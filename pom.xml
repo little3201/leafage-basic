@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>top.abeille</groupId>
-    <artifactId>basic</artifactId>
+    <artifactId>abeille-basic</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>basic</name>
     <description>config module of abeille</description>

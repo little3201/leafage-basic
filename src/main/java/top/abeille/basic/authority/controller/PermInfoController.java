@@ -18,7 +18,8 @@ import top.abeille.basic.common.controller.BasicController;
  * @author liwenqiang 2018/12/17 19:39
  **/
 @Api(tags = "Permission Service Api")
-@RequestMapping("/perm/v1")
+@RequestMapping("/basic/v1")
+@RestController
 public class PermInfoController extends BasicController {
 
     private final IPermInfoService permInfoService;
@@ -36,8 +37,8 @@ public class PermInfoController extends BasicController {
      */
     @ApiOperation(value = "Fetch enabled perms with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/perms")
-    public ResponseEntity findPermissions(Pageable pageable) {
+    @PostMapping("/permissions")
+    public ResponseEntity findPermissions(@RequestBody Pageable pageable) {
         return ResponseEntity.ok(permInfoService.findAllByPage(pageable));
     }
 
@@ -47,10 +48,10 @@ public class PermInfoController extends BasicController {
      * @param id
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Get single perm by id")
+    @ApiOperation(value = "Get single permission by id")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/option")
+    @GetMapping("/permission")
     public ResponseEntity getOption(Long id) {
         return ResponseEntity.ok(permInfoService.getById(id));
     }
@@ -58,17 +59,17 @@ public class PermInfoController extends BasicController {
     /**
      * 保存权限
      *
-     * @param perm
+     * @param permission
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Save single perm")
+    @ApiOperation(value = "Save single permission")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/option")
-    public ResponseEntity saveOption(PermInfoModel perm) {
+    @PostMapping("/permission")
+    public ResponseEntity saveOption(@RequestBody PermInfoModel permission) {
         try {
-            permInfoService.save(perm);
+            permInfoService.save(permission);
         } catch (Exception e) {
-            log.error("Save perm occurred an error", e);
+            log.error("Save permission occurred an error", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok("success");
@@ -77,17 +78,17 @@ public class PermInfoController extends BasicController {
     /**
      * 编辑权限
      *
-     * @param perm
+     * @param permission
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Modify single perm")
+    @ApiOperation(value = "Modify single permission")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PutMapping("/option")
-    public ResponseEntity modifyOption(PermInfoModel perm) {
+    @PutMapping("/permission")
+    public ResponseEntity modifyOption(@RequestBody PermInfoModel permission) {
         try {
-            permInfoService.update(perm);
+            permInfoService.update(permission);
         } catch (Exception e) {
-            log.error("Modify perm occurred an error", e);
+            log.error("Modify permission occurred an error", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok("success");
@@ -99,15 +100,15 @@ public class PermInfoController extends BasicController {
      * @param id
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Remove single perm")
+    @ApiOperation(value = "Remove single permission")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/option")
+    @DeleteMapping("/permission")
     public ResponseEntity removeOption(Long id) {
         try {
             permInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove perm occurred an error={}", e);
+            log.error("Remove permission occurred an error={}", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok("success");

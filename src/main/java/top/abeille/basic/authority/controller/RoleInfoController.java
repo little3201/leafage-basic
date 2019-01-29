@@ -18,7 +18,8 @@ import top.abeille.basic.common.controller.BasicController;
  * @author liwenqiang 2018/12/17 19:38
  **/
 @Api(tags = "Role Service Api")
-@RequestMapping("/role/v1")
+@RequestMapping("/basic/v1")
+@RestController
 public class RoleInfoController extends BasicController {
 
     private final IRoleInfoService roleInfoService;
@@ -36,8 +37,8 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Fetch enabled roles with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/roles")
-    public ResponseEntity findRoles(Pageable pageable) {
+    @PostMapping("/roles")
+    public ResponseEntity findRoles(@RequestBody Pageable pageable) {
         return ResponseEntity.ok(roleInfoService.findAllByPage(pageable));
     }
 
@@ -50,7 +51,7 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Get single role by id")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/option")
+    @GetMapping("/role")
     public ResponseEntity getOption(Long id) {
         return ResponseEntity.ok(roleInfoService.getById(id));
     }
@@ -63,8 +64,8 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/option")
-    public ResponseEntity saveOption(RoleInfoModel role) {
+    @PostMapping("/role")
+    public ResponseEntity saveOption(@RequestBody RoleInfoModel role) {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
@@ -82,8 +83,8 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Modify single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PutMapping("/option")
-    public ResponseEntity modifyOption(RoleInfoModel role) {
+    @PutMapping("/role")
+    public ResponseEntity modifyOption(@RequestBody RoleInfoModel role) {
         try {
             roleInfoService.update(role);
         } catch (Exception e) {
@@ -102,7 +103,7 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Remove single role")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/option")
+    @DeleteMapping("/role")
     public ResponseEntity removeOption(Long id) {
         try {
             roleInfoService.removeById(id);

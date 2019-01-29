@@ -9,14 +9,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 /**
- * ControllerTest parent
+ * Controller Parent
  *
  * @author liwenqiang 2018/12/28 14:40
  **/
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureWebTestClient
-public class BasicWebApplicationTests {
+public abstract class BasicControllerTest {
 
     @Autowired
     private WebTestClient webClient;

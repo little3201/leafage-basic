@@ -20,7 +20,6 @@ import top.abeille.basic.common.controller.BasicController;
  * @author liwenqiang 2018/8/2 21:02
  **/
 @Api(tags = "User Service Api")
-@RestController
 @RequestMapping("/user/v1")
 public class UserInfoController extends BasicController {
 

@@ -27,6 +27,11 @@ public class UserInfoServiceImpl implements IUserInfoService {
     }
 
     @Override
+    public UserInfoModel update(UserInfoModel entity) {
+        return userInfoDao.save(entity);
+    }
+
+    @Override
     public UserInfoModel getById(Long id) {
         /*使用getOne()返回的是引用，无法直接操作，会出现hibernate lazyxxx  no session 的错误
         在测试操作数据的方法(add/update)上加入@Transactional注解可以解决报错的问题

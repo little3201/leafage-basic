@@ -35,13 +35,13 @@ public class AbeilleSwaggerConfig {
                 .parameterType("header").required(false).build();
         parameters.add(parameterBuilder.build());
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("top.abeille.basic.authority.controller"))
+                .apis(RequestHandlerSelectors.basePackage("top.abeille.basic.data.controller"))
                 .paths(PathSelectors.any()).build().globalOperationParameters(parameters);
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().title("Basic Module of Polymerize Project")
-                .description("control authority of the polymerize project, about user , role and permission")
+                .description("control data of the polymerize project, about user , role and permission")
                 .contact(new Contact("wilson","https://abeille.top","little3201@163.com"))
                 .build();
     }

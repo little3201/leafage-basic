@@ -16,7 +16,7 @@ import top.abeille.basic.data.service.IRoleInfoService;
 import top.abeille.basic.data.service.IUserInfoService;
 import top.abeille.basic.data.service.IUserRoleService;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,7 +46,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (infoModel == null) {
             throw new UsernameNotFoundException("username does not exist");
         }
-        List<GrantedAuthority> authorityList = new LinkedList<>();
+        List<GrantedAuthority> authorityList = new ArrayList<>();
         /*添加角色组*/
         this.addAuthorities(infoModel, authorityList);
         /*检查角色是否配置*/

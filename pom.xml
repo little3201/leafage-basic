@@ -11,7 +11,7 @@
     <groupId>top.abeille</groupId>
     <artifactId>abeille-basic</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>basic</name>
+    <name>abeille-basic</name>
     <description>config module of abeille</description>
 
     <properties>

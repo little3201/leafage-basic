@@ -16,4 +16,4 @@ spring:
 
   ##=====active profile=====##
   profiles:
-    active: prod
+    active: dev

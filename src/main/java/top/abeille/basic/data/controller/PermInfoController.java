@@ -18,7 +18,7 @@ import top.abeille.basic.common.controller.BasicController;
  * @author liwenqiang 2018/12/17 19:39
  **/
 @Api(tags = "Permission Service Api")
-@RequestMapping("/basic/v1")
+@RequestMapping("/permission/v1")
 @RestController
 public class PermInfoController extends BasicController {
 
@@ -51,7 +51,7 @@ public class PermInfoController extends BasicController {
     @ApiOperation(value = "Get single permission by id")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/permission")
+    @GetMapping("/option")
     public ResponseEntity getOption(Long id) {
         return ResponseEntity.ok(permInfoService.getById(id));
     }
@@ -64,7 +64,7 @@ public class PermInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single permission")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/permission")
+    @PostMapping("/option")
     public ResponseEntity saveOption(@RequestBody PermInfoModel permission) {
         try {
             permInfoService.save(permission);
@@ -83,7 +83,7 @@ public class PermInfoController extends BasicController {
      */
     @ApiOperation(value = "Modify single permission")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PutMapping("/permission")
+    @PutMapping("/option")
     public ResponseEntity modifyOption(@RequestBody PermInfoModel permission) {
         try {
             permInfoService.update(permission);
@@ -103,7 +103,7 @@ public class PermInfoController extends BasicController {
     @ApiOperation(value = "Remove single permission")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/permission")
+    @DeleteMapping("/option")
     public ResponseEntity removeOption(Long id) {
         try {
             permInfoService.removeById(id);

@@ -20,7 +20,7 @@ import top.abeille.basic.common.controller.BasicController;
  * @author liwenqiang 2018/8/2 21:02
  **/
 @Api(tags = "User Service Api")
-@RequestMapping("/basic/v1")
+@RequestMapping("/user/v1")
 @RestController
 public class UserInfoController extends BasicController {
 
@@ -51,7 +51,7 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Get single user by id")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
-    @GetMapping("/user")
+    @GetMapping("/option")
     @JsonView(UserView.Details.class)
     public ResponseEntity getOption(Long id) {
         return ResponseEntity.ok(userInfoService.getById(id));
@@ -65,7 +65,7 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single user")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/user")
+    @PostMapping("/option")
     public ResponseEntity saveOption(@RequestBody UserInfoModel user) {
         try {
             userInfoService.save(user);
@@ -83,7 +83,7 @@ public class UserInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Modify single user")
-    @PutMapping("/user")
+    @PutMapping("/option")
     public ResponseEntity modifyOption(@RequestBody UserInfoModel user) {
         if (user.getId() == null) {
             return ResponseEntity.ok("Request param is null");
@@ -106,7 +106,7 @@ public class UserInfoController extends BasicController {
     @ApiOperation(value = "Remove single user")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/user")
+    @DeleteMapping("/option")
     public ResponseEntity removeOption(Long id) {
         try {
             userInfoService.removeById(id);

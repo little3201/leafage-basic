@@ -17,9 +17,9 @@ spring:
     # datasource connection path
     url: jdbc:mariadb://abeille.top:3306/abeille_basic?useUnicode=true&characterEncoding=utf-8
     # datasource username
-    username: user
+    username: abeille
     # datasource password
-    password: user
+    password: abeille.top
 
   ##=====Jpa configuration=====##
   jpa:

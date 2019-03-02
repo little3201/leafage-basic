@@ -35,6 +35,11 @@ public class UserRoleServiceImpl implements IUserRoleService {
     }
 
     @Override
+    public UserRoleModel save(UserRoleModel entity) {
+        return userRoleDao.save(entity);
+    }
+
+    @Override
     public void removeById(Long id) {
         userRoleDao.deleteById(id);
     }

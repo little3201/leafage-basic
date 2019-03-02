@@ -52,6 +52,11 @@ public class UserInfoServiceImpl implements IUserInfoService {
     }
 
     @Override
+    public UserInfoModel save(UserInfoModel entity) {
+        return userInfoDao.save(entity);
+    }
+
+    @Override
     public void removeById(Long id) {
         userInfoDao.deleteById(id);
     }

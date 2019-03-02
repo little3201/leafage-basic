@@ -16,7 +16,7 @@ public interface IBasicService<T> {
     /**
      * 根据id获取entity
      *
-     * @param id
+     * @param id 主键
      * @return T
      */
     default T getById(Long id) {
@@ -26,7 +26,7 @@ public interface IBasicService<T> {
     /**
      * 根据条件模版获取entity
      *
-     * @param t
+     * @param t 实例
      * @return T
      */
     default T getByExample(T t) {
@@ -45,7 +45,7 @@ public interface IBasicService<T> {
     /**
      * 获取所有entities并排序
      *
-     * @param sort
+     * @param sort 排序
      * @return List<T>
      */
     default List<T> findAll(Sort sort) {
@@ -59,7 +59,7 @@ public interface IBasicService<T> {
      * .withMatcher(roleInfoModel.getRoleName(), startsWith().ignoreCase())
      * .withMatcher(String.valueOf(roleInfoModel.getRoleId()), ExampleMatcher.GenericPropertyMatchers.contains());
      *
-     * @param t
+     * @param t 实例
      * @return List<T>
      */
     default List<T> findAllByExample(T t, ExampleMatcher exampleMatcher) {
@@ -69,8 +69,8 @@ public interface IBasicService<T> {
     /**
      * 分页获取所有entities
      *
-     * @param curPage
-     * @param pageSize
+     * @param curPage  当前页
+     * @param pageSize 当前页数据量
      * @return Page<T>
      */
     default Page<T> findAllByPage(Integer curPage, Integer pageSize) {
@@ -90,24 +90,22 @@ public interface IBasicService<T> {
     /**
      * 根据pkId删除entity
      *
-     * @param id
-     * @return
+     * @param id 主键
      */
     void removeById(Long id);
 
     /**
      * 批量删除
      *
-     * @param entities
-     * @return
+     * @param entities 实例集合
      */
     void removeInBatch(List<T> entities);
 
     /**
      * 保存entity
      *
-     * @param entity
-     * @return
+     * @param entity 实例
+     * @return T
      */
     default T save(T entity) {
         return null;
@@ -116,8 +114,8 @@ public interface IBasicService<T> {
     /**
      * 批量保存
      *
-     * @param entities
-     * @return
+     * @param entities 实例集合
+     * @return 实例类型
      */
     default List<T> saveAll(List<T> entities) {
         return null;

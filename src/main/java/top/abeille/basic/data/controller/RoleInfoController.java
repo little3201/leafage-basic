@@ -33,8 +33,8 @@ public class RoleInfoController extends BasicController {
     /**
      * 角色查询——分页
      *
-     * @param curPage
-     * @param pageSize
+     * @param curPage 当前页
+     * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @ApiOperation(value = "Fetch enabled roles with pageable")
@@ -55,7 +55,7 @@ public class RoleInfoController extends BasicController {
     /**
      * 角色查询——根据ID
      *
-     * @param id
+     * @param id 主键
      * @return ResponseEntity
      */
     @ApiOperation(value = "Get single role by id")
@@ -77,7 +77,7 @@ public class RoleInfoController extends BasicController {
     /**
      * 保存角色
      *
-     * @param role
+     * @param role 角色
      * @return ResponseEntity
      */
     @ApiOperation(value = "Save single role")
@@ -96,7 +96,7 @@ public class RoleInfoController extends BasicController {
     /**
      * 编辑角色
      *
-     * @param role
+     * @param role 角色
      * @return ResponseEntity
      */
     @ApiOperation(value = "Modify single role")
@@ -115,7 +115,7 @@ public class RoleInfoController extends BasicController {
     /**
      * 删除角色——根据ID
      *
-     * @param id
+     * @param id 主键
      * @return ResponseEntity
      */
     @ApiOperation(value = "Remove single role")

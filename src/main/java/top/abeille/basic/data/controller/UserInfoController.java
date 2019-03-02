@@ -35,6 +35,8 @@ public class UserInfoController extends BasicController {
     /**
      * 用户查询——分页
      *
+     * @param curPage 当前页
+     * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @ApiOperation(value = "Fetch enabled users with pageable")
@@ -55,7 +57,7 @@ public class UserInfoController extends BasicController {
     /**
      * 用户查询——根据ID
      *
-     * @param id
+     * @param id 主键
      * @return ResponseEntity
      */
     @ApiOperation(value = "Get single user by id")
@@ -77,7 +79,7 @@ public class UserInfoController extends BasicController {
     /**
      * 保存用户
      *
-     * @param user
+     * @param user 用户
      * @return ResponseEntity
      */
     @ApiOperation(value = "Save single user")
@@ -96,7 +98,7 @@ public class UserInfoController extends BasicController {
     /**
      * 编辑用户
      *
-     * @param user
+     * @param user 用户
      * @return ResponseEntity
      */
     @ApiOperation(value = "Modify single user")
@@ -117,7 +119,7 @@ public class UserInfoController extends BasicController {
     /**
      * 删除用户——根据ID
      *
-     * @param id
+     * @param id 主键
      * @return ResponseEntity
      */
     @ApiOperation(value = "Remove single user")

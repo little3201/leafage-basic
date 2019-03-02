@@ -33,8 +33,8 @@ public class PermInfoController extends BasicController {
     /**
      * 权限查询——分页
      *
-     * @param curPage
-     * @param pageSize
+     * @param curPage 当前页
+     * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @ApiOperation(value = "Fetch enabled permissions with pageable")
@@ -55,7 +55,7 @@ public class PermInfoController extends BasicController {
     /**
      * 权限查询——根据ID
      *
-     * @param id
+     * @param id 主键
      * @return ResponseEntity
      */
     @ApiOperation(value = "Get single permission by id")
@@ -77,7 +77,7 @@ public class PermInfoController extends BasicController {
     /**
      * 保存权限
      *
-     * @param permission
+     * @param permission 权限
      * @return ResponseEntity
      */
     @ApiOperation(value = "Save single permission")
@@ -96,7 +96,7 @@ public class PermInfoController extends BasicController {
     /**
      * 编辑权限
      *
-     * @param permission
+     * @param permission 权限
      * @return ResponseEntity
      */
     @ApiOperation(value = "Modify single permission")
@@ -115,7 +115,7 @@ public class PermInfoController extends BasicController {
     /**
      * 删除权限——根据ID
      *
-     * @param id
+     * @param id 主键
      * @return ResponseEntity
      */
     @ApiOperation(value = "Remove single permission")

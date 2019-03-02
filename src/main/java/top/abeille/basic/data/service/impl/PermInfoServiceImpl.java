@@ -1,12 +1,13 @@
 package top.abeille.basic.data.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IPermInfoDao;
 import top.abeille.basic.data.model.PermInfoModel;
 import top.abeille.basic.data.service.IPermInfoService;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -22,6 +23,23 @@ public class PermInfoServiceImpl implements IPermInfoService {
     @Autowired
     public PermInfoServiceImpl(IPermInfoDao permInfoDao) {
         this.permInfoDao = permInfoDao;
+    }
+
+    @Override
+    public Page<PermInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(curPage, pageSize, sort);
+        return permInfoDao.findAll(pageable);
+    }
+
+    @Override
+    public void removeById(Long id) {
+        permInfoDao.deleteById(id);
+    }
+
+    @Override
+    public void removeInBatch(List<PermInfoModel> entities) {
+        permInfoDao.deleteInBatch(entities);
     }
 
     @Override

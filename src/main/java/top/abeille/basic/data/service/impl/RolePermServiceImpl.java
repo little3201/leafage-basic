@@ -35,6 +35,16 @@ public class RolePermServiceImpl implements IRolePermService {
     }
 
     @Override
+    public void removeById(Long id) {
+        rolePermDao.deleteById(id);
+    }
+
+    @Override
+    public void removeInBatch(List<RolePermModel> entities) {
+        rolePermDao.deleteInBatch(entities);
+    }
+
+    @Override
     public List<RolePermModel> findAllByPermId(Long permId) {
         RolePermModel rolePerm = new RolePermModel();
         rolePerm.setPermId(permId);

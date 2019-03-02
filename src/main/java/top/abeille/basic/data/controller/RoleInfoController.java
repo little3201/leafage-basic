@@ -4,7 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,14 +33,23 @@ public class RoleInfoController extends BasicController {
     /**
      * 角色查询——分页
      *
-     * @param pageable param of page
+     * @param curPage
+     * @param pageSize
      * @return ResponseEntity
      */
     @ApiOperation(value = "Fetch enabled roles with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/roles")
-    public ResponseEntity findRoles(@RequestBody Pageable pageable) {
-        return ResponseEntity.ok(roleInfoService.findAllByPage(pageable));
+    @GetMapping("/roles")
+    public ResponseEntity findRoles(Integer curPage, Integer pageSize) {
+        if (curPage == null || pageSize == null) {
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
+        Page<RoleInfoModel> page = roleInfoService.findAllByPage(curPage, pageSize);
+        if (page == null) {
+            log.info("Not found anything of role with pageable.");
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(page);
     }
 
     /**
@@ -59,7 +68,7 @@ public class RoleInfoController extends BasicController {
         }
         RoleInfoModel role = roleInfoService.getById(id);
         if (role == null) {
-            log.info("Not found anything of role with id {}." + id);
+            log.info("Not found anything of role with id: {}." + id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(role);
@@ -78,7 +87,7 @@ public class RoleInfoController extends BasicController {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
-            log.error("Save role occurred an error={}", e);
+            log.error("Save role occurred an error: {}", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok("success");
@@ -95,9 +104,9 @@ public class RoleInfoController extends BasicController {
     @PutMapping("/option")
     public ResponseEntity modifyOption(@RequestBody RoleInfoModel role) {
         try {
-            roleInfoService.update(role);
+            roleInfoService.save(role);
         } catch (Exception e) {
-            log.error("Modify role occurred an error={}", e);
+            log.error("Modify role occurred an error: {}", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok("success");
@@ -117,7 +126,7 @@ public class RoleInfoController extends BasicController {
         try {
             roleInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove role occurred an error={}", e);
+            log.error("Remove role occurred an error: {}", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok("success");

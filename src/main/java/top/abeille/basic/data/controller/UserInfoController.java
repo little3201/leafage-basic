@@ -5,7 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,9 +39,17 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Fetch enabled users with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/users")
-    public ResponseEntity findUsers(@RequestBody Pageable pageable) {
-        return ResponseEntity.ok(userInfoService.findAllByPage(pageable));
+    @GetMapping("/users")
+    public ResponseEntity findUsers(Integer curPage, Integer pageSize) {
+        if (curPage == null || pageSize == null) {
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
+        Page<UserInfoModel> page = userInfoService.findAllByPage(curPage, pageSize);
+        if (page == null) {
+            log.info("Not found anything of user with pageable.");
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(page);
     }
 
     /**
@@ -60,7 +68,7 @@ public class UserInfoController extends BasicController {
         }
         UserInfoModel user = userInfoService.getById(id);
         if (user == null) {
-            log.info("Not found anything of user with id {}." + id);
+            log.info("Not found anything of user with id: {}." + id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(user);
@@ -79,7 +87,7 @@ public class UserInfoController extends BasicController {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
-            log.error("Save user occurred an error={}", e);
+            log.error("Save user occurred an error: {}", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok("success");
@@ -98,9 +106,9 @@ public class UserInfoController extends BasicController {
             return ResponseEntity.ok("Request param is null");
         }
         try {
-            userInfoService.update(user);
+            userInfoService.save(user);
         } catch (Exception e) {
-            log.error("Modify user occurred an error={}", e);
+            log.error("Modify user occurred an error: {}", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok("success");
@@ -120,7 +128,7 @@ public class UserInfoController extends BasicController {
         try {
             userInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove user occurred an error={}", e);
+            log.error("Remove user occurred an error: {}", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok("success");

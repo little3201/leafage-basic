@@ -35,6 +35,16 @@ public class UserRoleServiceImpl implements IUserRoleService {
     }
 
     @Override
+    public void removeById(Long id) {
+        userRoleDao.deleteById(id);
+    }
+
+    @Override
+    public void removeInBatch(List<UserRoleModel> entities) {
+        userRoleDao.deleteInBatch(entities);
+    }
+
+    @Override
     public List<UserRoleModel> findAllByUserId(Long userId) {
         UserRoleModel userRole = new UserRoleModel();
         userRole.setUserId(userId);

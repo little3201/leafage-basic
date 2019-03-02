@@ -2,7 +2,6 @@ package top.abeille.basic.common.service;
 
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
@@ -57,8 +56,8 @@ public interface IBasicService<T> {
      * 根据条件查询所有——设置匹配条件，如例所示：
      * Type one: ExampleMatcher exampleMatcher = ExampleMatcher.matching().withIgnorePaths("oneVar","twoVar");
      * Type two: ExampleMatcher exampleMatcher = ExampleMatcher.matching()
-     *                      .withMatcher(roleInfoModel.getRoleName(), startsWith().ignoreCase())
-     *                      .withMatcher(String.valueOf(roleInfoModel.getRoleId()), ExampleMatcher.GenericPropertyMatchers.contains());
+     * .withMatcher(roleInfoModel.getRoleName(), startsWith().ignoreCase())
+     * .withMatcher(String.valueOf(roleInfoModel.getRoleId()), ExampleMatcher.GenericPropertyMatchers.contains());
      *
      * @param t
      * @return List<T>
@@ -70,10 +69,11 @@ public interface IBasicService<T> {
     /**
      * 分页获取所有entities
      *
-     * @param pageable
+     * @param curPage
+     * @param pageSize
      * @return Page<T>
      */
-    default Page<T> findAllByPage(Pageable pageable) {
+    default Page<T> findAllByPage(Integer curPage, Integer pageSize) {
         return null;
     }
 
@@ -93,9 +93,7 @@ public interface IBasicService<T> {
      * @param id
      * @return
      */
-    default int removeById(Long id) {
-        return 0;
-    }
+    void removeById(Long id);
 
     /**
      * 批量删除
@@ -103,9 +101,7 @@ public interface IBasicService<T> {
      * @param entities
      * @return
      */
-    default int removeInBatch(List<T> entities) {
-        return 0;
-    }
+    void removeInBatch(List<T> entities);
 
     /**
      * 保存entity
@@ -124,26 +120,6 @@ public interface IBasicService<T> {
      * @return
      */
     default List<T> saveAll(List<T> entities) {
-        return null;
-    }
-
-    /**
-     * 更新entity
-     *
-     * @param entity
-     * @return
-     */
-    default T update(T entity) {
-        return null;
-    }
-
-    /**
-     * 批量更新
-     *
-     * @param entities
-     * @return
-     */
-    default List<T> updateAll(List<T> entities) {
         return null;
     }
 

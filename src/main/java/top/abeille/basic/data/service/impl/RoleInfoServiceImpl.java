@@ -26,7 +26,9 @@ public class RoleInfoServiceImpl implements IRoleInfoService {
     }
 
     @Override
-    public Page<RoleInfoModel> findAllByPage(Pageable pageable) {
+    public Page<RoleInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(curPage, pageSize, sort);
         return roleInfoDao.findAll(pageable);
     }
 
@@ -50,4 +52,18 @@ public class RoleInfoServiceImpl implements IRoleInfoService {
         return optional.orElse(null);
     }
 
+    @Override
+    public void removeById(Long id) {
+        roleInfoDao.deleteById(id);
+    }
+
+    @Override
+    public void removeInBatch(List<RoleInfoModel> entities) {
+        roleInfoDao.deleteInBatch(entities);
+    }
+
+    @Override
+    public RoleInfoModel save(RoleInfoModel entity) {
+        return roleInfoDao.save(entity);
+    }
 }

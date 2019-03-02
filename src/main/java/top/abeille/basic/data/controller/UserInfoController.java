@@ -6,13 +6,14 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import top.abeille.basic.common.controller.BasicController;
 import top.abeille.basic.data.model.UserInfoModel;
 import top.abeille.basic.data.service.IUserInfoService;
 import top.abeille.basic.data.view.UserView;
-import top.abeille.basic.common.controller.BasicController;
 
 /**
  * 用户信息Controller
@@ -54,7 +55,15 @@ public class UserInfoController extends BasicController {
     @GetMapping("/option")
     @JsonView(UserView.Details.class)
     public ResponseEntity getOption(Long id) {
-        return ResponseEntity.ok(userInfoService.getById(id));
+        if (id == null) {
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
+        UserInfoModel user = userInfoService.getById(id);
+        if (user == null) {
+            log.info("Not found anything of user with id {}." + id);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(user);
     }
 
     /**

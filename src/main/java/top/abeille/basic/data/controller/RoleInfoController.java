@@ -5,12 +5,13 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import top.abeille.basic.common.controller.BasicController;
 import top.abeille.basic.data.model.RoleInfoModel;
 import top.abeille.basic.data.service.IRoleInfoService;
-import top.abeille.basic.common.controller.BasicController;
 
 /**
  * 角色信息controller
@@ -53,7 +54,15 @@ public class RoleInfoController extends BasicController {
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping("/option")
     public ResponseEntity getOption(Long id) {
-        return ResponseEntity.ok(roleInfoService.getById(id));
+        if (id == null) {
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
+        RoleInfoModel role = roleInfoService.getById(id);
+        if (role == null) {
+            log.info("Not found anything of role with id {}." + id);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(role);
     }
 
     /**

@@ -18,7 +18,7 @@ import top.abeille.basic.common.controller.BasicController;
  * @author liwenqiang 2018/12/17 19:38
  **/
 @Api(tags = "Role Service Api")
-@RequestMapping("/basic/v1")
+@RequestMapping("/role/v1")
 @RestController
 public class RoleInfoController extends BasicController {
 
@@ -51,7 +51,7 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Get single role by id")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/role")
+    @GetMapping("/option")
     public ResponseEntity getOption(Long id) {
         return ResponseEntity.ok(roleInfoService.getById(id));
     }
@@ -64,7 +64,7 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/role")
+    @PostMapping("/option")
     public ResponseEntity saveOption(@RequestBody RoleInfoModel role) {
         try {
             roleInfoService.save(role);
@@ -83,7 +83,7 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Modify single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PutMapping("/role")
+    @PutMapping("/option")
     public ResponseEntity modifyOption(@RequestBody RoleInfoModel role) {
         try {
             roleInfoService.update(role);
@@ -103,7 +103,7 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Remove single role")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/role")
+    @DeleteMapping("/option")
     public ResponseEntity removeOption(Long id) {
         try {
             roleInfoService.removeById(id);

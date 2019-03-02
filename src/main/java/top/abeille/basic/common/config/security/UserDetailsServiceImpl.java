@@ -28,14 +28,18 @@ import java.util.List;
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private IUserInfoService userInfoService;
+    private final IUserInfoService userInfoService;
+
+    private final IUserRoleService userRoleService;
+
+    private final IRoleInfoService roleInfoService;
 
     @Autowired
-    private IUserRoleService userRoleService;
-
-    @Autowired
-    private IRoleInfoService roleInfoService;
+    public UserDetailsServiceImpl(IUserInfoService userInfoService, IUserRoleService userRoleService, IRoleInfoService roleInfoService) {
+        this.userInfoService = userInfoService;
+        this.userRoleService = userRoleService;
+        this.roleInfoService = roleInfoService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

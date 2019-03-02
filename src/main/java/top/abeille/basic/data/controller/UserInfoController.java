@@ -59,7 +59,7 @@ public class UserInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Get single user by id")
-    @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
+    @ApiImplicitParam(name = "id", required = true, dataType = "Long")
     @GetMapping("/option")
     @JsonView(UserView.Details.class)
     public ResponseEntity getOption(Long id) {
@@ -121,7 +121,7 @@ public class UserInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Remove single user")
-    @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
+    @ApiImplicitParam(name = "id", required = true, dataType = "Long")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @DeleteMapping("/option")
     public ResponseEntity removeOption(Long id) {

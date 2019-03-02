@@ -59,7 +59,7 @@ public class RoleInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Get single role by id")
-    @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
+    @ApiImplicitParam(name = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping("/option")
     public ResponseEntity getOption(Long id) {
@@ -119,7 +119,7 @@ public class RoleInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Remove single role")
-    @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
+    @ApiImplicitParam(name = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @DeleteMapping("/option")
     public ResponseEntity removeOption(Long id) {

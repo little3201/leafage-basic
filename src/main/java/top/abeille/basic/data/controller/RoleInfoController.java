@@ -59,7 +59,7 @@ public class RoleInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Get single role by id")
-    @ApiImplicitParam(name = "id", required = true, dataType = "int")
+    @ApiImplicitParam(name = "id", required = true, dataType = "Long")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping("/option")
     public ResponseEntity getOption(Long id) {

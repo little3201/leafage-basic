@@ -1,3 +1,10 @@
+##=====load eureka registry center=====##
+eureka:
+  client:
+    # registry path
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+
 ##=====log configuration=====##
 logging:
   level:

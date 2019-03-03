@@ -27,8 +27,12 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
 
     private RequestCache requestCache = new HttpSessionRequestCache();
 
+    private final ObjectMapper objectMapper;
+
     @Autowired
-    private ObjectMapper objectMapper;
+    public LoginSuccessHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)

@@ -22,8 +22,7 @@ import java.util.List;
 /**
  * 用户认证service实现
  *
- * @author liwenqiang
- * @date 2018/10/18 21:18
+ * @author liwenqiang 2018/10/18 21:18
  **/
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -64,8 +63,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * 查询所有角色并添加到权限组中
      *
-     * @param userInfo
-     * @param authorityList
+     * @param userInfo 用户信息
+     * @param authorityList 权限列表
      */
     private void addAuthorities(UserInfoModel userInfo, List<GrantedAuthority> authorityList) {
         List<UserRoleModel> roleList = userRoleService.findAllByUserId(userInfo.getId());

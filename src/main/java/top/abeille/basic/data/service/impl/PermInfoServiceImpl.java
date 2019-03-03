@@ -33,6 +33,21 @@ public class PermInfoServiceImpl implements IPermInfoService {
     }
 
     @Override
+    public List<PermInfoModel> findAll(Sort sort) {
+        return permInfoDao.findAll(sort);
+    }
+
+    @Override
+    public PermInfoModel save(PermInfoModel entity) {
+        return permInfoDao.save(entity);
+    }
+
+    @Override
+    public List<PermInfoModel> saveAll(List<PermInfoModel> entities) {
+        return permInfoDao.saveAll(entities);
+    }
+
+    @Override
     public void removeById(Long id) {
         permInfoDao.deleteById(id);
     }

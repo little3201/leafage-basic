@@ -39,7 +39,7 @@ public class UserInfoServiceImplTest extends BasicServiceTest {
         user.setId(0L);
         String pwd = new BCryptPasswordEncoder().encode("abeille");
         user.setPassword(pwd);
-        userInfoService.update(user);
+        userInfoService.save(user);
         Mockito.verify(userInfoDao, Mockito.times(1)).save(user);
     }
 

@@ -40,8 +40,8 @@ public class AbeilleSwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("Basic Module of Polymerize Project").version("0.0.1")
-                .description("control data of the polymerize project, about user , role and permission")
+        return new ApiInfoBuilder().title("Basic Module of Abeille").version("0.0.1")
+                .description("Provide security service for Abeille")
                 .contact(new Contact("wilson","https://abeille.top","little3201@163.com"))
                 .build();
     }

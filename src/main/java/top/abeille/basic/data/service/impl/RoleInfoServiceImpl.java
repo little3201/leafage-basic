@@ -53,6 +53,11 @@ public class RoleInfoServiceImpl implements IRoleInfoService {
     }
 
     @Override
+    public List<RoleInfoModel> findAll(Sort sort) {
+        return roleInfoDao.findAll(sort);
+    }
+
+    @Override
     public void removeById(Long id) {
         roleInfoDao.deleteById(id);
     }

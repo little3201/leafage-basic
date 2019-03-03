@@ -3,6 +3,7 @@ package top.abeille.basic.data.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IUserRoleDao;
 import top.abeille.basic.data.model.UserRoleModel;
@@ -37,6 +38,16 @@ public class UserRoleServiceImpl implements IUserRoleService {
     @Override
     public UserRoleModel save(UserRoleModel entity) {
         return userRoleDao.save(entity);
+    }
+
+    @Override
+    public List<UserRoleModel> findAll(Sort sort) {
+        return userRoleDao.findAll(sort);
+    }
+
+    @Override
+    public List<UserRoleModel> saveAll(List<UserRoleModel> entities) {
+        return userRoleDao.saveAll(entities);
     }
 
     @Override

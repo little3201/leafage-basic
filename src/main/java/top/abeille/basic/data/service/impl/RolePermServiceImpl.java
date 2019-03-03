@@ -35,6 +35,16 @@ public class RolePermServiceImpl implements IRolePermService {
     }
 
     @Override
+    public RolePermModel save(RolePermModel entity) {
+        return rolePermDao.save(entity);
+    }
+
+    @Override
+    public List<RolePermModel> saveAll(List<RolePermModel> entities) {
+        return rolePermDao.saveAll(entities);
+    }
+
+    @Override
     public void removeById(Long id) {
         rolePermDao.deleteById(id);
     }

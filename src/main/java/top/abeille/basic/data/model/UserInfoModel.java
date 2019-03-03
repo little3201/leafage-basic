@@ -17,6 +17,7 @@ public class UserInfoModel {
 
     private Long id;
     //用户ID
+    @JsonView(UserView.Summary.class)
     private String userId;
     //用户角色主键
     private Long userRoleId;

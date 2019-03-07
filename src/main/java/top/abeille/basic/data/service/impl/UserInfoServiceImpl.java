@@ -1,14 +1,13 @@
 package top.abeille.basic.data.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IUserInfoDao;
 import top.abeille.basic.data.model.UserInfoModel;
-import top.abeille.basic.data.service.IUserInfoService;
+import top.abeille.basic.data.service.UserInfoService;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -17,18 +16,13 @@ import java.util.Optional;
  * @author liwenqiang 2018/7/28 0:30
  **/
 @Service
-public class UserInfoServiceImpl implements IUserInfoService {
+public class UserInfoServiceImpl implements UserInfoService {
 
     private final IUserInfoDao userInfoDao;
 
     @Autowired
     public UserInfoServiceImpl(IUserInfoDao userInfoDao) {
         this.userInfoDao = userInfoDao;
-    }
-
-    @Override
-    public UserInfoModel update(UserInfoModel entity) {
-        return userInfoDao.save(entity);
     }
 
     @Override
@@ -51,8 +45,25 @@ public class UserInfoServiceImpl implements IUserInfoService {
     }
 
     @Override
-    public Page<UserInfoModel> findAllByPage(Pageable pageable) {
+    public Page<UserInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(curPage, pageSize, sort);
         return userInfoDao.findAll(pageable);
+    }
+
+    @Override
+    public UserInfoModel save(UserInfoModel entity) {
+        return userInfoDao.save(entity);
+    }
+
+    @Override
+    public void removeById(Long id) {
+        userInfoDao.deleteById(id);
+    }
+
+    @Override
+    public void removeInBatch(List<UserInfoModel> entities) {
+        userInfoDao.deleteInBatch(entities);
     }
 
 }

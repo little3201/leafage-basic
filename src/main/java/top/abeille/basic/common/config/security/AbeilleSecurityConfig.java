@@ -44,8 +44,8 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * http 请求安全配置
      *
-     * @param http
-     * @throws Exception
+     * @param http 安全请求
+     * @throws Exception 异常
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -67,8 +67,8 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 静态资源许可
      *
-     * @param web
-     * @throws Exception
+     * @param web 资源配置
+     * @throws Exception 异常
      */
     @Override
     public void configure(WebSecurity web) throws Exception {

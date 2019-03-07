@@ -8,13 +8,13 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import top.abeille.basic.data.model.RoleInfoModel;
 import top.abeille.basic.data.model.UserInfoModel;
 import top.abeille.basic.data.model.UserRoleModel;
-import top.abeille.basic.data.service.IRoleInfoService;
-import top.abeille.basic.data.service.IUserInfoService;
-import top.abeille.basic.data.service.IUserRoleService;
+import top.abeille.basic.data.service.RoleInfoService;
+import top.abeille.basic.data.service.UserInfoService;
+import top.abeille.basic.data.service.UserRoleService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,20 +22,19 @@ import java.util.List;
 /**
  * 用户认证service实现
  *
- * @author liwenqiang
- * @date 2018/10/18 21:18
+ * @author liwenqiang 2018/10/18 21:18
  **/
-@Component
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final IUserInfoService userInfoService;
+    private final UserInfoService userInfoService;
 
-    private final IUserRoleService userRoleService;
+    private final UserRoleService userRoleService;
 
-    private final IRoleInfoService roleInfoService;
+    private final RoleInfoService roleInfoService;
 
     @Autowired
-    public UserDetailsServiceImpl(IUserInfoService userInfoService, IUserRoleService userRoleService, IRoleInfoService roleInfoService) {
+    public UserDetailsServiceImpl(UserInfoService userInfoService, UserRoleService userRoleService, RoleInfoService roleInfoService) {
         this.userInfoService = userInfoService;
         this.userRoleService = userRoleService;
         this.roleInfoService = roleInfoService;
@@ -64,8 +63,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * 查询所有角色并添加到权限组中
      *
-     * @param userInfo
-     * @param authorityList
+     * @param userInfo      用户信息
+     * @param authorityList 权限列表
      */
     private void addAuthorities(UserInfoModel userInfo, List<GrantedAuthority> authorityList) {
         List<UserRoleModel> roleList = userRoleService.findAllByUserId(userInfo.getId());

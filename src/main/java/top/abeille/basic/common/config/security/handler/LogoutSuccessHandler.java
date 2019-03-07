@@ -22,8 +22,12 @@ import java.io.IOException;
 @Component
 public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 
+    private final ObjectMapper objectMapper;
+
     @Autowired
-    private ObjectMapper objectMapper;
+    public LogoutSuccessHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)

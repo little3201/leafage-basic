@@ -6,7 +6,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IRolePermDao;
 import top.abeille.basic.data.model.RolePermModel;
-import top.abeille.basic.data.service.IRolePermService;
+import top.abeille.basic.data.service.RolePermService;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/9/26 11:40
  **/
 @Service
-public class RolePermServiceImpl implements IRolePermService {
+public class RolePermServiceImpl implements RolePermService {
 
     private final IRolePermDao rolePermDao;
 
@@ -32,6 +32,26 @@ public class RolePermServiceImpl implements IRolePermService {
         // 创建查询模板实例
         Example<RolePermModel> example = Example.of(rolePermModel, exampleMatcher);
         return rolePermDao.findAll(example);
+    }
+
+    @Override
+    public RolePermModel save(RolePermModel entity) {
+        return rolePermDao.save(entity);
+    }
+
+    @Override
+    public List<RolePermModel> saveAll(List<RolePermModel> entities) {
+        return rolePermDao.saveAll(entities);
+    }
+
+    @Override
+    public void removeById(Long id) {
+        rolePermDao.deleteById(id);
+    }
+
+    @Override
+    public void removeInBatch(List<RolePermModel> entities) {
+        rolePermDao.deleteInBatch(entities);
     }
 
     @Override

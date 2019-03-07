@@ -5,7 +5,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IRoleInfoDao;
 import top.abeille.basic.data.model.RoleInfoModel;
-import top.abeille.basic.data.service.IRoleInfoService;
+import top.abeille.basic.data.service.RoleInfoService;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleInfoServiceImpl implements IRoleInfoService {
+public class RoleInfoServiceImpl implements RoleInfoService {
 
     private final IRoleInfoDao roleInfoDao;
 
@@ -26,7 +26,9 @@ public class RoleInfoServiceImpl implements IRoleInfoService {
     }
 
     @Override
-    public Page<RoleInfoModel> findAllByPage(Pageable pageable) {
+    public Page<RoleInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(curPage, pageSize, sort);
         return roleInfoDao.findAll(pageable);
     }
 
@@ -50,4 +52,23 @@ public class RoleInfoServiceImpl implements IRoleInfoService {
         return optional.orElse(null);
     }
 
+    @Override
+    public List<RoleInfoModel> findAll(Sort sort) {
+        return roleInfoDao.findAll(sort);
+    }
+
+    @Override
+    public void removeById(Long id) {
+        roleInfoDao.deleteById(id);
+    }
+
+    @Override
+    public void removeInBatch(List<RoleInfoModel> entities) {
+        roleInfoDao.deleteInBatch(entities);
+    }
+
+    @Override
+    public RoleInfoModel save(RoleInfoModel entity) {
+        return roleInfoDao.save(entity);
+    }
 }

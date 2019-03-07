@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 
 
 /**
- * oauth2 authorization server configuration
+ * oauth2 authorization server common
  *
  * @author liwenqiang 2018/12/28 14:56
  **/

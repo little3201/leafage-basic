@@ -1,12 +1,13 @@
 package top.abeille.basic.data.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IPermInfoDao;
 import top.abeille.basic.data.model.PermInfoModel;
-import top.abeille.basic.data.service.IPermInfoService;
+import top.abeille.basic.data.service.PermInfoService;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,13 +16,45 @@ import java.util.Optional;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class PermInfoServiceImpl implements IPermInfoService {
+public class PermInfoServiceImpl implements PermInfoService {
 
     private final IPermInfoDao permInfoDao;
 
     @Autowired
     public PermInfoServiceImpl(IPermInfoDao permInfoDao) {
         this.permInfoDao = permInfoDao;
+    }
+
+    @Override
+    public Page<PermInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(curPage, pageSize, sort);
+        return permInfoDao.findAll(pageable);
+    }
+
+    @Override
+    public List<PermInfoModel> findAll(Sort sort) {
+        return permInfoDao.findAll(sort);
+    }
+
+    @Override
+    public PermInfoModel save(PermInfoModel entity) {
+        return permInfoDao.save(entity);
+    }
+
+    @Override
+    public List<PermInfoModel> saveAll(List<PermInfoModel> entities) {
+        return permInfoDao.saveAll(entities);
+    }
+
+    @Override
+    public void removeById(Long id) {
+        permInfoDao.deleteById(id);
+    }
+
+    @Override
+    public void removeInBatch(List<PermInfoModel> entities) {
+        permInfoDao.deleteInBatch(entities);
     }
 
     @Override

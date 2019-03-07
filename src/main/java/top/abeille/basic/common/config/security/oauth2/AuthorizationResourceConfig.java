@@ -10,7 +10,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * oauth2 resource server configuration
+ * oauth2 resource server common
  *
  * @author liwenqiang 2018/12/31 14:42
  **/

@@ -1,7 +1,7 @@
 package top.abeille.basic.data.service;
 
 import top.abeille.basic.data.model.UserInfoModel;
-import top.abeille.common.service.BasicService;
+import top.abeille.common.basic.BasicService;
 
 /**
  * java类描述

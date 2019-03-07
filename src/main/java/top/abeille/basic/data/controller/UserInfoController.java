@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.data.model.UserInfoModel;
 import top.abeille.basic.data.service.UserInfoService;
 import top.abeille.basic.data.view.UserView;
-import top.abeille.common.controller.BasicController;
+import top.abeille.common.basic.BasicController;
 
 /**
  * 用户信息Controller

@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.data.model.PermInfoModel;
 import top.abeille.basic.data.service.PermInfoService;
-import top.abeille.common.controller.BasicController;
+import top.abeille.common.basic.BasicController;
 
 /**
  * 权限资源controller

@@ -1,7 +1,7 @@
 package top.abeille.basic.data.service;
 
 import top.abeille.basic.data.model.UserRoleModel;
-import top.abeille.common.service.BasicService;
+import top.abeille.common.basic.BasicService;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
 
-##=====log configuration=====##
+##=====log common=====##
 logging:
   level:
     # control root logger's level for WARN
@@ -16,7 +16,7 @@ logging:
       # control org.hibernate logger's level for ERROR
       hibernate: INFO
 
-##=====datasource configuration=====##
+##=====datasource common=====##
 spring:
   datasource:
     # datasource driver
@@ -28,7 +28,7 @@ spring:
     # datasource password
     password: user
 
-  ##=====Jpa configuration=====##
+  ##=====Jpa common=====##
   jpa:
     # datasource dialect
     database-platform: org.hibernate.dialect.MariaDBDialect
@@ -42,7 +42,7 @@ spring:
         hbm2ddl:
           auto: update
 
-  # data jpa run thread configuration, hibernate will run with another thread
+  # data jpa run thread common, hibernate will run with another thread
   data:
     jpa:
       repositories:

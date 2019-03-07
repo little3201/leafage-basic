@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.common.controller.BasicController;
 import top.abeille.basic.data.model.RoleInfoModel;
-import top.abeille.basic.data.service.IRoleInfoService;
+import top.abeille.basic.data.service.RoleInfoService;
+import top.abeille.common.basic.BasicController;
 
 /**
  * 角色信息controller
@@ -23,17 +23,17 @@ import top.abeille.basic.data.service.IRoleInfoService;
 @RestController
 public class RoleInfoController extends BasicController {
 
-    private final IRoleInfoService roleInfoService;
+    private final RoleInfoService roleInfoService;
 
     @Autowired
-    public RoleInfoController(IRoleInfoService roleInfoService) {
+    public RoleInfoController(RoleInfoService roleInfoService) {
         this.roleInfoService = roleInfoService;
     }
 
     /**
      * 角色查询——分页
      *
-     * @param curPage 当前页
+     * @param curPage  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
      */

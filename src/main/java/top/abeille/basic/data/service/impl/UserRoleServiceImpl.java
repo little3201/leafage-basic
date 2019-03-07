@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IUserRoleDao;
 import top.abeille.basic.data.model.UserRoleModel;
-import top.abeille.basic.data.service.IUserRoleService;
+import top.abeille.basic.data.service.UserRoleService;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @date 2018-12-06 22:05
  **/
 @Service
-public class UserRoleServiceImpl implements IUserRoleService {
+public class UserRoleServiceImpl implements UserRoleService {
 
     private final IUserRoleDao userRoleDao;
 

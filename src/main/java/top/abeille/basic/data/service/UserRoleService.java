@@ -1,7 +1,7 @@
 package top.abeille.basic.data.service;
 
 import top.abeille.basic.data.model.UserRoleModel;
-import top.abeille.basic.common.service.IBasicService;
+import top.abeille.common.basic.BasicService;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @author liwenqiang
  * @date 2018-12-06 22:04
  **/
-public interface IUserRoleService extends IBasicService<UserRoleModel> {
+public interface UserRoleService extends BasicService<UserRoleModel> {
 
     /**
      * 查询所有角色——根据用户id

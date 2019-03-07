@@ -5,7 +5,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IPermInfoDao;
 import top.abeille.basic.data.model.PermInfoModel;
-import top.abeille.basic.data.service.IPermInfoService;
+import top.abeille.basic.data.service.PermInfoService;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class PermInfoServiceImpl implements IPermInfoService {
+public class PermInfoServiceImpl implements PermInfoService {
 
     private final IPermInfoDao permInfoDao;
 

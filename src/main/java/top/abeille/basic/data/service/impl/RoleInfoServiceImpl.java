@@ -5,7 +5,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IRoleInfoDao;
 import top.abeille.basic.data.model.RoleInfoModel;
-import top.abeille.basic.data.service.IRoleInfoService;
+import top.abeille.basic.data.service.RoleInfoService;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleInfoServiceImpl implements IRoleInfoService {
+public class RoleInfoServiceImpl implements RoleInfoService {
 
     private final IRoleInfoDao roleInfoDao;
 

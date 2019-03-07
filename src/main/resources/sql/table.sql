@@ -128,7 +128,7 @@ create table oauth_access_token
    primary key (id)
 );
 
-alter table oauth_access_token comment 'oauth2 configuration';
+alter table oauth_access_token comment 'oauth2 common';
 
 
 

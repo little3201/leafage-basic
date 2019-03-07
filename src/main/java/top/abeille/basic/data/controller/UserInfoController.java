@@ -10,10 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.common.controller.BasicController;
 import top.abeille.basic.data.model.UserInfoModel;
-import top.abeille.basic.data.service.IUserInfoService;
+import top.abeille.basic.data.service.UserInfoService;
 import top.abeille.basic.data.view.UserView;
+import top.abeille.common.controller.BasicController;
 
 /**
  * 用户信息Controller
@@ -25,17 +25,17 @@ import top.abeille.basic.data.view.UserView;
 @RestController
 public class UserInfoController extends BasicController {
 
-    private final IUserInfoService userInfoService;
+    private final UserInfoService userInfoService;
 
     @Autowired
-    public UserInfoController(IUserInfoService userInfoService) {
+    public UserInfoController(UserInfoService userInfoService) {
         this.userInfoService = userInfoService;
     }
 
     /**
      * 用户查询——分页
      *
-     * @param curPage 当前页
+     * @param curPage  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
      */

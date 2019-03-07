@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.common.controller.BasicController;
 import top.abeille.basic.data.model.PermInfoModel;
-import top.abeille.basic.data.service.IPermInfoService;
+import top.abeille.basic.data.service.PermInfoService;
+import top.abeille.common.controller.BasicController;
 
 /**
  * 权限资源controller
@@ -23,17 +23,17 @@ import top.abeille.basic.data.service.IPermInfoService;
 @RestController
 public class PermInfoController extends BasicController {
 
-    private final IPermInfoService permInfoService;
+    private final PermInfoService permInfoService;
 
     @Autowired
-    public PermInfoController(IPermInfoService permInfoService) {
+    public PermInfoController(PermInfoService permInfoService) {
         this.permInfoService = permInfoService;
     }
 
     /**
      * 权限查询——分页
      *
-     * @param curPage 当前页
+     * @param curPage  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
      */

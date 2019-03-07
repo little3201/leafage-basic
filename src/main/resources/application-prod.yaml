@@ -5,7 +5,7 @@ eureka:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka/
 
-##=====log configuration=====##
+##=====log common=====##
 logging:
   level:
     # control root logger's level for INFO
@@ -16,7 +16,7 @@ logging:
       # control org.hibernate logger's level for ERROR
       hibernate: INFO
 
-##=====datasource configuration=====##
+##=====datasource common=====##
 spring:
   datasource:
     # datasource driver
@@ -28,7 +28,7 @@ spring:
     # datasource password
     password: abeille.top
 
-  ##=====Jpa configuration=====##
+  ##=====Jpa common=====##
   jpa:
     # jpa database
     database: mysql
@@ -41,13 +41,13 @@ spring:
           auto: update
     # datasource dialect
     database-platform: org.hibernate.dialect.MariaDBDialect
-  # data jpa run thread configuration, hibernate will run with another thread
+  # data jpa run thread common, hibernate will run with another thread
   data:
     jpa:
       repositories:
         bootstrap-mode: deferred
 
-  ##=====redis configuration=====##
+  ##=====redis common=====##
   redis:
     # Redis database index(default is 0)
     database: 0
@@ -61,7 +61,7 @@ spring:
     lettuce:
       shutdown-timeout: 0ms
 
-  ###=====rabbitMQ configuration=====##
+  ###=====rabbitMQ common=====##
   rabbitmq:
     # rabbitMQ server host
     host: abeille.top

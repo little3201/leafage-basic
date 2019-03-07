@@ -6,7 +6,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IRolePermDao;
 import top.abeille.basic.data.model.RolePermModel;
-import top.abeille.basic.data.service.IRolePermService;
+import top.abeille.basic.data.service.RolePermService;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/9/26 11:40
  **/
 @Service
-public class RolePermServiceImpl implements IRolePermService {
+public class RolePermServiceImpl implements RolePermService {
 
     private final IRolePermDao rolePermDao;
 

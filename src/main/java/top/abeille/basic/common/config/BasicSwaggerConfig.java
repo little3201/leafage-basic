@@ -24,7 +24,7 @@ import java.util.List;
  **/
 @Configuration
 @EnableSwagger2
-public class AbeilleSwaggerConfig {
+public class BasicSwaggerConfig {
 
     @Bean
     public Docket createRestApi() {
@@ -42,7 +42,7 @@ public class AbeilleSwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().title("Basic Module of Abeille").version("0.0.1")
                 .description("Provide security service for Abeille")
-                .contact(new Contact("wilson","https://abeille.top","little3201@163.com"))
+                .contact(new Contact("wilson", "https://abeille.top", "little3201@163.com"))
                 .build();
     }
 }

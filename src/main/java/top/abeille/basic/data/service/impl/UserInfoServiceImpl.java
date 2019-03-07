@@ -5,7 +5,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.data.dao.IUserInfoDao;
 import top.abeille.basic.data.model.UserInfoModel;
-import top.abeille.basic.data.service.IUserInfoService;
+import top.abeille.basic.data.service.UserInfoService;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,7 @@ import java.util.Optional;
  * @author liwenqiang 2018/7/28 0:30
  **/
 @Service
-public class UserInfoServiceImpl implements IUserInfoService {
+public class UserInfoServiceImpl implements UserInfoService {
 
     private final IUserInfoDao userInfoDao;
 

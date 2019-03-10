@@ -1,6 +1,7 @@
 package top.abeille.basic.data.vo;
 
 import top.abeille.basic.BasicVOTest;
+import top.abeille.common.vo.UserInfoVO;
 
 /**
  * UserInfoVO Test

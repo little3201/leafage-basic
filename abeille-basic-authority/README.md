@@ -1,2 +1,2 @@
-# abeille-business
-business module of abeille
+# abeille-basic-authority
+authority of abeille-basic

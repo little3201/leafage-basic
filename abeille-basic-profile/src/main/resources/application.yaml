@@ -1,0 +1,12 @@
+##========server port=======##
+server:
+  port: 8763
+
+##=====application name=====##
+spring:
+  application:
+    name: abeille-basic-profile
+
+  ##=====active profile=====##
+  profiles:
+    active: prod

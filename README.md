@@ -1,2 +1,2 @@
-# abeille-basic
-basic module of abeille
+# abeille-basic-profile
+profile of abeille-basic

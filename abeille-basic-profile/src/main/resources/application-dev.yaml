@@ -1,0 +1,49 @@
+##=====load eureka registry center=====##
+eureka:
+  client:
+    # registry path
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+
+##=====log common=====##
+logging:
+  level:
+    # control root logger's level for WARN
+    root: INFO
+    # control org.springframework logger's level for DEBUG
+    org:
+      springframework: INFO
+      # control org.hibernate logger's level for ERROR
+      hibernate: INFO
+
+##=====datasource common=====##
+spring:
+  datasource:
+    # datasource driver
+    driver-class-name: org.mariadb.jdbc.Driver
+    # datasource connection path
+    url: jdbc:mariadb://127.0.0.1:3306/abeille_basic_profile?useUnicode=true&characterEncoding=utf-8
+    # datasource username
+    username: user
+    # datasource password
+    password: user
+
+  ##=====Jpa common=====##
+  jpa:
+    # datasource dialect
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    # datasource driver
+    database: mysql
+    # whether show execute sql
+    show-sql: true
+    # what hibernate will do when application run
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+
+  # data jpa run thread common, hibernate will run with another thread
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred

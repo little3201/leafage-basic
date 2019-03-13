@@ -24,6 +24,7 @@
 
     <modules>
         <module>abeille-basic-authority</module>
+        <module>abeille-basic-profile</module>
     </modules>
 
     <dependencyManagement>

@@ -8,8 +8,7 @@ import top.abeille.basic.profile.data.api.vo.UserInfoVO;
 /**
  * 文件描述
  *
- * @author liwenqiang
- * @date 2019-03-03 22:55
+ * @author liwenqiang 2019-03-03 22:55
  **/
 @FeignClient(name = "abeille-basic")
 public interface UserApi {

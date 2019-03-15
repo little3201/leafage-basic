@@ -3,8 +3,7 @@ package top.abeille.basic.authority.data.vo;
 /**
  * 文件描述
  *
- * @author liwenqiang
- * @date 2019-01-07 21:36
+ * @author liwenqiang 2019-01-07 21:36
  **/
 public class UserInfoVO {
 

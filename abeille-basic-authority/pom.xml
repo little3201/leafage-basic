@@ -8,8 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-	
-    <groupId>top.abeille.basic.authority</groupId>
+
     <artifactId>abeille-basic-authority</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>abeille-basic-authority</name>

@@ -35,7 +35,7 @@ public class BasicSwaggerConfig {
                 .parameterType("header").required(false).build();
         parameters.add(parameterBuilder.build());
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("top.abeille.basic.data.controller"))
+                .apis(RequestHandlerSelectors.basePackage("top.abeille.basic.server.controller"))
                 .paths(PathSelectors.any()).build().globalOperationParameters(parameters);
     }
 

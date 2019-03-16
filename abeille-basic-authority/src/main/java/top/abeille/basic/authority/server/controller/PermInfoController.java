@@ -59,7 +59,7 @@ public class PermInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Get single permission by id")
-    @ApiImplicitParam(name = "id", required = true, dataType = "Long")
+    @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping("/option")
     public ResponseEntity getOption(Long id) {
@@ -122,7 +122,7 @@ public class PermInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Remove single permission")
-    @ApiImplicitParam(name = "id", required = true, dataType = "int")
+    @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @DeleteMapping("/option")
     public ResponseEntity removeOption(Long id) {

@@ -10,7 +10,7 @@ import top.abeille.basic.profile.data.api.vo.UserInfoVO;
  *
  * @author liwenqiang 2019-03-03 22:55
  **/
-@FeignClient(name = "abeille-basic")
+@FeignClient(name = "abeille-basic-authority")
 public interface UserApi {
 
     @GetMapping("/v1/user")

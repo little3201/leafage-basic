@@ -43,16 +43,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserInfoModel userInfo = new UserInfoModel();
-        userInfo.setUsername(username);//账号
-        /*根据登录名查找用户信息*/
+        userInfo.setUsername(username);
+        /* 根据登录名查找用户信息 */
         UserInfoModel infoModel = userInfoService.getByExample(userInfo);
         if (infoModel == null) {
             throw new UsernameNotFoundException("username does not exist");
         }
         List<GrantedAuthority> authorityList = new ArrayList<>();
-        /*添加角色组*/
+        /* 添加角色组 */
         this.addAuthorities(infoModel.getId(), authorityList);
-        /*检查角色是否配置*/
+        /* 检查角色是否配置 */
         if (infoModel.getUserRoleId() == null || authorityList.size() == 0) {
             throw new InsufficientAuthenticationException("permission denied");
         }

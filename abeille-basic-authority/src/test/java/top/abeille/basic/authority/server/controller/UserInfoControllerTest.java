@@ -40,7 +40,7 @@ public class UserInfoControllerTest extends BasicControllerTest<UserInfoControll
         pageMap.add("curPage", "1");
         pageMap.add("pageSize", "10");
         Mockito.when(userInfoService.findAllByPage(Mockito.anyInt(), Mockito.anyInt())).thenReturn(Page.empty());
-        ResultActions actions = super.getTestForPage("/v1/users", pageMap);
+        ResultActions actions = super.getTest("/v1/users", pageMap);
         //验证测试结果
         MockHttpServletResponse response = actions.andReturn().getResponse();
         Assert.assertThat(response.getStatus(), Matchers.equalTo(200));

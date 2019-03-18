@@ -43,14 +43,14 @@ public abstract class BasicControllerTest<T> {
                 .contentType(MediaType.APPLICATION_JSON_UTF8).content(new ObjectMapper().writeValueAsString(obj)));
     }
 
-    /* ====================  GET  ====================*/
+    /* ====================  GET 重载 添加参数到request body ====================*/
     public ResultActions getTest(String url, Object obj) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders.get(url).accept(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_UTF8).content(new ObjectMapper().writeValueAsString(obj)));
     }
 
-    /* ====================  GET  ====================*/
-    public ResultActions getTestForPage(String url, MultiValueMap<String, String> params) throws Exception {
+    /* ====================  GET 重载 添加Map类型参数到请求中 ====================*/
+    public ResultActions getTest(String url, MultiValueMap<String, String> params) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders.get(url).params(params).accept(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .contentType(MediaType.APPLICATION_JSON_UTF8));
     }

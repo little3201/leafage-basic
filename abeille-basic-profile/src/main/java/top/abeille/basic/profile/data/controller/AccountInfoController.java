@@ -13,7 +13,6 @@ import top.abeille.common.basic.BasicController;
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
-@RequestMapping("/account/v1")
 @RestController
 public class AccountInfoController extends BasicController {
 
@@ -30,8 +29,8 @@ public class AccountInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @GetMapping("/option")
-    public ResponseEntity getOption(Long id) {
+    @GetMapping("/v1/account")
+    public ResponseEntity getAccount(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -49,8 +48,8 @@ public class AccountInfoController extends BasicController {
      * @param account 账户信息
      * @return ResponseEntity
      */
-    @PostMapping("/option")
-    public ResponseEntity saveOption(@RequestBody AccountInfoModel account) {
+    @PostMapping("/v1/account")
+    public ResponseEntity saveAccount(@RequestBody AccountInfoModel account) {
         try {
             accountInfoService.save(account);
         } catch (Exception e) {
@@ -66,8 +65,8 @@ public class AccountInfoController extends BasicController {
      * @param account 账户信息
      * @return ResponseEntity
      */
-    @PutMapping("/option")
-    public ResponseEntity modifyOption(@RequestBody AccountInfoModel account) {
+    @PutMapping("/v1/account")
+    public ResponseEntity modifyAccount(@RequestBody AccountInfoModel account) {
         if (account.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -86,8 +85,8 @@ public class AccountInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/option")
-    public ResponseEntity removeOption(Long id) {
+    @DeleteMapping("/v1/account")
+    public ResponseEntity removeAccount(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }

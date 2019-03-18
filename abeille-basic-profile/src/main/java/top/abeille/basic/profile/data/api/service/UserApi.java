@@ -13,6 +13,6 @@ import top.abeille.basic.profile.data.api.vo.UserInfoVO;
 @FeignClient(name = "abeille-basic")
 public interface UserApi {
 
-    @GetMapping("/option")
+    @GetMapping("/v1/user")
     UserInfoVO getUserInfo(@RequestParam("id") Long id);
 }

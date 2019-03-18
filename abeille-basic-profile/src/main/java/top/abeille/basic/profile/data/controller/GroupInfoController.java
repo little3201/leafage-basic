@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.profile.data.service.GroupInfoService;
 import top.abeille.basic.profile.data.model.GroupInfoModel;
+import top.abeille.basic.profile.data.service.GroupInfoService;
 import top.abeille.common.basic.BasicController;
 
 /**
@@ -13,7 +13,6 @@ import top.abeille.common.basic.BasicController;
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
-@RequestMapping("/group/v1")
 @RestController
 public class GroupInfoController extends BasicController {
 
@@ -30,8 +29,8 @@ public class GroupInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @GetMapping("/option")
-    public ResponseEntity getOption(Long id) {
+    @GetMapping("/v1/group")
+    public ResponseEntity getGroup(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -49,8 +48,8 @@ public class GroupInfoController extends BasicController {
      * @param group 组织
      * @return ResponseEntity
      */
-    @PostMapping("/option")
-    public ResponseEntity saveOption(@RequestBody GroupInfoModel group) {
+    @PostMapping("/v1/group")
+    public ResponseEntity saveGroup(@RequestBody GroupInfoModel group) {
         try {
             groupInfoService.save(group);
         } catch (Exception e) {
@@ -66,8 +65,8 @@ public class GroupInfoController extends BasicController {
      * @param group 组织
      * @return ResponseEntity
      */
-    @PutMapping("/option")
-    public ResponseEntity modifyOption(@RequestBody GroupInfoModel group) {
+    @PutMapping("/v1/group")
+    public ResponseEntity modifyGroup(@RequestBody GroupInfoModel group) {
         try {
             groupInfoService.save(group);
         } catch (Exception e) {
@@ -83,8 +82,8 @@ public class GroupInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/option")
-    public ResponseEntity removeOption(Long id) {
+    @DeleteMapping("/v1/group")
+    public ResponseEntity removeGroup(Long id) {
         try {
             groupInfoService.removeById(id);
         } catch (Exception e) {

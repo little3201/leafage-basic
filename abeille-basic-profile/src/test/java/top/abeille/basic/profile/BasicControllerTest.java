@@ -1,6 +1,6 @@
-package top.abeille.basic.authority;
+package top.abeille.basic.profile;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;

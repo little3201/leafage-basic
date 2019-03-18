@@ -1,4 +1,4 @@
-package top.abeille.basic.authority;
+package top.abeille.basic.profile;
 
 import org.junit.Before;
 import org.junit.Test;

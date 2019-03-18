@@ -110,9 +110,9 @@ public class UserInfoController extends BasicController {
             userInfoService.save(user);
         } catch (Exception e) {
             log.error("Modify user occurred an error: {}", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     /**
@@ -135,6 +135,6 @@ public class UserInfoController extends BasicController {
             log.error("Remove user occurred an error: {}", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
     }
 }

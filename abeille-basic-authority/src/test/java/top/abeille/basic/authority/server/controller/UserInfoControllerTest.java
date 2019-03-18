@@ -43,7 +43,7 @@ public class UserInfoControllerTest extends BasicControllerTest<UserInfoControll
         ResultActions actions = super.getTest("/v1/users", pageMap);
         //验证测试结果
         MockHttpServletResponse response = actions.andReturn().getResponse();
-        Assert.assertThat(response.getStatus(), Matchers.equalTo(200));
+        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.OK.value()));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class UserInfoControllerTest extends BasicControllerTest<UserInfoControll
         ResultActions actions = super.getTest("/v1/user", Mockito.anyLong());
         //验证测试结果
         MockHttpServletResponse response = actions.andReturn().getResponse();
-        Assert.assertThat(response.getStatus(), Matchers.equalTo(200));
+        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.OK.value()));
     }
 
     @Test
@@ -61,7 +61,7 @@ public class UserInfoControllerTest extends BasicControllerTest<UserInfoControll
         Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfoModel.class));
         //验证测试结果
         MockHttpServletResponse response = actions.andReturn().getResponse();
-        Assert.assertThat(response.getStatus(), Matchers.equalTo(200));
+        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.CREATED.value()));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class UserInfoControllerTest extends BasicControllerTest<UserInfoControll
         Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfoModel.class));
         //验证测试结果
         MockHttpServletResponse response = actions.andReturn().getResponse();
-        Assert.assertThat(response.getContentAsString(), Matchers.equalTo(HttpStatus.CREATED.value()));
+        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.ACCEPTED.value()));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class UserInfoControllerTest extends BasicControllerTest<UserInfoControll
         Mockito.verify(userInfoService, Mockito.times(1)).removeById(Mockito.anyLong());
         //验证测试结果
         MockHttpServletResponse response = actions.andReturn().getResponse();
-        Assert.assertThat(response.getStatus(), Matchers.equalTo(200));
+        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.MOVED_PERMANENTLY.value()));
     }
 
 }

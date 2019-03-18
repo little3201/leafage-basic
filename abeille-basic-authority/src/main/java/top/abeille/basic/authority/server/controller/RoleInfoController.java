@@ -19,7 +19,6 @@ import top.abeille.common.basic.BasicController;
  * @author liwenqiang 2018/12/17 19:38
  **/
 @Api(tags = "Role Service Api")
-@RequestMapping("/role/v1")
 @RestController
 public class RoleInfoController extends BasicController {
 
@@ -39,7 +38,7 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Fetch enabled roles with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/roles")
+    @GetMapping("/v1/roles")
     public ResponseEntity findRoles(Integer curPage, Integer pageSize) {
         if (curPage == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -61,8 +60,8 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Get single role by id")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/option")
-    public ResponseEntity getOption(Long id) {
+    @GetMapping("/v1/role")
+    public ResponseEntity getRole(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -82,15 +81,15 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/option")
-    public ResponseEntity saveOption(@RequestBody RoleInfoModel role) {
+    @PostMapping("/v1/role")
+    public ResponseEntity saveRole(@RequestBody RoleInfoModel role) {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
             log.error("Save role occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     /**
@@ -101,8 +100,8 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Modify single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PutMapping("/option")
-    public ResponseEntity modifyOption(@RequestBody RoleInfoModel role) {
+    @PutMapping("/v1/role")
+    public ResponseEntity modifyRole(@RequestBody RoleInfoModel role) {
         if (role.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -110,9 +109,9 @@ public class RoleInfoController extends BasicController {
             roleInfoService.save(role);
         } catch (Exception e) {
             log.error("Modify role occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /**
@@ -124,8 +123,8 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Remove single role")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/option")
-    public ResponseEntity removeOption(Long id) {
+    @DeleteMapping("/v1/role")
+    public ResponseEntity removeRole(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -135,7 +134,7 @@ public class RoleInfoController extends BasicController {
             log.error("Remove role occurred an error: {}", e);
             return ResponseEntity.ok("error");
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

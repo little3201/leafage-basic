@@ -21,7 +21,6 @@ import top.abeille.common.basic.BasicController;
  * @author liwenqiang 2018/8/2 21:02
  **/
 @Api(tags = "User Service Api")
-@RequestMapping("/user/v1")
 @RestController
 public class UserInfoController extends BasicController {
 
@@ -41,7 +40,7 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Fetch enabled users with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/users")
+    @GetMapping("/v1/users")
     public ResponseEntity findUsers(Integer curPage, Integer pageSize) {
         if (curPage == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -62,9 +61,9 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Get single user by id")
     @ApiImplicitParam(name = "id", required = true)
-    @GetMapping("/option")
+    @GetMapping("/v1/user")
     @JsonView(UserView.Details.class)
-    public ResponseEntity getOption(Long id) {
+    public ResponseEntity getUser(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -84,15 +83,15 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single user")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/option")
-    public ResponseEntity saveOption(@RequestBody UserInfoModel user) {
+    @PostMapping("/v1/user")
+    public ResponseEntity saveUser(@RequestBody UserInfoModel user) {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
             log.error("Save user occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     /**
@@ -102,8 +101,8 @@ public class UserInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Modify single user")
-    @PutMapping("/option")
-    public ResponseEntity modifyOption(@RequestBody UserInfoModel user) {
+    @PutMapping("/v1/user")
+    public ResponseEntity modifyUser(@RequestBody UserInfoModel user) {
         if (user.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -111,9 +110,9 @@ public class UserInfoController extends BasicController {
             userInfoService.save(user);
         } catch (Exception e) {
             log.error("Modify user occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /**
@@ -125,8 +124,8 @@ public class UserInfoController extends BasicController {
     @ApiOperation(value = "Remove single user")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/option")
-    public ResponseEntity removeOption(Long id) {
+    @DeleteMapping("/v1/user")
+    public ResponseEntity removeUser(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -134,8 +133,8 @@ public class UserInfoController extends BasicController {
             userInfoService.removeById(id);
         } catch (Exception e) {
             log.error("Remove user occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

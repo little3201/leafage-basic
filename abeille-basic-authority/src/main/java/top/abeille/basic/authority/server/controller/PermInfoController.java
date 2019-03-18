@@ -19,7 +19,6 @@ import top.abeille.common.basic.BasicController;
  * @author liwenqiang 2018/12/17 19:39
  **/
 @Api(tags = "Permission Service Api")
-@RequestMapping("/permission/v1")
 @RestController
 public class PermInfoController extends BasicController {
 
@@ -39,7 +38,7 @@ public class PermInfoController extends BasicController {
      */
     @ApiOperation(value = "Fetch enabled permissions with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/permissions")
+    @GetMapping("/v1/permissions")
     public ResponseEntity findPermissions(Integer curPage, Integer pageSize) {
         if (curPage == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -61,8 +60,8 @@ public class PermInfoController extends BasicController {
     @ApiOperation(value = "Get single permission by id")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/option")
-    public ResponseEntity getOption(Long id) {
+    @GetMapping("/v1/permission")
+    public ResponseEntity getPermission(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -82,15 +81,15 @@ public class PermInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single permission")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/option")
-    public ResponseEntity saveOption(@RequestBody PermInfoModel permission) {
+    @PostMapping("/v1/permission")
+    public ResponseEntity savePermission(@RequestBody PermInfoModel permission) {
         try {
             permInfoService.save(permission);
         } catch (Exception e) {
             log.error("Save permission occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     /**
@@ -101,8 +100,8 @@ public class PermInfoController extends BasicController {
      */
     @ApiOperation(value = "Modify single permission")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PutMapping("/option")
-    public ResponseEntity modifyOption(@RequestBody PermInfoModel permission) {
+    @PutMapping("/v1/permission")
+    public ResponseEntity modifyPermission(@RequestBody PermInfoModel permission) {
         if (permission.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -110,9 +109,9 @@ public class PermInfoController extends BasicController {
             permInfoService.save(permission);
         } catch (Exception e) {
             log.error("Modify permission occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /**
@@ -124,8 +123,8 @@ public class PermInfoController extends BasicController {
     @ApiOperation(value = "Remove single permission")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/option")
-    public ResponseEntity removeOption(Long id) {
+    @DeleteMapping("/v1/permission")
+    public ResponseEntity removePermission(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -133,9 +132,9 @@ public class PermInfoController extends BasicController {
             permInfoService.removeById(id);
         } catch (Exception e) {
             log.error("Remove permission occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

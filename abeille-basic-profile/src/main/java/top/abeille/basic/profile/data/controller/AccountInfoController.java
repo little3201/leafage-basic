@@ -94,7 +94,7 @@ public class AccountInfoController extends BasicController {
             accountInfoService.removeById(id);
         } catch (Exception e) {
             log.error("Remove account occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
     }

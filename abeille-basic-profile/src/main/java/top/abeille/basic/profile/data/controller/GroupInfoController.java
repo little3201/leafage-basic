@@ -54,9 +54,9 @@ public class GroupInfoController extends BasicController {
             groupInfoService.save(group);
         } catch (Exception e) {
             log.error("Save group occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     /**
@@ -71,9 +71,9 @@ public class GroupInfoController extends BasicController {
             groupInfoService.save(group);
         } catch (Exception e) {
             log.error("Modify group occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     /**
@@ -88,8 +88,8 @@ public class GroupInfoController extends BasicController {
             groupInfoService.removeById(id);
         } catch (Exception e) {
             log.error("Remove group occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok("success");
+        return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
     }
 }

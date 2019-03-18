@@ -109,9 +109,9 @@ public class RoleInfoController extends BasicController {
             roleInfoService.save(role);
         } catch (Exception e) {
             log.error("Modify role occurred an error: {}", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     /**
@@ -132,9 +132,9 @@ public class RoleInfoController extends BasicController {
             roleInfoService.removeById(id);
         } catch (Exception e) {
             log.error("Remove role occurred an error: {}", e);
-            return ResponseEntity.ok("error");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
     }
 
 }

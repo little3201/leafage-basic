@@ -109,9 +109,9 @@ public class PermInfoController extends BasicController {
             permInfoService.save(permission);
         } catch (Exception e) {
             log.error("Modify permission occurred an error: {}", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     /**
@@ -134,7 +134,7 @@ public class PermInfoController extends BasicController {
             log.error("Remove permission occurred an error: {}", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
     }
 
 }

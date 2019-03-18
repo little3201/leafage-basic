@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import top.abeille.basic.profile.data.api.vo.UserInfoVO;
 
 /**
- * 文件描述
+ * 用户api
  *
  * @author liwenqiang 2019-03-03 22:55
  **/

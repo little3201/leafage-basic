@@ -10,7 +10,7 @@ import top.abeille.basic.authority.BasicVOTest;
 public class UserInfoVOTest extends BasicVOTest<UserInfoVO> {
 
     @Override
-    protected UserInfoVO getT() {
+    protected UserInfoVO setVO() {
         return new UserInfoVO();
     }
 

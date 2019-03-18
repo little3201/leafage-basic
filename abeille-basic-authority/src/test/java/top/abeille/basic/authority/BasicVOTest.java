@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 @RunWith(MockitoJUnitRunner.class)
 public abstract class BasicVOTest<T> {
 
-    protected abstract T getT();
+    protected abstract T setVO();
 
     @Before
     public void setupMock() {
@@ -32,8 +32,9 @@ public abstract class BasicVOTest<T> {
     /**
      * model的get和set方法
      */
-    public void testGetAndSet() throws IllegalAccessException, InstantiationException, IntrospectionException, InvocationTargetException {
-        T t = getT();
+    public void testGetAndSet() throws IllegalAccessException, InstantiationException, IntrospectionException,
+            InvocationTargetException {
+        T t = setVO();
         Class modelClass = t.getClass();
         Object obj = modelClass.newInstance();
         Field[] fields = modelClass.getDeclaredFields();

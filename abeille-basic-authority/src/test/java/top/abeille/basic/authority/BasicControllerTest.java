@@ -31,7 +31,7 @@ public abstract class BasicControllerTest<T> {
     }
 
     @Before
-    public void setup() {
+    public void setupMock() {
         /* initialize mock object */
         MockitoAnnotations.initMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.getController()).build();

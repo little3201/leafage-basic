@@ -1,7 +1,9 @@
 package top.abeille.basic.authority;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -21,6 +23,11 @@ import java.lang.reflect.Method;
 public abstract class BasicVOTest<T> {
 
     protected abstract T getT();
+
+    @Before
+    public void setupMock() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     /**
      * model的get和set方法

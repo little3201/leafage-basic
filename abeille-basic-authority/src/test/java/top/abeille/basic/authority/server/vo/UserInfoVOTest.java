@@ -1,6 +1,7 @@
 package top.abeille.basic.authority.server.vo;
 
 import top.abeille.basic.authority.BasicVOTest;
+import top.abeille.common.vo.UserInfoVO;
 
 /**
  * UserInfoVO Test

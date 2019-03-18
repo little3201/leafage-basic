@@ -42,7 +42,7 @@ spring:
         hbm2ddl:
           auto: update
 
-  # data jpa run thread common, hibernate will run with another thread
+  # server jpa run thread common, hibernate will run with another thread
   data:
     jpa:
       repositories:

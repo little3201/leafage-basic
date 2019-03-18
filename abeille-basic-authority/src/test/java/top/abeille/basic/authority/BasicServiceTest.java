@@ -1,6 +1,8 @@
 package top.abeille.basic.authority;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,5 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public abstract class BasicServiceTest {
 
+    @Before
+    public void setupMock() {
+        MockitoAnnotations.initMocks(this);
+    }
 }
 

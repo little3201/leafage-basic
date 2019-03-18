@@ -1,29 +1,69 @@
 package top.abeille.basic.authority;
 
-import org.junit.Test;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Controller Parent
  *
  * @author liwenqiang 2018/12/28 14:40
  **/
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-@AutoConfigureWebTestClient
-public abstract class BasicControllerTest {
+public abstract class BasicControllerTest<T> {
 
-    @Autowired
-    private WebTestClient webClient;
+    private MockMvc mockMvc;
 
-    @Test
-    public void exampleTest() {
-        this.webClient.get().uri("/").exchange().expectStatus().isOk()
-                .expectBody(String.class).isEqualTo("Hello World");
+    protected abstract T getController();
+
+    public MockMvc getMockMvc() {
+        return mockMvc;
+    }
+
+    @Before
+    public void setup() {
+        /* initialize mock object */
+        MockitoAnnotations.initMocks(this);
+        this.mockMvc = MockMvcBuilders.standaloneSetup(this.getController()).build();
+    }
+
+    /* ====================  POST  ====================*/
+    public ResultActions postTest(String url, Object obj) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.post(url).accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8).content(new ObjectMapper().writeValueAsString(obj)));
+    }
+
+    /* ====================  GET 重载 添加参数到request body ====================*/
+    public ResultActions getTest(String url, Object obj) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.get(url).accept(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_UTF8).content(new ObjectMapper().writeValueAsString(obj)));
+    }
+
+    /* ====================  GET 重载 添加Map类型参数到请求中 ====================*/
+    public ResultActions getTest(String url, MultiValueMap<String, String> params) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.get(url).params(params).accept(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_UTF8));
+    }
+
+    /* ====================  PUT  ====================*/
+    public ResultActions putTest(String url, Object obj) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.put(url).accept(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON_UTF8).content(new ObjectMapper().writeValueAsString(obj)));
+    }
+
+    /* ====================  DELETE  ====================*/
+    public ResultActions deleteTest(String url, Object obj) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders.delete(url).accept(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_UTF8).content(new ObjectMapper().writeValueAsString(obj)));
     }
 }

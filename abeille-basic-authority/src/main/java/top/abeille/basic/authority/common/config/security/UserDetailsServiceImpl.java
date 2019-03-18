@@ -9,12 +9,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.authority.data.model.RoleInfoModel;
-import top.abeille.basic.authority.data.model.UserInfoModel;
-import top.abeille.basic.authority.data.model.UserRoleModel;
-import top.abeille.basic.authority.data.service.RoleInfoService;
-import top.abeille.basic.authority.data.service.UserInfoService;
-import top.abeille.basic.authority.data.service.UserRoleService;
+import top.abeille.basic.authority.server.model.RoleInfoModel;
+import top.abeille.basic.authority.server.model.UserInfoModel;
+import top.abeille.basic.authority.server.model.UserRoleModel;
+import top.abeille.basic.authority.server.service.RoleInfoService;
+import top.abeille.basic.authority.server.service.UserInfoService;
+import top.abeille.basic.authority.server.service.UserRoleService;
 
 import java.util.ArrayList;
 import java.util.List;

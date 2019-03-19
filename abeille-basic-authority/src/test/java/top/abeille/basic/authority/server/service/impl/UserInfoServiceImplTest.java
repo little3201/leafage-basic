@@ -10,9 +10,9 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import top.abeille.basic.authority.BasicServiceTest;
 import top.abeille.basic.authority.server.dao.UserInfoDao;
 import top.abeille.basic.authority.server.model.UserInfoModel;
+import top.abeille.common.test.BasicServiceTest;
 
 import java.util.Optional;
 

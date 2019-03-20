@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ import java.util.Optional;
  **/
 public class UserInfoServiceImplTest extends BasicServiceTest {
 
-    @Mock
+    @Spy
     private UserInfoDao userInfoDao;
 
     @InjectMocks
@@ -37,6 +38,7 @@ public class UserInfoServiceImplTest extends BasicServiceTest {
     public void update() {
         UserInfoModel user = new UserInfoModel();
         user.setId(0L);
+        user.setUserNameCn("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
         user.setPassword(pwd);
         userInfoService.save(user);

@@ -14,6 +14,7 @@ import top.abeille.basic.authority.server.model.UserInfoModel;
 import top.abeille.basic.authority.server.service.UserInfoService;
 import top.abeille.basic.authority.server.view.UserView;
 import top.abeille.common.basic.BasicController;
+import top.abeille.common.log.aop.LogServer;
 
 /**
  * 用户信息Controller
@@ -63,6 +64,7 @@ public class UserInfoController extends BasicController {
     @ApiImplicitParam(name = "id", required = true)
     @GetMapping("/v1/user")
     @JsonView(UserView.Details.class)
+    @LogServer(value = "用户查询——根据ID")
     public ResponseEntity getUser(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);

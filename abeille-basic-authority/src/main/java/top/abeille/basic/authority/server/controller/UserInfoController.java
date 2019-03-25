@@ -64,7 +64,6 @@ public class UserInfoController extends BasicController {
     @ApiImplicitParam(name = "id", required = true)
     @GetMapping("/v1/user")
     @JsonView(UserView.Details.class)
-    @LogServer(value = "用户查询——根据ID")
     public ResponseEntity getUser(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -86,6 +85,7 @@ public class UserInfoController extends BasicController {
     @ApiOperation(value = "Save single user")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @PostMapping("/v1/user")
+    @LogServer(value = "新增用户信息")
     public ResponseEntity saveUser(@RequestBody UserInfoModel user) {
         try {
             userInfoService.save(user);

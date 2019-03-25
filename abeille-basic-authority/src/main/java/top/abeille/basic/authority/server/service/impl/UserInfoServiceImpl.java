@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import top.abeille.basic.authority.server.dao.UserInfoDao;
 import top.abeille.basic.authority.server.model.UserInfoModel;
 import top.abeille.basic.authority.server.service.UserInfoService;
-import top.abeille.common.log.aop.LogServer;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +26,6 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    @LogServer(value = "根据ID查询用户信息")
     public UserInfoModel getById(Long id) {
         /*使用getOne()返回的是引用，无法直接操作，会出现hibernate lazyxxx  no session 的错误
         在测试操作数据的方法(add/update)上加入@Transactional注解可以解决报错的问题

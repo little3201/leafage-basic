@@ -23,6 +23,13 @@
         <swagger.version>2.9.2</swagger.version>
     </properties>
 
+    <developers>
+        <developer>
+            <name>liwenqiang</name>
+            <email>little3201@gmail.com</email>
+        </developer>
+    </developers>
+
     <modules>
         <module>abeille-basic-authority</module>
         <module>abeille-basic-profile</module>

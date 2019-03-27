@@ -1,10 +1,3 @@
-##=====load eureka registry center=====##
-eureka:
-  client:
-    # registry path
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka/
-
 ##=====log common=====##
 logging:
   level:
@@ -16,8 +9,13 @@ logging:
       # control org.hibernate logger's level for ERROR
       hibernate: INFO
 
-##=====datasource common=====##
 spring:
+  cloud:
+    consul:
+      discovery:
+        hostname: 127.0.0.1
+        port: 8500
+  ##=====datasource common=====##
   datasource:
     # datasource driver
     driver-class-name: org.mariadb.jdbc.Driver

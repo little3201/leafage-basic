@@ -14,6 +14,7 @@ import top.abeille.basic.authority.server.model.UserInfoModel;
 import top.abeille.basic.authority.server.service.UserInfoService;
 import top.abeille.basic.authority.server.view.UserView;
 import top.abeille.common.basic.BasicController;
+import top.abeille.common.log.aop.LogServer;
 
 /**
  * 用户信息Controller
@@ -84,6 +85,7 @@ public class UserInfoController extends BasicController {
     @ApiOperation(value = "Save single user")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @PostMapping("/v1/user")
+    @LogServer(value = "新增用户信息")
     public ResponseEntity saveUser(@RequestBody UserInfoModel user) {
         try {
             userInfoService.save(user);

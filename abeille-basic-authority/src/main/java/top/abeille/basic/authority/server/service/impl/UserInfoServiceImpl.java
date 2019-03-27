@@ -31,7 +31,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         在测试操作数据的方法(add/update)上加入@Transactional注解可以解决报错的问题
         return userInfoDao.getOne(id);*/
         Optional<UserInfoModel> optional = userInfoDao.findById(id);
-        //使用Optional的内部方法isPresent()判断查询结果是否为null
+        /*使用Optional的内部方法isPresent()判断查询结果是否为null*/
         return optional.orElse(null);
     }
 
@@ -40,7 +40,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         /*Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可
         可以通过ExampleMatcher.matching()方法进行进一步得处理*/
         Optional<UserInfoModel> optional = userInfoDao.findOne(Example.of(userInfo));
-        //需要对结果做判断，查询结果为null时会报NoSuchElementExceptiontrue
+        /*需要对结果做判断，查询结果为null时会报NoSuchElementExceptiontrue*/
         return optional.orElse(null);
     }
 

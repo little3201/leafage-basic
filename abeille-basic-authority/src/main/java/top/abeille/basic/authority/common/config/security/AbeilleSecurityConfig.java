@@ -55,9 +55,9 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(loginSuccessHandler).failureHandler(loginFailureHandler)
                 .and().logout().deleteCookies("remove").invalidateHttpSession(false).logoutSuccessHandler(logoutSuccessHandler)
                 .and().authorizeRequests().antMatchers("/login", "/login.html").permitAll()
-                /*swagger 访问许可配置*/
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs",
-                        "/webjars/springfox-swagger-ui/**").permitAll()
+//                /*swagger 访问许可配置*/
+//                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/v2/api-docs",
+//                        "/webjars/springfox-swagger-ui/**").permitAll()
                 .anyRequest().authenticated()
                 .and().cors()
                 /* 下面的配置必须加，否则，会一直在登录页面循环，无法通过认证 */

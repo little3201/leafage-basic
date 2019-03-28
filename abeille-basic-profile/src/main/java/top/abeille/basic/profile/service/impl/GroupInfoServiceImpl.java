@@ -2,9 +2,9 @@ package top.abeille.basic.profile.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.profile.service.GroupInfoService;
 import top.abeille.basic.profile.dao.GroupInfoDao;
 import top.abeille.basic.profile.model.GroupInfoModel;
+import top.abeille.basic.profile.service.GroupInfoService;
 
 import java.util.List;
 import java.util.Optional;

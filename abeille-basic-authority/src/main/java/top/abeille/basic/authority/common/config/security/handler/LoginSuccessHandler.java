@@ -25,9 +25,8 @@ import java.io.IOException;
 @Component
 public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private RequestCache requestCache = new HttpSessionRequestCache();
-
     private final ObjectMapper objectMapper;
+    private RequestCache requestCache = new HttpSessionRequestCache();
 
     @Autowired
     public LoginSuccessHandler(ObjectMapper objectMapper) {

@@ -10,6 +10,8 @@ import top.abeille.basic.profile.dao.AccountInfoDao;
 import top.abeille.basic.profile.model.AccountInfoModel;
 import top.abeille.common.mock.BasicServiceMock;
 
+import java.util.Optional;
+
 /**
  * description
  *
@@ -25,8 +27,10 @@ public class AccountInfoServiceImplTest extends BasicServiceMock {
 
     @Test
     public void getById() {
-        Mockito.when(accountInfoDao.getOne(Mockito.anyLong())).thenReturn(Mockito.any(AccountInfoModel.class));
-        AccountInfoModel account = accountInfoService.getById(0L);
-        Assert.assertThat(account, Matchers.notNullValue());
+        AccountInfoModel account = new AccountInfoModel();
+        account.setId(0L);
+        Mockito.when(accountInfoDao.findById(Mockito.anyLong())).thenReturn(Optional.of(account));
+        AccountInfoModel accountInfo = accountInfoService.getById(0L);
+        Assert.assertThat(accountInfo, Matchers.notNullValue());
     }
 }

@@ -20,7 +20,7 @@ spring:
     # datasource driver
     driver-class-name: org.mariadb.jdbc.Driver
     # datasource connection path
-    url: jdbc:mariadb://127.0.0.1:3306/abeille_basic_authority?useUnicode=true&characterEncoding=utf-8
+    url: jdbc:mariadb://127.0.0.1:3306/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
     # datasource username
     username: user
     # datasource password

@@ -16,7 +16,7 @@ import top.abeille.basic.authority.service.impl.UserInfoServiceImpl;
 import top.abeille.common.mock.BasicControllerMock;
 
 /**
- * java类描述
+ * 用户测试
  *
  * @author liwenqiang 2019/1/29 17:09
  **/

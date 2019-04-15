@@ -12,9 +12,10 @@
     <groupId>top.abeille.basic</groupId>
     <artifactId>abeille-basic</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
     <name>abeille-basic</name>
     <description>basic module of abeille</description>
-    <packaging>pom</packaging>
 
     <properties>
         <java.version>1.8</java.version>

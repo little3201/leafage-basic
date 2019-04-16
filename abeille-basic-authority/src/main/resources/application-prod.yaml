@@ -17,14 +17,24 @@ spring:
         port: 8500
   ##=====datasource common=====##
   datasource:
-    # datasource driver
-    driver-class-name: org.mariadb.jdbc.Driver
-    # datasource connection path
-    url: jdbc:mariadb://abeille.top:3306/abeille_basic_authority?useUnicode=true&characterEncoding=utf-8
-    # datasource username
-    username: abeille
-    # datasource password
-    password: abeille.top
+    master:
+      # datasource driver
+      driver-class-name: org.mariadb.jdbc.Driver
+      # datasource connection path
+      jdbcUrl: jdbc:mariadb://abeille.top/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      # datasource username
+      username: abeille
+      # datasource password
+      password: beille.top
+    slave:
+      # datasource driver
+      driver-class-name: org.mariadb.jdbc.Driver
+      # datasource connection path
+      jdbcUrl: jdbc:mariadb://abeille.top/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      # datasource username
+      username: abeille
+      # datasource password
+      password: beille.top
 
   ##=====Jpa common=====##
   jpa:

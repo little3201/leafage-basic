@@ -1,4 +1,4 @@
-package top.abeille.basic.authority.common.config.security.oauth2;
+package top.abeille.basic.authority.config.security.oauth2;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

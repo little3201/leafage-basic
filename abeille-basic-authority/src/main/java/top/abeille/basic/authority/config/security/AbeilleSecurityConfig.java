@@ -1,4 +1,4 @@
-package top.abeille.basic.authority.common.config.security;
+package top.abeille.basic.authority.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package top.abeille.basic.authority.common.config.security.handler;
+package top.abeille.basic.authority.config.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;

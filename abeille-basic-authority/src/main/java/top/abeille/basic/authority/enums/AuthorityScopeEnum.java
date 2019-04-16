@@ -1,4 +1,4 @@
-package top.abeille.basic.authority.common.enums;
+package top.abeille.basic.authority.enums;
 
 /**
  * security scopes enum

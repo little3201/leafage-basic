@@ -49,9 +49,11 @@ spring:
       hibernate:
         hbm2ddl:
           auto: update
-
+        enable_lazy_load_no_trans: true
   # server jpa run thread common, hibernate will run with another thread
   data:
     jpa:
       repositories:
         bootstrap-mode: deferred
+
+

@@ -39,7 +39,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfoModel getByExample(UserInfoModel userInfo) {
         /*Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可
         可以通过ExampleMatcher.matching()方法进行进一步得处理*/
-        Optional<UserInfoModel> optional = userInfoDao.findOne(Example.of(userInfo));
+        ExampleMatcher exampleMatcher = this.desensitization();
+        Optional<UserInfoModel> optional = userInfoDao.findOne(Example.of(userInfo, exampleMatcher));
         /*需要对结果做判断，查询结果为null时会报NoSuchElementExceptiontrue*/
         return optional.orElse(null);
     }
@@ -66,4 +67,13 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoDao.deleteInBatch(entities);
     }
 
+    @Override
+    public UserInfoModel getByUsername(String username) {
+        return userInfoDao.getByUsername(username);
+    }
+
+    private ExampleMatcher desensitization() {
+        String[] fields = new String[]{"password", "is_enabled", "is_credentials_non_expired", "is_account_non_locked", "is_account_non_expired"};
+        return ExampleMatcher.matching().withIgnoreCase(fields);
+    }
 }

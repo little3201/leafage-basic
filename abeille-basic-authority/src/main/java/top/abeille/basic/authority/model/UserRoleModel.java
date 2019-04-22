@@ -31,18 +31,15 @@ public class UserRoleModel {
      * 是否有效
      */
     @JsonIgnore
-    @NotNull
     private Boolean valid;
     /**
      * 修改人ID
      */
-    @NotNull
     @JsonIgnore
     private Long modifierId;
     /**
      * 修改时间
      */
-    @NotNull
     @JsonIgnore
     private Date modifyTime;
 

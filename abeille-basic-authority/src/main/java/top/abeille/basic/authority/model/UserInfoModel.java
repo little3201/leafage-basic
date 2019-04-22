@@ -89,16 +89,13 @@ public class UserInfoModel {
     /**
      * 修改人ID
      */
-    @NotNull
     @JsonIgnore
     private Long modifierId;
     /**
      * 修改时间
      */
-    @NotNull
     @JsonIgnore
     private Date modifyTime;
-
 
     @Column(name = "id")
     @Id

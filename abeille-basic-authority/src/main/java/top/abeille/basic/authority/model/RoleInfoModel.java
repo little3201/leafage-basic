@@ -33,19 +33,16 @@ public class RoleInfoModel {
      * 是否有效
      */
     @JsonIgnore
-    @NotNull
     private Boolean valid;
     /**
      * 修改人ID
      */
     @JsonIgnore
-    @NotNull
     private Long modifierId;
     /**
      * 修改时间
      */
     @JsonIgnore
-    @NotNull
     private Date modifyTime;
 
     @Column(name = "id")

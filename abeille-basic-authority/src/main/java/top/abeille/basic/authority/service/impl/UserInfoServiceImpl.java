@@ -49,7 +49,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     public Page<UserInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(curPage, pageSize, sort);
-        return userInfoDao.findAll(pageable);
+        ExampleMatcher exampleMatcher = this.desensitization();
+        return userInfoDao.findAll(Example.of(new UserInfoModel(), exampleMatcher), pageable);
     }
 
     @Override

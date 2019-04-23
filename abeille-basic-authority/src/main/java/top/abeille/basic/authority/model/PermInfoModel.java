@@ -3,7 +3,6 @@ package top.abeille.basic.authority.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -37,7 +36,7 @@ public class PermInfoModel {
      * 是否有效
      */
     @JsonIgnore
-    private Boolean valid;
+    private Boolean enabled;
     /**
      * 修改人ID
      */
@@ -97,13 +96,13 @@ public class PermInfoModel {
         this.permDesc = permDesc;
     }
 
-    @Column(name = "is_valid")
-    public Boolean getValid() {
-        return valid;
+    @Column(name = "is_enabled")
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setValid(Boolean valid) {
-        this.valid = valid;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Column(name = "modifier_id")

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import top.abeille.basic.authority.view.UserView;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -23,10 +22,6 @@ public class UserInfoModel {
      * 用户ID
      */
     private String userId;
-    /**
-     * 用户角色主键
-     */
-    private Long userRoleId;
     /**
      * 组织主键
      */
@@ -115,15 +110,6 @@ public class UserInfoModel {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    @Column(name = "user_role_id")
-    public Long getUserRoleId() {
-        return userRoleId;
-    }
-
-    public void setUserRoleId(Long userRoleId) {
-        this.userRoleId = userRoleId;
     }
 
     @Column(name = "group_id")

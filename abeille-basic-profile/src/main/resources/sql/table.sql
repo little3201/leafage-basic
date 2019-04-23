@@ -14,13 +14,14 @@ create table group_info
    group_simple_name_cn varchar(128) comment '部门中文简称',
    group_full_name_en   varchar(128) comment '部门英文全称',
    group_simple_name_en varchar(128) comment '部门英文简称',
-   is_valid             tinyint(1) not null comment '是否有效',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
    modifier_id          bigint(11) not null comment '修改人ID',
-   modify_time          datetime not null comment '修改时间',
+   modify_time          timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id)
 );
 
 alter table group_info comment '组织信息表';
+
 
 
 drop table if exists account_info;
@@ -36,9 +37,9 @@ create table account_info
    account_type         char comment '账户类型',
    account_balance      decimal(11,3) comment '账户余额',
    user_id              bigint(11) not null comment '用户ID',
-   is_valid             tinyint(1) not null comment '是否有效',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
    modifier_id          bigint(11) not null comment '修改人ID',
-   modify_time          datetime not null comment '修改时间',
+   modify_time          timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id)
 );
 

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import top.abeille.basic.authority.model.RoleInfoModel;
 import top.abeille.basic.authority.model.UserInfoModel;
 import top.abeille.basic.authority.model.UserRoleModel;
@@ -52,7 +53,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         /* 添加角色组 */
         this.addAuthorities(infoModel.getId(), authorityList);
         /* 检查角色是否配置 */
-        if (infoModel.getUserRoleId() == null || authorityList.size() == 0) {
+        if (CollectionUtils.isEmpty(authorityList)) {
             throw new InsufficientAuthenticationException("permission denied");
         }
         return new User(infoModel.getUsername(), infoModel.getPassword(), infoModel.getEnabled(), infoModel.getAccountNonExpired(),

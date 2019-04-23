@@ -33,7 +33,7 @@ public class RoleInfoModel {
      * 是否有效
      */
     @JsonIgnore
-    private Boolean valid;
+    private Boolean enabled;
     /**
      * 修改人ID
      */
@@ -83,13 +83,13 @@ public class RoleInfoModel {
         this.roleRemark = roleRemark;
     }
 
-    @Column(name = "is_valid")
-    public Boolean getValid() {
-        return valid;
+    @Column(name = "is_enabled")
+    public Boolean getEnabled() {
+        return enabled;
     }
 
-    public void setValid(Boolean valid) {
-        this.valid = valid;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Column(name = "modifier_id")

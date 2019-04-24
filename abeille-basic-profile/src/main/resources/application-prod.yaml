@@ -20,7 +20,7 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://abeille.top:3306/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://abeille.top:3036/abeille_basic_profile?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: abeille
       # datasource password
@@ -29,7 +29,7 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://abeille.top:3306/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://abeille.top:3036/abeille_basic_profile?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: abeille
       # datasource password

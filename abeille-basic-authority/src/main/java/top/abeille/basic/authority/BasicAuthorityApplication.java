@@ -7,9 +7,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
-@EntityScan(basePackages = {"top.abeille.basic", "top.abeille.common"})
-@EnableJpaRepositories(basePackages = {"top.abeille.basic", "top.abeille.common"})
-@SpringBootApplication(scanBasePackages = {"top.abeille.basic", "top.abeille.common"})
+@EntityScan(basePackages = {"top.abeille.basic.authority", "top.abeille.common"})
+@EnableJpaRepositories(basePackages = {"top.abeille.basic.authority", "top.abeille.common"})
+@SpringBootApplication(scanBasePackages = {"top.abeille.basic.authority", "top.abeille.common"})
 @EnableDiscoveryClient
 public class BasicAuthorityApplication {
 

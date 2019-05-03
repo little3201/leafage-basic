@@ -11,6 +11,7 @@ import top.abeille.basic.authority.model.UserInfoModel;
  **/
 public interface UserInfoDao extends JpaRepository<UserInfoModel, Long> {
 
-    @Query("select username, password, is_enabled,is_credentials_non_expired,is_account_non_locked,is_account_non_expired from user_info where username = ?1")
+    @Query(value = "select username, password, is_enabled, is_credentials_non_expired, is_account_non_locked, " +
+            "is_account_non_expired from user_info where username = ?1", nativeQuery = true)
     UserInfoModel getByUsername(String username);
 }

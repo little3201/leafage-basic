@@ -1,6 +1,5 @@
 package top.abeille.basic.authority.config.security.oauth2;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -12,7 +11,6 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import top.abeille.basic.authority.enums.AuthorityScopeEnum;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
 
 
@@ -25,20 +23,13 @@ import java.util.Arrays;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    private final DataSource dataSource;
-
-    @Autowired
-    public AuthorizationServerConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient("normal-app").authorizedGrantTypes("authorization_code", "implicit")
-                .authorities("ROLE_CLIENT").scopes(Arrays.toString(AuthorityScopeEnum.values()))
-                .and().withClient("trusted-app")
-                .authorizedGrantTypes("client_credentials", "password").authorities("ROLE_TRUSTED_CLIENT")
+        clients.inMemory().withClient("normal-app")
+//                .authorities("ROLE_CLIENT")
                 .scopes(Arrays.toString(AuthorityScopeEnum.values()))
+                .and().withClient("trusted-app")
+                .authorizedGrantTypes("client_credentials", "password", "refresh_token")
                 .secret("secret");
     }
 

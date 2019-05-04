@@ -32,7 +32,8 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic()
-                .and().authorizeRequests().antMatchers(HttpMethod.OPTIONS).permitAll()
+                .and().authorizeRequests()
+                .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated()
                 .and().cors()
                 .and().csrf().disable();

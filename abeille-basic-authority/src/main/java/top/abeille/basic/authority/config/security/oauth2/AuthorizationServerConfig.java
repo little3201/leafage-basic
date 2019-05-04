@@ -40,18 +40,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.tokenStore(jwtTokenStore());
     }
 
-    @Bean
-    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+    private TokenStore jwtTokenStore() {
+        return new JwtTokenStore(jwtAccessTokenConverter());
+    }
+
+    //使用JWT作为token
+    private JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         //设置签名密钥
         jwtAccessTokenConverter.setSigningKey("abeille");
         return jwtAccessTokenConverter;
     }
-
-    //使用JWT作为token
-    @Bean
-    public TokenStore jwtTokenStore() {
-        return new JwtTokenStore(jwtAccessTokenConverter());
-    }
-
 }

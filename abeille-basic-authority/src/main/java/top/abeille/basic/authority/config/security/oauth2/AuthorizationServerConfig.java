@@ -42,10 +42,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         return new JwtTokenStore(jwtAccessTokenConverter());
     }
 
-    //使用JWT作为token
+    // 使用JWT作为token
     private JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        //设置签名密钥
+        // 设置签名密钥
         KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt/abeille.jks"), "abeille".toCharArray());
         jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("abeille"));
         return jwtAccessTokenConverter;

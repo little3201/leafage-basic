@@ -25,16 +25,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient("normal-app")
-//                .authorities("ROLE_CLIENT")
+                .authorities("ROLE_ADMIN")
                 .scopes(Arrays.toString(AuthorityScopeEnum.values()))
-                .and().withClient("trusted-app")
                 .authorizedGrantTypes("client_credentials", "password", "refresh_token")
                 .secret("secret");
     }
 
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-//        endpoints.authenticationManager(this.authenticationManager);
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.accessTokenConverter(jwtAccessTokenConverter());
         endpoints.tokenStore(jwtTokenStore());
     }

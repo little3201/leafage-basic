@@ -1,7 +1,6 @@
 package top.abeille.basic.authority.config.security;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * @author liwenqiang 2018/7/12 17:51
  **/
-@Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
 

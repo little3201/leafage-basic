@@ -1,6 +1,5 @@
 package top.abeille.basic.authority.config.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,7 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final RoleInfoService roleInfoService;
 
-    @Autowired
     public UserDetailsServiceImpl(UserInfoService userInfoService, UserRoleService userRoleService, RoleInfoService roleInfoService) {
         this.userInfoService = userInfoService;
         this.userRoleService = userRoleService;

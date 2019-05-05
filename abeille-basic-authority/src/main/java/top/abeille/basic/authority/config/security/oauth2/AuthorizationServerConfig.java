@@ -1,16 +1,18 @@
 package top.abeille.basic.authority.config.security.oauth2;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import top.abeille.basic.authority.enums.AuthorityScopeEnum;
-
-import java.util.Arrays;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import top.abeille.common.datasource.DynamicDataSource;
 
 
 /**
@@ -22,13 +24,12 @@ import java.util.Arrays;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
+    @Autowired
+    private DynamicDataSource dynamicDataSource;
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory().withClient("normal-app")
-                .authorities("ROLE_ADMIN")
-                .scopes(Arrays.toString(AuthorityScopeEnum.values()))
-                .authorizedGrantTypes("client_credentials", "password", "refresh_token")
-                .secret("secret");
+        clients.withClientDetails(new JdbcClientDetailsService(dynamicDataSource));
     }
 
     @Override
@@ -45,7 +46,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         //设置签名密钥
-        jwtAccessTokenConverter.setSigningKey("abeille");
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt/abeille.jks"), "abeille".toCharArray());
+        jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("abeille"));
         return jwtAccessTokenConverter;
     }
 }

@@ -14,16 +14,26 @@ spring:
       discovery:
         hostname: 127.0.0.1
         port: 8500
-##=====datasource common=====##
+  ##=====datasource common=====##
   datasource:
-    # datasource driver
-    driver-class-name: org.mariadb.jdbc.Driver
-    # datasource connection path
-    url: jdbc:mariadb://abeille.top:3306/abeille_basic_profile?useUnicode=true&characterEncoding=utf-8
-    # datasource username
-    username: abeille
-    # datasource password
-    password: abeille.top
+    master:
+      # datasource driver
+      driver-class-name: org.mariadb.jdbc.Driver
+      # datasource connection path
+      jdbcUrl: jdbc:mariadb://abeille.top:3036/abeille_basic_profile?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      # datasource username
+      username: abeille
+      # datasource password
+      password: abeille.top
+    slave:
+      # datasource driver
+      driver-class-name: org.mariadb.jdbc.Driver
+      # datasource connection path
+      jdbcUrl: jdbc:mariadb://abeille.top:3036/abeille_basic_profile?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      # datasource username
+      username: abeille
+      # datasource password
+      password: abeille.top
 
   ##=====Jpa common=====##
   jpa:

@@ -70,7 +70,7 @@ public class UserInfoController extends BasicController {
         }
         UserInfoModel user = userInfoService.getById(id);
         if (user == null) {
-            log.info("Not found anything about user with id: {}." + id);
+            log.info("Not found anything about user with id: {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(user);
@@ -90,7 +90,7 @@ public class UserInfoController extends BasicController {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
-            log.error("Save user occurred an error: {}", e);
+            log.error("Save user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -111,7 +111,7 @@ public class UserInfoController extends BasicController {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
-            log.error("Modify user occurred an error: {}", e);
+            log.error("Modify user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -134,7 +134,7 @@ public class UserInfoController extends BasicController {
         try {
             userInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove user occurred an error: {}", e);
+            log.error("Remove user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);

@@ -36,7 +36,7 @@ public class AccountInfoController extends BasicController {
         }
         AccountInfoModel account = accountInfoService.getById(id);
         if (account == null) {
-            log.info("Not found anything about account with id {}." + id);
+            log.info("Not found anything about account with id {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(account);
@@ -53,7 +53,7 @@ public class AccountInfoController extends BasicController {
         try {
             accountInfoService.save(account);
         } catch (Exception e) {
-            log.error("Save account occurred an error: {}", e);
+            log.error("Save account occurred an error: ", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -73,7 +73,7 @@ public class AccountInfoController extends BasicController {
         try {
             accountInfoService.save(account);
         } catch (Exception e) {
-            log.error("Modify account occurred an error: {}", e);
+            log.error("Modify account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -93,7 +93,7 @@ public class AccountInfoController extends BasicController {
         try {
             accountInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove account occurred an error: {}", e);
+            log.error("Remove account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);

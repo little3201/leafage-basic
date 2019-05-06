@@ -36,7 +36,7 @@ public class GroupInfoController extends BasicController {
         }
         GroupInfoModel groupInfo = groupInfoService.getById(id);
         if (groupInfo == null) {
-            log.info("Not found anything about group with id {}." + id);
+            log.info("Not found anything about group with id {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(groupInfo);
@@ -53,7 +53,7 @@ public class GroupInfoController extends BasicController {
         try {
             groupInfoService.save(group);
         } catch (Exception e) {
-            log.error("Save group occurred an error: {}", e);
+            log.error("Save group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -70,7 +70,7 @@ public class GroupInfoController extends BasicController {
         try {
             groupInfoService.save(group);
         } catch (Exception e) {
-            log.error("Modify group occurred an error: {}", e);
+            log.error("Modify group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -87,7 +87,7 @@ public class GroupInfoController extends BasicController {
         try {
             groupInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove group occurred an error: {}", e);
+            log.error("Remove group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);

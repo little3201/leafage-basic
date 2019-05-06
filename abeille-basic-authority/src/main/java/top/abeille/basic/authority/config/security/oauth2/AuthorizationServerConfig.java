@@ -12,7 +12,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
-import top.abeille.common.datasource.DynamicDataSource;
+
+import javax.sql.DataSource;
 
 
 /**
@@ -25,11 +26,11 @@ import top.abeille.common.datasource.DynamicDataSource;
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
-    private DynamicDataSource dynamicDataSource;
+    private DataSource dataSource;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(new JdbcClientDetailsService(dynamicDataSource));
+        clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
 
     @Override

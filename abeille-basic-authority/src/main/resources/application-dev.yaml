@@ -10,11 +10,11 @@ logging:
       hibernate: INFO
 
 spring:
-  cloud:
-    consul:
-      discovery:
-        hostname: 127.0.0.1
-        port: 8500
+#  cloud:
+#    consul:
+#      discovery:
+#        hostname: 127.0.0.1
+#        port: 8500
   ##=====datasource common=====##
   datasource:
     master:
@@ -49,7 +49,6 @@ spring:
       hibernate:
         hbm2ddl:
           auto: update
-        enable_lazy_load_no_trans: true
   # server jpa run thread common, hibernate will run with another thread
   data:
     jpa:

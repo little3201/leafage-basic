@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = {"top.abeille.basic.authority", "top.abeille.common"})
 @EnableJpaRepositories(basePackages = {"top.abeille.basic.authority", "top.abeille.common"})
 @SpringBootApplication(scanBasePackages = {"top.abeille.basic.authority", "top.abeille.common"})
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 public class BasicAuthorityApplication {
 
     public static void main(String[] args) {

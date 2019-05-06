@@ -67,7 +67,7 @@ public class PermInfoController extends BasicController {
         }
         PermInfoModel permission = permInfoService.getById(id);
         if (permission == null) {
-            log.info("Not found anything of permission with id: {}." + id);
+            log.info("Not found anything of permission with id: {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(permission);
@@ -86,7 +86,7 @@ public class PermInfoController extends BasicController {
         try {
             permInfoService.save(permission);
         } catch (Exception e) {
-            log.error("Save permission occurred an error: {}", e);
+            log.error("Save permission occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -108,7 +108,7 @@ public class PermInfoController extends BasicController {
         try {
             permInfoService.save(permission);
         } catch (Exception e) {
-            log.error("Modify permission occurred an error: {}", e);
+            log.error("Modify permission occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -131,7 +131,7 @@ public class PermInfoController extends BasicController {
         try {
             permInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove permission occurred an error: {}", e);
+            log.error("Remove permission occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);

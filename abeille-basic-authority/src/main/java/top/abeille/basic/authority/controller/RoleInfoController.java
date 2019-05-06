@@ -67,7 +67,7 @@ public class RoleInfoController extends BasicController {
         }
         RoleInfoModel role = roleInfoService.getById(id);
         if (role == null) {
-            log.info("Not found anything of role with id: {}." + id);
+            log.info("Not found anything of role with id: {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(role);
@@ -86,7 +86,7 @@ public class RoleInfoController extends BasicController {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
-            log.error("Save role occurred an error: {}", e);
+            log.error("Save role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -108,7 +108,7 @@ public class RoleInfoController extends BasicController {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
-            log.error("Modify role occurred an error: {}", e);
+            log.error("Modify role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -131,7 +131,7 @@ public class RoleInfoController extends BasicController {
         try {
             roleInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove role occurred an error: {}", e);
+            log.error("Remove role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);

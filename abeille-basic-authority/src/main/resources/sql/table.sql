@@ -119,20 +119,51 @@ drop table if exists oauth_access_token;
 create table oauth_access_token
 (
   id                   bigint(11) not null auto_increment comment '主键',
-  token_id             varchar(128) not null comment 'TokenID',
-  token                varchar(128) not null comment 'Token信息',
-  authentication_id    varchar(128) not null comment 'AuthenticationID',
-  user_name            varchar(128) not null comment '用户名',
-  client_id            varchar(128) not null comment 'ClientID',
-  authentication       varchar(256) not null comment '认证信息',
-  refresh_token        varchar(128) not null comment 'RefreshToken',
+  token_id             varchar(128) comment 'TokenID',
+  token                varchar(128) comment 'Token信息',
+  authentication_id    varchar(128) comment 'AuthenticationID',
+  user_name            varchar(128) comment '用户名',
+  client_id            varchar(128) comment 'ClientID',
+  authentication       varchar(256) comment '认证信息',
+  refresh_token        varchar(128) comment 'RefreshToken',
   is_enabled           tinyint(1) not null default 1 comment '是否可用',
   modifier_id          bigint(11) not null comment '修改人ID',
   modify_time          timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
   primary key (id)
 );
 
-alter table oauth_access_token comment 'oauth2 configuration';
+alter table oauth_access_token comment 'token信息表';
+
+
+
+drop table if exists oauth_client_details;
+
+/*==============================================================*/
+/* Table: oauth_client_details                                  */
+/*==============================================================*/
+create table oauth_client_details
+(
+  id                   bigint(11) not null auto_increment comment '主键',
+  client_id            varchar(128) comment '客户端ID',
+  resource_ids         varchar(128) comment '资源ID',
+  client_secret        varchar(128) comment '客户端密钥',
+  scope                varchar(128) comment '作用域',
+  authorized_grant_types varchar(128) comment '认证类型',
+  web_server_redirect_uri varchar(128) comment '跳转url',
+  authorities          varchar(128) comment '权限',
+  access_token_validity varchar(128) comment 'token验证',
+  refresh_token_validity varchar(128) comment '刷新token验证',
+  additional_information varchar(128) comment '附加信息',
+  autoapprove          varchar(128) comment '自动提交',
+  is_enabled           tinyint(1) default 1 comment '是否可用',
+  modifier_id          bigint(11) comment '修改人ID',
+  modifier_time        timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+  primary key (id)
+);
+
+alter table oauth_client_details comment '客户端信息表';
+
+
 
 
 

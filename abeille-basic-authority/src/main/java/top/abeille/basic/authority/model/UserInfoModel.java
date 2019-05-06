@@ -62,7 +62,7 @@ public class UserInfoModel {
     @JsonView(UserView.Summary.class)
     private String userAddress;
     /**
-     * 是否有效
+     * 是否无效
      */
     @JsonIgnore
     private Boolean accountNonExpired;
@@ -77,7 +77,7 @@ public class UserInfoModel {
     @JsonIgnore
     private Boolean credentialsNonExpired;
     /**
-     * 是否激活
+     * 是否可用
      */
     @JsonIgnore
     private Boolean enabled;

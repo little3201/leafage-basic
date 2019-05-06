@@ -94,8 +94,11 @@ drop table if exists perm_info;
 create table perm_info
 (
   id                   bigint(11) not null auto_increment comment '主键',
+  perm_code            varchar(64) comment '权限编号',
+  perm_parent_code     varchar(64) comment '权限父编号',
   perm_name_cn         varchar(64) comment '权限中文名称',
   perm_name_en         varchar(64) comment '权限英文名称',
+  perm_type            tinyint(4) comment '权限类型',
   perm_desc            varchar(64) comment '权限描述',
   perm_path            varchar(128) comment '权限路径',
   is_enabled           tinyint(1) not null default 1 comment '是否可用',
@@ -105,6 +108,7 @@ create table perm_info
 );
 
 alter table perm_info comment '权限信息表';
+
 
 
 drop table if exists oauth_access_token;

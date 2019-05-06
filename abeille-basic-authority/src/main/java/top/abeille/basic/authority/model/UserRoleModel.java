@@ -27,7 +27,7 @@ public class UserRoleModel {
      */
     private Long roleId;
     /**
-     * 是否有效
+     * 是否可用
      */
     @JsonIgnore
     private Boolean enabled;

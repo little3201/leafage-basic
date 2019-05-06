@@ -17,6 +17,14 @@ public class PermInfoModel {
      */
     private Long id;
     /**
+     * 权限编号
+     */
+    private String permCode;
+    /**
+     * 权限父编号
+     */
+    private String permParentCode;
+    /**
      * 权限中文名称
      */
     private String permNameCn;
@@ -24,6 +32,10 @@ public class PermInfoModel {
      * 权限英文名称
      */
     private String permNameEn;
+    /**
+     * 权限类型
+     */
+    private Integer permType;
     /**
      * 权限路径
      */
@@ -33,7 +45,7 @@ public class PermInfoModel {
      */
     private String permDesc;
     /**
-     * 是否有效
+     * 是否可用
      */
     @JsonIgnore
     private Boolean enabled;
@@ -60,6 +72,24 @@ public class PermInfoModel {
         this.id = id;
     }
 
+    @Column(name = "perm_code")
+    public String getPermCode() {
+        return permCode;
+    }
+
+    public void setPermCode(String permCode) {
+        this.permCode = permCode;
+    }
+
+    @Column(name = "perm_parent_code")
+    public String getPermParentCode() {
+        return permParentCode;
+    }
+
+    public void setPermParentCode(String permParentCode) {
+        this.permParentCode = permParentCode;
+    }
+
     @Column(name = "perm_name_cn")
     public String getPermNameCn() {
         return permNameCn;
@@ -76,6 +106,15 @@ public class PermInfoModel {
 
     public void setPermNameEn(String permNameEn) {
         this.permNameEn = permNameEn;
+    }
+
+    @Column(name = "perm_type")
+    public Integer getPermType() {
+        return permType;
+    }
+
+    public void setPermType(Integer permType) {
+        this.permType = permType;
     }
 
     @Column(name = "perm_path")

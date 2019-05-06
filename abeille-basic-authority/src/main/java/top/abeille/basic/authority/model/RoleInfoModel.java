@@ -30,7 +30,7 @@ public class RoleInfoModel {
      */
     private String roleRemark;
     /**
-     * 是否有效
+     * 是否可用
      */
     @JsonIgnore
     private Boolean enabled;

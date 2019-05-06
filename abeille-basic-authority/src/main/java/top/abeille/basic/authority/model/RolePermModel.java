@@ -26,7 +26,7 @@ public class RolePermModel {
      */
     private Long permId;
     /**
-     * 是否有效
+     * 是否可用
      */
     @JsonIgnore
     private Boolean enabled;

@@ -25,8 +25,11 @@ import javax.sql.DataSource;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
-    private DataSource dataSource;
+    private final DataSource dataSource;
+
+    public AuthorizationServerConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {

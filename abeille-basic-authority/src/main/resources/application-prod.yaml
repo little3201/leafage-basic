@@ -10,31 +10,31 @@ logging:
       hibernate: INFO
 
 spring:
-  cloud:
-    consul:
-      discovery:
-        hostname: 127.0.0.1
-        port: 8500
+#  cloud:
+#    consul:
+#      discovery:
+#        hostname: 127.0.0.1
+#        port: 8500
   ##=====datasource common=====##
   datasource:
     master:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://abeille.top:3036/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://34.80.77.231:3036/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: abeille
       # datasource password
-      password: beille.top
+      password: abeille.top
     slave:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://abeille.top:3036/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://34.80.77.231:3036/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: abeille
       # datasource password
-      password: beille.top
+      password: abeille.top
 
   ##=====Jpa common=====##
   jpa:

@@ -1,8 +1,10 @@
 package top.abeille.basic.profile.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.profile.model.GroupInfoModel;
 import top.abeille.basic.profile.service.GroupInfoService;
@@ -40,6 +42,26 @@ public class GroupInfoController extends BasicController {
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(groupInfo);
+    }
+
+    /**
+     * 查找组织信息——分页查询
+     *
+     * @param curPage  查询页码
+     * @param pageSize 分页大小
+     * @return ResponseEntity
+     */
+    @GetMapping("/v1/groups")
+    public ResponseEntity findGroups(Integer curPage, Integer pageSize) {
+        if (curPage == null || pageSize == null) {
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
+        Page<GroupInfoModel> groups = groupInfoService.findAllByPage(curPage, pageSize);
+        if (CollectionUtils.isEmpty(groups.getContent())) {
+            log.info("Not found anything about group with pageable.");
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(groups);
     }
 
     /**

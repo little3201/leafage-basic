@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.authority.model.PermInfoModel;
 import top.abeille.basic.authority.service.PermInfoService;
@@ -43,12 +44,12 @@ public class PermInfoController extends BasicController {
         if (curPage == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<PermInfoModel> page = permInfoService.findAllByPage(curPage, pageSize);
-        if (page == null) {
+        Page<PermInfoModel> permissions = permInfoService.findAllByPage(curPage, pageSize);
+        if (CollectionUtils.isEmpty(permissions.getContent())) {
             log.info("Not found anything about permission with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(permissions);
     }
 
     /**
@@ -67,7 +68,7 @@ public class PermInfoController extends BasicController {
         }
         PermInfoModel permission = permInfoService.getById(id);
         if (permission == null) {
-            log.info("Not found anything of permission with id: {}." + id);
+            log.info("Not found anything of permission with id: {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(permission);
@@ -86,7 +87,7 @@ public class PermInfoController extends BasicController {
         try {
             permInfoService.save(permission);
         } catch (Exception e) {
-            log.error("Save permission occurred an error: {}", e);
+            log.error("Save permission occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -108,7 +109,7 @@ public class PermInfoController extends BasicController {
         try {
             permInfoService.save(permission);
         } catch (Exception e) {
-            log.error("Modify permission occurred an error: {}", e);
+            log.error("Modify permission occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -131,7 +132,7 @@ public class PermInfoController extends BasicController {
         try {
             permInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove permission occurred an error: {}", e);
+            log.error("Remove permission occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);

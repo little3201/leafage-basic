@@ -1,6 +1,7 @@
 package top.abeille.basic.profile.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.profile.dao.GroupInfoDao;
 import top.abeille.basic.profile.model.GroupInfoModel;
@@ -19,7 +20,6 @@ public class GroupInfoServiceImpl implements GroupInfoService {
 
     private final GroupInfoDao groupInfoDao;
 
-    @Autowired
     public GroupInfoServiceImpl(GroupInfoDao groupInfoDao) {
         this.groupInfoDao = groupInfoDao;
     }
@@ -28,6 +28,11 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     public GroupInfoModel getById(Long id) {
         Optional<GroupInfoModel> optional = groupInfoDao.findById(id);
         return optional.orElse(null);
+    }
+
+    @Override
+    public Page<GroupInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
+        return groupInfoDao.findAll(PageRequest.of(curPage, pageSize));
     }
 
     @Override

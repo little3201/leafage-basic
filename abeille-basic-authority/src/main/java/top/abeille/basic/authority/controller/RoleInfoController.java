@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.authority.model.RoleInfoModel;
 import top.abeille.basic.authority.service.RoleInfoService;
@@ -43,12 +44,12 @@ public class RoleInfoController extends BasicController {
         if (curPage == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<RoleInfoModel> page = roleInfoService.findAllByPage(curPage, pageSize);
-        if (page == null) {
+        Page<RoleInfoModel> roles = roleInfoService.findAllByPage(curPage, pageSize);
+        if (CollectionUtils.isEmpty(roles.getContent())) {
             log.info("Not found anything about role with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(roles);
     }
 
     /**
@@ -67,7 +68,7 @@ public class RoleInfoController extends BasicController {
         }
         RoleInfoModel role = roleInfoService.getById(id);
         if (role == null) {
-            log.info("Not found anything of role with id: {}." + id);
+            log.info("Not found anything of role with id: {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(role);
@@ -86,7 +87,7 @@ public class RoleInfoController extends BasicController {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
-            log.error("Save role occurred an error: {}", e);
+            log.error("Save role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -108,7 +109,7 @@ public class RoleInfoController extends BasicController {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
-            log.error("Modify role occurred an error: {}", e);
+            log.error("Modify role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -131,7 +132,7 @@ public class RoleInfoController extends BasicController {
         try {
             roleInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove role occurred an error: {}", e);
+            log.error("Remove role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);

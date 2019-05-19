@@ -10,6 +10,8 @@ import top.abeille.basic.authority.service.UserInfoService;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
+
 /**
  * 用户信息service实现
  *
@@ -39,18 +41,20 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfoModel getByExample(UserInfoModel userInfo) {
         /*Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可
         可以通过ExampleMatcher.matching()方法进行进一步得处理*/
-        ExampleMatcher exampleMatcher = this.desensitization();
+        ExampleMatcher exampleMatcher = this.appendConditions();
+        this.appendParams(userInfo);
         Optional<UserInfoModel> optional = userInfoDao.findOne(Example.of(userInfo, exampleMatcher));
         /*需要对结果做判断，查询结果为null时会报NoSuchElementExceptiontrue*/
         return optional.orElse(null);
     }
 
     @Override
-    public Page<UserInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
+    public Page<UserInfoModel> findAllByPage(Integer pageNum, Integer pageSize) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(curPage, pageSize, sort);
-        ExampleMatcher exampleMatcher = this.desensitization();
-        return userInfoDao.findAll(Example.of(new UserInfoModel(), exampleMatcher), pageable);
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        ExampleMatcher exampleMatcher = this.appendConditions();
+        UserInfoModel userInfo = this.appendParams(new UserInfoModel());
+        return userInfoDao.findAll(Example.of(userInfo, exampleMatcher), pageable);
     }
 
     @Override
@@ -73,8 +77,31 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoDao.getByUsername(username);
     }
 
-    private ExampleMatcher desensitization() {
-        String[] fields = new String[]{"password", "is_enabled", "is_credentials_non_expired", "is_account_non_locked", "is_account_non_expired"};
-        return ExampleMatcher.matching().withIgnoreCase(fields);
+    /**
+     * 设置查询条件的必要参数
+     *
+     * @param userInfo 用户信息
+     * @return UserInfoModel
+     */
+    private UserInfoModel appendParams(UserInfoModel userInfo) {
+        userInfo.setEnabled(true);
+        userInfo.setAccountNonExpired(true);
+        userInfo.setAccountNonLocked(true);
+        userInfo.setCredentialsNonExpired(true);
+        return userInfo;
+    }
+
+    /**
+     * 设置必要参数匹配条件
+     *
+     * @return ExampleMatcher
+     */
+    private ExampleMatcher appendConditions() {
+        String[] fields = new String[]{"is_enabled", "is_credentials_non_expired", "is_account_non_locked", "is_account_non_expired"};
+        ExampleMatcher matcher = ExampleMatcher.matching();
+        for (String param : fields) {
+            matcher.withMatcher(param, exact());
+        }
+        return matcher;
     }
 }

@@ -31,8 +31,8 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Page<GroupInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
-        return groupInfoDao.findAll(PageRequest.of(curPage, pageSize));
+    public Page<GroupInfoModel> findAllByPage(Integer pageNum, Integer pageSize) {
+        return groupInfoDao.findAll(PageRequest.of(pageNum, pageSize));
     }
 
     @Override

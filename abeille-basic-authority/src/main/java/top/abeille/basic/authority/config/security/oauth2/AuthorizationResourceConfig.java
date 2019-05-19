@@ -23,7 +23,8 @@ public class AuthorizationResourceConfig extends ResourceServerConfigurerAdapter
         http.requestMatcher(new OAuth2RequestedMatcher())
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and().cors();
     }
 
     /**

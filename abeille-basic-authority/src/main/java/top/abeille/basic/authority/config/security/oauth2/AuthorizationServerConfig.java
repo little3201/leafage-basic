@@ -13,7 +13,6 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
-import top.abeille.basic.authority.config.security.UserDetailsServiceImpl;
 
 
 /**
@@ -27,15 +26,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     private final AuthenticationManager authenticationManager;
 
-    private final UserDetailsServiceImpl userDetailsService;
-
     private final PasswordEncoder passwordEncoder;
 
-    public AuthorizationServerConfig(AuthenticationManager authenticationManager,
-                                     UserDetailsServiceImpl userDetailsService,
-                                     PasswordEncoder passwordEncoder) {
+    public AuthorizationServerConfig(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -59,9 +53,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService)
-                .accessTokenConverter(jwtAccessTokenConverter())
-                .tokenStore(jwtTokenStore());
+                 .accessTokenConverter(jwtAccessTokenConverter())
+                 .tokenStore(jwtTokenStore());
     }
 
     @Override

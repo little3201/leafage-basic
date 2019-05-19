@@ -26,9 +26,9 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Page<RoleInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
+    public Page<RoleInfoModel> findAllByPage(Integer pageNum, Integer pageSize) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(curPage, pageSize, sort);
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         return roleInfoDao.findAll(pageable);
     }
 

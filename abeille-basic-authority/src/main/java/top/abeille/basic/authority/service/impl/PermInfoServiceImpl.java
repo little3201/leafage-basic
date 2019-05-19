@@ -26,9 +26,9 @@ public class PermInfoServiceImpl implements PermInfoService {
     }
 
     @Override
-    public Page<PermInfoModel> findAllByPage(Integer curPage, Integer pageSize) {
+    public Page<PermInfoModel> findAllByPage(Integer pageNum, Integer pageSize) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(curPage, pageSize, sort);
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         return permInfoDao.findAll(pageable);
     }
 

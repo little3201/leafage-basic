@@ -38,7 +38,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Boot Test -->
+            <!-- Spring Cloud -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -46,6 +46,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Abeille -->
             <dependency>
                 <groupId>top.abeille.common</groupId>
                 <artifactId>abeille-common</artifactId>

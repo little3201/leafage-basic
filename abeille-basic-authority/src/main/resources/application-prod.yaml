@@ -69,16 +69,16 @@ spring:
       shutdown-timeout: 0ms
 
   ###=====rabbitMQ common=====##
-#  rabbitmq:
-#    # rabbitMQ server host
-#    host: abeille.top
-#    # rabbitMQ server port
-#    port: 5672
-#    # rabbitMQ server username
-#    username: guest
-#    # rabbitMQ server password
-#    password: guest
-#    # connection timeout
-#    connection-timeout: 0ms
-#    # rabbitMQ publish confirm whether would open
-#    publisher-confirms: true
+  rabbitmq:
+    # rabbitMQ server host
+    host: abeille.top
+    # rabbitMQ server port
+    port: 5672
+    # rabbitMQ server username
+    username: guest
+    # rabbitMQ server password
+    password: guest
+    # connection timeout
+    connection-timeout: 0ms
+    # rabbitMQ publish confirm whether would open
+    publisher-confirms: true

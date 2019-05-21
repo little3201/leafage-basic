@@ -19,6 +19,7 @@
             <groupId>top.abeille.common</groupId>
             <artifactId>abeille-common</artifactId>
         </dependency>
+        <!-- Spring Cloud Consul -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-consul-discovery</artifactId>

@@ -24,6 +24,9 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * 密码配置，使用BCryptPasswordEncoder
+     */
     @Bean
     protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -45,12 +48,22 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();
     }
 
+    /**
+     * http 请求安全配置
+     *
+     * @param auth 认证管理创建器
+     * @throws Exception 异常
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-
+    /**
+     * 认证管理器，grant_type 为 password 时必须
+     *
+     * @throws Exception 异常
+     */
     @Bean
     @Override
     public AuthenticationManager authenticationManager() throws Exception {

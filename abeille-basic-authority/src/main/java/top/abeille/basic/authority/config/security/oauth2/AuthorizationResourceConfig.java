@@ -18,6 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 @EnableResourceServer
 public class AuthorizationResourceConfig extends ResourceServerConfigurerAdapter {
 
+    /**
+     * Http 配置
+     *
+     * @param http 安全信息
+     * @throws Exception 异常
+     */
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.requestMatcher(new OAuth2RequestedMatcher())

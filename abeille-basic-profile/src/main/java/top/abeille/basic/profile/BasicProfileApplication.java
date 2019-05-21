@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan(basePackages = {"top.abeille.basic.profile", "top.abeille.common"})
 @EnableJpaRepositories(basePackages = {"top.abeille.basic.profile", "top.abeille.common"})
 @SpringBootApplication(scanBasePackages = {"top.abeille.basic.profile", "top.abeille.common"})
-//@EnableDiscoveryClient
 public class BasicProfileApplication {
 
     public static void main(String[] args) {

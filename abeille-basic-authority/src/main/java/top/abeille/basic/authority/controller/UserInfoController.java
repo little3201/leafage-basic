@@ -22,7 +22,7 @@ import top.abeille.common.log.aop.LogServer;
  *
  * @author liwenqiang 2018/8/2 21:02
  **/
-@Api(tags = "User Service Api")
+@Api(tags = "User Api")
 @RestController
 public class UserInfoController extends BasicController {
 

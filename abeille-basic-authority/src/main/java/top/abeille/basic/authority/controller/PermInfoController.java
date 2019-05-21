@@ -19,7 +19,7 @@ import top.abeille.common.basic.BasicController;
  *
  * @author liwenqiang 2018/12/17 19:39
  **/
-@Api(tags = "Permission Service Api")
+@Api(tags = "Permission Api")
 @RestController
 public class PermInfoController extends BasicController {
 

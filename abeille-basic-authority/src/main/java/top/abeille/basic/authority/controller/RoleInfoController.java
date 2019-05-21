@@ -19,7 +19,7 @@ import top.abeille.common.basic.BasicController;
  *
  * @author liwenqiang 2018/12/17 19:38
  **/
-@Api(tags = "Role Service Api")
+@Api(tags = "Role Api")
 @RestController
 public class RoleInfoController extends BasicController {
 

@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
 package top.abeille.basic.authority.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;

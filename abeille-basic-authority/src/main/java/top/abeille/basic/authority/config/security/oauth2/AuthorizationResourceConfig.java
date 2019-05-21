@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
 package top.abeille.basic.authority.config.security.oauth2;
 
 import org.springframework.context.annotation.Configuration;

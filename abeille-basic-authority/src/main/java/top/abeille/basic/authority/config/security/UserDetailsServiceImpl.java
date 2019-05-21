@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
 package top.abeille.basic.authority.config.security;
 
 import org.springframework.security.authentication.InsufficientAuthenticationException;

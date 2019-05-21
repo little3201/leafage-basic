@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
 package top.abeille.basic.authority.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.authority.config.security.oauth2;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,11 +43,12 @@ public class AuthorizationResourceConfig extends ResourceServerConfigurerAdapter
     private static class OAuth2RequestedMatcher implements RequestMatcher {
         @Override
         public boolean matches(HttpServletRequest request) {
-            String auth = request.getHeader("Authorization");
             // 判断来源请求是否包含oauth2授权信息,这里授权信息来源可能是头部的Authorization值以Bearer开头,
+            String auth = request.getHeader("Authorization");
+            boolean haveOauth2Token = StringUtils.isNotBlank(auth) & auth.startsWith("Bearer");
             // 或者是请求参数中包含access_token参数,满足其中一个则匹配成功
-            boolean haveOauth2Token = (auth != null) && auth.startsWith("Bearer");
-            boolean haveAccessToken = request.getParameter("access_token") != null;
+            String access_token = request.getParameter("access_token");
+            boolean haveAccessToken = StringUtils.isNotBlank(access_token);
             return haveOauth2Token || haveAccessToken;
         }
     }

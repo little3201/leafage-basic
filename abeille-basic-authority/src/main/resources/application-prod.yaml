@@ -10,11 +10,10 @@ logging:
       hibernate: INFO
 
 spring:
-#  cloud:
-#    consul:
-#      discovery:
-#        hostname: 127.0.0.1
-#        port: 8500
+  cloud:
+    consul:
+      host: 34.80.77.231
+      port: 8500
   ##=====datasource common=====##
   datasource:
     master:
@@ -56,30 +55,30 @@ spring:
         bootstrap-mode: deferred
 
   ##=====redis common=====##
-#  redis:
-#    # Redis database index(default is 0)
-#    database: 0
-#    # Redis server host
-#    host: abeille.top
-#    # Redis server port
-#    port: 7369
-#    # Redis server password(default is non)
-#    password: redis
-#    # shutdown timeout(ms)
-#    lettuce:
-#      shutdown-timeout: 0ms
+  redis:
+    # Redis database index(default is 0)
+    database: 0
+    # Redis server host
+    host: abeille.top
+    # Redis server port
+    port: 7369
+    # Redis server password(default is non)
+    password: redis
+    # shutdown timeout(ms)
+    lettuce:
+      shutdown-timeout: 0ms
 
   ###=====rabbitMQ common=====##
-#  rabbitmq:
-#    # rabbitMQ server host
-#    host: abeille.top
-#    # rabbitMQ server port
-#    port: 5672
-#    # rabbitMQ server username
-#    username: guest
-#    # rabbitMQ server password
-#    password: guest
-#    # connection timeout
-#    connection-timeout: 0ms
-#    # rabbitMQ publish confirm whether would open
-#    publisher-confirms: true
+  rabbitmq:
+    # rabbitMQ server host
+    host: abeille.top
+    # rabbitMQ server port
+    port: 5672
+    # rabbitMQ server username
+    username: guest
+    # rabbitMQ server password
+    password: guest
+    # connection timeout
+    connection-timeout: 0ms
+    # rabbitMQ publish confirm whether would open
+    publisher-confirms: true

@@ -39,15 +39,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .withClient("android")
                 .scopes("xx")
                 .secret(passwordEncoder.encode("android"))
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token")
-                .and()
-                .withClient("webapp")
-                .scopes("xx")
-                .authorizedGrantTypes("implicit")
-                .and()
-                .withClient("browser")
-                .authorizedGrantTypes("refresh_token", "password")
-                .scopes("ui");
+                .authorizedGrantTypes("password", "authorization_code", "refresh_token");
     }
 
     @Override

@@ -3,16 +3,18 @@ package top.abeille.basic.authority.config.security.oauth2;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+
+import javax.sql.DataSource;
 
 
 /**
@@ -26,27 +28,23 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     private final AuthenticationManager authenticationManager;
 
-    private final PasswordEncoder passwordEncoder;
+    private final DataSource dataSource;
 
-    public AuthorizationServerConfig(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+    public AuthorizationServerConfig(AuthenticationManager authenticationManager, DataSource dataSource) {
         this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
+        this.dataSource = dataSource;
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                .withClient("android")
-                .scopes("xx")
-                .secret(passwordEncoder.encode("android"))
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token");
+        clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
-                 .accessTokenConverter(jwtAccessTokenConverter())
-                 .tokenStore(jwtTokenStore());
+                .accessTokenConverter(jwtAccessTokenConverter())
+                .tokenStore(jwtTokenStore());
     }
 
     @Override

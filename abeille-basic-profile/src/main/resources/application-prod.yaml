@@ -9,11 +9,11 @@ logging:
       # control org.hibernate logger's level for ERROR
       hibernate: INFO
 spring:
-#  cloud:
-#    consul:
-#      discovery:
-#        hostname: 127.0.0.1
-#        port: 8500
+  #  cloud:
+  #    consul:
+  #      discovery:
+  #        hostname: 127.0.0.1
+  #        port: 8500
   ##=====datasource common=====##
   datasource:
     master:

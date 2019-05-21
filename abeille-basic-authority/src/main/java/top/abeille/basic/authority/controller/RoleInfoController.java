@@ -33,18 +33,18 @@ public class RoleInfoController extends BasicController {
     /**
      * 角色查询——分页
      *
-     * @param curPage  当前页
+     * @param pageNum  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @ApiOperation(value = "Fetch enabled roles with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping("/v1/roles")
-    public ResponseEntity findRoles(Integer curPage, Integer pageSize) {
-        if (curPage == null || pageSize == null) {
+    public ResponseEntity findRoles(Integer pageNum, Integer pageSize) {
+        if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<RoleInfoModel> roles = roleInfoService.findAllByPage(curPage, pageSize);
+        Page<RoleInfoModel> roles = roleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             log.info("Not found anything about role with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

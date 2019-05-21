@@ -35,11 +35,22 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         this.dataSource = dataSource;
     }
 
+    /**
+     * 客户端详情服务配置
+     *
+     * @param clients 客户端详情
+     * @throws Exception 异常
+     */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.withClientDetails(new JdbcClientDetailsService(dataSource));
     }
 
+    /**
+     * 认证服务基本配置
+     *
+     * @param endpoints 认证配置
+     */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
@@ -47,6 +58,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .tokenStore(jwtTokenStore());
     }
 
+    /**
+     * 认证服务安全配置
+     *
+     * @param security 安全配置参数
+     */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
         security.allowFormAuthenticationForClients()
@@ -54,11 +70,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .checkTokenAccess("isAuthenticated()");
     }
 
+    /**
+     * 使用 JWT
+     */
     private TokenStore jwtTokenStore() {
         return new JwtTokenStore(jwtAccessTokenConverter());
     }
 
-    // 使用JWT作为token
+    /**
+     * JWT 转换器
+     */
     private JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         // 设置签名密钥

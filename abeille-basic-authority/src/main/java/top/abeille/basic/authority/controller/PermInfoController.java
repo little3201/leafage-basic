@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
 package top.abeille.basic.authority.controller;
 
 import io.swagger.annotations.Api;
@@ -19,7 +22,7 @@ import top.abeille.common.basic.BasicController;
  *
  * @author liwenqiang 2018/12/17 19:39
  **/
-@Api(tags = "Permission Service Api")
+@Api(tags = "Permission Api")
 @RestController
 public class PermInfoController extends BasicController {
 
@@ -33,18 +36,18 @@ public class PermInfoController extends BasicController {
     /**
      * 权限查询——分页
      *
-     * @param curPage  当前页
+     * @param pageNum  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @ApiOperation(value = "Fetch enabled permissions with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping("/v1/permissions")
-    public ResponseEntity findPermissions(Integer curPage, Integer pageSize) {
-        if (curPage == null || pageSize == null) {
+    public ResponseEntity findPermissions(Integer pageNum, Integer pageSize) {
+        if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<PermInfoModel> permissions = permInfoService.findAllByPage(curPage, pageSize);
+        Page<PermInfoModel> permissions = permInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(permissions.getContent())) {
             log.info("Not found anything about permission with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

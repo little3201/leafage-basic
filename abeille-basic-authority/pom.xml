@@ -11,6 +11,7 @@
 
     <artifactId>abeille-basic-authority</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
     <name>abeille-basic-authority</name>
     <description>authority of abeille-basic</description>
 
@@ -29,7 +30,6 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>
-
         <!-- mariadb -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>

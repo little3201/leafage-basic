@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
 package top.abeille.basic.profile.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,16 +50,16 @@ public class GroupInfoController extends BasicController {
     /**
      * 查找组织信息——分页查询
      *
-     * @param curPage  查询页码
+     * @param pageNum  查询页码
      * @param pageSize 分页大小
      * @return ResponseEntity
      */
     @GetMapping("/v1/groups")
-    public ResponseEntity findGroups(Integer curPage, Integer pageSize) {
-        if (curPage == null || pageSize == null) {
+    public ResponseEntity findGroups(Integer pageNum, Integer pageSize) {
+        if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<GroupInfoModel> groups = groupInfoService.findAllByPage(curPage, pageSize);
+        Page<GroupInfoModel> groups = groupInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(groups.getContent())) {
             log.info("Not found anything about group with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

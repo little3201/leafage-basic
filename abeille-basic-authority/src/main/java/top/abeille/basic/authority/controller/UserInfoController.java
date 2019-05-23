@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
 package top.abeille.basic.authority.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -22,7 +25,7 @@ import top.abeille.common.log.aop.LogServer;
  *
  * @author liwenqiang 2018/8/2 21:02
  **/
-@Api(tags = "User Service Api")
+@Api(tags = "User Api")
 @RestController
 public class UserInfoController extends BasicController {
 
@@ -36,18 +39,18 @@ public class UserInfoController extends BasicController {
     /**
      * 用户查询——分页
      *
-     * @param curPage  当前页
+     * @param pageNum  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @ApiOperation(value = "Fetch enabled users with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping("/v1/users")
-    public ResponseEntity findUsers(Integer curPage, Integer pageSize) {
-        if (curPage == null || pageSize == null) {
+    public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
+        if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<UserInfoModel> users = userInfoService.findAllByPage(curPage, pageSize);
+        Page<UserInfoModel> users = userInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(users.getContent())) {
             log.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

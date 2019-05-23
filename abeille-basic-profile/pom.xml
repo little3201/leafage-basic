@@ -11,6 +11,7 @@
 
     <artifactId>abeille-basic-profile</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
     <name>abeille-basic-profile</name>
     <description>profile of abeille-basic</description>
 
@@ -19,6 +20,7 @@
             <groupId>top.abeille.common</groupId>
             <artifactId>abeille-common</artifactId>
         </dependency>
+        <!-- Spring cloud consul -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-consul-discovery</artifactId>

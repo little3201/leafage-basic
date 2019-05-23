@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,9 +64,9 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Get single user by id")
     @ApiImplicitParam(name = "id", required = true)
-    @GetMapping("/user")
+    @GetMapping("/user/{id}")
     @JsonView(UserView.Details.class)
-    public ResponseEntity getUser(Long id) {
+    public ResponseEntity getUser(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -129,8 +128,8 @@ public class UserInfoController extends BasicController {
     @ApiOperation(value = "Remove single user")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/user")
-    public ResponseEntity removeUser(Long id) {
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity removeUser(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }

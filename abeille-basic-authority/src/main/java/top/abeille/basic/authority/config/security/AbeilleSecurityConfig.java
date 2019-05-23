@@ -46,7 +46,8 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated()
-                .and().cors();
+                .and().cors()
+                .and().httpBasic();
     }
 
     /**

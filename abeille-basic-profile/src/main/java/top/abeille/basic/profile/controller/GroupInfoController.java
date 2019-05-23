@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.profile.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +32,8 @@ public class GroupInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @GetMapping("/group")
-    public ResponseEntity getGroup(Long id) {
+    @GetMapping("/group/{id}")
+    public ResponseEntity getGroup(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -106,8 +105,8 @@ public class GroupInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/group")
-    public ResponseEntity removeGroup(Long id) {
+    @DeleteMapping("/group/{id}")
+    public ResponseEntity removeGroup(@PathVariable Long id) {
         try {
             groupInfoService.removeById(id);
         } catch (Exception e) {

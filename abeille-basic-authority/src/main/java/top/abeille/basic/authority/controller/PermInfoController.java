@@ -6,7 +6,6 @@ package top.abeille.basic.authority.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,8 +62,8 @@ public class PermInfoController extends BasicController {
     @ApiOperation(value = "Get single permission by id")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/permission")
-    public ResponseEntity getPermission(Long id) {
+    @GetMapping("/permission/{id}")
+    public ResponseEntity getPermission(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -126,8 +125,8 @@ public class PermInfoController extends BasicController {
     @ApiOperation(value = "Remove single permission")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/permission")
-    public ResponseEntity removePermission(Long id) {
+    @DeleteMapping("/permission/{id}")
+    public ResponseEntity removePermission(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }

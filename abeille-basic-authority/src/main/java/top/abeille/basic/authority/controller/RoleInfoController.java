@@ -6,7 +6,6 @@ package top.abeille.basic.authority.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,8 +62,8 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Get single role by id")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/role")
-    public ResponseEntity getRole(Long id) {
+    @GetMapping("/role/{id}")
+    public ResponseEntity getRole(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -126,8 +125,8 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Remove single role")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/role")
-    public ResponseEntity removeRole(Long id) {
+    @DeleteMapping("/role/{id}")
+    public ResponseEntity removeRole(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }

@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.profile.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +30,8 @@ public class AccountInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @GetMapping("/account")
-    public ResponseEntity getAccount(Long id) {
+    @GetMapping("/account/{id}")
+    public ResponseEntity getAccount(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
@@ -87,8 +86,8 @@ public class AccountInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/account")
-    public ResponseEntity removeAccount(Long id) {
+    @DeleteMapping("/account/{id}")
+    public ResponseEntity removeAccount(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }

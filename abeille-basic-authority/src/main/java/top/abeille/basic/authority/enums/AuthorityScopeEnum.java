@@ -10,8 +10,17 @@ package top.abeille.basic.authority.enums;
  **/
 public enum AuthorityScopeEnum {
 
+    /**
+     * 只读
+     */
     READ("Read"),
+    /**
+     * 只写
+     */
     WRITE("Write"),
+    /**
+     * 读写
+     */
     ALL("All");
 
     private String alias;

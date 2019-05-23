@@ -15,10 +15,10 @@ create table user_info
     user_mobile                varchar(64) comment '电话',
     user_email                 varchar(128) comment '邮箱',
     user_address               varchar(512) comment '地址',
-    is_account_non_expired     tinyint(1) comment '是否未失效',
-    is_account_non_locked      tinyint(1) comment '是否未锁定',
-    is_credentials_non_expired tinyint(1) comment '是否资格未失效',
-    is_enabled                 tinyint(1) not null default 1 comment '是否激活',
+    is_account_non_expired     tinyint(1)          default 1 comment '是否未失效',
+    is_account_non_locked      tinyint(1)          default 1 comment '是否未锁定',
+    is_credentials_non_expired tinyint(1)          default 1 comment '是否资格未失效',
+    is_enabled                 tinyint(1)          default 1 comment '是否激活',
     modifier_id                bigint(11) not null comment '修改人ID',
     modify_time                timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
@@ -26,6 +26,7 @@ create table user_info
 
 alter table user_info
     comment '用户信息表';
+
 
 
 drop table if exists user_role;
@@ -39,14 +40,13 @@ create table user_role
     user_id     bigint(11) comment '用户ID',
     role_id     bigint(11) comment '角色ID',
     is_enabled  tinyint(1) default 1 comment '是否可用',
-    modifier_id bigint(11) comment '修改人ID',
+    modifier_id bigint(11) not null comment '修改人ID',
     modify_time timestamp  default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
 );
 
 alter table user_role
     comment '用户角色表';
-
 
 
 drop table if exists role_info;
@@ -60,9 +60,9 @@ create table role_info
     role_name   varchar(64) comment '角色名称',
     role_desc   varchar(256) comment '角色描述',
     role_remark varchar(512) comment '备注',
-    is_enabled  tinyint(1) not null default 1 comment '是否可用',
+    is_enabled  tinyint(1) default 1 comment '是否可用',
     modifier_id bigint(11) not null comment '修改人ID',
-    modify_time timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    modify_time timestamp  default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
 );
 
@@ -80,9 +80,9 @@ create table role_perm
     id          bigint(11) not null auto_increment comment '主键',
     role_id     bigint(11) comment '角色ID',
     perm_id     bigint(11) comment '权限ID',
-    is_enabled  tinyint(1) not null default 1 comment '是否可用',
+    is_enabled  tinyint(1) default 1 comment '是否可用',
     modifier_id bigint(11) not null comment '修改人ID',
-    modify_time timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    modify_time timestamp  default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
 );
 
@@ -105,15 +105,14 @@ create table perm_info
     perm_type        tinyint(4) comment '权限类型',
     perm_desc        varchar(64) comment '权限描述',
     perm_path        varchar(128) comment '权限路径',
-    is_enabled       tinyint(1) not null default 1 comment '是否可用',
+    is_enabled       tinyint(1) default 1 comment '是否可用',
     modifier_id      bigint(11) not null comment '修改人ID',
-    modify_time      timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    modify_time      timestamp  default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
 );
 
 alter table perm_info
     comment '权限信息表';
-
 
 
 drop table if exists oauth_client_details;
@@ -136,7 +135,7 @@ create table oauth_client_details
     additional_information  varchar(128) comment '附加信息',
     autoapprove             varchar(128) comment '自动提交',
     is_enabled              tinyint(1) default 1 comment '是否可用',
-    modifier_id             bigint(11) comment '修改人ID',
+    modifier_id             bigint(11) not null comment '修改人ID',
     modifier_time           timestamp  default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
 );

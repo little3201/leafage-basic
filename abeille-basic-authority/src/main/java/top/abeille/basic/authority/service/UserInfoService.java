@@ -13,5 +13,11 @@ import top.abeille.common.basic.BasicService;
  **/
 public interface UserInfoService extends BasicService<UserInfoModel> {
 
+    /**
+     * 根据username获取用户信息
+     *
+     * @param username 主键
+     * @return UserInfoModel 用户信息
+     */
     UserInfoModel getByUsername(String username);
 }

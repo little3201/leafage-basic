@@ -16,6 +16,12 @@ import top.abeille.common.vo.UserInfoVO;
 @FeignClient(name = "abeille-basic-authority")
 public interface UserApi {
 
+    /**
+     * 根据id获取用户信息
+     *
+     * @param id 主键
+     * @return UserInfoVO 用户信息
+     */
     @GetMapping("/user")
     UserInfoVO getUserInfo(@RequestParam("id") Long id);
 }

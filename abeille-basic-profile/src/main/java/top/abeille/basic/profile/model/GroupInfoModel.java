@@ -10,6 +10,7 @@ import java.util.Date;
 
 /**
  * Model class for GroupInfo
+ * @author liwenqiang
  */
 @Entity
 @Table(name = "group_info")

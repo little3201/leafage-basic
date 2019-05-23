@@ -84,12 +84,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      * JWT 转换器
      */
     private JwtAccessTokenConverter jwtAccessTokenConverter() {
-        final String KEY_PAIR = "abeille";
-        final String PATH_RESOURCE = "jwt/abeille.jks";
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         // 设置签名密钥
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource(PATH_RESOURCE), KEY_PAIR.toCharArray());
-        jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(KEY_PAIR));
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("jwt/abeille.jks"), "abeille".toCharArray());
+        jwtAccessTokenConverter.setKeyPair(keyStoreKeyFactory.getKeyPair("abeille"));
         return jwtAccessTokenConverter;
     }
 }

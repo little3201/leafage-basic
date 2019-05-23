@@ -8,6 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+/**
+ * @author liwenqiang
+ */
 @EntityScan(basePackages = {"top.abeille.basic.profile", "top.abeille.common"})
 @EnableJpaRepositories(basePackages = {"top.abeille.basic.profile", "top.abeille.common"})
 @SpringBootApplication(scanBasePackages = {"top.abeille.basic.profile", "top.abeille.common"})

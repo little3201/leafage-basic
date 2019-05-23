@@ -10,6 +10,7 @@ import java.util.Date;
 
 /**
  * Model class for PermInfo
+ * @author liwenqiang
  */
 @Entity
 @Table(name = "perm_info")

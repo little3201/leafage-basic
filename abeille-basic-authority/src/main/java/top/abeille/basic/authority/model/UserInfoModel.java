@@ -12,6 +12,7 @@ import java.util.Date;
 
 /**
  * Model class for UserInfo
+ * @author liwenqiang
  */
 @Entity
 @Table(name = "user_info")

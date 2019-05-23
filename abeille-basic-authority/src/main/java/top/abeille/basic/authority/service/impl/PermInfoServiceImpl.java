@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.authority.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.authority.dao.PermInfoDao;
@@ -23,15 +22,13 @@ public class PermInfoServiceImpl implements PermInfoService {
 
     private final PermInfoDao permInfoDao;
 
-    @Autowired
     public PermInfoServiceImpl(PermInfoDao permInfoDao) {
         this.permInfoDao = permInfoDao;
     }
 
     @Override
     public Page<PermInfoModel> findAllByPage(Integer pageNum, Integer pageSize) {
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
         return permInfoDao.findAll(pageable);
     }
 

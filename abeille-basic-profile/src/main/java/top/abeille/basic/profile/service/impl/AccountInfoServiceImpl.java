@@ -22,7 +22,6 @@ public class AccountInfoServiceImpl implements AccountInfoService {
 
     private final AccountInfoDao accountInfoDao;
 
-    @Autowired
     public AccountInfoServiceImpl(AccountInfoDao accountInfoDao) {
         this.accountInfoDao = accountInfoDao;
     }

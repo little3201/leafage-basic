@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.authority.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.authority.dao.UserInfoDao;
@@ -25,7 +24,6 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     private final UserInfoDao userInfoDao;
 
-    @Autowired
     public UserInfoServiceImpl(UserInfoDao userInfoDao) {
         this.userInfoDao = userInfoDao;
     }

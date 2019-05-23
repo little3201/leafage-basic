@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.authority.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,6 @@ public class RolePermServiceImpl implements RolePermService {
 
     private final RolePermDao rolePermDao;
 
-    @Autowired
     public RolePermServiceImpl(RolePermDao rolePermDao) {
         this.rolePermDao = rolePermDao;
     }

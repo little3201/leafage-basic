@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import top.abeille.basic.profile.dao.AccountInfoDao;
 import top.abeille.basic.profile.model.AccountInfoModel;
-import top.abeille.common.mock.BasicServiceMock;
+import top.abeille.common.mock.AbstractServiceMock;
 
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ import java.util.Optional;
  *
  * @author liwenqiang 2019/3/28 20:22
  **/
-public class AccountInfoServiceImplTest extends BasicServiceMock {
+public class AccountInfoServiceImplTest extends AbstractServiceMock {
 
     @Mock
     private AccountInfoDao accountInfoDao;

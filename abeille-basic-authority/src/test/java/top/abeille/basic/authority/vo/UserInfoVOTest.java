@@ -1,6 +1,6 @@
 package top.abeille.basic.authority.vo;
 
-import top.abeille.common.mock.BasicVOMock;
+import top.abeille.common.mock.AbstractVOMock;
 import top.abeille.common.vo.UserInfoVO;
 
 /**
@@ -8,7 +8,7 @@ import top.abeille.common.vo.UserInfoVO;
  *
  * @author liwenqiang 2019/1/29 17:33
  **/
-public class UserInfoVOTest extends BasicVOMock<UserInfoVO> {
+public class UserInfoVOTest extends AbstractVOMock<UserInfoVO> {
 
     @Override
     protected UserInfoVO setVO() {

@@ -14,7 +14,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.authority.model.RoleInfoModel;
 import top.abeille.basic.authority.service.RoleInfoService;
-import top.abeille.common.basic.BasicController;
+import top.abeille.common.basic.AbstractController;
 
 /**
  * 角色信息controller
@@ -23,7 +23,7 @@ import top.abeille.common.basic.BasicController;
  **/
 @Api(tags = "Role Api")
 @RestController
-public class RoleInfoController extends BasicController {
+public class RoleInfoController extends AbstractController {
 
     private final RoleInfoService roleInfoService;
 

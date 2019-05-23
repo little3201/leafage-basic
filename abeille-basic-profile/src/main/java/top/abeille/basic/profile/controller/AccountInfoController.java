@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.profile.model.AccountInfoModel;
 import top.abeille.basic.profile.service.AccountInfoService;
-import top.abeille.common.basic.BasicController;
+import top.abeille.common.basic.AbstractController;
 
 /**
  * 账户信息Controller
@@ -16,7 +16,7 @@ import top.abeille.common.basic.BasicController;
  * @author liwenqiang 2018/12/20 9:54
  **/
 @RestController
-public class AccountInfoController extends BasicController {
+public class AccountInfoController extends AbstractController {
 
     private final AccountInfoService accountInfoService;
 

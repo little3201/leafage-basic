@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import top.abeille.basic.authority.dao.UserInfoDao;
 import top.abeille.basic.authority.model.UserInfoModel;
-import top.abeille.common.mock.BasicServiceMock;
+import top.abeille.common.mock.AbstractServiceMock;
 
 import java.util.Optional;
 
@@ -21,7 +21,7 @@ import java.util.Optional;
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
-public class UserInfoServiceImplTest extends BasicServiceMock {
+public class UserInfoServiceImplTest extends AbstractServiceMock {
 
     @Mock
     private UserInfoDao userInfoDao;

@@ -4,7 +4,6 @@
 package top.abeille.basic.authority.controller;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.authority.model.PermInfoModel;
 import top.abeille.basic.authority.service.PermInfoService;
-import top.abeille.common.basic.BasicController;
+import top.abeille.common.basic.AbstractController;
 
 /**
  * 权限资源controller
@@ -23,7 +22,7 @@ import top.abeille.common.basic.BasicController;
  **/
 @Api(tags = "Permission Api")
 @RestController
-public class PermInfoController extends BasicController {
+public class PermInfoController extends AbstractController {
 
     private final PermInfoService permInfoService;
 

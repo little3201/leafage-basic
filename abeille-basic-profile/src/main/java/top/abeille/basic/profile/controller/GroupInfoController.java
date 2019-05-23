@@ -10,7 +10,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.profile.model.GroupInfoModel;
 import top.abeille.basic.profile.service.GroupInfoService;
-import top.abeille.common.basic.BasicController;
+import top.abeille.common.basic.AbstractController;
 
 /**
  * 组织信息controller
@@ -18,7 +18,7 @@ import top.abeille.common.basic.BasicController;
  * @author liwenqiang 2018/12/20 9:54
  **/
 @RestController
-public class GroupInfoController extends BasicController {
+public class GroupInfoController extends AbstractController {
 
     private final GroupInfoService groupInfoService;
 

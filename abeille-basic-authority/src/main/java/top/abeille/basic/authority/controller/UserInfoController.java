@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.authority.model.UserInfoModel;
 import top.abeille.basic.authority.service.UserInfoService;
 import top.abeille.basic.authority.view.UserView;
-import top.abeille.common.basic.BasicController;
+import top.abeille.common.basic.AbstractController;
 import top.abeille.common.log.aop.LogServer;
 
 /**
@@ -26,7 +26,7 @@ import top.abeille.common.log.aop.LogServer;
  **/
 @Api(tags = "User Api")
 @RestController
-public class UserInfoController extends BasicController {
+public class UserInfoController extends AbstractController {
 
     private final UserInfoService userInfoService;
 

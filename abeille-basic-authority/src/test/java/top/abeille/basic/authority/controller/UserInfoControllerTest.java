@@ -13,14 +13,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import top.abeille.basic.authority.model.UserInfoModel;
 import top.abeille.basic.authority.service.impl.UserInfoServiceImpl;
-import top.abeille.common.mock.BasicControllerMock;
+import top.abeille.common.mock.AbstractControllerMock;
 
 /**
  * 用户测试
  *
  * @author liwenqiang 2019/1/29 17:09
  **/
-public class UserInfoControllerTest extends BasicControllerMock<UserInfoController> {
+public class UserInfoControllerTest extends AbstractControllerMock<UserInfoController> {
 
     @Mock
     private UserInfoServiceImpl userInfoService;

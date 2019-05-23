@@ -23,7 +23,6 @@ public class GroupInfoController extends BasicController {
 
     private final GroupInfoService groupInfoService;
 
-    @Autowired
     public GroupInfoController(GroupInfoService groupInfoService) {
         this.groupInfoService = groupInfoService;
     }
@@ -34,7 +33,7 @@ public class GroupInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @GetMapping("/v1/group")
+    @GetMapping("/group")
     public ResponseEntity getGroup(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -54,7 +53,7 @@ public class GroupInfoController extends BasicController {
      * @param pageSize 分页大小
      * @return ResponseEntity
      */
-    @GetMapping("/v1/groups")
+    @GetMapping("/groups")
     public ResponseEntity findGroups(Integer pageNum, Integer pageSize) {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -73,7 +72,7 @@ public class GroupInfoController extends BasicController {
      * @param group 组织
      * @return ResponseEntity
      */
-    @PostMapping("/v1/group")
+    @PostMapping("/group")
     public ResponseEntity saveGroup(@RequestBody GroupInfoModel group) {
         try {
             groupInfoService.save(group);
@@ -90,7 +89,7 @@ public class GroupInfoController extends BasicController {
      * @param group 组织
      * @return ResponseEntity
      */
-    @PutMapping("/v1/group")
+    @PutMapping("/group")
     public ResponseEntity modifyGroup(@RequestBody GroupInfoModel group) {
         try {
             groupInfoService.save(group);
@@ -107,7 +106,7 @@ public class GroupInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/v1/group")
+    @DeleteMapping("/group")
     public ResponseEntity removeGroup(Long id) {
         try {
             groupInfoService.removeById(id);
@@ -115,6 +114,6 @@ public class GroupInfoController extends BasicController {
             log.error("Remove group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

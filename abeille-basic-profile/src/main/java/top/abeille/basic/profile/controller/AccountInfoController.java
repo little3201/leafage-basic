@@ -21,7 +21,6 @@ public class AccountInfoController extends BasicController {
 
     private final AccountInfoService accountInfoService;
 
-    @Autowired
     public AccountInfoController(AccountInfoService accountInfoService) {
         this.accountInfoService = accountInfoService;
     }
@@ -32,7 +31,7 @@ public class AccountInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @GetMapping("/v1/account")
+    @GetMapping("/account")
     public ResponseEntity getAccount(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -51,7 +50,7 @@ public class AccountInfoController extends BasicController {
      * @param account 账户信息
      * @return ResponseEntity
      */
-    @PostMapping("/v1/account")
+    @PostMapping("/account")
     public ResponseEntity saveAccount(@RequestBody AccountInfoModel account) {
         try {
             accountInfoService.save(account);
@@ -68,7 +67,7 @@ public class AccountInfoController extends BasicController {
      * @param account 账户信息
      * @return ResponseEntity
      */
-    @PutMapping("/v1/account")
+    @PutMapping("/account")
     public ResponseEntity modifyAccount(@RequestBody AccountInfoModel account) {
         if (account.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -88,7 +87,7 @@ public class AccountInfoController extends BasicController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/v1/account")
+    @DeleteMapping("/account")
     public ResponseEntity removeAccount(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -99,6 +98,6 @@ public class AccountInfoController extends BasicController {
             log.error("Remove account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

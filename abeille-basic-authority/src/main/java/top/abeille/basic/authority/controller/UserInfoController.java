@@ -31,7 +31,6 @@ public class UserInfoController extends BasicController {
 
     private final UserInfoService userInfoService;
 
-    @Autowired
     public UserInfoController(UserInfoService userInfoService) {
         this.userInfoService = userInfoService;
     }
@@ -45,7 +44,7 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Fetch enabled users with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/v1/users")
+    @GetMapping("/users")
     public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -66,7 +65,7 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Get single user by id")
     @ApiImplicitParam(name = "id", required = true)
-    @GetMapping("/v1/user")
+    @GetMapping("/user")
     @JsonView(UserView.Details.class)
     public ResponseEntity getUser(Long id) {
         if (id == null) {
@@ -88,7 +87,7 @@ public class UserInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single user")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/v1/user")
+    @PostMapping("/user")
     @LogServer(value = "新增用户信息")
     public ResponseEntity saveUser(@RequestBody UserInfoModel user) {
         try {
@@ -107,7 +106,7 @@ public class UserInfoController extends BasicController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Modify single user")
-    @PutMapping("/v1/user")
+    @PutMapping("/user")
     public ResponseEntity modifyUser(@RequestBody UserInfoModel user) {
         if (user.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -130,7 +129,7 @@ public class UserInfoController extends BasicController {
     @ApiOperation(value = "Remove single user")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/v1/user")
+    @DeleteMapping("/user")
     public ResponseEntity removeUser(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -141,6 +140,6 @@ public class UserInfoController extends BasicController {
             log.error("Remove user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

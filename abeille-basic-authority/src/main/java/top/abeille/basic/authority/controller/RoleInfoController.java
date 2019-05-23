@@ -28,7 +28,6 @@ public class RoleInfoController extends BasicController {
 
     private final RoleInfoService roleInfoService;
 
-    @Autowired
     public RoleInfoController(RoleInfoService roleInfoService) {
         this.roleInfoService = roleInfoService;
     }
@@ -42,7 +41,7 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Fetch enabled roles with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/v1/roles")
+    @GetMapping("/roles")
     public ResponseEntity findRoles(Integer pageNum, Integer pageSize) {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -64,7 +63,7 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Get single role by id")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/v1/role")
+    @GetMapping("/role")
     public ResponseEntity getRole(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -85,7 +84,7 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/v1/role")
+    @PostMapping("/role")
     public ResponseEntity saveRole(@RequestBody RoleInfoModel role) {
         try {
             roleInfoService.save(role);
@@ -104,7 +103,7 @@ public class RoleInfoController extends BasicController {
      */
     @ApiOperation(value = "Modify single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PutMapping("/v1/role")
+    @PutMapping("/role")
     public ResponseEntity modifyRole(@RequestBody RoleInfoModel role) {
         if (role.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -127,7 +126,7 @@ public class RoleInfoController extends BasicController {
     @ApiOperation(value = "Remove single role")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/v1/role")
+    @DeleteMapping("/role")
     public ResponseEntity removeRole(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -138,7 +137,7 @@ public class RoleInfoController extends BasicController {
             log.error("Remove role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

@@ -16,6 +16,6 @@ import top.abeille.common.vo.UserInfoVO;
 @FeignClient(name = "abeille-basic-authority")
 public interface UserApi {
 
-    @GetMapping("/v1/user")
+    @GetMapping("/user")
     UserInfoVO getUserInfo(@RequestParam("id") Long id);
 }

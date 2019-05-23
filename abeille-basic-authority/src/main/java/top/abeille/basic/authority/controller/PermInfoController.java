@@ -28,7 +28,6 @@ public class PermInfoController extends BasicController {
 
     private final PermInfoService permInfoService;
 
-    @Autowired
     public PermInfoController(PermInfoService permInfoService) {
         this.permInfoService = permInfoService;
     }
@@ -42,7 +41,7 @@ public class PermInfoController extends BasicController {
      */
     @ApiOperation(value = "Fetch enabled permissions with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/v1/permissions")
+    @GetMapping("/permissions")
     public ResponseEntity findPermissions(Integer pageNum, Integer pageSize) {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -64,7 +63,7 @@ public class PermInfoController extends BasicController {
     @ApiOperation(value = "Get single permission by id")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/v1/permission")
+    @GetMapping("/permission")
     public ResponseEntity getPermission(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -85,7 +84,7 @@ public class PermInfoController extends BasicController {
      */
     @ApiOperation(value = "Save single permission")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/v1/permission")
+    @PostMapping("/permission")
     public ResponseEntity savePermission(@RequestBody PermInfoModel permission) {
         try {
             permInfoService.save(permission);
@@ -104,7 +103,7 @@ public class PermInfoController extends BasicController {
      */
     @ApiOperation(value = "Modify single permission")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PutMapping("/v1/permission")
+    @PutMapping("/permission")
     public ResponseEntity modifyPermission(@RequestBody PermInfoModel permission) {
         if (permission.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -127,7 +126,7 @@ public class PermInfoController extends BasicController {
     @ApiOperation(value = "Remove single permission")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/v1/permission")
+    @DeleteMapping("/permission")
     public ResponseEntity removePermission(Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -138,7 +137,7 @@ public class PermInfoController extends BasicController {
             log.error("Remove permission occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(HttpStatus.MOVED_PERMANENTLY);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
 }

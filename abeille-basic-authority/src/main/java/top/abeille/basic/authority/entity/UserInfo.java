@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.authority.model;
+package top.abeille.basic.authority.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import top.abeille.basic.authority.view.UserView;
+import top.abeille.common.basic.BasicInfo;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -16,89 +17,87 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user_info")
-public class UserInfoModel {
+public class UserInfo extends BasicInfo {
 
     /**
      * 主键
      */
+    @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
      * 用户ID
      */
+    @Column(name = "user_id")
     private String userId;
     /**
      * 组织主键
      */
+    @Column(name = "group_id")
     private Long groupId;
     /**
      * 中文姓名
      */
     @JsonView(UserView.Summary.class)
+    @Column(name = "user_name_cn")
     private String userNameCn;
     /**
      * 英文姓名
      */
     @JsonView(UserView.Summary.class)
+    @Column(name = "user_name_en")
     private String userNameEn;
     /**
      * 用户名
      */
     @JsonView(UserView.Summary.class)
+    @Column(name = "username")
     private String username;
     /**
      * 密码
      */
     @JsonIgnore
+    @Column(name = "password")
     private String password;
     /**
      * 电话
      */
     @JsonView(UserView.Summary.class)
+    @Column(name = "user_mobile")
     private String userMobile;
     /**
      * 邮箱
      */
     @JsonView(UserView.Summary.class)
+    @Column(name = "user_email")
     private String userEmail;
     /**
      * 地址
      */
     @JsonView(UserView.Summary.class)
+    @Column(name = "user_address")
     private String userAddress;
     /**
      * 是否无效
      */
     @JsonIgnore
+    @Column(name = "is_account_non_expired")
     private Boolean accountNonExpired;
     /**
      * 是否没有锁定
      */
     @JsonIgnore
+    @Column(name = "is_account_non_locked")
     private Boolean accountNonLocked;
     /**
      * 密码是否有效
      */
     @JsonIgnore
+    @Column(name = "is_credentials_non_expired")
     private Boolean credentialsNonExpired;
-    /**
-     * 是否可用
-     */
-    @JsonIgnore
-    private Boolean enabled;
-    /**
-     * 修改人ID
-     */
-    @JsonIgnore
-    private Long modifierId;
-    /**
-     * 修改时间
-     */
-    @JsonIgnore
-    private Date modifyTime;
 
-    @Column(name = "id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public Long getId() {
         return id;
     }
@@ -107,7 +106,6 @@ public class UserInfoModel {
         this.id = id;
     }
 
-    @Column(name = "user_id")
     public String getUserId() {
         return userId;
     }
@@ -116,7 +114,6 @@ public class UserInfoModel {
         this.userId = userId;
     }
 
-    @Column(name = "group_id")
     public Long getGroupId() {
         return groupId;
     }
@@ -125,7 +122,6 @@ public class UserInfoModel {
         this.groupId = groupId;
     }
 
-    @Column(name = "user_name_cn")
     public String getUserNameCn() {
         return userNameCn;
     }
@@ -134,7 +130,6 @@ public class UserInfoModel {
         this.userNameCn = userNameCn;
     }
 
-    @Column(name = "user_name_en")
     public String getUserNameEn() {
         return userNameEn;
     }
@@ -143,7 +138,6 @@ public class UserInfoModel {
         this.userNameEn = userNameEn;
     }
 
-    @Column(name = "username")
     public String getUsername() {
         return username;
     }
@@ -152,7 +146,6 @@ public class UserInfoModel {
         this.username = username;
     }
 
-    @Column(name = "password")
     public String getPassword() {
         return password;
     }
@@ -161,7 +154,6 @@ public class UserInfoModel {
         this.password = password;
     }
 
-    @Column(name = "user_mobile")
     public String getUserMobile() {
         return userMobile;
     }
@@ -170,7 +162,6 @@ public class UserInfoModel {
         this.userMobile = userMobile;
     }
 
-    @Column(name = "user_email")
     public String getUserEmail() {
         return userEmail;
     }
@@ -179,7 +170,6 @@ public class UserInfoModel {
         this.userEmail = userEmail;
     }
 
-    @Column(name = "user_address")
     public String getUserAddress() {
         return userAddress;
     }
@@ -188,7 +178,6 @@ public class UserInfoModel {
         this.userAddress = userAddress;
     }
 
-    @Column(name = "is_account_non_expired")
     public Boolean getAccountNonExpired() {
         return accountNonExpired;
     }
@@ -197,7 +186,6 @@ public class UserInfoModel {
         this.accountNonExpired = accountNonExpired;
     }
 
-    @Column(name = "is_account_non_locked")
     public Boolean getAccountNonLocked() {
         return accountNonLocked;
     }
@@ -206,40 +194,12 @@ public class UserInfoModel {
         this.accountNonLocked = accountNonLocked;
     }
 
-    @Column(name = "is_credentials_non_expired")
     public Boolean getCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
     public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
-    }
-
-    @Column(name = "is_enabled")
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Column(name = "modifier_id")
-    public Long getModifierId() {
-        return modifierId;
-    }
-
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
-    }
-
-    @Column(name = "modify_time")
-    public Date getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(Date modifyTime) {
-        this.modifyTime = modifyTime;
     }
 
 }

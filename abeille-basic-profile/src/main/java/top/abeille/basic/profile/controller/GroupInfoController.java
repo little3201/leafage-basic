@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.profile.model.GroupInfoModel;
+import top.abeille.basic.profile.entity.GroupInfo;
 import top.abeille.basic.profile.service.GroupInfoService;
 import top.abeille.common.basic.AbstractController;
 
@@ -37,7 +37,7 @@ public class GroupInfoController extends AbstractController {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        GroupInfoModel groupInfo = groupInfoService.getById(id);
+        GroupInfo groupInfo = groupInfoService.getById(id);
         if (groupInfo == null) {
             log.info("Not found anything about group with id {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -57,7 +57,7 @@ public class GroupInfoController extends AbstractController {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<GroupInfoModel> groups = groupInfoService.findAllByPage(pageNum, pageSize);
+        Page<GroupInfo> groups = groupInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(groups.getContent())) {
             log.info("Not found anything about group with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -72,7 +72,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping("/group")
-    public ResponseEntity saveGroup(@RequestBody GroupInfoModel group) {
+    public ResponseEntity saveGroup(@RequestBody GroupInfo group) {
         try {
             groupInfoService.save(group);
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping("/group")
-    public ResponseEntity modifyGroup(@RequestBody GroupInfoModel group) {
+    public ResponseEntity modifyGroup(@RequestBody GroupInfo group) {
         try {
             groupInfoService.save(group);
         } catch (Exception e) {

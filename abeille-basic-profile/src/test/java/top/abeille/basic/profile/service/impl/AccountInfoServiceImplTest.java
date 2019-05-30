@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import top.abeille.basic.profile.dao.AccountInfoDao;
-import top.abeille.basic.profile.model.AccountInfoModel;
+import top.abeille.basic.profile.entity.AccountInfo;
 import top.abeille.common.mock.AbstractServiceMock;
 
 import java.util.Optional;
@@ -27,10 +27,10 @@ public class AccountInfoServiceImplTest extends AbstractServiceMock {
 
     @Test
     public void getById() {
-        AccountInfoModel account = new AccountInfoModel();
+        AccountInfo account = new AccountInfo();
         account.setId(0L);
         Mockito.when(accountInfoDao.findById(Mockito.anyLong())).thenReturn(Optional.of(account));
-        AccountInfoModel accountInfo = accountInfoService.getById(0L);
+        AccountInfo accountInfo = accountInfoService.getById(0L);
         Assert.assertThat(accountInfo, Matchers.notNullValue());
     }
 }

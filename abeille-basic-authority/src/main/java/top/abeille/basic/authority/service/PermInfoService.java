@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.authority.service;
 
-import top.abeille.basic.authority.model.PermInfoModel;
+import top.abeille.basic.authority.entity.PermInfo;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -11,5 +11,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:36
  **/
-public interface PermInfoService extends BasicService<PermInfoModel> {
+public interface PermInfoService extends BasicService<PermInfo> {
 }

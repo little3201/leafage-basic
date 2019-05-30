@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.authority.service;
 
-import top.abeille.basic.authority.model.UserInfoModel;
+import top.abeille.basic.authority.entity.UserInfo;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -11,13 +11,13 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/7/28 0:29
  **/
-public interface UserInfoService extends BasicService<UserInfoModel> {
+public interface UserInfoService extends BasicService<UserInfo> {
 
     /**
      * 根据username获取用户信息
      *
      * @param username 主键
-     * @return UserInfoModel 用户信息
+     * @return UserInfo 用户信息
      */
-    UserInfoModel getByUsername(String username);
+    UserInfo getByUsername(String username);
 }

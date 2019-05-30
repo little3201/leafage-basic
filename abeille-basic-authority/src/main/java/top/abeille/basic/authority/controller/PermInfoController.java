@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.authority.model.PermInfoModel;
+import top.abeille.basic.authority.entity.PermInfo;
 import top.abeille.basic.authority.service.PermInfoService;
 import top.abeille.common.basic.AbstractController;
 
@@ -44,7 +44,7 @@ public class PermInfoController extends AbstractController {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<PermInfoModel> permissions = permInfoService.findAllByPage(pageNum, pageSize);
+        Page<PermInfo> permissions = permInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(permissions.getContent())) {
             log.info("Not found anything about permission with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

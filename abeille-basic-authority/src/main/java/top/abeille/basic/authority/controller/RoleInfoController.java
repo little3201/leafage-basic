@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.authority.model.RoleInfoModel;
+import top.abeille.basic.authority.entity.RoleInfo;
 import top.abeille.basic.authority.service.RoleInfoService;
 import top.abeille.common.basic.AbstractController;
 
@@ -45,7 +45,7 @@ public class RoleInfoController extends AbstractController {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<RoleInfoModel> roles = roleInfoService.findAllByPage(pageNum, pageSize);
+        Page<RoleInfo> roles = roleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             log.info("Not found anything about role with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -67,7 +67,7 @@ public class RoleInfoController extends AbstractController {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        RoleInfoModel role = roleInfoService.getById(id);
+        RoleInfo role = roleInfoService.getById(id);
         if (role == null) {
             log.info("Not found anything of role with id: {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -84,7 +84,7 @@ public class RoleInfoController extends AbstractController {
     @ApiOperation(value = "Save single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @PostMapping("/role")
-    public ResponseEntity saveRole(@RequestBody RoleInfoModel role) {
+    public ResponseEntity saveRole(@RequestBody RoleInfo role) {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
@@ -103,7 +103,7 @@ public class RoleInfoController extends AbstractController {
     @ApiOperation(value = "Modify single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @PutMapping("/role")
-    public ResponseEntity modifyRole(@RequestBody RoleInfoModel role) {
+    public ResponseEntity modifyRole(@RequestBody RoleInfo role) {
         if (role.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }

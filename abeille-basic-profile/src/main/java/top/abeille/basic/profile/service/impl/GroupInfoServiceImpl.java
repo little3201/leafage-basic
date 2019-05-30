@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.profile.dao.GroupInfoDao;
-import top.abeille.basic.profile.model.GroupInfoModel;
+import top.abeille.basic.profile.entity.GroupInfo;
 import top.abeille.basic.profile.service.GroupInfoService;
 
 import java.util.List;
@@ -28,18 +28,18 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public GroupInfoModel getById(Long id) {
-        Optional<GroupInfoModel> optional = groupInfoDao.findById(id);
+    public GroupInfo getById(Long id) {
+        Optional<GroupInfo> optional = groupInfoDao.findById(id);
         return optional.orElse(null);
     }
 
     @Override
-    public Page<GroupInfoModel> findAllByPage(Integer pageNum, Integer pageSize) {
+    public Page<GroupInfo> findAllByPage(Integer pageNum, Integer pageSize) {
         return groupInfoDao.findAll(PageRequest.of(pageNum, pageSize));
     }
 
     @Override
-    public GroupInfoModel save(GroupInfoModel entity) {
+    public GroupInfo save(GroupInfo entity) {
         return groupInfoDao.save(entity);
     }
 
@@ -49,7 +49,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public void removeInBatch(List<GroupInfoModel> entities) {
+    public void removeInBatch(List<GroupInfo> entities) {
         groupInfoDao.deleteInBatch(entities);
     }
 }

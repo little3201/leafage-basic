@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import top.abeille.basic.authority.model.UserInfoModel;
+import top.abeille.basic.authority.entity.UserInfo;
 import top.abeille.basic.authority.service.impl.UserInfoServiceImpl;
 import top.abeille.common.mock.AbstractControllerMock;
 
@@ -46,7 +46,7 @@ public class UserInfoControllerTest extends AbstractControllerMock<UserInfoContr
 
     @Test
     public void getUser() throws Exception {
-        Mockito.when(userInfoService.getById(Mockito.anyLong())).thenReturn(Mockito.any(UserInfoModel.class));
+        Mockito.when(userInfoService.getById(Mockito.anyLong())).thenReturn(Mockito.any(UserInfo.class));
         MockHttpServletResponse response = super.getTest("/v1/user", Mockito.anyLong());
         //验证测试结果
         Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.OK.value()));
@@ -54,16 +54,16 @@ public class UserInfoControllerTest extends AbstractControllerMock<UserInfoContr
 
     @Test
     public void saveUser() throws Exception {
-        MockHttpServletResponse response = super.postTest("/v1/user", Mockito.any(UserInfoModel.class));
-        Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfoModel.class));
+        MockHttpServletResponse response = super.postTest("/v1/user", Mockito.any(UserInfo.class));
+        Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfo.class));
         //验证测试结果
         Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.CREATED.value()));
     }
 
     @Test
     public void modifyUser() throws Exception {
-        MockHttpServletResponse response = super.putTest("/v1/user", Mockito.any(UserInfoModel.class));
-        Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfoModel.class));
+        MockHttpServletResponse response = super.putTest("/v1/user", Mockito.any(UserInfo.class));
+        Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfo.class));
         //验证测试结果
         Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.ACCEPTED.value()));
     }

@@ -7,8 +7,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.authority.dao.UserRoleDao;
-import top.abeille.basic.authority.model.UserRoleModel;
+import top.abeille.basic.authority.repository.UserRoleDao;
+import top.abeille.basic.authority.entity.UserRole;
 import top.abeille.basic.authority.service.UserRoleService;
 
 import java.util.List;
@@ -30,23 +30,23 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public List<UserRoleModel> findAllByExample(UserRoleModel userRole, ExampleMatcher exampleMatcher) {
-        Example<UserRoleModel> example = Example.of(userRole, exampleMatcher);
+    public List<UserRole> findAllByExample(UserRole userRole, ExampleMatcher exampleMatcher) {
+        Example<UserRole> example = Example.of(userRole, exampleMatcher);
         return userRoleDao.findAll(example);
     }
 
     @Override
-    public UserRoleModel save(UserRoleModel entity) {
+    public UserRole save(UserRole entity) {
         return userRoleDao.save(entity);
     }
 
     @Override
-    public List<UserRoleModel> findAll(Sort sort) {
+    public List<UserRole> findAll(Sort sort) {
         return userRoleDao.findAll(sort);
     }
 
     @Override
-    public List<UserRoleModel> saveAll(List<UserRoleModel> entities) {
+    public List<UserRole> saveAll(List<UserRole> entities) {
         return userRoleDao.saveAll(entities);
     }
 
@@ -56,13 +56,13 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public void removeInBatch(List<UserRoleModel> entities) {
+    public void removeInBatch(List<UserRole> entities) {
         userRoleDao.deleteInBatch(entities);
     }
 
     @Override
-    public List<UserRoleModel> findAllByUserId(Long userId) {
-        UserRoleModel userRole = new UserRoleModel();
+    public List<UserRole> findAllByUserId(Long userId) {
+        UserRole userRole = new UserRole();
         userRole.setUserId(userId);
         ExampleMatcher exampleMatcher = ExampleMatcher.matching().withMatcher(String.valueOf(userId), exact());
         return this.findAllByExample(userRole, exampleMatcher);

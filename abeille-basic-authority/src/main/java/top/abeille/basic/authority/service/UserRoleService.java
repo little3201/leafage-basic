@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.authority.service;
 
-import top.abeille.basic.authority.model.UserRoleModel;
+import top.abeille.basic.authority.entity.UserRole;
 import top.abeille.common.basic.BasicService;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018-12-06 22:04
  **/
-public interface UserRoleService extends BasicService<UserRoleModel> {
+public interface UserRoleService extends BasicService<UserRole> {
 
     /**
      * 查询所有角色——根据用户id
@@ -21,5 +21,5 @@ public interface UserRoleService extends BasicService<UserRoleModel> {
      * @param userId 用户ID
      * @return List
      */
-    List<UserRoleModel> findAllByUserId(Long userId);
+    List<UserRole> findAllByUserId(Long userId);
 }

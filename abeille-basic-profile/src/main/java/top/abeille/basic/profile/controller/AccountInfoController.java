@@ -6,7 +6,7 @@ package top.abeille.basic.profile.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.profile.model.AccountInfoModel;
+import top.abeille.basic.profile.entity.AccountInfo;
 import top.abeille.basic.profile.service.AccountInfoService;
 import top.abeille.common.basic.AbstractController;
 
@@ -35,7 +35,7 @@ public class AccountInfoController extends AbstractController {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        AccountInfoModel account = accountInfoService.getById(id);
+        AccountInfo account = accountInfoService.getById(id);
         if (account == null) {
             log.info("Not found anything about account with id {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -50,7 +50,7 @@ public class AccountInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping("/account")
-    public ResponseEntity saveAccount(@RequestBody AccountInfoModel account) {
+    public ResponseEntity saveAccount(@RequestBody AccountInfo account) {
         try {
             accountInfoService.save(account);
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class AccountInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping("/account")
-    public ResponseEntity modifyAccount(@RequestBody AccountInfoModel account) {
+    public ResponseEntity modifyAccount(@RequestBody AccountInfo account) {
         if (account.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }

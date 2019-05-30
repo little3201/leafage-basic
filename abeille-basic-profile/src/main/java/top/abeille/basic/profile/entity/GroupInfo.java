@@ -1,76 +1,70 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.profile.model;
+package top.abeille.basic.profile.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import top.abeille.common.basic.BasicInfo;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Model class for GroupInfo
+ *
  * @author liwenqiang
  */
 @Entity
 @Table(name = "group_info")
-public class GroupInfoModel {
+public class GroupInfo extends BasicInfo {
 
     /**
      * 主键
      */
+    @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
      * 组织ID
      */
+    @Column(name = "group_id")
     private String groupId;
     /**
      * 组织代码
      */
+    @Column(name = "group_code")
     private String groupCode;
     /**
      * 组织领导ID
      */
+    @Column(name = "group_leader_id")
     private Long groupLeaderId;
     /**
      * 上级组织ID
      */
+    @Column(name = "group_upper_id")
     private Long groupUpperId;
     /**
      * 组织中文全称
      */
+    @Column(name = "group_full_name_cn")
     private String groupFullNameCn;
     /**
      * 组织中文简称
      */
+    @Column(name = "group_simple_name_cn")
     private String groupSimpleNameCn;
     /**
      * 组织英文全称
      */
+    @Column(name = "group_full_name_en")
     private String groupFullNameEn;
     /**
      * 组织英文简称
      */
+    @Column(name = "group_simple_name_en")
     private String groupSimpleNameEn;
-    /**
-     * 是否有效
-     */
-    @JsonIgnore
-    private Boolean enabled;
-    /**
-     * 修改人ID
-     */
-    @JsonIgnore
-    private Long modifierId;
-    /**
-     * 修改时间
-     */
-    @JsonIgnore
-    private Date modifyTime;
 
-    @Column(name = "id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
     public Long getId() {
         return id;
     }
@@ -79,7 +73,7 @@ public class GroupInfoModel {
         this.id = id;
     }
 
-    @Column(name = "group_id")
+
     public String getGroupId() {
         return groupId;
     }
@@ -88,7 +82,6 @@ public class GroupInfoModel {
         this.groupId = groupId;
     }
 
-    @Column(name = "group_code")
     public String getGroupCode() {
         return groupCode;
     }
@@ -97,7 +90,6 @@ public class GroupInfoModel {
         this.groupCode = groupCode;
     }
 
-    @Column(name = "group_leader_id")
     public Long getGroupLeaderId() {
         return groupLeaderId;
     }
@@ -106,7 +98,6 @@ public class GroupInfoModel {
         this.groupLeaderId = groupLeaderId;
     }
 
-    @Column(name = "group_upper_id")
     public Long getGroupUpperId() {
         return groupUpperId;
     }
@@ -115,7 +106,6 @@ public class GroupInfoModel {
         this.groupUpperId = groupUpperId;
     }
 
-    @Column(name = "group_full_name_cn")
     public String getGroupFullNameCn() {
         return groupFullNameCn;
     }
@@ -124,7 +114,6 @@ public class GroupInfoModel {
         this.groupFullNameCn = groupFullNameCn;
     }
 
-    @Column(name = "group_simple_name_cn")
     public String getgroupSimpleNameCn() {
         return groupSimpleNameCn;
     }
@@ -133,7 +122,6 @@ public class GroupInfoModel {
         this.groupSimpleNameCn = groupSimpleNameCn;
     }
 
-    @Column(name = "group_full_name_en")
     public String getGroupFullNameEn() {
         return groupFullNameEn;
     }
@@ -142,7 +130,6 @@ public class GroupInfoModel {
         this.groupFullNameEn = groupFullNameEn;
     }
 
-    @Column(name = "group_simple_name_en")
     public String getGroupSimpleNameEn() {
         return groupSimpleNameEn;
     }
@@ -151,31 +138,5 @@ public class GroupInfoModel {
         this.groupSimpleNameEn = groupSimpleNameEn;
     }
 
-    @Column(name = "is_enabled")
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Column(name = "modifier_id")
-    public Long getModifierId() {
-        return modifierId;
-    }
-
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
-    }
-
-    @Column(name = "modify_time")
-    public Date getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(Date modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 
 }

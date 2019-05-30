@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.profile.service;
 
-import top.abeille.basic.profile.model.GroupInfoModel;
+import top.abeille.basic.profile.entity.GroupInfo;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -11,5 +11,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:24
  **/
-public interface GroupInfoService extends BasicService<GroupInfoModel> {
+public interface GroupInfoService extends BasicService<GroupInfo> {
 }

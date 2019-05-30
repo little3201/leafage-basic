@@ -5,8 +5,8 @@ package top.abeille.basic.authority.service.impl;
 
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.authority.dao.PermInfoDao;
-import top.abeille.basic.authority.model.PermInfoModel;
+import top.abeille.basic.authority.repository.PermInfoDao;
+import top.abeille.basic.authority.entity.PermInfo;
 import top.abeille.basic.authority.service.PermInfoService;
 
 import java.util.List;
@@ -27,23 +27,23 @@ public class PermInfoServiceImpl implements PermInfoService {
     }
 
     @Override
-    public Page<PermInfoModel> findAllByPage(Integer pageNum, Integer pageSize) {
+    public Page<PermInfo> findAllByPage(Integer pageNum, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNum, pageSize);
         return permInfoDao.findAll(pageable);
     }
 
     @Override
-    public List<PermInfoModel> findAll(Sort sort) {
+    public List<PermInfo> findAll(Sort sort) {
         return permInfoDao.findAll(sort);
     }
 
     @Override
-    public PermInfoModel save(PermInfoModel entity) {
+    public PermInfo save(PermInfo entity) {
         return permInfoDao.save(entity);
     }
 
     @Override
-    public List<PermInfoModel> saveAll(List<PermInfoModel> entities) {
+    public List<PermInfo> saveAll(List<PermInfo> entities) {
         return permInfoDao.saveAll(entities);
     }
 
@@ -53,13 +53,13 @@ public class PermInfoServiceImpl implements PermInfoService {
     }
 
     @Override
-    public void removeInBatch(List<PermInfoModel> entities) {
+    public void removeInBatch(List<PermInfo> entities) {
         permInfoDao.deleteInBatch(entities);
     }
 
     @Override
-    public PermInfoModel getByExample(PermInfoModel permInfo) {
-        Optional<PermInfoModel> optional = permInfoDao.findOne(Example.of(permInfo));
+    public PermInfo getByExample(PermInfo permInfo) {
+        Optional<PermInfo> optional = permInfoDao.findOne(Example.of(permInfo));
         return optional.orElse(null);
     }
 }

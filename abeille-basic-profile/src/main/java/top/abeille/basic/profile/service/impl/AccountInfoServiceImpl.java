@@ -3,10 +3,9 @@
  */
 package top.abeille.basic.profile.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.profile.dao.AccountInfoDao;
-import top.abeille.basic.profile.model.AccountInfoModel;
+import top.abeille.basic.profile.entity.AccountInfo;
 import top.abeille.basic.profile.service.AccountInfoService;
 
 import java.util.List;
@@ -27,13 +26,13 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public AccountInfoModel getById(Long id) {
-        Optional<AccountInfoModel> optional = accountInfoDao.findById(id);
+    public AccountInfo getById(Long id) {
+        Optional<AccountInfo> optional = accountInfoDao.findById(id);
         return optional.orElse(null);
     }
 
     @Override
-    public AccountInfoModel save(AccountInfoModel entity) {
+    public AccountInfo save(AccountInfo entity) {
         return accountInfoDao.save(entity);
     }
 
@@ -43,7 +42,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public void removeInBatch(List<AccountInfoModel> entities) {
+    public void removeInBatch(List<AccountInfo> entities) {
         accountInfoDao.deleteInBatch(entities);
     }
 }

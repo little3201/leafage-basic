@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.authority.service;
 
-import top.abeille.basic.authority.model.RoleInfoModel;
+import top.abeille.basic.authority.entity.RoleInfo;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -11,5 +11,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/9/27 14:18
  **/
-public interface RoleInfoService extends BasicService<RoleInfoModel> {
+public interface RoleInfoService extends BasicService<RoleInfo> {
 }

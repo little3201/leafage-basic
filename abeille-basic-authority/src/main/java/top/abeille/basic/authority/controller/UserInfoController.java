@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.authority.model.UserInfoModel;
+import top.abeille.basic.authority.entity.UserInfo;
 import top.abeille.basic.authority.service.UserInfoService;
 import top.abeille.basic.authority.view.UserView;
 import top.abeille.common.basic.AbstractController;
@@ -48,7 +48,7 @@ public class UserInfoController extends AbstractController {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        Page<UserInfoModel> users = userInfoService.findAllByPage(pageNum, pageSize);
+        Page<UserInfo> users = userInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(users.getContent())) {
             log.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -70,7 +70,7 @@ public class UserInfoController extends AbstractController {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        UserInfoModel user = userInfoService.getById(id);
+        UserInfo user = userInfoService.getById(id);
         if (user == null) {
             log.info("Not found anything about user with id: {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -88,7 +88,7 @@ public class UserInfoController extends AbstractController {
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @PostMapping("/user")
     @LogServer(value = "新增用户信息")
-    public ResponseEntity saveUser(@RequestBody UserInfoModel user) {
+    public ResponseEntity saveUser(@RequestBody UserInfo user) {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public class UserInfoController extends AbstractController {
      */
     @ApiOperation(value = "Modify single user")
     @PutMapping("/user")
-    public ResponseEntity modifyUser(@RequestBody UserInfoModel user) {
+    public ResponseEntity modifyUser(@RequestBody UserInfo user) {
         if (user.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }

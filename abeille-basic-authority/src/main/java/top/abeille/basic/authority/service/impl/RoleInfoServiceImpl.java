@@ -5,8 +5,8 @@ package top.abeille.basic.authority.service.impl;
 
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.authority.dao.RoleInfoDao;
-import top.abeille.basic.authority.model.RoleInfoModel;
+import top.abeille.basic.authority.repository.RoleInfoDao;
+import top.abeille.basic.authority.entity.RoleInfo;
 import top.abeille.basic.authority.service.RoleInfoService;
 
 import java.util.List;
@@ -27,34 +27,34 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Page<RoleInfoModel> findAllByPage(Integer pageNum, Integer pageSize) {
+    public Page<RoleInfo> findAllByPage(Integer pageNum, Integer pageSize) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         return roleInfoDao.findAll(pageable);
     }
 
     @Override
-    public List<RoleInfoModel> findAllByExample(RoleInfoModel roleInfoModel, ExampleMatcher exampleMatcher) {
+    public List<RoleInfo> findAllByExample(RoleInfo roleInfo, ExampleMatcher exampleMatcher) {
         // 创建查询模板实例
-        Example<RoleInfoModel> example = Example.of(roleInfoModel, exampleMatcher);
+        Example<RoleInfo> example = Example.of(roleInfo, exampleMatcher);
         return roleInfoDao.findAll(example);
     }
 
     @Override
-    public RoleInfoModel getById(Long id) {
-        Optional<RoleInfoModel> optional = roleInfoDao.findById(id);
+    public RoleInfo getById(Long id) {
+        Optional<RoleInfo> optional = roleInfoDao.findById(id);
         return optional.orElse(null);
     }
 
     @Override
-    public RoleInfoModel getByExample(RoleInfoModel roleInfo) {
-        Optional<RoleInfoModel> optional = roleInfoDao.findOne(Example.of(roleInfo));
+    public RoleInfo getByExample(RoleInfo roleInfo) {
+        Optional<RoleInfo> optional = roleInfoDao.findOne(Example.of(roleInfo));
         //需要对结果做判断，查询结果为null时会报NoSuchElementException
         return optional.orElse(null);
     }
 
     @Override
-    public List<RoleInfoModel> findAll(Sort sort) {
+    public List<RoleInfo> findAll(Sort sort) {
         return roleInfoDao.findAll(sort);
     }
 
@@ -64,12 +64,12 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public void removeInBatch(List<RoleInfoModel> entities) {
+    public void removeInBatch(List<RoleInfo> entities) {
         roleInfoDao.deleteInBatch(entities);
     }
 
     @Override
-    public RoleInfoModel save(RoleInfoModel entity) {
+    public RoleInfo save(RoleInfo entity) {
         return roleInfoDao.save(entity);
     }
 }

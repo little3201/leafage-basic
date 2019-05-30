@@ -12,9 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import top.abeille.basic.authority.model.RoleInfoModel;
-import top.abeille.basic.authority.model.UserInfoModel;
-import top.abeille.basic.authority.model.UserRoleModel;
+import top.abeille.basic.authority.entity.RoleInfo;
+import top.abeille.basic.authority.entity.UserInfo;
+import top.abeille.basic.authority.entity.UserRole;
 import top.abeille.basic.authority.service.RoleInfoService;
 import top.abeille.basic.authority.service.UserInfoService;
 import top.abeille.basic.authority.service.UserRoleService;
@@ -45,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 根据登录名查找用户信息
-        UserInfoModel userInfo = userInfoService.getByUsername(username);
+        UserInfo userInfo = userInfoService.getByUsername(username);
         if (userInfo == null) {
             throw new UsernameNotFoundException("username does not exist");
         }
@@ -67,9 +67,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @param authorityList 权限列表
      */
     private void addAuthorities(Long userId, List<GrantedAuthority> authorityList) {
-        List<UserRoleModel> roleList = userRoleService.findAllByUserId(userId);
+        List<UserRole> roleList = userRoleService.findAllByUserId(userId);
         roleList.forEach(userRoleInfo -> {
-            RoleInfoModel roleInfo = roleInfoService.getById(userRoleInfo.getId());
+            RoleInfo roleInfo = roleInfoService.getById(userRoleInfo.getId());
             authorityList.add(new SimpleGrantedAuthority("ROLE_" + roleInfo.getRoleName().toUpperCase()));
         });
     }

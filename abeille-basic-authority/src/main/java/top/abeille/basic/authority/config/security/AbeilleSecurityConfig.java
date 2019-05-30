@@ -18,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  *
  * @author liwenqiang 2018/7/12 17:51
  **/
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;

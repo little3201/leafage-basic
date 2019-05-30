@@ -6,8 +6,8 @@ package top.abeille.basic.authority.service.impl;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.authority.dao.RolePermDao;
-import top.abeille.basic.authority.model.RolePermModel;
+import top.abeille.basic.authority.repository.RolePermDao;
+import top.abeille.basic.authority.entity.RolePerm;
 import top.abeille.basic.authority.service.RolePermService;
 
 import java.util.List;
@@ -27,19 +27,19 @@ public class RolePermServiceImpl implements RolePermService {
     }
 
     @Override
-    public List<RolePermModel> findAllByExample(RolePermModel rolePermModel, ExampleMatcher exampleMatcher) {
+    public List<RolePerm> findAllByExample(RolePerm rolePerm, ExampleMatcher exampleMatcher) {
         // 创建查询模板实例
-        Example<RolePermModel> example = Example.of(rolePermModel, exampleMatcher);
+        Example<RolePerm> example = Example.of(rolePerm, exampleMatcher);
         return rolePermDao.findAll(example);
     }
 
     @Override
-    public RolePermModel save(RolePermModel entity) {
+    public RolePerm save(RolePerm entity) {
         return rolePermDao.save(entity);
     }
 
     @Override
-    public List<RolePermModel> saveAll(List<RolePermModel> entities) {
+    public List<RolePerm> saveAll(List<RolePerm> entities) {
         return rolePermDao.saveAll(entities);
     }
 
@@ -49,7 +49,7 @@ public class RolePermServiceImpl implements RolePermService {
     }
 
     @Override
-    public void removeInBatch(List<RolePermModel> entities) {
+    public void removeInBatch(List<RolePerm> entities) {
         rolePermDao.deleteInBatch(entities);
     }
 

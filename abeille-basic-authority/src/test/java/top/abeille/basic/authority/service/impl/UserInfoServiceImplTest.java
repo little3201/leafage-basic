@@ -10,8 +10,8 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import top.abeille.basic.authority.dao.UserInfoDao;
-import top.abeille.basic.authority.model.UserInfoModel;
+import top.abeille.basic.authority.entity.UserInfo;
+import top.abeille.basic.authority.repository.UserInfoDao;
 import top.abeille.common.mock.AbstractServiceMock;
 
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
      */
     @Test
     public void save() {
-        UserInfoModel user = new UserInfoModel();
+        UserInfo user = new UserInfo();
         user.setId(0L);
         user.setUserNameCn("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
@@ -46,25 +46,25 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
 
     @Test
     public void getById() {
-        UserInfoModel user = new UserInfoModel();
+        UserInfo user = new UserInfo();
         user.setId(0L);
         Mockito.when(userInfoDao.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
-        UserInfoModel userInfo = userInfoService.getById(user.getId());
+        UserInfo userInfo = userInfoService.getById(user.getId());
         Assert.assertThat(userInfo.getId(), Matchers.equalTo(0L));
     }
 
     @Test
     public void getByExample() {
-        UserInfoModel user = new UserInfoModel();
+        UserInfo user = new UserInfo();
         user.setId(0L);
         Mockito.when(userInfoDao.findOne(Example.of(user))).thenReturn(Optional.of(user));
-        UserInfoModel userInfo = userInfoService.getByExample(user);
+        UserInfo userInfo = userInfoService.getByExample(user);
         Assert.assertThat(userInfo.getId(), Matchers.equalTo(0L));
     }
 
     @Test
     public void findAllByPage() {
-        Page<UserInfoModel> page = null;
+        Page<UserInfo> page = null;
         Mockito.when(userInfoDao.findAll(Mockito.any(Pageable.class))).thenReturn(page);
     }
 

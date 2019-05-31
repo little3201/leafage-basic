@@ -3,9 +3,10 @@
  */
 package top.abeille.basic.authority.entity;
 
-import top.abeille.common.basic.BasicInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Model class for UserRole
@@ -14,7 +15,7 @@ import javax.persistence.*;
  **/
 @Entity
 @Table(name = "user_role")
-public class UserRole extends BasicInfo {
+public class UserRole {
 
     /**
      * 主键
@@ -33,6 +34,25 @@ public class UserRole extends BasicInfo {
      */
     @Column(name = "role_id")
     private Long roleId;
+
+    /**
+     * 是否有效
+     */
+    @JsonIgnore
+    @Column(name = "is_enabled")
+    private Boolean enabled;
+    /**
+     * 修改人ID
+     */
+    @JsonIgnore
+    @Column(name = "modifier_id")
+    private Long modifierId;
+    /**
+     * 修改时间
+     */
+    @JsonIgnore
+    @Column(name = "modify_time")
+    private Date modifyTime;
 
     public Long getId() {
         return id;
@@ -58,4 +78,27 @@ public class UserRole extends BasicInfo {
         this.roleId = roleId;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Long getModifierId() {
+        return modifierId;
+    }
+
+    public void setModifierId(Long modifierId) {
+        this.modifierId = modifierId;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 }

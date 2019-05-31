@@ -3,10 +3,11 @@
  */
 package top.abeille.basic.profile.entity;
 
-import top.abeille.common.basic.BasicInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Model class for AccountInfo
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "account_info")
-public class AccountInfo extends BasicInfo {
+public class AccountInfo {
 
     /**
      * 主键
@@ -50,6 +51,24 @@ public class AccountInfo extends BasicInfo {
     @Column(name = "account_type")
     private String accountType;
 
+    /**
+     * 是否有效
+     */
+    @JsonIgnore
+    @Column(name = "is_enabled")
+    private Boolean enabled;
+    /**
+     * 修改人ID
+     */
+    @JsonIgnore
+    @Column(name = "modifier_id")
+    private Long modifierId;
+    /**
+     * 修改时间
+     */
+    @JsonIgnore
+    @Column(name = "modify_time")
+    private Date modifyTime;
 
     public Long getId() {
         return id;
@@ -99,4 +118,27 @@ public class AccountInfo extends BasicInfo {
         this.accountBalance = accountBalance;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Long getModifierId() {
+        return modifierId;
+    }
+
+    public void setModifierId(Long modifierId) {
+        this.modifierId = modifierId;
+    }
+
+    public Date getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 }

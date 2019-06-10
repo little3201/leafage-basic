@@ -12,6 +12,7 @@ import java.util.Date;
 
 /**
  * Model class for UserInfo
+ *
  * @author liwenqiang
  */
 @Entity
@@ -86,7 +87,6 @@ public class UserInfo {
     /**
      * 是否没有锁定
      */
-    @JsonIgnore
     @Column(name = "is_account_non_locked")
     private Boolean accountNonLocked;
     /**

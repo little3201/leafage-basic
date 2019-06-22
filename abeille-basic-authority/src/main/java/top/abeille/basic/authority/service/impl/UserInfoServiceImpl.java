@@ -29,13 +29,14 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserInfo getById(Long id) {
+    public UserInfo getById(String userId) {
         /*使用getOne()返回的是引用，无法直接操作，会出现hibernate lazyxxx  no session 的错误
         在测试操作数据的方法(add/update)上加入@Transactional注解可以解决报错的问题
         return userInfoDao.getOne(id);*/
-        Optional<UserInfo> optional = userInfoDao.findById(id);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(userId);
         /*使用Optional的内部方法isPresent()判断查询结果是否为null*/
-        return optional.orElse(null);
+        return this.getByExample(userInfo);
     }
 
     @Override
@@ -65,9 +66,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public void removeById(String userId) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(userId);
-        UserInfo example = this.getByExample(userInfo);
+        UserInfo example = this.getById(userId);
         if (example == null) {
             return;
         }

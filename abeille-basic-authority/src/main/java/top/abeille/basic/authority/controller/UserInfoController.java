@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,20 +60,20 @@ public class UserInfoController extends AbstractController {
     /**
      * 用户查询——根据ID
      *
-     * @param id 主键
+     * @param userId 用户ID
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Get single user by id")
-    @ApiImplicitParam(name = "id", required = true)
-    @GetMapping("/user/{id}")
+    @ApiOperation(value = "Get single user by userId")
+    @ApiImplicitParam(name = "userId", required = true)
+    @GetMapping("/user/{userId}")
     @JsonView(UserView.Details.class)
-    public ResponseEntity getUser(@PathVariable Long id) {
-        if (id == null) {
+    public ResponseEntity getUser(@PathVariable String userId) {
+        if (StringUtils.isBlank(userId)) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        UserInfo user = userInfoService.getById(id);
+        UserInfo user = userInfoService.getById(userId);
         if (user == null) {
-            log.info("Not found anything about user with id: {}.", id);
+            log.info("Not found anything about user with userId: {}.", userId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(user);
@@ -130,7 +131,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Remove single user")
-    @ApiImplicitParam(name = "id", required = true)
+    @ApiImplicitParam(name = "userId", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @DeleteMapping("/user/{userId}")
     public ResponseEntity removeUser(@PathVariable String userId) {

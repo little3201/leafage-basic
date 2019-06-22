@@ -6,6 +6,8 @@ package top.abeille.basic.authority.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -77,7 +79,7 @@ public class PermInfo {
      */
     @JsonIgnore
     @Column(name = "modify_time")
-    private Date modifyTime;
+    private LocalDateTime modifyTime;
 
     public Long getId() {
         return id;
@@ -159,11 +161,11 @@ public class PermInfo {
         this.modifierId = modifierId;
     }
 
-    public Date getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(Date modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

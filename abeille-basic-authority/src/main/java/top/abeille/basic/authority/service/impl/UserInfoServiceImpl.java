@@ -64,8 +64,14 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public void removeById(Long id) {
-        userInfoDao.deleteById(id);
+    public void removeById(String userId) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(userId);
+        UserInfo example = this.getByExample(userInfo);
+        if (example == null) {
+            return;
+        }
+        userInfoDao.deleteById(example.getId());
     }
 
     @Override

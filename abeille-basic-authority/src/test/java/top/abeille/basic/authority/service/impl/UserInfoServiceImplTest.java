@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import top.abeille.basic.authority.entity.UserInfo;
@@ -44,6 +43,10 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
         Mockito.verify(userInfoDao, Mockito.times(1)).save(user);
     }
 
+    /**
+     * 主键查询用户信息
+     * 如果使用jpa的findById()
+     */
     @Test
     public void getById() {
         UserInfo user = new UserInfo();
@@ -53,6 +56,10 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
         Assert.assertThat(userInfo.getId(), Matchers.equalTo(0L));
     }
 
+    /**
+     * 条件查询用户信息
+     * 如果使用jpa的findOne()
+     */
     @Test
     public void getByExample() {
         UserInfo user = new UserInfo();
@@ -62,17 +69,27 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
         Assert.assertThat(userInfo.getId(), Matchers.equalTo(0L));
     }
 
+    /**
+     * 查询所有用户信息
+     */
     @Test
     public void findAllByPage() {
-        Page<UserInfo> page = null;
-        Mockito.when(userInfoDao.findAll(Mockito.any(Pageable.class))).thenReturn(page);
+        Mockito.when(userInfoDao.findAll(Mockito.any(Pageable.class))).thenReturn(Mockito.any());
     }
 
+    /**
+     * 根据主键删除用户信息
+     */
     @Test
     public void removeById() {
+        Mockito.verify(userInfoDao, Mockito.times(1)).deleteById(Mockito.anyLong());
     }
 
+    /**
+     * 批量删除用户信息
+     */
     @Test
     public void removeInBatch() {
+        Mockito.verify(userInfoDao, Mockito.times(1)).deleteInBatch(Mockito.anyIterable());
     }
 }

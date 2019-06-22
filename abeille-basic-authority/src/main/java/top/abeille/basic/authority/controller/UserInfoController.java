@@ -89,6 +89,10 @@ public class UserInfoController extends AbstractController {
     @PostMapping("/user")
     @LogServer(value = "新增用户信息")
     public ResponseEntity saveUser(@RequestBody UserInfo user) {
+        if (user.getUserId() == null) {
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
+        user.setModifierId(0L);
         try {
             userInfoService.save(user);
         } catch (Exception e) {
@@ -107,7 +111,7 @@ public class UserInfoController extends AbstractController {
     @ApiOperation(value = "Modify single user")
     @PutMapping("/user")
     public ResponseEntity modifyUser(@RequestBody UserInfo user) {
-        if (user.getId() == null) {
+        if (user.getUserId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
         try {
@@ -122,19 +126,19 @@ public class UserInfoController extends AbstractController {
     /**
      * 删除用户——根据ID
      *
-     * @param id 主键
+     * @param userId 用户ID
      * @return ResponseEntity
      */
     @ApiOperation(value = "Remove single user")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/user/{id}")
-    public ResponseEntity removeUser(@PathVariable Long id) {
-        if (id == null) {
+    @DeleteMapping("/user/{userId}")
+    public ResponseEntity removeUser(@PathVariable String userId) {
+        if (userId == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
         try {
-            userInfoService.removeById(id);
+            userInfoService.removeById(userId);
         } catch (Exception e) {
             log.error("Remove user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

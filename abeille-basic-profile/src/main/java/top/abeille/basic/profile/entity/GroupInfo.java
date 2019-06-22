@@ -6,6 +6,7 @@ package top.abeille.basic.profile.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -82,7 +83,7 @@ public class GroupInfo {
      */
     @JsonIgnore
     @Column(name = "modify_time")
-    private Date modifyTime;
+    private LocalDateTime modifyTime;
 
     public Long getId() {
         return id;
@@ -176,11 +177,11 @@ public class GroupInfo {
         this.modifierId = modifierId;
     }
 
-    public Date getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(Date modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

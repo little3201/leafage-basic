@@ -24,6 +24,7 @@ public class GroupInfo {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
     /**
      * 组织ID

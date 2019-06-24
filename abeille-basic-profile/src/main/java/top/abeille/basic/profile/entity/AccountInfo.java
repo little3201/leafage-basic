@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Model class for AccountInfo
@@ -25,6 +24,7 @@ public class AccountInfo {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
     /**
      * 用户ID

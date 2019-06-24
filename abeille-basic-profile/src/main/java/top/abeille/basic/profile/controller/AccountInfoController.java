@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.profile.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import top.abeille.common.basic.AbstractController;
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
+@RequestMapping("/account")
 @RestController
 public class AccountInfoController extends AbstractController {
 
@@ -27,17 +29,17 @@ public class AccountInfoController extends AbstractController {
     /**
      * 查询账号信息——根据ID
      *
-     * @param id 主键
+     * @param accountId 账户ID
      * @return ResponseEntity
      */
-    @GetMapping("/account/{id}")
-    public ResponseEntity getAccount(@PathVariable Long id) {
-        if (id == null) {
+    @GetMapping("/{accountId}")
+    public ResponseEntity getAccount(@PathVariable String accountId) {
+        if (StringUtils.isBlank(accountId)) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        AccountInfo account = accountInfoService.getById(id);
+        AccountInfo account = accountInfoService.getByAccountId(accountId);
         if (account == null) {
-            log.info("Not found anything about account with id {}.", id);
+            log.info("Not found anything about account with accountId {}.", accountId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(account);
@@ -49,7 +51,7 @@ public class AccountInfoController extends AbstractController {
      * @param account 账户信息
      * @return ResponseEntity
      */
-    @PostMapping("/account")
+    @PostMapping
     public ResponseEntity saveAccount(@RequestBody AccountInfo account) {
         try {
             accountInfoService.save(account);
@@ -66,9 +68,9 @@ public class AccountInfoController extends AbstractController {
      * @param account 账户信息
      * @return ResponseEntity
      */
-    @PutMapping("/account")
+    @PutMapping
     public ResponseEntity modifyAccount(@RequestBody AccountInfo account) {
-        if (account.getId() == null) {
+        if (account.getAccountId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
         try {
@@ -83,16 +85,16 @@ public class AccountInfoController extends AbstractController {
     /**
      * 删除账号信息
      *
-     * @param id 主键
+     * @param accountId 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/account/{id}")
-    public ResponseEntity removeAccount(@PathVariable Long id) {
-        if (id == null) {
+    @DeleteMapping("/{accountId}")
+    public ResponseEntity removeAccount(@PathVariable String accountId) {
+        if (StringUtils.isBlank(accountId)) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
         try {
-            accountInfoService.removeById(id);
+            accountInfoService.removeByAccountId(accountId);
         } catch (Exception e) {
             log.error("Remove account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

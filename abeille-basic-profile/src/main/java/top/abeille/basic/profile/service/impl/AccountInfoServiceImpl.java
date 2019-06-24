@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.profile.service.impl;
 
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.profile.dao.AccountInfoDao;
 import top.abeille.basic.profile.entity.AccountInfo;
@@ -26,8 +27,9 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public AccountInfo getById(Long id) {
-        Optional<AccountInfo> optional = accountInfoDao.findById(id);
+    public AccountInfo getByExample(AccountInfo accountInfo) {
+        accountInfo.setEnabled(true);
+        Optional<AccountInfo> optional = accountInfoDao.findOne(Example.of(accountInfo));
         return optional.orElse(null);
     }
 
@@ -44,5 +46,21 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     @Override
     public void removeInBatch(List<AccountInfo> entities) {
         accountInfoDao.deleteInBatch(entities);
+    }
+
+    @Override
+    public AccountInfo getByAccountId(String accountId) {
+        AccountInfo accountInfo = new AccountInfo();
+        accountInfo.setAccountId(accountId);
+        return this.getByExample(accountInfo);
+    }
+
+    @Override
+    public void removeByAccountId(String accountId) {
+        AccountInfo accountInfo = this.getByAccountId(accountId);
+        if (accountInfo == null) {
+            return;
+        }
+        accountInfoDao.deleteById(accountInfo.getId());
     }
 }

@@ -18,7 +18,6 @@ import top.abeille.basic.authority.entity.UserInfo;
 import top.abeille.basic.authority.service.UserInfoService;
 import top.abeille.basic.authority.view.UserView;
 import top.abeille.common.basic.AbstractController;
-import top.abeille.common.log.aop.LogServer;
 
 /**
  * 用户信息Controller
@@ -27,6 +26,7 @@ import top.abeille.common.log.aop.LogServer;
  **/
 @Api(tags = "User Api")
 @RestController
+@RequestMapping("/user")
 public class UserInfoController extends AbstractController {
 
     private final UserInfoService userInfoService;
@@ -44,7 +44,7 @@ public class UserInfoController extends AbstractController {
      */
     @ApiOperation(value = "Fetch enabled users with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/users")
+    @GetMapping
     public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -65,13 +65,13 @@ public class UserInfoController extends AbstractController {
      */
     @ApiOperation(value = "Get single user by userId")
     @ApiImplicitParam(name = "userId", required = true)
-    @GetMapping("/user/{userId}")
+    @GetMapping("/{userId}")
     @JsonView(UserView.Details.class)
     public ResponseEntity getUser(@PathVariable String userId) {
         if (StringUtils.isBlank(userId)) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        UserInfo user = userInfoService.getById(userId);
+        UserInfo user = userInfoService.getByUserId(userId);
         if (user == null) {
             log.info("Not found anything about user with userId: {}.", userId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -87,13 +87,11 @@ public class UserInfoController extends AbstractController {
      */
     @ApiOperation(value = "Save single user")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/user")
-    @LogServer(value = "新增用户信息")
+    @PostMapping
     public ResponseEntity saveUser(@RequestBody UserInfo user) {
         if (user.getUserId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
-        user.setModifierId(0L);
         try {
             userInfoService.save(user);
         } catch (Exception e) {
@@ -110,7 +108,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Modify single user")
-    @PutMapping("/user")
+    @PutMapping
     public ResponseEntity modifyUser(@RequestBody UserInfo user) {
         if (user.getUserId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -133,13 +131,13 @@ public class UserInfoController extends AbstractController {
     @ApiOperation(value = "Remove single user")
     @ApiImplicitParam(name = "userId", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity removeUser(@PathVariable String userId) {
         if (userId == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
         }
         try {
-            userInfoService.removeById(userId);
+            userInfoService.removeByUserId(userId);
         } catch (Exception e) {
             log.error("Remove user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

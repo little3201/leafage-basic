@@ -26,6 +26,7 @@ public class UserInfo {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
     /**
      * 用户ID

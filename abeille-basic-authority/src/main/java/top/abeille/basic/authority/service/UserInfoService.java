@@ -20,4 +20,8 @@ public interface UserInfoService extends BasicService<UserInfo> {
      * @return UserInfo 用户信息
      */
     UserInfo getByUsername(String username);
+
+    void removeByUserId(String userId);
+
+    UserInfo getByUserId(String userId);
 }

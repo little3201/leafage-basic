@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
- * Model class for PermInfo
+ * Model class for SourceInfo
  *
  * @author liwenqiang
  */
 @Entity
-@Table(name = "perm_info")
-public class PermInfo {
+@Table(name = "source_info")
+public class SourceInfo {
 
     /**
      * 主键
@@ -29,38 +29,38 @@ public class PermInfo {
     /**
      * 权限编号
      */
-    @Column(name = "perm_code")
-    private String permCode;
+    @Column(name = "source_code")
+    private String sourceCode;
     /**
      * 权限父编号
      */
-    @Column(name = "perm_parent_code")
-    private String permParentCode;
+    @Column(name = "source_parent_code")
+    private String sourceParentCode;
     /**
      * 权限中文名称
      */
-    @Column(name = "perm_name_cn")
-    private String permNameCn;
+    @Column(name = "source_name_cn")
+    private String sourceNameCn;
     /**
      * 权限英文名称
      */
-    @Column(name = "perm_name_en")
-    private String permNameEn;
+    @Column(name = "source_name_en")
+    private String sourceNameEn;
     /**
      * 权限类型
      */
-    @Column(name = "perm_type")
-    private Integer permType;
+    @Column(name = "source_type")
+    private Integer sourceType;
     /**
      * 权限路径
      */
-    @Column(name = "perm_path")
-    private String permPath;
+    @Column(name = "source_path")
+    private String sourcePath;
     /**
      * 权限描述
      */
-    @Column(name = "perm_desc")
-    private String permDesc;
+    @Column(name = "source_desc")
+    private String sourceDesc;
 
     /**
      * 是否有效
@@ -89,60 +89,60 @@ public class PermInfo {
         this.id = id;
     }
 
-    public String getPermCode() {
-        return permCode;
+    public String getSourceCode() {
+        return sourceCode;
     }
 
-    public void setPermCode(String permCode) {
-        this.permCode = permCode;
+    public void setSourceCode(String sourceCode) {
+        this.sourceCode = sourceCode;
     }
 
-    public String getPermParentCode() {
-        return permParentCode;
+    public String getSourceParentCode() {
+        return sourceParentCode;
     }
 
-    public void setPermParentCode(String permParentCode) {
-        this.permParentCode = permParentCode;
+    public void setSourceParentCode(String sourceParentCode) {
+        this.sourceParentCode = sourceParentCode;
     }
 
-    public String getPermNameCn() {
-        return permNameCn;
+    public String getSourceNameCn() {
+        return sourceNameCn;
     }
 
-    public void setPermNameCn(String permNameCn) {
-        this.permNameCn = permNameCn;
+    public void setSourceNameCn(String sourceNameCn) {
+        this.sourceNameCn = sourceNameCn;
     }
 
-    public String getPermNameEn() {
-        return permNameEn;
+    public String getSourceNameEn() {
+        return sourceNameEn;
     }
 
-    public void setPermNameEn(String permNameEn) {
-        this.permNameEn = permNameEn;
+    public void setSourceNameEn(String sourceNameEn) {
+        this.sourceNameEn = sourceNameEn;
     }
 
-    public Integer getPermType() {
-        return permType;
+    public Integer getSourceType() {
+        return sourceType;
     }
 
-    public void setPermType(Integer permType) {
-        this.permType = permType;
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 
-    public String getPermPath() {
-        return permPath;
+    public String getSourcePath() {
+        return sourcePath;
     }
 
-    public void setPermPath(String permPath) {
-        this.permPath = permPath;
+    public void setSourcePath(String sourcePath) {
+        this.sourcePath = sourcePath;
     }
 
-    public String getPermDesc() {
-        return permDesc;
+    public String getSourceDesc() {
+        return sourceDesc;
     }
 
-    public void setPermDesc(String permDesc) {
-        this.permDesc = permDesc;
+    public void setSourceDesc(String sourceDesc) {
+        this.sourceDesc = sourceDesc;
     }
 
     public Boolean getEnabled() {

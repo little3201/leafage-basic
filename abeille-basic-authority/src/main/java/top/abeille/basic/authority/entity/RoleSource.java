@@ -7,16 +7,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
- * Model class for RolePerm
+ * Model class for RoleSource
  *
  * @author liwenqiang
  */
 @Entity
-@Table(name = "role_perm")
-public class RolePerm {
+@Table(name = "role_source")
+public class RoleSource {
 
     /**
      * 主键
@@ -31,10 +30,10 @@ public class RolePerm {
     @Column(name = "role_id")
     private Long roleId;
     /**
-     * 权限ID
+     * 资源ID
      */
-    @Column(name = "perm_id")
-    private Long permId;
+    @Column(name = "source_id")
+    private Long sourceId;
 
     /**
      * 是否有效
@@ -71,12 +70,12 @@ public class RolePerm {
         this.roleId = roleId;
     }
 
-    public Long getPermId() {
-        return permId;
+    public Long getSourceId() {
+        return sourceId;
     }
 
-    public void setPermId(Long permId) {
-        this.permId = permId;
+    public void setSourceId(Long sourceId) {
+        this.sourceId = sourceId;
     }
 
     public Boolean getEnabled() {

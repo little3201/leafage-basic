@@ -70,48 +70,48 @@ alter table role_info
     comment '角色信息表';
 
 
-drop table if exists role_perm;
+drop table if exists role_source;
 
 /*==============================================================*/
-/* Table: role_perm                                             */
+/* Table: role_source                                           */
 /*==============================================================*/
-create table role_perm
+create table role_source
 (
     id          bigint(11) not null auto_increment comment '主键',
     role_id     bigint(11) comment '角色ID',
-    perm_id     bigint(11) comment '权限ID',
+    source_id   bigint(11) comment '资源ID',
     is_enabled  tinyint(1) default 1 comment '是否可用',
     modifier_id bigint(11) not null comment '修改人ID',
     modify_time timestamp  default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
 );
 
-alter table role_perm
-    comment '角色权限表';
+alter table role_source
+    comment '角色资源表';
 
 
-drop table if exists perm_info;
+drop table if exists source_info;
 
 /*==============================================================*/
-/* Table: perm_info                                             */
+/* Table: source_info                                           */
 /*==============================================================*/
-create table perm_info
+create table source_info
 (
-    id               bigint(11) not null auto_increment comment '主键',
-    perm_code        varchar(64) comment '权限编号',
-    perm_parent_code varchar(64) comment '权限父编号',
-    perm_name_cn     varchar(64) comment '权限中文名称',
-    perm_name_en     varchar(64) comment '权限英文名称',
-    perm_type        tinyint(4) comment '权限类型',
-    perm_desc        varchar(64) comment '权限描述',
-    perm_path        varchar(128) comment '权限路径',
-    is_enabled       tinyint(1) default 1 comment '是否可用',
-    modifier_id      bigint(11) not null comment '修改人ID',
-    modify_time      timestamp  default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    id                 bigint(11) not null auto_increment comment '主键',
+    source_code        varchar(64) comment '资源编号',
+    source_parent_code varchar(64) comment '资源父编号',
+    source_name_cn     varchar(64) comment '资源中文名称',
+    source_name_en     varchar(64) comment '资源英文名称',
+    source_type        tinyint(4) comment '资源类型',
+    source_desc        varchar(64) comment '资源描述',
+    source_path        varchar(128) comment '资源路径',
+    is_enabled         tinyint(1) default 1 comment '是否可用',
+    modifier_id        bigint(11) not null comment '修改人ID',
+    modify_time        timestamp  default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
 );
 
-alter table perm_info
+alter table source_info
     comment '权限信息表';
 
 

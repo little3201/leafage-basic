@@ -23,6 +23,7 @@ import top.abeille.common.basic.AbstractController;
  **/
 @Api(tags = "Role Api")
 @RestController
+@RequestMapping("/role")
 public class RoleInfoController extends AbstractController {
 
     private final RoleInfoService roleInfoService;
@@ -40,7 +41,7 @@ public class RoleInfoController extends AbstractController {
      */
     @ApiOperation(value = "Fetch enabled roles with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/roles")
+    @GetMapping
     public ResponseEntity findRoles(Integer pageNum, Integer pageSize) {
         if (pageNum == null || pageSize == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -62,7 +63,7 @@ public class RoleInfoController extends AbstractController {
     @ApiOperation(value = "Get single role by id")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @GetMapping("/role/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getRole(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -83,7 +84,7 @@ public class RoleInfoController extends AbstractController {
      */
     @ApiOperation(value = "Save single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PostMapping("/role")
+    @PostMapping
     public ResponseEntity saveRole(@RequestBody RoleInfo role) {
         try {
             roleInfoService.save(role);
@@ -102,7 +103,7 @@ public class RoleInfoController extends AbstractController {
      */
     @ApiOperation(value = "Modify single role")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @PutMapping("/role")
+    @PutMapping
     public ResponseEntity modifyRole(@RequestBody RoleInfo role) {
         if (role.getId() == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
@@ -125,7 +126,7 @@ public class RoleInfoController extends AbstractController {
     @ApiOperation(value = "Remove single role")
     @ApiImplicitParam(name = "id", required = true)
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/role/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity removeRole(@PathVariable Long id) {
         if (id == null) {
             return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);

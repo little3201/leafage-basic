@@ -28,16 +28,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         this.userInfoDao = userInfoDao;
     }
 
-    @Override
-    public UserInfo getById(String userId) {
-        /*使用getOne()返回的是引用，无法直接操作，会出现hibernate lazyxxx  no session 的错误
-        在测试操作数据的方法(add/update)上加入@Transactional注解可以解决报错的问题
-        return userInfoDao.getOne(id);*/
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(userId);
-        /*使用Optional的内部方法isPresent()判断查询结果是否为null*/
-        return this.getByExample(userInfo);
-    }
 
     @Override
     public UserInfo getByExample(UserInfo userInfo) {
@@ -61,16 +51,19 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfo save(UserInfo entity) {
+        UserInfo example = this.getByUserId(entity.getUserId());
+        if (example != null) {
+            entity.setId(example.getId());
+        }
+        if (entity.getModifierId() == null) {
+            entity.setModifierId(0L);
+        }
         return userInfoDao.save(entity);
     }
 
     @Override
-    public void removeById(String userId) {
-        UserInfo example = this.getById(userId);
-        if (example == null) {
-            return;
-        }
-        userInfoDao.deleteById(example.getId());
+    public void removeById(Long id) {
+        userInfoDao.deleteById(id);
     }
 
     @Override
@@ -80,7 +73,33 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfo getByUsername(String username) {
-        return userInfoDao.getByUsername(username);
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUsername(username);
+        UserInfo example = this.getByExample(userInfo);
+        if (example == null) {
+            return null;
+        }
+        return example;
+    }
+
+    @Override
+    public void removeByUserId(String userId) {
+        UserInfo example = this.getByUserId(userId);
+        if (example == null) {
+            return;
+        }
+        this.removeById(example.getId());
+    }
+
+    @Override
+    public UserInfo getByUserId(String userId) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(userId);
+        UserInfo example = this.getByExample(userInfo);
+        if (example == null) {
+            return null;
+        }
+        return example;
     }
 
     /**
@@ -92,7 +111,6 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInfo appendParams(UserInfo userInfo) {
         userInfo.setEnabled(true);
         userInfo.setAccountNonExpired(true);
-        userInfo.setAccountNonLocked(true);
         userInfo.setCredentialsNonExpired(true);
         return userInfo;
     }

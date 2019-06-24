@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.authority.service;
 
-import top.abeille.basic.authority.entity.RolePerm;
+import top.abeille.basic.authority.entity.RoleSource;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -11,5 +11,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/9/26 11:40
  **/
-public interface RolePermService extends BasicService<RolePerm> {
+public interface RoleSourceService extends BasicService<RoleSource> {
 }

@@ -17,11 +17,11 @@ import top.abeille.common.vo.UserInfoVO;
 public interface UserApi {
 
     /**
-     * 根据id获取用户信息
+     * 根据userId获取用户信息
      *
-     * @param id 主键
+     * @param userId 用户ID
      * @return UserInfoVO 用户信息
      */
     @GetMapping("/user")
-    UserInfoVO getUserInfo(@RequestParam("id") Long id);
+    UserInfoVO getUserInfo(@RequestParam("userId") String userId);
 }

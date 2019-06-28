@@ -16,6 +16,8 @@ import top.abeille.basic.authority.entity.RoleInfo;
 import top.abeille.basic.authority.service.RoleInfoService;
 import top.abeille.common.basic.AbstractController;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 角色信息controller
  *
@@ -42,10 +44,7 @@ public class RoleInfoController extends AbstractController {
     @ApiOperation(value = "Fetch enabled roles with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping
-    public ResponseEntity findRoles(Integer pageNum, Integer pageSize) {
-        if (pageNum == null || pageSize == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
+    public ResponseEntity findRoles(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         Page<RoleInfo> roles = roleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             log.info("Not found anything about role with pageable.");
@@ -65,9 +64,6 @@ public class RoleInfoController extends AbstractController {
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity getRole(@PathVariable Long id) {
-        if (id == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         RoleInfo role = roleInfoService.getById(id);
         if (role == null) {
             log.info("Not found anything of role with id: {}.", id);
@@ -105,9 +101,6 @@ public class RoleInfoController extends AbstractController {
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @PutMapping
     public ResponseEntity modifyRole(@RequestBody RoleInfo role) {
-        if (role.getId() == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
@@ -128,9 +121,6 @@ public class RoleInfoController extends AbstractController {
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity removeRole(@PathVariable Long id) {
-        if (id == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         try {
             roleInfoService.removeById(id);
         } catch (Exception e) {

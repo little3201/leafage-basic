@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import top.abeille.basic.authority.view.UserView;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * Model class for UserInfo
@@ -31,6 +31,7 @@ public class UserInfo {
     /**
      * 用户ID
      */
+    @NotNull
     @Column(name = "user_id")
     private String userId;
     /**

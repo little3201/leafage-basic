@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import top.abeille.basic.profile.dao.AccountInfoDao;
+import top.abeille.basic.profile.repository.AccountInfoRepository;
 import top.abeille.basic.profile.entity.AccountInfo;
 import top.abeille.common.mock.AbstractServiceMock;
 
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class AccountInfoServiceImplTest extends AbstractServiceMock {
 
     @Mock
-    private AccountInfoDao accountInfoDao;
+    private AccountInfoRepository accountInfoRepository;
 
     @InjectMocks
     private AccountInfoServiceImpl accountInfoService;
@@ -29,7 +29,7 @@ public class AccountInfoServiceImplTest extends AbstractServiceMock {
     public void getById() {
         AccountInfo account = new AccountInfo();
         account.setId(0L);
-        Mockito.when(accountInfoDao.findById(Mockito.anyLong())).thenReturn(Optional.of(account));
+        Mockito.when(accountInfoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(account));
         AccountInfo accountInfo = accountInfoService.getById(0L);
         Assert.assertThat(accountInfo, Matchers.notNullValue());
     }

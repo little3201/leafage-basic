@@ -6,7 +6,7 @@ package top.abeille.basic.authority.service.impl;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.authority.entity.UserInfo;
-import top.abeille.basic.authority.repository.UserInfoDao;
+import top.abeille.basic.authority.repository.UserInfoRepository;
 import top.abeille.basic.authority.service.UserInfoService;
 
 import java.util.List;
@@ -22,10 +22,10 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
 
-    private final UserInfoDao userInfoDao;
+    private final UserInfoRepository userInfoRepository;
 
-    public UserInfoServiceImpl(UserInfoDao userInfoDao) {
-        this.userInfoDao = userInfoDao;
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository) {
+        this.userInfoRepository = userInfoRepository;
     }
 
 
@@ -35,7 +35,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         可以通过ExampleMatcher.matching()方法进行进一步得处理*/
         ExampleMatcher exampleMatcher = this.appendConditions();
         this.appendParams(userInfo);
-        Optional<UserInfo> optional = userInfoDao.findOne(Example.of(userInfo, exampleMatcher));
+        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(userInfo, exampleMatcher));
         /*需要对结果做判断，查询结果为null时会报NoSuchElementExceptiontrue*/
         return optional.orElse(null);
     }
@@ -46,7 +46,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         ExampleMatcher exampleMatcher = this.appendConditions();
         UserInfo userInfo = this.appendParams(new UserInfo());
-        return userInfoDao.findAll(Example.of(userInfo, exampleMatcher), pageable);
+        return userInfoRepository.findAll(Example.of(userInfo, exampleMatcher), pageable);
     }
 
     @Override
@@ -58,28 +58,24 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (entity.getModifierId() == null) {
             entity.setModifierId(0L);
         }
-        return userInfoDao.save(entity);
+        return userInfoRepository.save(entity);
     }
 
     @Override
     public void removeById(Long id) {
-        userInfoDao.deleteById(id);
+        userInfoRepository.deleteById(id);
     }
 
     @Override
     public void removeInBatch(List<UserInfo> entities) {
-        userInfoDao.deleteInBatch(entities);
+        userInfoRepository.deleteInBatch(entities);
     }
 
     @Override
     public UserInfo getByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
-        UserInfo example = this.getByExample(userInfo);
-        if (example == null) {
-            return null;
-        }
-        return example;
+        return this.getByExample(userInfo);
     }
 
     @Override
@@ -95,11 +91,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfo getByUserId(String userId) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(userId);
-        UserInfo example = this.getByExample(userInfo);
-        if (example == null) {
-            return null;
-        }
-        return example;
+        return this.getByExample(userInfo);
     }
 
     /**

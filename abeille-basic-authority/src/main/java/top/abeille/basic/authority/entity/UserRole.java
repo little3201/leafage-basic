@@ -6,6 +6,7 @@ package top.abeille.basic.authority.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -28,11 +29,13 @@ public class UserRole {
     /**
      * 用户主键
      */
+    @NotNull
     @Column(name = "user_id")
     private Long userId;
     /**
      * 角色主键
      */
+    @NotNull
     @Column(name = "role_id")
     private Long roleId;
 

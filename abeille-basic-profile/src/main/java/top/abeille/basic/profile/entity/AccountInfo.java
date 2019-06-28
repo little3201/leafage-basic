@@ -6,6 +6,7 @@ package top.abeille.basic.profile.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -29,11 +30,13 @@ public class AccountInfo {
     /**
      * 用户ID
      */
+    @NotNull
     @Column(name = "user_id")
     private Long userId;
     /**
      * 账户ID
      */
+    @NotNull
     @Column(name = "account_id")
     private String accountId;
     /**

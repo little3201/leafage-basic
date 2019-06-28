@@ -34,9 +34,6 @@ public class AccountInfoController extends AbstractController {
      */
     @GetMapping("/{accountId}")
     public ResponseEntity getAccount(@PathVariable String accountId) {
-        if (StringUtils.isBlank(accountId)) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         AccountInfo account = accountInfoService.getByAccountId(accountId);
         if (account == null) {
             log.info("Not found anything about account with accountId {}.", accountId);
@@ -70,9 +67,6 @@ public class AccountInfoController extends AbstractController {
      */
     @PutMapping
     public ResponseEntity modifyAccount(@RequestBody AccountInfo account) {
-        if (account.getAccountId() == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         try {
             accountInfoService.save(account);
         } catch (Exception e) {
@@ -90,9 +84,6 @@ public class AccountInfoController extends AbstractController {
      */
     @DeleteMapping("/{accountId}")
     public ResponseEntity removeAccount(@PathVariable String accountId) {
-        if (StringUtils.isBlank(accountId)) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         try {
             accountInfoService.removeByAccountId(accountId);
         } catch (Exception e) {

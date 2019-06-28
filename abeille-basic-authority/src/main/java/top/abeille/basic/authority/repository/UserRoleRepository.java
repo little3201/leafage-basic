@@ -11,5 +11,5 @@ import top.abeille.basic.authority.entity.UserRole;
  *
  * @author liwenqiang 2018-12-06 22:09
  **/
-public interface UserRoleDao extends JpaRepository<UserRole, Long> {
+public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 }

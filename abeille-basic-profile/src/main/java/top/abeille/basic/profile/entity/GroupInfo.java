@@ -6,6 +6,7 @@ package top.abeille.basic.profile.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -29,6 +30,7 @@ public class GroupInfo {
     /**
      * 组织ID
      */
+    @NotNull
     @Column(name = "group_id")
     private String groupId;
     /**

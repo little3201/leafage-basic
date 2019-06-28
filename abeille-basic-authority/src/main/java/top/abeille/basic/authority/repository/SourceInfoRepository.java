@@ -11,6 +11,6 @@ import top.abeille.basic.authority.entity.SourceInfo;
  *
  * @author liwenqiang 2018/12/17 19:37
  **/
-public interface SourceInfoDao extends JpaRepository<SourceInfo, Long> {
+public interface SourceInfoRepository extends JpaRepository<SourceInfo, Long> {
 
 }

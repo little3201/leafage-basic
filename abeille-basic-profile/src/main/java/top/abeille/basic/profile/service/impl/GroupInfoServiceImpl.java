@@ -6,7 +6,7 @@ package top.abeille.basic.profile.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.profile.dao.GroupInfoDao;
+import top.abeille.basic.profile.repository.GroupInfoRepository;
 import top.abeille.basic.profile.entity.GroupInfo;
 import top.abeille.basic.profile.service.GroupInfoService;
 
@@ -21,35 +21,35 @@ import java.util.Optional;
 @Service
 public class GroupInfoServiceImpl implements GroupInfoService {
 
-    private final GroupInfoDao groupInfoDao;
+    private final GroupInfoRepository groupInfoRepository;
 
-    public GroupInfoServiceImpl(GroupInfoDao groupInfoDao) {
-        this.groupInfoDao = groupInfoDao;
+    public GroupInfoServiceImpl(GroupInfoRepository groupInfoRepository) {
+        this.groupInfoRepository = groupInfoRepository;
     }
 
     @Override
     public GroupInfo getById(Long id) {
-        Optional<GroupInfo> optional = groupInfoDao.findById(id);
+        Optional<GroupInfo> optional = groupInfoRepository.findById(id);
         return optional.orElse(null);
     }
 
     @Override
     public Page<GroupInfo> findAllByPage(Integer pageNum, Integer pageSize) {
-        return groupInfoDao.findAll(PageRequest.of(pageNum, pageSize));
+        return groupInfoRepository.findAll(PageRequest.of(pageNum, pageSize));
     }
 
     @Override
     public GroupInfo save(GroupInfo entity) {
-        return groupInfoDao.save(entity);
+        return groupInfoRepository.save(entity);
     }
 
     @Override
     public void removeById(Long id) {
-        groupInfoDao.deleteById(id);
+        groupInfoRepository.deleteById(id);
     }
 
     @Override
     public void removeInBatch(List<GroupInfo> entities) {
-        groupInfoDao.deleteInBatch(entities);
+        groupInfoRepository.deleteInBatch(entities);
     }
 }

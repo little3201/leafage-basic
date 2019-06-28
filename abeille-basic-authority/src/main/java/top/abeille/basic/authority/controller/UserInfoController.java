@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,8 @@ import top.abeille.basic.authority.entity.UserInfo;
 import top.abeille.basic.authority.service.UserInfoService;
 import top.abeille.basic.authority.view.UserView;
 import top.abeille.common.basic.AbstractController;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 用户信息Controller
@@ -45,10 +46,7 @@ public class UserInfoController extends AbstractController {
     @ApiOperation(value = "Fetch enabled users with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping
-    public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
-        if (pageNum == null || pageSize == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
+    public ResponseEntity findUsers(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         Page<UserInfo> users = userInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(users.getContent())) {
             log.info("Not found anything about user with pageable.");
@@ -68,9 +66,6 @@ public class UserInfoController extends AbstractController {
     @GetMapping("/{userId}")
     @JsonView(UserView.Details.class)
     public ResponseEntity getUser(@PathVariable String userId) {
-        if (StringUtils.isBlank(userId)) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         UserInfo user = userInfoService.getByUserId(userId);
         if (user == null) {
             log.info("Not found anything about user with userId: {}.", userId);
@@ -89,9 +84,6 @@ public class UserInfoController extends AbstractController {
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity saveUser(@RequestBody UserInfo user) {
-        if (user.getUserId() == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         try {
             userInfoService.save(user);
         } catch (Exception e) {
@@ -110,9 +102,6 @@ public class UserInfoController extends AbstractController {
     @ApiOperation(value = "Modify single user")
     @PutMapping
     public ResponseEntity modifyUser(@RequestBody UserInfo user) {
-        if (user.getUserId() == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         try {
             userInfoService.save(user);
         } catch (Exception e) {
@@ -133,9 +122,6 @@ public class UserInfoController extends AbstractController {
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{userId}")
     public ResponseEntity removeUser(@PathVariable String userId) {
-        if (userId == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         try {
             userInfoService.removeByUserId(userId);
         } catch (Exception e) {

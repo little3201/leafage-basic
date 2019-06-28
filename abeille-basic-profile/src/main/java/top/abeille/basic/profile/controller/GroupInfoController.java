@@ -12,6 +12,8 @@ import top.abeille.basic.profile.entity.GroupInfo;
 import top.abeille.basic.profile.service.GroupInfoService;
 import top.abeille.common.basic.AbstractController;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 组织信息controller
  *
@@ -34,9 +36,6 @@ public class GroupInfoController extends AbstractController {
      */
     @GetMapping("/group/{id}")
     public ResponseEntity getGroup(@PathVariable Long id) {
-        if (id == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
         GroupInfo groupInfo = groupInfoService.getById(id);
         if (groupInfo == null) {
             log.info("Not found anything about group with id {}.", id);
@@ -53,10 +52,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/groups")
-    public ResponseEntity findGroups(Integer pageNum, Integer pageSize) {
-        if (pageNum == null || pageSize == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
+    public ResponseEntity findGroups(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         Page<GroupInfo> groups = groupInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(groups.getContent())) {
             log.info("Not found anything about group with pageable.");

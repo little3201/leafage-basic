@@ -11,5 +11,5 @@ import top.abeille.basic.authority.entity.UserInfo;
  *
  * @author liwenqiang 2018/7/27 17:50
  **/
-public interface UserInfoDao extends JpaRepository<UserInfo, Long> {
+public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
 }

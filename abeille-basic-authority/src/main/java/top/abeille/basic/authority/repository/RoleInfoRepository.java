@@ -11,5 +11,5 @@ import top.abeille.basic.authority.entity.RoleInfo;
  *
  * @author liwenqiang 2018/9/26 11:06
  **/
-public interface RoleInfoDao extends JpaRepository<RoleInfo, Long> {
+public interface RoleInfoRepository extends JpaRepository<RoleInfo, Long> {
 }

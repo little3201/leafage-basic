@@ -6,6 +6,7 @@ package top.abeille.basic.authority.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -27,11 +28,13 @@ public class RoleSource {
     /**
      * 角色ID
      */
+    @NotNull
     @Column(name = "role_id")
     private Long roleId;
     /**
      * 资源ID
      */
+    @NotNull
     @Column(name = "source_id")
     private Long sourceId;
 

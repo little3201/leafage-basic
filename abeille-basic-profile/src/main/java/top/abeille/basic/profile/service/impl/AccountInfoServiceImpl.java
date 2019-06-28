@@ -5,7 +5,7 @@ package top.abeille.basic.profile.service.impl;
 
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.profile.dao.AccountInfoDao;
+import top.abeille.basic.profile.repository.AccountInfoRepository;
 import top.abeille.basic.profile.entity.AccountInfo;
 import top.abeille.basic.profile.service.AccountInfoService;
 
@@ -20,32 +20,32 @@ import java.util.Optional;
 @Service
 public class AccountInfoServiceImpl implements AccountInfoService {
 
-    private final AccountInfoDao accountInfoDao;
+    private final AccountInfoRepository accountInfoRepository;
 
-    public AccountInfoServiceImpl(AccountInfoDao accountInfoDao) {
-        this.accountInfoDao = accountInfoDao;
+    public AccountInfoServiceImpl(AccountInfoRepository accountInfoRepository) {
+        this.accountInfoRepository = accountInfoRepository;
     }
 
     @Override
     public AccountInfo getByExample(AccountInfo accountInfo) {
         accountInfo.setEnabled(true);
-        Optional<AccountInfo> optional = accountInfoDao.findOne(Example.of(accountInfo));
+        Optional<AccountInfo> optional = accountInfoRepository.findOne(Example.of(accountInfo));
         return optional.orElse(null);
     }
 
     @Override
     public AccountInfo save(AccountInfo entity) {
-        return accountInfoDao.save(entity);
+        return accountInfoRepository.save(entity);
     }
 
     @Override
     public void removeById(Long id) {
-        accountInfoDao.deleteById(id);
+        accountInfoRepository.deleteById(id);
     }
 
     @Override
     public void removeInBatch(List<AccountInfo> entities) {
-        accountInfoDao.deleteInBatch(entities);
+        accountInfoRepository.deleteInBatch(entities);
     }
 
     @Override
@@ -61,6 +61,6 @@ public class AccountInfoServiceImpl implements AccountInfoService {
         if (accountInfo == null) {
             return;
         }
-        accountInfoDao.deleteById(accountInfo.getId());
+        accountInfoRepository.deleteById(accountInfo.getId());
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import top.abeille.basic.authority.entity.UserInfo;
-import top.abeille.basic.authority.repository.UserInfoDao;
+import top.abeille.basic.authority.repository.UserInfoRepository;
 import top.abeille.common.mock.AbstractServiceMock;
 
 import java.util.Optional;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class UserInfoServiceImplTest extends AbstractServiceMock {
 
     @Mock
-    private UserInfoDao userInfoDao;
+    private UserInfoRepository userInfoRepository;
 
     @InjectMocks
     private UserInfoServiceImpl userInfoService;
@@ -40,7 +40,7 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
         String pwd = new BCryptPasswordEncoder().encode("abeille");
         user.setPassword(pwd);
         userInfoService.save(user);
-        Mockito.verify(userInfoDao, Mockito.times(1)).save(user);
+        Mockito.verify(userInfoRepository, Mockito.times(1)).save(user);
     }
 
     /**
@@ -51,7 +51,7 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
     public void getById() {
         UserInfo user = new UserInfo();
         user.setId(0L);
-        Mockito.when(userInfoDao.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
+        Mockito.when(userInfoRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(user));
         UserInfo userInfo = userInfoService.getById(user.getId());
         Assert.assertThat(userInfo.getId(), Matchers.equalTo(0L));
     }
@@ -64,7 +64,7 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
     public void getByExample() {
         UserInfo user = new UserInfo();
         user.setId(0L);
-        Mockito.when(userInfoDao.findOne(Example.of(user))).thenReturn(Optional.of(user));
+        Mockito.when(userInfoRepository.findOne(Example.of(user))).thenReturn(Optional.of(user));
         UserInfo userInfo = userInfoService.getByExample(user);
         Assert.assertThat(userInfo.getId(), Matchers.equalTo(0L));
     }
@@ -74,7 +74,7 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
      */
     @Test
     public void findAllByPage() {
-        Mockito.when(userInfoDao.findAll(Mockito.any(Pageable.class))).thenReturn(Mockito.any());
+        Mockito.when(userInfoRepository.findAll(Mockito.any(Pageable.class))).thenReturn(Mockito.any());
     }
 
     /**
@@ -82,7 +82,7 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
      */
     @Test
     public void removeById() {
-        Mockito.verify(userInfoDao, Mockito.times(1)).deleteById(Mockito.anyLong());
+        Mockito.verify(userInfoRepository, Mockito.times(1)).deleteById(Mockito.anyLong());
     }
 
     /**
@@ -90,6 +90,6 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
      */
     @Test
     public void removeInBatch() {
-        Mockito.verify(userInfoDao, Mockito.times(1)).deleteInBatch(Mockito.anyIterable());
+        Mockito.verify(userInfoRepository, Mockito.times(1)).deleteInBatch(Mockito.anyIterable());
     }
 }

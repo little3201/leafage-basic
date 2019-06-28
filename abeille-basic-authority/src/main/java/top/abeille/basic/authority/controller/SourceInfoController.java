@@ -17,6 +17,8 @@ import top.abeille.basic.authority.entity.SourceInfo;
 import top.abeille.basic.authority.service.SourceInfoService;
 import top.abeille.common.basic.AbstractController;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 权限资源controller
  *
@@ -43,10 +45,7 @@ public class SourceInfoController extends AbstractController {
     @ApiOperation(value = "Fetch enabled sources with pageable")
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping
-    public ResponseEntity findSource(Integer pageNum, Integer pageSize) {
-        if (pageNum == null || pageSize == null) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
+    public ResponseEntity findSource(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         Page<SourceInfo> sources = sourceInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(sources.getContent())) {
             log.info("Not found anything about source with pageable.");

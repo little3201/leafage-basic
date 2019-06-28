@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.profile.dao;
+package top.abeille.basic.profile.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import top.abeille.basic.profile.entity.AccountInfo;
@@ -11,5 +11,5 @@ import top.abeille.basic.profile.entity.AccountInfo;
  *
  * @author liwenqiang 2018/12/20 9:51
  **/
-public interface AccountInfoDao extends JpaRepository<AccountInfo, Long> {
+public interface AccountInfoRepository extends JpaRepository<AccountInfo, Long> {
 }

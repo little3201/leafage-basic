@@ -7,7 +7,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.authority.repository.UserRoleDao;
+import top.abeille.basic.authority.repository.UserRoleRepository;
 import top.abeille.basic.authority.entity.UserRole;
 import top.abeille.basic.authority.service.UserRoleService;
 
@@ -23,41 +23,41 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 @Service
 public class UserRoleServiceImpl implements UserRoleService {
 
-    private final UserRoleDao userRoleDao;
+    private final UserRoleRepository userRoleRepository;
 
-    public UserRoleServiceImpl(UserRoleDao userRoleDao) {
-        this.userRoleDao = userRoleDao;
+    public UserRoleServiceImpl(UserRoleRepository userRoleRepository) {
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
     public List<UserRole> findAllByExample(UserRole userRole, ExampleMatcher exampleMatcher) {
         Example<UserRole> example = Example.of(userRole, exampleMatcher);
-        return userRoleDao.findAll(example);
+        return userRoleRepository.findAll(example);
     }
 
     @Override
     public UserRole save(UserRole entity) {
-        return userRoleDao.save(entity);
+        return userRoleRepository.save(entity);
     }
 
     @Override
     public List<UserRole> findAll(Sort sort) {
-        return userRoleDao.findAll(sort);
+        return userRoleRepository.findAll(sort);
     }
 
     @Override
     public List<UserRole> saveAll(List<UserRole> entities) {
-        return userRoleDao.saveAll(entities);
+        return userRoleRepository.saveAll(entities);
     }
 
     @Override
     public void removeById(Long id) {
-        userRoleDao.deleteById(id);
+        userRoleRepository.deleteById(id);
     }
 
     @Override
     public void removeInBatch(List<UserRole> entities) {
-        userRoleDao.deleteInBatch(entities);
+        userRoleRepository.deleteInBatch(entities);
     }
 
     @Override

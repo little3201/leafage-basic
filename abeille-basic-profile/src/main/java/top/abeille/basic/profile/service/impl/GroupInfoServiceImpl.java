@@ -5,9 +5,10 @@ package top.abeille.basic.profile.service.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.profile.repository.GroupInfoRepository;
 import top.abeille.basic.profile.entity.GroupInfo;
+import top.abeille.basic.profile.repository.GroupInfoRepository;
 import top.abeille.basic.profile.service.GroupInfoService;
 
 import java.util.List;
@@ -23,8 +24,11 @@ public class GroupInfoServiceImpl implements GroupInfoService {
 
     private final GroupInfoRepository groupInfoRepository;
 
-    public GroupInfoServiceImpl(GroupInfoRepository groupInfoRepository) {
+    private final RedisTemplate<String, Page<GroupInfo>> redisTemplate;
+
+    public GroupInfoServiceImpl(GroupInfoRepository groupInfoRepository, RedisTemplate<String, Page<GroupInfo>> redisTemplate) {
         this.groupInfoRepository = groupInfoRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -35,7 +39,17 @@ public class GroupInfoServiceImpl implements GroupInfoService {
 
     @Override
     public Page<GroupInfo> findAllByPage(Integer pageNum, Integer pageSize) {
-        return groupInfoRepository.findAll(PageRequest.of(pageNum, pageSize));
+        Boolean hasKey = redisTemplate.hasKey("groups");
+        Page<GroupInfo> groups;
+        if (null != hasKey && hasKey) {
+            groups = redisTemplate.opsForValue().get("groups");
+            if (null != groups) {
+                return groups;
+            }
+        }
+        groups = groupInfoRepository.findAll(PageRequest.of(pageNum, pageSize));
+        redisTemplate.opsForValue().set("groups", groups);
+        return groups;
     }
 
     @Override

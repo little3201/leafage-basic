@@ -9,4 +9,11 @@ spring:
 
   ##=====active profile=====##
   profiles:
-    active: prod
+    active: dev
+
+#actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,metrics,prometheus

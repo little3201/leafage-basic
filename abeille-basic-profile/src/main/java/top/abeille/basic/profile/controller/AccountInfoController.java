@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.profile.controller;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +15,8 @@ import top.abeille.common.basic.AbstractController;
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
-@RequestMapping("/account")
 @RestController
+@RequestMapping("/account")
 public class AccountInfoController extends AbstractController {
 
     private final AccountInfoService accountInfoService;

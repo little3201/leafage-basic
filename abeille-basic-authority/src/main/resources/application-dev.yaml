@@ -48,10 +48,26 @@ spring:
       hibernate:
         hbm2ddl:
           auto: update
+
   # server jpa run thread common, hibernate will run with another thread
   data:
     jpa:
       repositories:
         bootstrap-mode: deferred
+
+
+  ##=====redis common=====##
+  redis:
+    # Redis database index(default is 0)
+    database: 0
+    # Redis server host
+    host: 192.168.248.254
+    # Redis server port
+    port: 6379
+    # Redis server password(default is non)
+    password:
+    # shutdown timeout(ms)
+    lettuce:
+      shutdown-timeout: 0ms
 
 

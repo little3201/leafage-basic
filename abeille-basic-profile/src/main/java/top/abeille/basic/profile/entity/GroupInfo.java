@@ -56,8 +56,8 @@ public class GroupInfo {
     /**
      * 组织中文简称
      */
-    @Column(name = "group_simple_name_cn")
-    private String groupSimpleNameCn;
+    @Column(name = "group_short_name_cn")
+    private String groupShortNameCn;
     /**
      * 组织英文全称
      */
@@ -66,8 +66,8 @@ public class GroupInfo {
     /**
      * 组织英文简称
      */
-    @Column(name = "group_simple_name_en")
-    private String groupSimpleNameEn;
+    @Column(name = "group_short_name_en")
+    private String groupShortNameEn;
 
     /**
      * 是否有效
@@ -136,12 +136,12 @@ public class GroupInfo {
         this.groupFullNameCn = groupFullNameCn;
     }
 
-    public String getgroupSimpleNameCn() {
-        return groupSimpleNameCn;
+    public String getGroupShortNameCn() {
+        return groupShortNameCn;
     }
 
-    public void setGroupSimpleNameCn(String groupSimpleNameCn) {
-        this.groupSimpleNameCn = groupSimpleNameCn;
+    public void setGroupShortNameCn(String groupShortNameCn) {
+        this.groupShortNameCn = groupShortNameCn;
     }
 
     public String getGroupFullNameEn() {
@@ -152,16 +152,12 @@ public class GroupInfo {
         this.groupFullNameEn = groupFullNameEn;
     }
 
-    public String getGroupSimpleNameEn() {
-        return groupSimpleNameEn;
+    public String getGroupShortNameEn() {
+        return groupShortNameEn;
     }
 
-    public void setGroupSimpleNameEn(String groupSimpleNameEn) {
-        this.groupSimpleNameEn = groupSimpleNameEn;
-    }
-
-    public String getGroupSimpleNameCn() {
-        return groupSimpleNameCn;
+    public void setGroupShortNameEn(String groupShortNameEn) {
+        this.groupShortNameEn = groupShortNameEn;
     }
 
     public Boolean getEnabled() {

@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
  * @author liwenqiang 2018/12/20 9:54
  **/
 @RestController
+@RequestMapping("/group")
 public class GroupInfoController extends AbstractController {
 
     private final GroupInfoService groupInfoService;
@@ -34,7 +35,7 @@ public class GroupInfoController extends AbstractController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @GetMapping("/group/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getGroup(@PathVariable Long id) {
         GroupInfo groupInfo = groupInfoService.getById(id);
         if (groupInfo == null) {
@@ -51,7 +52,7 @@ public class GroupInfoController extends AbstractController {
      * @param pageSize 分页大小
      * @return ResponseEntity
      */
-    @GetMapping("/groups")
+    @GetMapping
     public ResponseEntity findGroups(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         Page<GroupInfo> groups = groupInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(groups.getContent())) {
@@ -67,7 +68,7 @@ public class GroupInfoController extends AbstractController {
      * @param group 组织
      * @return ResponseEntity
      */
-    @PostMapping("/group")
+    @PostMapping
     public ResponseEntity saveGroup(@RequestBody GroupInfo group) {
         try {
             groupInfoService.save(group);
@@ -84,7 +85,7 @@ public class GroupInfoController extends AbstractController {
      * @param group 组织
      * @return ResponseEntity
      */
-    @PutMapping("/group")
+    @PutMapping
     public ResponseEntity modifyGroup(@RequestBody GroupInfo group) {
         try {
             groupInfoService.save(group);
@@ -101,7 +102,7 @@ public class GroupInfoController extends AbstractController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/group/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity removeGroup(@PathVariable Long id) {
         try {
             groupInfoService.removeById(id);

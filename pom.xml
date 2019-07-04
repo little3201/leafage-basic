@@ -32,8 +32,8 @@
     </developers>
 
     <modules>
-        <module>abeille-basic-authority</module>
-        <module>abeille-basic-profile</module>
+        <module>abeille-basic-payment</module>
+        <module>abeille-basic-user</module>
     </modules>
 
     <dependencyManagement>
@@ -52,7 +52,6 @@
                 <artifactId>abeille-common</artifactId>
                 <version>${abeille-common.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

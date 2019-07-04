@@ -28,7 +28,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         this.userInfoRepository = userInfoRepository;
     }
 
-
     @Override
     public UserInfo getByExample(UserInfo userInfo) {
         /*Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可

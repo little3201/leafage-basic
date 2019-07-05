@@ -1,14 +1,15 @@
 # abeille-basic
 
-> abeille-basic-authority
+> abeille-basic-hypervisor
 >
 > > user
 >
 > > role
 >
-> > permission
+> > source
 >
-> abeille-basic-profile
 > > group
+>
+> abeille-basic-assets
 >
 > > account

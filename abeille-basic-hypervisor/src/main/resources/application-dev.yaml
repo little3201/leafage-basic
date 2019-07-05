@@ -1,0 +1,73 @@
+##=====log common=====##
+logging:
+  level:
+    # control root logger's level for WARN
+    root: INFO
+    # control org.springframework logger's level for DEBUG
+    org:
+      springframework: INFO
+      # control org.hibernate logger's level for ERROR
+      hibernate: INFO
+
+spring:
+  cloud:
+    consul:
+      host: 34.80.77.231
+      port: 8500
+  ##=====datasource common=====##
+  datasource:
+    master:
+      # datasource driver
+      driver-class-name: org.mariadb.jdbc.Driver
+      # datasource connection path
+      jdbcUrl: jdbc:mariadb://127.0.0.1:3306/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      # datasource username
+      username: root
+      # datasource password
+      password: root
+    slaver:
+      # datasource driver
+      driver-class-name: org.mariadb.jdbc.Driver
+      # datasource connection path
+      jdbcUrl: jdbc:mariadb://127.0.0.1:3306/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      # datasource username
+      username: root
+      # datasource password
+      password: root
+
+  ##=====Jpa common=====##
+  jpa:
+    # datasource dialect
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    # datasource driver
+    database: mysql
+    # whether show execute sql
+    show-sql: true
+    # what hibernate will do when application run
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+
+  # server jpa run thread common, hibernate will run with another thread
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+
+
+  ##=====redis common=====##
+  redis:
+    # Redis database index(default is 0)
+    database: 0
+    # Redis server host
+    host: 192.168.248.254
+    # Redis server port
+    port: 6379
+    # Redis server password(default is non)
+    password:
+    # shutdown timeout(ms)
+    lettuce:
+      shutdown-timeout: 0ms
+
+

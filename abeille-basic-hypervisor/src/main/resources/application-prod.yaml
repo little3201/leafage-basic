@@ -1,0 +1,84 @@
+##=====log common=====##
+logging:
+  level:
+    # control root logger's level for INFO
+    root: INFO
+    # control org.springframework logger's level for DEBUG
+    org:
+      springframework: INFO
+      # control org.hibernate logger's level for ERROR
+      hibernate: INFO
+
+spring:
+  cloud:
+    consul:
+      host: 34.80.77.231
+      port: 8500
+  ##=====datasource common=====##
+  datasource:
+    master:
+      # datasource driver
+      driver-class-name: org.mariadb.jdbc.Driver
+      # datasource connection path
+      jdbcUrl: jdbc:mariadb://database-aws.cluster-cl3gpiad84o4.ap-northeast-1.rds.amazonaws.com:3036/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      # datasource username
+      username: admin
+      # datasource password
+      password: MgrfS1c3oqxq0eW9CTrU
+    slaver:
+      # datasource driver
+      driver-class-name: org.mariadb.jdbc.Driver
+      # datasource connection path
+      jdbcUrl: jdbc:mariadb://database-aws.cluster-ro-cl3gpiad84o4.ap-northeast-1.rds.amazonaws.com:3036/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      # datasource username
+      username: admin
+      # datasource password
+      password: MgrfS1c3oqxq0eW9CTrU
+
+  ##=====Jpa common=====##
+  jpa:
+    # jpa database
+    database: mysql
+    # whether show execute sql
+    show-sql: true
+    # what hibernate will do when application run
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+    # datasource dialect
+    database-platform: org.hibernate.dialect.MariaDBDialect
+  # server jpa run thread common, hibernate will run with another thread
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+
+  ##=====redis common=====##
+  redis:
+    # Redis database index(default is 0)
+    database: 0
+    # Redis server host
+    host: abeille.top
+    # Redis server port
+    port: 7369
+    # Redis server password(default is non)
+    password: redis
+    # shutdown timeout(ms)
+    lettuce:
+      shutdown-timeout: 0ms
+
+  ###=====rabbitMQ common=====##
+  rabbitmq:
+    # rabbitMQ server host
+    host: abeille.top
+    # rabbitMQ server port
+    port: 5672
+    # rabbitMQ server username
+    username: guest
+    # rabbitMQ server password
+    password: guest
+    # connection timeout
+    connection-timeout: 0ms
+    # rabbitMQ publish confirm whether would open
+    publisher-confirms: true

@@ -32,8 +32,8 @@
     </developers>
 
     <modules>
-        <module>abeille-basic-payment</module>
-        <module>abeille-basic-user</module>
+        <module>abeille-basic-hypervisor</module>
+        <module>abeille-basic-assets</module>
     </modules>
 
     <dependencyManagement>

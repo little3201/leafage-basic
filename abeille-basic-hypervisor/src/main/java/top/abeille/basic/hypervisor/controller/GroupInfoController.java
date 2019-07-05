@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.controller;
+package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.assets.entity.GroupInfo;
-import top.abeille.basic.assets.service.GroupInfoService;
+import top.abeille.basic.hypervisor.entity.GroupInfo;
+import top.abeille.basic.hypervisor.service.GroupInfoService;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.constraints.NotNull;

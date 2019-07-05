@@ -6,7 +6,7 @@ package top.abeille.basic.assets.api;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import top.abeille.common.vo.UserInfoVO;
+import top.abeille.basic.assets.vo.UserInfoVO;
 
 /**
  * 用户api

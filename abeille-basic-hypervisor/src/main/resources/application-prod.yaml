@@ -20,7 +20,7 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://database-aws.cluster-cl3gpiad84o4.ap-northeast-1.rds.amazonaws.com:3036/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://database-aws.cluster-cl3gpiad84o4.ap-northeast-1.rds.amazonaws.com:3036/abeille_basic?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: admin
       # datasource password
@@ -29,7 +29,7 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://database-aws.cluster-ro-cl3gpiad84o4.ap-northeast-1.rds.amazonaws.com:3036/abeille_basic_authority?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://database-aws.cluster-ro-cl3gpiad84o4.ap-northeast-1.rds.amazonaws.com:3036/abeille_basic?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: admin
       # datasource password

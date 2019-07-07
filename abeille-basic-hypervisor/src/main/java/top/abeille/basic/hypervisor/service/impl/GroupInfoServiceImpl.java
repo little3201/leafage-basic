@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.service.impl;
+package top.abeille.basic.hypervisor.service.impl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.assets.entity.GroupInfo;
-import top.abeille.basic.assets.repository.GroupInfoRepository;
-import top.abeille.basic.assets.service.GroupInfoService;
+import top.abeille.basic.hypervisor.entity.GroupInfo;
+import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
+import top.abeille.basic.hypervisor.service.GroupInfoService;
 
 import java.util.List;
 import java.util.Optional;

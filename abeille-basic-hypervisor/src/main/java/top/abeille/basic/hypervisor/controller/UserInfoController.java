@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.entity.UserInfo;
@@ -44,7 +43,6 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Fetch enabled users with pageable")
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity findUsers(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         Page<UserInfo> users = userInfoService.findAllByPage(pageNum, pageSize);
@@ -81,7 +79,6 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Save single hypervisor")
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity saveUser(@RequestBody UserInfo user) {
         try {
@@ -119,7 +116,6 @@ public class UserInfoController extends AbstractController {
      */
     @ApiOperation(value = "Remove single hypervisor")
     @ApiImplicitParam(name = "userId", required = true)
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{userId}")
     public ResponseEntity removeUser(@PathVariable String userId) {
         try {

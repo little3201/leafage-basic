@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.entity;
+package top.abeille.basic.hypervisor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

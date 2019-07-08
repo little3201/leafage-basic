@@ -10,10 +10,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author liwenqiang
  */
 @SpringBootApplication(scanBasePackages = {"top.abeille.basic.assets", "top.abeille.common"})
-public class AssetsApplication {
+public class BasicAssetsApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AssetsApplication.class, args);
+        SpringApplication.run(BasicAssetsApplication.class, args);
     }
 
 }

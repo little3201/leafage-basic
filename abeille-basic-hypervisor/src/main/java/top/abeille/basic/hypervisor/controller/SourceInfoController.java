@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +42,6 @@ public class SourceInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @ApiOperation(value = "Fetch enabled sources with pageable")
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity findSource(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         Page<SourceInfo> sources = sourceInfoService.findAllByPage(pageNum, pageSize);

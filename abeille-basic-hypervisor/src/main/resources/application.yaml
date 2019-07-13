@@ -10,3 +10,10 @@ spring:
   ##=====active assets=====##
   profiles:
     active: dev
+
+##=====actuator=====##
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,env,metrics,prometheus

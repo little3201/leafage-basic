@@ -16,6 +16,7 @@ import top.abeille.basic.hypervisor.service.UserInfoService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -95,7 +96,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfo example = this.getByExample(userInfo);
         if (null != example) {
             try {
-                stringRedisTemplate.opsForValue().set(username, objectMapper.writeValueAsString(example));
+                stringRedisTemplate.opsForValue().set(username, objectMapper.writeValueAsString(example), 1, TimeUnit.DAYS);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }

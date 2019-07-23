@@ -11,9 +11,17 @@ logging:
 
 spring:
   cloud:
+    ##=====consul=====##
     consul:
       host: 127.0.0.1
       port: 8500
+
+    ##=====sentinel=====##
+    sentinel:
+      eager: true
+      transport:
+        dashboard: 192.168.248.254:8089
+
   ##=====datasource common=====##
   datasource:
     master:

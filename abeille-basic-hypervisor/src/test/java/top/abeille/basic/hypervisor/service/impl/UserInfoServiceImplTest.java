@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.common.mock.AbstractServiceMock;
@@ -41,8 +40,6 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
         UserInfo user = new UserInfo();
         user.setId(0L);
         user.setUserNameCn("管理员");
-        String pwd = new BCryptPasswordEncoder().encode("abeille");
-        user.setPassword(pwd);
         userInfoService.save(user);
         Mockito.verify(userInfoRepository, Mockito.times(1)).save(user);
     }

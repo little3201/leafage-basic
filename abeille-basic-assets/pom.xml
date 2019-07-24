@@ -23,7 +23,7 @@
         <!-- Spring cloud consul -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+            <artifactId>spring-cloud-consul-discovery</artifactId>
         </dependency>
         <!-- Spring Cloud OpenFeign -->
         <dependency>

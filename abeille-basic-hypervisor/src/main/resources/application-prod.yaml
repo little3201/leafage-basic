@@ -11,9 +11,11 @@ logging:
 
 spring:
   cloud:
+    ##=====consul=====##
     consul:
       host: 34.80.77.231
       port: 8500
+
   ##=====datasource common=====##
   datasource:
     master:

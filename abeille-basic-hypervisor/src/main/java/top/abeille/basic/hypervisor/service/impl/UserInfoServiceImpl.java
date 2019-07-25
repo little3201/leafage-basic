@@ -3,20 +3,14 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang.BooleanUtils;
 import org.springframework.data.domain.*;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -30,11 +24,8 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
 
-    private final StringRedisTemplate stringRedisTemplate;
-
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, StringRedisTemplate stringRedisTemplate) {
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository) {
         this.userInfoRepository = userInfoRepository;
-        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     @Override
@@ -81,27 +72,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfo getByUsername(String username) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Boolean hasKey = stringRedisTemplate.hasKey(username);
-        if (BooleanUtils.isTrue(hasKey)) {
-            Object object = stringRedisTemplate.opsForValue().get(username);
-            try {
-                return objectMapper.readValue(String.valueOf(object), UserInfo.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
-        UserInfo example = this.getByExample(userInfo);
-        if (null != example) {
-            try {
-                stringRedisTemplate.opsForValue().set(username, objectMapper.writeValueAsString(example), 1, TimeUnit.DAYS);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        }
-        return example;
+        return this.getByExample(userInfo);
     }
 
     @Override

@@ -13,7 +13,7 @@ spring:
   cloud:
     ##=====consul=====##
     consul:
-      host: abeillt.top
+      host: abeille.top
       port: 8500
 
   ##=====datasource common=====##
@@ -22,20 +22,20 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://abeillt.top:3306/abeille_basic?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://abeille.top:3306/abeille_basic?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: abeille
       # datasource password
-      password: abeillt.top
+      password: abeille.top
     slaver:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://abeillt.top:3306/abeille_basic?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://abeille.top:3306/abeille_basic?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
-      username: abeillt
+      username: abeille
       # datasource password
-      password: abeillt.top
+      password: abeille.top
 
   ##=====Jpa common=====##
   jpa:

@@ -19,16 +19,16 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://abeille.top:3036/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://abeille.top:3306/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: abeille
       # datasource password
       password: abeille.top
-    slave:
+    slaver:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://abeille.top:3036/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://abeille.top:3306/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: abeille
       # datasource password

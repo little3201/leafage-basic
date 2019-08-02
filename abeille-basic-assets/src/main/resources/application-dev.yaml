@@ -26,7 +26,7 @@ spring:
       username: root
       # datasource password
       password: root
-    slave:
+    slaver:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path

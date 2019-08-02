@@ -23,7 +23,7 @@
         <!-- Spring Cloud Consul -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-consul-discovery</artifactId>
+            <artifactId>spring-cloud-starter-consul-discovery</artifactId>
         </dependency>
         <!-- mariadb -->
         <dependency>

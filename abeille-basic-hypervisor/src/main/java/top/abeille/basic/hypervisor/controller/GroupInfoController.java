@@ -3,6 +3,8 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,11 @@ import top.abeille.common.basic.AbstractController;
 import javax.validation.constraints.NotNull;
 
 /**
- * 组织信息controller
+ * 组信息controller
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
+@Api(tags = "Group Api")
 @RestController
 @RequestMapping("/group")
 public class GroupInfoController extends AbstractController {
@@ -30,11 +33,12 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 查找组织信息——根据ID
+     * 查找组信息——根据ID
      *
      * @param id 主键
      * @return ResponseEntity
      */
+    @ApiOperation(value = "Get single group with id")
     @GetMapping("/{id}")
     public ResponseEntity getGroup(@PathVariable Long id) {
         GroupInfo groupInfo = groupInfoService.getById(id);
@@ -46,12 +50,13 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 查找组织信息——分页查询
+     * 查找组信息——分页查询
      *
      * @param pageNum  查询页码
      * @param pageSize 分页大小
      * @return ResponseEntity
      */
+    @ApiOperation(value = "Fetch enabled groups with pageable")
     @GetMapping
     public ResponseEntity findGroups(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         Page<GroupInfo> groups = groupInfoService.findAllByPage(pageNum, pageSize);
@@ -63,11 +68,12 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 保存组织信息
+     * 保存组信息
      *
-     * @param group 组织
+     * @param group 组
      * @return ResponseEntity
      */
+    @ApiOperation(value = "save single group")
     @PostMapping
     public ResponseEntity saveGroup(@RequestBody GroupInfo group) {
         try {
@@ -80,11 +86,12 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 修改组织信息
+     * 修改组信息
      *
-     * @param group 组织
+     * @param group 组
      * @return ResponseEntity
      */
+    @ApiOperation(value = "modify single group")
     @PutMapping
     public ResponseEntity modifyGroup(@RequestBody GroupInfo group) {
         try {
@@ -97,11 +104,12 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 删除组织信息
+     * 删除组信息
      *
      * @param id 主键
      * @return ResponseEntity
      */
+    @ApiOperation(value = "remove single group")
     @DeleteMapping("/{id}")
     public ResponseEntity removeGroup(@PathVariable Long id) {
         try {

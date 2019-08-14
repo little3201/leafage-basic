@@ -41,6 +41,11 @@ public class ArticleInfo {
     /**
      * 文章描述
      */
+    @Column(name = "article_content")
+    private BigDecimal articleContent;
+    /**
+     * 文章描述
+     */
     @Column(name = "article_description")
     private BigDecimal articleDescription;
     /**
@@ -94,6 +99,14 @@ public class ArticleInfo {
 
     public void setArticleTitle(Long articleTitle) {
         this.articleTitle = articleTitle;
+    }
+
+    public BigDecimal getArticleContent() {
+        return articleContent;
+    }
+
+    public void setArticleContent(BigDecimal articleContent) {
+        this.articleContent = articleContent;
     }
 
     public BigDecimal getArticleDescription() {

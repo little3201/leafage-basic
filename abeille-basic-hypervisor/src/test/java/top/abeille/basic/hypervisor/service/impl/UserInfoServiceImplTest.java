@@ -19,7 +19,7 @@ import top.abeille.common.mock.AbstractServiceMock;
 import java.util.Optional;
 
 /**
- * java类描述
+ * 用户信息service测试
  *
  * @author liwenqiang 2019/1/29 17:10
  **/

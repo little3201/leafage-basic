@@ -37,17 +37,17 @@ public class ArticleInfo {
      * 文章标题
      */
     @Column(name = "article_title")
-    private Long articleTitle;
+    private String articleTitle;
     /**
      * 文章描述
      */
     @Column(name = "article_content")
-    private BigDecimal articleContent;
+    private String articleContent;
     /**
      * 文章描述
      */
     @Column(name = "article_description")
-    private BigDecimal articleDescription;
+    private String articleDescription;
     /**
      * 文章url
      */
@@ -93,27 +93,27 @@ public class ArticleInfo {
         this.articleId = articleId;
     }
 
-    public Long getArticleTitle() {
+    public String getArticleTitle() {
         return articleTitle;
     }
 
-    public void setArticleTitle(Long articleTitle) {
+    public void setArticleTitle(String articleTitle) {
         this.articleTitle = articleTitle;
     }
 
-    public BigDecimal getArticleContent() {
+    public String getArticleContent() {
         return articleContent;
     }
 
-    public void setArticleContent(BigDecimal articleContent) {
+    public void setArticleContent(String articleContent) {
         this.articleContent = articleContent;
     }
 
-    public BigDecimal getArticleDescription() {
+    public String getArticleDescription() {
         return articleDescription;
     }
 
-    public void setArticleDescription(BigDecimal articleDescription) {
+    public void setArticleDescription(String articleDescription) {
         this.articleDescription = articleDescription;
     }
 

@@ -9,4 +9,4 @@ spring:
 
   ##=====active assets=====##
   profiles:
-    active: dev
+    active: prod

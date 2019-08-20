@@ -4,8 +4,6 @@
 package top.abeille.basic.hypervisor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-import top.abeille.basic.hypervisor.view.UserView;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -42,49 +40,41 @@ public class UserInfo {
     /**
      * 中文姓名
      */
-    @JsonView(UserView.Summary.class)
     @Column(name = "user_name_cn")
     private String userNameCn;
     /**
      * 英文姓名
      */
-    @JsonView(UserView.Summary.class)
     @Column(name = "user_name_en")
     private String userNameEn;
     /**
      * 用户名
      */
-    @JsonView(UserView.Summary.class)
     @Column(name = "username")
     private String username;
     /**
      * 密码
      */
-    @JsonIgnore
     @Column(name = "password")
     private String password;
     /**
      * 电话
      */
-    @JsonView(UserView.Summary.class)
     @Column(name = "user_mobile")
     private String userMobile;
     /**
      * 邮箱
      */
-    @JsonView(UserView.Summary.class)
     @Column(name = "user_email")
     private String userEmail;
     /**
      * 地址
      */
-    @JsonView(UserView.Summary.class)
     @Column(name = "user_address")
     private String userAddress;
     /**
      * 是否无效
      */
-    @JsonIgnore
     @Column(name = "is_account_non_expired")
     private Boolean accountNonExpired;
     /**
@@ -95,14 +85,12 @@ public class UserInfo {
     /**
      * 密码是否有效
      */
-    @JsonIgnore
     @Column(name = "is_credentials_non_expired")
     private Boolean credentialsNonExpired;
 
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**

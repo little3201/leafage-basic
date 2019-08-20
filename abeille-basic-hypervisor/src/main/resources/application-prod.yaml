@@ -11,29 +11,31 @@ logging:
 
 spring:
   cloud:
+    ##=====consul=====##
     consul:
-      host: 34.80.77.231
+      host: 127.0.0.1
       port: 8500
+
   ##=====datasource common=====##
   datasource:
     master:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://database-aws.cluster-cl3gpiad84o4.ap-northeast-1.rds.amazonaws.com:3036/abeille_basic?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://119.3.182.185:3306/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
-      username: admin
+      username: root
       # datasource password
-      password: MgrfS1c3oqxq0eW9CTrU
+      password: zx110119@@
     slaver:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://database-aws.cluster-ro-cl3gpiad84o4.ap-northeast-1.rds.amazonaws.com:3036/abeille_basic?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://119.3.182.185:3306/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
-      username: admin
+      username: root
       # datasource password
-      password: MgrfS1c3oqxq0eW9CTrU
+      password: zx110119@@
 
   ##=====Jpa common=====##
   jpa:
@@ -53,32 +55,3 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
-
-  ##=====redis common=====##
-  redis:
-    # Redis database index(default is 0)
-    database: 0
-    # Redis server host
-    host: abeille.top
-    # Redis server port
-    port: 7369
-    # Redis server password(default is non)
-    password: redis
-    # shutdown timeout(ms)
-    lettuce:
-      shutdown-timeout: 0ms
-
-  ###=====rabbitMQ common=====##
-  rabbitmq:
-    # rabbitMQ server host
-    host: abeille.top
-    # rabbitMQ server port
-    port: 5672
-    # rabbitMQ server username
-    username: guest
-    # rabbitMQ server password
-    password: guest
-    # connection timeout
-    connection-timeout: 0ms
-    # rabbitMQ publish confirm whether would open
-    publisher-confirms: true

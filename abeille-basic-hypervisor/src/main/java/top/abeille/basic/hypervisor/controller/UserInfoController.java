@@ -3,9 +3,7 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -14,7 +12,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.service.UserInfoService;
-import top.abeille.basic.hypervisor.view.UserView;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.constraints.NotNull;
@@ -47,7 +44,7 @@ public class UserInfoController extends AbstractController {
     public ResponseEntity findUsers(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         Page<UserInfo> users = userInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(users.getContent())) {
-            log.info("Not found anything about hypervisor with pageable.");
+            log.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(users);
@@ -59,14 +56,29 @@ public class UserInfoController extends AbstractController {
      * @param userId 用户ID
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Get single hypervisor by userId")
-    @ApiImplicitParam(name = "userId", required = true)
+    /*@ApiOperation(value = "Get single user by userId")
     @GetMapping("/{userId}")
-    @JsonView(UserView.Details.class)
     public ResponseEntity getUser(@PathVariable String userId) {
         UserInfo user = userInfoService.getByUserId(userId);
         if (user == null) {
             log.info("Not found anything about hypervisor with userId: {}.", userId);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(user);
+    }*/
+
+    /**
+     * 用户查询——根据用户名
+     *
+     * @param username 用户名
+     * @return ResponseEntity
+     */
+    @ApiOperation(value = "Get single user by username")
+    @GetMapping("/{username}")
+    public ResponseEntity getByUsername(@PathVariable String username) {
+        UserInfo user = userInfoService.getByUsername(username);
+        if (user == null) {
+            log.info("Not found anything about user with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(user);
@@ -78,13 +90,13 @@ public class UserInfoController extends AbstractController {
      * @param user 用户
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Save single hypervisor")
+    @ApiOperation(value = "Save single user")
     @PostMapping
     public ResponseEntity saveUser(@RequestBody UserInfo user) {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
-            log.error("Save hypervisor occurred an error: ", e);
+            log.error("Save user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -96,13 +108,13 @@ public class UserInfoController extends AbstractController {
      * @param user 用户
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Modify single hypervisor")
+    @ApiOperation(value = "Modify single user")
     @PutMapping
     public ResponseEntity modifyUser(@RequestBody UserInfo user) {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
-            log.error("Modify hypervisor occurred an error: ", e);
+            log.error("Modify user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -114,14 +126,13 @@ public class UserInfoController extends AbstractController {
      * @param userId 用户ID
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Remove single hypervisor")
-    @ApiImplicitParam(name = "userId", required = true)
+    @ApiOperation(value = "Remove single user")
     @DeleteMapping("/{userId}")
     public ResponseEntity removeUser(@PathVariable String userId) {
         try {
             userInfoService.removeByUserId(userId);
         } catch (Exception e) {
-            log.error("Remove hypervisor occurred an error: ", e);
+            log.error("Remove user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.OK);

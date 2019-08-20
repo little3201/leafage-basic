@@ -8,31 +8,33 @@ logging:
       springframework: INFO
       # control org.hibernate logger's level for ERROR
       hibernate: INFO
+
 spring:
   cloud:
     consul:
-      host: 34.80.77.231
+      host: 127.0.0.1
       port: 8500
+
   ##=====datasource common=====##
   datasource:
     master:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://34.80.77.231:3036/abeille_basic_profile?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://119.3.182.185:3306/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
-      username: abeille
+      username: root
       # datasource password
-      password: abeille.top
-    slave:
+      password: zx110119@@
+    slaver:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://34.80.77.231:3036/abeille_basic_profile?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://119.3.182.185:3306/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
-      username: abeille
+      username: root
       # datasource password
-      password: abeille.top
+      password: zx110119@@
 
   ##=====Jpa common=====##
   jpa:
@@ -52,32 +54,3 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
-
-  ##=====redis common=====##
-  redis:
-    # Redis database index(default is 0)
-    database: 0
-    # Redis server host
-    host: abeille.top
-    # Redis server port
-    port: 7369
-    # Redis server password(default is non)
-    password: redis
-    # shutdown timeout(ms)
-    lettuce:
-      shutdown-timeout: 0ms
-
-  ###=====rabbitMQ common=====##
-  rabbitmq:
-    # rabbitMQ server host
-    host: abeille.top
-    # rabbitMQ server port
-    port: 5672
-    # rabbitMQ server username
-    username: guest
-    # rabbitMQ server password
-    password: guest
-    # connection timeout
-    connection-timeout: 0ms
-    # rabbitMQ publish confirm whether would open
-    publisher-confirms: true

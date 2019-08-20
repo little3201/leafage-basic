@@ -1,2 +1,2 @@
-# abeille-business
-business module of abeille
+# abeille-basic-assets
+assets module of abeille basic

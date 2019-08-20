@@ -56,6 +56,11 @@ spring:
       repositories:
         bootstrap-mode: deferred
 
+    ##=====elasticsearch server=====##
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: 127.0.0.1:9300
+
   ##=====redis server=====##
   redis:
     # Redis database index(default is 0)

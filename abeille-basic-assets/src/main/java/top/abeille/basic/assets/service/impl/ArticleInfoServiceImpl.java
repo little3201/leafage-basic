@@ -5,8 +5,10 @@ package top.abeille.basic.assets.service.impl;
 
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import top.abeille.basic.assets.document.Article;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
+import top.abeille.basic.assets.repository.ArticleRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
 
 import java.util.List;
@@ -24,8 +26,11 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     private final ArticleInfoRepository articleInfoRepository;
 
-    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository) {
+    private final ArticleRepository articleRepository;
+
+    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ArticleRepository articleRepository) {
         this.articleInfoRepository = articleInfoRepository;
+        this.articleRepository = articleRepository;
     }
 
     @Override
@@ -47,11 +52,11 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public ArticleInfo getByArticleId(String articleId) {
+    public Article getByArticleId(String articleId) {
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setArticleId(articleId);
-        return this.getByExample(articleInfo);
-
+        Optional<Article> optional = articleRepository.findById(articleId);
+        return optional.orElse(null);
     }
 
     @Override

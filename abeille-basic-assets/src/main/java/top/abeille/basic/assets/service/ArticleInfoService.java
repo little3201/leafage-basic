@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.service;
 
+import top.abeille.basic.assets.document.Article;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.common.basic.BasicService;
 
@@ -13,7 +14,7 @@ import top.abeille.common.basic.BasicService;
  **/
 public interface ArticleInfoService extends BasicService<ArticleInfo> {
 
-    ArticleInfo getByArticleId(String articleId);
+    Article getByArticleId(String articleId);
 
     void removeByArticleId(String articleId);
 }

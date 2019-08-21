@@ -14,7 +14,11 @@ import top.abeille.common.basic.BasicService;
  **/
 public interface ArticleInfoService extends BasicService<ArticleInfo> {
 
+    /**
+     * 根据articleId从es中查询内容
+     *
+     * @param articleId 文章id
+     * @return 文章内容
+     */
     Article getByArticleId(String articleId);
-
-    void removeByArticleId(String articleId);
 }

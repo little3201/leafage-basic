@@ -42,18 +42,18 @@ public class AccountInfo {
     /**
      * 账户号码
      */
-    @Column(name = "account_code")
-    private Long accountCode;
+    @Column(name = "account")
+    private Long account;
     /**
      * 账户余额
      */
-    @Column(name = "account_balance")
-    private BigDecimal accountBalance;
+    @Column(name = "balance")
+    private BigDecimal balance;
     /**
      * 账户类型
      */
-    @Column(name = "account_type")
-    private String accountType;
+    @Column(name = "type")
+    private String type;
 
     /**
      * 是否有效
@@ -98,28 +98,28 @@ public class AccountInfo {
         this.accountId = accountId;
     }
 
-    public Long getAccountCode() {
-        return accountCode;
+    public Long getAccount() {
+        return account;
     }
 
-    public void setAccountCode(Long accountCode) {
-        this.accountCode = accountCode;
+    public void setAccount(Long account) {
+        this.account = account;
     }
 
-    public String getAccountType() {
-        return accountType;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
-    public BigDecimal getAccountBalance() {
-        return accountBalance;
+    public String getType() {
+        return type;
     }
 
-    public void setAccountBalance(BigDecimal accountBalance) {
-        this.accountBalance = accountBalance;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Boolean getEnabled() {

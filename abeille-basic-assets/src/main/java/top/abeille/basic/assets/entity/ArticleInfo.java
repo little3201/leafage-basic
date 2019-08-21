@@ -36,28 +36,28 @@ public class ArticleInfo {
     /**
      * 文章标题
      */
-    @Column(name = "article_title")
-    private String articleTitle;
+    @Column(name = "title")
+    private String title;
     /**
      * 文章描述
      */
-    @Column(name = "article_content")
-    private String articleContent;
+    @Column(name = "content")
+    private String content;
     /**
      * 文章描述
      */
-    @Column(name = "article_description")
-    private String articleDescription;
+    @Column(name = "description")
+    private String description;
     /**
      * 文章url
      */
-    @Column(name = "article_url")
-    private String articleUrl;
+    @Column(name = "url")
+    private String url;
     /**
      * 主题图片url
      */
-    @Column(name = "article_image_url")
-    private String articleImageUrl;
+    @Column(name = "image_url")
+    private String imageUrl;
     /**
      * 是否有效
      */
@@ -93,44 +93,44 @@ public class ArticleInfo {
         this.articleId = articleId;
     }
 
-    public String getArticleTitle() {
-        return articleTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setArticleTitle(String articleTitle) {
-        this.articleTitle = articleTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getArticleContent() {
-        return articleContent;
+    public String getContent() {
+        return content;
     }
 
-    public void setArticleContent(String articleContent) {
-        this.articleContent = articleContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getArticleDescription() {
-        return articleDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setArticleDescription(String articleDescription) {
-        this.articleDescription = articleDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getArticleUrl() {
-        return articleUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setArticleUrl(String articleUrl) {
-        this.articleUrl = articleUrl;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getArticleImageUrl() {
-        return articleImageUrl;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setArticleImageUrl(String articleImageUrl) {
-        this.articleImageUrl = articleImageUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Boolean getEnabled() {

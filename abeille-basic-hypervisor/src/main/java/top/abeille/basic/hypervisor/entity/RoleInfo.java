@@ -27,18 +27,18 @@ public class RoleInfo {
     /**
      * 角色名称
      */
-    @Column(name = "role_name")
-    private String roleName;
+    @Column(name = "name")
+    private String name;
     /**
      * 角色描述
      */
-    @Column(name = "role_desc")
-    private String roleDesc;
+    @Column(name = "description")
+    private String description;
     /**
      * 备注
      */
-    @Column(name = "role_remark")
-    private String roleRemark;
+    @Column(name = "remark")
+    private String remark;
 
     /**
      * 是否有效
@@ -68,28 +68,28 @@ public class RoleInfo {
         this.id = id;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getRoleDesc() {
-        return roleDesc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setRoleDesc(String roleDesc) {
-        this.roleDesc = roleDesc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getRoleRemark() {
-        return roleRemark;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setRoleRemark(String roleRemark) {
-        this.roleRemark = roleRemark;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public Boolean getEnabled() {

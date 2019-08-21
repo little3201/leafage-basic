@@ -40,13 +40,13 @@ public class UserInfo {
     /**
      * 中文姓名
      */
-    @Column(name = "user_name_cn")
-    private String userNameCn;
+    @Column(name = "name_cn")
+    private String nameCn;
     /**
      * 英文姓名
      */
-    @Column(name = "user_name_en")
-    private String userNameEn;
+    @Column(name = "name_en")
+    private String nameEn;
     /**
      * 用户名
      */
@@ -60,18 +60,18 @@ public class UserInfo {
     /**
      * 电话
      */
-    @Column(name = "user_mobile")
-    private String userMobile;
+    @Column(name = "mobile")
+    private String mobile;
     /**
      * 邮箱
      */
-    @Column(name = "user_email")
-    private String userEmail;
+    @Column(name = "email")
+    private String email;
     /**
      * 地址
      */
-    @Column(name = "user_address")
-    private String userAddress;
+    @Column(name = "address")
+    private String address;
     /**
      * 是否无效
      */
@@ -130,20 +130,20 @@ public class UserInfo {
         this.groupId = groupId;
     }
 
-    public String getUserNameCn() {
-        return userNameCn;
+    public String getNameCn() {
+        return nameCn;
     }
 
-    public void setUserNameCn(String userNameCn) {
-        this.userNameCn = userNameCn;
+    public void setNameCn(String nameCn) {
+        this.nameCn = nameCn;
     }
 
-    public String getUserNameEn() {
-        return userNameEn;
+    public String getNameEn() {
+        return nameEn;
     }
 
-    public void setUserNameEn(String userNameEn) {
-        this.userNameEn = userNameEn;
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
     }
 
     public String getUsername() {
@@ -162,28 +162,28 @@ public class UserInfo {
         this.password = password;
     }
 
-    public String getUserMobile() {
-        return userMobile;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setUserMobile(String userMobile) {
-        this.userMobile = userMobile;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getUserAddress() {
-        return userAddress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setUserAddress(String userAddress) {
-        this.userAddress = userAddress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Boolean getAccountNonExpired() {

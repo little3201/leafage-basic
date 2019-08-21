@@ -35,38 +35,38 @@ public class GroupInfo {
     /**
      * 组织代码
      */
-    @Column(name = "group_code")
-    private String groupCode;
+    @Column(name = "code")
+    private String code;
     /**
      * 组织领导ID
      */
-    @Column(name = "group_leader_id")
-    private Long groupLeaderId;
+    @Column(name = "leader")
+    private Long leader;
     /**
      * 上级组织ID
      */
-    @Column(name = "group_upper_id")
-    private Long groupUpperId;
+    @Column(name = "superior")
+    private Long superior;
     /**
      * 组织中文全称
      */
-    @Column(name = "group_full_name_cn")
-    private String groupFullNameCn;
+    @Column(name = "full_name_cn")
+    private String fullNameCn;
     /**
      * 组织中文简称
      */
-    @Column(name = "group_short_name_cn")
-    private String groupShortNameCn;
+    @Column(name = "short_name_cn")
+    private String shortNameCn;
     /**
      * 组织英文全称
      */
     @Column(name = "group_full_name_en")
-    private String groupFullNameEn;
+    private String fullNameEn;
     /**
      * 组织英文简称
      */
-    @Column(name = "group_short_name_en")
-    private String groupShortNameEn;
+    @Column(name = "short_name_en")
+    private String shortNameEn;
 
     /**
      * 是否有效
@@ -103,60 +103,60 @@ public class GroupInfo {
         this.groupId = groupId;
     }
 
-    public String getGroupCode() {
-        return groupCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setGroupCode(String groupCode) {
-        this.groupCode = groupCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public Long getGroupLeaderId() {
-        return groupLeaderId;
+    public Long getLeader() {
+        return leader;
     }
 
-    public void setGroupLeaderId(Long groupLeaderId) {
-        this.groupLeaderId = groupLeaderId;
+    public void setLeader(Long leader) {
+        this.leader = leader;
     }
 
-    public Long getGroupUpperId() {
-        return groupUpperId;
+    public Long getSuperior() {
+        return superior;
     }
 
-    public void setGroupUpperId(Long groupUpperId) {
-        this.groupUpperId = groupUpperId;
+    public void setSuperior(Long superior) {
+        this.superior = superior;
     }
 
-    public String getGroupFullNameCn() {
-        return groupFullNameCn;
+    public String getFullNameCn() {
+        return fullNameCn;
     }
 
-    public void setGroupFullNameCn(String groupFullNameCn) {
-        this.groupFullNameCn = groupFullNameCn;
+    public void setFullNameCn(String fullNameCn) {
+        this.fullNameCn = fullNameCn;
     }
 
-    public String getGroupShortNameCn() {
-        return groupShortNameCn;
+    public String getShortNameCn() {
+        return shortNameCn;
     }
 
-    public void setGroupShortNameCn(String groupShortNameCn) {
-        this.groupShortNameCn = groupShortNameCn;
+    public void setShortNameCn(String shortNameCn) {
+        this.shortNameCn = shortNameCn;
     }
 
-    public String getGroupFullNameEn() {
-        return groupFullNameEn;
+    public String getFullNameEn() {
+        return fullNameEn;
     }
 
-    public void setGroupFullNameEn(String groupFullNameEn) {
-        this.groupFullNameEn = groupFullNameEn;
+    public void setFullNameEn(String fullNameEn) {
+        this.fullNameEn = fullNameEn;
     }
 
-    public String getGroupShortNameEn() {
-        return groupShortNameEn;
+    public String getShortNameEn() {
+        return shortNameEn;
     }
 
-    public void setGroupShortNameEn(String groupShortNameEn) {
-        this.groupShortNameEn = groupShortNameEn;
+    public void setShortNameEn(String shortNameEn) {
+        this.shortNameEn = shortNameEn;
     }
 
     public Boolean getEnabled() {

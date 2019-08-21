@@ -3,8 +3,10 @@
  */
 package top.abeille.basic.assets.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.abeille.basic.assets.document.Article;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
@@ -60,13 +62,15 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public void removeByArticleId(String articleId) {
-
-    }
-
-    @Override
+    @Transactional
     public void removeById(Long id) {
-
+        articleInfoRepository.deleteById(id);
+        ArticleInfo articleInfo = new ArticleInfo();
+        articleInfo.setId(id);
+        ArticleInfo example = this.getByExample(articleInfo);
+        if(null != example && StringUtils.isNotBlank(example.getArticleId())){
+            articleRepository.deleteById(example.getArticleId());
+        }
     }
 
     @Override

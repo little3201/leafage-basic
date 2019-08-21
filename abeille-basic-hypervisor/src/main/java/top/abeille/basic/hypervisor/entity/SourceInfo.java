@@ -29,38 +29,38 @@ public class SourceInfo {
      * 权限编号
      */
     @NotNull
-    @Column(name = "source_code")
-    private String sourceCode;
+    @Column(name = "code")
+    private String code;
     /**
      * 权限父编号
      */
-    @Column(name = "source_parent_code")
-    private String sourceParentCode;
+    @Column(name = "superior_code")
+    private String superiorCode;
     /**
      * 权限中文名称
      */
-    @Column(name = "source_name_cn")
-    private String sourceNameCn;
+    @Column(name = "name_cn")
+    private String nameCn;
     /**
      * 权限英文名称
      */
-    @Column(name = "source_name_en")
-    private String sourceNameEn;
+    @Column(name = "name_en")
+    private String nameEn;
     /**
      * 权限类型
      */
-    @Column(name = "source_type")
-    private Integer sourceType;
+    @Column(name = "type")
+    private Integer type;
     /**
      * 权限路径
      */
-    @Column(name = "source_path")
-    private String sourcePath;
+    @Column(name = "path")
+    private String path;
     /**
      * 权限描述
      */
-    @Column(name = "source_desc")
-    private String sourceDesc;
+    @Column(name = "description")
+    private String description;
 
     /**
      * 是否有效
@@ -89,60 +89,60 @@ public class SourceInfo {
         this.id = id;
     }
 
-    public String getSourceCode() {
-        return sourceCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setSourceCode(String sourceCode) {
-        this.sourceCode = sourceCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getSourceParentCode() {
-        return sourceParentCode;
+    public String getSuperiorCode() {
+        return superiorCode;
     }
 
-    public void setSourceParentCode(String sourceParentCode) {
-        this.sourceParentCode = sourceParentCode;
+    public void setSuperiorCode(String superiorCode) {
+        this.superiorCode = superiorCode;
     }
 
-    public String getSourceNameCn() {
-        return sourceNameCn;
+    public String getNameCn() {
+        return nameCn;
     }
 
-    public void setSourceNameCn(String sourceNameCn) {
-        this.sourceNameCn = sourceNameCn;
+    public void setNameCn(String nameCn) {
+        this.nameCn = nameCn;
     }
 
-    public String getSourceNameEn() {
-        return sourceNameEn;
+    public String getNameEn() {
+        return nameEn;
     }
 
-    public void setSourceNameEn(String sourceNameEn) {
-        this.sourceNameEn = sourceNameEn;
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
     }
 
-    public Integer getSourceType() {
-        return sourceType;
+    public Integer getType() {
+        return type;
     }
 
-    public void setSourceType(Integer sourceType) {
-        this.sourceType = sourceType;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
-    public String getSourcePath() {
-        return sourcePath;
+    public String getPath() {
+        return path;
     }
 
-    public void setSourcePath(String sourcePath) {
-        this.sourcePath = sourcePath;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public String getSourceDesc() {
-        return sourceDesc;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSourceDesc(String sourceDesc) {
-        this.sourceDesc = sourceDesc;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getEnabled() {

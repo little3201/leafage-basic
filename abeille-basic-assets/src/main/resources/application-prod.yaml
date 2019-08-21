@@ -54,3 +54,12 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
+
+    ##=====elasticsearch server=====##
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: 192.168.248.254:9300
+
+  elasticsearch:
+    jest:
+      uris: ["http://192.168.248.254:9200"]

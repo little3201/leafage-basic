@@ -59,7 +59,11 @@ spring:
     ##=====elasticsearch server=====##
     elasticsearch:
       cluster-name: elasticsearch
-      cluster-nodes: 127.0.0.1:9300
+      cluster-nodes: 192.168.248.254:9300
+
+  elasticsearch:
+    jest:
+      uris: ["http://192.168.248.254:9200"]
 
   ##=====redis server=====##
   redis:

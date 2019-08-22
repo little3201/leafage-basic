@@ -29,7 +29,7 @@ public class ArticleInfoServiceImplTest {
         Article article = new Article();
         article.setArticleId("002");
         String content = "一步步带你实现web全景看房——three.js";
-        article.setArticleContent(content);
+        article.setContent(content);
         articleRepository.save(article);
     }
 }

@@ -25,6 +25,11 @@ public class RoleInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
+     * 角色ID
+     */
+    @Column(name = "role_id")
+    private String roleId;
+    /**
      * 名称
      */
     @Column(name = "name")
@@ -66,6 +71,14 @@ public class RoleInfo {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 
     public String getName() {

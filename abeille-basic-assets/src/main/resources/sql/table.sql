@@ -14,7 +14,8 @@ create table article_info
     is_enabled  tinyint(1) not null default 1 comment '是否可用',
     modifier    bigint(11) not null comment '修改人',
     modify_time timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-    primary key (id)
+    primary key (id),
+    unique key AK_article_id (article_id)
 );
 
 alter table article_info
@@ -37,8 +38,10 @@ create table account_info
     is_enabled  tinyint(1) not null default 1 comment '是否可用',
     modifier    bigint(11) not null comment '修改人',
     modify_time timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-    primary key (id)
+    primary key (id),
+    unique key AK_account_id (account_id)
 );
 
 alter table account_info
     comment '账户信息表';
+

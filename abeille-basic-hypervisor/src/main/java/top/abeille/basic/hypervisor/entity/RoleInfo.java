@@ -25,12 +25,12 @@ public class RoleInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
-     * 角色名称
+     * 名称
      */
     @Column(name = "name")
     private String name;
     /**
-     * 角色描述
+     * 描述
      */
     @Column(name = "description")
     private String description;
@@ -47,11 +47,11 @@ public class RoleInfo {
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
-     * 修改人ID
+     * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier_id")
-    private Long modifierId;
+    @Column(name = "modifier")
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -100,12 +100,12 @@ public class RoleInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifierId() {
-        return modifierId;
+    public Long getModifier() {
+        return modifier;
     }
 
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

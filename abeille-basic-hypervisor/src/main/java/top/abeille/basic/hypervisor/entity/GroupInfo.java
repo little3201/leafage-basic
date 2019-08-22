@@ -27,47 +27,31 @@ public class GroupInfo {
     @JsonIgnore
     private Long id;
     /**
-     * 组织ID
+     * 组ID
      */
     @NotNull
     @Column(name = "group_id")
     private String groupId;
     /**
-     * 组织代码
-     */
-    @Column(name = "code")
-    private String code;
-    /**
-     * 组织领导ID
+     * 领导
      */
     @Column(name = "leader")
     private Long leader;
     /**
-     * 上级组织ID
+     * 上级
      */
     @Column(name = "superior")
     private Long superior;
     /**
-     * 组织中文全称
+     * 中文名
      */
-    @Column(name = "full_name_cn")
-    private String fullNameCn;
+    @Column(name = "chinese_name")
+    private String chineseName;
     /**
-     * 组织中文简称
+     * 英文名
      */
-    @Column(name = "short_name_cn")
-    private String shortNameCn;
-    /**
-     * 组织英文全称
-     */
-    @Column(name = "group_full_name_en")
-    private String fullNameEn;
-    /**
-     * 组织英文简称
-     */
-    @Column(name = "short_name_en")
-    private String shortNameEn;
-
+    @Column(name = "english_name")
+    private String englishName;
     /**
      * 是否有效
      */
@@ -75,11 +59,11 @@ public class GroupInfo {
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
-     * 修改人ID
+     * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier_id")
-    private Long modifierId;
+    @Column(name = "modifier")
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -103,14 +87,6 @@ public class GroupInfo {
         this.groupId = groupId;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public Long getLeader() {
         return leader;
     }
@@ -127,36 +103,20 @@ public class GroupInfo {
         this.superior = superior;
     }
 
-    public String getFullNameCn() {
-        return fullNameCn;
+    public String getChineseName() {
+        return chineseName;
     }
 
-    public void setFullNameCn(String fullNameCn) {
-        this.fullNameCn = fullNameCn;
+    public void setChineseName(String chineseName) {
+        this.chineseName = chineseName;
     }
 
-    public String getShortNameCn() {
-        return shortNameCn;
+    public String getEnglishName() {
+        return englishName;
     }
 
-    public void setShortNameCn(String shortNameCn) {
-        this.shortNameCn = shortNameCn;
-    }
-
-    public String getFullNameEn() {
-        return fullNameEn;
-    }
-
-    public void setFullNameEn(String fullNameEn) {
-        this.fullNameEn = fullNameEn;
-    }
-
-    public String getShortNameEn() {
-        return shortNameEn;
-    }
-
-    public void setShortNameEn(String shortNameEn) {
-        this.shortNameEn = shortNameEn;
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
     }
 
     public Boolean getEnabled() {
@@ -167,12 +127,12 @@ public class GroupInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifierId() {
-        return modifierId;
+    public Long getModifier() {
+        return modifier;
     }
 
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

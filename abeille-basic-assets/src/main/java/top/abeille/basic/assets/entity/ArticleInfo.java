@@ -34,17 +34,17 @@ public class ArticleInfo {
     @Column(name = "article_id")
     private String articleId;
     /**
-     * 文章标题
+     * 标题
      */
     @Column(name = "title")
     private String title;
     /**
-     * 文章描述
+     * 概要
      */
-    @Column(name = "content")
-    private String content;
+    @Column(name = "summary")
+    private String summary;
     /**
-     * 文章描述
+     * 描述
      */
     @Column(name = "description")
     private String description;
@@ -54,22 +54,17 @@ public class ArticleInfo {
     @Column(name = "url")
     private String url;
     /**
-     * 主题图片url
-     */
-    @Column(name = "image_url")
-    private String imageUrl;
-    /**
      * 是否有效
      */
     @JsonIgnore
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
-     * 修改人ID
+     * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier_id")
-    private Long modifierId;
+    @Column(name = "modifier")
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -101,12 +96,12 @@ public class ArticleInfo {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getDescription() {
@@ -125,14 +120,6 @@ public class ArticleInfo {
         this.url = url;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public Boolean getEnabled() {
         return enabled;
     }
@@ -141,12 +128,12 @@ public class ArticleInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifierId() {
-        return modifierId;
+    public Long getModifier() {
+        return modifier;
     }
 
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

@@ -38,15 +38,15 @@ public class UserInfo {
     @Column(name = "group_id")
     private Long groupId;
     /**
-     * 中文姓名
+     * 中文名
      */
-    @Column(name = "name_cn")
-    private String nameCn;
+    @Column(name = "chinese_name")
+    private String chineseName;
     /**
-     * 英文姓名
+     * 英文名
      */
-    @Column(name = "name_en")
-    private String nameEn;
+    @Column(name = "english_name")
+    private String englishName;
     /**
      * 用户名
      */
@@ -94,11 +94,11 @@ public class UserInfo {
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
-     * 修改人ID
+     * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier_id")
-    private Long modifierId;
+    @Column(name = "modifier")
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -130,20 +130,20 @@ public class UserInfo {
         this.groupId = groupId;
     }
 
-    public String getNameCn() {
-        return nameCn;
+    public String getChineseName() {
+        return chineseName;
     }
 
-    public void setNameCn(String nameCn) {
-        this.nameCn = nameCn;
+    public void setChineseName(String chineseName) {
+        this.chineseName = chineseName;
     }
 
-    public String getNameEn() {
-        return nameEn;
+    public String getEnglishName() {
+        return englishName;
     }
 
-    public void setNameEn(String nameEn) {
-        this.nameEn = nameEn;
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
     }
 
     public String getUsername() {
@@ -218,12 +218,12 @@ public class UserInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifierId() {
-        return modifierId;
+    public Long getModifier() {
+        return modifier;
     }
 
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

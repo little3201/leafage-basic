@@ -26,38 +26,38 @@ public class SourceInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
-     * 权限编号
+     * 权限ID
      */
     @NotNull
-    @Column(name = "code")
-    private String code;
+    @Column(name = "source_id")
+    private String sourceId;
     /**
-     * 权限父编号
+     * 上级
      */
-    @Column(name = "superior_code")
-    private String superiorCode;
+    @Column(name = "superior")
+    private String superior;
     /**
-     * 权限中文名称
+     * 中文名
      */
-    @Column(name = "name_cn")
-    private String nameCn;
+    @Column(name = "chinese_name")
+    private String chineseName;
     /**
-     * 权限英文名称
+     * 英文名
      */
-    @Column(name = "name_en")
-    private String nameEn;
+    @Column(name = "english_name")
+    private String englishName;
     /**
-     * 权限类型
+     * 类型
      */
     @Column(name = "type")
     private Integer type;
     /**
-     * 权限路径
+     * 路径
      */
     @Column(name = "path")
     private String path;
     /**
-     * 权限描述
+     * 描述
      */
     @Column(name = "description")
     private String description;
@@ -69,11 +69,11 @@ public class SourceInfo {
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
-     * 修改人ID
+     * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier_id")
-    private Long modifierId;
+    @Column(name = "modifier")
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -89,36 +89,36 @@ public class SourceInfo {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
-    public String getSuperiorCode() {
-        return superiorCode;
+    public String getSuperior() {
+        return superior;
     }
 
-    public void setSuperiorCode(String superiorCode) {
-        this.superiorCode = superiorCode;
+    public void setSuperior(String superior) {
+        this.superior = superior;
     }
 
-    public String getNameCn() {
-        return nameCn;
+    public String getChineseName() {
+        return chineseName;
     }
 
-    public void setNameCn(String nameCn) {
-        this.nameCn = nameCn;
+    public void setChineseName(String chineseName) {
+        this.chineseName = chineseName;
     }
 
-    public String getNameEn() {
-        return nameEn;
+    public String getEnglishName() {
+        return englishName;
     }
 
-    public void setNameEn(String nameEn) {
-        this.nameEn = nameEn;
+    public void setEnglishName(String englishName) {
+        this.englishName = englishName;
     }
 
     public Integer getType() {
@@ -153,12 +153,13 @@ public class SourceInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifierId() {
-        return modifierId;
+
+    public Long getModifier() {
+        return modifier;
     }
 
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

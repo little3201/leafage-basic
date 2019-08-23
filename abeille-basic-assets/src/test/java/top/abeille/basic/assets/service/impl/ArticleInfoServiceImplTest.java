@@ -1,5 +1,6 @@
 package top.abeille.basic.assets.service.impl;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,8 @@ public class ArticleInfoServiceImplTest {
     @Test
     public void saveArticle() {
         Article article = new Article();
-        article.setArticleId("002");
-        String content = "统一返回值\n" +
-                "在前后端分离大行其道的今天，有一个统一的返回值格式不仅能使我们的接口看起来更漂亮，而且还可以使前端可以统一处理很多东西，避免很多问题的产生。\n" +
+        article.setArticleId("001");
+        String content = "在前后端分离大行其道的今天，有一个统一的返回值格式不仅能使我们的接口看起来更漂亮，而且还可以使前端可以统一处理很多东西，避免很多问题的产生。\n" +
                 "\n" +
                 "比较通用的返回值格式如下：\n" +
                 "\n" +
@@ -123,10 +123,9 @@ public class ArticleInfoServiceImplTest {
                 "    }\n" +
                 "\n" +
                 "}\n" +
-                "其中的AlertException为我们自定义的异常，因此当业务中需要抛出错误时，可以手动抛出AlertException。\n" +
-                "\n" +
-                "以上就是统一处理返回值和统一处理异常的两步。";
+                "其中的AlertException为我们自定义的异常，因此当业务中需要抛出错误时，可以手动抛出AlertException。\n";
         article.setContent(content);
-        articleRepository.save(article);
+        Article result = articleRepository.save(article);
+        Assert.assertNotNull(result.getContent());
     }
 }

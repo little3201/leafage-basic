@@ -9,4 +9,11 @@ spring:
 
   ##=====active assets=====##
   profiles:
-    active: dev
+    active: prod
+
+  ##=====consul config=====##
+  cloud:
+    consul:
+      discovery:
+        heartbeat:
+          enabled: true

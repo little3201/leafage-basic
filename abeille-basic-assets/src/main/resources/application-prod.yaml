@@ -62,4 +62,4 @@ spring:
 
   elasticsearch:
     rest:
-      uris: ["http://122.152.218.103:9200"]
+      uris: http://122.152.218.103:9200

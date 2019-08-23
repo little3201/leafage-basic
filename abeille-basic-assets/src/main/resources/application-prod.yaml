@@ -61,5 +61,5 @@ spring:
       cluster-nodes: 122.152.218.103:9300
 
   elasticsearch:
-    jest:
+    rest:
       uris: ["http://122.152.218.103:9200"]

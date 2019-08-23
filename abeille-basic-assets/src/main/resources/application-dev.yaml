@@ -62,7 +62,7 @@ spring:
       cluster-nodes: 192.168.248.254:9300
 
   elasticsearch:
-    jest:
+    rest:
       uris: ["http://192.168.248.254:9200"]
 
   ##=====redis server=====##

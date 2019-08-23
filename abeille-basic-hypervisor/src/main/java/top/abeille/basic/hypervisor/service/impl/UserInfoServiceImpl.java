@@ -54,8 +54,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (example != null) {
             entity.setId(example.getId());
         }
-        if (entity.getModifierId() == null) {
-            entity.setModifierId(0L);
+        if (entity.getModifier() == null) {
+            entity.setModifier(0L);
         }
         return userInfoRepository.save(entity);
     }

@@ -3,8 +3,6 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +12,11 @@ import top.abeille.basic.hypervisor.entity.GroupInfo;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
 import top.abeille.common.basic.AbstractController;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 组信息controller
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
-@Api(tags = "Group Api")
 @RestController
 @RequestMapping("/group")
 public class GroupInfoController extends AbstractController {
@@ -38,7 +33,6 @@ public class GroupInfoController extends AbstractController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Get single group with id")
     @GetMapping("/{id}")
     public ResponseEntity getGroup(@PathVariable Long id) {
         GroupInfo groupInfo = groupInfoService.getById(id);
@@ -56,9 +50,14 @@ public class GroupInfoController extends AbstractController {
      * @param pageSize 分页大小
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Fetch enabled groups with pageable")
     @GetMapping
-    public ResponseEntity findGroups(@NotNull Integer pageNum, @NotNull Integer pageSize) {
+    public ResponseEntity findGroups(Integer pageNum, Integer pageSize) {
+        if(null == pageNum){
+            pageNum = 0;
+        }
+        if(null == pageSize){
+            pageSize = 10;
+        }
         Page<GroupInfo> groups = groupInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(groups.getContent())) {
             log.info("Not found anything about group with pageable.");
@@ -73,7 +72,6 @@ public class GroupInfoController extends AbstractController {
      * @param group 组
      * @return ResponseEntity
      */
-    @ApiOperation(value = "save single group")
     @PostMapping
     public ResponseEntity saveGroup(@RequestBody GroupInfo group) {
         try {
@@ -91,7 +89,6 @@ public class GroupInfoController extends AbstractController {
      * @param group 组
      * @return ResponseEntity
      */
-    @ApiOperation(value = "modify single group")
     @PutMapping
     public ResponseEntity modifyGroup(@RequestBody GroupInfo group) {
         try {
@@ -109,7 +106,6 @@ public class GroupInfoController extends AbstractController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @ApiOperation(value = "remove single group")
     @DeleteMapping("/{id}")
     public ResponseEntity removeGroup(@PathVariable Long id) {
         try {

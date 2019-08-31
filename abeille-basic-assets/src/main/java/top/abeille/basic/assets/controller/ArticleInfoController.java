@@ -41,7 +41,13 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity findUsers(@NotNull Integer pageNum, @NotNull Integer pageSize) {
+    public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
+        if(null == pageNum){
+            pageNum = 0;
+        }
+        if(null == pageSize){
+            pageSize = 10;
+        }
         Page<ArticleInfo> articles = articleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(articles.getContent())) {
             log.info("Not found anything about user with pageable.");

@@ -3,8 +3,6 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +12,11 @@ import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.common.basic.AbstractController;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 用户信息Controller
  *
  * @author liwenqiang 2018/8/2 21:02
  **/
-@Api(tags = "User Api")
 @RestController
 @RequestMapping("/user")
 public class UserInfoController extends AbstractController {
@@ -39,9 +34,14 @@ public class UserInfoController extends AbstractController {
      * @param pageSize 页内数据量
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Fetch enabled users with pageable")
     @GetMapping
-    public ResponseEntity findUsers(@NotNull Integer pageNum, @NotNull Integer pageSize) {
+    public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
+        if(null == pageNum){
+            pageNum = 0;
+        }
+        if(null == pageSize){
+            pageSize = 10;
+        }
         Page<UserInfo> users = userInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(users.getContent())) {
             log.info("Not found anything about user with pageable.");
@@ -56,7 +56,6 @@ public class UserInfoController extends AbstractController {
      * @param username 用户名
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Get single user by username")
     @GetMapping("/{username}")
     public ResponseEntity getByUsername(@PathVariable String username) {
         UserInfo user = userInfoService.getByUsername(username);
@@ -73,7 +72,6 @@ public class UserInfoController extends AbstractController {
      * @param user 用户
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Save single user")
     @PostMapping
     public ResponseEntity saveUser(@RequestBody UserInfo user) {
         try {
@@ -91,7 +89,6 @@ public class UserInfoController extends AbstractController {
      * @param user 用户
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Modify single user")
     @PutMapping
     public ResponseEntity modifyUser(@RequestBody UserInfo user) {
         try {
@@ -109,7 +106,6 @@ public class UserInfoController extends AbstractController {
      * @param userId 用户ID
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Remove single user")
     @DeleteMapping("/{userId}")
     public ResponseEntity removeUser(@PathVariable String userId) {
         try {

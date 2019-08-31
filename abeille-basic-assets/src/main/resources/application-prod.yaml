@@ -57,7 +57,7 @@ spring:
 
     ##=====elasticsearch server=====##
     elasticsearch:
-      cluster-name: elasticsearch
+      cluster-name: elasticesarch
       cluster-nodes: 122.152.218.103:9300
 
   elasticsearch:

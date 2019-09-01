@@ -10,6 +10,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.service.UserInfoService;
+import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
@@ -58,7 +59,7 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/{username}")
     public ResponseEntity getByUsername(@PathVariable String username) {
-        UserInfo user = userInfoService.getByUsername(username);
+        UserVO user = userInfoService.getByUsername(username);
         if (user == null) {
             log.info("Not found anything about user with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

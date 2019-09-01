@@ -39,7 +39,7 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
     public void save() {
         UserInfo user = new UserInfo();
         user.setId(0L);
-        user.setChineseName("管理员");
+        user.setNickname("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
         user.setPassword(pwd);
         userInfoService.save(user);

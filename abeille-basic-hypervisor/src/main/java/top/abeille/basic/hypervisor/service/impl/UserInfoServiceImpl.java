@@ -3,14 +3,23 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
+import top.abeille.basic.hypervisor.entity.UserRole;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
+import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.service.UserInfoService;
+import top.abeille.basic.hypervisor.service.UserRoleService;
+import top.abeille.basic.hypervisor.vo.UserVO;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -23,9 +32,13 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 public class UserInfoServiceImpl implements UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
+    private final UserRoleService userRoleService;
+    private final RoleInfoService roleInfoService;
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository) {
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleService userRoleService, RoleInfoService roleInfoService) {
         this.userInfoRepository = userInfoRepository;
+        this.userRoleService = userRoleService;
+        this.roleInfoService = roleInfoService;
     }
 
     @Override
@@ -71,10 +84,26 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserInfo getByUsername(String username) {
+    public UserVO getByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
-        return this.getByExample(userInfo);
+        UserInfo example = this.getByExample(userInfo);
+        if(null == example){
+            return null;
+        }
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(example, userVO);
+        List<UserRole> userRoles = userRoleService.findAllByUserId(example.getId());
+        if(CollectionUtils.isEmpty(userRoles)){
+            return null;
+        }
+        Set<String> authorities = new HashSet<>();
+        userRoles.forEach(userRole -> {
+            RoleInfo roleInfo = roleInfoService.getById(userRole.getRoleId());
+            authorities.add(roleInfo.getName().toUpperCase());
+        });
+        userVO.setAuthorities(authorities);
+        return userVO;
     }
 
     @Override

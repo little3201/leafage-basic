@@ -38,15 +38,15 @@ public class UserInfo {
     @Column(name = "group_id")
     private Long groupId;
     /**
-     * 中文名
+     * 昵称
      */
-    @Column(name = "chinese_name")
-    private String chineseName;
+    @Column(name = "nickname")
+    private String nickname;
     /**
-     * 英文名
+     * 头像
      */
-    @Column(name = "english_name")
-    private String englishName;
+    @Column(name = "avatar")
+    private String avatar;
     /**
      * 用户名
      */
@@ -130,20 +130,20 @@ public class UserInfo {
         this.groupId = groupId;
     }
 
-    public String getChineseName() {
-        return chineseName;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setChineseName(String chineseName) {
-        this.chineseName = chineseName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getEnglishName() {
-        return englishName;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setEnglishName(String englishName) {
-        this.englishName = englishName;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUsername() {

@@ -52,16 +52,6 @@ public class RoleInfoController extends AbstractController {
         return ResponseEntity.ok(roles);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity findByUserId(@PathVariable String userId) {
-        List<RoleInfo> roleInfoList = roleInfoService.findByUserId(userId);
-        if (CollectionUtils.isEmpty(roleInfoList)) {
-            log.info("Not found anything of role with userId: {}.", userId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(roleInfoList);
-    }
-
     /**
      * 保存角色
      *

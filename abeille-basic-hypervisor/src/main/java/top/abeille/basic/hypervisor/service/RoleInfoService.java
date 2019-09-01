@@ -14,12 +14,4 @@ import java.util.List;
  * @author liwenqiang 2018/9/27 14:18
  **/
 public interface RoleInfoService extends BasicService<RoleInfo> {
-
-    /**
-     * 根据用户ID查询相关角色信息
-     *
-     * @param userId 用户ID
-     * @return RoleInfoVO
-     */
-    List<RoleInfo> findByUserId(String userId);
 }

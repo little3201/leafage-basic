@@ -19,7 +19,7 @@ public class Article {
     /**
      * 文章内容
      */
-    private String content;
+    private String details;
 
     public String getArticleId() {
         return articleId;
@@ -29,11 +29,11 @@ public class Article {
         this.articleId = articleId;
     }
 
-    public String getContent() {
-        return content;
+    public String getDetails() {
+        return details;
     }
 
-    public void setContent(String articleContent) {
-        this.content = content;
+    public void setDetails(String details) {
+        this.details = details;
     }
 }

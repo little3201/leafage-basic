@@ -13,6 +13,8 @@ import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
+import javax.validation.Valid;
+
 /**
  * 用户信息Controller
  *
@@ -74,7 +76,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveUser(@RequestBody UserInfo user) {
+    public ResponseEntity saveUser(@RequestBody @Valid UserInfo user) {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
@@ -91,7 +93,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping
-    public ResponseEntity modifyUser(@RequestBody UserInfo user) {
+    public ResponseEntity modifyUser(@RequestBody @Valid UserInfo user) {
         try {
             userInfoService.save(user);
         } catch (Exception e) {

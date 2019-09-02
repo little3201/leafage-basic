@@ -6,6 +6,8 @@ package top.abeille.basic.hypervisor.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -29,7 +31,7 @@ public class UserInfo {
     /**
      * 用户ID
      */
-    @NotNull
+    @NotBlank
     @Column(name = "user_id")
     private String userId;
     /**
@@ -65,6 +67,7 @@ public class UserInfo {
     /**
      * 邮箱
      */
+    @Email
     @Column(name = "email")
     private String email;
     /**

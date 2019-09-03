@@ -3,6 +3,8 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,11 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  **/
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
+
+    /**
+     * 开启日志
+     */
+    private static final Logger log = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
     private final UserInfoRepository userInfoRepository;
     private final UserRoleService userRoleService;
@@ -89,12 +96,14 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setUsername(username);
         UserInfo example = this.getByExample(userInfo);
         if(null == example){
+            log.info("no user with username: {} be found", username);
             return null;
         }
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(example, userVO);
         List<UserRole> userRoles = userRoleService.findAllByUserId(example.getId());
         if(CollectionUtils.isEmpty(userRoles)){
+            log.info("the user with username: {} was unauthorized ", username);
             return null;
         }
         Set<String> authorities = new HashSet<>();

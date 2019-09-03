@@ -4,7 +4,10 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.abeille.basic.assets.document.Article;
@@ -26,13 +29,19 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 @Service
 public class ArticleInfoServiceImpl implements ArticleInfoService {
 
+    /**
+     * 开启日志
+     */
+    private static final Logger log = LoggerFactory.getLogger(ArticleInfoServiceImpl.class);
+
     private final ArticleInfoRepository articleInfoRepository;
-
     private final ArticleRepository articleRepository;
+    private final RedisTemplate redisTemplate;
 
-    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ArticleRepository articleRepository) {
+    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ArticleRepository articleRepository, RedisTemplate redisTemplate) {
         this.articleInfoRepository = articleInfoRepository;
         this.articleRepository = articleRepository;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -43,7 +52,9 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         exampleMatcher.withMatcher("is_enabled", exact());
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setEnabled(true);
-        return articleInfoRepository.findAll(Example.of(articleInfo, exampleMatcher), pageable);
+        Page<ArticleInfo> articleInfoPage = articleInfoRepository.findAll(Example.of(articleInfo, exampleMatcher), pageable);
+        redisTemplate.opsForList().set("articleInfoPage", 120000L, articleInfoPage);
+        return articleInfoPage;
     }
 
     @Override
@@ -70,11 +81,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         ArticleInfo example = this.getByExample(articleInfo);
         if(null != example && StringUtils.isNotBlank(example.getArticleId())){
             articleRepository.deleteById(example.getArticleId());
+            log.info("remove article with articleId: {}, success", example.getArticleId());
         }
     }
 
     @Override
     public void removeInBatch(List<ArticleInfo> entities) {
-
+        articleInfoRepository.deleteInBatch(entities);
     }
 }

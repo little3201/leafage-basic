@@ -34,7 +34,7 @@ public class ArticleInfoServiceImplTest {
                 "elasticsearch 记录的简单日志服务：提供日志保存接口，范围查询接口，多条件查询接口，都支持分页；\n" +
                 "\n" +
                 "\n" +
-                "###使用方法：\n" +
+                "### 使用方法：\n" +
                 "\n" +
                 "1、添加依赖：版本已经加入到 framework-parent 的 pom 中；\n" +
                 "\n" +
@@ -59,11 +59,11 @@ public class ArticleInfoServiceImplTest {
                 "    private LogServerApi logServerApi;\n" +
                 "```\n" +
                 "\n" +
-                "###接口说明：\n" +
+                "### 接口说明：\n" +
                 "\n" +
                 "- 保存日志信息\n" +
                 "\n" +
-                "```$xslt\n" +
+                "```\n" +
                 "    /**\n" +
                 "     * 保存日志信息\n" +
                 "     *\n" +
@@ -76,7 +76,7 @@ public class ArticleInfoServiceImplTest {
                 "    \n" +
                 "- 多条件匹配查询，字段查询精确匹配（相当与 == ）\n" +
                 "\n" +
-                "```$xslt\n" +
+                "```\n" +
                 "    /**\n" +
                 "     * 多条件匹配查询\n" +
                 "     *\n" +
@@ -89,7 +89,7 @@ public class ArticleInfoServiceImplTest {
                 "    Response<Page<BusinessLog>> boolQueryByPage(@RequestBody BusinessLogVO businessLogVO);\n" +
                 "```\n" +
                 "\n" +
-                "###参数说明\n" +
+                "### 参数说明\n" +
                 "    \n" +
                 "+ BusinessLog : 日志操作模板，其中appId 必填\n" +
                 "\n" +

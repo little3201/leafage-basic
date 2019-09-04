@@ -38,12 +38,7 @@ public class RoleInfoController extends AbstractController {
      */
     @GetMapping
     public ResponseEntity findRoles(Integer pageNum, Integer pageSize) {
-        if(null == pageNum){
-            pageNum = 0;
-        }
-        if(null == pageSize){
-            pageSize = 10;
-        }
+        super.initPageParam(pageNum, pageSize);
         Page<RoleInfo> roles = roleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             log.info("Not found anything about role with pageable.");

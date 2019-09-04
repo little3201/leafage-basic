@@ -34,14 +34,14 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 用户查询——分页
+     * 文章查询——分页
      *
      * @param pageNum  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
+    public ResponseEntity findArticles(Integer pageNum, Integer pageSize) {
         super.initPageParam(pageNum, pageSize);
         Page<ArticleInfo> articles = articleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(articles.getContent())) {

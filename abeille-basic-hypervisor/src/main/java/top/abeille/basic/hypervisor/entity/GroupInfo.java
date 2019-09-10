@@ -33,10 +33,10 @@ public class GroupInfo {
     @Column(name = "group_id")
     private String groupId;
     /**
-     * 领导
+     * 负责人
      */
-    @Column(name = "leader")
-    private Long leader;
+    @Column(name = "principal")
+    private Long principal;
     /**
      * 上级
      */
@@ -87,12 +87,12 @@ public class GroupInfo {
         this.groupId = groupId;
     }
 
-    public Long getLeader() {
-        return leader;
+    public Long getPrincipal() {
+        return principal;
     }
 
-    public void setLeader(Long leader) {
-        this.leader = leader;
+    public void setPrincipal(Long principal) {
+        this.principal = principal;
     }
 
     public Long getSuperior() {

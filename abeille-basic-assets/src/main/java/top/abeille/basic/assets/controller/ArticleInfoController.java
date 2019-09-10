@@ -16,8 +16,6 @@ import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.common.basic.AbstractController;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 文章信息controller
  *

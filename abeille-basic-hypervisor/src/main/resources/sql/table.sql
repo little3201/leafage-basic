@@ -131,7 +131,7 @@ create table group_info
 (
     id           bigint(11) not null auto_increment comment '主键',
     group_id     varchar(8) comment '组ID',
-    leader       bigint(11) comment '领导',
+    principal    bigint(11) comment '负责人',
     superior     bigint(11) comment '上级',
     chinese_name varchar(128) comment '中文名',
     english_name varchar(128) comment '英文名',

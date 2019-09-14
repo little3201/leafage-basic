@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.hamcrest.Matchers;

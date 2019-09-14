@@ -12,8 +12,6 @@ import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.common.basic.AbstractController;
 
-import java.util.List;
-
 /**
  * 角色信息controller
  *

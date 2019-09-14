@@ -3,10 +3,12 @@
  */
 package top.abeille.basic.assets.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.entity.AccountInfo;
+import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
 
 import java.util.List;
@@ -19,6 +21,11 @@ import java.util.Optional;
  **/
 @Service
 public class AccountInfoServiceImpl implements AccountInfoService {
+
+    /**
+     * 开启日志
+     */
+    private static final Logger log = LoggerFactory.getLogger(AccountInfoServiceImpl.class);
 
     private final AccountInfoRepository accountInfoRepository;
 
@@ -58,9 +65,9 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     @Override
     public void removeByAccountId(String accountId) {
         AccountInfo accountInfo = this.getByAccountId(accountId);
-        if (accountInfo == null) {
-            return;
+        if (accountInfo != null) {
+            accountInfoRepository.deleteById(accountInfo.getId());
+            log.info("remove account with accountId: {}, successful", accountId);
         }
-        accountInfoRepository.deleteById(accountInfo.getId());
     }
 }

@@ -95,14 +95,14 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
         UserInfo example = this.getByExample(userInfo);
-        if(null == example){
+        if (null == example) {
             log.info("no user with username: {} be found", username);
             return null;
         }
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(example, userVO);
         List<UserRole> userRoles = userRoleService.findAllByUserId(example.getId());
-        if(CollectionUtils.isEmpty(userRoles)){
+        if (CollectionUtils.isEmpty(userRoles)) {
             log.info("the user with username: {} was unauthorized ", username);
             return null;
         }

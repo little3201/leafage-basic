@@ -22,7 +22,7 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://119.3.182.185:3306/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://cd-cdb-qdykj0yw.sql.tencentcdb.com:62841/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: root
       # datasource password
@@ -31,7 +31,7 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://119.3.182.185:3306/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://cd-cdb-qdykj0yw.sql.tencentcdb.com:62841/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: root
       # datasource password

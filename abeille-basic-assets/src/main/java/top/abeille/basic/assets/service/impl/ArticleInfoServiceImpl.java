@@ -76,7 +76,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         ArticleInfo example = this.getByExample(articleInfo);
         if (null != example && StringUtils.isNotBlank(example.getArticleId())) {
             articleRepository.deleteById(example.getArticleId());
-            log.info("remove article with articleId: {}, successful", example.getArticleId());
+            log.info("Remove article with articleId: {}, successful", example.getArticleId());
         }
     }
 

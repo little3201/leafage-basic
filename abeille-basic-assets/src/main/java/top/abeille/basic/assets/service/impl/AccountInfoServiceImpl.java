@@ -67,7 +67,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
         AccountInfo accountInfo = this.getByAccountId(accountId);
         if (accountInfo != null) {
             accountInfoRepository.deleteById(accountInfo.getId());
-            log.info("remove account with accountId: {}, successful", accountId);
+            log.info("Remove account with accountId: {}, successful", accountId);
         }
     }
 }

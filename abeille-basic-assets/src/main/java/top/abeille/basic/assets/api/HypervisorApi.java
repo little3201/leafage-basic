@@ -14,7 +14,7 @@ import top.abeille.basic.assets.vo.UserInfoVO;
  * @author liwenqiang 2019-03-03 22:55
  **/
 @FeignClient(name = "abeille-basic-authority")
-public interface UserApi {
+public interface HypervisorApi {
 
     /**
      * 根据userId获取用户信息

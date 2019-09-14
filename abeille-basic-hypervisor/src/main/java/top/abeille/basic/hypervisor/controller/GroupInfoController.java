@@ -52,7 +52,6 @@ public class GroupInfoController extends AbstractController {
      */
     @GetMapping
     public ResponseEntity findGroups(Integer pageNum, Integer pageSize) {
-        super.initPageParam(pageNum, pageSize);
         Page<GroupInfo> groups = groupInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(groups.getContent())) {
             log.info("Not found anything about group with pageable.");

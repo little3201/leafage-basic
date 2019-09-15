@@ -20,7 +20,7 @@ public interface UserInfoService extends BasicService<UserInfo> {
      * @param username 主键
      * @return UserInfo 用户信息
      */
-    UserVO getByUsername(String username);
+    UserVO loadUserByUsername(String username);
 
     void removeByUserId(String userId);
 

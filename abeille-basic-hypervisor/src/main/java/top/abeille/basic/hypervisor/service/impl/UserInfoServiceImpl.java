@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -91,7 +92,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserVO getByUsername(String username) {
+    public UserVO loadUserByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
         UserInfo example = this.getByExample(userInfo);
@@ -109,7 +110,9 @@ public class UserInfoServiceImpl implements UserInfoService {
         Set<String> authorities = new HashSet<>();
         userRoles.forEach(userRole -> {
             RoleInfo roleInfo = roleInfoService.getById(userRole.getRoleId());
-            authorities.add(roleInfo.getName().toUpperCase());
+            if (roleInfo != null && StringUtils.isNotBlank(roleInfo.getName())) {
+                authorities.add(roleInfo.getName().toUpperCase());
+            }
         });
         userVO.setAuthorities(authorities);
         return userVO;

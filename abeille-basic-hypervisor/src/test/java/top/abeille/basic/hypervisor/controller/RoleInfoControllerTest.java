@@ -4,9 +4,8 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import top.abeille.common.mock.AbstractControllerMock;
-
-import static org.junit.Assert.*;
 
 /**
  * 角色接口测试类
@@ -15,9 +14,12 @@ import static org.junit.Assert.*;
  **/
 public class RoleInfoControllerTest extends AbstractControllerMock {
 
+    @InjectMocks
+    private RoleInfoController roleInfoController;
+
     @Override
     protected Object getController() {
-        return null;
+        return roleInfoController;
     }
 
     @Test

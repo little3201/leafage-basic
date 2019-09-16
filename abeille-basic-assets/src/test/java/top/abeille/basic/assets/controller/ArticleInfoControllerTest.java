@@ -4,8 +4,8 @@
 package top.abeille.basic.assets.controller;
 
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.service.impl.ArticleInfoServiceImpl;
 import top.abeille.common.mock.AbstractControllerMock;
 
@@ -16,12 +16,12 @@ import top.abeille.common.mock.AbstractControllerMock;
  **/
 public class ArticleInfoControllerTest extends AbstractControllerMock {
 
-    @Mock
-    private ArticleInfoServiceImpl articleInfoService;
+    @InjectMocks
+    private ArticleInfoController articleInfoController;
 
     @Override
     protected Object getController() {
-        return new ArticleInfoController(articleInfoService);
+        return articleInfoController;
     }
 
     @Test

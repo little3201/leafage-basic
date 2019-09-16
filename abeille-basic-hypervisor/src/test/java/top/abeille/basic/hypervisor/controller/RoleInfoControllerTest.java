@@ -4,23 +4,18 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import top.abeille.common.mock.AbstractControllerMock;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 
 /**
  * 角色接口测试类
  *
  * @author liwenqiang 2019/9/14 21:52
  **/
-public class RoleInfoControllerTest extends AbstractControllerMock {
-
-    @InjectMocks
-    private RoleInfoController roleInfoController;
-
-    @Override
-    protected Object getController() {
-        return roleInfoController;
-    }
+@RunWith(MockitoJUnitRunner.class)
+@WebFluxTest
+public class RoleInfoControllerTest {
 
     @Test
     public void findRoles() {

@@ -4,25 +4,18 @@
 package top.abeille.basic.assets.controller;
 
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import top.abeille.basic.assets.service.impl.ArticleInfoServiceImpl;
-import top.abeille.common.mock.AbstractControllerMock;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 
 /**
  * 文章管理接口测试类
  *
  * @author liwenqiang 2019/9/14 21:46
  **/
-public class ArticleInfoControllerTest extends AbstractControllerMock {
-
-    @InjectMocks
-    private ArticleInfoController articleInfoController;
-
-    @Override
-    protected Object getController() {
-        return articleInfoController;
-    }
+@RunWith(MockitoJUnitRunner.class)
+@WebFluxTest
+public class ArticleInfoControllerTest {
 
     @Test
     public void findArticles() {

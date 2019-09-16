@@ -21,20 +21,20 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://119.3.182.185:3306/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://cd-cdb-qdykj0yw.sql.tencentcdb.com:62841/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: root
       # datasource password
-      password: zx110119@@
+      password: MySQL@abeille123
     slaver:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://119.3.182.185:3306/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://cd-cdb-qdykj0yw.sql.tencentcdb.com:62841/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
       username: root
       # datasource password
-      password: zx110119@@
+      password: MySQL@abeille123
 
   ##=====Jpa common=====##
   jpa:
@@ -69,11 +69,11 @@ spring:
     # Redis database index(default is 0)
     database: 0
     # Redis server host
-    host: 192.168.248.254
+    host: 122.152.218.103
     # Redis server port
-    port: 6379
+    port: 7369
     # Redis server password(default is non)
-    password:
+    password: Redis@abeille123
     # shutdown timeout(ms)
     lettuce:
       shutdown-timeout: 0ms

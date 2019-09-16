@@ -6,14 +6,15 @@ package top.abeille.basic.hypervisor.service.impl;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
-import top.abeille.common.mock.AbstractServiceMock;
 
 import java.util.Optional;
 
@@ -22,7 +23,8 @@ import java.util.Optional;
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
-public class UserInfoServiceImplTest extends AbstractServiceMock {
+@RunWith(MockitoJUnitRunner.class)
+public class UserInfoServiceImplTest {
 
     @Mock
     private UserInfoRepository userInfoRepository;

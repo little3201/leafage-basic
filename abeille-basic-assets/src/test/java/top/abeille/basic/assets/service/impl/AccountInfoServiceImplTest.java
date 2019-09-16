@@ -6,12 +6,13 @@ package top.abeille.basic.assets.service.impl;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import top.abeille.basic.assets.entity.AccountInfo;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
-import top.abeille.common.mock.AbstractServiceMock;
 
 import java.util.Optional;
 
@@ -20,7 +21,8 @@ import java.util.Optional;
  *
  * @author liwenqiang 2019/3/28 20:22
  **/
-public class AccountInfoServiceImplTest extends AbstractServiceMock {
+@RunWith(MockitoJUnitRunner.class)
+public class AccountInfoServiceImplTest {
 
     @Mock
     private AccountInfoRepository accountInfoRepository;

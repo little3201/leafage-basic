@@ -37,15 +37,10 @@ public class SourceInfo {
     @Column(name = "superior")
     private String superior;
     /**
-     * 中文名
+     * 名称
      */
-    @Column(name = "chinese_name")
-    private String chineseName;
-    /**
-     * 英文名
-     */
-    @Column(name = "english_name")
-    private String englishName;
+    @Column(name = "name")
+    private String name;
     /**
      * 类型
      */
@@ -105,20 +100,12 @@ public class SourceInfo {
         this.superior = superior;
     }
 
-    public String getChineseName() {
-        return chineseName;
+    public String getName() {
+        return name;
     }
 
-    public void setChineseName(String chineseName) {
-        this.chineseName = chineseName;
-    }
-
-    public String getEnglishName() {
-        return englishName;
-    }
-
-    public void setEnglishName(String englishName) {
-        this.englishName = englishName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getType() {

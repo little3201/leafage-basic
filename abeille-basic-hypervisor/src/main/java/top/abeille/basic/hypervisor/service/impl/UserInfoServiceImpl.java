@@ -14,9 +14,9 @@ import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.entity.UserRole;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
+import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.service.UserInfoService;
-import top.abeille.basic.hypervisor.service.UserRoleService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
 import java.util.HashSet;
@@ -40,12 +40,12 @@ public class UserInfoServiceImpl implements UserInfoService {
     private static final Logger log = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
     private final UserInfoRepository userInfoRepository;
-    private final UserRoleService userRoleService;
+    private final UserRoleRepository userRoleRepository;
     private final RoleInfoService roleInfoService;
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleService userRoleService, RoleInfoService roleInfoService) {
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleRepository userRoleRepository, RoleInfoService roleInfoService) {
         this.userInfoRepository = userInfoRepository;
-        this.userRoleService = userRoleService;
+        this.userRoleRepository = userRoleRepository;
         this.roleInfoService = roleInfoService;
     }
 
@@ -102,7 +102,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(example, userVO);
-        List<UserRole> userRoles = userRoleService.findAllByUserId(example.getId());
+        List<UserRole> userRoles = userRoleRepository.findAllByUserIdAndEnabled(example.getId(), true);
         if (CollectionUtils.isEmpty(userRoles)) {
             log.info("the user with username: {} was unauthorized ", username);
             return null;

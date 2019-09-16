@@ -75,12 +75,12 @@ public class UserInfo {
     @Column(name = "address")
     private String address;
     /**
-     * 是否无效
+     * 是否有效
      */
     @Column(name = "is_account_non_expired")
     private Boolean accountNonExpired;
     /**
-     * 是否没有锁定
+     * 是否锁定
      */
     @Column(name = "is_account_non_locked")
     private Boolean accountNonLocked;

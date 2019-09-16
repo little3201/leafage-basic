@@ -6,16 +6,17 @@ package top.abeille.basic.hypervisor.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
- * Model class for RoleInfo
+ * Model class for UserRole
  *
- * @author liwenqiang
- */
+ * @author liwenqiang 2019/9/16 10:09
+ **/
 @Entity
-@Table(name = "role_info")
-public class RoleInfo {
+@Table(name = "user_group")
+public class UserGroup {
 
     /**
      * 主键
@@ -25,20 +26,18 @@ public class RoleInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
-     * 角色ID
+     * 用户主键
      */
-    @Column(name = "role_id")
-    private String roleId;
+    @NotNull
+    @Column(name = "user_id")
+    private Long userId;
     /**
-     * 名称
+     * 组主键
      */
-    @Column(name = "name")
-    private String name;
-    /**
-     * 描述
-     */
-    @Column(name = "description")
-    private String description;
+    @NotNull
+    @Column(name = "group_id")
+    private Long groupId;
+
     /**
      * 是否有效
      */
@@ -58,7 +57,6 @@ public class RoleInfo {
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 
-
     public Long getId() {
         return id;
     }
@@ -67,28 +65,20 @@ public class RoleInfo {
         this.id = id;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public Boolean getEnabled() {

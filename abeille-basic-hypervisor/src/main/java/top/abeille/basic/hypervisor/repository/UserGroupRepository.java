@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import top.abeille.basic.hypervisor.entity.UserRole;
+import top.abeille.basic.hypervisor.entity.UserGroup;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018-12-06 22:09
  **/
-public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
+public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
 
     /**
      * 查询所有角色——根据用户id
@@ -22,5 +22,5 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
      * @param userId 用户ID
      * @return List
      */
-    List<UserRole> findAllByUserIdAndEnabled(@NotNull Long userId, Boolean enabled);
+    List<UserGroup> findAllByUserIdAndEnabled(@NotNull Long userId, Boolean enabled);
 }

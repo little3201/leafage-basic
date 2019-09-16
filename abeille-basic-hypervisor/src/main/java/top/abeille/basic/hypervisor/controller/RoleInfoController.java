@@ -12,8 +12,6 @@ import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.common.basic.AbstractController;
 
-import java.util.List;
-
 /**
  * 角色信息controller
  *
@@ -38,7 +36,6 @@ public class RoleInfoController extends AbstractController {
      */
     @GetMapping
     public ResponseEntity findRoles(Integer pageNum, Integer pageSize) {
-        super.initPageParam(pageNum, pageSize);
         Page<RoleInfo> roles = roleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             log.info("Not found anything about role with pageable.");

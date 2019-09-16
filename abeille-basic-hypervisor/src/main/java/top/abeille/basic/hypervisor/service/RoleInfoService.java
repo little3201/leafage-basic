@@ -6,8 +6,6 @@ package top.abeille.basic.hypervisor.service;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.common.basic.BasicService;
 
-import java.util.List;
-
 /**
  * 角色信息service 接口
  *

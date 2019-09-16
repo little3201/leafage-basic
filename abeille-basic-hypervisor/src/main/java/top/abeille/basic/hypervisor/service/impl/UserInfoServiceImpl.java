@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -91,25 +92,27 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserVO getByUsername(String username) {
+    public UserVO loadUserByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
         UserInfo example = this.getByExample(userInfo);
-        if(null == example){
+        if (null == example) {
             log.info("no user with username: {} be found", username);
             return null;
         }
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(example, userVO);
         List<UserRole> userRoles = userRoleService.findAllByUserId(example.getId());
-        if(CollectionUtils.isEmpty(userRoles)){
+        if (CollectionUtils.isEmpty(userRoles)) {
             log.info("the user with username: {} was unauthorized ", username);
             return null;
         }
         Set<String> authorities = new HashSet<>();
         userRoles.forEach(userRole -> {
             RoleInfo roleInfo = roleInfoService.getById(userRole.getRoleId());
-            authorities.add(roleInfo.getName().toUpperCase());
+            if (roleInfo != null && StringUtils.isNotBlank(roleInfo.getName())) {
+                authorities.add(roleInfo.getName().toUpperCase());
+            }
         });
         userVO.setAuthorities(authorities);
         return userVO;

@@ -7,7 +7,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.abeille.basic.assets.document.Article;
@@ -36,12 +35,10 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     private final ArticleInfoRepository articleInfoRepository;
     private final ArticleRepository articleRepository;
-    private final RedisTemplate redisTemplate;
 
-    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ArticleRepository articleRepository, RedisTemplate redisTemplate) {
+    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ArticleRepository articleRepository) {
         this.articleInfoRepository = articleInfoRepository;
         this.articleRepository = articleRepository;
-        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -52,9 +49,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         exampleMatcher.withMatcher("is_enabled", exact());
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setEnabled(true);
-        Page<ArticleInfo> articleInfoPage = articleInfoRepository.findAll(Example.of(articleInfo, exampleMatcher), pageable);
-        redisTemplate.opsForList().set("articleInfoPage", 120000L, articleInfoPage);
-        return articleInfoPage;
+        return articleInfoRepository.findAll(Example.of(articleInfo, exampleMatcher), pageable);
     }
 
     @Override
@@ -79,9 +74,9 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setId(id);
         ArticleInfo example = this.getByExample(articleInfo);
-        if(null != example && StringUtils.isNotBlank(example.getArticleId())){
+        if (null != example && StringUtils.isNotBlank(example.getArticleId())) {
             articleRepository.deleteById(example.getArticleId());
-            log.info("remove article with articleId: {}, success", example.getArticleId());
+            log.info("Remove article with articleId: {}, successful", example.getArticleId());
         }
     }
 

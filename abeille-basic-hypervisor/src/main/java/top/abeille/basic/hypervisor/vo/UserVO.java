@@ -1,7 +1,5 @@
 package top.abeille.basic.hypervisor.vo;
 
-import top.abeille.basic.hypervisor.entity.RoleInfo;
-
 import java.util.Set;
 
 /**

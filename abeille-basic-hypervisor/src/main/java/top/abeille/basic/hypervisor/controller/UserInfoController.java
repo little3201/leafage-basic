@@ -39,7 +39,6 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping
     public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
-        super.initPageParam(pageNum, pageSize);
         Page<UserInfo> users = userInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(users.getContent())) {
             log.info("Not found anything about user with pageable.");
@@ -49,14 +48,30 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
+     * 用户查询——根据ID
+     *
+     * @param userId 用户ID
+     * @return ResponseEntity
+     */
+    @GetMapping("/{userId}")
+    public ResponseEntity getUser(@PathVariable String userId) {
+        UserInfo user = userInfoService.getByUserId(userId);
+        if (user == null) {
+            log.info("Not found anything about hypervisor with userId: {}.", userId);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(user);
+    }
+
+    /**
      * 用户查询——根据用户名
      *
      * @param username 用户名
      * @return ResponseEntity
      */
-    @GetMapping("/{username}")
-    public ResponseEntity getByUsername(@PathVariable String username) {
-        UserVO user = userInfoService.getByUsername(username);
+    @GetMapping("/load/{username}")
+    public ResponseEntity loadUserByUsername(@PathVariable String username) {
+        UserVO user = userInfoService.loadUserByUsername(username);
         if (user == null) {
             log.info("Not found anything about user with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

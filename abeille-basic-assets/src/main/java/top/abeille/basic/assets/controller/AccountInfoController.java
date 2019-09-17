@@ -10,6 +10,8 @@ import top.abeille.basic.assets.entity.AccountInfo;
 import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.common.basic.AbstractController;
 
+import java.util.Objects;
+
 /**
  * 账户信息Controller
  *
@@ -34,7 +36,7 @@ public class AccountInfoController extends AbstractController {
     @GetMapping("/{accountId}")
     public ResponseEntity getAccount(@PathVariable String accountId) {
         AccountInfo account = accountInfoService.getByAccountId(accountId);
-        if (account == null) {
+        if (Objects.isNull(account)) {
             log.info("Not found anything about account with accountId {}.", accountId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }

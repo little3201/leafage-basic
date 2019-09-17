@@ -29,21 +29,4 @@ public class SourceInfoController extends AbstractController {
         this.sourceInfoService = sourceInfoService;
     }
 
-    /**
-     * 权限查询——分页
-     *
-     * @param pageNum  当前页
-     * @param pageSize 页内数据量
-     * @return ResponseEntity
-     */
-    @GetMapping
-    public ResponseEntity findSource(Integer pageNum, Integer pageSize) {
-        Page<SourceInfo> sources = sourceInfoService.findAllByPage(pageNum, pageSize);
-        if (CollectionUtils.isEmpty(sources.getContent())) {
-            log.info("Not found anything about source with pageable.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(sources);
-    }
-
 }

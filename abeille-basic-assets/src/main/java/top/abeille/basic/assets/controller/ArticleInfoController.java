@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.abeille.basic.assets.document.Article;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.common.basic.AbstractController;
+
+import java.util.Objects;
 
 /**
  * 文章信息controller
@@ -34,18 +37,11 @@ public class ArticleInfoController extends AbstractController {
     /**
      * 文章查询——分页
      *
-     * @param pageNum  当前页
-     * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity findArticles(Integer pageNum, Integer pageSize) {
-        Page<ArticleInfo> articles = articleInfoService.findAllByPage(pageNum, pageSize);
-        if (CollectionUtils.isEmpty(articles.getContent())) {
-            log.info("Not found anything about user with pageable.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(articles);
+    public Flux<ArticleInfo> fetchArticles() {
+        return articleInfoService.findAll();
     }
 
     /**
@@ -56,12 +52,12 @@ public class ArticleInfoController extends AbstractController {
      */
     @GetMapping("/{articleId}")
     public ResponseEntity getArticle(@PathVariable String articleId) {
-        Article article = articleInfoService.getByArticleId(articleId);
-        if (article == null) {
+        Mono<ArticleInfo> articleInfo = articleInfoService.getByArticleId(articleId);
+        if (Objects.isNull(articleInfo)) {
             log.info("Not found anything about article with articleId {}.", articleId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok(article);
+        return ResponseEntity.ok(articleInfo);
     }
 
 }

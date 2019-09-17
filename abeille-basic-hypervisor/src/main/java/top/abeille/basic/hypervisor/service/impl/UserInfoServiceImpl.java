@@ -7,9 +7,11 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.entity.UserRole;
@@ -21,7 +23,7 @@ import top.abeille.basic.hypervisor.vo.UserVO;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
@@ -50,28 +52,17 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserInfo getByExample(UserInfo userInfo) {
+    public Mono<UserInfo> getByExample(UserInfo userInfo) {
         /*Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可
         可以通过ExampleMatcher.matching()方法进行进一步得处理*/
         ExampleMatcher exampleMatcher = this.appendConditions();
         this.appendParams(userInfo);
-        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(userInfo, exampleMatcher));
-        /*需要对结果做判断，查询结果为null时会报NoSuchElementExceptiontrue*/
-        return optional.orElse(null);
+        return userInfoRepository.findOne(Example.of(userInfo, exampleMatcher));
     }
 
     @Override
-    public Page<UserInfo> findAllByPage(Integer pageNum, Integer pageSize) {
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
-        ExampleMatcher exampleMatcher = this.appendConditions();
-        UserInfo userInfo = this.appendParams(new UserInfo());
-        return userInfoRepository.findAll(Example.of(userInfo, exampleMatcher), pageable);
-    }
-
-    @Override
-    public UserInfo save(UserInfo entity) {
-        UserInfo example = this.getByUserId(entity.getUserId());
+    public Mono<UserInfo> save(UserInfo entity) {
+        UserInfo example = this.getByUserId(entity.getUserId()).block();
         if (example != null) {
             entity.setId(example.getId());
         }
@@ -82,21 +73,16 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public void removeById(Long id) {
-        userInfoRepository.deleteById(id);
-    }
-
-    @Override
-    public void removeInBatch(List<UserInfo> entities) {
-        userInfoRepository.deleteInBatch(entities);
+    public Mono<Void> removeById(Long id) {
+        return userInfoRepository.deleteById(id);
     }
 
     @Override
     public UserVO loadUserByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
-        UserInfo example = this.getByExample(userInfo);
-        if (null == example) {
+        UserInfo example = this.getByExample(userInfo).block();
+        if (Objects.isNull(example)) {
             log.info("no user with username: {} be found", username);
             return null;
         }
@@ -109,7 +95,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         Set<String> authorities = new HashSet<>();
         userRoles.forEach(userRole -> {
-            RoleInfo roleInfo = roleInfoService.getById(userRole.getRoleId());
+            RoleInfo roleInfo = roleInfoService.getById(userRole.getRoleId()).block();
             if (roleInfo != null && StringUtils.isNotBlank(roleInfo.getName())) {
                 authorities.add(roleInfo.getName().toUpperCase());
             }
@@ -119,16 +105,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public void removeByUserId(String userId) {
-        UserInfo example = this.getByUserId(userId);
-        if (example == null) {
-            return;
-        }
-        this.removeById(example.getId());
-    }
-
-    @Override
-    public UserInfo getByUserId(String userId) {
+    public Mono<UserInfo> getByUserId(String userId) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(userId);
         return this.getByExample(userInfo);

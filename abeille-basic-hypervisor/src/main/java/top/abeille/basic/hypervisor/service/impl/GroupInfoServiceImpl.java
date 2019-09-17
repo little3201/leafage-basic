@@ -6,6 +6,7 @@ package top.abeille.basic.hypervisor.service.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.entity.GroupInfo;
 import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
@@ -28,28 +29,17 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public GroupInfo getById(Long id) {
-        Optional<GroupInfo> optional = groupInfoRepository.findById(id);
-        return optional.orElse(null);
+    public Mono<GroupInfo> getById(Long id) {
+        return groupInfoRepository.findById(id);
     }
 
     @Override
-    public Page<GroupInfo> findAllByPage(Integer pageNum, Integer pageSize) {
-        return groupInfoRepository.findAll(PageRequest.of(pageNum, pageSize));
-    }
-
-    @Override
-    public GroupInfo save(GroupInfo entity) {
+    public Mono<GroupInfo> save(GroupInfo entity) {
         return groupInfoRepository.save(entity);
     }
 
     @Override
-    public void removeById(Long id) {
-        groupInfoRepository.deleteById(id);
-    }
-
-    @Override
-    public void removeInBatch(List<GroupInfo> entities) {
-        groupInfoRepository.deleteInBatch(entities);
+    public Mono<Void> removeById(Long id) {
+        return groupInfoRepository.deleteById(id);
     }
 }

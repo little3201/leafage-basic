@@ -15,55 +15,6 @@ spring:
       host: 122.152.218.103
       port: 8500
 
-  ##=====datasource common=====##
-  datasource:
-    master:
-      # datasource driver
-      driver-class-name: org.mariadb.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mariadb://cd-cdb-qdykj0yw.sql.tencentcdb.com:62841/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
-      # datasource username
-      username: root
-      # datasource password
-      password: MySQL@abeille123
-    slaver:
-      # datasource driver
-      driver-class-name: org.mariadb.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mariadb://cd-cdb-qdykj0yw.sql.tencentcdb.com:62841/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
-      # datasource username
-      username: root
-      # datasource password
-      password: MySQL@abeille123
-
-  ##=====Jpa common=====##
-  jpa:
-    # jpa database
-    database: mysql
-    # whether show execute sql
-    show-sql: true
-    # what hibernate will do when application run
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
-    # datasource dialect
-    database-platform: org.hibernate.dialect.MariaDBDialect
-  # server jpa run thread common, hibernate will run with another thread
-  data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred
-
-    ##=====elasticsearch server=====##
-    elasticsearch:
-      cluster-name: es-abeille
-      cluster-nodes: 122.152.218.103:9300
-
-  elasticsearch:
-    rest:
-      uris: http://122.152.218.103:9200
-
   ##=====redis server=====##
   redis:
     # Redis database index(default is 0)

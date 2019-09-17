@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.assets.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import top.abeille.basic.assets.entity.ArticleInfo;
 
 /**
@@ -11,5 +11,5 @@ import top.abeille.basic.assets.entity.ArticleInfo;
  *
  * @author liwenqiang 2018/12/20 9:51
  **/
-public interface ArticleInfoRepository extends JpaRepository<ArticleInfo, Long> {
+public interface ArticleInfoRepository extends ReactiveMongoRepository<ArticleInfo, Long> {
 }

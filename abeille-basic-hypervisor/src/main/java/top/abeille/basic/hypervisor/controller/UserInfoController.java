@@ -3,11 +3,11 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserVO;
@@ -33,18 +33,11 @@ public class UserInfoController extends AbstractController {
     /**
      * 用户查询——分页
      *
-     * @param pageNum  当前页
-     * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
-        Page<UserInfo> users = userInfoService.findAllByPage(pageNum, pageSize);
-        if (CollectionUtils.isEmpty(users.getContent())) {
-            log.info("Not found anything about user with pageable.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(users);
+    public Flux<UserInfo> fetchUsers() {
+        return userInfoService.findAll();
     }
 
     /**
@@ -54,13 +47,8 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{userId}")
-    public ResponseEntity getUser(@PathVariable String userId) {
-        UserInfo user = userInfoService.getByUserId(userId);
-        if (user == null) {
-            log.info("Not found anything about hypervisor with userId: {}.", userId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(user);
+    public Mono<UserInfo> getUser(@PathVariable String userId) {
+        return userInfoService.getByUserId(userId);
     }
 
     /**
@@ -86,14 +74,8 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveUser(@RequestBody @Valid UserInfo user) {
-        try {
-            userInfoService.save(user);
-        } catch (Exception e) {
-            log.error("Save user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    public Mono<UserInfo> saveUser(@RequestBody @Valid UserInfo user) {
+        return userInfoService.save(user);
     }
 
     /**
@@ -103,30 +85,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping
-    public ResponseEntity modifyUser(@RequestBody @Valid UserInfo user) {
-        try {
-            userInfoService.save(user);
-        } catch (Exception e) {
-            log.error("Modify user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
-        }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
-    }
-
-    /**
-     * 删除用户——根据ID
-     *
-     * @param userId 用户ID
-     * @return ResponseEntity
-     */
-    @DeleteMapping("/{userId}")
-    public ResponseEntity removeUser(@PathVariable String userId) {
-        try {
-            userInfoService.removeByUserId(userId);
-        } catch (Exception e) {
-            log.error("Remove user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.OK);
+    public Mono<UserInfo> modifyUser(@RequestBody @Valid UserInfo user) {
+        return userInfoService.save(user);
     }
 }

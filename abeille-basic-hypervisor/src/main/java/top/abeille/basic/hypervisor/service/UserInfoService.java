@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service;
 
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.BasicService;
@@ -22,7 +23,5 @@ public interface UserInfoService extends BasicService<UserInfo> {
      */
     UserVO loadUserByUsername(String username);
 
-    void removeByUserId(String userId);
-
-    UserInfo getByUserId(String userId);
+    Mono<UserInfo> getByUserId(String userId);
 }

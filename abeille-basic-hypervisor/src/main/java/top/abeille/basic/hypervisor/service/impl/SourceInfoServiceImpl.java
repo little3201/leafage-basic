@@ -3,14 +3,11 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.entity.SourceInfo;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 权限资源信息Service实现
@@ -27,39 +24,7 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public Page<SourceInfo> findAllByPage(Integer pageNum, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
-        return sourceInfoRepository.findAll(pageable);
-    }
-
-    @Override
-    public List<SourceInfo> findAll(Sort sort) {
-        return sourceInfoRepository.findAll(sort);
-    }
-
-    @Override
-    public SourceInfo save(SourceInfo entity) {
-        return sourceInfoRepository.save(entity);
-    }
-
-    @Override
-    public List<SourceInfo> saveAll(List<SourceInfo> entities) {
-        return sourceInfoRepository.saveAll(entities);
-    }
-
-    @Override
-    public void removeById(Long id) {
-        sourceInfoRepository.deleteById(id);
-    }
-
-    @Override
-    public void removeInBatch(List<SourceInfo> entities) {
-        sourceInfoRepository.deleteInBatch(entities);
-    }
-
-    @Override
-    public SourceInfo getByExample(SourceInfo sourceInfo) {
-        Optional<SourceInfo> optional = sourceInfoRepository.findOne(Example.of(sourceInfo));
-        return optional.orElse(null);
+    public Flux<SourceInfo> findAll() {
+        return sourceInfoRepository.findAll();
     }
 }

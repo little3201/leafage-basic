@@ -3,8 +3,6 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,7 +26,7 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 查找组信息——分页查询
+     * 查找组信息
      *
      * @return ResponseEntity
      */

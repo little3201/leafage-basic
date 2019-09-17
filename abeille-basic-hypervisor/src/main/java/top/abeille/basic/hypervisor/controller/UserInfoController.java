@@ -14,6 +14,7 @@ import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 /**
  * 用户信息Controller
@@ -60,7 +61,7 @@ public class UserInfoController extends AbstractController {
     @GetMapping("/load/{username}")
     public ResponseEntity loadUserByUsername(@PathVariable String username) {
         UserVO user = userInfoService.loadUserByUsername(username);
-        if (user == null) {
+        if (Objects.isNull(user)) {
             log.info("Not found anything about user with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }

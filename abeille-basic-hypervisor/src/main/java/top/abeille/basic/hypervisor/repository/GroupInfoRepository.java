@@ -4,7 +4,6 @@
 package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import top.abeille.basic.hypervisor.entity.GroupInfo;
 
 /**

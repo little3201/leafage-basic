@@ -3,13 +3,10 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.entity.SourceInfo;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
 import top.abeille.common.basic.AbstractController;
@@ -29,4 +26,13 @@ public class SourceInfoController extends AbstractController {
         this.sourceInfoService = sourceInfoService;
     }
 
+    /**
+     * 查找资源信息
+     *
+     * @return ResponseEntity
+     */
+    @GetMapping
+    public Flux<SourceInfo> fetchGroups() {
+        return sourceInfoService.findAll();
+    }
 }

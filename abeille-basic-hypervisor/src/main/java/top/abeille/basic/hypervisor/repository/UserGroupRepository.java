@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import top.abeille.basic.hypervisor.entity.UserGroup;
 
 import javax.validation.constraints.NotNull;
@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018-12-06 22:09
  **/
-public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
+public interface UserGroupRepository extends ReactiveCrudRepository<UserGroup, Long> {
 
     /**
      * 查询所有角色——根据用户id

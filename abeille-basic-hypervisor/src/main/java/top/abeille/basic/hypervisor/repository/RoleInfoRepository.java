@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
 
 /**
@@ -11,5 +11,5 @@ import top.abeille.basic.hypervisor.entity.RoleInfo;
  *
  * @author liwenqiang 2018/9/26 11:06
  **/
-public interface RoleInfoRepository extends JpaRepository<RoleInfo, Long> {
+public interface RoleInfoRepository extends ReactiveCrudRepository<RoleInfo, Long> {
 }

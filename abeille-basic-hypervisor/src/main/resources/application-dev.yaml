@@ -16,50 +16,14 @@ spring:
       host: 127.0.0.1
       port: 8500
 
-  ##=====datasource common=====##
-  datasource:
-    master:
-      # datasource driver
-      driver-class-name: org.mariadb.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mariadb://127.0.0.1:3306/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
-      # datasource username
-      username: root
-      # datasource password
-      password: root
-    slaver:
-      # datasource driver
-      driver-class-name: org.mariadb.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mariadb://127.0.0.1:3306/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
-      # datasource username
-      username: root
-      # datasource password
-      password: root
-
-  ##=====Jpa common=====##
-  jpa:
-    # datasource dialect
-    database-platform: org.hibernate.dialect.MariaDBDialect
-    # datasource driver
-    database: mysql
-    # whether show execute sql
-    show-sql: true
-    # what hibernate will do when application run
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
-
-  # spring data config
+  ##=====mongodb config=====##
   data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred
-    redis:
-      repositories:
-        enabled: false
-
+    mongodb:
+      database: abeille_basic_hypervisor
+      host: 127.0.0.1
+      port:
+      username: abeille
+      password: abeille
 
   ##=====redis common=====##
   redis:

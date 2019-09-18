@@ -4,8 +4,10 @@
 package top.abeille.basic.assets.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,58 +17,55 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "account_info")
+@Document(collection = "account_info")
 public class AccountInfo {
 
     /**
      * 主键
      */
-    @Column(name = "id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
+    @Id
     private Long id;
     /**
      * 用户ID
      */
     @NotNull
-    @Column(name = "user_id")
+    @Field(value = "user_id")
     private Long userId;
     /**
      * 账户ID
      */
     @NotNull
-    @Column(name = "account_id")
+    @Field(value = "account_id")
     private String accountId;
     /**
      * 余额
      */
-    @Column(name = "balance")
+    @Field(value = "balance")
     private BigDecimal balance;
     /**
      * 类型
      */
-    @Column(name = "type")
+    @Field(value = "type")
     private String type;
 
     /**
      * 是否有效
      */
     @JsonIgnore
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
     @JsonIgnore
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
     public Long getId() {

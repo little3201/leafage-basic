@@ -3,14 +3,11 @@
  */
 package top.abeille.basic.assets.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.entity.AccountInfo;
 import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.common.basic.AbstractController;
-
-import java.util.Objects;
 
 /**
  * 账户信息Controller
@@ -31,66 +28,43 @@ public class AccountInfoController extends AbstractController {
      * 查询账号信息——根据ID
      *
      * @param accountId 账户ID
-     * @return ResponseEntity
+     * @return Mono<AccountInfo>
      */
     @GetMapping("/{accountId}")
-    public ResponseEntity getAccount(@PathVariable String accountId) {
-        AccountInfo account = accountInfoService.getByAccountId(accountId);
-        if (Objects.isNull(account)) {
-            log.info("Not found anything about account with accountId {}.", accountId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(account);
+    public Mono<AccountInfo> getAccount(@PathVariable String accountId) {
+        return accountInfoService.getByAccountId(accountId);
     }
 
     /**
      * 保存账号信息
      *
      * @param account 账户信息
-     * @return ResponseEntity
+     * @return Mono<AccountInfo>
      */
     @PostMapping
-    public ResponseEntity saveAccount(@RequestBody AccountInfo account) {
-        try {
-            accountInfoService.save(account);
-        } catch (Exception e) {
-            log.error("Save account occurred an error: ", e);
-            return ResponseEntity.ok("error");
-        }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    public Mono<AccountInfo> saveAccount(@RequestBody AccountInfo account) {
+        return accountInfoService.save(account);
     }
 
     /**
      * 修改账号信息
      *
      * @param account 账户信息
-     * @return ResponseEntity
+     * @return Mono<AccountInfo>
      */
     @PutMapping
-    public ResponseEntity modifyAccount(@RequestBody AccountInfo account) {
-        try {
-            accountInfoService.save(account);
-        } catch (Exception e) {
-            log.error("Modify account occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
-        }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+    public Mono<AccountInfo> modifyAccount(@RequestBody AccountInfo account) {
+        return accountInfoService.save(account);
     }
 
     /**
      * 删除账号信息
      *
      * @param accountId 主键
-     * @return ResponseEntity
+     * @return Mono<Void>
      */
     @DeleteMapping("/{accountId}")
-    public ResponseEntity removeAccount(@PathVariable String accountId) {
-        try {
-            accountInfoService.removeByAccountId(accountId);
-        } catch (Exception e) {
-            log.error("Remove account occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.OK);
+    public Mono<Void> removeAccount(@PathVariable String accountId) {
+        return accountInfoService.removeByAccountId(accountId);
     }
 }

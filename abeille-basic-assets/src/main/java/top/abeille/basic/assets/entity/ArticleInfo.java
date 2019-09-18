@@ -4,8 +4,10 @@
 package top.abeille.basic.assets.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -14,61 +16,58 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "article_info")
+@Document(collection = "article_info")
 public class ArticleInfo {
 
     /**
      * 主键
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
-    @Column(name = "id")
+    @Id
     private Long id;
     /**
      * 文章ID
      */
     @NotNull
-    @Column(name = "article_id")
+    @Field(value = "article_id")
     private String articleId;
     /**
      * 标题
      */
-    @Column(name = "title")
+    @Field(value = "title")
     private String title;
-    /**
-     * 概要
-     */
-    @Column(name = "summary")
-    private String summary;
     /**
      * 描述
      */
-    @Column(name = "description")
+    @Field(value = "description")
     private String description;
     /**
-     * 文章url
+     * 内容
      */
-    @Column(name = "url")
-    private String url;
+    @Field(value = "content")
+    private String content;
+    /**
+     * 图片url
+     */
+    @Field(value = "image_url")
+    private String imageUrl;
     /**
      * 是否有效
      */
     @JsonIgnore
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
     @JsonIgnore
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
     public Long getId() {
@@ -95,12 +94,12 @@ public class ArticleInfo {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getContent() {
+        return content;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getDescription() {
@@ -111,12 +110,12 @@ public class ArticleInfo {
         this.description = description;
     }
 
-    public String getUrl() {
-        return url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Boolean getEnabled() {

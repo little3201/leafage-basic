@@ -7,12 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.entity.AccountInfo;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 账户信息Service实现
@@ -34,40 +32,34 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public AccountInfo getByExample(AccountInfo accountInfo) {
+    public Mono<AccountInfo> getByExample(AccountInfo accountInfo) {
         accountInfo.setEnabled(true);
-        Optional<AccountInfo> optional = accountInfoRepository.findOne(Example.of(accountInfo));
-        return optional.orElse(null);
+        return accountInfoRepository.findOne(Example.of(accountInfo));
     }
 
     @Override
-    public AccountInfo save(AccountInfo entity) {
+    public Mono<AccountInfo> save(AccountInfo entity) {
         return accountInfoRepository.save(entity);
     }
 
     @Override
-    public void removeById(Long id) {
-        accountInfoRepository.deleteById(id);
+    public Mono<Void> removeById(Long id) {
+        return accountInfoRepository.deleteById(id);
     }
 
     @Override
-    public void removeInBatch(List<AccountInfo> entities) {
-        accountInfoRepository.deleteInBatch(entities);
-    }
-
-    @Override
-    public AccountInfo getByAccountId(String accountId) {
+    public Mono<AccountInfo> getByAccountId(String accountId) {
         AccountInfo accountInfo = new AccountInfo();
         accountInfo.setAccountId(accountId);
         return this.getByExample(accountInfo);
     }
 
     @Override
-    public void removeByAccountId(String accountId) {
-        AccountInfo accountInfo = this.getByAccountId(accountId);
+    public Mono<Void> removeByAccountId(String accountId) {
+        AccountInfo accountInfo = this.getByAccountId(accountId).block();
         if (accountInfo != null) {
-            accountInfoRepository.deleteById(accountInfo.getId());
-            log.info("Remove account with accountId: {}, successful", accountId);
+            return accountInfoRepository.deleteById(accountInfo.getId());
         }
+        return Mono.empty();
     }
 }

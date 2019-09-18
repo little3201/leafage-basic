@@ -4,8 +4,10 @@
 package top.abeille.basic.hypervisor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -14,56 +16,53 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "group_info")
+@Document(collection = "group_info")
 public class GroupInfo {
 
     /**
      * 主键
      */
-    @Column(name = "id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
+    @Id
     private Long id;
     /**
      * 组ID
      */
     @NotNull
-    @Column(name = "group_id")
+    @Field(value = "group_id")
     private String groupId;
     /**
      * 负责人
      */
-    @Column(name = "principal")
+    @Field(value = "principal")
     private Long principal;
     /**
      * 上级
      */
-    @Column(name = "superior")
+    @Field(value = "superior")
     private Long superior;
     /**
      * 名称
      */
-    @Column(name = "name")
+    @Field(value = "name")
     private String name;
     /**
      * 是否有效
      */
     @JsonIgnore
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
     @JsonIgnore
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
     public Long getId() {

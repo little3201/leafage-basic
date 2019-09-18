@@ -4,8 +4,10 @@
 package top.abeille.basic.hypervisor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -14,66 +16,63 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "source_info")
+@Document(collection = "source_info")
 public class SourceInfo {
 
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
      * 权限ID
      */
     @NotNull
-    @Column(name = "source_id")
+    @Field(value = "source_id")
     private String sourceId;
     /**
      * 上级
      */
-    @Column(name = "superior")
+    @Field(value = "superior")
     private String superior;
     /**
      * 名称
      */
-    @Column(name = "name")
+    @Field(value = "name")
     private String name;
     /**
      * 类型
      */
-    @Column(name = "type")
+    @Field(value = "type")
     private Integer type;
     /**
      * 路径
      */
-    @Column(name = "path")
+    @Field(value = "path")
     private String path;
     /**
      * 描述
      */
-    @Column(name = "description")
+    @Field(value = "description")
     private String description;
 
     /**
      * 是否有效
      */
     @JsonIgnore
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
     @JsonIgnore
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
     public Long getId() {

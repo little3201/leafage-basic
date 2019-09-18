@@ -4,8 +4,10 @@
 package top.abeille.basic.hypervisor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -14,47 +16,44 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "role_source")
+@Document(collection = "role_source")
 public class RoleSource {
 
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
      * 角色ID
      */
     @NotNull
-    @Column(name = "role_id")
+    @Field(value = "role_id")
     private Long roleId;
     /**
      * 资源ID
      */
     @NotNull
-    @Column(name = "source_id")
+    @Field(value = "source_id")
     private Long sourceId;
 
     /**
      * 是否有效
      */
     @JsonIgnore
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
     @JsonIgnore
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
     public Long getId() {

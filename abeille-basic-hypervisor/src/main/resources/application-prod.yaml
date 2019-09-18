@@ -19,11 +19,11 @@ spring:
   ##=====mongodb config=====##
   data:
     mongodb:
-      database: abeille_basic_hypervisor
-      host: 127.0.0.1
-      port:
+      host: 122.152.218.103
+      port: 27017
+      authentication-database: admin
       username: abeille
-      password: abeille
+      password: abeille.top@123
 
   ##=====redis server=====##
   redis:

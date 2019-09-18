@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 
@@ -43,8 +44,8 @@ public class UserInfoServiceImplTest {
         user.setNickname("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
         user.setPassword(pwd);
-        userInfoService.save(user);
-        Mockito.verify(userInfoRepository, Mockito.times(1)).save(user);
+        Mono<UserInfo> infoMono = userInfoService.save(user);
+        Mono<UserInfo> save = Mockito.verify(userInfoRepository, Mockito.times(1)).save(user);
     }
 
 
@@ -56,9 +57,9 @@ public class UserInfoServiceImplTest {
     public void getByExample() {
         UserInfo user = new UserInfo();
         user.setId(0L);
-        Mockito.when(userInfoRepository.findOne(Example.of(user))).thenReturn(Optional.of(user));
-        UserInfo userInfo = userInfoService.getByExample(user);
-        Assert.assertThat(userInfo.getId(), Matchers.equalTo(0L));
+        Mockito.when(userInfoRepository.findOne(Example.of(user)).blockOptional()).thenReturn(Optional.of(user));
+        UserInfo userInfo = userInfoService.getByExample(user).block();
+        Assert.assertNotNull(userInfo != null ? userInfo.getId() : null);
     }
 
 

@@ -4,8 +4,10 @@
 package top.abeille.basic.hypervisor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -15,97 +17,94 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "user_info")
+@Document(collection = "user_info")
 public class UserInfo {
 
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
     private Long id;
     /**
      * 用户ID
      */
     @NotBlank
-    @Column(name = "user_id")
+    @Field(value = "user_id")
     private String userId;
     /**
      * 组织主键
      */
-    @Column(name = "group_id")
+    @Field(value = "group_id")
     private Long groupId;
     /**
      * 昵称
      */
-    @Column(name = "nickname")
+    @Field(value = "nickname")
     private String nickname;
     /**
      * 头像
      */
-    @Column(name = "avatar")
+    @Field(value = "avatar")
     private String avatar;
     /**
      * 用户名
      */
-    @Column(name = "username")
+    @Field(value = "username")
     private String username;
     /**
      * 密码
      */
-    @Column(name = "password")
+    @Field(value = "password")
     private String password;
     /**
      * 电话
      */
-    @Column(name = "mobile")
+    @Field(value = "mobile")
     private String mobile;
     /**
      * 邮箱
      */
     @Email
-    @Column(name = "email")
+    @Field(value = "email")
     private String email;
     /**
      * 地址
      */
-    @Column(name = "address")
+    @Field(value = "address")
     private String address;
     /**
      * 是否有效
      */
-    @Column(name = "is_account_non_expired")
+    @Field(value = "is_account_non_expired")
     private Boolean accountNonExpired;
     /**
      * 是否锁定
      */
-    @Column(name = "is_account_non_locked")
+    @Field(value = "is_account_non_locked")
     private Boolean accountNonLocked;
     /**
      * 密码是否有效
      */
-    @Column(name = "is_credentials_non_expired")
+    @Field(value = "is_credentials_non_expired")
     private Boolean credentialsNonExpired;
 
     /**
      * 是否有效
      */
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
     @JsonIgnore
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
     public Long getId() {

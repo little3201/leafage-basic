@@ -7,14 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
-
-import java.util.List;
 
 /**
  * 文章信息service实现
@@ -54,13 +51,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    @Transactional
-    public Mono<Void> removeById(Long id) {
-        return articleInfoRepository.deleteById(id);
+    public Mono<ArticleInfo> save(ArticleInfo entity) {
+        return articleInfoRepository.save(entity);
     }
 
     @Override
-    public Mono<Void> removeInBatch(List<ArticleInfo> entities) {
-        return articleInfoRepository.deleteAll(entities);
+    public Mono<Void> removeById(Long id) {
+        return articleInfoRepository.deleteById(id);
     }
 }

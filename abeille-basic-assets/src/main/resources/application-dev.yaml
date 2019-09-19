@@ -12,12 +12,12 @@ logging:
 spring:
   cloud:
     consul:
-      host: 192.168.248.254
+      host: 192.168.31.101
       port: 8500
 
   data:
     mongodb:
-      host: 122.152.218.103
+      host: 192.168.31.101
       port: 27017
       authentication-database: admin
       username: abeille
@@ -28,11 +28,11 @@ spring:
     # Redis database index(default is 0)
     database: 0
     # Redis server host
-    host: 192.168.248.254
+    host: 192.168.31.101
     # Redis server port
-    port: 6379
+    port: 7369
     # Redis server password(default is non)
-    password:
+    password: abeille.top@123
     # shutdown timeout(ms)
     lettuce:
       shutdown-timeout: 0ms

@@ -70,12 +70,12 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/load/{username}")
     public ResponseEntity loadUserByUsername(@PathVariable String username) {
-        UserVO user = userInfoService.loadUserByUsername(username);
-        if (Objects.isNull(user)) {
+        Mono<UserVO> userMono = userInfoService.loadUserByUsername(username);
+        if (Objects.isNull(userMono)) {
             log.info("Not found with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userMono);
     }
 
     /**

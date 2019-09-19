@@ -78,7 +78,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserVO loadUserByUsername(String username) {
+    public Mono<UserVO> loadUserByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
         UserInfo example = this.getByExample(userInfo).block();
@@ -101,7 +101,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             }
         });
         userVO.setAuthorities(authorities);
-        return userVO;
+        return Mono.just(userVO);
     }
 
     @Override

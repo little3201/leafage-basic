@@ -32,7 +32,7 @@ spring:
     # Redis server port
     port: 7369
     # Redis server password(default is non)
-    password: Redis@abeille123
+    password: abeille.top@123
     # shutdown timeout(ms)
     lettuce:
       shutdown-timeout: 0ms

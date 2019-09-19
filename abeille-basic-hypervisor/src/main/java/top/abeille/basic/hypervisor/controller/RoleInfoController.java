@@ -3,11 +3,15 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.common.basic.AbstractController;
+
+import java.util.Objects;
 
 /**
  * 角色信息controller
@@ -31,8 +35,13 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<RoleInfo> saveRole(@RequestBody RoleInfo role) {
-        return roleInfoService.save(role);
+    public ResponseEntity saveRole(@RequestBody RoleInfo role) {
+        Mono<RoleInfo> infoMono = roleInfoService.save(role);
+        if (Objects.isNull(infoMono)) {
+            log.error("Save role occurred error.");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+        }
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     /**
@@ -42,20 +51,16 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping
-    public Mono<RoleInfo> modifyRole(@RequestBody RoleInfo role) {
-        return roleInfoService.save(role);
-    }
-
-    /**
-     * 删除角色——根据ID
-     *
-     * @param id 主键
-     * @return ResponseEntity
-     */
-    @DeleteMapping("/{id}")
-    public Mono<Void> removeRole(@PathVariable Long id) {
-        return roleInfoService.removeById(id);
-
+    public ResponseEntity modifyRole(@RequestBody RoleInfo role) {
+        if (Objects.isNull(role.getId())) {
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
+        Mono<RoleInfo> infoMono = roleInfoService.save(role);
+        if (Objects.isNull(infoMono)) {
+            log.error("Modify role occurred error.");
+            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
+        }
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
 }

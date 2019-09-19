@@ -37,8 +37,13 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<UserInfo> fetchUsers() {
-        return userInfoService.findAll();
+    public ResponseEntity fetchUsers() {
+        Flux<UserInfo> infoFlux = userInfoService.findAll();
+        if (Objects.isNull(infoFlux)) {
+            log.info("Not found anything about user.");
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(infoFlux);
     }
 
     /**
@@ -48,8 +53,13 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{userId}")
-    public Mono<UserInfo> getUser(@PathVariable String userId) {
-        return userInfoService.getByUserId(userId);
+    public ResponseEntity getUser(@PathVariable String userId) {
+        Mono<UserInfo> infoMono = userInfoService.getByUserId(userId);
+        if (Objects.isNull(infoMono)) {
+            log.info("Not found with userId: {}.", userId);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(infoMono);
     }
 
     /**
@@ -62,7 +72,7 @@ public class UserInfoController extends AbstractController {
     public ResponseEntity loadUserByUsername(@PathVariable String username) {
         UserVO user = userInfoService.loadUserByUsername(username);
         if (Objects.isNull(user)) {
-            log.info("Not found anything about user with username: {}.", username);
+            log.info("Not found with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(user);
@@ -75,8 +85,13 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<UserInfo> saveUser(@RequestBody @Valid UserInfo user) {
-        return userInfoService.save(user);
+    public ResponseEntity saveUser(@RequestBody @Valid UserInfo user) {
+        Mono<UserInfo> infoMono = userInfoService.save(user);
+        if (Objects.isNull(infoMono)) {
+            log.error("Save user occurred error.");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+        }
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     /**
@@ -86,7 +101,15 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping
-    public Mono<UserInfo> modifyUser(@RequestBody @Valid UserInfo user) {
-        return userInfoService.save(user);
+    public ResponseEntity modifyUser(@RequestBody @Valid UserInfo user) {
+        if (Objects.isNull(user.getId())) {
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
+        Mono<UserInfo> infoMono = userInfoService.save(user);
+        if (Objects.isNull(infoMono)) {
+            log.error("Modify user occurred error.");
+            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
+        }
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 }

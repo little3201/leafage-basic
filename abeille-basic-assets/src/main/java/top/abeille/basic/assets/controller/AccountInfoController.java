@@ -39,7 +39,7 @@ public class AccountInfoController extends AbstractController {
     public ResponseEntity getAccount(@PathVariable String accountId) {
         Mono<AccountInfo> infoMono = accountInfoService.getByAccountId(accountId);
         if (Objects.isNull(infoMono)) {
-            log.info("Not found anything about article with accountId: {}.", accountId);
+            log.info("Not found with accountId: {}.", accountId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(infoMono);
@@ -77,7 +77,7 @@ public class AccountInfoController extends AbstractController {
             log.error("Modify user occurred error.");
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     /**

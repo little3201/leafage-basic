@@ -3,12 +3,16 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.entity.GroupInfo;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
 import top.abeille.common.basic.AbstractController;
+
+import java.util.Objects;
 
 /**
  * 组信息controller
@@ -31,8 +35,13 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<GroupInfo> fetchGroups() {
-        return groupInfoService.findAll();
+    public ResponseEntity fetchGroups() {
+        Flux<GroupInfo> infoFlux = groupInfoService.findAll();
+        if (Objects.isNull(infoFlux)) {
+            log.info("Not found anything about groups.");
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(infoFlux);
     }
 
     /**
@@ -42,8 +51,13 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<GroupInfo> saveGroup(@RequestBody GroupInfo group) {
-        return groupInfoService.save(group);
+    public ResponseEntity saveGroup(@RequestBody GroupInfo group) {
+        Mono<GroupInfo> infoMono = groupInfoService.save(group);
+        if (Objects.isNull(infoMono)) {
+            log.error("Save group occurred error.");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+        }
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     /**
@@ -53,8 +67,16 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping
-    public Mono<GroupInfo> modifyGroup(@RequestBody GroupInfo group) {
-        return groupInfoService.save(group);
+    public ResponseEntity modifyGroup(@RequestBody GroupInfo group) {
+        if (Objects.isNull(group.getId())) {
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
+        Mono<GroupInfo> infoMono = groupInfoService.save(group);
+        if (Objects.isNull(infoMono)) {
+            log.error("Modify group occurred error.");
+            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
+        }
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
     /**
@@ -64,7 +86,12 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @DeleteMapping("/{id}")
-    public Mono<Void> removeGroup(@PathVariable Long id) {
-        return groupInfoService.removeById(id);
+    public ResponseEntity removeGroup(@PathVariable Long id) {
+        Mono<Void> voidMono = groupInfoService.removeById(id);
+        if (Objects.isNull(voidMono)) {
+            log.error("Remove group occurred error.");
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+        }
+        return ResponseEntity.ok(voidMono);
     }
 }

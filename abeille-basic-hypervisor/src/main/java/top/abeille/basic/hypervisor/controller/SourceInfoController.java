@@ -3,6 +3,8 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +12,8 @@ import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.entity.SourceInfo;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
 import top.abeille.common.basic.AbstractController;
+
+import java.util.Objects;
 
 /**
  * 权限资源controller
@@ -32,7 +36,12 @@ public class SourceInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<SourceInfo> fetchGroups() {
-        return sourceInfoService.findAll();
+    public ResponseEntity fetchSources() {
+        Flux<SourceInfo> infoFlux = sourceInfoService.findAll();
+        if (Objects.isNull(infoFlux)) {
+            log.info("Not found anything about source.");
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(infoFlux);
     }
 }

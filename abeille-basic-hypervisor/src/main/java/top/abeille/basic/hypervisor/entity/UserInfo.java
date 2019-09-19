@@ -33,11 +33,6 @@ public class UserInfo {
     @Field(value = "user_id")
     private String userId;
     /**
-     * 组织主键
-     */
-    @Field(value = "group_id")
-    private Long groupId;
-    /**
      * 昵称
      */
     @Field(value = "nickname")
@@ -121,14 +116,6 @@ public class UserInfo {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
     }
 
     public String getNickname() {

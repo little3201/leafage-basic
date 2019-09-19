@@ -55,7 +55,7 @@ public class ArticleInfoController extends AbstractController {
     public ResponseEntity getArticle(@PathVariable String articleId) {
         Mono<ArticleInfo> infoMono = articleInfoService.getByArticleId(articleId);
         if (Objects.isNull(infoMono)) {
-            log.info("Not found anything about article with articleId: {}.", articleId);
+            log.info("Not found with articleId: {}.", articleId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(infoMono);
@@ -71,7 +71,7 @@ public class ArticleInfoController extends AbstractController {
     public ResponseEntity saveArticle(@RequestBody @Valid ArticleInfo articleInfo) {
         Mono<ArticleInfo> infoMono = articleInfoService.save(articleInfo);
         if (Objects.isNull(infoMono)) {
-            log.error("Save user occurred error.");
+            log.error("Save article occurred error.");
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -90,10 +90,10 @@ public class ArticleInfoController extends AbstractController {
         }
         Mono<ArticleInfo> infoMono = articleInfoService.save(articleInfo);
         if (Objects.isNull(infoMono)) {
-            log.error("Save user occurred error.");
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            log.error("Modify article occurred error.");
+            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
 
 }

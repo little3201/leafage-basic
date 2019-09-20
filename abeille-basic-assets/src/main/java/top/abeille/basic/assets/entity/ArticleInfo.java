@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -24,7 +25,7 @@ public class ArticleInfo {
      */
     @JsonIgnore
     @Id
-    private Long id;
+    private ObjectId id;
     /**
      * 文章ID
      */
@@ -70,11 +71,11 @@ public class ArticleInfo {
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
-    public Long getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

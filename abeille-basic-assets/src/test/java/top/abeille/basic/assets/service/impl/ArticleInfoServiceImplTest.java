@@ -27,6 +27,7 @@ public class ArticleInfoServiceImplTest {
     @Test
     public void save() {
         ArticleInfo article = new ArticleInfo();
+        article.setTitle("edc-sdk-log");
         String details = "# edc-sdk-log\n" +
                 "\n" +
                 "elasticsearch 记录的简单日志服务：提供日志保存接口，范围查询接口，多条件查询接口，都支持分页；\n" +

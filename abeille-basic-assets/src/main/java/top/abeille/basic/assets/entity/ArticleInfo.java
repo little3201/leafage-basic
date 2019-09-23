@@ -40,18 +40,18 @@ public class ArticleInfo {
     /**
      * 概要
      */
-    @Column(name = "summary")
-    private String summary;
+    @Column(name = "content")
+    private String content;
     /**
      * 描述
      */
     @Column(name = "description")
     private String description;
     /**
-     * 文章url
+     * 图片url
      */
-    @Column(name = "url")
-    private String url;
+    @Column(name = "image_url")
+    private String imageUrl;
     /**
      * 是否有效
      */
@@ -95,12 +95,20 @@ public class ArticleInfo {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getContent() {
+        return content;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getDescription() {
@@ -109,14 +117,6 @@ public class ArticleInfo {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public Boolean getEnabled() {

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.abeille.basic.assets.document.Article;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.common.basic.AbstractController;
@@ -56,7 +55,7 @@ public class ArticleInfoController extends AbstractController {
      */
     @GetMapping("/{articleId}")
     public ResponseEntity getArticle(@PathVariable String articleId) {
-        Article article = articleInfoService.getByArticleId(articleId);
+        ArticleInfo article = articleInfoService.getByArticleId(articleId);
         if (article == null) {
             log.info("Not found anything about article with articleId {}.", articleId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

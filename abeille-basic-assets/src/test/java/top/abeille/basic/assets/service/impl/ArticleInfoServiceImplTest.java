@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import top.abeille.basic.assets.document.Article;
-import top.abeille.basic.assets.repository.ArticleRepository;
+import top.abeille.basic.assets.entity.ArticleInfo;
+import top.abeille.basic.assets.repository.ArticleInfoRepository;
 
 /**
  * 文章接口测试
@@ -19,7 +19,7 @@ import top.abeille.basic.assets.repository.ArticleRepository;
 public class ArticleInfoServiceImplTest {
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArticleInfoRepository articleInfoRepository;
 
     @Test
     public void getByArticleId() {
@@ -27,7 +27,7 @@ public class ArticleInfoServiceImplTest {
 
     @Test
     public void saveArticle() {
-        Article article = new Article();
+        ArticleInfo article = new ArticleInfo();
         article.setArticleId("002");
         String details = "# edc-sdk-log\n" +
                 "\n" +
@@ -123,8 +123,8 @@ public class ArticleInfoServiceImplTest {
                 "    pageSize:       分页大小\n" +
                 "    orderBy:        排序字段（暂时无效）\n" +
                 "```";
-        article.setDetails(details);
-        Article result = articleRepository.save(article);
-        Assert.assertNotNull(result.getDetails());
+        article.setContent(details);
+        ArticleInfo result = articleInfoRepository.save(article);
+        Assert.assertNotNull(result.getContent());
     }
 }

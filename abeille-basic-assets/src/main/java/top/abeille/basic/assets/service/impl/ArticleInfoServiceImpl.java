@@ -3,16 +3,13 @@
  */
 package top.abeille.basic.assets.service.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.abeille.basic.assets.document.Article;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
-import top.abeille.basic.assets.repository.ArticleRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
 
 import java.util.List;
@@ -34,11 +31,9 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     private static final Logger log = LoggerFactory.getLogger(ArticleInfoServiceImpl.class);
 
     private final ArticleInfoRepository articleInfoRepository;
-    private final ArticleRepository articleRepository;
 
-    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ArticleRepository articleRepository) {
+    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository) {
         this.articleInfoRepository = articleInfoRepository;
-        this.articleRepository = articleRepository;
     }
 
     @Override
@@ -60,24 +55,16 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Article getByArticleId(String articleId) {
+    public ArticleInfo getByArticleId(String articleId) {
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setArticleId(articleId);
-        Optional<Article> optional = articleRepository.findById(articleId);
-        return optional.orElse(null);
+        return getByExample(articleInfo);
     }
 
     @Override
     @Transactional
     public void removeById(Long id) {
         articleInfoRepository.deleteById(id);
-        ArticleInfo articleInfo = new ArticleInfo();
-        articleInfo.setId(id);
-        ArticleInfo example = this.getByExample(articleInfo);
-        if (null != example && StringUtils.isNotBlank(example.getArticleId())) {
-            articleRepository.deleteById(example.getArticleId());
-            log.info("Remove article with articleId: {}, successful", example.getArticleId());
-        }
     }
 
     @Override

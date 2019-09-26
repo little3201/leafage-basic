@@ -5,7 +5,6 @@ package top.abeille.basic.assets.controller;
 
 import org.junit.Test;
 import org.mockito.Mock;
-import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.service.impl.ArticleInfoServiceImpl;
 import top.abeille.common.mock.AbstractControllerMock;
 
@@ -26,9 +25,11 @@ public class ArticleInfoControllerTest extends AbstractControllerMock {
 
     @Test
     public void findArticles() {
+        articleInfoService.findAll();
     }
 
     @Test
     public void getArticle() {
+        articleInfoService.getById(0L);
     }
 }

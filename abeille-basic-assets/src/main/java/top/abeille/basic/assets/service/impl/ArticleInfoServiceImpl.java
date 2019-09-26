@@ -3,8 +3,6 @@
  */
 package top.abeille.basic.assets.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +22,6 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  **/
 @Service
 public class ArticleInfoServiceImpl implements ArticleInfoService {
-
-    /**
-     * 开启日志
-     */
-    private static final Logger log = LoggerFactory.getLogger(ArticleInfoServiceImpl.class);
 
     private final ArticleInfoRepository articleInfoRepository;
 

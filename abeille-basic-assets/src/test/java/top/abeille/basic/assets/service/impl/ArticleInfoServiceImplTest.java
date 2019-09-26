@@ -22,10 +22,6 @@ public class ArticleInfoServiceImplTest {
     private ArticleInfoRepository articleInfoRepository;
 
     @Test
-    public void getByArticleId() {
-    }
-
-    @Test
     public void saveArticle() {
         ArticleInfo article = new ArticleInfo();
         article.setArticleId("002");

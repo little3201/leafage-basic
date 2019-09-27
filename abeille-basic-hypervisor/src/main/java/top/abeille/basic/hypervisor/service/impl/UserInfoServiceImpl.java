@@ -3,14 +3,26 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
+import top.abeille.basic.hypervisor.entity.UserRole;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
+import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.service.UserInfoService;
+import top.abeille.basic.hypervisor.service.UserRoleService;
+import top.abeille.basic.hypervisor.vo.UserVO;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -22,10 +34,19 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
 
-    private final UserInfoRepository userInfoRepository;
+    /**
+     * 开启日志
+     */
+    private static final Logger log = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository) {
+    private final UserInfoRepository userInfoRepository;
+    private final UserRoleService userRoleService;
+    private final RoleInfoService roleInfoService;
+
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleService userRoleService, RoleInfoService roleInfoService) {
         this.userInfoRepository = userInfoRepository;
+        this.userRoleService = userRoleService;
+        this.roleInfoService = roleInfoService;
     }
 
     @Override
@@ -54,8 +75,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (example != null) {
             entity.setId(example.getId());
         }
-        if (entity.getModifierId() == null) {
-            entity.setModifierId(0L);
+        if (entity.getModifier() == null) {
+            entity.setModifier(0L);
         }
         return userInfoRepository.save(entity);
     }
@@ -71,10 +92,30 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserInfo getByUsername(String username) {
+    public UserVO loadUserByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
-        return this.getByExample(userInfo);
+        UserInfo example = this.getByExample(userInfo);
+        if (null == example) {
+            log.info("no user with username: {} be found", username);
+            return null;
+        }
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(example, userVO);
+        List<UserRole> userRoles = userRoleService.findAllByUserId(example.getId());
+        if (CollectionUtils.isEmpty(userRoles)) {
+            log.info("the user with username: {} was unauthorized ", username);
+            return null;
+        }
+        Set<String> authorities = new HashSet<>();
+        userRoles.forEach(userRole -> {
+            RoleInfo roleInfo = roleInfoService.getById(userRole.getRoleId());
+            if (roleInfo != null && StringUtils.isNotBlank(roleInfo.getName())) {
+                authorities.add(roleInfo.getName().toUpperCase());
+            }
+        });
+        userVO.setAuthorities(authorities);
+        return userVO;
     }
 
     @Override

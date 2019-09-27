@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.assets.service;
 
-import top.abeille.basic.assets.document.Article;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.common.basic.BasicService;
 
@@ -20,5 +19,5 @@ public interface ArticleInfoService extends BasicService<ArticleInfo> {
      * @param articleId 文章id
      * @return 文章内容
      */
-    Article getByArticleId(String articleId);
+    ArticleInfo getByArticleId(String articleId);
 }

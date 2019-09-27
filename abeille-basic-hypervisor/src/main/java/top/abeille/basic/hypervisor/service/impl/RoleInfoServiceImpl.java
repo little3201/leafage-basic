@@ -5,17 +5,10 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
-import top.abeille.basic.hypervisor.entity.UserInfo;
-import top.abeille.basic.hypervisor.entity.UserRole;
 import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
-import top.abeille.basic.hypervisor.service.UserInfoService;
-import top.abeille.basic.hypervisor.service.UserRoleService;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,14 +22,8 @@ public class RoleInfoServiceImpl implements RoleInfoService {
 
     private final RoleInfoRepository roleInfoRepository;
 
-    private final UserRoleService userRoleService;
-
-    private final UserInfoService userInfoService;
-
-    public RoleInfoServiceImpl(RoleInfoRepository roleInfoRepository, UserRoleService userRoleService, UserInfoService userInfoService) {
+    public RoleInfoServiceImpl(RoleInfoRepository roleInfoRepository) {
         this.roleInfoRepository = roleInfoRepository;
-        this.userRoleService = userRoleService;
-        this.userInfoService = userInfoService;
     }
 
     @Override
@@ -84,20 +71,5 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     @Override
     public RoleInfo save(RoleInfo entity) {
         return roleInfoRepository.save(entity);
-    }
-
-    @Override
-    public List<RoleInfo> findByUserId(String userId) {
-        UserInfo userInfo = userInfoService.getByUserId(userId);
-        if (null == userInfo) {
-            return Collections.emptyList();
-        }
-        List<UserRole> userRoleList = userRoleService.findAllByUserId(userInfo.getId());
-        if (CollectionUtils.isEmpty(userRoleList)) {
-            return Collections.emptyList();
-        }
-        List<RoleInfo> roleInfoList = new ArrayList<>();
-        userRoleList.forEach(userRole -> roleInfoList.add(this.getById(userRole.getRoleId())));
-        return roleInfoList;
     }
 }

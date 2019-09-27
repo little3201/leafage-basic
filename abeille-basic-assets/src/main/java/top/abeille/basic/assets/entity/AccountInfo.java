@@ -40,17 +40,12 @@ public class AccountInfo {
     @Column(name = "account_id")
     private String accountId;
     /**
-     * 账户号码
-     */
-    @Column(name = "account")
-    private Long account;
-    /**
-     * 账户余额
+     * 余额
      */
     @Column(name = "balance")
     private BigDecimal balance;
     /**
-     * 账户类型
+     * 类型
      */
     @Column(name = "type")
     private String type;
@@ -62,11 +57,11 @@ public class AccountInfo {
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
-     * 修改人ID
+     * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier_id")
-    private Long modifierId;
+    @Column(name = "modifier")
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -98,14 +93,6 @@ public class AccountInfo {
         this.accountId = accountId;
     }
 
-    public Long getAccount() {
-        return account;
-    }
-
-    public void setAccount(Long account) {
-        this.account = account;
-    }
-
     public BigDecimal getBalance() {
         return balance;
     }
@@ -130,12 +117,12 @@ public class AccountInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifierId() {
-        return modifierId;
+    public Long getModifier() {
+        return modifier;
     }
 
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

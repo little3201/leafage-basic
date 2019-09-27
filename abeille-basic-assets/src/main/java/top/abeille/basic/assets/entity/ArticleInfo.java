@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -22,10 +21,10 @@ public class ArticleInfo {
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
+    @Column(name = "id")
     private Long id;
     /**
      * 文章ID
@@ -34,27 +33,22 @@ public class ArticleInfo {
     @Column(name = "article_id")
     private String articleId;
     /**
-     * 文章标题
+     * 标题
      */
     @Column(name = "title")
     private String title;
     /**
-     * 文章描述
+     * 概要
      */
     @Column(name = "content")
     private String content;
     /**
-     * 文章描述
+     * 描述
      */
     @Column(name = "description")
     private String description;
     /**
-     * 文章url
-     */
-    @Column(name = "url")
-    private String url;
-    /**
-     * 主题图片url
+     * 图片url
      */
     @Column(name = "image_url")
     private String imageUrl;
@@ -65,11 +59,11 @@ public class ArticleInfo {
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
-     * 修改人ID
+     * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier_id")
-    private Long modifierId;
+    @Column(name = "modifier")
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -109,28 +103,20 @@ public class ArticleInfo {
         this.content = content;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getEnabled() {
@@ -141,12 +127,12 @@ public class ArticleInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifierId() {
-        return modifierId;
+    public Long getModifier() {
+        return modifier;
     }
 
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

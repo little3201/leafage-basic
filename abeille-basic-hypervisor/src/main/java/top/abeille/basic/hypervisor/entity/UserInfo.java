@@ -6,7 +6,8 @@ package top.abeille.basic.hypervisor.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 /**
@@ -29,7 +30,7 @@ public class UserInfo {
     /**
      * 用户ID
      */
-    @NotNull
+    @NotBlank
     @Column(name = "user_id")
     private String userId;
     /**
@@ -38,15 +39,15 @@ public class UserInfo {
     @Column(name = "group_id")
     private Long groupId;
     /**
-     * 中文姓名
+     * 昵称
      */
-    @Column(name = "name_cn")
-    private String nameCn;
+    @Column(name = "nickname")
+    private String nickname;
     /**
-     * 英文姓名
+     * 头像
      */
-    @Column(name = "name_en")
-    private String nameEn;
+    @Column(name = "avatar")
+    private String avatar;
     /**
      * 用户名
      */
@@ -65,6 +66,7 @@ public class UserInfo {
     /**
      * 邮箱
      */
+    @Email
     @Column(name = "email")
     private String email;
     /**
@@ -94,11 +96,11 @@ public class UserInfo {
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
-     * 修改人ID
+     * 修改人
      */
     @JsonIgnore
-    @Column(name = "modifier_id")
-    private Long modifierId;
+    @Column(name = "modifier")
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -130,20 +132,20 @@ public class UserInfo {
         this.groupId = groupId;
     }
 
-    public String getNameCn() {
-        return nameCn;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setNameCn(String nameCn) {
-        this.nameCn = nameCn;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getNameEn() {
-        return nameEn;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setNameEn(String nameEn) {
-        this.nameEn = nameEn;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUsername() {
@@ -218,12 +220,12 @@ public class UserInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifierId() {
-        return modifierId;
+    public Long getModifier() {
+        return modifier;
     }
 
-    public void setModifierId(Long modifierId) {
-        this.modifierId = modifierId;
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

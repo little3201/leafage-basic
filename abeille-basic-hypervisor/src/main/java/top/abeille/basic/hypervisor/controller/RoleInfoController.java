@@ -3,8 +3,6 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +12,11 @@ import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.common.basic.AbstractController;
 
-import javax.validation.constraints.NotNull;
-import java.util.List;
-
 /**
  * 角色信息controller
  *
  * @author liwenqiang 2018/12/17 19:38
  **/
-@Api(tags = "Role Api")
 @RestController
 @RequestMapping("/role")
 public class RoleInfoController extends AbstractController {
@@ -40,9 +34,8 @@ public class RoleInfoController extends AbstractController {
      * @param pageSize 页内数据量
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Fetch enabled roles with pageable")
     @GetMapping
-    public ResponseEntity findRoles(@NotNull Integer pageNum, @NotNull Integer pageSize) {
+    public ResponseEntity findRoles(Integer pageNum, Integer pageSize) {
         Page<RoleInfo> roles = roleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             log.info("Not found anything about role with pageable.");
@@ -51,41 +44,12 @@ public class RoleInfoController extends AbstractController {
         return ResponseEntity.ok(roles);
     }
 
-    @ApiOperation(value = "Fetch enabled roles by userId")
-    @GetMapping("/{userId}")
-    public ResponseEntity findByUserId(@PathVariable String userId) {
-        List<RoleInfo> roleInfoList = roleInfoService.findByUserId(userId);
-        if (CollectionUtils.isEmpty(roleInfoList)) {
-            log.info("Not found anything of role with userId: {}.", userId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(roleInfoList);
-    }
-
-    /**
-     * 角色查询——根据ID
-     *
-     * @param id 主键
-     * @return ResponseEntity
-     */
-    /*@ApiOperation(value = "Get single role by id")
-    @GetMapping("/{id}")
-    public ResponseEntity getRole(@PathVariable Long id) {
-        RoleInfo role = roleInfoService.getById(id);
-        if (role == null) {
-            log.info("Not found anything of role with id: {}.", id);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(role);
-    }*/
-
     /**
      * 保存角色
      *
      * @param role 角色
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Save single role")
     @PostMapping
     public ResponseEntity saveRole(@RequestBody RoleInfo role) {
         try {
@@ -103,7 +67,6 @@ public class RoleInfoController extends AbstractController {
      * @param role 角色
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Modify single role")
     @PutMapping
     public ResponseEntity modifyRole(@RequestBody RoleInfo role) {
         try {
@@ -121,7 +84,6 @@ public class RoleInfoController extends AbstractController {
      * @param id 主键
      * @return ResponseEntity
      */
-    @ApiOperation(value = "Remove single role")
     @DeleteMapping("/{id}")
     public ResponseEntity removeRole(@PathVariable Long id) {
         try {

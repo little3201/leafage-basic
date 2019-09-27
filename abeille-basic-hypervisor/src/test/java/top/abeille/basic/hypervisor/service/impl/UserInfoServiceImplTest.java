@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.hamcrest.Matchers;
@@ -39,7 +38,7 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
     public void save() {
         UserInfo user = new UserInfo();
         user.setId(0L);
-        user.setUserNameCn("管理员");
+        user.setNickname("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
         user.setPassword(pwd);
         userInfoService.save(user);

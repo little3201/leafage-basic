@@ -31,11 +31,6 @@
         </developer>
     </developers>
 
-    <modules>
-        <module>abeille-basic-hypervisor</module>
-        <module>abeille-basic-assets</module>
-    </modules>
-
     <dependencyManagement>
         <dependencies>
             <!-- Spring Cloud -->

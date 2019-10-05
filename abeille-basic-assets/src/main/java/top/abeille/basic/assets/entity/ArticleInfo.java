@@ -38,7 +38,12 @@ public class ArticleInfo {
     @Column(name = "title")
     private String title;
     /**
-     * 概要
+     * 概览
+     */
+    @Column(name = "summary")
+    private String summary;
+    /**
+     * 内容
      */
     @Column(name = "content")
     private String content;
@@ -93,6 +98,14 @@ public class ArticleInfo {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getContent() {

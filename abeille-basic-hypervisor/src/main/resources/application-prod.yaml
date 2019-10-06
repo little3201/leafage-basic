@@ -1,7 +1,7 @@
 ##=====log common=====##
 logging:
   level:
-    # control root logger's level for INFO
+    # control root logger's level for WARN
     root: INFO
     # control org.springframework logger's level for DEBUG
     org:
@@ -11,9 +11,8 @@ logging:
 
 spring:
   cloud:
-    ##=====consul=====##
     consul:
-      host: 122.152.218.103
+      host: 127.0.0.1
       port: 8500
 
   ##=====datasource common=====##
@@ -22,24 +21,26 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://cd-cdb-qdykj0yw.sql.tencentcdb.com:62841/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://127.0.0.1:3036/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
-      username: root
+      username: abeille
       # datasource password
-      password: zx110119@@
+      password: abeille.top@123
     slaver:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://cd-cdb-qdykj0yw.sql.tencentcdb.com:62841/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://127.0.0.1:3036/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
-      username: root
+      username: abeille
       # datasource password
-      password: zx110119@@
+      password: abeille.top@123
 
   ##=====Jpa common=====##
   jpa:
-    # jpa database
+    # datasource dialect
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    # datasource driver
     database: mysql
     # whether show execute sql
     show-sql: true
@@ -48,8 +49,6 @@ spring:
       hibernate:
         hbm2ddl:
           auto: update
-    # datasource dialect
-    database-platform: org.hibernate.dialect.MariaDBDialect
 
   # server jpa run thread common, hibernate will run with another thread
   data:
@@ -62,11 +61,11 @@ spring:
     # Redis database index(default is 0)
     database: 0
     # Redis server host
-    host: 192.168.248.254
+    host: 127.0.0.1
     # Redis server port
-    port: 6379
+    port: 7369
     # Redis server password(default is non)
-    password:
+    password: abeille.top@123
     # shutdown timeout(ms)
     lettuce:
       shutdown-timeout: 0ms

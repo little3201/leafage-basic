@@ -14,6 +14,8 @@ import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.vo.enter.ArticleEnter;
 import top.abeille.basic.assets.vo.outer.ArticleOuter;
 
+import java.util.Objects;
+
 /**
  * 文章信息service实现
  *
@@ -30,37 +32,46 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Override
     public Flux<ArticleOuter> findAll() {
-        return articleInfoRepository.findAll().map(article -> {
-            ArticleOuter outer = new ArticleOuter();
-            BeanUtils.copyProperties(article, outer);
-            return outer;
-        });
+        return articleInfoRepository.findAll().map(this::convertOuter);
     }
 
     @Override
-    public Mono<ArticleOuter> getByArticleId(Long articleId) {
-        ArticleInfo info = new ArticleInfo();
-        info.setArticleId(articleId);
-        return articleInfoRepository.findOne(Example.of(info)).map(article -> {
-            ArticleOuter outer = new ArticleOuter();
-            BeanUtils.copyProperties(article, outer);
-            return outer;
-        });
+    public Mono<ArticleOuter> getById(Long articleId) {
+        return fetchByArticleId(articleId).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ArticleOuter> save(ArticleEnter enter) {
+    public Mono<ArticleOuter> save(Long articleId, ArticleEnter enter) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(enter, info);
-        return articleInfoRepository.save(info).map(article -> {
-            ArticleOuter outer = new ArticleOuter();
-            BeanUtils.copyProperties(article, outer);
-            return outer;
-        });
+        if (Objects.nonNull(articleId)) {
+            return fetchByArticleId(articleId).flatMap(articleInfo -> articleInfoRepository.save(info).map(this::convertOuter));
+        }
+        return articleInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<Void> removeById(String id) {
-        return articleInfoRepository.deleteById(id);
+    public Mono<Void> removeById(Long articleId) {
+        ArticleInfo info = new ArticleInfo();
+        info.setArticleId(articleId);
+        return articleInfoRepository.findOne(Example.of(info)).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
+    }
+
+    private Mono<ArticleInfo> fetchByArticleId(Long articleId) {
+        if (Objects.isNull(articleId)) {
+            return Mono.empty();
+        }
+        ArticleInfo info = new ArticleInfo();
+        info.setArticleId(articleId);
+        return articleInfoRepository.findOne(Example.of(info));
+    }
+
+    private ArticleOuter convertOuter(ArticleInfo info) {
+        if (Objects.isNull(info)) {
+            return null;
+        }
+        ArticleOuter outer = new ArticleOuter();
+        BeanUtils.copyProperties(info, outer);
+        return outer;
     }
 }

@@ -21,5 +21,5 @@ public interface ArticleInfoService extends BasicService<ArticleEnter, ArticleOu
      * @param articleId 文章id
      * @return 文章内容
      */
-    Mono<ArticleOuter> getByArticleId(Long articleId);
+    Mono<ArticleOuter> getById(Long articleId);
 }

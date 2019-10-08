@@ -51,7 +51,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserOuter> save(UserEnter enter) {
+    public Mono<UserOuter> save(Long userId, UserEnter enter) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(enter, info);
         return userInfoRepository.save(info).map(user -> {
@@ -62,8 +62,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<Void> removeById(String id) {
-        return userInfoRepository.deleteById(id);
+    public Mono<Void> removeById(Long userId) {
+        return fetchByUserId(userId).flatMap(userInfo -> userInfoRepository.deleteById(userInfo.getId()));
     }
 
     @Override
@@ -81,9 +81,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         //遍历用户角色信息，取出角色名
         Set<String> authorities = new HashSet<>();
         Flux<String> stringFlux = listMono.flatMapIterable(userRoles -> {
-            userRoles.forEach(userRole -> {
-                roleInfoService.getByRoleId(userRole.getRoleId()).map(roleOuter -> authorities.add(roleOuter.getName()));
-            });
+            userRoles.forEach(userRole -> roleInfoService.getByRoleId(userRole.getRoleId()).map(roleOuter -> authorities.add(roleOuter.getName())));
             return authorities;
         });
         return outerMono.map(userOuter -> {
@@ -96,15 +94,19 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public Mono<UserOuter> getByUserId(Long userId) {
-        ExampleMatcher exampleMatcher = this.appendConditions();
-        UserInfo info = new UserInfo();
-        info.setUserId(userId);
-        this.appendParams(info);
-        return userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(user -> {
+        return fetchByUserId(userId).map(user -> {
             UserOuter outer = new UserOuter();
             BeanUtils.copyProperties(user, outer);
             return outer;
         });
+    }
+
+    private Mono<UserInfo> fetchByUserId(Long userId) {
+        ExampleMatcher exampleMatcher = this.appendConditions();
+        UserInfo info = new UserInfo();
+        info.setUserId(userId);
+        this.appendParams(info);
+        return userInfoRepository.findOne(Example.of(info, exampleMatcher));
     }
 
     /**

@@ -13,6 +13,8 @@ import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.basic.assets.vo.enter.AccountEnter;
 import top.abeille.basic.assets.vo.outer.AccountOuter;
 
+import java.util.Objects;
+
 /**
  * 账户信息Service实现
  *
@@ -27,16 +29,11 @@ public class AccountInfoServiceImpl implements AccountInfoService {
         this.accountInfoRepository = accountInfoRepository;
     }
 
-
     @Override
-    public Mono<AccountOuter> save(AccountEnter entity) {
+    public Mono<AccountOuter> save(Long accountId, AccountEnter entity) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(entity, info);
-        AccountOuter outer = new AccountOuter();
-        return accountInfoRepository.save(info).map(account -> {
-            BeanUtils.copyProperties(account, outer);
-            return outer;
-        });
+        return accountInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
@@ -44,11 +41,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
         AccountInfo info = new AccountInfo();
         info.setAccountId(accountId);
         info.setEnabled(true);
-        AccountOuter outer = new AccountOuter();
-        return accountInfoRepository.findOne(Example.of(info)).map(account -> {
-            BeanUtils.copyProperties(account, outer);
-            return outer;
-        });
+        return accountInfoRepository.findOne(Example.of(info)).map(this::convertOuter);
     }
 
     @Override
@@ -57,5 +50,14 @@ public class AccountInfoServiceImpl implements AccountInfoService {
         info.setAccountId(accountId);
         return accountInfoRepository.findOne(Example.of(info))
                 .flatMap(account -> accountInfoRepository.deleteById(account.getId()));
+    }
+
+    private AccountOuter convertOuter(AccountInfo info) {
+        if (Objects.isNull(info)) {
+            return null;
+        }
+        AccountOuter outer = new AccountOuter();
+        BeanUtils.copyProperties(info, outer);
+        return outer;
     }
 }

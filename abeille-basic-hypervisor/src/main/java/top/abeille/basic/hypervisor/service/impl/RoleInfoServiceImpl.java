@@ -53,7 +53,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Mono<RoleOuter> save(RoleEnter enter) {
+    public Mono<RoleOuter> save(Long roleId, RoleEnter enter) {
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(enter, info);
         return roleInfoRepository.save(info).map(role -> {

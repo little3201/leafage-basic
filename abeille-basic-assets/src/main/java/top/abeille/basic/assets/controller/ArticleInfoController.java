@@ -8,12 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.service.ArticleInfoService;
+import top.abeille.basic.assets.vo.enter.ArticleEnter;
+import top.abeille.basic.assets.vo.outer.ArticleOuter;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 /**
  * 文章信息controller
@@ -36,13 +36,10 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity fetchArticle() {
-        Flux<ArticleInfo> infoFlux = articleInfoService.findAll();
-        if (Objects.isNull(infoFlux)) {
-            log.info("Not found anything about article.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(infoFlux);
+    public Flux<ResponseEntity<ArticleOuter>> fetchArticle() {
+        return articleInfoService.findAll()
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.noContent().build());
     }
 
     /**
@@ -52,48 +49,36 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{articleId}")
-    public ResponseEntity getArticle(@PathVariable String articleId) {
-        Mono<ArticleInfo> infoMono = articleInfoService.getByArticleId(articleId);
-        if (Objects.isNull(infoMono)) {
-            log.info("Not found with articleId: {}.", articleId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(infoMono);
+    public Mono<ResponseEntity<ArticleOuter>> getArticle(@PathVariable Long articleId) {
+        return articleInfoService.getById(articleId)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * 保存文章信息
      *
-     * @param articleInfo 文章
+     * @param enter 文章
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveArticle(@RequestBody @Valid ArticleInfo articleInfo) {
-        Mono<ArticleInfo> infoMono = articleInfoService.save(articleInfo);
-        if (Objects.isNull(infoMono)) {
-            log.error("Save article occurred error.");
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    public Mono<ResponseEntity<ArticleOuter>> saveArticle(@RequestBody @Valid ArticleEnter enter) {
+        return articleInfoService.save(null, enter)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 
     /**
      * 保存文章信息
      *
-     * @param articleInfo 文章
+     * @param enter 文章
      * @return ResponseEntity
      */
-    @PutMapping
-    public ResponseEntity modifyArticle(@RequestBody @Valid ArticleInfo articleInfo) {
-        if (Objects.isNull(articleInfo.getId())) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
-        Mono<ArticleInfo> infoMono = articleInfoService.save(articleInfo);
-        if (Objects.isNull(infoMono)) {
-            log.error("Modify article occurred error.");
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
-        }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+    @PutMapping("/{articleId}")
+    public Mono<ResponseEntity<ArticleOuter>> modifyArticle(@PathVariable Long articleId, @RequestBody @Valid ArticleEnter enter) {
+        return articleInfoService.save(articleId, enter)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 
 }

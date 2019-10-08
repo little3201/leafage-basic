@@ -50,7 +50,7 @@ public class AccountInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<AccountOuter>> saveAccount(@RequestBody @Valid AccountEnter account) {
-        return accountInfoService.save(account)
+        return accountInfoService.save(null, account)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -62,8 +62,8 @@ public class AccountInfoController extends AbstractController {
      * @return Mono<AccountInfo>
      */
     @PutMapping("/{accountId}")
-    public Mono<ResponseEntity<AccountOuter>> modifyAccount(@PathVariable String accountId, @RequestBody @Valid AccountEnter account) {
-        return accountInfoService.save(account)
+    public Mono<ResponseEntity<AccountOuter>> modifyAccount(@PathVariable Long accountId, @RequestBody @Valid AccountEnter account) {
+        return accountInfoService.save(accountId, account)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }

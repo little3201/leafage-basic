@@ -3,8 +3,7 @@
  */
 package top.abeille.basic.assets.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -12,6 +11,8 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
+import top.abeille.basic.assets.vo.enter.ArticleEnter;
+import top.abeille.basic.assets.vo.outer.ArticleOuter;
 
 /**
  * 文章信息service实现
@@ -21,11 +22,6 @@ import top.abeille.basic.assets.service.ArticleInfoService;
 @Service
 public class ArticleInfoServiceImpl implements ArticleInfoService {
 
-    /**
-     * 开启日志
-     */
-    private static final Logger log = LoggerFactory.getLogger(ArticleInfoServiceImpl.class);
-
     private final ArticleInfoRepository articleInfoRepository;
 
     public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository) {
@@ -33,30 +29,38 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Flux<ArticleInfo> findAll() {
-        return articleInfoRepository.findAll();
+    public Flux<ArticleOuter> findAll() {
+        return articleInfoRepository.findAll().map(article -> {
+            ArticleOuter outer = new ArticleOuter();
+            BeanUtils.copyProperties(article, outer);
+            return outer;
+        });
     }
 
     @Override
-    public Mono<ArticleInfo> getByExample(ArticleInfo articleInfo) {
-        articleInfo.setEnabled(true);
-        return articleInfoRepository.findOne(Example.of(articleInfo));
+    public Mono<ArticleOuter> getByArticleId(Long articleId) {
+        ArticleInfo info = new ArticleInfo();
+        info.setArticleId(articleId);
+        return articleInfoRepository.findOne(Example.of(info)).map(article -> {
+            ArticleOuter outer = new ArticleOuter();
+            BeanUtils.copyProperties(article, outer);
+            return outer;
+        });
     }
 
     @Override
-    public Mono<ArticleInfo> getByArticleId(String articleId) {
-        ArticleInfo articleInfo = new ArticleInfo();
-        articleInfo.setArticleId(articleId);
-        return articleInfoRepository.findOne(Example.of(articleInfo));
+    public Mono<ArticleOuter> save(ArticleEnter enter) {
+        ArticleInfo info = new ArticleInfo();
+        BeanUtils.copyProperties(enter, info);
+        return articleInfoRepository.save(info).map(article -> {
+            ArticleOuter outer = new ArticleOuter();
+            BeanUtils.copyProperties(article, outer);
+            return outer;
+        });
     }
 
     @Override
-    public Mono<ArticleInfo> save(ArticleInfo entity) {
-        return articleInfoRepository.save(entity);
-    }
-
-    @Override
-    public Mono<Void> removeById(Long id) {
+    public Mono<Void> removeById(String id) {
         return articleInfoRepository.deleteById(id);
     }
 }

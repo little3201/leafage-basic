@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018-12-06 22:09
  **/
-public interface UserGroupRepository extends ReactiveCrudRepository<UserGroup, Long> {
+public interface UserGroupRepository extends ReactiveCrudRepository<UserGroup, String> {
 
     /**
      * 查询所有角色——根据用户id

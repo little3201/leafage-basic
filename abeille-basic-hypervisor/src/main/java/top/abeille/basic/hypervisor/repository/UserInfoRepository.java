@@ -11,5 +11,5 @@ import top.abeille.basic.hypervisor.entity.UserInfo;
  *
  * @author liwenqiang 2018/7/27 17:50
  **/
-public interface UserInfoRepository extends ReactiveMongoRepository<UserInfo, Long> {
+public interface UserInfoRepository extends ReactiveMongoRepository<UserInfo, String> {
 }

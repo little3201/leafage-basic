@@ -11,5 +11,5 @@ import top.abeille.basic.hypervisor.entity.RoleInfo;
  *
  * @author liwenqiang 2018/9/26 11:06
  **/
-public interface RoleInfoRepository extends ReactiveMongoRepository<RoleInfo, Long> {
+public interface RoleInfoRepository extends ReactiveMongoRepository<RoleInfo, String> {
 }

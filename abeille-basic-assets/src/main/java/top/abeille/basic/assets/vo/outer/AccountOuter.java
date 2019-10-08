@@ -1,71 +1,43 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.entity;
+package top.abeille.basic.assets.vo.outer;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for AccountInfo
+ * Outer class for AccountInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "account_info")
-public class AccountInfo {
+public class AccountOuter implements Serializable {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 用户ID
      */
-    @Field(value = "user_id")
     private Long userId;
     /**
      * 账户ID
      */
-    @Field(value = "account_id")
     private Long accountId;
     /**
      * 余额
      */
-    @Field(value = "balance")
     private BigDecimal balance;
     /**
      * 类型
      */
-    @Field(value = "type")
     private String type;
-    /**
-     * 是否有效
-     */
-    @Field(value = "is_enabled")
-    private Boolean enabled;
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Long getUserId() {
         return userId;
@@ -97,14 +69,6 @@ public class AccountInfo {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public Long getModifier() {

@@ -11,5 +11,5 @@ import top.abeille.basic.assets.entity.AccountInfo;
  *
  * @author liwenqiang 2018/12/20 9:51
  **/
-public interface AccountInfoRepository extends ReactiveMongoRepository<AccountInfo, Long> {
+public interface AccountInfoRepository extends ReactiveMongoRepository<AccountInfo, String> {
 }

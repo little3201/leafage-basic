@@ -1,14 +1,9 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.entity;
+package top.abeille.basic.hypervisor.vo.outer;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -16,72 +11,40 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Document(collection = "source_info")
-public class SourceInfo {
+public class SourceOuter implements Serializable {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 权限ID
      */
-    @NotNull
-    @Field(value = "source_id")
     private Long sourceId;
     /**
      * 上级
      */
-    @Field(value = "superior")
-    private Long superior;
+    private String superior;
     /**
      * 名称
      */
-    @Field(value = "name")
     private String name;
     /**
      * 类型
      */
-    @Field(value = "type")
     private Integer type;
     /**
      * 路径
      */
-    @Field(value = "path")
     private String path;
     /**
      * 描述
      */
-    @Field(value = "description")
     private String description;
-
-    /**
-     * 是否有效
-     */
-    @JsonIgnore
-    @Field(value = "is_enabled")
-    private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
-    @Field(value = "modifier")
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
-    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Long getSourceId() {
         return sourceId;
@@ -91,11 +54,11 @@ public class SourceInfo {
         this.sourceId = sourceId;
     }
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
     }
 
@@ -131,20 +94,11 @@ public class SourceInfo {
         this.description = description;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

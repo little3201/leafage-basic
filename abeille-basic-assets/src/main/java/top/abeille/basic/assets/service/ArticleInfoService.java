@@ -4,7 +4,8 @@
 package top.abeille.basic.assets.service;
 
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.entity.ArticleInfo;
+import top.abeille.basic.assets.vo.enter.ArticleEnter;
+import top.abeille.basic.assets.vo.outer.ArticleOuter;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -12,7 +13,7 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface ArticleInfoService extends BasicService<ArticleInfo> {
+public interface ArticleInfoService extends BasicService<ArticleEnter, ArticleOuter> {
 
     /**
      * 根据articleId从es中查询内容
@@ -20,5 +21,5 @@ public interface ArticleInfoService extends BasicService<ArticleInfo> {
      * @param articleId 文章id
      * @return 文章内容
      */
-    Mono<ArticleInfo> getByArticleId(String articleId);
+    Mono<ArticleOuter> getByArticleId(Long articleId);
 }

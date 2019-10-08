@@ -3,28 +3,21 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
-import top.abeille.basic.hypervisor.entity.UserRole;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserVO;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import top.abeille.basic.hypervisor.vo.enter.UserEnter;
+import top.abeille.basic.hypervisor.vo.outer.UserOuter;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -52,76 +45,61 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserInfo> getByExample(UserInfo userInfo) {
-        /*Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可
-        可以通过ExampleMatcher.matching()方法进行进一步得处理*/
-        ExampleMatcher exampleMatcher = this.appendConditions();
-        this.appendParams(userInfo);
-        return userInfoRepository.findOne(Example.of(userInfo, exampleMatcher));
+    public Mono<UserOuter> save(UserEnter enter) {
+        UserInfo info = new UserInfo();
+        BeanUtils.copyProperties(enter, info);
+        return userInfoRepository.save(info).map(user -> {
+            UserOuter outer = new UserOuter();
+            BeanUtils.copyProperties(user, outer);
+            return outer;
+        });
     }
 
     @Override
-    public Mono<UserInfo> save(UserInfo entity) {
-        UserInfo example = this.getByUserId(entity.getUserId()).block();
-        if (example != null) {
-            entity.setId(example.getId());
-        }
-        if (entity.getModifier() == null) {
-            entity.setModifier(0L);
-        }
-        return userInfoRepository.save(entity);
-    }
-
-    @Override
-    public Mono<Void> removeById(Long id) {
+    public Mono<Void> removeById(String id) {
         return userInfoRepository.deleteById(id);
     }
 
     @Override
     public Mono<UserVO> loadUserByUsername(String username) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUsername(username);
-        UserInfo example = this.getByExample(userInfo).block();
-        if (Objects.isNull(example)) {
-            log.info("no user with username: {} be found", username);
-            return null;
-        }
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(example, userVO);
-        List<UserRole> userRoles = userRoleRepository.findAllByUserIdAndEnabled(example.getId(), true);
-        if (CollectionUtils.isEmpty(userRoles)) {
-            log.info("the user with username: {} was unauthorized ", username);
-            return null;
-        }
-        Set<String> authorities = new HashSet<>();
-        userRoles.forEach(userRole -> {
-            RoleInfo roleInfo = roleInfoService.getById(userRole.getRoleId()).block();
-            if (roleInfo != null && StringUtils.isNotBlank(roleInfo.getName())) {
-                authorities.add(roleInfo.getName().toUpperCase());
-            }
-        });
-        userVO.setAuthorities(authorities);
-        return Mono.just(userVO);
+        UserInfo info = new UserInfo();
+        info.setUsername(username);
+        ExampleMatcher exampleMatcher = this.appendConditions();
+        userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(user -> {
+            UserOuter outer = new UserOuter();
+            BeanUtils.copyProperties(user, outer);
+            return outer;
+        }).map(userOuter -> userRoleRepository.findAllByUserIdAndEnabled(userOuter.getUserId(), true));
+//        Set<String> authorities = new HashSet<>();
+//        mono.flatMap(userRoles -> userRoles.forEach(userRole -> {
+//            roleInfoService.getByRoleId(userRole.getRoleId()).map(roleOuter -> authorities.add(roleOuter.getName()));
+//        }));
+//        userVO.setAuthorities(authorities);
+        return Mono.empty();
     }
 
     @Override
-    public Mono<UserInfo> getByUserId(String userId) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(userId);
-        return this.getByExample(userInfo);
+    public Mono<UserOuter> getByUserId(Long userId) {
+        ExampleMatcher exampleMatcher = this.appendConditions();
+        UserInfo info = new UserInfo();
+        info.setUserId(userId);
+        this.appendParams(info);
+        return userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(user -> {
+            UserOuter outer = new UserOuter();
+            BeanUtils.copyProperties(user, outer);
+            return outer;
+        });
     }
 
     /**
      * 设置查询条件的必要参数
      *
-     * @param userInfo 用户信息
-     * @return UserInfo
+     * @param info 用户信息
      */
-    private UserInfo appendParams(UserInfo userInfo) {
-        userInfo.setEnabled(true);
-        userInfo.setAccountNonExpired(true);
-        userInfo.setCredentialsNonExpired(true);
-        return userInfo;
+    private void appendParams(UserInfo info) {
+        info.setEnabled(true);
+        info.setAccountNonExpired(true);
+        info.setCredentialsNonExpired(true);
     }
 
     /**

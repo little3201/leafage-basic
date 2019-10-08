@@ -4,7 +4,8 @@
 package top.abeille.basic.assets.service;
 
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.entity.AccountInfo;
+import top.abeille.basic.assets.vo.enter.AccountEnter;
+import top.abeille.basic.assets.vo.outer.AccountOuter;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -12,9 +13,9 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface AccountInfoService extends BasicService<AccountInfo> {
+public interface AccountInfoService extends BasicService<AccountEnter, AccountOuter> {
 
-    Mono<AccountInfo> getByAccountId(String accountId);
+    Mono<AccountOuter> getByAccountId(Long accountId);
 
-    Mono<Void> removeByAccountId(String accountId);
+    Mono<Void> removeByAccountId(Long accountId);
 }

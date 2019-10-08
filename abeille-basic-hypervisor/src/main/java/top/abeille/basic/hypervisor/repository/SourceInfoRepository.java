@@ -11,6 +11,6 @@ import top.abeille.basic.hypervisor.entity.SourceInfo;
  *
  * @author liwenqiang 2018/12/17 19:37
  **/
-public interface SourceInfoRepository extends ReactiveCrudRepository<SourceInfo, Long> {
+public interface SourceInfoRepository extends ReactiveCrudRepository<SourceInfo, String> {
 
 }

@@ -3,11 +3,12 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import top.abeille.basic.hypervisor.entity.SourceInfo;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
+import top.abeille.basic.hypervisor.vo.outer.SourceOuter;
 
 /**
  * 权限资源信息Service实现
@@ -24,7 +25,11 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public Flux<SourceInfo> findAll() {
-        return sourceInfoRepository.findAll();
+    public Flux<SourceOuter> findAll() {
+        return sourceInfoRepository.findAll().map(article -> {
+            SourceOuter outer = new SourceOuter();
+            BeanUtils.copyProperties(article, outer);
+            return outer;
+        });
     }
 }

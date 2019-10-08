@@ -3,12 +3,10 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -23,44 +21,39 @@ public class UserRole {
      * 主键
      */
     @Id
-    private Long id;
+    private String id;
     /**
      * 用户主键
      */
-    @NotNull
     @Field(value = "user_id")
     private Long userId;
     /**
      * 角色主键
      */
-    @NotNull
     @Field(value = "role_id")
     private Long roleId;
 
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
     @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

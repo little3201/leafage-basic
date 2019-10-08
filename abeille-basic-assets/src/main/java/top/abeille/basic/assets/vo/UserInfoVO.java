@@ -3,17 +3,19 @@
  */
 package top.abeille.basic.assets.vo;
 
+import java.io.Serializable;
+
 /**
  * 文件描述
  *
  * @author liwenqiang  2019-03-03 22:59
  **/
-public class UserInfoVO {
+public class UserInfoVO implements Serializable {
 
     /**
      * 用户编号
      */
-    private String userId;
+    private Long userId;
     /**
      * 中文姓名
      */
@@ -35,11 +37,11 @@ public class UserInfoVO {
      */
     private String userAddress;
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -81,17 +83,5 @@ public class UserInfoVO {
 
     public void setUserAddress(String userAddress) {
         this.userAddress = userAddress;
-    }
-
-    @Override
-    public String toString() {
-        return "UserInfoVO{" +
-                "userId='" + userId + '\'' +
-                ", userNameCn='" + userNameCn + '\'' +
-                ", userNameEn='" + userNameEn + '\'' +
-                ", userMobile='" + userMobile + '\'' +
-                ", userEmail='" + userEmail + '\'' +
-                ", userAddress='" + userAddress + '\'' +
-                '}';
     }
 }

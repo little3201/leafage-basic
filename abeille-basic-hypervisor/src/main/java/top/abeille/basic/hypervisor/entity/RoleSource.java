@@ -23,7 +23,7 @@ public class RoleSource {
      * 主键
      */
     @Id
-    private Long id;
+    private String id;
     /**
      * 角色ID
      */
@@ -56,11 +56,11 @@ public class RoleSource {
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

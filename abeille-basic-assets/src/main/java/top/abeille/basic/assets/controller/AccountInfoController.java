@@ -7,12 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.entity.AccountInfo;
 import top.abeille.basic.assets.service.AccountInfoService;
+import top.abeille.basic.assets.vo.enter.AccountEnter;
+import top.abeille.basic.assets.vo.outer.AccountOuter;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 /**
  * 账户信息Controller
@@ -36,13 +36,10 @@ public class AccountInfoController extends AbstractController {
      * @return Mono<AccountInfo>
      */
     @GetMapping("/{accountId}")
-    public ResponseEntity getAccount(@PathVariable String accountId) {
-        Mono<AccountInfo> infoMono = accountInfoService.getByAccountId(accountId);
-        if (Objects.isNull(infoMono)) {
-            log.info("Not found with accountId: {}.", accountId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(infoMono);
+    public Mono<ResponseEntity<AccountOuter>> getAccount(@PathVariable Long accountId) {
+        return accountInfoService.getByAccountId(accountId)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
@@ -52,13 +49,10 @@ public class AccountInfoController extends AbstractController {
      * @return Mono<AccountInfo>
      */
     @PostMapping
-    public ResponseEntity saveAccount(@RequestBody @Valid AccountInfo account) {
-        Mono<AccountInfo> infoMono = accountInfoService.save(account);
-        if (Objects.isNull(infoMono)) {
-            log.error("Save user occurred error.");
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    public Mono<ResponseEntity<AccountOuter>> saveAccount(@RequestBody @Valid AccountEnter account) {
+        return accountInfoService.save(account)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 
     /**
@@ -67,17 +61,11 @@ public class AccountInfoController extends AbstractController {
      * @param account 账户信息
      * @return Mono<AccountInfo>
      */
-    @PutMapping
-    public ResponseEntity modifyAccount(@RequestBody @Valid AccountInfo account) {
-        if (Objects.isNull(account.getId())) {
-            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
-        }
-        Mono<AccountInfo> infoMono = accountInfoService.save(account);
-        if (Objects.isNull(infoMono)) {
-            log.error("Modify user occurred error.");
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
-        }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+    @PutMapping("/{accountId}")
+    public Mono<ResponseEntity<AccountOuter>> modifyAccount(@PathVariable String accountId, @RequestBody @Valid AccountEnter account) {
+        return accountInfoService.save(account)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
 
     /**
@@ -87,7 +75,9 @@ public class AccountInfoController extends AbstractController {
      * @return Mono<Void>
      */
     @DeleteMapping("/{accountId}")
-    public ResponseEntity removeAccount(@PathVariable String accountId) {
-        return ResponseEntity.ok(accountInfoService.removeByAccountId(accountId));
+    public Mono<ResponseEntity<Void>> removeAccount(@PathVariable Long accountId) {
+        return accountInfoService.removeByAccountId(accountId)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 }

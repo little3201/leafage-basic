@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018-12-06 22:09
  **/
-public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, Long> {
+public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, String> {
 
     /**
      * 查询所有角色——根据用户id

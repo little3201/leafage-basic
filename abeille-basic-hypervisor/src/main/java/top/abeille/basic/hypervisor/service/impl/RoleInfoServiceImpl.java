@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
+import top.abeille.basic.hypervisor.vo.enter.RoleEnter;
+import top.abeille.basic.hypervisor.vo.outer.RoleOuter;
 
 /**
  * 角色信息service 实现
@@ -27,24 +30,36 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Flux<RoleInfo> findAllByExample(RoleInfo roleInfo, ExampleMatcher exampleMatcher) {
+    public Flux<RoleOuter> findAllByExample(RoleEnter enter, ExampleMatcher exampleMatcher) {
         // 创建查询模板实例
-        Example<RoleInfo> example = Example.of(roleInfo, exampleMatcher);
-        return roleInfoRepository.findAll(example);
+        RoleInfo info = new RoleInfo();
+        BeanUtils.copyProperties(enter, info);
+        return roleInfoRepository.findAll(Example.of(info, exampleMatcher)).map(roleInfo1 -> {
+            RoleOuter outer = new RoleOuter();
+            BeanUtils.copyProperties(roleInfo1, outer);
+            return outer;
+        });
     }
 
     @Override
-    public Mono<RoleInfo> getById(Long id) {
-        return roleInfoRepository.findById(id);
+    public Mono<RoleOuter> getByRoleId(Long roleId) {
+        RoleInfo info = new RoleInfo();
+        info.setRoleId(roleId);
+        return roleInfoRepository.findOne(Example.of(info)).map(role -> {
+            RoleOuter outer = new RoleOuter();
+            BeanUtils.copyProperties(role, outer);
+            return outer;
+        });
     }
 
     @Override
-    public Mono<RoleInfo> getByExample(RoleInfo roleInfo) {
-        return roleInfoRepository.findOne(Example.of(roleInfo));
-    }
-
-    @Override
-    public Mono<RoleInfo> save(RoleInfo entity) {
-        return roleInfoRepository.save(entity);
+    public Mono<RoleOuter> save(RoleEnter enter) {
+        RoleInfo info = new RoleInfo();
+        BeanUtils.copyProperties(enter, info);
+        return roleInfoRepository.save(info).map(role -> {
+            RoleOuter outer = new RoleOuter();
+            BeanUtils.copyProperties(role, outer);
+            return outer;
+        });
     }
 }

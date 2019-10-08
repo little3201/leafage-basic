@@ -1,75 +1,46 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.entity;
+package top.abeille.basic.assets.vo.outer;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * Model class for ArticleInfo
+ * Enter class for ArticleInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "article_info")
-public class ArticleInfo {
+public class ArticleOuter implements Serializable {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 文章ID
      */
-    @Field(value = "article_id")
     private Long articleId;
     /**
      * 标题
      */
-    @Field(value = "title")
     private String title;
     /**
      * 描述
      */
-    @Field(value = "description")
     private String description;
     /**
      * 内容
      */
-    @Field(value = "content")
     private String content;
     /**
      * 图片url
      */
-    @Field(value = "image_url")
     private String imageUrl;
-    /**
-     * 是否有效
-     */
-    @Field(value = "is_enabled")
-    private Boolean enabled;
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Long getArticleId() {
         return articleId;
@@ -109,14 +80,6 @@ public class ArticleInfo {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public Long getModifier() {

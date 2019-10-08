@@ -11,5 +11,5 @@ import top.abeille.basic.hypervisor.entity.GroupInfo;
  *
  * @author liwenqiang 2018/12/20 9:52
  **/
-public interface GroupInfoRepository extends ReactiveMongoRepository<GroupInfo, Long> {
+public interface GroupInfoRepository extends ReactiveMongoRepository<GroupInfo, String> {
 }

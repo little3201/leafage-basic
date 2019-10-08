@@ -11,5 +11,5 @@ import top.abeille.basic.assets.entity.ArticleInfo;
  *
  * @author liwenqiang 2018/12/20 9:51
  **/
-public interface ArticleInfoRepository extends ReactiveMongoRepository<ArticleInfo, Long> {
+public interface ArticleInfoRepository extends ReactiveMongoRepository<ArticleInfo, String> {
 }

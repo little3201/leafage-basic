@@ -1,14 +1,9 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.entity;
+package top.abeille.basic.hypervisor.vo.outer;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import javax.validation.constraints.Email;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -16,96 +11,48 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Document(collection = "user_info")
-public class UserInfo {
+public class UserOuter implements Serializable {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 用户ID
      */
-    @Field(value = "user_id")
     private Long userId;
     /**
      * 昵称
      */
-    @Field(value = "nickname")
     private String nickname;
     /**
      * 头像
      */
-    @Field(value = "avatar")
     private String avatar;
     /**
      * 用户名
      */
-    @Field(value = "username")
     private String username;
     /**
      * 密码
      */
-    @Field(value = "password")
     private String password;
     /**
      * 电话
      */
-    @Field(value = "mobile")
     private String mobile;
     /**
      * 邮箱
      */
-    @Email
-    @Field(value = "email")
     private String email;
     /**
      * 地址
      */
-    @Field(value = "address")
     private String address;
-    /**
-     * 是否有效
-     */
-    @Field(value = "is_account_non_expired")
-    private Boolean accountNonExpired;
-    /**
-     * 是否锁定
-     */
-    @Field(value = "is_account_non_locked")
-    private Boolean accountNonLocked;
-    /**
-     * 密码是否有效
-     */
-    @Field(value = "is_credentials_non_expired")
-    private Boolean credentialsNonExpired;
-
-    /**
-     * 是否有效
-     */
-    @Field(value = "is_enabled")
-    private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
-    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
-    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Long getUserId() {
         return userId;
@@ -169,38 +116,6 @@ public class UserInfo {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Boolean getAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public void setAccountNonExpired(Boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public Boolean getAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(Boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public Boolean getCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public Long getModifier() {

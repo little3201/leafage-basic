@@ -5,6 +5,7 @@ package top.abeille.basic.hypervisor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -29,6 +30,7 @@ public class SourceInfo {
      */
     @NotNull
     @Field(value = "source_id")
+    @Indexed
     private Long sourceId;
     /**
      * 上级

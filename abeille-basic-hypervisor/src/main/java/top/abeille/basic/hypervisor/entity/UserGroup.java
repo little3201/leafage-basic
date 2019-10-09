@@ -5,6 +5,7 @@ package top.abeille.basic.hypervisor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -29,12 +30,14 @@ public class UserGroup {
      */
     @NotNull
     @Field(value = "user_id")
+    @Indexed
     private Long userId;
     /**
      * 组主键
      */
     @NotNull
     @Field(value = "group_id")
+    @Indexed
     private Long groupId;
 
     /**

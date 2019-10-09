@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -26,11 +27,13 @@ public class UserRole {
      * 用户主键
      */
     @Field(value = "user_id")
+    @Indexed
     private Long userId;
     /**
      * 角色主键
      */
     @Field(value = "role_id")
+    @Indexed
     private Long roleId;
 
     /**

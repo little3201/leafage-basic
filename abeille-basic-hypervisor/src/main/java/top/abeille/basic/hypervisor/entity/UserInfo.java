@@ -5,6 +5,7 @@ package top.abeille.basic.hypervisor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -28,6 +29,7 @@ public class UserInfo {
      * 用户ID
      */
     @Field(value = "user_id")
+    @Indexed
     private Long userId;
     /**
      * 昵称
@@ -43,6 +45,7 @@ public class UserInfo {
      * 用户名
      */
     @Field(value = "username")
+    @Indexed
     private String username;
     /**
      * 密码

@@ -65,7 +65,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public Mono<UserVO> loadUserByUsername(String username) {
         UserInfo info = new UserInfo();
         info.setUsername(username);
-        ExampleMatcher exampleMatcher = this.appendConditions();
+        ExampleMatcher exampleMatcher = appendConditions();
         Mono<UserOuter> outerMono = userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(this::convertOuter);
         //获取用户角色信息
         Flux<String> authorities = outerMono.map(userOuter -> userRoleRepository.findAllByUserIdAndEnabled(userOuter.getUserId(), true))
@@ -99,7 +99,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return UserInfo 用户源数据
      */
     private Mono<UserInfo> fetchByUserId(Long userId) {
-        ExampleMatcher exampleMatcher = this.appendConditions();
+        ExampleMatcher exampleMatcher = appendConditions();
         UserInfo info = new UserInfo();
         info.setUserId(userId);
         this.appendParams(info);

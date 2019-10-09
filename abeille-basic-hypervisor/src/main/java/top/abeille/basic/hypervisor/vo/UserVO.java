@@ -2,14 +2,14 @@ package top.abeille.basic.hypervisor.vo;
 
 import reactor.core.publisher.Flux;
 
-import java.util.Set;
+import java.io.Serializable;
 
 /**
  * 用户关键信息类
  *
  * @author liwenqiang 2019/8/31 15:50
  **/
-public class UserVO {
+public class UserVO implements Serializable {
 
     private String password;
     private String username;

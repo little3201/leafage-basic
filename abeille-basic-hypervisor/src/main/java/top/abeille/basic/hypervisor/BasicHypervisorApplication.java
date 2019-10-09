@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author liwenqiang
  */
-@SpringBootApplication(scanBasePackages = {"top.abeille.basic.hypervisor", "top.abeille.common"})
+@SpringBootApplication
 public class BasicHypervisorApplication {
 
     public static void main(String[] args) {

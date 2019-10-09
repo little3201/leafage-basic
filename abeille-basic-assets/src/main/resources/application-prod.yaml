@@ -19,9 +19,9 @@ spring:
     mongodb:
       host: 122.152.218.103
       port: 27017
-      authentication-database: admin
       username: abeille
       password: abeille.top@123
+      database: abeille
 
   ##=====redis server=====##
   redis:

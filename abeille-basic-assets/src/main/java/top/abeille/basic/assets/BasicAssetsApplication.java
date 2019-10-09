@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * @author liwenqiang
  */
-@SpringBootApplication(scanBasePackages = {"top.abeille.basic.assets", "top.abeille.common"})
+@SpringBootApplication
 public class BasicAssetsApplication {
 
     public static void main(String[] args) {

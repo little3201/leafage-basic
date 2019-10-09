@@ -1,5 +1,7 @@
 package top.abeille.basic.hypervisor.vo;
 
+import reactor.core.publisher.Flux;
+
 import java.util.Set;
 
 /**
@@ -11,7 +13,7 @@ public class UserVO {
 
     private String password;
     private String username;
-    private Set<String> authorities;
+    private Flux<String> authorities;
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
@@ -33,11 +35,11 @@ public class UserVO {
         this.username = username;
     }
 
-    public Set<String> getAuthorities() {
+    public Flux<String> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<String> authorities) {
+    public void setAuthorities(Flux<String> authorities) {
         this.authorities = authorities;
     }
 

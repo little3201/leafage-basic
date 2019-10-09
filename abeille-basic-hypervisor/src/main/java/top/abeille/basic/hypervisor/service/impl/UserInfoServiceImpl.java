@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.entity.UserInfo;
-import top.abeille.basic.hypervisor.entity.UserRole;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
@@ -22,7 +21,7 @@ import top.abeille.basic.hypervisor.vo.enter.UserEnter;
 import top.abeille.basic.hypervisor.vo.outer.UserOuter;
 
 import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
@@ -54,11 +53,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public Mono<UserOuter> save(Long userId, UserEnter enter) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(enter, info);
-        return userInfoRepository.save(info).map(user -> {
-            UserOuter outer = new UserOuter();
-            BeanUtils.copyProperties(user, outer);
-            return outer;
-        });
+        return userInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
@@ -71,19 +66,15 @@ public class UserInfoServiceImpl implements UserInfoService {
         UserInfo info = new UserInfo();
         info.setUsername(username);
         ExampleMatcher exampleMatcher = this.appendConditions();
-        Mono<UserOuter> outerMono = userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(user -> {
-            UserOuter outer = new UserOuter();
-            BeanUtils.copyProperties(user, outer);
-            return outer;
-        });
+        Mono<UserOuter> outerMono = userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(this::convertOuter);
         //获取用户角色信息
-        Mono<List<UserRole>> listMono = outerMono.map(userOuter -> userRoleRepository.findAllByUserIdAndEnabled(userOuter.getUserId(), true));
-        //遍历用户角色信息，取出角色名
-        Set<String> authorities = new HashSet<>();
-        Flux<String> stringFlux = listMono.flatMapIterable(userRoles -> {
-            userRoles.forEach(userRole -> roleInfoService.getByRoleId(userRole.getRoleId()).map(roleOuter -> authorities.add(roleOuter.getName())));
-            return authorities;
-        });
+        Flux<String> authorities = outerMono.map(userOuter -> userRoleRepository.findAllByUserIdAndEnabled(userOuter.getUserId(), true))
+                .flatMapIterable(userRoles -> {
+                    Set<String> roleNameSet = new HashSet<>();
+                    userRoles.forEach(userRole -> roleInfoService.getByRoleId(userRole.getRoleId())
+                            .map(roleOuter -> roleNameSet.add(roleOuter.getName())));
+                    return roleNameSet;
+                });
         return outerMono.map(userOuter -> {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(userOuter, userVO);
@@ -101,12 +92,33 @@ public class UserInfoServiceImpl implements UserInfoService {
         });
     }
 
+    /**
+     * 设置查询条件的必要参数
+     *
+     * @param userId 业务id
+     * @return UserInfo 用户源数据
+     */
     private Mono<UserInfo> fetchByUserId(Long userId) {
         ExampleMatcher exampleMatcher = this.appendConditions();
         UserInfo info = new UserInfo();
         info.setUserId(userId);
         this.appendParams(info);
         return userInfoRepository.findOne(Example.of(info, exampleMatcher));
+    }
+
+    /**
+     * 设置查询条件的必要参数
+     *
+     * @param info 用户信息
+     * @return UserOuter 用户输出对象
+     */
+    private UserOuter convertOuter(UserInfo info) {
+        if (Objects.isNull(info)) {
+            return null;
+        }
+        UserOuter outer = new UserOuter();
+        BeanUtils.copyProperties(info, outer);
+        return outer;
     }
 
     /**

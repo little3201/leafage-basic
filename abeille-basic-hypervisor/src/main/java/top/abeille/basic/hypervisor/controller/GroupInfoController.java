@@ -34,10 +34,8 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<ResponseEntity<GroupOuter>> fetchGroups() {
-        return groupInfoService.findAll()
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.noContent().build());
+    public Flux<GroupOuter> fetchGroups() {
+        return groupInfoService.findAll();
     }
 
     /**

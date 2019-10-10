@@ -36,10 +36,8 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<ResponseEntity<ArticleOuter>> fetchArticle() {
-        return articleInfoService.findAll()
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.noContent().build());
+    public Flux<ArticleOuter> fetchArticle() {
+        return articleInfoService.findAll();
     }
 
     /**

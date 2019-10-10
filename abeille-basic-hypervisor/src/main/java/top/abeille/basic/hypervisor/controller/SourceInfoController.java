@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,9 +32,7 @@ public class SourceInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<ResponseEntity<SourceOuter>> fetchSources() {
-        return sourceInfoService.findAll()
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.noContent().build());
+    public Flux<SourceOuter> fetchSources() {
+        return sourceInfoService.findAll();
     }
 }

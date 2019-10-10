@@ -37,10 +37,8 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<ResponseEntity<UserOuter>> fetchUsers() {
-        return userInfoService.findAll()
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.noContent().build());
+    public Flux<UserOuter> fetchUsers() {
+        return userInfoService.findAll();
     }
 
     /**

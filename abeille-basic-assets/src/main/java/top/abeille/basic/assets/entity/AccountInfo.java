@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -27,11 +28,13 @@ public class AccountInfo {
      * 用户ID
      */
     @Field(value = "user_id")
+    @Indexed
     private Long userId;
     /**
      * 账户ID
      */
     @Field(value = "account_id")
+    @Indexed
     private Long accountId;
     /**
      * 余额

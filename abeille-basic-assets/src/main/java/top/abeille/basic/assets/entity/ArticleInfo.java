@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -26,11 +27,13 @@ public class ArticleInfo {
      * 文章ID
      */
     @Field(value = "article_id")
+    @Indexed
     private Long articleId;
     /**
      * 标题
      */
     @Field(value = "title")
+    @Indexed
     private String title;
     /**
      * 描述

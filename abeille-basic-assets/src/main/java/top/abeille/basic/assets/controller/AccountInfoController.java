@@ -35,7 +35,7 @@ public class AccountInfoController extends AbstractController {
     public ResponseEntity getAccount(@PathVariable String accountId) {
         AccountInfo account = accountInfoService.getByAccountId(accountId);
         if (account == null) {
-            log.info("Not found anything about account with accountId {}.", accountId);
+            logger.info("Not found anything about account with accountId {}.", accountId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(account);
@@ -52,7 +52,7 @@ public class AccountInfoController extends AbstractController {
         try {
             accountInfoService.save(account);
         } catch (Exception e) {
-            log.error("Save account occurred an error: ", e);
+            logger.error("Save account occurred an error: ", e);
             return ResponseEntity.ok("error");
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -69,7 +69,7 @@ public class AccountInfoController extends AbstractController {
         try {
             accountInfoService.save(account);
         } catch (Exception e) {
-            log.error("Modify account occurred an error: ", e);
+            logger.error("Modify account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -86,7 +86,7 @@ public class AccountInfoController extends AbstractController {
         try {
             accountInfoService.removeByAccountId(accountId);
         } catch (Exception e) {
-            log.error("Remove account occurred an error: ", e);
+            logger.error("Remove account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.OK);

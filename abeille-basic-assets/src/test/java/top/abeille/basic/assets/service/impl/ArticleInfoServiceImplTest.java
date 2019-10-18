@@ -25,7 +25,7 @@ public class ArticleInfoServiceImplTest {
     public void saveArticle() {
         ArticleInfo article = new ArticleInfo();
         article.setArticleId("002");
-        String details = "# edc-sdk-log\n" +
+        String details = "# edc-sdk-logger\n" +
                 "\n" +
                 "elasticsearch 记录的简单日志服务：提供日志保存接口，范围查询接口，多条件查询接口，都支持分页；\n" +
                 "\n" +
@@ -37,15 +37,15 @@ public class ArticleInfoServiceImplTest {
                 "```\n" +
                 "<dependency>\n" +
                 "    <groupId>com.edc.sdk</groupId>\n" +
-                "    <artifactId>edc-sdk-log</artifactId>\n" +
+                "    <artifactId>edc-sdk-logger</artifactId>\n" +
                 "</dependency>\n" +
                 "```\n" +
-                "2、在启动类上加入@EnableFeignClients(\"com.edc.sdk.log\"),如果有这个注解，则将\"com.edc.sdk.log\"添加到后面即可\n" +
+                "2、在启动类上加入@EnableFeignClients(\"com.edc.sdk.logger\"),如果有这个注解，则将\"com.edc.sdk.logger\"添加到后面即可\n" +
                 "\n" +
                 "示例：\n" +
                 "\n" +
                 "```$xslt\n" +
-                "@EnableFeignClients(basePackages = {\"com.example\",\"com.edc.sdk.log\"})\n" +
+                "@EnableFeignClients(basePackages = {\"com.example\",\"com.edc.sdk.logger\"})\n" +
                 "```\n" +
                 "\n" +
                 "3、注入LogServiceApi 接口，此接口为feign 接口\n" +
@@ -66,7 +66,7 @@ public class ArticleInfoServiceImplTest {
                 "     * @param businessLog 日志信息\n" +
                 "     * @return BusinessLog\n" +
                 "     */\n" +
-                "    @PostMapping(\"/log/save\")\n" +
+                "    @PostMapping(\"/logger/save\")\n" +
                 "    Response<BusinessLog> saveLog(@RequestBody BusinessLog businessLog);\n" +
                 "```\n" +
                 "    \n" +
@@ -81,7 +81,7 @@ public class ArticleInfoServiceImplTest {
                 "     * @param pageSize      分页大小\n" +
                 "     * @return BusinessLog\n" +
                 "     */\n" +
-                "    @PostMapping(\"/log/query\")\n" +
+                "    @PostMapping(\"/logger/query\")\n" +
                 "    Response<Page<BusinessLog>> boolQueryByPage(@RequestBody BusinessLogVO businessLogVO);\n" +
                 "```\n" +
                 "\n" +

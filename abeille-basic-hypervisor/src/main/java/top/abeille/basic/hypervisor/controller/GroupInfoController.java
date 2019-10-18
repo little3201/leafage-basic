@@ -37,7 +37,7 @@ public class GroupInfoController extends AbstractController {
     public ResponseEntity getGroup(@PathVariable Long id) {
         GroupInfo groupInfo = groupInfoService.getById(id);
         if (groupInfo == null) {
-            log.info("Not found anything about group with id {}.", id);
+            logger.info("Not found anything about group with id {}.", id);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(groupInfo);
@@ -54,7 +54,7 @@ public class GroupInfoController extends AbstractController {
     public ResponseEntity findGroups(Integer pageNum, Integer pageSize) {
         Page<GroupInfo> groups = groupInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(groups.getContent())) {
-            log.info("Not found anything about group with pageable.");
+            logger.info("Not found anything about group with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(groups);
@@ -71,7 +71,7 @@ public class GroupInfoController extends AbstractController {
         try {
             groupInfoService.save(group);
         } catch (Exception e) {
-            log.error("Save group occurred an error: ", e);
+            logger.error("Save group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -88,7 +88,7 @@ public class GroupInfoController extends AbstractController {
         try {
             groupInfoService.save(group);
         } catch (Exception e) {
-            log.error("Modify group occurred an error: ", e);
+            logger.error("Modify group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -105,7 +105,7 @@ public class GroupInfoController extends AbstractController {
         try {
             groupInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove group occurred an error: ", e);
+            logger.error("Remove group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.OK);

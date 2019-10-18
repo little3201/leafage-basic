@@ -1,4 +1,4 @@
-##=====log common=====##
+##=====logger common=====##
 logging:
   level:
     # control root logger's level for WARN

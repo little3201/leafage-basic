@@ -38,7 +38,7 @@ public class RoleInfoController extends AbstractController {
     public ResponseEntity findRoles(Integer pageNum, Integer pageSize) {
         Page<RoleInfo> roles = roleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(roles.getContent())) {
-            log.info("Not found anything about role with pageable.");
+            logger.info("Not found anything about role with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(roles);
@@ -55,7 +55,7 @@ public class RoleInfoController extends AbstractController {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
-            log.error("Save role occurred an error: ", e);
+            logger.error("Save role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -72,7 +72,7 @@ public class RoleInfoController extends AbstractController {
         try {
             roleInfoService.save(role);
         } catch (Exception e) {
-            log.error("Modify role occurred an error: ", e);
+            logger.error("Modify role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -89,7 +89,7 @@ public class RoleInfoController extends AbstractController {
         try {
             roleInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove role occurred an error: ", e);
+            logger.error("Remove role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.OK);

@@ -41,7 +41,7 @@ public class ArticleInfoController extends AbstractController {
     public ResponseEntity findArticles(Integer pageNum, Integer pageSize) {
         Page<ArticleInfo> articles = articleInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(articles.getContent())) {
-            log.info("Not found anything about user with pageable.");
+            logger.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(articles);
@@ -57,7 +57,7 @@ public class ArticleInfoController extends AbstractController {
     public ResponseEntity getArticle(@PathVariable String articleId) {
         ArticleInfo article = articleInfoService.getByArticleId(articleId);
         if (article == null) {
-            log.info("Not found anything about article with articleId {}.", articleId);
+            logger.info("Not found anything about article with articleId {}.", articleId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(article);

@@ -41,7 +41,7 @@ public class UserInfoController extends AbstractController {
     public ResponseEntity findUsers(Integer pageNum, Integer pageSize) {
         Page<UserInfo> users = userInfoService.findAllByPage(pageNum, pageSize);
         if (CollectionUtils.isEmpty(users.getContent())) {
-            log.info("Not found anything about user with pageable.");
+            logger.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(users);
@@ -57,7 +57,7 @@ public class UserInfoController extends AbstractController {
     public ResponseEntity getUser(@PathVariable String userId) {
         UserInfo user = userInfoService.getByUserId(userId);
         if (user == null) {
-            log.info("Not found anything about hypervisor with userId: {}.", userId);
+            logger.info("Not found anything about hypervisor with userId: {}.", userId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(user);
@@ -73,7 +73,7 @@ public class UserInfoController extends AbstractController {
     public ResponseEntity loadUserByUsername(@PathVariable String username) {
         UserVO user = userInfoService.loadUserByUsername(username);
         if (user == null) {
-            log.info("Not found anything about user with username: {}.", username);
+            logger.info("Not found anything about user with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(user);
@@ -90,7 +90,7 @@ public class UserInfoController extends AbstractController {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
-            log.error("Save user occurred an error: ", e);
+            logger.error("Save user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -107,7 +107,7 @@ public class UserInfoController extends AbstractController {
         try {
             userInfoService.save(user);
         } catch (Exception e) {
-            log.error("Modify user occurred an error: ", e);
+            logger.error("Modify user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -124,7 +124,7 @@ public class UserInfoController extends AbstractController {
         try {
             userInfoService.removeByUserId(userId);
         } catch (Exception e) {
-            log.error("Remove user occurred an error: ", e);
+            logger.error("Remove user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.OK);

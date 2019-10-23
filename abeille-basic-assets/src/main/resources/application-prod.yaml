@@ -20,9 +20,9 @@ spring:
       host: 122.152.218.103
       port: 27017
       username: abeille
-      password: abeille.top@123
+      password: abeille.top
       database: abeille
-      authentication-database: admin
+      authentication-database: abeille
 
   ##=====redis server=====##
   redis:

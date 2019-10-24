@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import top.abeille.basic.assets.entity.ArticleInfo;
 
 /**
- * 账户信息dao
+ * 文章基本信息dao
  *
  * @author liwenqiang 2018/12/20 9:51
  **/

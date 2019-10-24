@@ -41,7 +41,7 @@ public class ArticleInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity fetchArticle(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<ArticleVO> articles = articleInfoService.fetchAllByPage(pageable);
+        Page<ArticleVO> articles = articleInfoService.fetchByPage(pageable);
         if (CollectionUtils.isEmpty(articles.getContent())) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

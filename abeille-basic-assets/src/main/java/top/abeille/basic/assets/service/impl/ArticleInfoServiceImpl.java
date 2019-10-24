@@ -6,6 +6,7 @@ package top.abeille.basic.assets.service.impl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import top.abeille.basic.assets.document.ArticleDocument;
 import top.abeille.basic.assets.dto.ArticleDTO;
@@ -15,7 +16,8 @@ import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +42,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Page<ArticleVO> fetchAllByPage(Pageable pageable) {
+    public Page<ArticleVO> fetchByPage(Pageable pageable) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matching();
         exampleMatcher.withMatcher("is_enabled", exact());
         //设置查询必要参数，只查询is_enabled为true的数据
@@ -84,19 +86,33 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
+    @Transactional
     public ArticleVO save(ArticleDTO articleDTO) {
-        //获得时间作为文章id
-        Long articleId = LocalDate.now().toEpochDay();
-        //转换入参为数据对象，保存数据库
         ArticleInfo info = new ArticleInfo();
+        info.setArticleId(articleDTO.getArticleId());
+        //先查一下，是否已经存在，存在，填充主键id，不存在，填充业务id
+        Optional<ArticleInfo> optional = articleInfoRepository.findOne(Example.of(info));
         BeanUtils.copyProperties(articleDTO, info);
-        info.setArticleId(articleId);
-        info.setEnabled(true);
+        Long articleId;
+        if (optional.isPresent()) {
+            info.setId(optional.get().getId());
+            info.setArticleId(optional.get().getArticleId());
+        } else {
+            //获得时间作为文章id
+            articleId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+            //转换入参为数据对象，保存数据库
+            info.setArticleId(articleId);
+            info.setEnabled(true);
+        }
         info.setModifier(0L);
         articleInfoRepository.save(info);
         //保存文章内容
         ArticleDocument document = new ArticleDocument();
-        document.setArticleId(articleId);
+        document.setArticleId(info.getArticleId());
+        //先查一下，是否已经存在，存在，填充主键id，不存在，填充业务id
+        Optional<ArticleDocument> documentOptional = articleDocumentRepository.findOne(Example.of(document));
+        documentOptional.ifPresent(articleDocument -> document.setId(articleDocument.getId()));
+        document.setTitle(articleDTO.getTitle());
         document.setContent(articleDTO.getContent());
         articleDocumentRepository.save(document);
         //转换结果

@@ -43,7 +43,7 @@ public class UserInfoControllerTest extends AbstractControllerMock<UserInfoContr
         pageMap.add("pageNum", "1");
         pageMap.add("pageSize", "10");
         Pageable pageable = PageRequest.of(0, 10);
-        Mockito.when(userInfoService.fetchAllByPage(pageable)).thenReturn(Page.empty());
+        Mockito.when(userInfoService.fetchByPage(pageable)).thenReturn(Page.empty());
         MockHttpServletResponse response = super.getTest("/v1/users", pageMap).getResponse();
         //验证测试结果
         Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.OK.value()));

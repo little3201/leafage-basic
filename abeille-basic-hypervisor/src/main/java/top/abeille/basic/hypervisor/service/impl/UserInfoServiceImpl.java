@@ -51,7 +51,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Page<UserVO> fetchAllByPage(Pageable pageable) {
+    public Page<UserVO> fetchByPage(Pageable pageable) {
         ExampleMatcher exampleMatcher = this.appendConditions();
         UserInfo userInfo = this.appendParams(new UserInfo());
         Page<UserInfo> infoPage = userInfoRepository.findAll(Example.of(userInfo, exampleMatcher), pageable);

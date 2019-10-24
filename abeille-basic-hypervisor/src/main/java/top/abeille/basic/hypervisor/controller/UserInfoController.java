@@ -43,7 +43,7 @@ public class UserInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity fetchUser(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<UserVO> users = userInfoService.fetchAllByPage(pageable);
+        Page<UserVO> users = userInfoService.fetchByPage(pageable);
         if (CollectionUtils.isEmpty(users.getContent())) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

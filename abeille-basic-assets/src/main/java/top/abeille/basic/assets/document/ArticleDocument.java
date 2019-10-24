@@ -7,15 +7,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
-
 /**
  * document for ArticleInfo
  *
  * @author liwenqiang
  */
-@Document
-public class ArticleDocument implements Serializable {
+@Document(collection = "article")
+public class ArticleDocument {
 
     /**
      * 主键

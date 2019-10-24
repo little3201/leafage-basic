@@ -39,7 +39,7 @@ public class GroupInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity fetchGroup(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<GroupVO> groups = groupInfoService.fetchAllByPage(pageable);
+        Page<GroupVO> groups = groupInfoService.fetchByPage(pageable);
         if (CollectionUtils.isEmpty(groups.getContent())) {
             logger.info("Not found anything about group with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

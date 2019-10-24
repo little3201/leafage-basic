@@ -39,7 +39,7 @@ public class RoleInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity fetchRole(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<RoleVO> roles = roleInfoService.fetchAllByPage(pageable);
+        Page<RoleVO> roles = roleInfoService.fetchByPage(pageable);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             logger.info("Not found anything about role with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

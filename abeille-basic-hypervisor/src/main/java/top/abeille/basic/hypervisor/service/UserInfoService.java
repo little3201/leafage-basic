@@ -3,7 +3,8 @@
  */
 package top.abeille.basic.hypervisor.service;
 
-import top.abeille.basic.hypervisor.entity.UserInfo;
+import top.abeille.basic.hypervisor.dto.UserDTO;
+import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.BasicService;
 
@@ -12,17 +13,13 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/7/28 0:29
  **/
-public interface UserInfoService extends BasicService<UserInfo> {
+public interface UserInfoService extends BasicService<UserDTO, UserVO> {
 
     /**
      * 根据username获取用户信息
      *
-     * @param username 主键
-     * @return UserInfo 用户信息
+     * @param username 用户名
+     * @return UserDetailsVO 用户认证信息
      */
-    UserVO loadUserByUsername(String username);
-
-    void removeByUserId(String userId);
-
-    UserInfo getByUserId(String userId);
+    UserDetailsVO loadUserByUsername(String username);
 }

@@ -3,14 +3,13 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.hypervisor.entity.SourceInfo;
+import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
+import top.abeille.basic.hypervisor.vo.SourceVO;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 权限资源信息Service实现
@@ -27,24 +26,8 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public Page<SourceInfo> findAllByPage(Integer pageNum, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize);
-        return sourceInfoRepository.findAll(pageable);
-    }
-
-    @Override
-    public List<SourceInfo> findAll(Sort sort) {
-        return sourceInfoRepository.findAll(sort);
-    }
-
-    @Override
-    public SourceInfo save(SourceInfo entity) {
-        return sourceInfoRepository.save(entity);
-    }
-
-    @Override
-    public List<SourceInfo> saveAll(List<SourceInfo> entities) {
-        return sourceInfoRepository.saveAll(entities);
+    public List<SourceVO> saveAll(List<SourceDTO> entities) {
+        return null;
     }
 
     @Override
@@ -53,13 +36,6 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public void removeInBatch(List<SourceInfo> entities) {
-        sourceInfoRepository.deleteInBatch(entities);
-    }
-
-    @Override
-    public SourceInfo getByExample(SourceInfo sourceInfo) {
-        Optional<SourceInfo> optional = sourceInfoRepository.findOne(Example.of(sourceInfo));
-        return optional.orElse(null);
+    public void removeInBatch(List<SourceDTO> entities) {
     }
 }

@@ -1,14 +1,15 @@
-package top.abeille.basic.hypervisor.vo;
+package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDate;
 
 /**
  * 用户关键信息类
  *
  * @author liwenqiang 2019/8/31 15:50
  **/
-public class UserVO implements Serializable {
+public class UserDTO implements Serializable {
 
     /**
      * 用户ID
@@ -17,10 +18,12 @@ public class UserVO implements Serializable {
     /**
      * 组织主键
      */
+    @NotNull
     private Long groupId;
     /**
      * 昵称
      */
+    @NotBlank
     private String nickname;
     /**
      * 头像
@@ -29,10 +32,12 @@ public class UserVO implements Serializable {
     /**
      * 用户名
      */
+    @NotBlank
     private String username;
     /**
      * 电话
      */
+    @NotBlank
     private String mobile;
     /**
      * 邮箱
@@ -42,14 +47,7 @@ public class UserVO implements Serializable {
      * 地址
      */
     private String address;
-    /**
-     * 修改人
-     */
-    private Long modifier;
-    /**
-     * 修改时间
-     */
-    private LocalDate modifyTime;
+
 
     public Long getUserId() {
         return userId;
@@ -115,19 +113,4 @@ public class UserVO implements Serializable {
         this.address = address;
     }
 
-    public Long getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDate getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDate modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

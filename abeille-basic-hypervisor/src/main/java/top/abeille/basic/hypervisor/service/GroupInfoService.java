@@ -3,7 +3,8 @@
  */
 package top.abeille.basic.hypervisor.service;
 
-import top.abeille.basic.hypervisor.entity.GroupInfo;
+import top.abeille.basic.hypervisor.dto.GroupDTO;
+import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -11,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:24
  **/
-public interface GroupInfoService extends BasicService<GroupInfo> {
+public interface GroupInfoService extends BasicService<GroupDTO, GroupVO> {
 }

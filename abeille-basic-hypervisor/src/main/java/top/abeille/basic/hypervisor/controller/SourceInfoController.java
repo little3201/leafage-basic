@@ -4,14 +4,15 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.abeille.basic.hypervisor.entity.SourceInfo;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
+import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
@@ -37,8 +38,9 @@ public class SourceInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity findSource(Integer pageNum, Integer pageSize) {
-        Page<SourceInfo> sources = sourceInfoService.findAllByPage(pageNum, pageSize);
+    public ResponseEntity fetchSource(Integer pageNum, Integer pageSize) {
+        Pageable pageable = super.initPageParams(pageNum, pageSize);
+        Page<SourceVO> sources = sourceInfoService.fetchAllByPage(pageable);
         if (CollectionUtils.isEmpty(sources.getContent())) {
             logger.info("Not found anything about source with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

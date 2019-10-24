@@ -4,12 +4,14 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.hypervisor.entity.RoleInfo;
+import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
+import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
@@ -35,8 +37,9 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity findRoles(Integer pageNum, Integer pageSize) {
-        Page<RoleInfo> roles = roleInfoService.findAllByPage(pageNum, pageSize);
+    public ResponseEntity fetchRole(Integer pageNum, Integer pageSize) {
+        Pageable pageable = super.initPageParams(pageNum, pageSize);
+        Page<RoleVO> roles = roleInfoService.fetchAllByPage(pageable);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             logger.info("Not found anything about role with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -47,13 +50,13 @@ public class RoleInfoController extends AbstractController {
     /**
      * 保存角色
      *
-     * @param role 角色
+     * @param roleDTO 角色
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveRole(@RequestBody RoleInfo role) {
+    public ResponseEntity saveRole(@RequestBody RoleDTO roleDTO) {
         try {
-            roleInfoService.save(role);
+            roleInfoService.save(roleDTO);
         } catch (Exception e) {
             logger.error("Save role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
@@ -64,13 +67,13 @@ public class RoleInfoController extends AbstractController {
     /**
      * 编辑角色
      *
-     * @param role 角色
+     * @param roleDTO 角色
      * @return ResponseEntity
      */
     @PutMapping
-    public ResponseEntity modifyRole(@RequestBody RoleInfo role) {
+    public ResponseEntity modifyRole(@RequestBody RoleDTO roleDTO) {
         try {
-            roleInfoService.save(role);
+            roleInfoService.save(roleDTO);
         } catch (Exception e) {
             logger.error("Modify role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);

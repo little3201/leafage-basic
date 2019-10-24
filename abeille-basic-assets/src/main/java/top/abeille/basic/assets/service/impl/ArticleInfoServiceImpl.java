@@ -3,13 +3,21 @@
  */
 package top.abeille.basic.assets.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import top.abeille.basic.assets.document.ArticleDocument;
+import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.entity.ArticleInfo;
+import top.abeille.basic.assets.repository.ArticleDocumentRepository;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
+import top.abeille.basic.assets.vo.ArticleVO;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,44 +32,87 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     private final ArticleInfoRepository articleInfoRepository;
+    private final ArticleDocumentRepository articleDocumentRepository;
 
-    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository) {
+    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ArticleDocumentRepository articleDocumentRepository) {
         this.articleInfoRepository = articleInfoRepository;
+        this.articleDocumentRepository = articleDocumentRepository;
     }
 
     @Override
-    public Page<ArticleInfo> findAllByPage(Integer pageNum, Integer pageSize) {
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+    public Page<ArticleVO> fetchAllByPage(Pageable pageable) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matching();
         exampleMatcher.withMatcher("is_enabled", exact());
+        //设置查询必要参数，只查询is_enabled为true的数据
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setEnabled(true);
-        return articleInfoRepository.findAll(Example.of(articleInfo, exampleMatcher), pageable);
+        Page<ArticleInfo> infoPage = articleInfoRepository.findAll(Example.of(articleInfo, exampleMatcher), pageable);
+        List<ArticleInfo> infoList = infoPage.getContent();
+        if (CollectionUtils.isEmpty(infoList)) {
+            return new PageImpl<>(Collections.emptyList());
+        }
+        //参数转换为出参结果
+        List<ArticleVO> voList = new ArrayList<>(infoList.size());
+        for (ArticleInfo info : infoList) {
+            ArticleVO articleVO = new ArticleVO();
+            BeanUtils.copyProperties(info, articleVO);
+            voList.add(articleVO);
+        }
+        Page<ArticleVO> voPage = new PageImpl<>(voList);
+        BeanUtils.copyProperties(infoPage, voPage);
+        return voPage;
     }
 
     @Override
-    public ArticleInfo getByExample(ArticleInfo articleInfo) {
-        articleInfo.setEnabled(true);
-        Optional<ArticleInfo> optional = articleInfoRepository.findOne(Example.of(articleInfo));
-        return optional.orElse(null);
-    }
-
-    @Override
-    public ArticleInfo getByArticleId(String articleId) {
+    public ArticleVO queryById(Long articleId) {
+        //去mysql中查询基本信息
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setArticleId(articleId);
-        return getByExample(articleInfo);
+        articleInfo.setEnabled(true);
+        Optional<ArticleInfo> optional = articleInfoRepository.findOne(Example.of(articleInfo));
+        if (!optional.isPresent()) {
+            return null;
+        }
+        //去mongodb查询具体内容
+        ArticleVO articleVO = new ArticleVO();
+        BeanUtils.copyProperties(optional.get(), articleVO);
+        ArticleDocument document = new ArticleDocument();
+        document.setArticleId(articleId);
+        Optional<ArticleDocument> documentOptional = articleDocumentRepository.findOne(Example.of(document));
+        documentOptional.ifPresent(articleDocument -> articleVO.setContent(articleDocument.getContent()));
+        return articleVO;
     }
 
     @Override
-    @Transactional
-    public void removeById(Long id) {
-        articleInfoRepository.deleteById(id);
+    public ArticleVO save(ArticleDTO articleDTO) {
+        //获得时间作为文章id
+        Long articleId = LocalDate.now().toEpochDay();
+        //转换入参为数据对象，保存数据库
+        ArticleInfo info = new ArticleInfo();
+        BeanUtils.copyProperties(articleDTO, info);
+        info.setArticleId(articleId);
+        info.setEnabled(true);
+        info.setModifier(0L);
+        articleInfoRepository.save(info);
+        //保存文章内容
+        ArticleDocument document = new ArticleDocument();
+        document.setArticleId(articleId);
+        document.setContent(articleDTO.getContent());
+        articleDocumentRepository.save(document);
+        //转换结果
+        ArticleVO articleVO = new ArticleVO();
+        BeanUtils.copyProperties(info, articleVO);
+        articleVO.setContent(articleDTO.getContent());
+        return articleVO;
     }
 
     @Override
-    public void removeInBatch(List<ArticleInfo> entities) {
-        articleInfoRepository.deleteInBatch(entities);
+    public void removeById(Long articleId) {
+
+    }
+
+    @Override
+    public void removeInBatch(List<ArticleDTO> articleDTOs) {
+
     }
 }

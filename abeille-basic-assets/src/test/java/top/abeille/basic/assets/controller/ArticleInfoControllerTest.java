@@ -5,6 +5,7 @@ package top.abeille.basic.assets.controller;
 
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.data.domain.Sort;
 import top.abeille.basic.assets.service.impl.ArticleInfoServiceImpl;
 import top.abeille.common.mock.AbstractControllerMock;
 
@@ -25,11 +26,8 @@ public class ArticleInfoControllerTest extends AbstractControllerMock {
 
     @Test
     public void findArticles() {
-        articleInfoService.findAll();
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        articleInfoService.fetchAll(sort);
     }
 
-    @Test
-    public void getArticle() {
-        articleInfoService.getById(0L);
-    }
 }

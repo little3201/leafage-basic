@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 import top.abeille.basic.assets.document.ArticleDocument;
 
 /**
@@ -11,7 +12,6 @@ import top.abeille.basic.assets.document.ArticleDocument;
  *
  * @author liwenqiang 2018/12/20 9:51
  **/
+@Repository
 public interface ArticleDocumentRepository extends MongoRepository<ArticleDocument, String> {
-
-
 }

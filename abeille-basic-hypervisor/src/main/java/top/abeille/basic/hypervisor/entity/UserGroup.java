@@ -7,40 +7,30 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Model class for RoleInfo
+ * Model class for UserGroup
  *
  * @author liwenqiang
  */
 @Entity
-@Table(name = "role_info")
-public class RoleInfo {
+@Table(name = "user_group")
+public class UserGroup {
 
     /**
      * 主键
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
     /**
-     * 角色ID
+     * 用户主键
      */
-    @Column(name = "role_id")
-    private String roleId;
+    @Column(name = "user_id")
+    private Long userId;
     /**
-     * 名称
+     * 组主键
      */
-    @Column(name = "name")
-    private String name;
-    /**
-     * 描述
-     */
-    @Column(name = "description")
-    private String description;
-    /**
-     * 备注
-     */
-    @Column(name = "remark")
-    private String remark;
+    @Column(name = "group_id")
+    private Long groupId;
 
     /**
      * 是否有效
@@ -58,45 +48,28 @@ public class RoleInfo {
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public String getName() {
-        return name;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public Boolean getEnabled() {

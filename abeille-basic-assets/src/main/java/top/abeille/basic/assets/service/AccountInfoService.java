@@ -3,7 +3,8 @@
  */
 package top.abeille.basic.assets.service;
 
-import top.abeille.basic.assets.entity.AccountInfo;
+import top.abeille.basic.assets.dto.AccountDTO;
+import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -11,9 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface AccountInfoService extends BasicService<AccountInfo> {
-
-    AccountInfo getByAccountId(String accountId);
-
-    void removeByAccountId(String accountId);
+public interface AccountInfoService extends BasicService<AccountDTO, AccountVO> {
 }

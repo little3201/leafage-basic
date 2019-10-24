@@ -3,7 +3,8 @@
  */
 package top.abeille.basic.hypervisor.service;
 
-import top.abeille.basic.hypervisor.entity.RoleInfo;
+import top.abeille.basic.hypervisor.dto.RoleDTO;
+import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -11,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/9/27 14:18
  **/
-public interface RoleInfoService extends BasicService<RoleInfo> {
+public interface RoleInfoService extends BasicService<RoleDTO, RoleVO> {
 }

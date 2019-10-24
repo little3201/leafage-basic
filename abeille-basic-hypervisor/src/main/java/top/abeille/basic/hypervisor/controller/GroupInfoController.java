@@ -4,12 +4,14 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.hypervisor.entity.GroupInfo;
+import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
+import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
@@ -28,22 +30,6 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 查找组信息——根据ID
-     *
-     * @param id 主键
-     * @return ResponseEntity
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity getGroup(@PathVariable Long id) {
-        GroupInfo groupInfo = groupInfoService.getById(id);
-        if (groupInfo == null) {
-            log.info("Not found anything about group with id {}.", id);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(groupInfo);
-    }
-
-    /**
      * 查找组信息——分页查询
      *
      * @param pageNum  查询页码
@@ -51,27 +37,44 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity findGroups(Integer pageNum, Integer pageSize) {
-        Page<GroupInfo> groups = groupInfoService.findAllByPage(pageNum, pageSize);
+    public ResponseEntity fetchGroup(Integer pageNum, Integer pageSize) {
+        Pageable pageable = super.initPageParams(pageNum, pageSize);
+        Page<GroupVO> groups = groupInfoService.fetchByPage(pageable);
         if (CollectionUtils.isEmpty(groups.getContent())) {
-            log.info("Not found anything about group with pageable.");
+            logger.info("Not found anything about group with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(groups);
     }
 
     /**
+     * 查找组信息——根据groupId
+     *
+     * @param groupId 业务主键
+     * @return ResponseEntity
+     */
+    @GetMapping("/{groupId}")
+    public ResponseEntity queryGroup(@PathVariable Long groupId) {
+        GroupVO groupInfo = groupInfoService.queryById(groupId);
+        if (groupInfo == null) {
+            logger.info("Not found anything about group with id {}.", groupId);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(groupInfo);
+    }
+
+    /**
      * 保存组信息
      *
-     * @param group 组
+     * @param groupDTO 组
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveGroup(@RequestBody GroupInfo group) {
+    public ResponseEntity saveGroup(@RequestBody GroupDTO groupDTO) {
         try {
-            groupInfoService.save(group);
+            groupInfoService.save(groupDTO);
         } catch (Exception e) {
-            log.error("Save group occurred an error: ", e);
+            logger.error("Save group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
@@ -80,15 +83,15 @@ public class GroupInfoController extends AbstractController {
     /**
      * 修改组信息
      *
-     * @param group 组
+     * @param groupDTO 组
      * @return ResponseEntity
      */
     @PutMapping
-    public ResponseEntity modifyGroup(@RequestBody GroupInfo group) {
+    public ResponseEntity modifyGroup(@RequestBody GroupDTO groupDTO) {
         try {
-            groupInfoService.save(group);
+            groupInfoService.save(groupDTO);
         } catch (Exception e) {
-            log.error("Modify group occurred an error: ", e);
+            logger.error("Modify group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -105,7 +108,7 @@ public class GroupInfoController extends AbstractController {
         try {
             groupInfoService.removeById(id);
         } catch (Exception e) {
-            log.error("Remove group occurred an error: ", e);
+            logger.error("Remove group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.OK);

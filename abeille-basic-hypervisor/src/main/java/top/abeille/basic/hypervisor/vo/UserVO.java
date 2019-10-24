@@ -1,28 +1,86 @@
 package top.abeille.basic.hypervisor.vo;
 
-import java.util.Set;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * 用户关键信息类
  *
  * @author liwenqiang 2019/8/31 15:50
  **/
-public class UserVO {
+public class UserVO implements Serializable {
 
-    private String password;
+    /**
+     * 用户ID
+     */
+    private Long userId;
+    /**
+     * 组织主键
+     */
+    private Long groupId;
+    /**
+     * 昵称
+     */
+    private String nickname;
+    /**
+     * 头像
+     */
+    private String avatar;
+    /**
+     * 用户名
+     */
     private String username;
-    private Set<String> authorities;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
+    /**
+     * 电话
+     */
+    private String mobile;
+    /**
+     * 邮箱
+     */
+    private String email;
+    /**
+     * 地址
+     */
+    private String address;
+    /**
+     * 修改人
+     */
+    private Long modifier;
+    /**
+     * 修改时间
+     */
+    private LocalDate modifyTime;
 
-    public String getPassword() {
-        return password;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getUsername() {
@@ -33,43 +91,43 @@ public class UserVO {
         this.username = username;
     }
 
-    public Set<String> getAuthorities() {
-        return authorities;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setAuthorities(Set<String> authorities) {
-        this.authorities = authorities;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+    public Long getModifier() {
+        return modifier;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public LocalDate getModifyTime() {
+        return modifyTime;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setModifyTime(LocalDate modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

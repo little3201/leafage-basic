@@ -3,8 +3,6 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -20,7 +18,6 @@ public class RoleInfo {
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -48,19 +45,16 @@ public class RoleInfo {
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
     @Column(name = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 

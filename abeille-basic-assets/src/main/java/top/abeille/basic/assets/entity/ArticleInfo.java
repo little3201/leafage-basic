@@ -3,10 +3,7 @@
  */
 package top.abeille.basic.assets.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -23,15 +20,13 @@ public class ArticleInfo {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     @Column(name = "id")
     private Long id;
     /**
      * 文章ID
      */
-    @NotNull
     @Column(name = "article_id")
-    private String articleId;
+    private Long articleId;
     /**
      * 标题
      */
@@ -43,16 +38,6 @@ public class ArticleInfo {
     @Column(name = "summary")
     private String summary;
     /**
-     * 内容
-     */
-    @Column(name = "content")
-    private String content;
-    /**
-     * 描述
-     */
-    @Column(name = "description")
-    private String description;
-    /**
      * 图片url
      */
     @Column(name = "image_url")
@@ -60,19 +45,16 @@ public class ArticleInfo {
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
     @Column(name = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 
@@ -84,11 +66,11 @@ public class ArticleInfo {
         this.id = id;
     }
 
-    public String getArticleId() {
+    public Long getArticleId() {
         return articleId;
     }
 
-    public void setArticleId(String articleId) {
+    public void setArticleId(Long articleId) {
         this.articleId = articleId;
     }
 
@@ -108,28 +90,12 @@ public class ArticleInfo {
         this.summary = summary;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Boolean getEnabled() {

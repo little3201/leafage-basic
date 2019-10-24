@@ -3,10 +3,7 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -21,14 +18,12 @@ public class SourceInfo {
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
      * 权限ID
      */
-    @NotNull
     @Column(name = "source_id")
     private String sourceId;
     /**
@@ -37,15 +32,10 @@ public class SourceInfo {
     @Column(name = "superior")
     private String superior;
     /**
-     * 中文名
+     * 名称
      */
-    @Column(name = "chinese_name")
-    private String chineseName;
-    /**
-     * 英文名
-     */
-    @Column(name = "english_name")
-    private String englishName;
+    @Column(name = "name")
+    private String name;
     /**
      * 类型
      */
@@ -65,19 +55,16 @@ public class SourceInfo {
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
     @Column(name = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 
@@ -105,20 +92,12 @@ public class SourceInfo {
         this.superior = superior;
     }
 
-    public String getChineseName() {
-        return chineseName;
+    public String getName() {
+        return name;
     }
 
-    public void setChineseName(String chineseName) {
-        this.chineseName = chineseName;
-    }
-
-    public String getEnglishName() {
-        return englishName;
-    }
-
-    public void setEnglishName(String englishName) {
-        this.englishName = englishName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getType() {

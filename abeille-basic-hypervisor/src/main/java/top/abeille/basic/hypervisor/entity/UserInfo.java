@@ -3,11 +3,7 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 /**
@@ -22,22 +18,14 @@ public class UserInfo {
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     private Long id;
     /**
      * 用户ID
      */
-    @NotBlank
     @Column(name = "user_id")
-    private String userId;
-    /**
-     * 组织主键
-     */
-    @Column(name = "group_id")
-    private Long groupId;
+    private Long userId;
     /**
      * 昵称
      */
@@ -66,7 +54,6 @@ public class UserInfo {
     /**
      * 邮箱
      */
-    @Email
     @Column(name = "email")
     private String email;
     /**
@@ -98,13 +85,11 @@ public class UserInfo {
     /**
      * 修改人
      */
-    @JsonIgnore
     @Column(name = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 
@@ -116,20 +101,12 @@ public class UserInfo {
         this.id = id;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
     }
 
     public String getNickname() {

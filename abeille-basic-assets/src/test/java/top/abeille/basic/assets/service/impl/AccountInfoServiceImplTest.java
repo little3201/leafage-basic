@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import top.abeille.basic.assets.entity.AccountInfo;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
+import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.mock.AbstractServiceMock;
 
 import java.util.Optional;
@@ -31,9 +32,9 @@ public class AccountInfoServiceImplTest extends AbstractServiceMock {
     @Test
     public void getByAccountId() {
         AccountInfo account = new AccountInfo();
-        account.setAccountId("001");
+        account.setAccountId(1L);
         Mockito.when(accountInfoRepository.findOne(Mockito.any())).thenReturn(Optional.of(account));
-        AccountInfo accountInfo = accountInfoService.getByAccountId("001");
-        Assert.assertThat(accountInfo, Matchers.notNullValue());
+        AccountVO accountVO = accountInfoService.queryById(201910230001L);
+        Assert.assertThat(accountVO, Matchers.notNullValue());
     }
 }

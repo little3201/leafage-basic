@@ -3,10 +3,7 @@
  */
 package top.abeille.basic.assets.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -25,20 +22,17 @@ public class AccountInfo {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     private Long id;
     /**
      * 用户ID
      */
-    @NotNull
     @Column(name = "user_id")
     private Long userId;
     /**
      * 账户ID
      */
-    @NotNull
     @Column(name = "account_id")
-    private String accountId;
+    private Long accountId;
     /**
      * 余额
      */
@@ -53,19 +47,16 @@ public class AccountInfo {
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
     @Column(name = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 
@@ -85,11 +76,11 @@ public class AccountInfo {
         this.userId = userId;
     }
 
-    public String getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 

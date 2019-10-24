@@ -3,10 +3,7 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -21,17 +18,14 @@ public class GroupInfo {
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     private Long id;
     /**
      * 组ID
      */
-    @NotNull
     @Column(name = "group_id")
-    private String groupId;
+    private Long groupId;
     /**
      * 负责人
      */
@@ -43,31 +37,23 @@ public class GroupInfo {
     @Column(name = "superior")
     private Long superior;
     /**
-     * 中文名
+     * 名称
      */
-    @Column(name = "chinese_name")
-    private String chineseName;
-    /**
-     * 英文名
-     */
-    @Column(name = "english_name")
-    private String englishName;
+    @Column(name = "name")
+    private String name;
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Column(name = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
     @Column(name = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 
@@ -79,11 +65,11 @@ public class GroupInfo {
         this.id = id;
     }
 
-    public String getGroupId() {
+    public Long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(String groupId) {
+    public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 
@@ -103,20 +89,12 @@ public class GroupInfo {
         this.superior = superior;
     }
 
-    public String getChineseName() {
-        return chineseName;
+    public String getName() {
+        return name;
     }
 
-    public void setChineseName(String chineseName) {
-        this.chineseName = chineseName;
-    }
-
-    public String getEnglishName() {
-        return englishName;
-    }
-
-    public void setEnglishName(String englishName) {
-        this.englishName = englishName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Boolean getEnabled() {

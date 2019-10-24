@@ -4,16 +4,17 @@
 package top.abeille.basic.assets.controller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import top.abeille.basic.assets.entity.ArticleInfo;
+import org.springframework.web.bind.annotation.*;
+import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.service.ArticleInfoService;
+import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractController;
+
+import javax.validation.Valid;
 
 /**
  * 文章信息controller
@@ -38,10 +39,11 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity findArticles(Integer pageNum, Integer pageSize) {
-        Page<ArticleInfo> articles = articleInfoService.findAllByPage(pageNum, pageSize);
+    public ResponseEntity fetchArticle(Integer pageNum, Integer pageSize) {
+        Pageable pageable = super.initPageParams(pageNum, pageSize);
+        Page<ArticleVO> articles = articleInfoService.fetchByPage(pageable);
         if (CollectionUtils.isEmpty(articles.getContent())) {
-            log.info("Not found anything about user with pageable.");
+            logger.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(articles);
@@ -54,13 +56,30 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{articleId}")
-    public ResponseEntity getArticle(@PathVariable String articleId) {
-        ArticleInfo article = articleInfoService.getByArticleId(articleId);
+    public ResponseEntity queryArticle(@PathVariable Long articleId) {
+        ArticleVO article = articleInfoService.queryById(articleId);
         if (article == null) {
-            log.info("Not found anything about article with articleId {}.", articleId);
+            logger.info("Not found anything about article with articleId {}.", articleId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(article);
     }
 
+    /**
+     * 保存文章信息
+     *
+     * @param articleDTO 文章内容
+     * @return ResponseEntity
+     */
+    @PostMapping
+    public ResponseEntity saveArticle(@RequestBody @Valid ArticleDTO articleDTO) {
+        ArticleVO articleVO;
+        try {
+            articleVO = articleInfoService.save(articleDTO);
+        } catch (Exception e) {
+            logger.error("Save article occurred an error: ", e);
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+        }
+        return ResponseEntity.ok(articleVO);
+    }
 }

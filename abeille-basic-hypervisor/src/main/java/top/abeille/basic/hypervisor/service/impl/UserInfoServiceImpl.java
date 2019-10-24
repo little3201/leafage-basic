@@ -10,19 +10,20 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.entity.UserRole;
+import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
-import top.abeille.basic.hypervisor.service.RoleInfoService;
+import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.UserInfoService;
-import top.abeille.basic.hypervisor.service.UserRoleService;
+import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -40,45 +41,54 @@ public class UserInfoServiceImpl implements UserInfoService {
     private static final Logger log = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
     private final UserInfoRepository userInfoRepository;
-    private final UserRoleService userRoleService;
-    private final RoleInfoService roleInfoService;
+    private final UserRoleRepository userRoleRepository;
+    private final RoleInfoRepository roleInfoRepository;
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleService userRoleService, RoleInfoService roleInfoService) {
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleRepository userRoleRepository, RoleInfoRepository roleInfoRepository) {
         this.userInfoRepository = userInfoRepository;
-        this.userRoleService = userRoleService;
-        this.roleInfoService = roleInfoService;
+        this.userRoleRepository = userRoleRepository;
+        this.roleInfoRepository = roleInfoRepository;
     }
 
     @Override
-    public UserInfo getByExample(UserInfo userInfo) {
-        /*Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可
-        可以通过ExampleMatcher.matching()方法进行进一步得处理*/
-        ExampleMatcher exampleMatcher = this.appendConditions();
-        this.appendParams(userInfo);
-        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(userInfo, exampleMatcher));
-        /*需要对结果做判断，查询结果为null时会报NoSuchElementExceptiontrue*/
-        return optional.orElse(null);
-    }
-
-    @Override
-    public Page<UserInfo> findAllByPage(Integer pageNum, Integer pageSize) {
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+    public Page<UserVO> fetchByPage(Pageable pageable) {
         ExampleMatcher exampleMatcher = this.appendConditions();
         UserInfo userInfo = this.appendParams(new UserInfo());
-        return userInfoRepository.findAll(Example.of(userInfo, exampleMatcher), pageable);
+        Page<UserInfo> infoPage = userInfoRepository.findAll(Example.of(userInfo, exampleMatcher), pageable);
+        List<UserInfo> infoList = infoPage.getContent();
+        if (CollectionUtils.isEmpty(infoList)) {
+            return new PageImpl<>(Collections.emptyList());
+        }
+        //参数转换为出参结果
+        List<UserVO> voList = new ArrayList<>(infoList.size());
+        for (UserInfo info : infoList) {
+            UserVO articleVO = new UserVO();
+            BeanUtils.copyProperties(info, articleVO);
+            voList.add(articleVO);
+        }
+        Page<UserVO> voPage = new PageImpl<>(voList);
+        BeanUtils.copyProperties(infoPage, voPage);
+        return voPage;
     }
 
     @Override
-    public UserInfo save(UserInfo entity) {
-        UserInfo example = this.getByUserId(entity.getUserId());
-        if (example != null) {
-            entity.setId(example.getId());
+    public UserVO save(UserDTO userDTO) {
+        UserInfo info = new UserInfo();
+        info.setUserId(userDTO.getUserId());
+        Optional<UserInfo> userInfo = userInfoRepository.findOne(Example.of(info));
+        BeanUtils.copyProperties(userDTO, info);
+        if (userInfo.isPresent()) {
+            info.setId(userInfo.get().getId());
+        } else {
+            Long userId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+            info.setUserId(userId);
+            info.setEnabled(true);
         }
-        if (entity.getModifier() == null) {
-            entity.setModifier(0L);
-        }
-        return userInfoRepository.save(entity);
+        info.setModifier(0L);
+        userInfoRepository.save(info);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(info, userVO);
+        return userVO;
     }
 
     @Override
@@ -87,51 +97,53 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public void removeInBatch(List<UserInfo> entities) {
-        userInfoRepository.deleteInBatch(entities);
+    public void removeInBatch(List<UserDTO> dtoList) {
     }
 
     @Override
-    public UserVO loadUserByUsername(String username) {
+    public UserDetailsVO loadUserByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
-        UserInfo example = this.getByExample(userInfo);
-        if (null == example) {
+        appendParams(userInfo);
+        Optional<UserInfo> infoOptional = userInfoRepository.findOne(Example.of(userInfo));
+        if (!infoOptional.isPresent()) {
             log.info("no user with username: {} be found", username);
             return null;
         }
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(example, userVO);
-        List<UserRole> userRoles = userRoleService.findAllByUserId(example.getId());
+        UserDetailsVO userDetailsVO = new UserDetailsVO();
+        BeanUtils.copyProperties(infoOptional.get(), userDetailsVO);
+        UserRole userRole = new UserRole();
+        userRole.setUserId(infoOptional.get().getId());
+        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withMatcher(String.valueOf(infoOptional.get().getId()), exact());
+        List<UserRole> userRoles = userRoleRepository.findAll(Example.of(userRole, exampleMatcher));
         if (CollectionUtils.isEmpty(userRoles)) {
             log.info("the user with username: {} was unauthorized ", username);
             return null;
         }
         Set<String> authorities = new HashSet<>();
-        userRoles.forEach(userRole -> {
-            RoleInfo roleInfo = roleInfoService.getById(userRole.getRoleId());
-            if (roleInfo != null && StringUtils.isNotBlank(roleInfo.getName())) {
-                authorities.add(roleInfo.getName().toUpperCase());
+        userRoles.forEach(userRoleInfo -> {
+            RoleInfo roleVO = roleInfoRepository.getOne(userRoleInfo.getRoleId());
+            if (StringUtils.isNotBlank(roleVO.getRoleId())) {
+                authorities.add(roleVO.getRoleId());
             }
         });
-        userVO.setAuthorities(authorities);
-        return userVO;
+        userDetailsVO.setAuthorities(authorities);
+        return userDetailsVO;
     }
 
     @Override
-    public void removeByUserId(String userId) {
-        UserInfo example = this.getByUserId(userId);
-        if (example == null) {
-            return;
-        }
-        this.removeById(example.getId());
-    }
-
-    @Override
-    public UserInfo getByUserId(String userId) {
+    public UserVO queryById(Long userId) {
+        // Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可, 可以通过ExampleMatcher.matching()方法进行进一步得处理
+        ExampleMatcher exampleMatcher = this.appendConditions();
         UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(userId);
-        return this.getByExample(userInfo);
+        this.appendParams(userInfo);
+        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(userInfo, exampleMatcher));
+        if (!optional.isPresent()) {
+            return null;
+        }
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(optional.get(), userVO);
+        return userVO;
     }
 
     /**

@@ -6,8 +6,9 @@ package top.abeille.basic.assets.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.assets.entity.AccountInfo;
+import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.service.AccountInfoService;
+import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
@@ -32,10 +33,10 @@ public class AccountInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{accountId}")
-    public ResponseEntity getAccount(@PathVariable String accountId) {
-        AccountInfo account = accountInfoService.getByAccountId(accountId);
+    public ResponseEntity queryAccount(@PathVariable Long accountId) {
+        AccountVO account = accountInfoService.queryById(accountId);
         if (account == null) {
-            log.info("Not found anything about account with accountId {}.", accountId);
+            logger.info("Not found anything about account with accountId {}.", accountId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(account);
@@ -48,14 +49,15 @@ public class AccountInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveAccount(@RequestBody AccountInfo account) {
+    public ResponseEntity saveAccount(@RequestBody AccountDTO account) {
+        AccountVO accountVO;
         try {
-            accountInfoService.save(account);
+            accountVO = accountInfoService.save(account);
         } catch (Exception e) {
-            log.error("Save account occurred an error: ", e);
-            return ResponseEntity.ok("error");
+            logger.error("Save account occurred an error: ", e);
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        return ResponseEntity.ok(accountVO);
     }
 
     /**
@@ -65,11 +67,11 @@ public class AccountInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping
-    public ResponseEntity modifyAccount(@RequestBody AccountInfo account) {
+    public ResponseEntity modifyAccount(@RequestBody AccountDTO account) {
         try {
             accountInfoService.save(account);
         } catch (Exception e) {
-            log.error("Modify account occurred an error: ", e);
+            logger.error("Modify account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
@@ -82,11 +84,11 @@ public class AccountInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @DeleteMapping("/{accountId}")
-    public ResponseEntity removeAccount(@PathVariable String accountId) {
+    public ResponseEntity removeAccount(@PathVariable Long accountId) {
         try {
-            accountInfoService.removeByAccountId(accountId);
+            accountInfoService.removeById(accountId);
         } catch (Exception e) {
-            log.error("Remove account occurred an error: ", e);
+            logger.error("Remove account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.OK);

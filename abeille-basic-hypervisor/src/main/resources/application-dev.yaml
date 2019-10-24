@@ -1,4 +1,4 @@
-##=====log common=====##
+##=====logger common=====##
 logging:
   level:
     # control root logger's level for WARN
@@ -13,7 +13,7 @@ spring:
   cloud:
     ##=====consul=====##
     consul:
-      host: 122.152.218.103
+      host: 192.168.31.100
       port: 8500
 
   ##=====datasource common=====##
@@ -22,20 +22,20 @@ spring:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://122.152.218.103:3036/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://127.0.0.1:3306/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
-      username: abeille
+      username: root
       # datasource password
-      password: abeille.top@123
+      password: root
     slaver:
       # datasource driver
       driver-class-name: org.mariadb.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://122.152.218.103:3036/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mariadb://127.0.0.1:3306/abeille_basic_hypervisor?useSsl=false&useUnicode=true&characterEncoding=utf-8
       # datasource username
-      username: abeille
+      username: root
       # datasource password
-      password: abeille.top@123
+      password: root
 
   ##=====Jpa common=====##
   jpa:
@@ -66,7 +66,7 @@ spring:
     # Redis database index(default is 0)
     database: 0
     # Redis server host
-    host: 122.152.218.103
+    host: 192.168.31.100
     # Redis server port
     port: 7369
     # Redis server password(default is non)

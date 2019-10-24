@@ -3,15 +3,13 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.hypervisor.entity.GroupInfo;
+import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
+import top.abeille.basic.hypervisor.vo.GroupVO;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 组织信息Service实现
@@ -28,19 +26,8 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public GroupInfo getById(Long id) {
-        Optional<GroupInfo> optional = groupInfoRepository.findById(id);
-        return optional.orElse(null);
-    }
-
-    @Override
-    public Page<GroupInfo> findAllByPage(Integer pageNum, Integer pageSize) {
-        return groupInfoRepository.findAll(PageRequest.of(pageNum, pageSize));
-    }
-
-    @Override
-    public GroupInfo save(GroupInfo entity) {
-        return groupInfoRepository.save(entity);
+    public GroupVO save(GroupDTO groupDTO) {
+        return null;
     }
 
     @Override
@@ -49,7 +36,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public void removeInBatch(List<GroupInfo> entities) {
-        groupInfoRepository.deleteInBatch(entities);
+    public void removeInBatch(List<GroupDTO> entities) {
+
     }
 }

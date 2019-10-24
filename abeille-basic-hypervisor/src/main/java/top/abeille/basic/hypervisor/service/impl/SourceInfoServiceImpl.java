@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
-import top.abeille.basic.hypervisor.vo.outer.SourceOuter;
+import top.abeille.basic.hypervisor.vo.SourceVO;
 
 /**
  * 权限资源信息Service实现
@@ -25,9 +25,9 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public Flux<SourceOuter> findAll() {
+    public Flux<SourceVO> fetchAll() {
         return sourceInfoRepository.findAll().map(article -> {
-            SourceOuter outer = new SourceOuter();
+            SourceVO outer = new SourceVO();
             BeanUtils.copyProperties(article, outer);
             return outer;
         });

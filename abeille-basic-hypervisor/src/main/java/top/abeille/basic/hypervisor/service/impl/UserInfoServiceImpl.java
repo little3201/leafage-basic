@@ -3,22 +3,20 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.service.UserInfoService;
+import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
-import top.abeille.basic.hypervisor.vo.enter.UserEnter;
-import top.abeille.basic.hypervisor.vo.outer.UserOuter;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -34,11 +32,6 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
 
-    /**
-     * 开启日志
-     */
-    private static final Logger log = LoggerFactory.getLogger(UserInfoServiceImpl.class);
-
     private final UserInfoRepository userInfoRepository;
     private final UserRoleRepository userRoleRepository;
     private final RoleInfoService roleInfoService;
@@ -50,7 +43,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserOuter> save(Long userId, UserEnter enter) {
+    public Mono<UserVO> save(Long userId, UserDTO enter) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(enter, info);
         return userInfoRepository.save(info).map(this::convertOuter);
@@ -62,31 +55,34 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserVO> loadUserByUsername(String username) {
+    public Mono<UserDetailsVO> loadUserByUsername(String username) {
         UserInfo info = new UserInfo();
         info.setUsername(username);
+        // 组装查询条件，只查询可用，未被锁定的用户信息
         ExampleMatcher exampleMatcher = appendConditions();
-        Mono<UserOuter> outerMono = userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(this::convertOuter);
-        //获取用户角色信息
-        Flux<String> authorities = outerMono.map(userOuter -> userRoleRepository.findAllByUserIdAndEnabled(userOuter.getUserId(), true))
+        Mono<UserVO> voMono = userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(this::convertOuter);
+        // 获取用户角色信息
+        Flux<Long> authorities = voMono.map(userVO -> userRoleRepository.findAllByUserIdAndEnabled(userVO.getUserId(), true))
                 .flatMapIterable(userRoles -> {
-                    Set<String> roleNameSet = new HashSet<>();
-                    userRoles.forEach(userRole -> roleInfoService.getByRoleId(userRole.getRoleId())
-                            .map(roleOuter -> roleNameSet.add(roleOuter.getName())));
+                    Set<Long> roleNameSet = new HashSet<>();
+                    // 遍历获取角色信息
+                    userRoles.forEach(userRole -> roleInfoService.queryById(userRole.getRoleId())
+                            .map(roleOuter -> roleNameSet.add(roleOuter.getRoleId())));
                     return roleNameSet;
                 });
-        return outerMono.map(userOuter -> {
-            UserVO userVO = new UserVO();
-            BeanUtils.copyProperties(userOuter, userVO);
-            userVO.setAuthorities(authorities);
-            return userVO;
+        // 将结果装载
+        return voMono.map(userVO -> {
+            UserDetailsVO userDetailsVO = new UserDetailsVO();
+            BeanUtils.copyProperties(userVO, userDetailsVO);
+            userDetailsVO.setAuthorities(authorities);
+            return userDetailsVO;
         });
     }
 
     @Override
-    public Mono<UserOuter> getByUserId(Long userId) {
+    public Mono<UserVO> queryById(Long userId) {
         return fetchByUserId(userId).map(user -> {
-            UserOuter outer = new UserOuter();
+            UserVO outer = new UserVO();
             BeanUtils.copyProperties(user, outer);
             return outer;
         });
@@ -112,11 +108,11 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @param info 用户信息
      * @return UserOuter 用户输出对象
      */
-    private UserOuter convertOuter(UserInfo info) {
+    private UserVO convertOuter(UserInfo info) {
         if (Objects.isNull(info)) {
             return null;
         }
-        UserOuter outer = new UserOuter();
+        UserVO outer = new UserVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
     }

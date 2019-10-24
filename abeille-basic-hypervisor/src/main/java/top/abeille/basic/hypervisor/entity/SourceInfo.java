@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -28,9 +27,8 @@ public class SourceInfo {
     /**
      * 权限ID
      */
-    @NotNull
-    @Field(value = "source_id")
     @Indexed
+    @Field(value = "source_id")
     private Long sourceId;
     /**
      * 上级
@@ -40,6 +38,7 @@ public class SourceInfo {
     /**
      * 名称
      */
+    @Indexed
     @Field(value = "name")
     private String name;
     /**

@@ -3,13 +3,11 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -28,34 +26,29 @@ public class RoleSource {
     /**
      * 角色ID
      */
-    @NotNull
-    @Field(value = "role_id")
     @Indexed
+    @Field(value = "role_id")
     private Long roleId;
     /**
      * 资源ID
      */
-    @NotNull
-    @Field(value = "source_id")
     @Indexed
+    @Field(value = "source_id")
     private Long sourceId;
 
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
     @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 

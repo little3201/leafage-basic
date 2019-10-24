@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.assets.vo.outer;
+package top.abeille.basic.assets.vo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-public class AccountOuter implements Serializable {
+public class AccountVO implements Serializable {
 
     /**
      * 用户ID

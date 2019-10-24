@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,8 +26,8 @@ public class RoleInfo {
     /**
      * 角色ID
      */
-    @Field(value = "role_id")
     @Indexed
+    @Field(value = "role_id")
     private Long roleId;
     /**
      * 名称
@@ -43,19 +42,16 @@ public class RoleInfo {
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
     @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 

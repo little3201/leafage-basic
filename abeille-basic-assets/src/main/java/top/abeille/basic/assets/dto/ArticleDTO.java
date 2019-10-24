@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.vo.enter;
+package top.abeille.basic.assets.dto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author liwenqiang
  */
-public class ArticleEnter implements Serializable {
+public class ArticleDTO implements Serializable {
 
     /**
      * 文章ID

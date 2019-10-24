@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
-import top.abeille.basic.hypervisor.vo.outer.SourceOuter;
+import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
@@ -32,7 +32,7 @@ public class SourceInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<SourceOuter> fetchSources() {
-        return sourceInfoService.findAll();
+    public Flux<SourceVO> fetchSources() {
+        return sourceInfoService.fetchAll();
     }
 }

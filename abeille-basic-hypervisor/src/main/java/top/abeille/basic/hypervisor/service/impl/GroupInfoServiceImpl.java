@@ -7,11 +7,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.entity.GroupInfo;
 import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
-import top.abeille.basic.hypervisor.vo.enter.GroupEnter;
-import top.abeille.basic.hypervisor.vo.outer.GroupOuter;
+import top.abeille.basic.hypervisor.vo.GroupVO;
 
 /**
  * 组织信息Service实现
@@ -28,12 +28,12 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Mono<GroupOuter> getById(Long groupId) {
+    public Mono<GroupVO> queryById(Long groupId) {
         return fetchByGroupId(groupId).map(this::convertOuter);
     }
 
     @Override
-    public Mono<GroupOuter> save(Long groupId, GroupEnter enter) {
+    public Mono<GroupVO> save(Long groupId, GroupDTO enter) {
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(enter, info);
         return groupInfoRepository.save(info).map(this::convertOuter);
@@ -50,8 +50,8 @@ public class GroupInfoServiceImpl implements GroupInfoService {
         return groupInfoRepository.findOne(Example.of(info));
     }
 
-    private GroupOuter convertOuter(GroupInfo info) {
-        GroupOuter outer = new GroupOuter();
+    private GroupVO convertOuter(GroupInfo info) {
+        GroupVO outer = new GroupVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
     }

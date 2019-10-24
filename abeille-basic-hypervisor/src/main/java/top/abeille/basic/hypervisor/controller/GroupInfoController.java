@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
-import top.abeille.basic.hypervisor.vo.enter.GroupEnter;
-import top.abeille.basic.hypervisor.vo.outer.GroupOuter;
+import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
@@ -34,8 +34,8 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<GroupOuter> fetchGroups() {
-        return groupInfoService.findAll();
+    public Flux<GroupVO> fetchGroups() {
+        return groupInfoService.fetchAll();
     }
 
     /**
@@ -45,7 +45,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<GroupOuter>> saveGroup(@RequestBody GroupEnter group) {
+    public Mono<ResponseEntity<GroupVO>> saveGroup(@RequestBody GroupDTO group) {
         return groupInfoService.save(null, group)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
@@ -58,7 +58,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping("/{groupId}")
-    public Mono<ResponseEntity<GroupOuter>> modifyGroup(@PathVariable Long groupId, @RequestBody GroupEnter group) {
+    public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable Long groupId, @RequestBody GroupDTO group) {
         return groupInfoService.save(groupId, group)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
-import top.abeille.basic.hypervisor.vo.enter.RoleEnter;
-import top.abeille.basic.hypervisor.vo.outer.RoleOuter;
+import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
@@ -34,7 +34,7 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<RoleOuter>> saveRole(@RequestBody RoleEnter role) {
+    public Mono<ResponseEntity<RoleVO>> saveRole(@RequestBody RoleDTO role) {
         return roleInfoService.save(null, role)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
@@ -47,7 +47,7 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping("/{roleId}")
-    public Mono<ResponseEntity<RoleOuter>> modifyRole(@PathVariable Long roleId, @RequestBody RoleEnter role) {
+    public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable Long roleId, @RequestBody RoleDTO role) {
         return roleInfoService.save(roleId, role)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

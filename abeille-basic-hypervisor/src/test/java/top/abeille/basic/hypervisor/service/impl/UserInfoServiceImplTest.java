@@ -9,8 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
-import top.abeille.basic.hypervisor.vo.enter.UserEnter;
 
 /**
  * 用户信息service测试
@@ -32,7 +32,7 @@ public class UserInfoServiceImplTest {
      */
     @Test
     public void save() {
-        UserEnter user = new UserEnter();
+        UserDTO user = new UserDTO();
         user.setNickname("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
         user.setPassword(pwd);

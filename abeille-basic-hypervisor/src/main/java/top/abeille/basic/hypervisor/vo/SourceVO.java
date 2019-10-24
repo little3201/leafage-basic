@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.hypervisor.vo.enter;
+package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Model class for SourceInfo
  *
  * @author liwenqiang
  */
-public class SourceEnter implements Serializable {
+public class SourceVO implements Serializable {
 
     /**
      * 权限ID
@@ -36,6 +37,14 @@ public class SourceEnter implements Serializable {
      * 描述
      */
     private String description;
+    /**
+     * 修改人
+     */
+    private String modifier;
+    /**
+     * 修改时间
+     */
+    private LocalDateTime modifyTime;
 
     public Long getSourceId() {
         return sourceId;
@@ -83,5 +92,21 @@ public class SourceEnter implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

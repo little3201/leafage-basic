@@ -3,8 +3,8 @@
  */
 package top.abeille.basic.hypervisor.service;
 
-import top.abeille.basic.hypervisor.vo.enter.SourceEnter;
-import top.abeille.basic.hypervisor.vo.outer.SourceOuter;
+import top.abeille.basic.hypervisor.dto.SourceDTO;
+import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:36
  **/
-public interface SourceInfoService extends BasicService<SourceEnter, SourceOuter> {
+public interface SourceInfoService extends BasicService<SourceDTO, SourceVO> {
 }

@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.service.ArticleInfoService;
-import top.abeille.basic.assets.vo.enter.ArticleEnter;
-import top.abeille.basic.assets.vo.outer.ArticleOuter;
+import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -36,8 +36,8 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<ArticleOuter> fetchArticle() {
-        return articleInfoService.findAll();
+    public Flux<ArticleVO> fetchArticle() {
+        return articleInfoService.fetchAll();
     }
 
     /**
@@ -47,8 +47,8 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{articleId}")
-    public Mono<ResponseEntity<ArticleOuter>> getArticle(@PathVariable Long articleId) {
-        return articleInfoService.getById(articleId)
+    public Mono<ResponseEntity<ArticleVO>> getArticle(@PathVariable Long articleId) {
+        return articleInfoService.queryById(articleId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -60,7 +60,7 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<ArticleOuter>> saveArticle(@RequestBody @Valid ArticleEnter enter) {
+    public Mono<ResponseEntity<ArticleVO>> saveArticle(@RequestBody @Valid ArticleDTO enter) {
         return articleInfoService.save(null, enter)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
@@ -73,7 +73,7 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping("/{articleId}")
-    public Mono<ResponseEntity<ArticleOuter>> modifyArticle(@PathVariable Long articleId, @RequestBody @Valid ArticleEnter enter) {
+    public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable Long articleId, @RequestBody @Valid ArticleDTO enter) {
         return articleInfoService.save(articleId, enter)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

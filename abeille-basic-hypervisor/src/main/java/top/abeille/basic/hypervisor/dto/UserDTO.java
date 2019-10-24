@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.vo.enter;
+package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author liwenqiang
  */
-public class UserEnter implements Serializable {
+public class UserDTO implements Serializable {
 
     /**
      * 用户ID

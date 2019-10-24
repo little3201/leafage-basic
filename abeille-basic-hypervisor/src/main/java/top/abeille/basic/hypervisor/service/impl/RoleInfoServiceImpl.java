@@ -9,11 +9,11 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
-import top.abeille.basic.hypervisor.vo.enter.RoleEnter;
-import top.abeille.basic.hypervisor.vo.outer.RoleOuter;
+import top.abeille.basic.hypervisor.vo.RoleVO;
 
 /**
  * 角色信息service 实现
@@ -30,34 +30,34 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Flux<RoleOuter> findAllByExample(RoleEnter enter, ExampleMatcher exampleMatcher) {
+    public Flux<RoleVO> fetchByExample(RoleDTO enter, ExampleMatcher exampleMatcher) {
         // 创建查询模板实例
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(enter, info);
         return roleInfoRepository.findAll(Example.of(info, exampleMatcher)).map(roleInfo1 -> {
-            RoleOuter outer = new RoleOuter();
+            RoleVO outer = new RoleVO();
             BeanUtils.copyProperties(roleInfo1, outer);
             return outer;
         });
     }
 
     @Override
-    public Mono<RoleOuter> getByRoleId(Long roleId) {
+    public Mono<RoleVO> queryById(Long roleId) {
         RoleInfo info = new RoleInfo();
         info.setRoleId(roleId);
         return roleInfoRepository.findOne(Example.of(info)).map(role -> {
-            RoleOuter outer = new RoleOuter();
+            RoleVO outer = new RoleVO();
             BeanUtils.copyProperties(role, outer);
             return outer;
         });
     }
 
     @Override
-    public Mono<RoleOuter> save(Long roleId, RoleEnter enter) {
+    public Mono<RoleVO> save(Long roleId, RoleDTO enter) {
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(enter, info);
         return roleInfoRepository.save(info).map(role -> {
-            RoleOuter outer = new RoleOuter();
+            RoleVO outer = new RoleVO();
             BeanUtils.copyProperties(role, outer);
             return outer;
         });

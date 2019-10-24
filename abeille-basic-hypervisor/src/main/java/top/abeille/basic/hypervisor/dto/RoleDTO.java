@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.vo.enter;
+package top.abeille.basic.hypervisor.dto;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  * @author liwenqiang
  */
-public class RoleEnter implements Serializable {
+public class RoleDTO implements Serializable {
 
     /**
      * 角色ID

@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.assets.vo.outer;
+package top.abeille.basic.assets.vo;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-public class ArticleOuter implements Serializable {
+public class ArticleVO implements Serializable {
 
     /**
      * 文章ID

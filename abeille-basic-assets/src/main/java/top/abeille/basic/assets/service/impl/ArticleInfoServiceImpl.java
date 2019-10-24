@@ -8,11 +8,11 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.entity.ArticleInfo;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
-import top.abeille.basic.assets.vo.enter.ArticleEnter;
-import top.abeille.basic.assets.vo.outer.ArticleOuter;
+import top.abeille.basic.assets.vo.ArticleVO;
 
 import java.util.Objects;
 
@@ -31,17 +31,17 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Flux<ArticleOuter> findAll() {
+    public Flux<ArticleVO> fetchAll() {
         return articleInfoRepository.findAll().map(this::convertOuter);
     }
 
     @Override
-    public Mono<ArticleOuter> getById(Long articleId) {
+    public Mono<ArticleVO> queryById(Long articleId) {
         return fetchByArticleId(articleId).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ArticleOuter> save(Long articleId, ArticleEnter enter) {
+    public Mono<ArticleVO> save(Long articleId, ArticleDTO enter) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(enter, info);
         if (Objects.nonNull(articleId)) {
@@ -66,11 +66,11 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         return articleInfoRepository.findOne(Example.of(info));
     }
 
-    private ArticleOuter convertOuter(ArticleInfo info) {
+    private ArticleVO convertOuter(ArticleInfo info) {
         if (Objects.isNull(info)) {
             return null;
         }
-        ArticleOuter outer = new ArticleOuter();
+        ArticleVO outer = new ArticleVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
     }

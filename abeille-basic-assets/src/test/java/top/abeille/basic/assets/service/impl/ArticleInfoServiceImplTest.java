@@ -5,11 +5,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.service.ArticleInfoService;
-import top.abeille.basic.assets.vo.enter.ArticleEnter;
-import top.abeille.basic.assets.vo.outer.ArticleOuter;
+import top.abeille.basic.assets.vo.ArticleVO;
 
 /**
  * 文章接口实现类测试
@@ -25,10 +24,10 @@ public class ArticleInfoServiceImplTest {
 
     @Test
     public void save() {
-        ArticleEnter enter = new ArticleEnter();
+        ArticleDTO enter = new ArticleDTO();
         enter.setArticleId(20191009001L);
         enter.setTitle("spring");
         enter.setContent("spring boot 和 spring cloud");
-        Mono<ArticleOuter> outerMono = articleInfoService.save(null, enter);
+        Mono<ArticleVO> outerMono = articleInfoService.save(null, enter);
     }
 }

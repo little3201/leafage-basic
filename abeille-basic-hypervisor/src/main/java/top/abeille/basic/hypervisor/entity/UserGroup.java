@@ -3,13 +3,11 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -28,34 +26,29 @@ public class UserGroup {
     /**
      * 用户主键
      */
-    @NotNull
-    @Field(value = "user_id")
     @Indexed
+    @Field(value = "user_id")
     private Long userId;
     /**
      * 组主键
      */
-    @NotNull
-    @Field(value = "group_id")
     @Indexed
+    @Field(value = "group_id")
     private Long groupId;
 
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
     @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 

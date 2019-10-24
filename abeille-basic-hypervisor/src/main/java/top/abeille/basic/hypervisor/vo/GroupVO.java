@@ -1,22 +1,21 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.hypervisor.vo.enter;
+package top.abeille.basic.hypervisor.vo;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Model class for GroupInfo
  *
  * @author liwenqiang
  */
-public class GroupEnter implements Serializable {
+public class GroupVO implements Serializable {
 
     /**
      * 组ID
      */
-    @NotNull
     private String groupId;
     /**
      * 负责人
@@ -30,6 +29,14 @@ public class GroupEnter implements Serializable {
      * 名称
      */
     private String name;
+    /**
+     * 修改人
+     */
+    private Long modifier;
+    /**
+     * 修改时间
+     */
+    private LocalDateTime modifyTime;
 
     public String getGroupId() {
         return groupId;
@@ -61,5 +68,21 @@ public class GroupEnter implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(Long modifier) {
+        this.modifier = modifier;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

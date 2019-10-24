@@ -3,13 +3,11 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 
 /**
@@ -28,12 +26,13 @@ public class UserInfo {
     /**
      * 用户ID
      */
-    @Field(value = "user_id")
     @Indexed
+    @Field(value = "user_id")
     private Long userId;
     /**
      * 昵称
      */
+    @Indexed
     @Field(value = "nickname")
     private String nickname;
     /**
@@ -44,8 +43,8 @@ public class UserInfo {
     /**
      * 用户名
      */
-    @Field(value = "username")
     @Indexed
+    @Field(value = "username")
     private String username;
     /**
      * 密码
@@ -60,7 +59,6 @@ public class UserInfo {
     /**
      * 邮箱
      */
-    @Email
     @Field(value = "email")
     private String email;
     /**
@@ -92,13 +90,11 @@ public class UserInfo {
     /**
      * 修改人
      */
-    @JsonIgnore
     @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 

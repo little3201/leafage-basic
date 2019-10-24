@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.vo.enter;
+package top.abeille.basic.assets.dto;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  *
  * @author liwenqiang
  */
-public class AccountEnter implements Serializable {
+public class AccountDTO implements Serializable {
 
     /**
      * 用户ID

@@ -26,14 +26,14 @@ public class UserRole {
     /**
      * 用户主键
      */
-    @Field(value = "user_id")
     @Indexed
+    @Field(value = "user_id")
     private Long userId;
     /**
      * 角色主键
      */
-    @Field(value = "role_id")
     @Indexed
+    @Field(value = "role_id")
     private Long roleId;
 
     /**

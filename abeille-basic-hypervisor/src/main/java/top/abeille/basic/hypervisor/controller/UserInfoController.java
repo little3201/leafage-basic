@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserInfoService;
+import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
-import top.abeille.basic.hypervisor.vo.enter.UserEnter;
-import top.abeille.basic.hypervisor.vo.outer.UserOuter;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -37,8 +37,8 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<UserOuter> fetchUsers() {
-        return userInfoService.findAll();
+    public Flux<UserVO> fetchUsers() {
+        return userInfoService.fetchAll();
     }
 
     /**
@@ -48,8 +48,8 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{userId}")
-    public Mono<ResponseEntity<UserOuter>> getUser(@PathVariable Long userId) {
-        return userInfoService.getByUserId(userId)
+    public Mono<ResponseEntity<UserVO>> getUser(@PathVariable Long userId) {
+        return userInfoService.queryById(userId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -61,7 +61,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/load/{username}")
-    public Mono<ResponseEntity<UserVO>> loadUserByUsername(@PathVariable String username) {
+    public Mono<ResponseEntity<UserDetailsVO>> loadUserByUsername(@PathVariable String username) {
         return userInfoService.loadUserByUsername(username).map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -73,7 +73,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<UserOuter>> saveUser(@RequestBody @Valid UserEnter user) {
+    public Mono<ResponseEntity<UserVO>> saveUser(@RequestBody @Valid UserDTO user) {
         return userInfoService.save(null, user)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
@@ -86,7 +86,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping
-    public Mono<ResponseEntity<UserOuter>> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserEnter user) {
+    public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO user) {
         return userInfoService.save(userId, user)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

@@ -21,7 +21,8 @@ import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
@@ -72,11 +73,17 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserVO save(UserDTO userDTO) {
-        Long userId = LocalDate.now().toEpochDay();
         UserInfo info = new UserInfo();
+        info.setUserId(userDTO.getUserId());
+        Optional<UserInfo> userInfo = userInfoRepository.findOne(Example.of(info));
         BeanUtils.copyProperties(userDTO, info);
-        info.setUserId(userId);
-        info.setEnabled(true);
+        if (userInfo.isPresent()) {
+            info.setId(userInfo.get().getId());
+        } else {
+            Long userId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+            info.setUserId(userId);
+            info.setEnabled(true);
+        }
         info.setModifier(0L);
         userInfoRepository.save(info);
         UserVO userVO = new UserVO();

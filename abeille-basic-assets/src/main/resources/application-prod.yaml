@@ -22,7 +22,7 @@ spring:
       username: abeille
       password: abeille.top
       database: abeille
-      authentication-database: admin
+      authentication-database: abeille
 
   ##=====redis server=====##
   redis:

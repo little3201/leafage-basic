@@ -3,11 +3,12 @@
  */
 package top.abeille.basic.assets.dto;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * Model class for AccountInfo
+ * Enter class for AccountInfo
  *
  * @author liwenqiang
  */
@@ -16,11 +17,13 @@ public class AccountDTO implements Serializable {
     /**
      * 用户ID
      */
+    @NotNull
     private Long userId;
     /**
      * 账户ID
      */
-    private String accountId;
+    @NotNull
+    private Long accountId;
     /**
      * 余额
      */
@@ -30,7 +33,6 @@ public class AccountDTO implements Serializable {
      */
     private String type;
 
-
     public Long getUserId() {
         return userId;
     }
@@ -39,11 +41,11 @@ public class AccountDTO implements Serializable {
         this.userId = userId;
     }
 
-    public String getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 

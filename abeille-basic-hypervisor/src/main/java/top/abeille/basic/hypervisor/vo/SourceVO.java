@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
 package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Model class for SourceInfo
@@ -16,7 +16,7 @@ public class SourceVO implements Serializable {
     /**
      * 权限ID
      */
-    private String sourceId;
+    private Long sourceId;
     /**
      * 上级
      */
@@ -40,18 +40,17 @@ public class SourceVO implements Serializable {
     /**
      * 修改人
      */
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
-    private LocalDate modifyTime;
+    private LocalDateTime modifyTime;
 
-
-    public String getSourceId() {
+    public Long getSourceId() {
         return sourceId;
     }
 
-    public void setSourceId(String sourceId) {
+    public void setSourceId(Long sourceId) {
         this.sourceId = sourceId;
     }
 
@@ -95,19 +94,19 @@ public class SourceVO implements Serializable {
         this.description = description;
     }
 
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 
-    public LocalDate getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDate modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 
@@ -13,5 +13,5 @@ import top.abeille.basic.hypervisor.entity.UserInfo;
  * @author liwenqiang 2018/7/27 17:50
  **/
 @Repository
-public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
+public interface UserInfoRepository extends ReactiveMongoRepository<UserInfo, String> {
 }

@@ -3,7 +3,11 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDateTime;
 
 /**
@@ -11,48 +15,48 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2018/12/4 10:09
  **/
-@Entity
-@Table(name = "user_role")
+@Document(collection = "user_role")
 public class UserRole {
 
     /**
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
     /**
      * 用户主键
      */
-    @Column(name = "user_id")
+    @Indexed
+    @Field(value = "user_id")
     private Long userId;
     /**
      * 角色主键
      */
-    @Column(name = "role_id")
+    @Indexed
+    @Field(value = "role_id")
     private Long roleId;
 
     /**
      * 是否有效
      */
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

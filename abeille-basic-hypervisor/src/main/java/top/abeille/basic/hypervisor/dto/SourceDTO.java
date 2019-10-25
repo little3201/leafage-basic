@@ -15,7 +15,7 @@ public class SourceDTO implements Serializable {
     /**
      * 权限ID
      */
-    private String sourceId;
+    private Long sourceId;
     /**
      * 上级
      */
@@ -37,12 +37,11 @@ public class SourceDTO implements Serializable {
      */
     private String description;
 
-
-    public String getSourceId() {
+    public Long getSourceId() {
         return sourceId;
     }
 
-    public void setSourceId(String sourceId) {
+    public void setSourceId(Long sourceId) {
         this.sourceId = sourceId;
     }
 

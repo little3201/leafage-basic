@@ -3,7 +3,11 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDateTime;
 
 /**
@@ -11,67 +15,60 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "role_info")
+@Document(collection = "role_info")
 public class RoleInfo {
 
     /**
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
     /**
      * 角色ID
      */
-    @Column(name = "role_id")
-    private String roleId;
+    @Indexed
+    @Field(value = "role_id")
+    private Long roleId;
     /**
      * 名称
      */
-    @Column(name = "name")
+    @Field(value = "name")
     private String name;
     /**
      * 描述
      */
-    @Column(name = "description")
+    @Field(value = "description")
     private String description;
-    /**
-     * 备注
-     */
-    @Column(name = "remark")
-    private String remark;
-
     /**
      * 是否有效
      */
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(String roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 
@@ -89,14 +86,6 @@ public class RoleInfo {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     public Boolean getEnabled() {

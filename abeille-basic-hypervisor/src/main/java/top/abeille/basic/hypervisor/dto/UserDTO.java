@@ -1,29 +1,26 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
 package top.abeille.basic.hypervisor.dto;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * 用户关键信息类
+ * Model class for UserInfo
  *
- * @author liwenqiang 2019/8/31 15:50
- **/
+ * @author liwenqiang
+ */
 public class UserDTO implements Serializable {
 
     /**
      * 用户ID
      */
-    private Long userId;
-    /**
-     * 组织主键
-     */
     @NotNull
-    private Long groupId;
+    private Long userId;
     /**
      * 昵称
      */
-    @NotBlank
     private String nickname;
     /**
      * 头像
@@ -32,12 +29,14 @@ public class UserDTO implements Serializable {
     /**
      * 用户名
      */
-    @NotBlank
     private String username;
+    /**
+     * 密码
+     */
+    private String password;
     /**
      * 电话
      */
-    @NotBlank
     private String mobile;
     /**
      * 邮箱
@@ -48,21 +47,12 @@ public class UserDTO implements Serializable {
      */
     private String address;
 
-
     public Long getUserId() {
         return userId;
     }
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
     }
 
     public String getNickname() {
@@ -89,6 +79,14 @@ public class UserDTO implements Serializable {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getMobile() {
         return mobile;
     }
@@ -112,5 +110,4 @@ public class UserDTO implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
-
 }

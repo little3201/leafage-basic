@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
 package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Model class for GroupInfo
@@ -26,13 +26,9 @@ public class GroupVO implements Serializable {
      */
     private Long superior;
     /**
-     * 中文名
+     * 名称
      */
-    private String chineseName;
-    /**
-     * 英文名
-     */
-    private String englishName;
+    private String name;
     /**
      * 修改人
      */
@@ -40,8 +36,7 @@ public class GroupVO implements Serializable {
     /**
      * 修改时间
      */
-    private LocalDate modifyTime;
-
+    private LocalDateTime modifyTime;
 
     public String getGroupId() {
         return groupId;
@@ -67,20 +62,12 @@ public class GroupVO implements Serializable {
         this.superior = superior;
     }
 
-    public String getChineseName() {
-        return chineseName;
+    public String getName() {
+        return name;
     }
 
-    public void setChineseName(String chineseName) {
-        this.chineseName = chineseName;
-    }
-
-    public String getEnglishName() {
-        return englishName;
-    }
-
-    public void setEnglishName(String englishName) {
-        this.englishName = englishName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getModifier() {
@@ -91,11 +78,11 @@ public class GroupVO implements Serializable {
         this.modifier = modifier;
     }
 
-    public LocalDate getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDate modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

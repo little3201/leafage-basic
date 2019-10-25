@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ public class GroupDTO implements Serializable {
     /**
      * 组ID
      */
+    @NotNull
     private String groupId;
     /**
      * 负责人
@@ -25,14 +27,9 @@ public class GroupDTO implements Serializable {
      */
     private Long superior;
     /**
-     * 中文名
+     * 名称
      */
-    private String chineseName;
-    /**
-     * 英文名
-     */
-    private String englishName;
-
+    private String name;
 
     public String getGroupId() {
         return groupId;
@@ -58,19 +55,11 @@ public class GroupDTO implements Serializable {
         this.superior = superior;
     }
 
-    public String getChineseName() {
-        return chineseName;
+    public String getName() {
+        return name;
     }
 
-    public void setChineseName(String chineseName) {
-        this.chineseName = chineseName;
-    }
-
-    public String getEnglishName() {
-        return englishName;
-    }
-
-    public void setEnglishName(String englishName) {
-        this.englishName = englishName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

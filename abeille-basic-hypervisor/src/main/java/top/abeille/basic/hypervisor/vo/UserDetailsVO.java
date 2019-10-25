@@ -1,7 +1,8 @@
 package top.abeille.basic.hypervisor.vo;
 
+import reactor.core.publisher.Flux;
+
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * 用户关键信息类
@@ -10,9 +11,9 @@ import java.util.Set;
  **/
 public class UserDetailsVO implements Serializable {
 
-    private String username;
     private String password;
-    private Set<String> authorities;
+    private String username;
+    private Flux<Long> authorities;
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
@@ -34,11 +35,11 @@ public class UserDetailsVO implements Serializable {
         this.username = username;
     }
 
-    public Set<String> getAuthorities() {
+    public Flux<Long> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<String> authorities) {
+    public void setAuthorities(Flux<Long> authorities) {
         this.authorities = authorities;
     }
 

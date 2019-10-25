@@ -3,14 +3,17 @@
  */
 package top.abeille.basic.assets.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.AccountDTO;
+import top.abeille.basic.assets.entity.AccountInfo;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
+import top.abeille.basic.assets.vo.AccountVO;
 
-import java.util.List;
+import java.util.Objects;
 
 /**
  * 账户信息Service实现
@@ -20,11 +23,6 @@ import java.util.List;
 @Service
 public class AccountInfoServiceImpl implements AccountInfoService {
 
-    /**
-     * 开启日志
-     */
-    private static final Logger log = LoggerFactory.getLogger(AccountInfoServiceImpl.class);
-
     private final AccountInfoRepository accountInfoRepository;
 
     public AccountInfoServiceImpl(AccountInfoRepository accountInfoRepository) {
@@ -32,11 +30,34 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public void removeById(Long id) {
-        accountInfoRepository.deleteById(id);
+    public Mono<AccountVO> save(Long accountId, AccountDTO entity) {
+        AccountInfo info = new AccountInfo();
+        BeanUtils.copyProperties(entity, info);
+        return accountInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
-    public void removeInBatch(List<AccountDTO> entities) {
+    public Mono<AccountVO> queryById(Long accountId) {
+        AccountInfo info = new AccountInfo();
+        info.setAccountId(accountId);
+        info.setEnabled(true);
+        return accountInfoRepository.findOne(Example.of(info)).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<Void> removeById(Long accountId) {
+        AccountInfo info = new AccountInfo();
+        info.setAccountId(accountId);
+        return accountInfoRepository.findOne(Example.of(info))
+                .flatMap(account -> accountInfoRepository.deleteById(account.getId()));
+    }
+
+    private AccountVO convertOuter(AccountInfo info) {
+        if (Objects.isNull(info)) {
+            return null;
+        }
+        AccountVO outer = new AccountVO();
+        BeanUtils.copyProperties(info, outer);
+        return outer;
     }
 }

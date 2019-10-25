@@ -3,35 +3,38 @@
  */
 package top.abeille.basic.assets.dto;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * 用户信息入参
+ * Enter class for ArticleInfo
  *
- * @author liwenqiang  2019-03-03 22:59
- **/
+ * @author liwenqiang
+ */
 public class ArticleDTO implements Serializable {
 
     /**
      * 文章ID
      */
+    @NotNull
     private Long articleId;
     /**
      * 标题
      */
     private String title;
     /**
-     * 概览
+     * 描述
      */
-    private String summary;
-    /**
-     * 图片url
-     */
-    private String imageUrl;
+    private String description;
     /**
      * 内容
      */
     private String content;
+    /**
+     * 图片url
+     */
+    private String imageUrl;
+
 
     public Long getArticleId() {
         return articleId;
@@ -49,12 +52,20 @@ public class ArticleDTO implements Serializable {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getContent() {
+        return content;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImageUrl() {
@@ -63,13 +74,5 @@ public class ArticleDTO implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 }

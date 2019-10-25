@@ -1,31 +1,33 @@
 package top.abeille.basic.assets.service.impl;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import top.abeille.basic.assets.entity.ArticleInfo;
-import top.abeille.basic.assets.repository.ArticleInfoRepository;
+import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.dto.ArticleDTO;
+import top.abeille.basic.assets.service.ArticleInfoService;
+import top.abeille.basic.assets.vo.ArticleVO;
 
 /**
- * 文章接口测试
+ * 文章接口实现类测试
  *
- * @author liwenqiang 2019-08-20 22:38
- **/
+ * @author liwenqiang 2019/9/19 9:27
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ArticleInfoServiceImplTest {
 
     @Autowired
-    private ArticleInfoRepository articleInfoRepository;
+    private ArticleInfoService articleInfoService;
 
     @Test
-    public void saveArticle() {
-        ArticleInfo article = new ArticleInfo();
-        article.setArticleId(2L);
-        ArticleInfo result = articleInfoRepository.save(article);
-        Assert.assertNotNull(result.getId());
+    public void save() {
+        ArticleDTO enter = new ArticleDTO();
+        enter.setArticleId(20191009001L);
+        enter.setTitle("spring");
+        enter.setContent("spring boot 和 spring cloud");
+        Mono<ArticleVO> outerMono = articleInfoService.save(null, enter);
     }
 }

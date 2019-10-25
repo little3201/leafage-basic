@@ -3,7 +3,12 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDateTime;
 
 /**
@@ -11,84 +16,87 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "source_info")
+@Document(collection = "source_info")
 public class SourceInfo {
 
     /**
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
     /**
      * 权限ID
      */
-    @Column(name = "source_id")
-    private String sourceId;
+    @Indexed
+    @Field(value = "source_id")
+    private Long sourceId;
     /**
      * 上级
      */
-    @Column(name = "superior")
-    private String superior;
+    @Field(value = "superior")
+    private Long superior;
     /**
      * 名称
      */
-    @Column(name = "name")
+    @Indexed
+    @Field(value = "name")
     private String name;
     /**
      * 类型
      */
-    @Column(name = "type")
+    @Field(value = "type")
     private Integer type;
     /**
      * 路径
      */
-    @Column(name = "path")
+    @Field(value = "path")
     private String path;
     /**
      * 描述
      */
-    @Column(name = "description")
+    @Field(value = "description")
     private String description;
 
     /**
      * 是否有效
      */
-    @Column(name = "is_enabled")
+    @JsonIgnore
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @Column(name = "modifier")
+    @JsonIgnore
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @Column(name = "modify_time")
+    @JsonIgnore
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getSourceId() {
+    public Long getSourceId() {
         return sourceId;
     }
 
-    public void setSourceId(String sourceId) {
+    public void setSourceId(Long sourceId) {
         this.sourceId = sourceId;
     }
 
-    public String getSuperior() {
+    public Long getSuperior() {
         return superior;
     }
 
-    public void setSuperior(String superior) {
+    public void setSuperior(Long superior) {
         this.superior = superior;
     }
 

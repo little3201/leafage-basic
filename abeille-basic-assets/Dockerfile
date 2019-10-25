@@ -8,7 +8,7 @@ LABEL maintainer="little3201@gmail.com"
 VOLUME /tmp
 
 # Make port 8764 available to the world outside this container
-EXPOSE 8764
+#EXPOSE 8764
 
 # The application's jar file
 ARG JAR_FILE=target/abeille-basic-assets-0.0.1-SNAPSHOT.jar

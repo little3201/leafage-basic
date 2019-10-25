@@ -3,13 +3,12 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.hypervisor.dto.SourceDTO;
+import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
-
-import java.util.List;
 
 /**
  * 权限资源信息Service实现
@@ -26,16 +25,11 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public List<SourceVO> saveAll(List<SourceDTO> entities) {
-        return null;
-    }
-
-    @Override
-    public void removeById(Long id) {
-        sourceInfoRepository.deleteById(id);
-    }
-
-    @Override
-    public void removeInBatch(List<SourceDTO> entities) {
+    public Flux<SourceVO> fetchAll() {
+        return sourceInfoRepository.findAll().map(article -> {
+            SourceVO outer = new SourceVO();
+            BeanUtils.copyProperties(article, outer);
+            return outer;
+        });
     }
 }

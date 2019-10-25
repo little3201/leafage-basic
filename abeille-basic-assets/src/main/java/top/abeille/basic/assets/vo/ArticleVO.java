@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
 package top.abeille.basic.assets.vo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
- * 用户信息出参
+ * Enter class for ArticleInfo
  *
- * @author liwenqiang  2019-03-03 22:59
- **/
+ * @author liwenqiang
+ */
 public class ArticleVO implements Serializable {
 
     /**
@@ -22,17 +22,17 @@ public class ArticleVO implements Serializable {
      */
     private String title;
     /**
-     * 概览
+     * 描述
      */
-    private String summary;
-    /**
-     * 图片url
-     */
-    private String imageUrl;
+    private String description;
     /**
      * 内容
      */
     private String content;
+    /**
+     * 图片url
+     */
+    private String imageUrl;
     /**
      * 修改人
      */
@@ -40,7 +40,7 @@ public class ArticleVO implements Serializable {
     /**
      * 修改时间
      */
-    private LocalDate modifyTime;
+    private LocalDateTime modifyTime;
 
     public Long getArticleId() {
         return articleId;
@@ -58,12 +58,20 @@ public class ArticleVO implements Serializable {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getContent() {
+        return content;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImageUrl() {
@@ -74,14 +82,6 @@ public class ArticleVO implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public Long getModifier() {
         return modifier;
     }
@@ -90,11 +90,11 @@ public class ArticleVO implements Serializable {
         this.modifier = modifier;
     }
 
-    public LocalDate getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDate modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

@@ -3,27 +3,24 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
-import top.abeille.basic.hypervisor.entity.UserRole;
-import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
+import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -35,128 +32,100 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
 
-    /**
-     * 开启日志
-     */
-    private static final Logger log = LoggerFactory.getLogger(UserInfoServiceImpl.class);
-
     private final UserInfoRepository userInfoRepository;
     private final UserRoleRepository userRoleRepository;
-    private final RoleInfoRepository roleInfoRepository;
+    private final RoleInfoService roleInfoService;
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleRepository userRoleRepository, RoleInfoRepository roleInfoRepository) {
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleRepository userRoleRepository, RoleInfoService roleInfoService) {
         this.userInfoRepository = userInfoRepository;
         this.userRoleRepository = userRoleRepository;
-        this.roleInfoRepository = roleInfoRepository;
+        this.roleInfoService = roleInfoService;
     }
 
     @Override
-    public Page<UserVO> fetchByPage(Pageable pageable) {
-        ExampleMatcher exampleMatcher = this.appendConditions();
-        UserInfo userInfo = this.appendParams(new UserInfo());
-        Page<UserInfo> infoPage = userInfoRepository.findAll(Example.of(userInfo, exampleMatcher), pageable);
-        List<UserInfo> infoList = infoPage.getContent();
-        if (CollectionUtils.isEmpty(infoList)) {
-            return new PageImpl<>(Collections.emptyList());
-        }
-        //参数转换为出参结果
-        List<UserVO> voList = new ArrayList<>(infoList.size());
-        for (UserInfo info : infoList) {
-            UserVO articleVO = new UserVO();
-            BeanUtils.copyProperties(info, articleVO);
-            voList.add(articleVO);
-        }
-        Page<UserVO> voPage = new PageImpl<>(voList);
-        BeanUtils.copyProperties(infoPage, voPage);
-        return voPage;
-    }
-
-    @Override
-    public UserVO save(UserDTO userDTO) {
+    public Mono<UserVO> save(Long userId, UserDTO enter) {
         UserInfo info = new UserInfo();
-        info.setUserId(userDTO.getUserId());
-        Optional<UserInfo> userInfo = userInfoRepository.findOne(Example.of(info));
-        BeanUtils.copyProperties(userDTO, info);
-        if (userInfo.isPresent()) {
-            info.setId(userInfo.get().getId());
-        } else {
-            Long userId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
-            info.setUserId(userId);
-            info.setEnabled(true);
-        }
-        info.setModifier(0L);
-        userInfoRepository.save(info);
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(info, userVO);
-        return userVO;
+        BeanUtils.copyProperties(enter, info);
+        return userInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
-    public void removeById(Long id) {
-        userInfoRepository.deleteById(id);
+    public Mono<Void> removeById(Long userId) {
+        return fetchByUserId(userId).flatMap(userInfo -> userInfoRepository.deleteById(userInfo.getId()));
     }
 
     @Override
-    public void removeInBatch(List<UserDTO> dtoList) {
-    }
-
-    @Override
-    public UserDetailsVO loadUserByUsername(String username) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUsername(username);
-        appendParams(userInfo);
-        Optional<UserInfo> infoOptional = userInfoRepository.findOne(Example.of(userInfo));
-        if (!infoOptional.isPresent()) {
-            log.info("no user with username: {} be found", username);
-            return null;
-        }
-        UserDetailsVO userDetailsVO = new UserDetailsVO();
-        BeanUtils.copyProperties(infoOptional.get(), userDetailsVO);
-        UserRole userRole = new UserRole();
-        userRole.setUserId(infoOptional.get().getId());
-        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withMatcher(String.valueOf(infoOptional.get().getId()), exact());
-        List<UserRole> userRoles = userRoleRepository.findAll(Example.of(userRole, exampleMatcher));
-        if (CollectionUtils.isEmpty(userRoles)) {
-            log.info("the user with username: {} was unauthorized ", username);
-            return null;
-        }
-        Set<String> authorities = new HashSet<>();
-        userRoles.forEach(userRoleInfo -> {
-            RoleInfo roleVO = roleInfoRepository.getOne(userRoleInfo.getRoleId());
-            if (StringUtils.isNotBlank(roleVO.getRoleId())) {
-                authorities.add(roleVO.getRoleId());
-            }
+    public Mono<UserDetailsVO> loadUserByUsername(String username) {
+        UserInfo info = new UserInfo();
+        info.setUsername(username);
+        // 组装查询条件，只查询可用，未被锁定的用户信息
+        ExampleMatcher exampleMatcher = appendConditions();
+        Mono<UserVO> voMono = userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(this::convertOuter);
+        // 获取用户角色信息
+        Flux<Long> authorities = voMono.map(userVO -> userRoleRepository.findAllByUserIdAndEnabled(userVO.getUserId(), true))
+                .flatMapIterable(userRoles -> {
+                    Set<Long> roleNameSet = new HashSet<>();
+                    // 遍历获取角色信息
+                    userRoles.forEach(userRole -> roleInfoService.queryById(userRole.getRoleId())
+                            .map(roleOuter -> roleNameSet.add(roleOuter.getRoleId())));
+                    return roleNameSet;
+                });
+        // 将结果装载
+        return voMono.map(userVO -> {
+            UserDetailsVO userDetailsVO = new UserDetailsVO();
+            BeanUtils.copyProperties(userVO, userDetailsVO);
+            userDetailsVO.setAuthorities(authorities);
+            return userDetailsVO;
         });
-        userDetailsVO.setAuthorities(authorities);
-        return userDetailsVO;
     }
 
     @Override
-    public UserVO queryById(Long userId) {
-        // Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可, 可以通过ExampleMatcher.matching()方法进行进一步得处理
-        ExampleMatcher exampleMatcher = this.appendConditions();
-        UserInfo userInfo = new UserInfo();
-        this.appendParams(userInfo);
-        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(userInfo, exampleMatcher));
-        if (!optional.isPresent()) {
-            return null;
-        }
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(optional.get(), userVO);
-        return userVO;
+    public Mono<UserVO> queryById(Long userId) {
+        return fetchByUserId(userId).map(user -> {
+            UserVO outer = new UserVO();
+            BeanUtils.copyProperties(user, outer);
+            return outer;
+        });
     }
 
     /**
      * 设置查询条件的必要参数
      *
-     * @param userInfo 用户信息
-     * @return UserInfo
+     * @param userId 业务id
+     * @return UserInfo 用户源数据
      */
-    private UserInfo appendParams(UserInfo userInfo) {
-        userInfo.setEnabled(true);
-        userInfo.setAccountNonExpired(true);
-        userInfo.setCredentialsNonExpired(true);
-        return userInfo;
+    private Mono<UserInfo> fetchByUserId(Long userId) {
+        ExampleMatcher exampleMatcher = appendConditions();
+        UserInfo info = new UserInfo();
+        info.setUserId(userId);
+        this.appendParams(info);
+        return userInfoRepository.findOne(Example.of(info, exampleMatcher));
+    }
+
+    /**
+     * 设置查询条件的必要参数
+     *
+     * @param info 用户信息
+     * @return UserOuter 用户输出对象
+     */
+    private UserVO convertOuter(UserInfo info) {
+        if (Objects.isNull(info)) {
+            return null;
+        }
+        UserVO outer = new UserVO();
+        BeanUtils.copyProperties(info, outer);
+        return outer;
+    }
+
+    /**
+     * 设置查询条件的必要参数
+     *
+     * @param info 用户信息
+     */
+    private void appendParams(UserInfo info) {
+        info.setEnabled(true);
+        info.setAccountNonExpired(true);
+        info.setCredentialsNonExpired(true);
     }
 
     /**

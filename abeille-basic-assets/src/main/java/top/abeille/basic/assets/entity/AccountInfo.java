@@ -3,7 +3,11 @@
  */
 package top.abeille.basic.assets.entity;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -12,59 +16,57 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "account_info")
+@Document(collection = "account_info")
 public class AccountInfo {
 
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
     /**
      * 用户ID
      */
-    @Column(name = "user_id")
+    @Field(value = "user_id")
+    @Indexed
     private Long userId;
     /**
      * 账户ID
      */
-    @Column(name = "account_id")
+    @Field(value = "account_id")
+    @Indexed
     private Long accountId;
     /**
      * 余额
      */
-    @Column(name = "balance")
+    @Field(value = "balance")
     private BigDecimal balance;
     /**
      * 类型
      */
-    @Column(name = "type")
+    @Field(value = "type")
     private String type;
-
     /**
      * 是否有效
      */
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

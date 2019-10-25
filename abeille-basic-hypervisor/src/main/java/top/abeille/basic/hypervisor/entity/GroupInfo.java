@@ -3,7 +3,11 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDateTime;
 
 /**
@@ -11,57 +15,56 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "group_info")
+@Document(collection = "group_info")
 public class GroupInfo {
 
     /**
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
     /**
      * 组ID
      */
-    @Column(name = "group_id")
+    @Indexed
+    @Field(value = "group_id")
     private Long groupId;
     /**
      * 负责人
      */
-    @Column(name = "principal")
+    @Field(value = "principal")
     private Long principal;
     /**
      * 上级
      */
-    @Column(name = "superior")
+    @Field(value = "superior")
     private Long superior;
     /**
      * 名称
      */
-    @Column(name = "name")
+    @Field(value = "name")
     private String name;
     /**
      * 是否有效
      */
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

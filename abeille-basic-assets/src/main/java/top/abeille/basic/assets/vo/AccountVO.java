@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
 package top.abeille.basic.assets.vo;
 
@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for AccountInfo
+ * Outer class for AccountInfo
  *
  * @author liwenqiang
  */
@@ -21,7 +21,7 @@ public class AccountVO implements Serializable {
     /**
      * 账户ID
      */
-    private String accountId;
+    private Long accountId;
     /**
      * 余额
      */
@@ -39,7 +39,6 @@ public class AccountVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-
     public Long getUserId() {
         return userId;
     }
@@ -48,11 +47,11 @@ public class AccountVO implements Serializable {
         this.userId = userId;
     }
 
-    public String getAccountId() {
+    public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(String accountId) {
+    public void setAccountId(Long accountId) {
         this.accountId = accountId;
     }
 
@@ -71,7 +70,6 @@ public class AccountVO implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
-
 
     public Long getModifier() {
         return modifier;

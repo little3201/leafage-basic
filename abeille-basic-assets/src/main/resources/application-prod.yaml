@@ -1,7 +1,7 @@
-##=====logger common=====##
+##=====log common=====##
 logging:
   level:
-    # control root logger's level for WARN
+    # control root logger's level for INFO
     root: INFO
     # control org.springframework logger's level for DEBUG
     org:
@@ -12,55 +12,14 @@ logging:
 spring:
   cloud:
     consul:
-      host: 127.0.0.1
+      host: 122.152.218.103
       port: 8500
 
-  ##=====datasource common=====##
-  datasource:
-    master:
-      # datasource driver
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC8
-      # datasource username
-      username: abeille
-      # datasource password
-      password: abeille.top@123
-    slaver:
-      # datasource driver
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
-      # datasource username
-      username: abeille
-      # datasource password
-      password: abeille.top@123
-
-  ##=====Jpa config=====##
-  jpa:
-    # datasource dialect
-    database-platform: org.hibernate.dialect.MariaDBDialect
-    # datasource driver
-    database: mysql
-    # whether show execute sql
-    show-sql: true
-    # what hibernate will do when application run
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
-
-  # server jpa run thread common, hibernate will run with another thread
   data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred
-
-    ##=====mongodb config=====##
     mongodb:
-      host: 127.0.0.1
-      port: 27917
-      database: abeille
+      host: 122.152.218.103
+      port: 27017
       username: abeille
       password: abeille.top
+      database: abeille
       authentication-database: abeille

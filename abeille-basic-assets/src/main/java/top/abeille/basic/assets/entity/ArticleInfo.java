@@ -3,7 +3,11 @@
  */
 package top.abeille.basic.assets.entity;
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDateTime;
 
 /**
@@ -11,58 +15,62 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Entity
-@Table(name = "article_info")
+@Document(collection = "article_info")
 public class ArticleInfo {
 
     /**
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long id;
+    private String id;
     /**
      * 文章ID
      */
-    @Column(name = "article_id")
+    @Field(value = "article_id")
+    @Indexed
     private Long articleId;
     /**
      * 标题
      */
-    @Column(name = "title")
+    @Field(value = "title")
+    @Indexed
     private String title;
     /**
-     * 概览
+     * 描述
      */
-    @Column(name = "summary")
-    private String summary;
+    @Field(value = "description")
+    private String description;
+    /**
+     * 内容
+     */
+    @Field(value = "content")
+    private String content;
     /**
      * 图片url
      */
-    @Column(name = "image_url")
+    @Field(value = "image_url")
     private String imageUrl;
     /**
      * 是否有效
      */
-    @Column(name = "is_enabled")
+    @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @Column(name = "modifier")
+    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间
      */
-    @Column(name = "modify_time")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -82,12 +90,20 @@ public class ArticleInfo {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getContent() {
+        return content;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImageUrl() {

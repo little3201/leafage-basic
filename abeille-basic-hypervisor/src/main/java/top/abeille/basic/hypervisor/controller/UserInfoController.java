@@ -3,12 +3,11 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
@@ -16,7 +15,6 @@ import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 /**
  * 用户信息Controller
@@ -36,19 +34,11 @@ public class UserInfoController extends AbstractController {
     /**
      * 用户查询——分页
      *
-     * @param pageNum  当前页
-     * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity fetchUser(Integer pageNum, Integer pageSize) {
-        Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<UserVO> users = userInfoService.fetchByPage(pageable);
-        if (CollectionUtils.isEmpty(users.getContent())) {
-            logger.info("Not found anything about user with pageable.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(users);
+    public Flux<UserVO> fetchUsers() {
+        return userInfoService.fetchAll();
     }
 
     /**
@@ -58,13 +48,10 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{userId}")
-    public ResponseEntity queryUser(@PathVariable Long userId) {
-        UserVO userVO = userInfoService.queryById(userId);
-        if (Objects.isNull(userVO)) {
-            logger.info("Not found anything about hypervisor with userId: {}.", userId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(userVO);
+    public Mono<ResponseEntity<UserVO>> getUser(@PathVariable Long userId) {
+        return userInfoService.queryById(userId)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
@@ -74,63 +61,34 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/load/{username}")
-    public ResponseEntity loadUserByUsername(@PathVariable String username) {
-        UserDetailsVO user = userInfoService.loadUserByUsername(username);
-        if (user == null) {
-            logger.info("Not found anything about user with username: {}.", username);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(user);
+    public Mono<ResponseEntity<UserDetailsVO>> loadUserByUsername(@PathVariable String username) {
+        return userInfoService.loadUserByUsername(username).map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * 保存用户
      *
-     * @param userDTO 用户
+     * @param user 用户
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveUser(@RequestBody @Valid UserDTO userDTO) {
-        try {
-            userInfoService.save(userDTO);
-        } catch (Exception e) {
-            logger.error("Save user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    public Mono<ResponseEntity<UserVO>> saveUser(@RequestBody @Valid UserDTO user) {
+        return userInfoService.save(null, user)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 
     /**
      * 编辑用户
      *
-     * @param userDTO 用户
+     * @param user 用户
      * @return ResponseEntity
      */
     @PutMapping
-    public ResponseEntity modifyUser(@RequestBody @Valid UserDTO userDTO) {
-        try {
-            userInfoService.save(userDTO);
-        } catch (Exception e) {
-            logger.error("Modify user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
-        }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
-    }
-
-    /**
-     * 删除用户——根据ID
-     *
-     * @param userId 用户ID
-     * @return ResponseEntity
-     */
-    @DeleteMapping("/{userId}")
-    public ResponseEntity removeUser(@PathVariable Long userId) {
-        try {
-            userInfoService.removeById(userId);
-        } catch (Exception e) {
-            logger.error("Remove user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.OK);
+    public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO user) {
+        return userInfoService.save(userId, user)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 }

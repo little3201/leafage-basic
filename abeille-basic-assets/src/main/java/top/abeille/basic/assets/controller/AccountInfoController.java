@@ -6,10 +6,13 @@ package top.abeille.basic.assets.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.AbstractController;
+
+import javax.validation.Valid;
 
 /**
  * 账户信息Controller
@@ -30,67 +33,51 @@ public class AccountInfoController extends AbstractController {
      * 查询账号信息——根据ID
      *
      * @param accountId 账户ID
-     * @return ResponseEntity
+     * @return Mono<AccountInfo>
      */
     @GetMapping("/{accountId}")
-    public ResponseEntity queryAccount(@PathVariable Long accountId) {
-        AccountVO account = accountInfoService.queryById(accountId);
-        if (account == null) {
-            logger.info("Not found anything about account with accountId {}.", accountId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(account);
+    public Mono<ResponseEntity<AccountVO>> getAccount(@PathVariable Long accountId) {
+        return accountInfoService.queryById(accountId)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * 保存账号信息
      *
      * @param account 账户信息
-     * @return ResponseEntity
+     * @return Mono<AccountInfo>
      */
     @PostMapping
-    public ResponseEntity saveAccount(@RequestBody AccountDTO account) {
-        AccountVO accountVO;
-        try {
-            accountVO = accountInfoService.save(account);
-        } catch (Exception e) {
-            logger.error("Save account occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(accountVO);
+    public Mono<ResponseEntity<AccountVO>> saveAccount(@RequestBody @Valid AccountDTO account) {
+        return accountInfoService.save(null, account)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 
     /**
      * 修改账号信息
      *
      * @param account 账户信息
-     * @return ResponseEntity
+     * @return Mono<AccountInfo>
      */
-    @PutMapping
-    public ResponseEntity modifyAccount(@RequestBody AccountDTO account) {
-        try {
-            accountInfoService.save(account);
-        } catch (Exception e) {
-            logger.error("Modify account occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
-        }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+    @PutMapping("/{accountId}")
+    public Mono<ResponseEntity<AccountVO>> modifyAccount(@PathVariable Long accountId, @RequestBody @Valid AccountDTO account) {
+        return accountInfoService.save(accountId, account)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
 
     /**
      * 删除账号信息
      *
      * @param accountId 主键
-     * @return ResponseEntity
+     * @return Mono<Void>
      */
     @DeleteMapping("/{accountId}")
-    public ResponseEntity removeAccount(@PathVariable Long accountId) {
-        try {
-            accountInfoService.removeById(accountId);
-        } catch (Exception e) {
-            logger.error("Remove account occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.OK);
+    public Mono<ResponseEntity<Void>> removeAccount(@PathVariable Long accountId) {
+        return accountInfoService.removeById(accountId)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 }

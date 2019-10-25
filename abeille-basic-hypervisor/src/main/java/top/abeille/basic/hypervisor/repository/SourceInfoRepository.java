@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import top.abeille.basic.hypervisor.entity.SourceInfo;
 
@@ -13,6 +13,6 @@ import top.abeille.basic.hypervisor.entity.SourceInfo;
  * @author liwenqiang 2018/12/17 19:37
  **/
 @Repository
-public interface SourceInfoRepository extends JpaRepository<SourceInfo, Long> {
+public interface SourceInfoRepository extends ReactiveCrudRepository<SourceInfo, String> {
 
 }

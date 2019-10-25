@@ -3,12 +3,10 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
@@ -30,72 +28,29 @@ public class RoleInfoController extends AbstractController {
     }
 
     /**
-     * 角色查询——分页
-     *
-     * @param pageNum  当前页
-     * @param pageSize 页内数据量
-     * @return ResponseEntity
-     */
-    @GetMapping
-    public ResponseEntity fetchRole(Integer pageNum, Integer pageSize) {
-        Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<RoleVO> roles = roleInfoService.fetchByPage(pageable);
-        if (CollectionUtils.isEmpty(roles.getContent())) {
-            logger.info("Not found anything about role with pageable.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(roles);
-    }
-
-    /**
      * 保存角色
      *
-     * @param roleDTO 角色
+     * @param role 角色
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveRole(@RequestBody RoleDTO roleDTO) {
-        try {
-            roleInfoService.save(roleDTO);
-        } catch (Exception e) {
-            logger.error("Save role occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    public Mono<ResponseEntity<RoleVO>> saveRole(@RequestBody RoleDTO role) {
+        return roleInfoService.save(null, role)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 
     /**
      * 编辑角色
      *
-     * @param roleDTO 角色
+     * @param role 角色
      * @return ResponseEntity
      */
-    @PutMapping
-    public ResponseEntity modifyRole(@RequestBody RoleDTO roleDTO) {
-        try {
-            roleInfoService.save(roleDTO);
-        } catch (Exception e) {
-            logger.error("Modify role occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
-        }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
-    }
-
-    /**
-     * 删除角色——根据ID
-     *
-     * @param id 主键
-     * @return ResponseEntity
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity removeRole(@PathVariable Long id) {
-        try {
-            roleInfoService.removeById(id);
-        } catch (Exception e) {
-            logger.error("Remove role occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(HttpStatus.OK);
+    @PutMapping("/{roleId}")
+    public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable Long roleId, @RequestBody RoleDTO role) {
+        return roleInfoService.save(roleId, role)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 
 }

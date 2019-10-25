@@ -15,7 +15,7 @@ public class RoleDTO implements Serializable {
     /**
      * 角色ID
      */
-    private String roleId;
+    private Long roleId;
     /**
      * 名称
      */
@@ -24,17 +24,12 @@ public class RoleDTO implements Serializable {
      * 描述
      */
     private String description;
-    /**
-     * 备注
-     */
-    private String remark;
 
-
-    public String getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(String roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 
@@ -52,13 +47,5 @@ public class RoleDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 }

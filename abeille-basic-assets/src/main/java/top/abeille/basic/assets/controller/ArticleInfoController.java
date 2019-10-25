@@ -3,12 +3,11 @@
  */
 package top.abeille.basic.assets.controller;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
@@ -34,19 +33,11 @@ public class ArticleInfoController extends AbstractController {
     /**
      * 文章查询——分页
      *
-     * @param pageNum  当前页
-     * @param pageSize 页内数据量
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity fetchArticle(Integer pageNum, Integer pageSize) {
-        Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<ArticleVO> articles = articleInfoService.fetchByPage(pageable);
-        if (CollectionUtils.isEmpty(articles.getContent())) {
-            logger.info("Not found anything about user with pageable.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(articles);
+    public Flux<ArticleVO> fetchArticle() {
+        return articleInfoService.fetchAll();
     }
 
     /**
@@ -56,30 +47,36 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{articleId}")
-    public ResponseEntity queryArticle(@PathVariable Long articleId) {
-        ArticleVO article = articleInfoService.queryById(articleId);
-        if (article == null) {
-            logger.info("Not found anything about article with articleId {}.", articleId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(article);
+    public Mono<ResponseEntity<ArticleVO>> getArticle(@PathVariable Long articleId) {
+        return articleInfoService.queryById(articleId)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
      * 保存文章信息
      *
-     * @param articleDTO 文章内容
+     * @param enter 文章
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveArticle(@RequestBody @Valid ArticleDTO articleDTO) {
-        ArticleVO articleVO;
-        try {
-            articleVO = articleInfoService.save(articleDTO);
-        } catch (Exception e) {
-            logger.error("Save article occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
-        }
-        return ResponseEntity.ok(articleVO);
+    public Mono<ResponseEntity<ArticleVO>> saveArticle(@RequestBody @Valid ArticleDTO enter) {
+        return articleInfoService.save(null, enter)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
+
+    /**
+     * 保存文章信息
+     *
+     * @param enter 文章
+     * @return ResponseEntity
+     */
+    @PutMapping("/{articleId}")
+    public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable Long articleId, @RequestBody @Valid ArticleDTO enter) {
+        return articleInfoService.save(articleId, enter)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    }
+
 }

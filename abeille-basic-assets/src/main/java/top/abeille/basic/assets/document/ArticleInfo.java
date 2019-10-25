@@ -1,23 +1,22 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.entity;
+package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for AccountInfo
+ * Model class for ArticleInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "account_info")
-public class AccountInfo {
+@Document(collection = "article_info")
+public class ArticleInfo {
 
     /**
      * 主键
@@ -25,27 +24,32 @@ public class AccountInfo {
     @Id
     private String id;
     /**
-     * 用户ID
+     * 文章ID
      */
-    @Field(value = "user_id")
+    @Field(value = "article_id")
     @Indexed
-    private Long userId;
+    private Long articleId;
     /**
-     * 账户ID
+     * 标题
      */
-    @Field(value = "account_id")
+    @Field(value = "title")
     @Indexed
-    private Long accountId;
+    private String title;
     /**
-     * 余额
+     * 描述
      */
-    @Field(value = "balance")
-    private BigDecimal balance;
+    @Field(value = "description")
+    private String description;
     /**
-     * 类型
+     * 内容
      */
-    @Field(value = "type")
-    private String type;
+    @Field(value = "content")
+    private String content;
+    /**
+     * 图片url
+     */
+    @Field(value = "image_url")
+    private String imageUrl;
     /**
      * 是否有效
      */
@@ -70,36 +74,44 @@ public class AccountInfo {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getArticleId() {
+        return articleId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public String getTitle() {
+        return title;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
+    public String getContent() {
+        return content;
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getType() {
-        return type;
+    public String getDescription() {
+        return description;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Boolean getEnabled() {

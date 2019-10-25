@@ -20,11 +20,6 @@ public class AccountDTO implements Serializable {
     @NotNull
     private Long userId;
     /**
-     * 账户ID
-     */
-    @NotNull
-    private Long accountId;
-    /**
      * 余额
      */
     private BigDecimal balance;
@@ -39,14 +34,6 @@ public class AccountDTO implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
     }
 
     public BigDecimal getBalance() {

@@ -8,7 +8,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.AccountDTO;
-import top.abeille.basic.assets.entity.AccountInfo;
+import top.abeille.basic.assets.document.AccountInfo;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.basic.assets.vo.AccountVO;

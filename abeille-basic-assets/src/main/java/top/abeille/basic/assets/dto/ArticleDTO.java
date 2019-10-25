@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.assets.dto;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -14,13 +14,9 @@ import java.io.Serializable;
 public class ArticleDTO implements Serializable {
 
     /**
-     * 文章ID
-     */
-    @NotNull
-    private Long articleId;
-    /**
      * 标题
      */
+    @NotBlank
     private String title;
     /**
      * 描述
@@ -35,14 +31,6 @@ public class ArticleDTO implements Serializable {
      */
     private String imageUrl;
 
-
-    public Long getArticleId() {
-        return articleId;
-    }
-
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
-    }
 
     public String getTitle() {
         return title;

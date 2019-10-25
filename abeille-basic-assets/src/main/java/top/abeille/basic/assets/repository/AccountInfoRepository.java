@@ -5,7 +5,7 @@ package top.abeille.basic.assets.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.assets.entity.AccountInfo;
+import top.abeille.basic.assets.document.AccountInfo;
 
 /**
  * 账户信息dao

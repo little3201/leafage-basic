@@ -19,18 +19,18 @@ spring:
   datasource:
     master:
       # datasource driver
-      driver-class-name: org.mariadb.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://127.0.0.1:3036/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC8
       # datasource username
       username: abeille
       # datasource password
       password: abeille.top@123
     slaver:
       # datasource driver
-      driver-class-name: org.mariadb.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mariadb://127.0.0.1:3036/abeille_basic_assets?useSsl=false&useUnicode=true&characterEncoding=utf-8
+      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
       # datasource username
       username: abeille
       # datasource password

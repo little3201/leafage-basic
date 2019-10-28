@@ -27,6 +27,11 @@ public class UserInfo {
     @Column(name = "user_id")
     private Long userId;
     /**
+     * 角色主键
+     */
+    @Column(name = "role_id")
+    private Long roleId;
+    /**
      * 昵称
      */
     @Column(name = "nickname")
@@ -107,6 +112,14 @@ public class UserInfo {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
     public String getNickname() {

@@ -50,6 +50,7 @@ create table user_info
 (
     id                         bigint(11) not null auto_increment comment '主键',
     user_id                    bigint(13) not null comment '用户ID',
+    role_id                    bigint(11) not null comment '角色主键',
     nickname                   varchar(64) comment '昵称',
     avatar                     varchar(128) comment '头像',
     username                   varchar(64) comment '用户名',
@@ -70,26 +71,6 @@ create table user_info
 
 alter table user_info
     comment '用户信息表';
-
-
-drop table if exists user_role;
-
-/*==============================================================*/
-/* Table: user_role                                             */
-/*==============================================================*/
-create table user_role
-(
-    id          bigint(11) not null auto_increment comment '主键',
-    user_id     bigint(11) not null comment '用户主键',
-    role_id     bigint(11) not null comment '角色主键',
-    is_enabled  tinyint(1) not null default 1 comment '是否可用',
-    modifier    bigint(11) not null comment '修改人',
-    modify_time timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-    primary key (id)
-);
-
-alter table user_role
-    comment '用户角色表';
 
 
 drop table if exists role_info;

@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -13,10 +12,8 @@ import org.springframework.util.CollectionUtils;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
-import top.abeille.basic.hypervisor.entity.UserRole;
 import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
-import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
@@ -41,12 +38,10 @@ public class UserInfoServiceImpl implements UserInfoService {
     private static final Logger log = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
     private final UserInfoRepository userInfoRepository;
-    private final UserRoleRepository userRoleRepository;
     private final RoleInfoRepository roleInfoRepository;
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleRepository userRoleRepository, RoleInfoRepository roleInfoRepository) {
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, RoleInfoRepository roleInfoRepository) {
         this.userInfoRepository = userInfoRepository;
-        this.userRoleRepository = userRoleRepository;
         this.roleInfoRepository = roleInfoRepository;
     }
 
@@ -110,23 +105,13 @@ public class UserInfoServiceImpl implements UserInfoService {
             log.info("no user with username: {} be found", username);
             return null;
         }
+        // 查询角色信息
+        Set<String> authorities = new HashSet<>();
+        RoleInfo roleVO = roleInfoRepository.getOne(infoOptional.get().getRoleId());
+        authorities.add(roleVO.getRoleId());
+        // 对象转换
         UserDetailsVO userDetailsVO = new UserDetailsVO();
         BeanUtils.copyProperties(infoOptional.get(), userDetailsVO);
-        UserRole userRole = new UserRole();
-        userRole.setUserId(infoOptional.get().getId());
-        ExampleMatcher exampleMatcher = ExampleMatcher.matching().withMatcher(String.valueOf(infoOptional.get().getId()), exact());
-        List<UserRole> userRoles = userRoleRepository.findAll(Example.of(userRole, exampleMatcher));
-        if (CollectionUtils.isEmpty(userRoles)) {
-            log.info("the user with username: {} was unauthorized ", username);
-            return null;
-        }
-        Set<String> authorities = new HashSet<>();
-        userRoles.forEach(userRoleInfo -> {
-            RoleInfo roleVO = roleInfoRepository.getOne(userRoleInfo.getRoleId());
-            if (StringUtils.isNotBlank(roleVO.getRoleId())) {
-                authorities.add(roleVO.getRoleId());
-            }
-        });
         userDetailsVO.setAuthorities(authorities);
         return userDetailsVO;
     }

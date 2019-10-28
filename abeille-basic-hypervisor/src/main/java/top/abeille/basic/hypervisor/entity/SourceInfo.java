@@ -51,7 +51,6 @@ public class SourceInfo {
      */
     @Column(name = "description")
     private String description;
-
     /**
      * 是否有效
      */

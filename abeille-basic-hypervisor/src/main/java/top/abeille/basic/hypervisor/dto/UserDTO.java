@@ -12,14 +12,10 @@ import java.io.Serializable;
 public class UserDTO implements Serializable {
 
     /**
-     * 用户ID
-     */
-    private Long userId;
-    /**
-     * 组织主键
+     * 角色ID
      */
     @NotNull
-    private Long groupId;
+    private Long roleId;
     /**
      * 昵称
      */
@@ -49,20 +45,12 @@ public class UserDTO implements Serializable {
     private String address;
 
 
-    public Long getUserId() {
-        return userId;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
     public String getNickname() {

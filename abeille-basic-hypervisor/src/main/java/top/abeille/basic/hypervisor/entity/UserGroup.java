@@ -31,7 +31,6 @@ public class UserGroup {
      */
     @Column(name = "group_id")
     private Long groupId;
-
     /**
      * 是否有效
      */

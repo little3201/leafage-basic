@@ -7,9 +7,10 @@ create table group_info
 (
     id          bigint(11) not null auto_increment comment '主键',
     group_id    bigint(13) not null comment '组ID',
+    name        varchar(64) comment '名称',
     principal   bigint(11) comment '负责人',
     superior    bigint(11) comment '上级',
-    name        varchar(128) comment '名称',
+    remark      varchar(128) comment '备注',
     is_enabled  tinyint(1) not null default 1 comment '是否可用',
     modifier    bigint(11) not null comment '修改人',
     modify_time timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',

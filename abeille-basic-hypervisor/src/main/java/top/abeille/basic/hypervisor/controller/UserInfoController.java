@@ -75,24 +75,24 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/load/{username}")
     public ResponseEntity loadUserByUsername(@PathVariable String username) {
-        UserDetailsVO user = userInfoService.loadUserByUsername(username);
-        if (user == null) {
+        UserDetailsVO userDetailsVO = userInfoService.loadUserByUsername(username);
+        if (Objects.isNull(userDetailsVO)) {
             logger.info("Not found anything about user with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userDetailsVO);
     }
 
     /**
-     * 保存用户
+     * 添加用户
      *
      * @param userDTO 用户
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity createUser(@RequestBody @Valid UserDTO userDTO) {
         try {
-            userInfoService.save(userDTO);
+            userInfoService.create(userDTO);
         } catch (Exception e) {
             logger.error("Save user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
@@ -101,15 +101,16 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 编辑用户
+     * 修改用户
      *
+     * @param userId  用户id
      * @param userDTO 用户
      * @return ResponseEntity
      */
-    @PutMapping
-    public ResponseEntity modifyUser(@RequestBody @Valid UserDTO userDTO) {
+    @PutMapping("/{userId}")
+    public ResponseEntity modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
         try {
-            userInfoService.save(userDTO);
+            userInfoService.modify(userId, userDTO);
         } catch (Exception e) {
             logger.error("Modify user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);

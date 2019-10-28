@@ -27,6 +27,11 @@ public class GroupInfo {
     @Column(name = "group_id")
     private Long groupId;
     /**
+     * 名称
+     */
+    @Column(name = "name")
+    private String name;
+    /**
      * 负责人
      */
     @Column(name = "principal")
@@ -37,10 +42,10 @@ public class GroupInfo {
     @Column(name = "superior")
     private Long superior;
     /**
-     * 名称
+     * 描述
      */
-    @Column(name = "name")
-    private String name;
+    @Column(name = "description")
+    private String description;
     /**
      * 是否有效
      */
@@ -95,6 +100,14 @@ public class GroupInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getEnabled() {

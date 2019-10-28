@@ -18,7 +18,6 @@ import top.abeille.basic.assets.vo.ArticleVO;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -49,20 +48,14 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setEnabled(true);
         Page<ArticleInfo> infoPage = articleInfoRepository.findAll(Example.of(articleInfo, exampleMatcher), pageable);
-        List<ArticleInfo> infoList = infoPage.getContent();
-        if (CollectionUtils.isEmpty(infoList)) {
+        if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
-        //参数转换为出参结果
-        List<ArticleVO> voList = new ArrayList<>(infoList.size());
-        for (ArticleInfo info : infoList) {
+        return infoPage.map(info -> {
             ArticleVO articleVO = new ArticleVO();
             BeanUtils.copyProperties(info, articleVO);
-            voList.add(articleVO);
-        }
-        Page<ArticleVO> voPage = new PageImpl<>(voList);
-        BeanUtils.copyProperties(infoPage, voPage);
-        return voPage;
+            return articleVO;
+        });
     }
 
     @Override
@@ -87,7 +80,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Override
     @Transactional
-    public ArticleVO save(ArticleDTO articleDTO) {
+    public ArticleVO create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
         info.setArticleId(articleDTO.getArticleId());
         //先查一下，是否已经存在，存在，填充主键id，不存在，填充业务id

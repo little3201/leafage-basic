@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Model class for GroupInfo
@@ -26,13 +26,13 @@ public class GroupVO implements Serializable {
      */
     private Long superior;
     /**
-     * 中文名
+     * 名称
      */
-    private String chineseName;
+    private String name;
     /**
-     * 英文名
+     * 描述
      */
-    private String englishName;
+    private String description;
     /**
      * 修改人
      */
@@ -40,7 +40,7 @@ public class GroupVO implements Serializable {
     /**
      * 修改时间
      */
-    private LocalDate modifyTime;
+    private LocalDateTime modifyTime;
 
 
     public String getGroupId() {
@@ -67,20 +67,20 @@ public class GroupVO implements Serializable {
         this.superior = superior;
     }
 
-    public String getChineseName() {
-        return chineseName;
+    public String getName() {
+        return name;
     }
 
-    public void setChineseName(String chineseName) {
-        this.chineseName = chineseName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getEnglishName() {
-        return englishName;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEnglishName(String englishName) {
-        this.englishName = englishName;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getModifier() {
@@ -91,11 +91,11 @@ public class GroupVO implements Serializable {
         this.modifier = modifier;
     }
 
-    public LocalDate getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDate modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

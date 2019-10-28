@@ -3,13 +3,20 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
+import top.abeille.basic.hypervisor.entity.GroupInfo;
 import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 
+import java.util.Collections;
 import java.util.List;
+
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
 /**
  * 组织信息Service实现
@@ -26,7 +33,23 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public GroupVO save(GroupDTO groupDTO) {
+    public Page<GroupVO> fetchByPage(Pageable pageable) {
+        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("is_enabled", exact());
+        GroupInfo groupInfo = new GroupInfo();
+        groupInfo.setEnabled(true);
+        Page<GroupInfo> infoPage = groupInfoRepository.findAll(Example.of(groupInfo, matcher), pageable);
+        if (CollectionUtils.isEmpty(infoPage.getContent())) {
+            return new PageImpl<>(Collections.emptyList());
+        }
+        return infoPage.map(info -> {
+            GroupVO groupVO = new GroupVO();
+            BeanUtils.copyProperties(info, groupVO);
+            return groupVO;
+        });
+    }
+
+    @Override
+    public GroupVO create(GroupDTO groupDTO) {
         return null;
     }
 

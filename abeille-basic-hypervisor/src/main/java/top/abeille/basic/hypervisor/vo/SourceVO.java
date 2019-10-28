@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Model class for SourceInfo
@@ -44,7 +44,7 @@ public class SourceVO implements Serializable {
     /**
      * 修改时间
      */
-    private LocalDate modifyTime;
+    private LocalDateTime modifyTime;
 
 
     public String getSourceId() {
@@ -103,11 +103,11 @@ public class SourceVO implements Serializable {
         this.modifier = modifier;
     }
 
-    public LocalDate getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDate modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

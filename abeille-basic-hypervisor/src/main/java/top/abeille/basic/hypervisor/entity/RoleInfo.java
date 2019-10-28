@@ -37,12 +37,6 @@ public class RoleInfo {
     @Column(name = "description")
     private String description;
     /**
-     * 备注
-     */
-    @Column(name = "remark")
-    private String remark;
-
-    /**
      * 是否有效
      */
     @Column(name = "is_enabled")
@@ -89,14 +83,6 @@ public class RoleInfo {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
     }
 
     public Boolean getEnabled() {

@@ -13,10 +13,6 @@ import java.io.Serializable;
 public class SourceDTO implements Serializable {
 
     /**
-     * 权限ID
-     */
-    private String sourceId;
-    /**
      * 上级
      */
     private String superior;
@@ -37,14 +33,6 @@ public class SourceDTO implements Serializable {
      */
     private String description;
 
-
-    public String getSourceId() {
-        return sourceId;
-    }
-
-    public void setSourceId(String sourceId) {
-        this.sourceId = sourceId;
-    }
 
     public String getSuperior() {
         return superior;

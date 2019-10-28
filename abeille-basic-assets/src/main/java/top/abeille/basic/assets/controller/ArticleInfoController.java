@@ -75,7 +75,7 @@ public class ArticleInfoController extends AbstractController {
     public ResponseEntity saveArticle(@RequestBody @Valid ArticleDTO articleDTO) {
         ArticleVO articleVO;
         try {
-            articleVO = articleInfoService.save(articleDTO);
+            articleVO = articleInfoService.create(articleDTO);
         } catch (Exception e) {
             logger.error("Save article occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

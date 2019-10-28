@@ -70,9 +70,9 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveGroup(@RequestBody GroupDTO groupDTO) {
+    public ResponseEntity createGroup(@RequestBody GroupDTO groupDTO) {
         try {
-            groupInfoService.save(groupDTO);
+            groupInfoService.create(groupDTO);
         } catch (Exception e) {
             logger.error("Save group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
@@ -83,13 +83,14 @@ public class GroupInfoController extends AbstractController {
     /**
      * 修改组信息
      *
-     * @param groupDTO 组
+     * @param groupId  业务主键
+     * @param groupDTO 组信息
      * @return ResponseEntity
      */
-    @PutMapping
-    public ResponseEntity modifyGroup(@RequestBody GroupDTO groupDTO) {
+    @PutMapping("/{groupId}")
+    public ResponseEntity modifyGroup(@PathVariable Long groupId, @RequestBody GroupDTO groupDTO) {
         try {
-            groupInfoService.save(groupDTO);
+            groupInfoService.modify(groupId, groupDTO);
         } catch (Exception e) {
             logger.error("Modify group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
@@ -100,13 +101,13 @@ public class GroupInfoController extends AbstractController {
     /**
      * 删除组信息
      *
-     * @param id 主键
+     * @param groupId 业务主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity removeGroup(@PathVariable Long id) {
+    @DeleteMapping("/{groupId}")
+    public ResponseEntity removeGroup(@PathVariable Long groupId) {
         try {
-            groupInfoService.removeById(id);
+            groupInfoService.removeById(groupId);
         } catch (Exception e) {
             logger.error("Remove group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

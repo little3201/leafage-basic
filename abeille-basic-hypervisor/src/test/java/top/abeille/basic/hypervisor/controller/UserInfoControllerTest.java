@@ -60,7 +60,7 @@ public class UserInfoControllerTest extends AbstractControllerMock<UserInfoContr
 //    @Test
 //    public void saveUser() throws Exception {
 //        MockHttpServletResponse response = super.postTest("/v1/hypervisor", Mockito.any(UserInfo.class)).getResponse();
-//        Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfo.class));
+//        Mockito.verify(userInfoService, Mockito.times(1)).create(Mockito.any(UserInfo.class));
 //        //验证测试结果
 //        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.CREATED.value()));
 //    }
@@ -68,7 +68,7 @@ public class UserInfoControllerTest extends AbstractControllerMock<UserInfoContr
 //    @Test
 //    public void modifyUser() throws Exception {
 //        MockHttpServletResponse response = super.putTest("/v1/hypervisor", Mockito.any(UserInfo.class)).getResponse();
-//        Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfo.class));
+//        Mockito.verify(userInfoService, Mockito.times(1)).create(Mockito.any(UserInfo.class));
 //        //验证测试结果
 //        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.ACCEPTED.value()));
 //    }

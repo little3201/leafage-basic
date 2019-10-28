@@ -52,7 +52,7 @@ public class AccountInfoController extends AbstractController {
     public ResponseEntity saveAccount(@RequestBody AccountDTO account) {
         AccountVO accountVO;
         try {
-            accountVO = accountInfoService.save(account);
+            accountVO = accountInfoService.create(account);
         } catch (Exception e) {
             logger.error("Save account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
@@ -69,7 +69,7 @@ public class AccountInfoController extends AbstractController {
     @PutMapping
     public ResponseEntity modifyAccount(@RequestBody AccountDTO account) {
         try {
-            accountInfoService.save(account);
+            accountInfoService.create(account);
         } catch (Exception e) {
             logger.error("Modify account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);

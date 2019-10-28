@@ -10,12 +10,33 @@ import java.util.Set;
  **/
 public class UserDetailsVO implements Serializable {
 
+    /**
+     * 用户名
+     */
     private String username;
+    /**
+     * 密码
+     */
     private String password;
+    /**
+     * 权限
+     */
     private Set<String> authorities;
+    /**
+     * 是否无效
+     */
     private boolean accountNonExpired;
+    /**
+     * 是否没有锁定
+     */
     private boolean accountNonLocked;
+    /**
+     * 密码是否有效
+     */
     private boolean credentialsNonExpired;
+    /**
+     * 是否可用
+     */
     private boolean enabled;
 
     public String getPassword() {

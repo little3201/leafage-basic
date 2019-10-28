@@ -81,9 +81,8 @@ public class UserInfo {
      */
     @Column(name = "is_credentials_non_expired")
     private Boolean credentialsNonExpired;
-
     /**
-     * 是否有效
+     * 是否可用
      */
     @Column(name = "is_enabled")
     private Boolean enabled;

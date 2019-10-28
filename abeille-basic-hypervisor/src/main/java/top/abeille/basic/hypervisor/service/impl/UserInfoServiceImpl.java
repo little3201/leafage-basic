@@ -50,34 +50,37 @@ public class UserInfoServiceImpl implements UserInfoService {
         ExampleMatcher exampleMatcher = this.appendConditions();
         UserInfo userInfo = this.appendParams(new UserInfo());
         Page<UserInfo> infoPage = userInfoRepository.findAll(Example.of(userInfo, exampleMatcher), pageable);
-        List<UserInfo> infoList = infoPage.getContent();
-        if (CollectionUtils.isEmpty(infoList)) {
+        if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
-        //参数转换为出参结果
-        List<UserVO> voList = new ArrayList<>(infoList.size());
-        for (UserInfo info : infoList) {
-            UserVO articleVO = new UserVO();
-            BeanUtils.copyProperties(info, articleVO);
-            voList.add(articleVO);
-        }
-        Page<UserVO> voPage = new PageImpl<>(voList);
-        BeanUtils.copyProperties(infoPage, voPage);
-        return voPage;
+        return infoPage.map(info -> {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(info, userVO);
+            return userVO;
+        });
     }
 
     @Override
-    public UserVO save(UserDTO userDTO) {
+    public UserVO create(UserDTO userDTO) {
         UserInfo info = new UserInfo();
-        info.setUserId(userDTO.getUserId());
-        Optional<UserInfo> userInfo = userInfoRepository.findOne(Example.of(info));
         BeanUtils.copyProperties(userDTO, info);
-        if (userInfo.isPresent()) {
-            info.setId(userInfo.get().getId());
-        } else {
-            Long userId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
-            info.setUserId(userId);
-            info.setEnabled(true);
+        Long userId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+        info.setUserId(userId);
+        info.setEnabled(true);
+        info.setModifier(0L);
+        userInfoRepository.save(info);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(info, userVO);
+        return userVO;
+    }
+
+    @Override
+    public UserVO modify(Long userId, UserDTO userDTO) {
+        UserInfo info = new UserInfo();
+        info.setUserId(userId);
+        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(info));
+        if (!optional.isPresent()) {
+            return null;
         }
         info.setModifier(0L);
         userInfoRepository.save(info);

@@ -35,9 +35,17 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserVO> save(Long userId, UserDTO enter) {
+    public Mono<UserVO> create(UserDTO enter) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(enter, info);
+        return userInfoRepository.save(info).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<UserVO> modify(Long userId, UserDTO enter) {
+        UserInfo info = new UserInfo();
+        BeanUtils.copyProperties(enter, info);
+        info.setUserId(userId);
         return userInfoRepository.save(info).map(this::convertOuter);
     }
 

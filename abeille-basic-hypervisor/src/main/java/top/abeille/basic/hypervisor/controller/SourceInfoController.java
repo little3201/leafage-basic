@@ -32,7 +32,7 @@ public class SourceInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<SourceVO> fetchSources() {
+    public Flux<SourceVO> fetchSource() {
         return sourceInfoService.fetchAll();
     }
 }

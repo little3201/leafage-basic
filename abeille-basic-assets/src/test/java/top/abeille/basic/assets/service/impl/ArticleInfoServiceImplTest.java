@@ -24,10 +24,9 @@ public class ArticleInfoServiceImplTest {
 
     @Test
     public void save() {
-        ArticleDTO enter = new ArticleDTO();
-        enter.setArticleId(20191009001L);
-        enter.setTitle("spring");
-        enter.setContent("spring boot 和 spring cloud");
-        Mono<ArticleVO> outerMono = articleInfoService.save(null, enter);
+        ArticleDTO articleDTO = new ArticleDTO();
+        articleDTO.setTitle("spring");
+        articleDTO.setContent("spring boot 和 spring cloud");
+        Mono<ArticleVO> outerMono = articleInfoService.create(articleDTO);
     }
 }

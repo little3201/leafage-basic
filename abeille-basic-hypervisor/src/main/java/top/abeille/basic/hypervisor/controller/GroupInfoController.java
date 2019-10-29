@@ -13,6 +13,8 @@ import top.abeille.basic.hypervisor.service.GroupInfoService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractController;
 
+import javax.validation.Valid;
+
 /**
  * 组信息controller
  *
@@ -34,7 +36,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<GroupVO> fetchGroups() {
+    public Flux<GroupVO> fetchGroup() {
         return groupInfoService.fetchAll();
     }
 
@@ -45,8 +47,8 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<GroupVO>> saveGroup(@RequestBody GroupDTO group) {
-        return groupInfoService.save(null, group)
+    public Mono<ResponseEntity<GroupVO>> createGroup(@RequestBody @Valid GroupDTO group) {
+        return groupInfoService.create(group)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -58,8 +60,8 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping("/{groupId}")
-    public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable Long groupId, @RequestBody GroupDTO group) {
-        return groupInfoService.save(groupId, group)
+    public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable Long groupId, @RequestBody @Valid GroupDTO group) {
+        return groupInfoService.modify(groupId, group)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

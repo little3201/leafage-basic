@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -13,37 +14,28 @@ import java.io.Serializable;
 public class SourceDTO implements Serializable {
 
     /**
-     * 权限ID
-     */
-    private Long sourceId;
-    /**
      * 上级
      */
     private String superior;
     /**
      * 名称
      */
+    @NotBlank
     private String name;
     /**
      * 类型
      */
+    @NotBlank
     private Integer type;
     /**
      * 路径
      */
+    @NotBlank
     private String path;
     /**
      * 描述
      */
     private String description;
-
-    public Long getSourceId() {
-        return sourceId;
-    }
-
-    public void setSourceId(Long sourceId) {
-        this.sourceId = sourceId;
-    }
 
     public String getSuperior() {
         return superior;

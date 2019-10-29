@@ -33,9 +33,17 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Mono<GroupVO> save(Long groupId, GroupDTO enter) {
+    public Mono<GroupVO> create(GroupDTO enter) {
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(enter, info);
+        return groupInfoRepository.save(info).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<GroupVO> modify(Long groupId, GroupDTO enter) {
+        GroupInfo info = new GroupInfo();
+        BeanUtils.copyProperties(enter, info);
+        info.setGroupId(groupId);
         return groupInfoRepository.save(info).map(this::convertOuter);
     }
 

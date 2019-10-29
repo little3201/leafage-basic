@@ -41,12 +41,9 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Mono<ArticleVO> save(Long articleId, ArticleDTO enter) {
+    public Mono<ArticleVO> create(ArticleDTO enter) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(enter, info);
-        if (Objects.nonNull(articleId)) {
-            return fetchByArticleId(articleId).flatMap(articleInfo -> articleInfoRepository.save(info).map(this::convertOuter));
-        }
         return articleInfoRepository.save(info).map(this::convertOuter);
     }
 

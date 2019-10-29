@@ -53,9 +53,21 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Mono<RoleVO> save(Long roleId, RoleDTO enter) {
+    public Mono<RoleVO> create(RoleDTO enter) {
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(enter, info);
+        return roleInfoRepository.save(info).map(role -> {
+            RoleVO outer = new RoleVO();
+            BeanUtils.copyProperties(role, outer);
+            return outer;
+        });
+    }
+
+    @Override
+    public Mono<RoleVO> modify(Long roleId, RoleDTO roleDTO) {
+        RoleInfo info = new RoleInfo();
+        BeanUtils.copyProperties(roleDTO, info);
+        info.setRoleId(roleId);
         return roleInfoRepository.save(info).map(role -> {
             RoleVO outer = new RoleVO();
             BeanUtils.copyProperties(role, outer);

@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -21,6 +22,7 @@ public class UserDTO implements Serializable {
     /**
      * 昵称
      */
+    @NotBlank
     private String nickname;
     /**
      * 头像
@@ -29,6 +31,7 @@ public class UserDTO implements Serializable {
     /**
      * 用户名
      */
+    @NotBlank
     private String username;
     /**
      * 密码

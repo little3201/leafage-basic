@@ -45,6 +45,11 @@ public class GroupInfo {
     @Field(value = "name")
     private String name;
     /**
+     * 描述
+     */
+    @Field(value = "name")
+    private String description;
+    /**
      * 是否有效
      */
     @Field(value = "is_enabled")
@@ -98,6 +103,14 @@ public class GroupInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getEnabled() {

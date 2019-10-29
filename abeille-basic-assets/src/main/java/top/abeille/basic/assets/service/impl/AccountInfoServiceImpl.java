@@ -7,8 +7,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.document.AccountInfo;
+import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.basic.assets.vo.AccountVO;
@@ -30,7 +30,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public Mono<AccountVO> save(Long accountId, AccountDTO entity) {
+    public Mono<AccountVO> create(AccountDTO entity) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(entity, info);
         return accountInfoRepository.save(info).map(this::convertOuter);

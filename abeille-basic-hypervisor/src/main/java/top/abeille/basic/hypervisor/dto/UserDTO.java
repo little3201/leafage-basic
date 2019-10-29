@@ -1,7 +1,9 @@
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 /**
@@ -29,15 +31,18 @@ public class UserDTO implements Serializable {
      * 用户名
      */
     @NotBlank
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "contains illegal format")
     private String username;
     /**
      * 电话
      */
     @NotBlank
+    @Pattern(regexp = "^([1][3-9])\\d{9}$", message = "mobile can't be accepted")
     private String mobile;
     /**
      * 邮箱
      */
+    @Email(message = "illegal format")
     private String email;
     /**
      * 地址

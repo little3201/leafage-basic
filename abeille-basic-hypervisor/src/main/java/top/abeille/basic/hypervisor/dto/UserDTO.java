@@ -17,7 +17,7 @@ public class UserDTO implements Serializable {
      * 用户ID
      */
     @NotNull
-    private Long userId;
+    private Long roleId;
     /**
      * 昵称
      */
@@ -47,12 +47,12 @@ public class UserDTO implements Serializable {
      */
     private String address;
 
-    public Long getUserId() {
-        return userId;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 
     public String getNickname() {

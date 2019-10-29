@@ -12,15 +12,11 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
-import top.abeille.basic.hypervisor.repository.UserRoleRepository;
-import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -33,13 +29,9 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 public class UserInfoServiceImpl implements UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
-    private final UserRoleRepository userRoleRepository;
-    private final RoleInfoService roleInfoService;
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleRepository userRoleRepository, RoleInfoService roleInfoService) {
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository) {
         this.userInfoRepository = userInfoRepository;
-        this.userRoleRepository = userRoleRepository;
-        this.roleInfoService = roleInfoService;
     }
 
     @Override
@@ -60,20 +52,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         info.setUsername(username);
         // 组装查询条件，只查询可用，未被锁定的用户信息
         ExampleMatcher exampleMatcher = appendConditions();
-        Mono<UserVO> voMono = userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(this::convertOuter);
-        // 获取用户角色信息
-        Flux<Long> authorities = voMono.map(userVO -> userRoleRepository.findAllByUserIdAndEnabled(userVO.getUserId(), true))
-                .flatMapIterable(userRoles -> {
-                    Set<Long> roleNameSet = new HashSet<>();
-                    // 遍历获取角色信息
-                    userRoles.forEach(userRole -> roleInfoService.queryById(userRole.getRoleId())
-                            .map(roleOuter -> roleNameSet.add(roleOuter.getRoleId())));
-                    return roleNameSet;
-                });
-        // 将结果装载
-        return voMono.map(userVO -> {
+        return userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(userVO -> {
             UserDetailsVO userDetailsVO = new UserDetailsVO();
             BeanUtils.copyProperties(userVO, userDetailsVO);
+            Flux<Long> authorities = Flux.just(userVO.getRoleId());
             userDetailsVO.setAuthorities(authorities);
             return userDetailsVO;
         });

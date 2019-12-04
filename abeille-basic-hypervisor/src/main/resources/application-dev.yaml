@@ -43,8 +43,6 @@ spring:
     database-platform: org.hibernate.dialect.MariaDBDialect
     # datasource driver
     database: mysql
-    # whether show execute sql
-    show-sql: true
     # what hibernate will do when application run
     properties:
       hibernate:

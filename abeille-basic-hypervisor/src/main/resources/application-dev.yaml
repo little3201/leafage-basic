@@ -13,7 +13,7 @@ spring:
   cloud:
     ##=====consul=====##
     consul:
-      host: 192.168.31.100
+      host: 127.0.0.1
       port: 8500
 
   ##=====datasource common=====##
@@ -22,7 +22,7 @@ spring:
       # datasource driver
       driver-class-name: com.mysql.cj.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
+      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_hypervisor?useSSL=false&serverTimezone=UTC
       # datasource username
       username: root
       # datasource password
@@ -31,7 +31,7 @@ spring:
       # datasource driver
       driver-class-name: com.mysql.cj.jdbc.Driver
       # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
+      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_hypervisor?useSSL=false&serverTimezone=UTC
       # datasource username
       username: root
       # datasource password
@@ -66,11 +66,11 @@ spring:
     # Redis database index(default is 0)
     database: 0
     # Redis server host
-    host: 192.168.31.100
+    host: 192.168.31.103
     # Redis server port
-    port: 7369
+    port: 6379
     # Redis server password(default is non)
-    password: abeille.top@123
+    password: Hh9r08s{qrGJbIl93nZy
     # shutdown timeout(ms)
     lettuce:
       shutdown-timeout: 0ms

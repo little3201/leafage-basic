@@ -1,0 +1,26 @@
+##=====log common=====##
+logging:
+  level:
+    # control root logger's level for WARN
+    root: INFO
+    # control org.springframework logger's level for DEBUG
+    org:
+      springframework: INFO
+      # control org.hibernate logger's level for ERROR
+      hibernate: INFO
+
+spring:
+  cloud:
+    consul:
+      host: 192.168.31.100
+      port: 8500
+
+  data:
+    mongodb:
+      host: 192.168.31.100
+      port: 27917
+      authentication-database: abeille
+      username: abeille
+      password: abeille.top
+      database: abeille
+

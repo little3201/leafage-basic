@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -29,10 +30,12 @@ public class UserDTO implements Serializable {
     /**
      * 用户名
      */
+    @NotBlank
     private String username;
     /**
      * 密码
      */
+    @NotBlank
     private String password;
     /**
      * 电话

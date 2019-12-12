@@ -85,7 +85,7 @@ public class UserInfoController extends AbstractController {
      * @param user 用户
      * @return ResponseEntity
      */
-    @PutMapping
+    @PutMapping("/{userId}")
     public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO user) {
         return userInfoService.save(userId, user)
                 .map(ResponseEntity::ok)

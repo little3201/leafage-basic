@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,8 @@ public class GroupInfoController extends AbstractController {
      */
     @GetMapping
     public Flux<GroupVO> fetchGroups() {
-        return groupInfoService.fetchAll();
+        Sort sort = Sort.by("id");
+        return groupInfoService.fetchAll(sort);
     }
 
     /**
@@ -46,7 +48,7 @@ public class GroupInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<GroupVO>> saveGroup(@RequestBody GroupDTO group) {
-        return groupInfoService.create(null, group)
+        return groupInfoService.create(group)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -59,7 +61,7 @@ public class GroupInfoController extends AbstractController {
      */
     @PutMapping("/{groupId}")
     public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable Long groupId, @RequestBody GroupDTO group) {
-        return groupInfoService.create(groupId, group)
+        return groupInfoService.modify(groupId, group)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

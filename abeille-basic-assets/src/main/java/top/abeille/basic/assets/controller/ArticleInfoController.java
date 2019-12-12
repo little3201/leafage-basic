@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.controller;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,8 @@ public class ArticleInfoController extends AbstractController {
      */
     @GetMapping
     public Flux<ArticleVO> fetchArticle() {
-        return articleInfoService.fetchAll();
+        Sort sort = Sort.by("id");
+        return articleInfoService.fetchAll(sort);
     }
 
     /**
@@ -61,7 +63,7 @@ public class ArticleInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<ArticleVO>> saveArticle(@RequestBody @Valid ArticleDTO enter) {
-        return articleInfoService.create(null, enter)
+        return articleInfoService.create(enter)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -74,7 +76,7 @@ public class ArticleInfoController extends AbstractController {
      */
     @PutMapping("/{articleId}")
     public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable Long articleId, @RequestBody @Valid ArticleDTO enter) {
-        return articleInfoService.create(articleId, enter)
+        return articleInfoService.modify(articleId, enter)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

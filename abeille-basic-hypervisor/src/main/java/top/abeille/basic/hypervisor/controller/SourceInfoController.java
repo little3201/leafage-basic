@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +34,7 @@ public class SourceInfoController extends AbstractController {
      */
     @GetMapping
     public Flux<SourceVO> fetchSources() {
-        return sourceInfoService.fetchAll();
+        Sort sort = Sort.by("id");
+        return sourceInfoService.fetchAll(sort);
     }
 }

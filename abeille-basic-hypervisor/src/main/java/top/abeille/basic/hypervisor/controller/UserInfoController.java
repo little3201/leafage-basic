@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,8 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping
     public Flux<UserVO> fetchUsers() {
-        return userInfoService.fetchAll();
+        Sort sort = Sort.by("id");
+        return userInfoService.fetchAll(sort);
     }
 
     /**
@@ -74,7 +76,7 @@ public class UserInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<UserVO>> saveUser(@RequestBody @Valid UserDTO user) {
-        return userInfoService.create(null, user)
+        return userInfoService.create(user)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -87,7 +89,7 @@ public class UserInfoController extends AbstractController {
      */
     @PutMapping("/{userId}")
     public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO user) {
-        return userInfoService.create(userId, user)
+        return userInfoService.modify(userId, user)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

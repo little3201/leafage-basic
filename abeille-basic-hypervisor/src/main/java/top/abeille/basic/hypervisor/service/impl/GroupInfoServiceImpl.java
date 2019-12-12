@@ -40,6 +40,14 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
+    public Mono<GroupVO> modify(Long groupId, GroupDTO enter) {
+        GroupInfo info = new GroupInfo();
+        BeanUtils.copyProperties(enter, info);
+        info.setGroupId(groupId);
+        return groupInfoRepository.save(info).map(this::convertOuter);
+    }
+
+    @Override
     public Mono<Void> removeById(Long groupId) {
         return fetchByGroupId(groupId).flatMap(groupInfo -> groupInfoRepository.deleteById(groupInfo.getId()));
     }

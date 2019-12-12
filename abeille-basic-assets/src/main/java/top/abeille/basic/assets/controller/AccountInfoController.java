@@ -45,12 +45,12 @@ public class AccountInfoController extends AbstractController {
     /**
      * 保存账号信息
      *
-     * @param account 账户信息
+     * @param accountDTO 账户信息
      * @return Mono<AccountInfo>
      */
     @PostMapping
-    public Mono<ResponseEntity<AccountVO>> createAccount(@RequestBody @Valid AccountDTO account) {
-        return accountInfoService.create(account)
+    public Mono<ResponseEntity<AccountVO>> saveAccount(@RequestBody @Valid AccountDTO accountDTO) {
+        return accountInfoService.create(accountDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -58,12 +58,12 @@ public class AccountInfoController extends AbstractController {
     /**
      * 修改账号信息
      *
-     * @param account 账户信息
+     * @param accountDTO 账户信息
      * @return Mono<AccountInfo>
      */
     @PutMapping("/{accountId}")
-    public Mono<ResponseEntity<AccountVO>> modifyAccount(@PathVariable Long accountId, @RequestBody @Valid AccountDTO account) {
-        return accountInfoService.modify(accountId, account)
+    public Mono<ResponseEntity<AccountVO>> modifyAccount(@PathVariable Long accountId, @RequestBody @Valid AccountDTO accountDTO) {
+        return accountInfoService.modify(accountId, accountDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }

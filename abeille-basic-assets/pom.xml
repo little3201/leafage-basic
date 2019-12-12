@@ -37,15 +37,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>top.abeille.common</groupId>
+            <groupId>top.abeille</groupId>
             <artifactId>abeille-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- Spring cloud consul -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-consul-discovery</artifactId>
         </dependency>
-        <!-- Spring Cloud OpenFeign -->
+        <!-- Spring cloud feign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>

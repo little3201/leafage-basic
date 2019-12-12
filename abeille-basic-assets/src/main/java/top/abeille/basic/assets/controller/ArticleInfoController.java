@@ -58,12 +58,12 @@ public class ArticleInfoController extends AbstractController {
     /**
      * 保存文章信息
      *
-     * @param enter 文章
+     * @param articleDTO 文章
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<ArticleVO>> createArticle(@RequestBody @Valid ArticleDTO enter) {
-        return articleInfoService.create(enter)
+    public Mono<ResponseEntity<ArticleVO>> saveArticle(@RequestBody @Valid ArticleDTO articleDTO) {
+        return articleInfoService.create(articleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -71,12 +71,12 @@ public class ArticleInfoController extends AbstractController {
     /**
      * 保存文章信息
      *
-     * @param enter 文章
+     * @param articleDTO 文章
      * @return ResponseEntity
      */
     @PutMapping("/{articleId}")
-    public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable Long articleId, @RequestBody @Valid ArticleDTO enter) {
-        return articleInfoService.modify(articleId, enter)
+    public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable Long articleId, @RequestBody @Valid ArticleDTO articleDTO) {
+        return articleInfoService.modify(articleId, articleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

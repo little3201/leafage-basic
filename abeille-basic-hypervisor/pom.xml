@@ -37,8 +37,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>top.abeille.common</groupId>
+            <groupId>top.abeille</groupId>
             <artifactId>abeille-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- Spring Cloud Consul -->
         <dependency>

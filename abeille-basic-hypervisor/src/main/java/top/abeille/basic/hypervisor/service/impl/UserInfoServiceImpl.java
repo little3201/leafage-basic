@@ -12,18 +12,15 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
-import top.abeille.basic.hypervisor.repository.UserRoleRepository;
-import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
+
 
 /**
  * 用户信息service实现
@@ -34,13 +31,9 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 public class UserInfoServiceImpl implements UserInfoService {
 
     private final UserInfoRepository userInfoRepository;
-    private final UserRoleRepository userRoleRepository;
-    private final RoleInfoService roleInfoService;
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, UserRoleRepository userRoleRepository, RoleInfoService roleInfoService) {
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository) {
         this.userInfoRepository = userInfoRepository;
-        this.userRoleRepository = userRoleRepository;
-        this.roleInfoService = roleInfoService;
     }
 
     @Override
@@ -53,13 +46,16 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserVO> modify(Long id, UserDTO s) {
-        return null;
+    public Mono<UserVO> modify(Long userId, UserDTO enter) {
+        UserInfo info = new UserInfo();
+        BeanUtils.copyProperties(enter, info);
+        info.setUserId(userId);
+        return userInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
     public Mono<Void> removeById(Long userId) {
-        return fetchByUserId(userId).flatMap(userInfo -> userInfoRepository.deleteById(userInfo.getId()));
+        return queryByUserId(userId).flatMap(userInfo -> userInfoRepository.deleteById(userInfo.getId()));
     }
 
     @Override
@@ -68,20 +64,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         info.setUsername(username);
         // 组装查询条件，只查询可用，未被锁定的用户信息
         ExampleMatcher exampleMatcher = appendConditions();
-        Mono<UserVO> voMono = userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(this::convertOuter);
-        // 获取用户角色信息
-        Flux<Long> authorities = voMono.map(userVO -> userRoleRepository.findAllByUserIdAndEnabled(userVO.getUserId(), true))
-                .flatMapIterable(userRoles -> {
-                    Set<Long> roleNameSet = new HashSet<>();
-                    // 遍历获取角色信息
-                    userRoles.forEach(userRole -> roleInfoService.queryById(userRole.getRoleId())
-                            .map(roleOuter -> roleNameSet.add(roleOuter.getRoleId())));
-                    return roleNameSet;
-                });
-        // 将结果装载
-        return voMono.map(userVO -> {
+        return userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(userVO -> {
             UserDetailsVO userDetailsVO = new UserDetailsVO();
             BeanUtils.copyProperties(userVO, userDetailsVO);
+            Flux<Long> authorities = Flux.just(userVO.getRoleId());
             userDetailsVO.setAuthorities(authorities);
             return userDetailsVO;
         });
@@ -89,7 +75,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public Mono<UserVO> queryById(Long userId) {
-        return fetchByUserId(userId).map(user -> {
+        return queryByUserId(userId).map(user -> {
             UserVO outer = new UserVO();
             BeanUtils.copyProperties(user, outer);
             return outer;
@@ -102,7 +88,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @param userId 业务id
      * @return UserInfo 用户源数据
      */
-    private Mono<UserInfo> fetchByUserId(Long userId) {
+    private Mono<UserInfo> queryByUserId(Long userId) {
         ExampleMatcher exampleMatcher = appendConditions();
         UserInfo info = new UserInfo();
         info.setUserId(userId);

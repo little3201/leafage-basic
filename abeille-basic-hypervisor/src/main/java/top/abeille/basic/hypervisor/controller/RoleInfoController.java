@@ -12,6 +12,8 @@ import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractController;
 
+import javax.validation.Valid;
+
 /**
  * 角色信息controller
  *
@@ -30,12 +32,12 @@ public class RoleInfoController extends AbstractController {
     /**
      * 保存角色
      *
-     * @param role 角色
+     * @param roleDTO 角色
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<RoleVO>> createRole(@RequestBody RoleDTO role) {
-        return roleInfoService.create(role)
+    public Mono<ResponseEntity<RoleVO>> createRole(@RequestBody @Valid RoleDTO roleDTO) {
+        return roleInfoService.create(roleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -43,12 +45,12 @@ public class RoleInfoController extends AbstractController {
     /**
      * 编辑角色
      *
-     * @param role 角色
+     * @param roleDTO 角色
      * @return ResponseEntity
      */
     @PutMapping("/{roleId}")
-    public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable Long roleId, @RequestBody RoleDTO role) {
-        return roleInfoService.modify(roleId, role)
+    public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable Long roleId, @RequestBody @Valid RoleDTO roleDTO) {
+        return roleInfoService.modify(roleId, roleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

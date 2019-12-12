@@ -71,12 +71,12 @@ public class UserInfoController extends AbstractController {
     /**
      * 保存用户
      *
-     * @param user 用户
+     * @param userDTO 用户
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<UserVO>> createUser(@RequestBody @Valid UserDTO user) {
-        return userInfoService.create(user)
+    public Mono<ResponseEntity<UserVO>> createUser(@RequestBody @Valid UserDTO userDTO) {
+        return userInfoService.create(userDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -84,12 +84,12 @@ public class UserInfoController extends AbstractController {
     /**
      * 编辑用户
      *
-     * @param user 用户
+     * @param userDTO 用户
      * @return ResponseEntity
      */
     @PutMapping("/{userId}")
-    public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO user) {
-        return userInfoService.modify(userId, user)
+    public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
+        return userInfoService.modify(userId, userDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

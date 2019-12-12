@@ -33,7 +33,7 @@ public class SourceInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<SourceVO> fetchSources() {
+    public Flux<SourceVO> fetchSource() {
         Sort sort = Sort.by("id");
         return sourceInfoService.fetchAll(sort);
     }

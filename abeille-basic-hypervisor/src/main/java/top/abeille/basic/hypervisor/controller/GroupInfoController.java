@@ -35,7 +35,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<GroupVO> fetchGroups() {
+    public Flux<GroupVO> fetchGroup() {
         Sort sort = Sort.by("id");
         return groupInfoService.fetchAll(sort);
     }
@@ -47,7 +47,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<GroupVO>> saveGroup(@RequestBody GroupDTO group) {
+    public Mono<ResponseEntity<GroupVO>> createGroup(@RequestBody GroupDTO group) {
         return groupInfoService.create(group)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

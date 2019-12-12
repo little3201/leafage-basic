@@ -49,7 +49,7 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{articleId}")
-    public Mono<ResponseEntity<ArticleVO>> getArticle(@PathVariable Long articleId) {
+    public Mono<ResponseEntity<ArticleVO>> queryArticle(@PathVariable Long articleId) {
         return articleInfoService.queryById(articleId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -62,7 +62,7 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<ArticleVO>> saveArticle(@RequestBody @Valid ArticleDTO enter) {
+    public Mono<ResponseEntity<ArticleVO>> createArticle(@RequestBody @Valid ArticleDTO enter) {
         return articleInfoService.create(enter)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

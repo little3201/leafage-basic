@@ -38,7 +38,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<UserVO> fetchUsers() {
+    public Flux<UserVO> fetchUser() {
         Sort sort = Sort.by("id");
         return userInfoService.fetchAll(sort);
     }
@@ -50,7 +50,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{userId}")
-    public Mono<ResponseEntity<UserVO>> getUser(@PathVariable Long userId) {
+    public Mono<ResponseEntity<UserVO>> queryUser(@PathVariable Long userId) {
         return userInfoService.queryById(userId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -75,7 +75,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<UserVO>> saveUser(@RequestBody @Valid UserDTO user) {
+    public Mono<ResponseEntity<UserVO>> createUser(@RequestBody @Valid UserDTO user) {
         return userInfoService.create(user)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

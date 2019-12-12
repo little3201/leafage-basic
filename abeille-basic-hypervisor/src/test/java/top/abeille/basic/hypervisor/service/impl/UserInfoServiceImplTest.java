@@ -36,7 +36,7 @@ public class UserInfoServiceImplTest {
         user.setNickname("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
         user.setPassword(pwd);
-        userInfoService.create(null, user);
+        userInfoService.create(user);
     }
 
     /**

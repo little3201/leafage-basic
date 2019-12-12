@@ -74,7 +74,7 @@ public class UserInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<UserVO>> saveUser(@RequestBody @Valid UserDTO user) {
-        return userInfoService.save(null, user)
+        return userInfoService.create(null, user)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -87,7 +87,7 @@ public class UserInfoController extends AbstractController {
      */
     @PutMapping("/{userId}")
     public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO user) {
-        return userInfoService.save(userId, user)
+        return userInfoService.create(userId, user)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

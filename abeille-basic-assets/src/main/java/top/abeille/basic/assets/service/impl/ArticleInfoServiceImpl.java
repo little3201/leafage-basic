@@ -5,11 +5,12 @@ package top.abeille.basic.assets.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.document.ArticleInfo;
+import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
@@ -31,8 +32,8 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Flux<ArticleVO> fetchAll() {
-        return articleInfoRepository.findAll().map(this::convertOuter);
+    public Flux<ArticleVO> fetchAll(Sort sort) {
+        return articleInfoRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
@@ -41,12 +42,9 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Mono<ArticleVO> save(Long articleId, ArticleDTO enter) {
+    public Mono<ArticleVO> create(ArticleDTO enter) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(enter, info);
-        if (Objects.nonNull(articleId)) {
-            return fetchByArticleId(articleId).flatMap(articleInfo -> articleInfoRepository.save(info).map(this::convertOuter));
-        }
         return articleInfoRepository.save(info).map(this::convertOuter);
     }
 

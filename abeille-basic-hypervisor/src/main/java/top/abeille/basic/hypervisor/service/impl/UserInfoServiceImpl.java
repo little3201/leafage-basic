@@ -18,6 +18,7 @@ import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -43,10 +44,17 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserVO> save(Long userId, UserDTO enter) {
+    public Mono<UserVO> create(UserDTO enter) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(enter, info);
+        info.setModifier(0L);
+        info.setModifyTime(LocalDateTime.now());
         return userInfoRepository.save(info).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<UserVO> modify(Long id, UserDTO s) {
+        return null;
     }
 
     @Override

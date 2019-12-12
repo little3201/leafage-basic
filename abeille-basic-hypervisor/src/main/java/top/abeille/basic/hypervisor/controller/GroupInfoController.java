@@ -46,7 +46,7 @@ public class GroupInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<GroupVO>> saveGroup(@RequestBody GroupDTO group) {
-        return groupInfoService.save(null, group)
+        return groupInfoService.create(null, group)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -59,7 +59,7 @@ public class GroupInfoController extends AbstractController {
      */
     @PutMapping("/{groupId}")
     public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable Long groupId, @RequestBody GroupDTO group) {
-        return groupInfoService.save(groupId, group)
+        return groupInfoService.create(groupId, group)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

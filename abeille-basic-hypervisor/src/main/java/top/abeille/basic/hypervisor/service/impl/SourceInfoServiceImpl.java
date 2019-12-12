@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
@@ -25,8 +26,8 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public Flux<SourceVO> fetchAll() {
-        return sourceInfoRepository.findAll().map(article -> {
+    public Flux<SourceVO> fetchAll(Sort sort) {
+        return sourceInfoRepository.findAll(sort).map(article -> {
             SourceVO outer = new SourceVO();
             BeanUtils.copyProperties(article, outer);
             return outer;

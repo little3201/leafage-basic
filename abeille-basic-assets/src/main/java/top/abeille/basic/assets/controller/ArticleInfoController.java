@@ -61,7 +61,7 @@ public class ArticleInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<ArticleVO>> saveArticle(@RequestBody @Valid ArticleDTO enter) {
-        return articleInfoService.save(null, enter)
+        return articleInfoService.create(null, enter)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -74,7 +74,7 @@ public class ArticleInfoController extends AbstractController {
      */
     @PutMapping("/{articleId}")
     public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable Long articleId, @RequestBody @Valid ArticleDTO enter) {
-        return articleInfoService.save(articleId, enter)
+        return articleInfoService.create(articleId, enter)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

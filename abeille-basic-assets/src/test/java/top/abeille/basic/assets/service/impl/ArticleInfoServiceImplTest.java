@@ -28,6 +28,6 @@ public class ArticleInfoServiceImplTest {
         enter.setArticleId(20191009001L);
         enter.setTitle("spring");
         enter.setContent("spring boot 和 spring cloud");
-        Mono<ArticleVO> outerMono = articleInfoService.save(null, enter);
+        Mono<ArticleVO> outerMono = articleInfoService.create(null, enter);
     }
 }

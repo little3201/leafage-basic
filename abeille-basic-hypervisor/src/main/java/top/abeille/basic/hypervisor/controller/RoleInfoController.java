@@ -35,7 +35,7 @@ public class RoleInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<RoleVO>> saveRole(@RequestBody RoleDTO role) {
-        return roleInfoService.save(null, role)
+        return roleInfoService.create(null, role)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -48,7 +48,7 @@ public class RoleInfoController extends AbstractController {
      */
     @PutMapping("/{roleId}")
     public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable Long roleId, @RequestBody RoleDTO role) {
-        return roleInfoService.save(roleId, role)
+        return roleInfoService.create(roleId, role)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

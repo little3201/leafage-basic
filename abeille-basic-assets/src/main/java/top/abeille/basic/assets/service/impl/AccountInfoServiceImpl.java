@@ -30,7 +30,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public Mono<AccountVO> save(Long accountId, AccountDTO entity) {
+    public Mono<AccountVO> create(AccountDTO entity) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(entity, info);
         return accountInfoRepository.save(info).map(this::convertOuter);

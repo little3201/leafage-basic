@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
  */
 public class AccountVO implements Serializable {
 
+    private static final long serialVersionUID = 2227758644875658137L;
     /**
      * 用户ID
      */

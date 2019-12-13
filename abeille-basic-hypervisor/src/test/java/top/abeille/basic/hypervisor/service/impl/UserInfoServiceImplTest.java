@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -13,12 +14,14 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.vo.UserVO;
+import top.abeille.common.test.AbstractTest;
 
 /**
  * 用户信息service测试
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
+@ExtendWith(AbstractTest.class)
 @RunWith(MockitoJUnitRunner.class)
 public class UserInfoServiceImplTest {
 

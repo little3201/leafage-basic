@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class GroupDTO implements Serializable {
 
+    private static final long serialVersionUID = 5146594305386328379L;
     /**
      * 负责人
      */

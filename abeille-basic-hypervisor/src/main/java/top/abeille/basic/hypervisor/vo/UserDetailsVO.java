@@ -11,6 +11,7 @@ import java.io.Serializable;
  **/
 public class UserDetailsVO implements Serializable {
 
+    private static final long serialVersionUID = -4070462974486912745L;
     private String password;
     private String username;
     private Flux<Long> authorities;

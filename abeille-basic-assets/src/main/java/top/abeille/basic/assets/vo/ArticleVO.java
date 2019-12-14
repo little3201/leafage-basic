@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  */
 public class ArticleVO implements Serializable {
 
+    private static final long serialVersionUID = -2692474466082844624L;
     /**
      * 文章ID
      */

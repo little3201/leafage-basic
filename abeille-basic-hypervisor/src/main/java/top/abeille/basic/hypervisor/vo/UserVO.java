@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  */
 public class UserVO implements Serializable {
 
+    private static final long serialVersionUID = 635350278320138075L;
     /**
      * 用户ID
      */

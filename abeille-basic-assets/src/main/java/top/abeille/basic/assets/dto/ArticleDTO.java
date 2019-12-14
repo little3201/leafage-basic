@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class ArticleDTO implements Serializable {
 
+    private static final long serialVersionUID = 248576207213923230L;
     /**
      * 标题
      */

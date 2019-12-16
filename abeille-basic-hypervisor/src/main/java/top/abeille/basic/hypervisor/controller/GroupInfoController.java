@@ -67,10 +67,10 @@ public class GroupInfoController extends AbstractController {
      * 保存组信息
      *
      * @param groupDTO 组
-     * @return ResponseEntity<HttpStatus>
+     * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<HttpStatus> createGroup(@RequestBody GroupDTO groupDTO) {
+    public ResponseEntity createGroup(@RequestBody GroupDTO groupDTO) {
         try {
             groupInfoService.create(groupDTO);
         } catch (Exception e) {
@@ -85,10 +85,10 @@ public class GroupInfoController extends AbstractController {
      *
      * @param groupId  业务主键
      * @param groupDTO 组信息
-     * @return ResponseEntity<HttpStatus>
+     * @return ResponseEntity
      */
     @PutMapping("/{groupId}")
-    public ResponseEntity<HttpStatus> modifyGroup(@PathVariable Long groupId, @RequestBody GroupDTO groupDTO) {
+    public ResponseEntity modifyGroup(@PathVariable Long groupId, @RequestBody GroupDTO groupDTO) {
         try {
             groupInfoService.modify(groupId, groupDTO);
         } catch (Exception e) {
@@ -102,10 +102,10 @@ public class GroupInfoController extends AbstractController {
      * 删除组信息
      *
      * @param groupId 业务主键
-     * @return ResponseEntity<HttpStatus>
+     * @return ResponseEntity
      */
     @DeleteMapping("/{groupId}")
-    public ResponseEntity<HttpStatus> removeGroup(@PathVariable Long groupId) {
+    public ResponseEntity removeGroup(@PathVariable Long groupId) {
         try {
             groupInfoService.removeById(groupId);
         } catch (Exception e) {

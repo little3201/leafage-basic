@@ -87,10 +87,10 @@ public class UserInfoController extends AbstractController {
      * 添加用户
      *
      * @param userDTO 用户
-     * @return ResponseEntity<HttpStatus>
+     * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<HttpStatus> createUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity createUser(@RequestBody @Valid UserDTO userDTO) {
         try {
             userInfoService.create(userDTO);
         } catch (Exception e) {
@@ -105,10 +105,10 @@ public class UserInfoController extends AbstractController {
      *
      * @param userId  用户id
      * @param userDTO 用户
-     * @return ResponseEntity<HttpStatus>
+     * @return ResponseEntity
      */
     @PutMapping("/{userId}")
-    public ResponseEntity<HttpStatus> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
         try {
             userInfoService.modify(userId, userDTO);
         } catch (Exception e) {
@@ -122,10 +122,10 @@ public class UserInfoController extends AbstractController {
      * 删除用户——根据ID
      *
      * @param userId 用户ID
-     * @return ResponseEntity<HttpStatus>
+     * @return ResponseEntity
      */
     @DeleteMapping("/{userId}")
-    public ResponseEntity<HttpStatus> removeUser(@PathVariable Long userId) {
+    public ResponseEntity removeUser(@PathVariable Long userId) {
         try {
             userInfoService.removeById(userId);
         } catch (Exception e) {

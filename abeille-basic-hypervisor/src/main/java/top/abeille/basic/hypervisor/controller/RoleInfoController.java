@@ -53,10 +53,10 @@ public class RoleInfoController extends AbstractController {
      * 保存角色
      *
      * @param roleDTO 角色
-     * @return ResponseEntity<HttpStatus>
+     * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<HttpStatus> createRole(@RequestBody @Valid RoleDTO roleDTO) {
+    public ResponseEntity createRole(@RequestBody @Valid RoleDTO roleDTO) {
         try {
             roleInfoService.create(roleDTO);
         } catch (Exception e) {
@@ -71,10 +71,10 @@ public class RoleInfoController extends AbstractController {
      *
      * @param roleId 角色id
      * @param roleDTO 角色
-     * @return ResponseEntity<HttpStatus>
+     * @return ResponseEntity
      */
     @PutMapping("/{roleId}")
-    public ResponseEntity<HttpStatus> modifyRole(@PathVariable Long roleId, @RequestBody @Valid RoleDTO roleDTO) {
+    public ResponseEntity modifyRole(@PathVariable Long roleId, @RequestBody @Valid RoleDTO roleDTO) {
         try {
             roleInfoService.modify(roleId, roleDTO);
         } catch (Exception e) {
@@ -88,10 +88,10 @@ public class RoleInfoController extends AbstractController {
      * 删除角色——根据ID
      *
      * @param roleId 主键
-     * @return ResponseEntity<HttpStatus>
+     * @return ResponseEntity
      */
     @DeleteMapping("/{roleId}")
-    public ResponseEntity<HttpStatus> removeRole(@PathVariable Long roleId) {
+    public ResponseEntity removeRole(@PathVariable Long roleId) {
         try {
             roleInfoService.removeById(roleId);
         } catch (Exception e) {

@@ -48,6 +48,12 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.shalousun</groupId>
+            <artifactId>smart-doc</artifactId>
+            <version>1.7.9</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

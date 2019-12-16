@@ -64,10 +64,10 @@ public class AccountInfoController extends AbstractController {
      * 修改账号信息
      *
      * @param account 账户信息
-     * @return ResponseEntity
+     * @return ResponseEntity<HttpStatus>
      */
     @PutMapping
-    public ResponseEntity modifyAccount(@RequestBody AccountDTO account) {
+    public ResponseEntity<HttpStatus> modifyAccount(@RequestBody AccountDTO account) {
         try {
             accountInfoService.create(account);
         } catch (Exception e) {
@@ -81,10 +81,10 @@ public class AccountInfoController extends AbstractController {
      * 删除账号信息
      *
      * @param accountId 主键
-     * @return ResponseEntity
+     * @return ResponseEntity<HttpStatus>
      */
     @DeleteMapping("/{accountId}")
-    public ResponseEntity removeAccount(@PathVariable Long accountId) {
+    public ResponseEntity<HttpStatus> removeAccount(@PathVariable Long accountId) {
         try {
             accountInfoService.removeById(accountId);
         } catch (Exception e) {

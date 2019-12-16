@@ -12,7 +12,7 @@ import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
- * 账户信息Controller
+ * 账户信息接口
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

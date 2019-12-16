@@ -17,7 +17,7 @@ import top.abeille.common.basic.AbstractController;
 import javax.validation.Valid;
 
 /**
- * 角色信息controller
+ * 角色信息接口
  *
  * @author liwenqiang 2018/12/17 19:38
  **/

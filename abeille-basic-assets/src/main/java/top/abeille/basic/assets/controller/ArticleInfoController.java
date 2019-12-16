@@ -17,7 +17,7 @@ import top.abeille.common.basic.AbstractController;
 import javax.validation.Valid;
 
 /**
- * 文章信息controller
+ * 文章信息接口
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

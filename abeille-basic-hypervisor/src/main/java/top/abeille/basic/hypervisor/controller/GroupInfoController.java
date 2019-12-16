@@ -15,7 +15,7 @@ import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
- * 组信息controller
+ * 组信息接口
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

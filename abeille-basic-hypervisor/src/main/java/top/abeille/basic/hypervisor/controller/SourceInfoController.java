@@ -16,7 +16,7 @@ import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
- * 权限资源controller
+ * 权限资源接口
  *
  * @author liwenqiang 2018/12/17 19:39
  **/

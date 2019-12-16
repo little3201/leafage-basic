@@ -22,6 +22,8 @@ import java.util.Objects;
  * 用户信息接口
  *
  * @author liwenqiang 2018/8/2 21:02
+ * @since 1.0
+ * @version 0.0.1
  **/
 @RestController
 @RequestMapping("/user")
@@ -39,6 +41,7 @@ public class UserInfoController extends AbstractController {
      * @param pageNum  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
+     * @since 1.0
      */
     @GetMapping
     public ResponseEntity fetchUser(Integer pageNum, Integer pageSize) {
@@ -56,6 +59,7 @@ public class UserInfoController extends AbstractController {
      *
      * @param userId 用户ID
      * @return ResponseEntity
+     * @since 1.0
      */
     @GetMapping("/{userId}")
     public ResponseEntity queryUser(@PathVariable Long userId) {
@@ -72,6 +76,7 @@ public class UserInfoController extends AbstractController {
      *
      * @param username 用户名
      * @return ResponseEntity
+     * @since 1.0
      */
     @GetMapping("/load/{username}")
     public ResponseEntity loadUserByUsername(@PathVariable String username) {
@@ -88,6 +93,7 @@ public class UserInfoController extends AbstractController {
      *
      * @param userDTO 用户
      * @return ResponseEntity
+     * @since 1.0
      */
     @PostMapping
     public ResponseEntity createUser(@RequestBody @Valid UserDTO userDTO) {
@@ -106,6 +112,7 @@ public class UserInfoController extends AbstractController {
      * @param userId  用户id
      * @param userDTO 用户
      * @return ResponseEntity
+     * @since 1.0
      */
     @PutMapping("/{userId}")
     public ResponseEntity modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
@@ -123,6 +130,7 @@ public class UserInfoController extends AbstractController {
      *
      * @param userId 用户ID
      * @return ResponseEntity
+     * @since 1.0
      */
     @DeleteMapping("/{userId}")
     public ResponseEntity removeUser(@PathVariable Long userId) {

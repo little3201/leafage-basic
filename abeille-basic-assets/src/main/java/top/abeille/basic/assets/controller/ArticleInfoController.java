@@ -37,6 +37,7 @@ public class ArticleInfoController extends AbstractController {
      * @param pageNum  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
+     * @since 0.0.1
      */
     @GetMapping
     public ResponseEntity fetchArticle(Integer pageNum, Integer pageSize) {
@@ -54,6 +55,7 @@ public class ArticleInfoController extends AbstractController {
      *
      * @param articleId 文章ID
      * @return ResponseEntity
+     * @since 0.0.1
      */
     @GetMapping("/{articleId}")
     public ResponseEntity queryArticle(@PathVariable Long articleId) {
@@ -70,6 +72,7 @@ public class ArticleInfoController extends AbstractController {
      *
      * @param articleDTO 文章内容
      * @return ResponseEntity
+     * @since 0.0.1
      */
     @PostMapping
     public ResponseEntity saveArticle(@RequestBody @Valid ArticleDTO articleDTO) {

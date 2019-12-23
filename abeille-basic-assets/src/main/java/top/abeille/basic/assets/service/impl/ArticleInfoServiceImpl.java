@@ -38,14 +38,22 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Override
     public Mono<ArticleVO> queryById(Long articleId) {
-        return fetchByArticleId(articleId).map(this::convertOuter);
+        return queryByArticleId(articleId).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ArticleVO> create(ArticleDTO enter) {
+    public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
-        BeanUtils.copyProperties(enter, info);
+        BeanUtils.copyProperties(articleDTO, info);
         return articleInfoRepository.save(info).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<ArticleVO> modify(Long articleId, ArticleDTO articleDTO) {
+        return queryByArticleId(articleId).flatMap(articleInfo -> {
+            BeanUtils.copyProperties(articleDTO, articleInfo);
+            return articleInfoRepository.save(articleInfo).map(this::convertOuter);
+        });
     }
 
     @Override
@@ -55,7 +63,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         return articleInfoRepository.findOne(Example.of(info)).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
     }
 
-    private Mono<ArticleInfo> fetchByArticleId(Long articleId) {
+    private Mono<ArticleInfo> queryByArticleId(Long articleId) {
         if (Objects.isNull(articleId)) {
             return Mono.empty();
         }

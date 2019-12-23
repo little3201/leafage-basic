@@ -46,11 +46,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserVO> modify(Long userId, UserDTO enter) {
-        UserInfo info = new UserInfo();
-        BeanUtils.copyProperties(enter, info);
-        info.setUserId(userId);
-        return userInfoRepository.save(info).map(this::convertOuter);
+    public Mono<UserVO> modify(Long userId, UserDTO userDTO) {
+        return queryByUserId(userId).flatMap(articleInfo -> {
+            BeanUtils.copyProperties(userDTO, articleInfo);
+            return userInfoRepository.save(articleInfo).map(this::convertOuter);
+        });
     }
 
     @Override
@@ -97,7 +97,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     /**
-     * 设置查询条件的必要参数
+     * 将info 转换为输出对象 VO
      *
      * @param info 用户信息
      * @return UserOuter 用户输出对象

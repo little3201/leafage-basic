@@ -40,7 +40,7 @@ public class SourceInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity fetchSource(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<SourceVO> sources = sourceInfoService.fetchByPage(pageable);
+        Page<SourceVO> sources = sourceInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(sources.getContent())) {
             logger.info("Not found anything about source with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

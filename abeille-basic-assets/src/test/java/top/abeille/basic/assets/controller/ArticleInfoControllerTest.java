@@ -7,7 +7,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.data.domain.Sort;
 import top.abeille.basic.assets.service.impl.ArticleInfoServiceImpl;
+import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.mock.AbstractControllerMock;
+
+import java.util.List;
 
 /**
  * 文章管理接口测试类
@@ -27,7 +30,7 @@ public class ArticleInfoControllerTest extends AbstractControllerMock {
     @Test
     public void findArticles() {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
-        articleInfoService.fetchAll(sort);
+        List<ArticleVO> voList = articleInfoService.retrieveAll(sort);
     }
 
 }

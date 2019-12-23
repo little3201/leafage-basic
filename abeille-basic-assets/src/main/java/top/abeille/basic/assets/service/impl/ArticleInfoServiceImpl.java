@@ -41,7 +41,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Page<ArticleVO> fetchByPage(Pageable pageable) {
+    public Page<ArticleVO> retrieveByPage(Pageable pageable) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matching();
         exampleMatcher.withMatcher("is_enabled", exact());
         //设置查询必要参数，只查询is_enabled为true的数据
@@ -59,7 +59,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public ArticleVO queryById(Long articleId) {
+    public ArticleVO fetchById(Long articleId) {
         //去mysql中查询基本信息
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setArticleId(articleId);

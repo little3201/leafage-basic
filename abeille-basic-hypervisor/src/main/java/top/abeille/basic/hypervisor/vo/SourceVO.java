@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  */
 public class SourceVO implements Serializable {
 
+    private static final long serialVersionUID = 7493821282349624572L;
     /**
      * 权限ID
      */

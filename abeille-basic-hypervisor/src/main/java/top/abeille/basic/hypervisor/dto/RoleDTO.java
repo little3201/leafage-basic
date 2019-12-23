@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class RoleDTO implements Serializable {
 
+    private static final long serialVersionUID = 3695400553311525056L;
     /**
      * 名称
      */

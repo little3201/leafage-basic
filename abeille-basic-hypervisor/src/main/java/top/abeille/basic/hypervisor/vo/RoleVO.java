@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  */
 public class RoleVO implements Serializable {
 
+    private static final long serialVersionUID = 256108084040535709L;
     /**
      * 角色ID
      */

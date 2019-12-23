@@ -46,7 +46,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Page<UserVO> fetchByPage(Pageable pageable) {
+    public Page<UserVO> retrieveByPage(Pageable pageable) {
         ExampleMatcher exampleMatcher = this.appendConditions();
         UserInfo userInfo = this.appendParams(new UserInfo());
         Page<UserInfo> infoPage = userInfoRepository.findAll(Example.of(userInfo, exampleMatcher), pageable);
@@ -120,7 +120,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserVO queryById(Long userId) {
+    public UserVO fetchById(Long userId) {
         // Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可, 可以通过ExampleMatcher.matching()方法进行进一步得处理
         ExampleMatcher exampleMatcher = this.appendConditions();
         UserInfo userInfo = new UserInfo();

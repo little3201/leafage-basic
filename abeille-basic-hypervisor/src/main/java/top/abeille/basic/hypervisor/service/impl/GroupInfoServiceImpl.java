@@ -33,7 +33,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Page<GroupVO> fetchByPage(Pageable pageable) {
+    public Page<GroupVO> retrieveByPage(Pageable pageable) {
         ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("is_enabled", exact());
         GroupInfo groupInfo = new GroupInfo();
         groupInfo.setEnabled(true);

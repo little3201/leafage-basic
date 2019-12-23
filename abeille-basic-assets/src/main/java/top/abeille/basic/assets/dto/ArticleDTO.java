@@ -12,6 +12,7 @@ import java.io.Serializable;
  **/
 public class ArticleDTO implements Serializable {
 
+    private static final long serialVersionUID = -4116939329295119085L;
     /**
      * 文章ID
      */

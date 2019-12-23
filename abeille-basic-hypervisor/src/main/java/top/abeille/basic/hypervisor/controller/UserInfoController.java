@@ -46,7 +46,7 @@ public class UserInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity fetchUser(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<UserVO> users = userInfoService.fetchByPage(pageable);
+        Page<UserVO> users = userInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(users.getContent())) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -63,7 +63,7 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity queryUser(@PathVariable Long userId) {
-        UserVO userVO = userInfoService.queryById(userId);
+        UserVO userVO = userInfoService.fetchById(userId);
         if (Objects.isNull(userVO)) {
             logger.info("Not found anything about hypervisor with userId: {}.", userId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

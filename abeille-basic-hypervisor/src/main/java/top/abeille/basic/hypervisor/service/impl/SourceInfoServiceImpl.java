@@ -33,7 +33,7 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public Page<SourceVO> fetchByPage(Pageable pageable) {
+    public Page<SourceVO> retrieveByPage(Pageable pageable) {
         ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("is_enabled", exact());
         SourceInfo roleInfo = new SourceInfo();
         roleInfo.setEnabled(true);

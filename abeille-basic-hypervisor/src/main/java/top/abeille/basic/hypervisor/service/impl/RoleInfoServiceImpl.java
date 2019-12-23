@@ -33,7 +33,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Page<RoleVO> fetchByPage(Pageable pageable) {
+    public Page<RoleVO> retrieveByPage(Pageable pageable) {
         ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("is_enabled", exact());
         RoleInfo roleInfo = new RoleInfo();
         roleInfo.setEnabled(true);

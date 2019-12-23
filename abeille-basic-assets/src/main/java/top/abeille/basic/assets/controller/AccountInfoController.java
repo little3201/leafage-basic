@@ -33,8 +33,8 @@ public class AccountInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{accountId}")
-    public ResponseEntity queryAccount(@PathVariable Long accountId) {
-        AccountVO account = accountInfoService.queryById(accountId);
+    public ResponseEntity fetchAccount(@PathVariable Long accountId) {
+        AccountVO account = accountInfoService.fetchById(accountId);
         if (account == null) {
             logger.info("Not found anything about account with accountId {}.", accountId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

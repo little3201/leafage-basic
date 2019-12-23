@@ -37,12 +37,11 @@ public class ArticleInfoController extends AbstractController {
      * @param pageNum  当前页
      * @param pageSize 页内数据量
      * @return ResponseEntity
-     * @since 0.0.1
      */
     @GetMapping
-    public ResponseEntity fetchArticle(Integer pageNum, Integer pageSize) {
+    public ResponseEntity retrieveArticle(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<ArticleVO> articles = articleInfoService.fetchByPage(pageable);
+        Page<ArticleVO> articles = articleInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(articles.getContent())) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -55,11 +54,10 @@ public class ArticleInfoController extends AbstractController {
      *
      * @param articleId 文章ID
      * @return ResponseEntity
-     * @since 0.0.1
      */
     @GetMapping("/{articleId}")
-    public ResponseEntity queryArticle(@PathVariable Long articleId) {
-        ArticleVO article = articleInfoService.queryById(articleId);
+    public ResponseEntity fetchArticle(@PathVariable Long articleId) {
+        ArticleVO article = articleInfoService.fetchById(articleId);
         if (article == null) {
             logger.info("Not found anything about article with articleId {}.", articleId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -72,10 +70,9 @@ public class ArticleInfoController extends AbstractController {
      *
      * @param articleDTO 文章内容
      * @return ResponseEntity
-     * @since 0.0.1
      */
     @PostMapping
-    public ResponseEntity saveArticle(@RequestBody @Valid ArticleDTO articleDTO) {
+    public ResponseEntity createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
         ArticleVO articleVO;
         try {
             articleVO = articleInfoService.create(articleDTO);

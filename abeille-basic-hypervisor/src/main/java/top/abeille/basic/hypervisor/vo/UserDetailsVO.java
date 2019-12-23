@@ -10,6 +10,7 @@ import java.util.Set;
  **/
 public class UserDetailsVO implements Serializable {
 
+    private static final long serialVersionUID = 4870999263949230176L;
     /**
      * 用户名
      */

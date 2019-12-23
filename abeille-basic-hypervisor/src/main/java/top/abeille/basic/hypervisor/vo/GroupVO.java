@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
  */
 public class GroupVO implements Serializable {
 
+    private static final long serialVersionUID = 5740100575689452491L;
     /**
      * 组ID
      */

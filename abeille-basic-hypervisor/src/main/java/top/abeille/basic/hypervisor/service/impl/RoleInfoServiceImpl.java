@@ -30,7 +30,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Flux<RoleVO> fetchByExample(RoleDTO enter, ExampleMatcher exampleMatcher) {
+    public Flux<RoleVO> retrieveByExample(RoleDTO enter, ExampleMatcher exampleMatcher) {
         // 创建查询模板实例
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(enter, info);
@@ -42,7 +42,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Mono<RoleVO> queryById(Long roleId) {
+    public Mono<RoleVO> fetchById(Long roleId) {
         RoleInfo info = new RoleInfo();
         info.setRoleId(roleId);
         return roleInfoRepository.findOne(Example.of(info)).map(role -> {

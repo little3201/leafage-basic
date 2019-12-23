@@ -32,12 +32,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Flux<ArticleVO> fetchAll(Sort sort) {
+    public Flux<ArticleVO> retrieveAll(Sort sort) {
         return articleInfoRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ArticleVO> queryById(Long articleId) {
+    public Mono<ArticleVO> fetchById(Long articleId) {
         return fetchByArticleId(articleId).map(this::convertOuter);
     }
 

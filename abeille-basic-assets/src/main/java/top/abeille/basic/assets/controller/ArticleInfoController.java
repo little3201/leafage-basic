@@ -37,9 +37,9 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<ArticleVO> fetchArticle() {
-        Sort sort = Sort.by("id");
-        return articleInfoService.fetchAll(sort);
+    public Flux<ArticleVO> retrieveArticle() {
+        Sort sort = super.initSortProperties();
+        return articleInfoService.retrieveAll(sort);
     }
 
     /**
@@ -50,7 +50,7 @@ public class ArticleInfoController extends AbstractController {
      */
     @GetMapping("/{articleId}")
     public Mono<ResponseEntity<ArticleVO>> queryArticle(@PathVariable Long articleId) {
-        return articleInfoService.queryById(articleId)
+        return articleInfoService.fetchById(articleId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }

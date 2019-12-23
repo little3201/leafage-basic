@@ -37,7 +37,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public Mono<AccountVO> queryById(Long accountId) {
+    public Mono<AccountVO> fetchById(Long accountId) {
         AccountInfo info = new AccountInfo();
         info.setAccountId(accountId);
         info.setEnabled(true);

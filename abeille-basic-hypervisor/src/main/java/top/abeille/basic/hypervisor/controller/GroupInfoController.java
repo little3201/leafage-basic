@@ -38,8 +38,8 @@ public class GroupInfoController extends AbstractController {
      */
     @GetMapping
     public Flux<GroupVO> fetchGroup() {
-        Sort sort = Sort.by("id");
-        return groupInfoService.fetchAll(sort);
+        Sort sort = super.initSortProperties();
+        return groupInfoService.retrieveAll(sort);
     }
 
     /**

@@ -28,7 +28,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Mono<GroupVO> queryById(Long groupId) {
+    public Mono<GroupVO> fetchById(Long groupId) {
         return fetchByGroupId(groupId).map(this::convertOuter);
     }
 

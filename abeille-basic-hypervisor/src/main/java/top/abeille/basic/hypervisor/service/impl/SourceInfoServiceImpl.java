@@ -26,7 +26,7 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public Flux<SourceVO> fetchAll(Sort sort) {
+    public Flux<SourceVO> retrieveAll(Sort sort) {
         return sourceInfoRepository.findAll(sort).map(article -> {
             SourceVO outer = new SourceVO();
             BeanUtils.copyProperties(article, outer);

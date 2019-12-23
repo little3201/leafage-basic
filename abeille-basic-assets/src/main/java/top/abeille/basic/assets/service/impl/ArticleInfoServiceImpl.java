@@ -32,13 +32,13 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Flux<ArticleVO> fetchAll(Sort sort) {
+    public Flux<ArticleVO> retrieveAll(Sort sort) {
         return articleInfoRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ArticleVO> queryById(Long articleId) {
-        return queryByArticleId(articleId).map(this::convertOuter);
+    public Mono<ArticleVO> fetchById(Long articleId) {
+        return fetchByArticleId(articleId).map(this::convertOuter);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Override
     public Mono<ArticleVO> modify(Long articleId, ArticleDTO articleDTO) {
-        return queryByArticleId(articleId).flatMap(articleInfo -> {
+        return fetchByArticleId(articleId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(articleDTO, articleInfo);
             return articleInfoRepository.save(articleInfo).map(this::convertOuter);
         });
@@ -63,7 +63,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         return articleInfoRepository.findOne(Example.of(info)).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
     }
 
-    private Mono<ArticleInfo> queryByArticleId(Long articleId) {
+    private Mono<ArticleInfo> fetchByArticleId(Long articleId) {
         if (Objects.isNull(articleId)) {
             return Mono.empty();
         }

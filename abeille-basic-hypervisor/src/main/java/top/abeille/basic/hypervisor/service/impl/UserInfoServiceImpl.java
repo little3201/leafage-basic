@@ -74,7 +74,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserVO> queryById(Long userId) {
+    public Mono<UserVO> fetchById(Long userId) {
         return queryByUserId(userId).map(user -> {
             UserVO outer = new UserVO();
             BeanUtils.copyProperties(user, outer);

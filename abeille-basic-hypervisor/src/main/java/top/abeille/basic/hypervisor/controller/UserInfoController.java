@@ -39,8 +39,8 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping
     public Flux<UserVO> fetchUser() {
-        Sort sort = Sort.by("id");
-        return userInfoService.fetchAll(sort);
+        Sort sort = super.initSortProperties();
+        return userInfoService.retrieveAll(sort);
     }
 
     /**
@@ -51,7 +51,7 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/{userId}")
     public Mono<ResponseEntity<UserVO>> queryUser(@PathVariable Long userId) {
-        return userInfoService.queryById(userId)
+        return userInfoService.fetchById(userId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }

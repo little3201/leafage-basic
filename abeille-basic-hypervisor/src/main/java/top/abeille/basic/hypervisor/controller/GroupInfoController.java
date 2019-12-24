@@ -37,7 +37,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<GroupVO> fetchGroup() {
+    public Flux<GroupVO> retrieveGroup() {
         Sort sort = super.initSortProperties();
         return groupInfoService.retrieveAll(sort);
     }

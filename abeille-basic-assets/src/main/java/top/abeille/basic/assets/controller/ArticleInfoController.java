@@ -49,7 +49,7 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{articleId}")
-    public Mono<ResponseEntity<ArticleVO>> queryArticle(@PathVariable Long articleId) {
+    public Mono<ResponseEntity<ArticleVO>> fetchArticle(@PathVariable Long articleId) {
         return articleInfoService.fetchById(articleId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());

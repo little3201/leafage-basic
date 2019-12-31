@@ -43,7 +43,7 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 保存组信息
+     * 添加组信息
      *
      * @param groupDTO 组
      * @return ResponseEntity

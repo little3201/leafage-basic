@@ -56,7 +56,7 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 保存文章信息
+     * 添加文章信息
      *
      * @param articleDTO 文章
      * @return ResponseEntity
@@ -69,7 +69,7 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 保存文章信息
+     * 修改文章信息
      *
      * @param articleDTO 文章
      * @return ResponseEntity

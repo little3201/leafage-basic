@@ -30,7 +30,7 @@ public class RoleInfoController extends AbstractController {
     }
 
     /**
-     * 保存角色
+     * 添加角色信息
      *
      * @param roleDTO 角色
      * @return ResponseEntity
@@ -43,7 +43,7 @@ public class RoleInfoController extends AbstractController {
     }
 
     /**
-     * 编辑角色
+     * 编辑角色信息
      *
      * @param roleDTO 角色
      * @return ResponseEntity

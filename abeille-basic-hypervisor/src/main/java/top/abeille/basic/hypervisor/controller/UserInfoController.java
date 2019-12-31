@@ -69,7 +69,7 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 保存用户
+     * 添加用户信息
      *
      * @param userDTO 用户
      * @return ResponseEntity

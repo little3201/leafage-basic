@@ -43,7 +43,7 @@ public class AccountInfoController extends AbstractController {
     }
 
     /**
-     * 保存账号信息
+     * 添加账号信息
      *
      * @param accountDTO 账户信息
      * @return Mono<AccountInfo>

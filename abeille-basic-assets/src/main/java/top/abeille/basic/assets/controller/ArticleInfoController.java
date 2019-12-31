@@ -62,7 +62,7 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<ArticleVO>> saveArticle(@RequestBody @Valid ArticleDTO articleDTO) {
+    public Mono<ResponseEntity<ArticleVO>> createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
         return articleInfoService.create(articleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

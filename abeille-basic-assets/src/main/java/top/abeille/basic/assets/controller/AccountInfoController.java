@@ -49,7 +49,7 @@ public class AccountInfoController extends AbstractController {
      * @return Mono<AccountInfo>
      */
     @PostMapping
-    public Mono<ResponseEntity<AccountVO>> saveAccount(@RequestBody @Valid AccountDTO accountDTO) {
+    public Mono<ResponseEntity<AccountVO>> createAccount(@RequestBody @Valid AccountDTO accountDTO) {
         return accountInfoService.create(accountDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

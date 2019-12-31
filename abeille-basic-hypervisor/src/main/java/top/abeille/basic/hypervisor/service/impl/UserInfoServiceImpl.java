@@ -37,18 +37,18 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserVO> create(UserDTO enter) {
+    public Mono<UserVO> create(UserDTO groupDTO) {
         UserInfo info = new UserInfo();
-        BeanUtils.copyProperties(enter, info);
+        BeanUtils.copyProperties(groupDTO, info);
         info.setModifier(0L);
         info.setModifyTime(LocalDateTime.now());
         return userInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<UserVO> modify(Long userId, UserDTO enter) {
+    public Mono<UserVO> modify(Long userId, UserDTO userDTO) {
         UserInfo info = new UserInfo();
-        BeanUtils.copyProperties(enter, info);
+        BeanUtils.copyProperties(userDTO, info);
         info.setUserId(userId);
         return userInfoRepository.save(info).map(this::convertOuter);
     }
@@ -99,8 +99,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     /**
      * 设置查询条件的必要参数
      *
-     * @param info 用户信息
-     * @return UserOuter 用户输出对象
+     * @param info 信息
+     * @return UserVO 输出对象
      */
     private UserVO convertOuter(UserInfo info) {
         if (Objects.isNull(info)) {

@@ -49,12 +49,26 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
+    public Mono<ArticleVO> modify(Long articleId, ArticleDTO articleDTO) {
+        ArticleInfo info = new ArticleInfo();
+        BeanUtils.copyProperties(articleDTO, info);
+        info.setArticleId(articleId);
+        return articleInfoRepository.save(info).map(this::convertOuter);
+    }
+
+    @Override
     public Mono<Void> removeById(Long articleId) {
         ArticleInfo info = new ArticleInfo();
         info.setArticleId(articleId);
         return articleInfoRepository.findOne(Example.of(info)).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
     }
 
+    /**
+     * 根据ID查询
+     *
+     * @param articleId 文章ID
+     * @return ArticleInfo 对象
+     */
     private Mono<ArticleInfo> fetchByArticleId(Long articleId) {
         if (Objects.isNull(articleId)) {
             return Mono.empty();
@@ -64,6 +78,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         return articleInfoRepository.findOne(Example.of(info));
     }
 
+    /**
+     * 设置查询条件的必要参数
+     *
+     * @param info 信息
+     * @return ArticleVO 输出对象
+     */
     private ArticleVO convertOuter(ArticleInfo info) {
         if (Objects.isNull(info)) {
             return null;

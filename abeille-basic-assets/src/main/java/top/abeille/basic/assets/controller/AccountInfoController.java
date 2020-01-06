@@ -36,20 +36,20 @@ public class AccountInfoController extends AbstractController {
      * @return Mono<AccountInfo>
      */
     @GetMapping("/{accountId}")
-    public Mono<ResponseEntity<AccountVO>> queryAccount(@PathVariable Long accountId) {
+    public Mono<ResponseEntity<AccountVO>> fetchAccount(@PathVariable Long accountId) {
         return accountInfoService.fetchById(accountId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
-     * 保存账号信息
+     * 添加账号信息
      *
      * @param accountDTO 账户信息
      * @return Mono<AccountInfo>
      */
     @PostMapping
-    public Mono<ResponseEntity<AccountVO>> saveAccount(@RequestBody @Valid AccountDTO accountDTO) {
+    public Mono<ResponseEntity<AccountVO>> createAccount(@RequestBody @Valid AccountDTO accountDTO) {
         return accountInfoService.create(accountDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

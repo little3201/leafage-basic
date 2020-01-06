@@ -63,6 +63,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         return articleInfoRepository.findOne(Example.of(info)).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
     }
 
+    /**
+     * 根据ID查询
+     *
+     * @param articleId 文章ID
+     * @return ArticleInfo 对象
+     */
     private Mono<ArticleInfo> fetchByArticleId(Long articleId) {
         if (Objects.isNull(articleId)) {
             return Mono.empty();
@@ -72,6 +78,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         return articleInfoRepository.findOne(Example.of(info));
     }
 
+    /**
+     * 设置查询条件的必要参数
+     *
+     * @param info 信息
+     * @return ArticleVO 输出对象
+     */
     private ArticleVO convertOuter(ArticleInfo info) {
         if (Objects.isNull(info)) {
             return null;

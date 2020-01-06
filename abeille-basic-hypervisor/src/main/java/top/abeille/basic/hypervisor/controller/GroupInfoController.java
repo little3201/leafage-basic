@@ -37,13 +37,13 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<GroupVO> fetchGroup() {
+    public Flux<GroupVO> retrieveGroup() {
         Sort sort = super.initSortProperties();
         return groupInfoService.retrieveAll(sort);
     }
 
     /**
-     * 保存组信息
+     * 添加组信息
      *
      * @param groupDTO 组
      * @return ResponseEntity

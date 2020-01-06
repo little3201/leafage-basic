@@ -37,7 +37,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public Flux<UserVO> fetchUser() {
+    public Flux<UserVO> retrieveUser() {
         Sort sort = super.initSortProperties();
         return userInfoService.retrieveAll(sort);
     }
@@ -49,14 +49,14 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{userId}")
-    public Mono<ResponseEntity<UserVO>> queryUser(@PathVariable Long userId) {
+    public Mono<ResponseEntity<UserVO>> fetchUser(@PathVariable Long userId) {
         return userInfoService.fetchById(userId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
-     * 保存用户
+     * 添加用户信息
      *
      * @param userDTO 用户
      * @return ResponseEntity

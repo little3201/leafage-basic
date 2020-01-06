@@ -49,27 +49,27 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{articleId}")
-    public Mono<ResponseEntity<ArticleVO>> queryArticle(@PathVariable Long articleId) {
+    public Mono<ResponseEntity<ArticleVO>> fetchArticle(@PathVariable Long articleId) {
         return articleInfoService.fetchById(articleId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     /**
-     * 保存文章信息
+     * 添加文章信息
      *
      * @param articleDTO 文章
      * @return ResponseEntity
      */
     @PostMapping
-    public Mono<ResponseEntity<ArticleVO>> saveArticle(@RequestBody @Valid ArticleDTO articleDTO) {
+    public Mono<ResponseEntity<ArticleVO>> createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
         return articleInfoService.create(articleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 
     /**
-     * 保存文章信息
+     * 修改文章信息
      *
      * @param articleDTO 文章
      * @return ResponseEntity

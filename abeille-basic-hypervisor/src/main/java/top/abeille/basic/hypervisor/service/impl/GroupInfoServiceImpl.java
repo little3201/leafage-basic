@@ -33,16 +33,16 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Mono<GroupVO> create(GroupDTO enter) {
+    public Mono<GroupVO> create(GroupDTO groupDTO) {
         GroupInfo info = new GroupInfo();
-        BeanUtils.copyProperties(enter, info);
+        BeanUtils.copyProperties(groupDTO, info);
         return groupInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<GroupVO> modify(Long groupId, GroupDTO enter) {
+    public Mono<GroupVO> modify(Long groupId, GroupDTO groupDTO) {
         GroupInfo info = new GroupInfo();
-        BeanUtils.copyProperties(enter, info);
+        BeanUtils.copyProperties(groupDTO, info);
         info.setGroupId(groupId);
         return groupInfoRepository.save(info).map(this::convertOuter);
     }
@@ -52,12 +52,24 @@ public class GroupInfoServiceImpl implements GroupInfoService {
         return fetchByGroupId(groupId).flatMap(groupInfo -> groupInfoRepository.deleteById(groupInfo.getId()));
     }
 
+    /**
+     * 根据ID查询
+     *
+     * @param groupId 组ID
+     * @return GroupInfo 对象
+     */
     private Mono<GroupInfo> fetchByGroupId(Long groupId) {
         GroupInfo info = new GroupInfo();
         info.setGroupId(groupId);
         return groupInfoRepository.findOne(Example.of(info));
     }
 
+    /**
+     * 设置查询条件的必要参数
+     *
+     * @param info 信息
+     * @return GroupVO 输出对象
+     */
     private GroupVO convertOuter(GroupInfo info) {
         GroupVO outer = new GroupVO();
         BeanUtils.copyProperties(info, outer);

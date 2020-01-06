@@ -30,9 +30,17 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public Mono<AccountVO> create(AccountDTO entity) {
+    public Mono<AccountVO> create(AccountDTO accountDTO) {
         AccountInfo info = new AccountInfo();
-        BeanUtils.copyProperties(entity, info);
+        BeanUtils.copyProperties(accountDTO, info);
+        return accountInfoRepository.save(info).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<AccountVO> modify(Long accountId, AccountDTO accountDTO) {
+        AccountInfo info = new AccountInfo();
+        BeanUtils.copyProperties(accountDTO, info);
+        info.setAccountId(accountId);
         return accountInfoRepository.save(info).map(this::convertOuter);
     }
 
@@ -52,6 +60,12 @@ public class AccountInfoServiceImpl implements AccountInfoService {
                 .flatMap(account -> accountInfoRepository.deleteById(account.getId()));
     }
 
+    /**
+     * 设置查询条件的必要参数
+     *
+     * @param info 信息
+     * @return AccountVO 输出对象
+     */
     private AccountVO convertOuter(AccountInfo info) {
         if (Objects.isNull(info)) {
             return null;

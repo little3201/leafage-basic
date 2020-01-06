@@ -7,17 +7,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.service.UserInfoService;
-import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -59,21 +56,6 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserDetailsVO> loadUserByUsername(String username) {
-        UserInfo info = new UserInfo();
-        info.setUsername(username);
-        // 组装查询条件，只查询可用，未被锁定的用户信息
-        ExampleMatcher exampleMatcher = appendConditions();
-        return userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(userVO -> {
-            UserDetailsVO userDetailsVO = new UserDetailsVO();
-            BeanUtils.copyProperties(userVO, userDetailsVO);
-            Flux<Long> authorities = Flux.just(userVO.getRoleId());
-            userDetailsVO.setAuthorities(authorities);
-            return userDetailsVO;
-        });
-    }
-
-    @Override
     public Mono<UserVO> fetchById(Long userId) {
         return queryByUserId(userId).map(user -> {
             UserVO outer = new UserVO();
@@ -103,9 +85,6 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return UserOuter 用户输出对象
      */
     private UserVO convertOuter(UserInfo info) {
-        if (Objects.isNull(info)) {
-            return null;
-        }
         UserVO outer = new UserVO();
         BeanUtils.copyProperties(info, outer);
         return outer;

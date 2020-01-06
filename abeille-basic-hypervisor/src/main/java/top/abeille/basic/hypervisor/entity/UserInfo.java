@@ -47,12 +47,6 @@ public class UserInfo {
     @Field(value = "avatar")
     private String avatar;
     /**
-     * 用户名
-     */
-    @Indexed
-    @Field(value = "username")
-    private String username;
-    /**
      * 密码
      */
     @Field(value = "password")
@@ -142,14 +136,6 @@ public class UserInfo {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {

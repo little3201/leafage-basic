@@ -11,7 +11,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserInfoService;
-import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -53,18 +52,6 @@ public class UserInfoController extends AbstractController {
     public Mono<ResponseEntity<UserVO>> queryUser(@PathVariable Long userId) {
         return userInfoService.fetchById(userId)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * 用户查询——根据用户名
-     *
-     * @param username 用户名
-     * @return ResponseEntity
-     */
-    @GetMapping("/load/{username}")
-    public Mono<ResponseEntity<UserDetailsVO>> loadUserByUsername(@PathVariable String username) {
-        return userInfoService.loadUserByUsername(username).map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 

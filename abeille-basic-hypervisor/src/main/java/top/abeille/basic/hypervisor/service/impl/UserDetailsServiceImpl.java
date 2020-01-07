@@ -21,6 +21,7 @@ import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -31,6 +32,9 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  **/
 @Service
 public class UserDetailsServiceImpl extends MapReactiveUserDetailsService {
+
+    private static final String REGEX_EMAIL = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}";
+    private static final String REGEX_MOBILE = "0?(13|14|15|17|18|19)[0-9]{9}";
 
     private final UserInfoRepository userInfoRepository;
     private final RoleSourceRepository roleSourceRepository;
@@ -86,11 +90,23 @@ public class UserDetailsServiceImpl extends MapReactiveUserDetailsService {
         return matcher;
     }
 
-    private boolean isMobile(String username) {
-        return false;
+    /**
+     * 是否手机号
+     *
+     * @param mobile 匹配字符
+     * @return true if mather otherwise false
+     */
+    private boolean isMobile(String mobile) {
+        return Pattern.matches(REGEX_MOBILE, mobile);
     }
 
-    private boolean isEmail(String username) {
-        return false;
+    /**
+     * 是否邮箱
+     *
+     * @param email 匹配字符
+     * @return true if mather otherwise false
+     */
+    private boolean isEmail(String email) {
+        return Pattern.matches(REGEX_EMAIL, email);
     }
 }

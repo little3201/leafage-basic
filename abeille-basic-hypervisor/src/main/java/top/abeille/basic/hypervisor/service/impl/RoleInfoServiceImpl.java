@@ -15,6 +15,7 @@ import top.abeille.basic.hypervisor.vo.RoleVO;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -46,6 +47,19 @@ public class RoleInfoServiceImpl implements RoleInfoService {
             BeanUtils.copyProperties(info, roleVO);
             return roleVO;
         });
+    }
+
+    @Override
+    public RoleVO fetchById(Long businessId) {
+        RoleInfo roleInfo = new RoleInfo();
+        roleInfo.setId(businessId);
+        Optional<RoleInfo> optional = roleInfoRepository.findOne(Example.of(roleInfo));
+        if (!optional.isPresent()) {
+            return null;
+        }
+        RoleVO roleVO = new RoleVO();
+        BeanUtils.copyProperties(optional.get(), roleVO);
+        return roleVO;
     }
 
     @Override

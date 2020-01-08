@@ -110,8 +110,8 @@ public class UserInfoServiceImpl implements UserInfoService {
         }
         // 查询角色信息
         Set<String> authorities = new HashSet<>();
-        RoleInfo roleVO = roleInfoRepository.getOne(infoOptional.get().getRoleId());
-        authorities.add(roleVO.getRoleId());
+        Optional<RoleInfo> roleInfoOptional = roleInfoRepository.findById(infoOptional.get().getRoleId());
+        roleInfoOptional.ifPresent(roleInfo -> authorities.add(roleInfo.getRoleId()));
         // 对象转换
         UserDetailsVO userDetailsVO = new UserDetailsVO();
         BeanUtils.copyProperties(infoOptional.get(), userDetailsVO);
@@ -124,6 +124,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         // Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可, 可以通过ExampleMatcher.matching()方法进行进一步得处理
         ExampleMatcher exampleMatcher = this.appendConditions();
         UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(userId);
         this.appendParams(userInfo);
         Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(userInfo, exampleMatcher));
         if (!optional.isPresent()) {

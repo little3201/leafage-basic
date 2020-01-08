@@ -28,7 +28,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Mono<GroupVO> fetchById(Long groupId) {
+    public Mono<GroupVO> fetchById(String groupId) {
         return fetchByGroupId(groupId).map(this::convertOuter);
     }
 
@@ -40,7 +40,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Mono<GroupVO> modify(Long groupId, GroupDTO groupDTO) {
+    public Mono<GroupVO> modify(String groupId, GroupDTO groupDTO) {
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
         info.setGroupId(groupId);
@@ -48,7 +48,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Mono<Void> removeById(Long groupId) {
+    public Mono<Void> removeById(String groupId) {
         return fetchByGroupId(groupId).flatMap(groupInfo -> groupInfoRepository.deleteById(groupInfo.getId()));
     }
 
@@ -58,7 +58,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
      * @param groupId 组ID
      * @return GroupInfo 对象
      */
-    private Mono<GroupInfo> fetchByGroupId(Long groupId) {
+    private Mono<GroupInfo> fetchByGroupId(String groupId) {
         GroupInfo info = new GroupInfo();
         info.setGroupId(groupId);
         return groupInfoRepository.findOne(Example.of(info));

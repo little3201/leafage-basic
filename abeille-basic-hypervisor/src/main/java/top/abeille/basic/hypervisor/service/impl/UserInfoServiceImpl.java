@@ -43,7 +43,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<UserVO> modify(Long userId, UserDTO userDTO) {
+    public Mono<UserVO> modify(String userId, UserDTO userDTO) {
         return queryByUserId(userId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(userDTO, articleInfo);
             return userInfoRepository.save(articleInfo).map(this::convertOuter);
@@ -51,12 +51,12 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public Mono<Void> removeById(Long userId) {
+    public Mono<Void> removeById(String userId) {
         return queryByUserId(userId).flatMap(userInfo -> userInfoRepository.deleteById(userInfo.getId()));
     }
 
     @Override
-    public Mono<UserVO> fetchById(Long userId) {
+    public Mono<UserVO> fetchById(String userId) {
         return queryByUserId(userId).map(user -> {
             UserVO outer = new UserVO();
             BeanUtils.copyProperties(user, outer);
@@ -70,7 +70,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @param userId 业务id
      * @return UserInfo 用户源数据
      */
-    private Mono<UserInfo> queryByUserId(Long userId) {
+    private Mono<UserInfo> queryByUserId(String userId) {
         ExampleMatcher exampleMatcher = appendConditions();
         UserInfo info = new UserInfo();
         info.setUserId(userId);

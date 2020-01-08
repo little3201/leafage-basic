@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import top.abeille.basic.hypervisor.entity.SourceInfo;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
@@ -27,10 +28,12 @@ public class SourceInfoServiceImpl implements SourceInfoService {
 
     @Override
     public Flux<SourceVO> retrieveAll(Sort sort) {
-        return sourceInfoRepository.findAll(sort).map(article -> {
-            SourceVO outer = new SourceVO();
-            BeanUtils.copyProperties(article, outer);
-            return outer;
-        });
+        return sourceInfoRepository.findAll(sort).map(this::convertOuter);
+    }
+
+    private SourceVO convertOuter(SourceInfo sourceInfo) {
+        SourceVO outer = new SourceVO();
+        BeanUtils.copyProperties(sourceInfo, outer);
+        return outer;
     }
 }

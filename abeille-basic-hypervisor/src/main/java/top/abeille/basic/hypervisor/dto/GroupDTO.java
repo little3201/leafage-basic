@@ -21,7 +21,7 @@ public class GroupDTO implements Serializable {
     /**
      * 上级
      */
-    private Long superior;
+    private String superior;
     /**
      * 名称
      */
@@ -40,11 +40,11 @@ public class GroupDTO implements Serializable {
         this.principal = principal;
     }
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
     }
 

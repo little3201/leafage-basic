@@ -29,12 +29,12 @@ public class SourceInfo {
      */
     @Indexed
     @Field(value = "source_id")
-    private Long sourceId;
+    private String sourceId;
     /**
      * 上级
      */
     @Field(value = "superior")
-    private Long superior;
+    private String superior;
     /**
      * 名称
      */
@@ -84,19 +84,19 @@ public class SourceInfo {
         this.id = id;
     }
 
-    public Long getSourceId() {
+    public String getSourceId() {
         return sourceId;
     }
 
-    public void setSourceId(Long sourceId) {
+    public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
     }
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
     }
 

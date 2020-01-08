@@ -28,7 +28,7 @@ public class GroupInfo {
      */
     @Indexed
     @Field(value = "group_id")
-    private Long groupId;
+    private String groupId;
     /**
      * 负责人
      */
@@ -73,11 +73,11 @@ public class GroupInfo {
         this.id = id;
     }
 
-    public Long getGroupId() {
+    public String getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(Long groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 

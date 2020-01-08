@@ -13,10 +13,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.entity.RoleSource;
 import top.abeille.basic.hypervisor.entity.UserInfo;
+import top.abeille.basic.hypervisor.entity.UserRole;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
+import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 
 import java.util.HashSet;
 import java.util.List;
@@ -33,15 +34,24 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 @Service
 public class UserDetailsServiceImpl extends MapReactiveUserDetailsService {
 
+    /**
+     * email 正则
+     */
     private static final String REGEX_EMAIL = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}";
+    /**
+     * 手机号 正则
+     */
     private static final String REGEX_MOBILE = "0?(13|14|15|17|18|19)[0-9]{9}";
 
     private final UserInfoRepository userInfoRepository;
     private final RoleSourceRepository roleSourceRepository;
+    private final UserRoleRepository userRoleRepository;
 
-    public UserDetailsServiceImpl(UserInfoRepository userInfoRepository, RoleSourceRepository roleSourceRepository) {
+    public UserDetailsServiceImpl(UserInfoRepository userInfoRepository, RoleSourceRepository roleSourceRepository,
+                                  UserRoleRepository userRoleRepository) {
         this.userInfoRepository = userInfoRepository;
         this.roleSourceRepository = roleSourceRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
@@ -57,6 +67,7 @@ public class UserDetailsServiceImpl extends MapReactiveUserDetailsService {
      */
     private Mono<User> loadUserByUsername(String username) {
         UserInfo info = new UserInfo();
+        // 判断是邮箱还是手机号
         if (isMobile(username)) {
             info.setMobile(username);
         } else if (isEmail(username)) {
@@ -68,8 +79,11 @@ public class UserDetailsServiceImpl extends MapReactiveUserDetailsService {
         ExampleMatcher exampleMatcher = appendConditions();
         return userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(userVO -> {
             Set<GrantedAuthority> authorities = new HashSet<>();
-            List<RoleSource> roleSources = roleSourceRepository.findAllByRoleIdAndEnabled(userVO.getRoleId(), Boolean.TRUE);
-            roleSources.forEach(roleSource -> authorities.add(new SimpleGrantedAuthority(String.valueOf(roleSource.getSourceId()))));
+            // 获取用户关联角色
+            List<UserRole> userRoleList = userRoleRepository.findAllByUserIdAndEnabled(userVO.getId(), Boolean.TRUE);
+            // 遍历获取资源ID
+            userRoleList.forEach(userRole -> roleSourceRepository.findAllByRoleIdAndEnabled(userRole.getRoleId(), Boolean.TRUE)
+                    .forEach(roleSource -> authorities.add(new SimpleGrantedAuthority(String.valueOf(roleSource.getSourceId())))));
             return new User(isMobile(username) ? userVO.getMobile() : userVO.getEmail(), userVO.getPassword(),
                     userVO.getEnabled(), userVO.getAccountNonExpired(), userVO.getCredentialsNonExpired(),
                     userVO.getAccountNonLocked(), authorities);

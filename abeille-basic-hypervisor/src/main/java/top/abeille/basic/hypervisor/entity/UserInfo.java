@@ -28,13 +28,7 @@ public class UserInfo {
      */
     @Indexed
     @Field(value = "user_id")
-    private Long userId;
-    /**
-     * 角色主键
-     */
-    @Indexed
-    @Field(value = "role_id")
-    private Long roleId;
+    private String userId;
     /**
      * 昵称
      */
@@ -106,20 +100,12 @@ public class UserInfo {
         this.id = id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
     }
 
     public String getNickname() {

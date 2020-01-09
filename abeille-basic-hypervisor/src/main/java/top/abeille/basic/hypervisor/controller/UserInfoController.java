@@ -11,7 +11,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserInfoService;
-import top.abeille.basic.hypervisor.vo.UserDetailsVO;
+import top.abeille.basic.hypervisor.vo.UserAuthority;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -80,12 +80,12 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/load/{username}")
     public ResponseEntity loadUserByUsername(@PathVariable String username) {
-        UserDetailsVO userDetailsVO = userInfoService.loadUserByUsername(username);
-        if (Objects.isNull(userDetailsVO)) {
+        UserAuthority userAuthority = userInfoService.loadUserByUsername(username);
+        if (Objects.isNull(userAuthority)) {
             logger.info("Not found anything about user with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok(userDetailsVO);
+        return ResponseEntity.ok(userAuthority);
     }
 
     /**

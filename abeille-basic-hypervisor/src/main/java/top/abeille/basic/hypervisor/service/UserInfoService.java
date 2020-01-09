@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.service;
 
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.vo.UserDetailsVO;
+import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.BasicService;
 
@@ -21,5 +21,5 @@ public interface UserInfoService extends BasicService<UserDTO, UserVO> {
      * @param username 用户名
      * @return UserDetailsVO 用户认证信息
      */
-    UserDetailsVO loadUserByUsername(String username);
+    UserInfo loadUserByUsername(String username);
 }

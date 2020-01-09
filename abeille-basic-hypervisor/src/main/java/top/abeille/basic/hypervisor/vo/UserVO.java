@@ -16,10 +16,6 @@ public class UserVO implements Serializable {
      */
     private Long userId;
     /**
-     * 角色ID
-     */
-    private Long roleId;
-    /**
      * 昵称
      */
     private String nickname;
@@ -58,14 +54,6 @@ public class UserVO implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
     }
 
     public String getNickname() {

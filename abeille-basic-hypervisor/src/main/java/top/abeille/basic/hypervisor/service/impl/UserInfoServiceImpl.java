@@ -10,17 +10,17 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.service.UserInfoService;
-import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -99,7 +99,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserDetailsVO loadUserByUsername(String username) {
+    public UserInfo loadUserByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);
         appendParams(userInfo);
@@ -108,15 +108,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             log.info("no user with username: {} be found", username);
             return null;
         }
-        // 查询角色信息
-        Set<String> authorities = new HashSet<>();
-        Optional<RoleInfo> roleInfoOptional = roleInfoRepository.findById(infoOptional.get().getRoleId());
-        roleInfoOptional.ifPresent(roleInfo -> authorities.add(roleInfo.getRoleId()));
-        // 对象转换
-        UserDetailsVO userDetailsVO = new UserDetailsVO();
-        BeanUtils.copyProperties(infoOptional.get(), userDetailsVO);
-        userDetailsVO.setAuthorities(authorities);
-        return userDetailsVO;
+        return infoOptional.get();
     }
 
     @Override

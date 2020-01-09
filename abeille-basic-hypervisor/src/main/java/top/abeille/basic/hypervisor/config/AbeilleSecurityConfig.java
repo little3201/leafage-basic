@@ -37,6 +37,17 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
+     * 认证管理器，grant_type 为 password 时必须
+     *
+     * @throws Exception 异常
+     */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+    /**
      * http 请求安全配置
      *
      * @param http 安全请求
@@ -59,17 +70,6 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }
-
-    /**
-     * 认证管理器，grant_type 为 password 时必须
-     *
-     * @throws Exception 异常
-     */
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
     }
 
 }

@@ -20,6 +20,7 @@ import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -78,7 +79,7 @@ public class UserDetailsServiceImpl extends MapReactiveUserDetailsService {
         // 组装查询条件，只查询可用，未被锁定的用户信息
         ExampleMatcher exampleMatcher = appendConditions();
         return userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(userVO -> {
-            Set<GrantedAuthority> authorities = new HashSet<>();
+            Set<GrantedAuthority> authorities = new LinkedHashSet<>();
             // 获取用户关联角色
             List<UserRole> userRoleList = userRoleRepository.findAllByUserIdAndEnabled(userVO.getId(), Boolean.TRUE);
             // 遍历获取资源ID

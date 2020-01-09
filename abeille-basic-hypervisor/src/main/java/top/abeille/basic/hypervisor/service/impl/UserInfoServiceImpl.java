@@ -37,6 +37,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public Mono<UserVO> create(UserDTO groupDTO) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(groupDTO, info);
+        info.setUserId(LocalDateTime.now()+"");
         info.setModifier(0L);
         info.setModifyTime(LocalDateTime.now());
         return userInfoRepository.save(info).map(this::convertOuter);

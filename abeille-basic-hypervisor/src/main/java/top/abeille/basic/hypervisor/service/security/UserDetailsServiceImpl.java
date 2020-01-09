@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.hypervisor.service.impl;
+package top.abeille.basic.hypervisor.service.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +20,6 @@ import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,8 +32,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  *
  * @author liwenqiang 2018/10/18 21:18
  **/
-@Service
-public class UserDetailsServiceImpl extends MapReactiveUserDetailsService {
+public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
 
     /**
      * email 正则
@@ -48,8 +47,7 @@ public class UserDetailsServiceImpl extends MapReactiveUserDetailsService {
     private final RoleSourceRepository roleSourceRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public UserDetailsServiceImpl(UserInfoRepository userInfoRepository, RoleSourceRepository roleSourceRepository,
-                                  UserRoleRepository userRoleRepository) {
+    public UserDetailsServiceImpl(UserInfoRepository userInfoRepository, RoleSourceRepository roleSourceRepository, UserRoleRepository userRoleRepository) {
         this.userInfoRepository = userInfoRepository;
         this.roleSourceRepository = roleSourceRepository;
         this.userRoleRepository = userRoleRepository;

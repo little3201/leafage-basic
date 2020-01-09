@@ -10,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.dto.UserDTO;
+import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.service.UserInfoService;
-import top.abeille.basic.hypervisor.vo.UserAuthority;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -22,8 +22,8 @@ import java.util.Objects;
  * 用户信息接口
  *
  * @author liwenqiang 2018/8/2 21:02
- * @since 1.0
  * @version 0.0.1
+ * @since 1.0
  **/
 @RestController
 @RequestMapping("/user")
@@ -80,12 +80,12 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/load/{username}")
     public ResponseEntity loadUserByUsername(@PathVariable String username) {
-        UserAuthority userAuthority = userInfoService.loadUserByUsername(username);
-        if (Objects.isNull(userAuthority)) {
+        UserInfo userInfo = userInfoService.loadUserByUsername(username);
+        if (Objects.isNull(userInfo)) {
             logger.info("Not found anything about user with username: {}.", username);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok(userAuthority);
+        return ResponseEntity.ok(userInfo);
     }
 
     /**

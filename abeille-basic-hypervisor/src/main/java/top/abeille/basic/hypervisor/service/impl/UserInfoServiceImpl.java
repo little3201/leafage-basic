@@ -98,7 +98,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void removeInBatch(List<UserDTO> dtoList) {
     }
 
-    @Override
+//    @Override
     public UserInfo loadUserByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);

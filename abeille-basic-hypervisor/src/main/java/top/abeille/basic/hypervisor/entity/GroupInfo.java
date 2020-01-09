@@ -47,7 +47,7 @@ public class GroupInfo {
     /**
      * 描述
      */
-    @Field(value = "name")
+    @Field(value = "description")
     private String description;
     /**
      * 是否有效

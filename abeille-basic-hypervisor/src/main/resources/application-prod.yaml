@@ -22,6 +22,6 @@ spring:
       host: 122.152.218.103
       port: 27017
       username: abeille
-      password: abeille.top
+      password: Abeille-top001
       database: abeille
       authentication-database: abeille

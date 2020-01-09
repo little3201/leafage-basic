@@ -49,7 +49,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping("/{userId}")
-    public Mono<ResponseEntity<UserVO>> fetchUser(@PathVariable Long userId) {
+    public Mono<ResponseEntity<UserVO>> fetchUser(@PathVariable String userId) {
         return userInfoService.fetchById(userId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -75,7 +75,7 @@ public class UserInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping("/{userId}")
-    public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
+    public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable String userId, @RequestBody @Valid UserDTO userDTO) {
         return userInfoService.modify(userId, userDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

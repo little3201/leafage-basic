@@ -62,7 +62,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping("/{groupId}")
-    public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable Long groupId, @RequestBody @Valid GroupDTO groupDTO) {
+    public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable String groupId, @RequestBody @Valid GroupDTO groupDTO) {
         return groupInfoService.modify(groupId, groupDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
@@ -75,7 +75,7 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @DeleteMapping("/{groupId}")
-    public Mono<ResponseEntity<Void>> removeGroup(@PathVariable Long groupId) {
+    public Mono<ResponseEntity<Void>> removeGroup(@PathVariable String groupId) {
         return groupInfoService.removeById(groupId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

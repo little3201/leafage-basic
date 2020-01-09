@@ -49,7 +49,7 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PutMapping("/{roleId}")
-    public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable Long roleId, @RequestBody @Valid RoleDTO roleDTO) {
+    public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable String roleId, @RequestBody @Valid RoleDTO roleDTO) {
         return roleInfoService.modify(roleId, roleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

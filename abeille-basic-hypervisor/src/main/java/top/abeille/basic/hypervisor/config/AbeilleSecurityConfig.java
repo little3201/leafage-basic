@@ -39,10 +39,10 @@ public class AbeilleSecurityConfig {
     /**
      * 自定义获取用户信息，此处使用mysql基于RBAC模式
      *
-     * @return
+     * @return The implements of ReactiveUserDetailsService
      */
     @Bean
-    public ReactiveUserDetailsService userDetailsService() {
+    protected ReactiveUserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl(userInfoRepository, roleSourceRepository, userRoleRepository);
     }
 

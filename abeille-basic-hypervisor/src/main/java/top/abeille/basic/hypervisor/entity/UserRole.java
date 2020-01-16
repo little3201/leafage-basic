@@ -20,7 +20,7 @@ public class UserRole {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private Long id;
     /**
      * 用户主键
      */
@@ -47,11 +47,11 @@ public class UserRole {
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

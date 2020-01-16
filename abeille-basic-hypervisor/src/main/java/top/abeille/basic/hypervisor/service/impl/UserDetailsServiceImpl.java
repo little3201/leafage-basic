@@ -47,7 +47,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         UserRole userRole = new UserRole();
         userRole.setEnabled(Boolean.TRUE);
-        userRole.setUserId(userInfo.getUserId());
+        userRole.setUserId(userInfo.getId());
         List<UserRole> userRoles = userRoleRepository.findAll(Example.of(userRole));
         // 检查角色是否配置
         if (CollectionUtils.isEmpty(userRoles)) {

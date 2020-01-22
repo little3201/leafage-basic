@@ -15,6 +15,8 @@ import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 
+import java.util.Objects;
+
 /**
  * 角色信息service 实现
  *
@@ -34,21 +36,21 @@ public class RoleInfoServiceImpl implements RoleInfoService {
         // 创建查询模板实例
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(enter, info);
-        return roleInfoRepository.findAll(Example.of(info, exampleMatcher)).map(this::convertOuter);
+        return roleInfoRepository.findAll(Example.of(info, exampleMatcher)).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> fetchById(String roleId) {
         RoleInfo info = new RoleInfo();
         info.setRoleId(roleId);
-        return roleInfoRepository.findOne(Example.of(info)).map(this::convertOuter);
+        return roleInfoRepository.findOne(Example.of(info)).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> create(RoleDTO enter) {
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(enter, info);
-        return roleInfoRepository.save(info).map(this::convertOuter);
+        return roleInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
         info.setRoleId(roleId);
-        return roleInfoRepository.save(info).map(this::convertOuter);
+        return roleInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     private RoleVO convertOuter(RoleInfo roleInfo) {

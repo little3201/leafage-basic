@@ -13,6 +13,8 @@ import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.basic.assets.vo.AccountVO;
 
+import java.util.Objects;
+
 /**
  * 账户信息Service实现
  *
@@ -31,7 +33,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     public Mono<AccountVO> create(AccountDTO accountDTO) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(accountDTO, info);
-        return accountInfoRepository.save(info).map(this::convertOuter);
+        return accountInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(accountDTO, info);
         info.setAccountId(accountId);
-        return accountInfoRepository.save(info).map(this::convertOuter);
+        return accountInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
         AccountInfo info = new AccountInfo();
         info.setAccountId(accountId);
         info.setEnabled(true);
-        return accountInfoRepository.findOne(Example.of(info)).map(this::convertOuter);
+        return accountInfoRepository.findOne(Example.of(info)).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override

@@ -33,26 +33,26 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     @Override
     public Flux<ArticleVO> retrieveAll(Sort sort) {
-        return articleInfoRepository.findAll(sort).map(this::convertOuter);
+        return articleInfoRepository.findAll(sort).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<ArticleVO> fetchById(String articleId) {
-        return fetchByArticleId(articleId).map(this::convertOuter);
+        return fetchByArticleId(articleId).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(articleDTO, info);
-        return articleInfoRepository.save(info).map(this::convertOuter);
+        return articleInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<ArticleVO> modify(String articleId, ArticleDTO articleDTO) {
         return fetchByArticleId(articleId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(articleDTO, articleInfo);
-            return articleInfoRepository.save(articleInfo).map(this::convertOuter);
+            return articleInfoRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
         });
     }
 

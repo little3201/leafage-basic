@@ -13,6 +13,8 @@ import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 
+import java.util.Objects;
+
 /**
  * 组织信息Service实现
  *
@@ -29,14 +31,14 @@ public class GroupInfoServiceImpl implements GroupInfoService {
 
     @Override
     public Mono<GroupVO> fetchById(String groupId) {
-        return fetchByGroupId(groupId).map(this::convertOuter);
+        return fetchByGroupId(groupId).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
-        return groupInfoRepository.save(info).map(this::convertOuter);
+        return groupInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
@@ -44,7 +46,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
         info.setGroupId(groupId);
-        return groupInfoRepository.save(info).map(this::convertOuter);
+        return groupInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override

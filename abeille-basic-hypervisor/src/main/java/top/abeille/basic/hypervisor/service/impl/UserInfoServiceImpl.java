@@ -15,6 +15,7 @@ import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -37,17 +38,17 @@ public class UserInfoServiceImpl implements UserInfoService {
     public Mono<UserVO> create(UserDTO groupDTO) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(groupDTO, info);
-        info.setUserId(LocalDateTime.now()+"");
+        info.setUserId(LocalDateTime.now() + "");
         info.setModifier(0L);
         info.setModifyTime(LocalDateTime.now());
-        return userInfoRepository.save(info).map(this::convertOuter);
+        return userInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<UserVO> modify(String userId, UserDTO userDTO) {
         return queryByUserId(userId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(userDTO, articleInfo);
-            return userInfoRepository.save(articleInfo).map(this::convertOuter);
+            return userInfoRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
         });
     }
 
@@ -58,11 +59,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public Mono<UserVO> fetchById(String userId) {
-        return queryByUserId(userId).map(user -> {
-            UserVO outer = new UserVO();
-            BeanUtils.copyProperties(user, outer);
-            return outer;
-        });
+        return queryByUserId(userId).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     /**

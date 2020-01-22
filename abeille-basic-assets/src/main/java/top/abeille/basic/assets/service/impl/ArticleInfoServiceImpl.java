@@ -85,9 +85,6 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
      * @return ArticleVO 输出对象
      */
     private ArticleVO convertOuter(ArticleInfo info) {
-        if (Objects.isNull(info)) {
-            return null;
-        }
         ArticleVO outer = new ArticleVO();
         BeanUtils.copyProperties(info, outer);
         return outer;

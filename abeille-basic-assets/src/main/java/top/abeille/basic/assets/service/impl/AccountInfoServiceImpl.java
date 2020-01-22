@@ -13,8 +13,6 @@ import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.basic.assets.vo.AccountVO;
 
-import java.util.Objects;
-
 /**
  * 账户信息Service实现
  *
@@ -67,9 +65,6 @@ public class AccountInfoServiceImpl implements AccountInfoService {
      * @return AccountVO 输出对象
      */
     private AccountVO convertOuter(AccountInfo info) {
-        if (Objects.isNull(info)) {
-            return null;
-        }
         AccountVO outer = new AccountVO();
         BeanUtils.copyProperties(info, outer);
         return outer;

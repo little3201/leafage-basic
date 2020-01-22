@@ -13,7 +13,7 @@ spring:
   cloud:
     ##=====consul=====##
     consul:
-      host: 122.152.218.103
+      host: 127.0.0.1
       port: 8500
 
   ##=====mongodb config=====##
@@ -22,6 +22,6 @@ spring:
       host: 122.152.218.103
       port: 27017
       username: abeille
-      password: Abeille-top001
+      password: zx110119@@
       database: abeille
-      authentication-database: abeille
+      authentication-database: admin

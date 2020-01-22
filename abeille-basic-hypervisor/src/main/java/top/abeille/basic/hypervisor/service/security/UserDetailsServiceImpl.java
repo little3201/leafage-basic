@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.service.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,6 +31,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  *
  * @author liwenqiang 2018/10/18 21:18
  **/
+@Service
 public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
 
     /**

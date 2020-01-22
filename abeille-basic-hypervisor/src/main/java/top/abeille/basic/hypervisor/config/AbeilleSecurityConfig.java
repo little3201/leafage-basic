@@ -3,18 +3,24 @@
  */
 package top.abeille.basic.hypervisor.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
-import top.abeille.basic.hypervisor.repository.UserInfoRepository;
-import top.abeille.basic.hypervisor.repository.UserRoleRepository;
-import top.abeille.basic.hypervisor.service.security.UserDetailsServiceImpl;
+
+import java.io.InputStream;
+import java.security.KeyFactory;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.KeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 /**
  * spring security 配置
@@ -24,9 +30,13 @@ import top.abeille.basic.hypervisor.service.security.UserDetailsServiceImpl;
 @EnableWebFluxSecurity
 public class AbeilleSecurityConfig {
 
-    private UserInfoRepository userInfoRepository;
-    private RoleSourceRepository roleSourceRepository;
-    private UserRoleRepository userRoleRepository;
+    /**
+     * 开启日志
+     */
+    protected static final Logger logger = LoggerFactory.getLogger(AbeilleSecurityConfig.class);
+
+    private static final String CERT_PATH = "jwt/public.cert";
+    private static final String CERT_TYPE = "RSA";
 
     /**
      * 密码配置，使用BCryptPasswordEncoder
@@ -37,25 +47,34 @@ public class AbeilleSecurityConfig {
     }
 
     /**
-     * 自定义获取用户信息，此处使用mysql基于RBAC模式
-     *
-     * @return The implements of ReactiveUserDetailsService
-     */
-    @Bean
-    protected ReactiveUserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl(userInfoRepository, roleSourceRepository, userRoleRepository);
-    }
-
-    /**
      * 安全配置
      */
     @Bean
-    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http
+    SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) throws Exception {
+        http.csrf().disable().formLogin().disable().httpBasic().disable()
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyExchange().authenticated()
-                .and().oauth2ResourceServer();
+                .and().exceptionHandling()
+                .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
         return http.build();
+    }
+
+    /**
+     * JWT 解码器
+     */
+    private ReactiveJwtDecoder jwtDecoder() throws Exception {
+        return new NimbusReactiveJwtDecoder(readRSAPublicKey());
+    }
+
+    /**
+     * 获取RSAPublicKey
+     */
+    private RSAPublicKey readRSAPublicKey() throws Exception {
+        // 从资源目录下的文件中读取证书文件，获取Public Key
+        InputStream is = new ClassPathResource(CERT_PATH).getInputStream();
+        KeySpec keySpec = new X509EncodedKeySpec(new byte[is.available()]);
+        KeyFactory keyFactory = KeyFactory.getInstance(CERT_TYPE);
+        return (RSAPublicKey) keyFactory.generatePublic(keySpec);
     }
 }

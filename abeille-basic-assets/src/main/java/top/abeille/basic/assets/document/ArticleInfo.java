@@ -28,7 +28,7 @@ public class ArticleInfo {
      */
     @Field(value = "article_id")
     @Indexed
-    private Long articleId;
+    private String articleId;
     /**
      * 标题
      */
@@ -59,7 +59,7 @@ public class ArticleInfo {
      * 修改人
      */
     @Field(value = "modifier")
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
@@ -74,11 +74,11 @@ public class ArticleInfo {
         this.id = id;
     }
 
-    public Long getArticleId() {
+    public String getArticleId() {
         return articleId;
     }
 
-    public void setArticleId(Long articleId) {
+    public void setArticleId(String articleId) {
         this.articleId = articleId;
     }
 
@@ -122,11 +122,11 @@ public class ArticleInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

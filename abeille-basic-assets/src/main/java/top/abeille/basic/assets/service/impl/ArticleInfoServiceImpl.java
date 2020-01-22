@@ -37,7 +37,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Mono<ArticleVO> fetchById(Long articleId) {
+    public Mono<ArticleVO> fetchById(String articleId) {
         return fetchByArticleId(articleId).map(this::convertOuter);
     }
 
@@ -49,7 +49,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Mono<ArticleVO> modify(Long articleId, ArticleDTO articleDTO) {
+    public Mono<ArticleVO> modify(String articleId, ArticleDTO articleDTO) {
         return fetchByArticleId(articleId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(articleDTO, articleInfo);
             return articleInfoRepository.save(articleInfo).map(this::convertOuter);
@@ -57,7 +57,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public Mono<Void> removeById(Long articleId) {
+    public Mono<Void> removeById(String articleId) {
         ArticleInfo info = new ArticleInfo();
         info.setArticleId(articleId);
         return articleInfoRepository.findOne(Example.of(info)).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
@@ -69,7 +69,7 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
      * @param articleId 文章ID
      * @return ArticleInfo 对象
      */
-    private Mono<ArticleInfo> fetchByArticleId(Long articleId) {
+    private Mono<ArticleInfo> fetchByArticleId(String articleId) {
         if (Objects.isNull(articleId)) {
             return Mono.empty();
         }

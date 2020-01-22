@@ -36,7 +36,7 @@ public class AccountInfoController extends AbstractController {
      * @return Mono<AccountInfo>
      */
     @GetMapping("/{accountId}")
-    public Mono<ResponseEntity<AccountVO>> fetchAccount(@PathVariable Long accountId) {
+    public Mono<ResponseEntity<AccountVO>> fetchAccount(@PathVariable String accountId) {
         return accountInfoService.fetchById(accountId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -62,7 +62,7 @@ public class AccountInfoController extends AbstractController {
      * @return Mono<AccountInfo>
      */
     @PutMapping("/{accountId}")
-    public Mono<ResponseEntity<AccountVO>> modifyAccount(@PathVariable Long accountId, @RequestBody @Valid AccountDTO accountDTO) {
+    public Mono<ResponseEntity<AccountVO>> modifyAccount(@PathVariable String accountId, @RequestBody @Valid AccountDTO accountDTO) {
         return accountInfoService.modify(accountId, accountDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
@@ -75,7 +75,7 @@ public class AccountInfoController extends AbstractController {
      * @return Mono<Void>
      */
     @DeleteMapping("/{accountId}")
-    public Mono<ResponseEntity<Void>> removeAccount(@PathVariable Long accountId) {
+    public Mono<ResponseEntity<Void>> removeAccount(@PathVariable String accountId) {
         return accountInfoService.removeById(accountId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

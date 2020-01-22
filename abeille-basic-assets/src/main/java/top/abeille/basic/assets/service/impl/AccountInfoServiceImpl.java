@@ -37,7 +37,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public Mono<AccountVO> modify(Long accountId, AccountDTO accountDTO) {
+    public Mono<AccountVO> modify(String accountId, AccountDTO accountDTO) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(accountDTO, info);
         info.setAccountId(accountId);
@@ -45,7 +45,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public Mono<AccountVO> fetchById(Long accountId) {
+    public Mono<AccountVO> fetchById(String accountId) {
         AccountInfo info = new AccountInfo();
         info.setAccountId(accountId);
         info.setEnabled(true);
@@ -53,7 +53,7 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     }
 
     @Override
-    public Mono<Void> removeById(Long accountId) {
+    public Mono<Void> removeById(String accountId) {
         AccountInfo info = new AccountInfo();
         info.setAccountId(accountId);
         return accountInfoRepository.findOne(Example.of(info))

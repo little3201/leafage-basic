@@ -17,7 +17,7 @@ public class ArticleVO implements Serializable {
     /**
      * 文章ID
      */
-    private Long articleId;
+    private String articleId;
     /**
      * 标题
      */
@@ -43,11 +43,11 @@ public class ArticleVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public Long getArticleId() {
+    public String getArticleId() {
         return articleId;
     }
 
-    public void setArticleId(Long articleId) {
+    public void setArticleId(String articleId) {
         this.articleId = articleId;
     }
 

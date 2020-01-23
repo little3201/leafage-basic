@@ -30,11 +30,6 @@ import java.security.spec.X509EncodedKeySpec;
 @EnableWebFluxSecurity
 public class AbeilleSecurityConfig {
 
-    /**
-     * 开启日志
-     */
-    protected static final Logger logger = LoggerFactory.getLogger(AbeilleSecurityConfig.class);
-
     private static final String CERT_PATH = "jwt/public.cert";
     private static final String CERT_TYPE = "RSA";
 

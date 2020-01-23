@@ -47,7 +47,8 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
     private final RoleSourceRepository roleSourceRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public UserDetailsServiceImpl(UserInfoRepository userInfoRepository, RoleSourceRepository roleSourceRepository, UserRoleRepository userRoleRepository) {
+    public UserDetailsServiceImpl(UserInfoRepository userInfoRepository, RoleSourceRepository roleSourceRepository,
+                                  UserRoleRepository userRoleRepository) {
         this.userInfoRepository = userInfoRepository;
         this.roleSourceRepository = roleSourceRepository;
         this.userRoleRepository = userRoleRepository;

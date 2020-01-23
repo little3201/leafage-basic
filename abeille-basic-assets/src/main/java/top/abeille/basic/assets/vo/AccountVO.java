@@ -18,11 +18,11 @@ public class AccountVO implements Serializable {
     /**
      * 用户ID
      */
-    private Long userId;
+    private String userId;
     /**
      * 账户ID
      */
-    private Long accountId;
+    private String accountId;
     /**
      * 余额
      */
@@ -40,19 +40,19 @@ public class AccountVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public Long getAccountId() {
+    public String getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Long accountId) {
+    public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 

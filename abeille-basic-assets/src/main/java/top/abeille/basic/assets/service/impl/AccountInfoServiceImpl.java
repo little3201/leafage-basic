@@ -12,6 +12,7 @@ import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.basic.assets.vo.AccountVO;
+import top.abeille.common.basic.AbstractBasicService;
 
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ import java.util.Objects;
  * @author liwenqiang 2018/12/17 19:27
  **/
 @Service
-public class AccountInfoServiceImpl implements AccountInfoService {
+public class AccountInfoServiceImpl extends AbstractBasicService implements AccountInfoService {
 
     private final AccountInfoRepository accountInfoRepository;
 
@@ -33,19 +34,23 @@ public class AccountInfoServiceImpl implements AccountInfoService {
     public Mono<AccountVO> create(AccountDTO accountDTO) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(accountDTO, info);
+        info.setAccountId(this.getDateValue());
+        info.setEnabled(Boolean.TRUE);
         return accountInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<AccountVO> modify(String accountId, AccountDTO accountDTO) {
-        AccountInfo info = new AccountInfo();
-        BeanUtils.copyProperties(accountDTO, info);
-        info.setAccountId(accountId);
-        return accountInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        return fetchById(accountId).flatMap(accountVO -> {
+            AccountInfo info = new AccountInfo();
+            BeanUtils.copyProperties(accountVO, info);
+            return accountInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        });
     }
 
     @Override
     public Mono<AccountVO> fetchById(String accountId) {
+        Objects.requireNonNull(accountId);
         AccountInfo info = new AccountInfo();
         info.setAccountId(accountId);
         info.setEnabled(true);

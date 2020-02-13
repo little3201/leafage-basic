@@ -14,7 +14,9 @@ import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
+import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -23,7 +25,7 @@ import java.util.Objects;
  * @author liwenqiang 2018/12/20 9:54
  **/
 @Service
-public class ArticleInfoServiceImpl implements ArticleInfoService {
+public class ArticleInfoServiceImpl extends AbstractBasicService implements ArticleInfoService {
 
     private final ArticleInfoRepository articleInfoRepository;
 
@@ -45,6 +47,8 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(articleDTO, info);
+        info.setArticleId(this.getDateValue());
+        info.setEnabled(Boolean.TRUE);
         return articleInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 

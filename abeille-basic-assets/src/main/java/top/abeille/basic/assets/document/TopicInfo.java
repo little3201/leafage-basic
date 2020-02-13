@@ -1,22 +1,21 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
 package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
 /**
- * Model class for ArticleInfo
+ * Model class for TopicInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "article_info")
-public class ArticleInfo {
+@Document(collection = "topic_info")
+public class TopicInfo {
 
     /**
      * 主键
@@ -24,43 +23,20 @@ public class ArticleInfo {
     @Id
     private String id;
     /**
-     * 文章ID
+     * 话题ID
      */
-    @Field(value = "article_id")
-    @Indexed
-    private String articleId;
+    @Field(value = "topic_id")
+    private String topicId;
     /**
-     * 文章ID
+     * 用户ID
      */
     @Field(value = "user_id")
-    @Indexed
     private String userId;
-    /**
-     * 标题
-     */
-    @Field(value = "title")
-    @Indexed
-    private String title;
-    /**
-     * 副标题
-     */
-    @Field(value = "subtitle")
-    private String subtitle;
     /**
      * 内容
      */
     @Field(value = "content")
     private String content;
-    /**
-     * 图片url
-     */
-    @Field(value = "image_url")
-    private String imageUrl;
-    /**
-     * 目录
-     */
-    @Field(value = "catalog")
-    private String catalog;
     /**
      * 是否有效
      */
@@ -85,12 +61,12 @@ public class ArticleInfo {
         this.id = id;
     }
 
-    public String getArticleId() {
-        return articleId;
+    public String getTopicId() {
+        return topicId;
     }
 
-    public void setArticleId(String articleId) {
-        this.articleId = articleId;
+    public void setTopicId(String topicId) {
+        this.topicId = topicId;
     }
 
     public String getUserId() {
@@ -101,22 +77,6 @@ public class ArticleInfo {
         this.userId = userId;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
-
     public String getContent() {
         return content;
     }
@@ -125,24 +85,8 @@ public class ArticleInfo {
         this.content = content;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public Boolean getEnabled() {
         return enabled;
-    }
-
-    public String getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
     }
 
     public void setEnabled(Boolean enabled) {

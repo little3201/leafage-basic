@@ -31,11 +31,11 @@ public class AccountInfo {
     @Indexed
     private String userId;
     /**
-     * 账户ID
+     * 业务ID
      */
-    @Field(value = "account_id")
+    @Field(value = "business_id")
     @Indexed
-    private String accountId;
+    private String businessId;
     /**
      * 余额
      */
@@ -78,12 +78,12 @@ public class AccountInfo {
         this.userId = userId;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public BigDecimal getBalance() {

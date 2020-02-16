@@ -3,19 +3,20 @@
  */
 package top.abeille.basic.assets.vo;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.io.Serializable;
 
 /**
  * VO class for TopicInfo
  *
  * @author liwenqiang
  */
-public class TopicVO {
+public class TopicVO implements Serializable {
+
 
     /**
-     * 话题ID
+     * 业务ID
      */
-    private String topicId;
+    private String businessId;
     /**
      * 用户ID
      */
@@ -25,12 +26,12 @@ public class TopicVO {
      */
     private String content;
 
-    public String getTopicId() {
-        return topicId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setTopicId(String topicId) {
-        this.topicId = topicId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getUserId() {

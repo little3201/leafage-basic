@@ -34,42 +34,42 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
     }
 
     @Override
-    public Mono<TranslationVO> fetchById(String translationId) {
-        return fetchByTranslationId(translationId).map(this::convertOuter);
+    public Mono<TranslationVO> fetchById(String businessId) {
+        return fetchByTranslationId(businessId).map(this::convertOuter);
     }
 
     @Override
     public Mono<TranslationVO> create(TranslationDTO translationDTO) {
         TranslationInfo info = new TranslationInfo();
         BeanUtils.copyProperties(translationDTO, info);
-        info.setTranslationId(this.getDateValue());
+        info.setBusinessId(this.getDateValue());
         info.setEnabled(Boolean.TRUE);
         return translationInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<TranslationVO> modify(String translationId, TranslationDTO translationDTO) {
-        return this.fetchByTranslationId(translationId).flatMap(info -> {
+    public Mono<TranslationVO> modify(String businessId, TranslationDTO translationDTO) {
+        return this.fetchByTranslationId(businessId).flatMap(info -> {
             BeanUtils.copyProperties(translationDTO, info);
             return translationInfoRepository.save(info).map(this::convertOuter);
         });
     }
 
     /**
-     * 根据ID查询
+     * 根据业务id查询
      *
-     * @param translationId 翻译ID
-     * @return translation_info的对应映射关系的对象，否则返回empty
+     * @param businessId 业务id
+     * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<TranslationInfo> fetchByTranslationId(String translationId) {
-        Objects.requireNonNull(translationId);
+    private Mono<TranslationInfo> fetchByTranslationId(String businessId) {
+        Objects.requireNonNull(businessId);
         TranslationInfo info = new TranslationInfo();
-        info.setTranslationId(translationId);
+        info.setBusinessId(businessId);
         return translationInfoRepository.findOne(Example.of(info));
     }
 
     /**
-     * 对象转换魏输出结果对象
+     * 对象转换为输出结果对象
      *
      * @param info 信息
      * @return 输出转换后的vo对象

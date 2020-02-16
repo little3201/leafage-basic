@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.entity;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for RoleInfo
+ * Model class for UserRole
  *
- * @author liwenqiang
- */
-@Document(collection = "role_info")
-public class RoleInfo {
+ * @author liwenqiang 2019/9/16 10:09
+ **/
+@Document(collection = "user_role")
+public class UserRole {
 
     /**
      * 主键
@@ -24,21 +24,18 @@ public class RoleInfo {
     @Id
     private String id;
     /**
-     * 角色ID
+     * 用户主键
+     */
+    @Indexed
+    @Field(value = "user_id")
+    private Long userId;
+    /**
+     * 组主键
      */
     @Indexed
     @Field(value = "role_id")
-    private String roleId;
-    /**
-     * 名称
-     */
-    @Field(value = "name")
-    private String name;
-    /**
-     * 描述
-     */
-    @Field(value = "description")
-    private String description;
+    private Long roleId;
+
     /**
      * 是否有效
      */
@@ -55,7 +52,6 @@ public class RoleInfo {
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
-
     public String getId() {
         return id;
     }
@@ -64,28 +60,20 @@ public class RoleInfo {
         this.id = id;
     }
 
-    public String getRoleId() {
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(String roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Boolean getEnabled() {

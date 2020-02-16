@@ -15,9 +15,9 @@ public class UserVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
     /**
-     * 用户ID
+     * 业务id
      */
-    private Long userId;
+    private String businessId;
     /**
      * 角色ID
      */
@@ -59,12 +59,12 @@ public class UserVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public Long getUserId() {
-        return userId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public Long getRoleId() {

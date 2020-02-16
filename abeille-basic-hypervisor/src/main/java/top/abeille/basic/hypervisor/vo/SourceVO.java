@@ -15,9 +15,9 @@ public class SourceVO implements Serializable {
 
     private static final long serialVersionUID = 9207337014543117619L;
     /**
-     * 权限ID
+     * 业务id
      */
-    private Long sourceId;
+    private String businessId;
     /**
      * 上级
      */
@@ -47,12 +47,12 @@ public class SourceVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public Long getSourceId() {
-        return sourceId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setSourceId(Long sourceId) {
-        this.sourceId = sourceId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getSuperior() {

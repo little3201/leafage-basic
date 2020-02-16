@@ -15,9 +15,9 @@ public class ArticleVO implements Serializable {
 
     private static final long serialVersionUID = -2692474466082844624L;
     /**
-     * 文章ID
+     * 业务ID
      */
-    private String articleId;
+    private String businessId;
     /**
      * 标题
      */
@@ -43,12 +43,12 @@ public class ArticleVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public String getArticleId() {
-        return articleId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setArticleId(String articleId) {
-        this.articleId = articleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getTitle() {

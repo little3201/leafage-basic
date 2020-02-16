@@ -24,11 +24,11 @@ public class ArticleInfo {
     @Id
     private String id;
     /**
-     * 文章ID
+     * 业务ID
      */
-    @Field(value = "article_id")
+    @Field(value = "business_id")
     @Indexed
-    private String articleId;
+    private String businessId;
     /**
      * 文章ID
      */
@@ -85,12 +85,12 @@ public class ArticleInfo {
         this.id = id;
     }
 
-    public String getArticleId() {
-        return articleId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setArticleId(String articleId) {
-        this.articleId = articleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getUserId() {

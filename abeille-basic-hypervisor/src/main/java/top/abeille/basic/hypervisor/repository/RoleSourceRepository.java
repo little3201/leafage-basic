@@ -5,7 +5,7 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.hypervisor.entity.RoleSource;
+import top.abeille.basic.hypervisor.document.RoleSource;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

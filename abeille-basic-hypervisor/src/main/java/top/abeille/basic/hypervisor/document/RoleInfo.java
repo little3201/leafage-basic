@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.entity;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for RoleSource
+ * Model class for RoleInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "role_source")
-public class RoleSource {
+@Document(collection = "role_info")
+public class RoleInfo {
 
     /**
      * 主键
@@ -24,18 +24,21 @@ public class RoleSource {
     @Id
     private String id;
     /**
-     * 角色ID
+     * 业务ID
      */
+    @Field(value = "business_id")
     @Indexed
-    @Field(value = "role_id")
-    private Long roleId;
+    private String businessId;
     /**
-     * 资源ID
+     * 名称
      */
-    @Indexed
-    @Field(value = "source_id")
-    private Long sourceId;
-
+    @Field(value = "name")
+    private String name;
+    /**
+     * 描述
+     */
+    @Field(value = "description")
+    private String description;
     /**
      * 是否有效
      */
@@ -52,6 +55,7 @@ public class RoleSource {
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
+
     public String getId() {
         return id;
     }
@@ -60,20 +64,28 @@ public class RoleSource {
         this.id = id;
     }
 
-    public Long getRoleId() {
-        return roleId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
-    public Long getSourceId() {
-        return sourceId;
+    public String getName() {
+        return name;
     }
 
-    public void setSourceId(Long sourceId) {
-        this.sourceId = sourceId;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getEnabled() {

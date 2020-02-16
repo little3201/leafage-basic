@@ -38,55 +38,52 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
     }
 
     @Override
-    public Mono<TopicVO> fetchById(String topicId) {
-        Objects.requireNonNull(topicId);
-        return fetchByTopicId(topicId).map(this::convertOuter);
+    public Mono<TopicVO> fetchById(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchByBusinessId(businessId).map(this::convertOuter);
     }
 
     @Override
     public Mono<TopicVO> create(TopicDTO topicDTO) {
         TopicInfo info = new TopicInfo();
         BeanUtils.copyProperties(topicDTO, info);
-        info.setTopicId(this.getDateValue());
+        info.setBusinessId(this.getDateValue());
         info.setEnabled(Boolean.TRUE);
         return topicInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<TopicVO> modify(String topicId, TopicDTO topicDTO) {
-        Objects.requireNonNull(topicId);
-        return fetchByTopicId(topicId).flatMap(topicInfo -> {
+    public Mono<TopicVO> modify(String businessId, TopicDTO topicDTO) {
+        Objects.requireNonNull(businessId);
+        return this.fetchByBusinessId(businessId).flatMap(topicInfo -> {
             BeanUtils.copyProperties(topicDTO, topicInfo);
             return topicInfoRepository.save(topicInfo).map(this::convertOuter);
         });
     }
 
     @Override
-    public Mono<Void> removeById(String topicId) {
-        Objects.requireNonNull(topicId);
-        TopicInfo info = new TopicInfo();
-        info.setTopicId(topicId);
-        return topicInfoRepository.findOne(Example.of(info)).flatMap(topic -> topicInfoRepository.deleteById(topic.getId()));
+    public Mono<Void> removeById(String businessId) {
+        return this.fetchByBusinessId(businessId).flatMap(topic -> topicInfoRepository.deleteById(topic.getId()));
     }
 
     /**
-     * 根据ID查询
+     * 根据业务id查询
      *
-     * @param topicId 文章ID
-     * @return ArticleInfo 对象
+     * @param businessId 业务id
+     * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<TopicInfo> fetchByTopicId(String topicId) {
-        Objects.requireNonNull(topicId);
+    private Mono<TopicInfo> fetchByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
         TopicInfo info = new TopicInfo();
-        info.setTopicId(topicId);
+        info.setBusinessId(businessId);
         return topicInfoRepository.findOne(Example.of(info));
     }
 
     /**
-     * 对象转换魏输出结果对象
+     * 对象转换为输出结果对象
      *
      * @param info 信息
-     * @return ArticleVO 输出对象
+     * @return 输出转换后的vo对象
      */
     private TopicVO convertOuter(TopicInfo info) {
         TopicVO outer = new TopicVO();

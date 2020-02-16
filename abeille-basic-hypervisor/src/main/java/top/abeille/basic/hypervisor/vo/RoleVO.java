@@ -15,9 +15,9 @@ public class RoleVO implements Serializable {
 
     private static final long serialVersionUID = 1564574233487923178L;
     /**
-     * 角色ID
+     * 业务id
      */
-    private Long roleId;
+    private String businessId;
     /**
      * 名称
      */
@@ -35,12 +35,12 @@ public class RoleVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public Long getRoleId() {
-        return roleId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getName() {

@@ -8,6 +8,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.AccountInfo;
+import top.abeille.basic.assets.document.TranslationInfo;
 import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
@@ -34,7 +35,7 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
     public Mono<AccountVO> create(AccountDTO accountDTO) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(accountDTO, info);
-        info.setAccountId(this.getDateValue());
+        info.setBusinessId(this.getDateValue());
         info.setEnabled(Boolean.TRUE);
         return accountInfoRepository.save(info).map(this::convertOuter);
     }
@@ -51,27 +52,34 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
 
     @Override
     public Mono<AccountVO> fetchById(String accountId) {
-        Objects.requireNonNull(accountId);
-        AccountInfo info = new AccountInfo();
-        info.setAccountId(accountId);
-        info.setEnabled(true);
-        return accountInfoRepository.findOne(Example.of(info)).map(this::convertOuter);
+        return this.fetchByBusinessId(accountId).map(this::convertOuter);
     }
 
     @Override
     public Mono<Void> removeById(String accountId) {
-        Objects.requireNonNull(accountId);
-        AccountInfo info = new AccountInfo();
-        info.setAccountId(accountId);
-        return accountInfoRepository.findOne(Example.of(info))
+        return this.fetchByBusinessId(accountId)
                 .flatMap(account -> accountInfoRepository.deleteById(account.getId()));
     }
 
     /**
-     * 设置查对象转换魏输出结果对象询条件的必要参数
+     * 根据业务id查询
+     *
+     * @param businessId 业务id
+     * @return 返回查询到的信息，否则返回empty
+     */
+    private Mono<AccountInfo> fetchByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
+        AccountInfo info = new AccountInfo();
+        info.setBusinessId(businessId);
+        info.setEnabled(Boolean.TRUE);
+        return accountInfoRepository.findOne(Example.of(info));
+    }
+
+    /**
+     * 对象转换为输出结果对象
      *
      * @param info 信息
-     * @return AccountVO 输出对象
+     * @return 输出转换后的vo对象
      */
     private AccountVO convertOuter(AccountInfo info) {
         AccountVO outer = new AccountVO();

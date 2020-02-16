@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.entity;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2019/9/16 10:09
  **/
-@Document(collection = "user_role")
-public class UserRole {
+@Document(collection = "user_group")
+public class UserGroup {
 
     /**
      * 主键
@@ -33,8 +33,8 @@ public class UserRole {
      * 组主键
      */
     @Indexed
-    @Field(value = "role_id")
-    private Long roleId;
+    @Field(value = "group_id")
+    private Long groupId;
 
     /**
      * 是否有效
@@ -68,12 +68,12 @@ public class UserRole {
         this.userId = userId;
     }
 
-    public Long getRoleId() {
-        return roleId;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public Boolean getEnabled() {

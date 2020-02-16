@@ -3,17 +3,19 @@
  */
 package top.abeille.basic.assets.vo;
 
+import java.io.Serializable;
+
 /**
  * DTO class for TranslationInfo
  *
  * @author liwenqiang
  */
-public class TranslationVO {
+public class TranslationVO implements Serializable {
 
     /**
-     * 话题ID
+     * 业务ID
      */
-    private String translationId;
+    private String businessId;
     /**
      * 内容
      */
@@ -27,12 +29,12 @@ public class TranslationVO {
      */
     private String originalUrl;
 
-    public String getTranslationId() {
-        return translationId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setTranslationId(String translationId) {
-        this.translationId = translationId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getContent() {

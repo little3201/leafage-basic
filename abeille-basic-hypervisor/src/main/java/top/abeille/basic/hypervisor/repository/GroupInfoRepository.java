@@ -5,7 +5,7 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.hypervisor.entity.GroupInfo;
+import top.abeille.basic.hypervisor.document.GroupInfo;
 
 /**
  * 组织信息dao

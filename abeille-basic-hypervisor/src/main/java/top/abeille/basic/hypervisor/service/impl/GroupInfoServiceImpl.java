@@ -8,7 +8,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
-import top.abeille.basic.hypervisor.entity.GroupInfo;
+import top.abeille.basic.hypervisor.document.GroupInfo;
 import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
@@ -30,9 +30,9 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Mono<GroupVO> fetchById(String groupId) {
-        Objects.requireNonNull(groupId);
-        return fetchByGroupId(groupId).map(this::convertOuter);
+    public Mono<GroupVO> fetchById(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchByBusinessId(businessId).map(this::convertOuter);
     }
 
     @Override
@@ -43,38 +43,37 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public Mono<GroupVO> modify(String groupId, GroupDTO groupDTO) {
-        Objects.requireNonNull(groupId);
-        GroupInfo info = new GroupInfo();
-        BeanUtils.copyProperties(groupDTO, info);
-        info.setGroupId(groupId);
-        return groupInfoRepository.save(info).map(this::convertOuter);
+    public Mono<GroupVO> modify(String businessId, GroupDTO groupDTO) {
+        return this.fetchByBusinessId(businessId).flatMap(info -> {
+            BeanUtils.copyProperties(groupDTO, info);
+            return groupInfoRepository.save(info);
+        }).map(this::convertOuter);
     }
 
     @Override
-    public Mono<Void> removeById(String groupId) {
-        Objects.requireNonNull(groupId);
-        return fetchByGroupId(groupId).flatMap(groupInfo -> groupInfoRepository.deleteById(groupInfo.getId()));
+    public Mono<Void> removeById(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchByBusinessId(businessId).flatMap(groupInfo -> groupInfoRepository.deleteById(groupInfo.getId()));
     }
 
     /**
-     * 根据ID查询
+     * 根据业务id查询
      *
-     * @param groupId 组ID
-     * @return GroupInfo 对象
+     * @param businessId 业务id
+     * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<GroupInfo> fetchByGroupId(String groupId) {
-        Objects.requireNonNull(groupId);
+    private Mono<GroupInfo> fetchByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
         GroupInfo info = new GroupInfo();
-        info.setGroupId(groupId);
+        info.setBusinessId(businessId);
         return groupInfoRepository.findOne(Example.of(info));
     }
 
     /**
-     * 设置查询条件的必要参数
+     * 对象转换为输出结果对象
      *
      * @param info 信息
-     * @return GroupVO 输出对象
+     * @return 输出转换后的vo对象
      */
     private GroupVO convertOuter(GroupInfo info) {
         GroupVO outer = new GroupVO();

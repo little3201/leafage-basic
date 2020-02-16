@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.entity;
+package top.abeille.basic.hypervisor.document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
@@ -25,11 +25,11 @@ public class SourceInfo {
     @Id
     private String id;
     /**
-     * 权限ID
+     * 业务ID
      */
+    @Field(value = "business_id")
     @Indexed
-    @Field(value = "source_id")
-    private String sourceId;
+    private String businessId;
     /**
      * 上级
      */
@@ -84,12 +84,12 @@ public class SourceInfo {
         this.id = id;
     }
 
-    public String getSourceId() {
-        return sourceId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setSourceId(String sourceId) {
-        this.sourceId = sourceId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getSuperior() {

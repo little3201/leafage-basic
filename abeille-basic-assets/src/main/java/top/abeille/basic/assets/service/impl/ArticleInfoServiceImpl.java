@@ -16,7 +16,6 @@ import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -39,54 +38,52 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     }
 
     @Override
-    public Mono<ArticleVO> fetchById(String articleId) {
-        Objects.requireNonNull(articleId);
-        return fetchByArticleId(articleId).filter(Objects::nonNull).map(this::convertOuter);
+    public Mono<ArticleVO> fetchById(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchByBusinessIdId(businessId).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(articleDTO, info);
-        info.setArticleId(this.getDateValue());
+        info.setBusinessId(this.getDateValue());
         info.setEnabled(Boolean.TRUE);
         return articleInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ArticleVO> modify(String articleId, ArticleDTO articleDTO) {
-        return fetchByArticleId(articleId).flatMap(articleInfo -> {
+    public Mono<ArticleVO> modify(String businessId, ArticleDTO articleDTO) {
+        return this.fetchByBusinessIdId(businessId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(articleDTO, articleInfo);
             return articleInfoRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
         });
     }
 
     @Override
-    public Mono<Void> removeById(String articleId) {
-        Objects.requireNonNull(articleId);
-        ArticleInfo info = new ArticleInfo();
-        info.setArticleId(articleId);
-        return articleInfoRepository.findOne(Example.of(info)).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
+    public Mono<Void> removeById(String businessId) {
+        return this.fetchByBusinessIdId(businessId).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
     }
 
     /**
-     * 根据ID查询
+     * 根据业务id查询
      *
-     * @param articleId 文章ID
-     * @return ArticleInfo 对象
+     * @param businessId 业务id
+     * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<ArticleInfo> fetchByArticleId(String articleId) {
-        Objects.requireNonNull(articleId);
+    private Mono<ArticleInfo> fetchByBusinessIdId(String businessId) {
+        Objects.requireNonNull(businessId);
         ArticleInfo info = new ArticleInfo();
-        info.setArticleId(articleId);
+        info.setBusinessId(businessId);
+        info.setEnabled(Boolean.TRUE);
         return articleInfoRepository.findOne(Example.of(info));
     }
 
     /**
-     * 对象转换魏输出结果对象
+     * 对象转换为输出结果对象
      *
      * @param info 信息
-     * @return ArticleVO 输出对象
+     * @return 输出转换后的vo对象
      */
     private ArticleVO convertOuter(ArticleInfo info) {
         ArticleVO outer = new ArticleVO();

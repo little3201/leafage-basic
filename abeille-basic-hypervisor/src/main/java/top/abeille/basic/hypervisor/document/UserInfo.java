@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.entity;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -24,11 +24,11 @@ public class UserInfo {
     @Id
     private String id;
     /**
-     * 用户ID
+     * 业务ID
      */
+    @Field(value = "business_id")
     @Indexed
-    @Field(value = "user_id")
-    private String userId;
+    private String businessId;
     /**
      * 昵称
      */
@@ -100,12 +100,12 @@ public class UserInfo {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getNickname() {

@@ -15,9 +15,9 @@ public class GroupVO implements Serializable {
 
     private static final long serialVersionUID = 5740100575689452491L;
     /**
-     * 组ID
+     * 业务id
      */
-    private String groupId;
+    private String businessId;
     /**
      * 负责人
      */
@@ -43,12 +43,12 @@ public class GroupVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public String getGroupId() {
-        return groupId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public Long getPrincipal() {

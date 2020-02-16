@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -23,10 +24,11 @@ public class TopicInfo {
     @Id
     private String id;
     /**
-     * 话题ID
+     * 业务ID
      */
-    @Field(value = "topic_id")
-    private String topicId;
+    @Field(value = "business_id")
+    @Indexed
+    private String businessId;
     /**
      * 用户ID
      */
@@ -61,12 +63,12 @@ public class TopicInfo {
         this.id = id;
     }
 
-    public String getTopicId() {
-        return topicId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setTopicId(String topicId) {
-        this.topicId = topicId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getUserId() {

@@ -20,9 +20,9 @@ public class AccountVO implements Serializable {
      */
     private String userId;
     /**
-     * 账户ID
+     * 业务ID
      */
-    private String accountId;
+    private String businessId;
     /**
      * 余额
      */
@@ -48,12 +48,12 @@ public class AccountVO implements Serializable {
         this.userId = userId;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public BigDecimal getBalance() {

@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -23,10 +24,11 @@ public class TranslationInfo {
     @Id
     private String id;
     /**
-     * 话题ID
+     * 业务ID
      */
-    @Field(value = "translation_id")
-    private String translationId;
+    @Field(value = "business_id")
+    @Indexed
+    private String businessId;
     /**
      * 内容
      */
@@ -66,12 +68,12 @@ public class TranslationInfo {
         this.id = id;
     }
 
-    public String getTranslationId() {
-        return translationId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setTranslationId(String translationId) {
-        this.translationId = translationId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getContent() {

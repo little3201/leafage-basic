@@ -34,13 +34,13 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
 
     @Override
     public Flux<TopicVO> retrieveAll(Sort sort) {
-        return topicInfoRepository.findAll(sort).filter(Objects::nonNull).map(this::convertOuter);
+        return topicInfoRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
     public Mono<TopicVO> fetchById(String topicId) {
         Objects.requireNonNull(topicId);
-        return fetchByTopicId(topicId).filter(Objects::nonNull).map(this::convertOuter);
+        return fetchByTopicId(topicId).map(this::convertOuter);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
         BeanUtils.copyProperties(topicDTO, info);
         info.setTopicId(this.getDateValue());
         info.setEnabled(Boolean.TRUE);
-        return topicInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        return topicInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
         Objects.requireNonNull(topicId);
         return fetchByTopicId(topicId).flatMap(topicInfo -> {
             BeanUtils.copyProperties(topicDTO, topicInfo);
-            return topicInfoRepository.save(topicInfo).filter(Objects::nonNull).map(this::convertOuter);
+            return topicInfoRepository.save(topicInfo).map(this::convertOuter);
         });
     }
 
@@ -83,7 +83,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
     }
 
     /**
-     * 设置查询条件的必要参数
+     * 对象转换魏输出结果对象
      *
      * @param info 信息
      * @return ArticleVO 输出对象

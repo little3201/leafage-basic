@@ -8,7 +8,7 @@ import top.abeille.basic.assets.vo.TopicVO;
 import top.abeille.common.basic.BasicService;
 
 /**
- * 文章信息Service
+ * 话题信息Service
  *
  * @author liwenqiang 2020/2/13 20:16
  **/

@@ -83,7 +83,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     }
 
     /**
-     * 设置查询条件的必要参数
+     * 对象转换魏输出结果对象
      *
      * @param info 信息
      * @return ArticleVO 输出对象

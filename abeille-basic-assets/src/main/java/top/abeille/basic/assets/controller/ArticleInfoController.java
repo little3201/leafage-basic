@@ -32,9 +32,9 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 文章查询——分页
+     * 分页查询翻译信息
      *
-     * @return ResponseEntity
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
     public Flux<ArticleVO> retrieveArticle() {
@@ -43,10 +43,10 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 查询文章信息——根据ID
+     * 根据传入的业务id: articleId 查询信息
      *
-     * @param articleId 文章ID
-     * @return ResponseEntity
+     * @param articleId 业务id
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{articleId}")
     public Mono<ResponseEntity<ArticleVO>> fetchArticle(@PathVariable String articleId) {
@@ -56,10 +56,10 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 添加文章信息
+     * 根据传入的数据添加信息
      *
-     * @param articleDTO 文章
-     * @return ResponseEntity
+     * @param articleDTO 要修改的数据
+     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
     public Mono<ResponseEntity<ArticleVO>> createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
@@ -69,10 +69,11 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 修改文章信息
+     * 根据传入的业务id: articleId 和要修改的数据，修改信息
      *
-     * @param articleDTO 文章
-     * @return ResponseEntity
+     * @param articleId  业务id
+     * @param articleDTO 要修改的数据
+     * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{articleId}")
     public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable String articleId, @RequestBody @Valid ArticleDTO articleDTO) {

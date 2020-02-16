@@ -3,6 +3,8 @@
  */
 package top.abeille.basic.assets.dto;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * DTO class for TopicInfo
  *
@@ -13,10 +15,12 @@ public class TopicDTO {
     /**
      * 用户ID
      */
+    @NotBlank
     private String userId;
     /**
      * 内容
      */
+    @NotBlank
     private String content;
 
     public String getUserId() {

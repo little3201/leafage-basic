@@ -68,7 +68,7 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
     }
 
     /**
-     * 设置查询条件的必要参数
+     * 设置查对象转换魏输出结果对象询条件的必要参数
      *
      * @param info 信息
      * @return AccountVO 输出对象

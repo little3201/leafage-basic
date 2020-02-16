@@ -58,7 +58,7 @@ public class TopicInfoController extends AbstractController {
     /**
      * 根据传入的数据添加信息
      *
-     * @param topicDTO 要修改的数据
+     * @param topicDTO 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping

@@ -30,10 +30,10 @@ public class RoleInfoController extends AbstractController {
     }
 
     /**
-     * 添加角色信息
+     * 根据传入的数据添加信息
      *
-     * @param roleDTO 角色
-     * @return ResponseEntity
+     * @param roleDTO 要添加的数据
+     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
     public Mono<ResponseEntity<RoleVO>> createRole(@RequestBody @Valid RoleDTO roleDTO) {
@@ -43,10 +43,11 @@ public class RoleInfoController extends AbstractController {
     }
 
     /**
-     * 编辑角色信息
+     * 根据传入的业务id: roleId 和要修改的数据，修改信息
      *
-     * @param roleDTO 角色
-     * @return ResponseEntity
+     * @param roleId  业务id
+     * @param roleDTO 要修改的数据
+     * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{roleId}")
     public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable String roleId, @RequestBody @Valid RoleDTO roleDTO) {

@@ -28,9 +28,9 @@ public class SourceInfoController extends AbstractController {
     }
 
     /**
-     * 查找资源信息
+     * 分页查询翻译信息
      *
-     * @return ResponseEntity
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
     public Flux<SourceVO> retrieveSource() {

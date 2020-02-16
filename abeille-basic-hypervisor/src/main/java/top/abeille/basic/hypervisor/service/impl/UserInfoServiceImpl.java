@@ -41,25 +41,28 @@ public class UserInfoServiceImpl implements UserInfoService {
         info.setUserId(LocalDateTime.now() + "");
         info.setModifier(0L);
         info.setModifyTime(LocalDateTime.now());
-        return userInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        return userInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
     public Mono<UserVO> modify(String userId, UserDTO userDTO) {
+        Objects.requireNonNull(userId);
         return queryByUserId(userId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(userDTO, articleInfo);
-            return userInfoRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
+            return userInfoRepository.save(articleInfo).map(this::convertOuter);
         });
     }
 
     @Override
     public Mono<Void> removeById(String userId) {
+        Objects.requireNonNull(userId);
         return queryByUserId(userId).flatMap(userInfo -> userInfoRepository.deleteById(userInfo.getId()));
     }
 
     @Override
     public Mono<UserVO> fetchById(String userId) {
-        return queryByUserId(userId).filter(Objects::nonNull).map(this::convertOuter);
+        Objects.requireNonNull(userId);
+        return queryByUserId(userId).map(this::convertOuter);
     }
 
     /**
@@ -69,6 +72,7 @@ public class UserInfoServiceImpl implements UserInfoService {
      * @return UserInfo 用户源数据
      */
     private Mono<UserInfo> queryByUserId(String userId) {
+        Objects.requireNonNull(userId);
         ExampleMatcher exampleMatcher = appendConditions();
         UserInfo info = new UserInfo();
         info.setUserId(userId);

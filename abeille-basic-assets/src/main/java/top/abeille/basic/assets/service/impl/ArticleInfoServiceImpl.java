@@ -40,6 +40,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
 
     @Override
     public Mono<ArticleVO> fetchById(String articleId) {
+        Objects.requireNonNull(articleId);
         return fetchByArticleId(articleId).filter(Objects::nonNull).map(this::convertOuter);
     }
 
@@ -62,6 +63,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
 
     @Override
     public Mono<Void> removeById(String articleId) {
+        Objects.requireNonNull(articleId);
         ArticleInfo info = new ArticleInfo();
         info.setArticleId(articleId);
         return articleInfoRepository.findOne(Example.of(info)).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
@@ -74,9 +76,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
      * @return ArticleInfo 对象
      */
     private Mono<ArticleInfo> fetchByArticleId(String articleId) {
-        if (Objects.isNull(articleId)) {
-            return Mono.empty();
-        }
+        Objects.requireNonNull(articleId);
         ArticleInfo info = new ArticleInfo();
         info.setArticleId(articleId);
         return articleInfoRepository.findOne(Example.of(info));

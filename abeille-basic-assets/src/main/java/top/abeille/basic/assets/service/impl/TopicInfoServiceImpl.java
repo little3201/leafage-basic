@@ -38,8 +38,9 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
     }
 
     @Override
-    public Mono<TopicVO> fetchById(String articleId) {
-        return fetchByTopicId(articleId).filter(Objects::nonNull).map(this::convertOuter);
+    public Mono<TopicVO> fetchById(String topicId) {
+        Objects.requireNonNull(topicId);
+        return fetchByTopicId(topicId).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
@@ -53,6 +54,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
 
     @Override
     public Mono<TopicVO> modify(String topicId, TopicDTO topicDTO) {
+        Objects.requireNonNull(topicId);
         return fetchByTopicId(topicId).flatMap(topicInfo -> {
             BeanUtils.copyProperties(topicDTO, topicInfo);
             return topicInfoRepository.save(topicInfo).filter(Objects::nonNull).map(this::convertOuter);
@@ -61,6 +63,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
 
     @Override
     public Mono<Void> removeById(String topicId) {
+        Objects.requireNonNull(topicId);
         TopicInfo info = new TopicInfo();
         info.setTopicId(topicId);
         return topicInfoRepository.findOne(Example.of(info)).flatMap(topic -> topicInfoRepository.deleteById(topic.getId()));
@@ -73,9 +76,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
      * @return ArticleInfo 对象
      */
     private Mono<TopicInfo> fetchByTopicId(String topicId) {
-        if (Objects.isNull(topicId)) {
-            return Mono.empty();
-        }
+        Objects.requireNonNull(topicId);
         TopicInfo info = new TopicInfo();
         info.setTopicId(topicId);
         return topicInfoRepository.findOne(Example.of(info));

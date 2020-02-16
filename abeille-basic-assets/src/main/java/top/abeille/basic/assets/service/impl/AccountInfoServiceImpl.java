@@ -36,15 +36,16 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
         BeanUtils.copyProperties(accountDTO, info);
         info.setAccountId(this.getDateValue());
         info.setEnabled(Boolean.TRUE);
-        return accountInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        return accountInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
     public Mono<AccountVO> modify(String accountId, AccountDTO accountDTO) {
+        Objects.requireNonNull(accountId);
         return fetchById(accountId).flatMap(accountVO -> {
             AccountInfo info = new AccountInfo();
             BeanUtils.copyProperties(accountVO, info);
-            return accountInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+            return accountInfoRepository.save(info).map(this::convertOuter);
         });
     }
 
@@ -54,11 +55,12 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
         AccountInfo info = new AccountInfo();
         info.setAccountId(accountId);
         info.setEnabled(true);
-        return accountInfoRepository.findOne(Example.of(info)).filter(Objects::nonNull).map(this::convertOuter);
+        return accountInfoRepository.findOne(Example.of(info)).map(this::convertOuter);
     }
 
     @Override
     public Mono<Void> removeById(String accountId) {
+        Objects.requireNonNull(accountId);
         AccountInfo info = new AccountInfo();
         info.setAccountId(accountId);
         return accountInfoRepository.findOne(Example.of(info))

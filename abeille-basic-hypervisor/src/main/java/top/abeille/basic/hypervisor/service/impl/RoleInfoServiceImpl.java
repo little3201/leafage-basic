@@ -32,33 +32,35 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public Flux<RoleVO> retrieveByExample(RoleDTO enter, ExampleMatcher exampleMatcher) {
+    public Flux<RoleVO> retrieveByExample(RoleDTO roleDTO, ExampleMatcher exampleMatcher) {
         // 创建查询模板实例
         RoleInfo info = new RoleInfo();
-        BeanUtils.copyProperties(enter, info);
+        BeanUtils.copyProperties(roleDTO, info);
         return roleInfoRepository.findAll(Example.of(info, exampleMatcher)).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> fetchById(String roleId) {
+        Objects.requireNonNull(roleId);
         RoleInfo info = new RoleInfo();
         info.setRoleId(roleId);
-        return roleInfoRepository.findOne(Example.of(info)).filter(Objects::nonNull).map(this::convertOuter);
+        return roleInfoRepository.findOne(Example.of(info)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<RoleVO> create(RoleDTO enter) {
+    public Mono<RoleVO> create(RoleDTO roleDTO) {
         RoleInfo info = new RoleInfo();
-        BeanUtils.copyProperties(enter, info);
-        return roleInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        BeanUtils.copyProperties(roleDTO, info);
+        return roleInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> modify(String roleId, RoleDTO roleDTO) {
+        Objects.requireNonNull(roleId);
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
         info.setRoleId(roleId);
-        return roleInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        return roleInfoRepository.save(info).map(this::convertOuter);
     }
 
     private RoleVO convertOuter(RoleInfo roleInfo) {

@@ -31,26 +31,29 @@ public class GroupInfoServiceImpl implements GroupInfoService {
 
     @Override
     public Mono<GroupVO> fetchById(String groupId) {
-        return fetchByGroupId(groupId).filter(Objects::nonNull).map(this::convertOuter);
+        Objects.requireNonNull(groupId);
+        return fetchByGroupId(groupId).map(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
-        return groupInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        return groupInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> modify(String groupId, GroupDTO groupDTO) {
+        Objects.requireNonNull(groupId);
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
         info.setGroupId(groupId);
-        return groupInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        return groupInfoRepository.save(info).map(this::convertOuter);
     }
 
     @Override
     public Mono<Void> removeById(String groupId) {
+        Objects.requireNonNull(groupId);
         return fetchByGroupId(groupId).flatMap(groupInfo -> groupInfoRepository.deleteById(groupInfo.getId()));
     }
 
@@ -61,6 +64,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
      * @return GroupInfo 对象
      */
     private Mono<GroupInfo> fetchByGroupId(String groupId) {
+        Objects.requireNonNull(groupId);
         GroupInfo info = new GroupInfo();
         info.setGroupId(groupId);
         return groupInfoRepository.findOne(Example.of(info));

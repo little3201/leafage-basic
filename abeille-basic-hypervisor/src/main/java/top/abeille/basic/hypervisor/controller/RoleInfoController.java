@@ -43,15 +43,15 @@ public class RoleInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: roleId 和要修改的数据，修改信息
+     * 根据传入的业务id: businessId 和要修改的数据，修改信息
      *
-     * @param roleId  业务id
-     * @param roleDTO 要修改的数据
+     * @param businessId 业务id
+     * @param roleDTO    要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{roleId}")
-    public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable String roleId, @RequestBody @Valid RoleDTO roleDTO) {
-        return roleInfoService.modify(roleId, roleDTO)
+    @PutMapping("/{businessId}")
+    public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable String businessId, @RequestBody @Valid RoleDTO roleDTO) {
+        return roleInfoService.modify(businessId, roleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

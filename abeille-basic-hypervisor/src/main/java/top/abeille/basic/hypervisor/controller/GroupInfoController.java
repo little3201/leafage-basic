@@ -56,28 +56,28 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: groupId 和要修改的数据，修改信息
+     * 根据传入的业务id: businessId 和要修改的数据，修改信息
      *
-     * @param groupId  业务id
-     * @param groupDTO 要修改的数据
+     * @param businessId 业务id
+     * @param groupDTO   要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{groupId}")
-    public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable String groupId, @RequestBody @Valid GroupDTO groupDTO) {
-        return groupInfoService.modify(groupId, groupDTO)
+    @PutMapping("/{businessId}")
+    public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable String businessId, @RequestBody @Valid GroupDTO groupDTO) {
+        return groupInfoService.modify(businessId, groupDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 
     /**
-     * 根据传入的业务id: groupId 删除信息（逻辑删除）
+     * 根据传入的业务id: businessId 删除信息（逻辑删除）
      *
-     * @param groupId 业务id
+     * @param businessId 业务id
      * @return 如果删除数据成功，返回删除后的信息，否则返回417状态码
      */
-    @DeleteMapping("/{groupId}")
-    public Mono<ResponseEntity<Void>> removeGroup(@PathVariable String groupId) {
-        return groupInfoService.removeById(groupId)
+    @DeleteMapping("/{businessId}")
+    public Mono<ResponseEntity<Void>> removeGroup(@PathVariable String businessId) {
+        return groupInfoService.removeById(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

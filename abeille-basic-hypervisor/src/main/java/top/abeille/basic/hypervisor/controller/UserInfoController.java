@@ -43,14 +43,14 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: userId 查询信息
+     * 根据传入的业务id: businessId 查询信息
      *
-     * @param userId 业务id
+     * @param businessId 业务id
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{userId}")
-    public Mono<ResponseEntity<UserVO>> fetchUser(@PathVariable String userId) {
-        return userInfoService.fetchById(userId)
+    @GetMapping("/{businessId}")
+    public Mono<ResponseEntity<UserVO>> fetchUser(@PathVariable String businessId) {
+        return userInfoService.fetchById(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -69,15 +69,15 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: userId 和要修改的数据，修改信息
+     * 根据传入的业务id: businessId 和要修改的数据，修改信息
      *
-     * @param userId  业务id
-     * @param userDTO 要修改的数据
+     * @param businessId 业务id
+     * @param userDTO    要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{userId}")
-    public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable String userId, @RequestBody @Valid UserDTO userDTO) {
-        return userInfoService.modify(userId, userDTO)
+    @PutMapping("/{businessId}")
+    public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable String businessId, @RequestBody @Valid UserDTO userDTO) {
+        return userInfoService.modify(businessId, userDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

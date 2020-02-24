@@ -30,14 +30,14 @@ public class AccountInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: accountId 查询信息
+     * 根据传入的业务id: businessId 查询信息
      *
-     * @param accountId 业务id
+     * @param businessId 业务id
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{accountId}")
-    public Mono<ResponseEntity<AccountVO>> fetchAccount(@PathVariable String accountId) {
-        return accountInfoService.fetchById(accountId)
+    @GetMapping("/{businessId}")
+    public Mono<ResponseEntity<AccountVO>> fetchAccount(@PathVariable String businessId) {
+        return accountInfoService.fetchById(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -56,28 +56,28 @@ public class AccountInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: accountId 和要修改的数据，修改信息
+     * 根据传入的业务id: businessId 和要修改的数据，修改信息
      *
-     * @param accountId  业务id
+     * @param businessId 业务id
      * @param accountDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{accountId}")
-    public Mono<ResponseEntity<AccountVO>> modifyAccount(@PathVariable String accountId, @RequestBody @Valid AccountDTO accountDTO) {
-        return accountInfoService.modify(accountId, accountDTO)
+    public Mono<ResponseEntity<AccountVO>> modifyAccount(@PathVariable String businessId, @RequestBody @Valid AccountDTO accountDTO) {
+        return accountInfoService.modify(businessId, accountDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
 
     /**
-     * 根据传入的业务id: accountId 删除信息（逻辑删除）
+     * 根据传入的业务id: businessId 删除信息（逻辑删除）
      *
-     * @param accountId 业务id
+     * @param businessId 业务id
      * @return 如果删除数据成功，返回删除后的信息，否则返回417状态码
      */
     @DeleteMapping("/{accountId}")
-    public Mono<ResponseEntity<Void>> removeAccount(@PathVariable String accountId) {
-        return accountInfoService.removeById(accountId)
+    public Mono<ResponseEntity<Void>> removeAccount(@PathVariable String businessId) {
+        return accountInfoService.removeById(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

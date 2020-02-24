@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2019. Abeille All Right Reserved.
  */
 package top.abeille.basic.assets.document;
 
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for TranslationInfo
+ * Model class for ArticleInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "translation_info")
-public class TranslationInfo {
+@Document(collection = "source_info")
+public class SourceInfo {
 
     /**
      * 主键
@@ -30,25 +30,32 @@ public class TranslationInfo {
     @Indexed
     private String businessId;
     /**
+     * 文章ID
+     */
+    @Field(value = "user_id")
+    @Indexed
+    private String userId;
+    /**
      * 标题
      */
     @Field(value = "title")
+    @Indexed
     private String title;
+    /**
+     * 副标题
+     */
+    @Field(value = "subtitle")
+    private String subtitle;
     /**
      * 内容
      */
     @Field(value = "content")
     private String content;
     /**
-     * 目录
+     * 图片url
      */
-    @Field(value = "catalog")
-    private String catalog;
-    /**
-     * 原文连接
-     */
-    @Field(value = "originalUrl")
-    private String originalUrl;
+    @Field(value = "image_url")
+    private String imageUrl;
     /**
      * 是否有效
      */
@@ -81,12 +88,28 @@ public class TranslationInfo {
         this.businessId = businessId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
     public String getContent() {
@@ -97,20 +120,12 @@ public class TranslationInfo {
         this.content = content;
     }
 
-    public String getCatalog() {
-        return catalog;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
-    }
-
-    public String getOriginalUrl() {
-        return originalUrl;
-    }
-
-    public void setOriginalUrl(String originalUrl) {
-        this.originalUrl = originalUrl;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Boolean getEnabled() {

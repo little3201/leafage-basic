@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import top.abeille.basic.assets.document.AccountInfo;
 
 /**
- * 账户信息dao
+ * 账户信息repository
  *
  * @author liwenqiang 2018/12/20 9:51
  **/

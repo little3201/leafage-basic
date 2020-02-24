@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import top.abeille.basic.assets.document.TranslationInfo;
 
 /**
- * 账户信息dao
+ * 翻译信息repository
  *
  * @author liwenqiang 2020/2/16 14:35
  **/

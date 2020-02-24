@@ -43,14 +43,14 @@ public class TranslationInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: translationId 查询信息
+     * 根据传入的业务id: businessId 查询信息
      *
-     * @param translationId 业务id
+     * @param businessId 业务id
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{translationId}")
-    public Mono<ResponseEntity<TranslationVO>> fetchTranslation(@PathVariable String translationId) {
-        return translationInfoService.fetchById(translationId)
+    @GetMapping("/{businessId}")
+    public Mono<ResponseEntity<TranslationVO>> fetchTranslation(@PathVariable String businessId) {
+        return translationInfoService.fetchById(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -69,15 +69,15 @@ public class TranslationInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: translationId 和要修改的数据，修改信息
+     * 根据传入的业务id: businessId 和要修改的数据，修改信息
      *
-     * @param translationId  业务id
+     * @param businessId     业务id
      * @param translationDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{translationId}")
-    public Mono<ResponseEntity<TranslationVO>> modifyTranslation(@PathVariable String translationId, @RequestBody @Valid TranslationDTO translationDTO) {
-        return translationInfoService.modify(translationId, translationDTO)
+    @PutMapping("/{businessId}")
+    public Mono<ResponseEntity<TranslationVO>> modifyTranslation(@PathVariable String businessId, @RequestBody @Valid TranslationDTO translationDTO) {
+        return translationInfoService.modify(businessId, translationDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }

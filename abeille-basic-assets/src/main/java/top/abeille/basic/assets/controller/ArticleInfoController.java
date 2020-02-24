@@ -43,14 +43,14 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: articleId 查询信息
+     * 根据传入的业务id: businessId 查询信息
      *
-     * @param articleId 业务id
+     * @param businessId 业务id
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{articleId}")
-    public Mono<ResponseEntity<ArticleVO>> fetchArticle(@PathVariable String articleId) {
-        return articleInfoService.fetchById(articleId)
+    @GetMapping("/{businessId}")
+    public Mono<ResponseEntity<ArticleVO>> fetchArticle(@PathVariable String businessId) {
+        return articleInfoService.fetchById(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -69,15 +69,15 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: articleId 和要修改的数据，修改信息
+     * 根据传入的业务id: businessId 和要修改的数据，修改信息
      *
-     * @param articleId  业务id
+     * @param businessId 业务id
      * @param articleDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{articleId}")
-    public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable String articleId, @RequestBody @Valid ArticleDTO articleDTO) {
-        return articleInfoService.modify(articleId, articleDTO)
+    public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable String businessId, @RequestBody @Valid ArticleDTO articleDTO) {
+        return articleInfoService.modify(businessId, articleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

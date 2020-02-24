@@ -35,6 +35,11 @@ public class TopicInfo {
     @Field(value = "user_id")
     private String userId;
     /**
+     * 标题
+     */
+    @Field(value = "title")
+    private String title;
+    /**
      * 内容
      */
     @Field(value = "content")
@@ -77,6 +82,14 @@ public class TopicInfo {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {

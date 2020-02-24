@@ -19,6 +19,11 @@ import top.abeille.common.basic.AbstractBasicService;
 
 import java.util.Objects;
 
+/**
+ * 翻译信息service实现
+ *
+ * @author liwenqiang 2020/2/13 20:24
+ **/
 @Service
 public class TranslationInfoServiceImpl extends AbstractBasicService implements TranslationInfoService {
 

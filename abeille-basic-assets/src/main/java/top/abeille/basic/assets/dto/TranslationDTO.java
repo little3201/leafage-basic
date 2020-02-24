@@ -11,6 +11,10 @@ package top.abeille.basic.assets.dto;
 public class TranslationDTO {
 
     /**
+     * 标题
+     */
+    private String title;
+    /**
      * 内容
      */
     private String content;
@@ -22,6 +26,14 @@ public class TranslationDTO {
      * 原文连接
      */
     private String originalUrl;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getContent() {
         return content;

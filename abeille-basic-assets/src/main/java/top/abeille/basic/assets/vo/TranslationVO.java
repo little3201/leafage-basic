@@ -17,6 +17,10 @@ public class TranslationVO implements Serializable {
      */
     private String businessId;
     /**
+     * 标题
+     */
+    private String title;
+    /**
      * 内容
      */
     private String content;
@@ -35,6 +39,14 @@ public class TranslationVO implements Serializable {
 
     public void setBusinessId(String businessId) {
         this.businessId = businessId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {

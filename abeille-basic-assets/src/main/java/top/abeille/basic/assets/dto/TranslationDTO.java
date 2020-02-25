@@ -3,13 +3,16 @@
  */
 package top.abeille.basic.assets.dto;
 
+import java.io.Serializable;
+
 /**
  * DTO class for TranslationInfo
  *
  * @author liwenqiang
  */
-public class TranslationDTO {
+public class TranslationDTO implements Serializable {
 
+    private static final long serialVersionUID = 2348596129394113262L;
     /**
      * 标题
      */

@@ -4,14 +4,16 @@
 package top.abeille.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 /**
  * DTO class for TopicInfo
  *
  * @author liwenqiang
  */
-public class TopicDTO {
+public class TopicDTO implements Serializable {
 
+    private static final long serialVersionUID = -6972802402513706361L;
     /**
      * 用户ID
      */
@@ -20,6 +22,7 @@ public class TopicDTO {
     /**
      * 标题
      */
+    @NotBlank
     private String title;
     /**
      * 内容

@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 public class TopicVO implements Serializable {
 
-
+    private static final long serialVersionUID = 6078275280120953852L;
     /**
      * 业务ID
      */

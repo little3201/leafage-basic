@@ -12,6 +12,7 @@ import java.io.Serializable;
  */
 public class TranslationVO implements Serializable {
 
+    private static final long serialVersionUID = -3749575111922683487L;
     /**
      * 业务ID
      */

@@ -4,14 +4,16 @@
 package top.abeille.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 
 /**
  * DTO for SourceInfo
  *
  * @author liwenqiang
  */
-public class SourceDTO {
+public class SourceDTO implements Serializable {
 
+    private static final long serialVersionUID = 6514393945624239153L;
     /**
      * 用户ID
      */

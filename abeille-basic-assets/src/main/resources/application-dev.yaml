@@ -12,15 +12,15 @@ logging:
 spring:
   cloud:
     consul:
-      host: 192.168.31.100
+      host: 172.20.10.6
       port: 8500
 
   data:
     mongodb:
-      host: 192.168.31.100
-      port: 27917
-      authentication-database: abeille
-      username: abeille
-      password: abeille.top
+      host: 172.20.10.6
+      port: 27017
+      #      authentication-database: abeille
+      #      username: abeille
+      #      password: abeille.top
       database: abeille
 

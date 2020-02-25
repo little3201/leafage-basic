@@ -3,13 +3,16 @@
  */
 package top.abeille.basic.assets.vo;
 
+import java.io.Serializable;
+
 /**
  * VO for SourceInfo
  *
  * @author liwenqiang
  */
-public class SourceVO {
+public class SourceVO implements Serializable {
 
+    private static final long serialVersionUID = -2168494818144125736L;
     /**
      * 业务ID
      */

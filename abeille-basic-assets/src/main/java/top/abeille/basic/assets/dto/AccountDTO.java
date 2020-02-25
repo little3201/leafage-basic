@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.assets.dto;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -16,11 +15,6 @@ public class AccountDTO implements Serializable {
 
     private static final long serialVersionUID = 5424195124842285237L;
     /**
-     * 用户ID
-     */
-    @NotNull
-    private Long userId;
-    /**
      * 余额
      */
     private BigDecimal balance;
@@ -28,14 +22,6 @@ public class AccountDTO implements Serializable {
      * 类型
      */
     private String type;
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
     public BigDecimal getBalance() {
         return balance;

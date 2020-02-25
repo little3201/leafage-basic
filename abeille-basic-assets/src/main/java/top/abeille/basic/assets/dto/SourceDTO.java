@@ -15,10 +15,6 @@ public class SourceDTO implements Serializable {
 
     private static final long serialVersionUID = 6514393945624239153L;
     /**
-     * 用户ID
-     */
-    private String userId;
-    /**
      * 标题
      */
     @NotBlank
@@ -37,14 +33,6 @@ public class SourceDTO implements Serializable {
      */
     @NotBlank
     private String imageUrl;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getTitle() {
         return title;

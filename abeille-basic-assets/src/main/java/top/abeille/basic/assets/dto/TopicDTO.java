@@ -15,11 +15,6 @@ public class TopicDTO implements Serializable {
 
     private static final long serialVersionUID = -6972802402513706361L;
     /**
-     * 用户ID
-     */
-    @NotBlank
-    private String userId;
-    /**
      * 标题
      */
     @NotBlank
@@ -29,14 +24,6 @@ public class TopicDTO implements Serializable {
      */
     @NotBlank
     private String content;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getTitle() {
         return title;

@@ -23,7 +23,7 @@ public class ArticleVO implements Serializable {
      */
     private String title;
     /**
-     * 描述
+     * 副标题
      */
     private String subtitle;
     /**

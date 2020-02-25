@@ -25,7 +25,7 @@ public class ArticleVO implements Serializable {
     /**
      * 描述
      */
-    private String description;
+    private String subtitle;
     /**
      * 内容
      */
@@ -59,20 +59,20 @@ public class ArticleVO implements Serializable {
         this.title = title;
     }
 
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getImageUrl() {

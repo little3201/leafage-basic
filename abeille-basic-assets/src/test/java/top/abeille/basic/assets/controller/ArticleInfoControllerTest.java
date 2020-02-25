@@ -29,7 +29,7 @@ public class ArticleInfoControllerTest extends AbstractControllerMock {
 
     @Test
     public void findArticles() {
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         List<ArticleVO> voList = articleInfoService.retrieveAll(sort);
     }
 

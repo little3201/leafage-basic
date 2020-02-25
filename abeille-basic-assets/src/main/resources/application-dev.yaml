@@ -58,9 +58,9 @@ spring:
 
     ##=====mongodb config=====##
     mongodb:
-      host: 122.152.218.103
+      host: 127.0.0.1
       port: 27017
       database: abeille
-      username: abeille
-      password: Abeille0-top001
-      authentication-database: abeille
+#      username: abeille
+#      password: Abeille0-top001
+#      authentication-database: abeille

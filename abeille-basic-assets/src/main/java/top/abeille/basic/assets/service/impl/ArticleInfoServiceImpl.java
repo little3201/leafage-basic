@@ -86,13 +86,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         //先查一下，是否已经存在，存在，填充主键id，不存在，填充业务id
         Optional<ArticleInfo> optional = articleInfoRepository.findOne(Example.of(info));
         BeanUtils.copyProperties(articleDTO, info);
-        Long articleId;
         if (optional.isPresent()) {
             info.setId(optional.get().getId());
             info.setArticleId(optional.get().getArticleId());
         } else {
             //获得时间作为文章id
-            articleId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+            long articleId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
             //转换入参为数据对象，保存数据库
             info.setArticleId(articleId);
             info.setEnabled(true);

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.TopicInfo;
 import top.abeille.basic.assets.dto.TopicDTO;
 import top.abeille.basic.assets.repository.TopicInfoRepository;
@@ -47,7 +48,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
     public Mono<TopicVO> create(TopicDTO topicDTO) {
         TopicInfo info = new TopicInfo();
         BeanUtils.copyProperties(topicDTO, info);
-        info.setBusinessId(this.generateId());
+        info.setBusinessId(PrefixEnum.TP + this.generateId());
         info.setEnabled(Boolean.TRUE);
         return topicInfoRepository.save(info).map(this::convertOuter);
     }

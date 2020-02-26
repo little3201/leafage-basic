@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ResourceInfo;
 import top.abeille.basic.assets.dto.ResourceDTO;
 import top.abeille.basic.assets.repository.ResourceInfoRepository;
@@ -47,7 +48,7 @@ public class ResourceInfoServiceImpl extends AbstractBasicService implements Res
     public Mono<ResourceVO> create(ResourceDTO resourceDTO) {
         ResourceInfo info = new ResourceInfo();
         BeanUtils.copyProperties(resourceDTO, info);
-        info.setBusinessId(this.generateId());
+        info.setBusinessId(PrefixEnum.RS + this.generateId());
         info.setEnabled(Boolean.TRUE);
         return resourceInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }

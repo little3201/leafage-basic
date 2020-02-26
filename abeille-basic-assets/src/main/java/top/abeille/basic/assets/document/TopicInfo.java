@@ -40,11 +40,6 @@ public class TopicInfo {
     @Field(value = "title")
     private String title;
     /**
-     * 内容
-     */
-    @Field(value = "content")
-    private String content;
-    /**
      * 是否有效
      */
     @Field(value = "is_enabled")
@@ -90,14 +85,6 @@ public class TopicInfo {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public Boolean getEnabled() {

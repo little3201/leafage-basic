@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.vo;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * VO class for TopicInfo
@@ -18,9 +19,9 @@ public class TopicVO implements Serializable {
      */
     private String businessId;
     /**
-     * 用户ID
+     * 作者
      */
-    private String userId;
+    private String author;
     /**
      * 标题
      */
@@ -29,6 +30,10 @@ public class TopicVO implements Serializable {
      * 内容
      */
     private String content;
+    /**
+     * 修改时间
+     */
+    private LocalDateTime modifyTime;
 
     public String getBusinessId() {
         return businessId;
@@ -38,12 +43,12 @@ public class TopicVO implements Serializable {
         this.businessId = businessId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public String getTitle() {
@@ -60,5 +65,13 @@ public class TopicVO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

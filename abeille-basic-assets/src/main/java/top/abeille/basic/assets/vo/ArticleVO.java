@@ -19,6 +19,10 @@ public class ArticleVO implements Serializable {
      */
     private String businessId;
     /**
+     * 作者
+     */
+    private String author;
+    /**
      * 标题
      */
     private String title;
@@ -31,13 +35,13 @@ public class ArticleVO implements Serializable {
      */
     private String content;
     /**
+     * 目录
+     */
+    private String catalog;
+    /**
      * 图片url
      */
     private String imageUrl;
-    /**
-     * 修改人
-     */
-    private Long modifier;
     /**
      * 修改时间
      */
@@ -75,6 +79,14 @@ public class ArticleVO implements Serializable {
         this.content = content;
     }
 
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -83,12 +95,12 @@ public class ArticleVO implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public Long getModifier() {
-        return modifier;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public LocalDateTime getModifyTime() {

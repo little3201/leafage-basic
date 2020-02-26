@@ -9,13 +9,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ArticleInfo;
+import top.abeille.basic.assets.document.ContentInfo;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
+import top.abeille.basic.assets.service.ContentInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -27,36 +31,56 @@ import java.util.Objects;
 public class ArticleInfoServiceImpl extends AbstractBasicService implements ArticleInfoService {
 
     private final ArticleInfoRepository articleInfoRepository;
+    private final ContentInfoService contentInfoService;
 
-    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository) {
+    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ContentInfoService contentInfoService) {
         this.articleInfoRepository = articleInfoRepository;
+        this.contentInfoService = contentInfoService;
     }
 
     @Override
     public Flux<ArticleVO> retrieveAll(Sort sort) {
-        return articleInfoRepository.findAll(sort).filter(Objects::nonNull).map(this::convertOuter);
+        return articleInfoRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
     public Mono<ArticleVO> fetchById(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).filter(Objects::nonNull).map(this::convertOuter);
+        return this.fetchByBusinessIdId(businessId).map(this::convertOuter).flatMap(articleVO -> contentInfoService.fetchByBusinessIdId(businessId)
+                .map(contentInfo -> {
+                    articleVO.setContent(contentInfo.getContent());
+                    articleVO.setCatalog(contentInfo.getCatalog());
+                    return articleVO;
+                }));
     }
 
     @Override
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(articleDTO, info);
-        info.setBusinessId(this.generateId());
+        info.setBusinessId(PrefixEnum.AT + this.generateId());
         info.setEnabled(Boolean.TRUE);
-        return articleInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        info.setModifyTime(LocalDateTime.now());
+        return articleInfoRepository.save(info).doOnSuccess(articleInfo -> {
+            ContentInfo contentInfo = new ContentInfo();
+            contentInfo.setBusinessId(articleInfo.getBusinessId());
+            contentInfo.setContent(articleDTO.getContent());
+            contentInfo.setCatalog(articleDTO.getCatalog());
+            contentInfo.setModifier(articleInfo.getModifier());
+            contentInfoService.create(contentInfo);
+        }).map(this::convertOuter);
     }
 
     @Override
     public Mono<ArticleVO> modify(String businessId, ArticleDTO articleDTO) {
         return this.fetchByBusinessIdId(businessId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(articleDTO, articleInfo);
-            return articleInfoRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
+            return articleInfoRepository.save(articleInfo).doOnSuccess(info -> contentInfoService.fetchByBusinessIdId(businessId).flatMap(contentInfo -> {
+                contentInfo.setContent(articleDTO.getContent());
+                contentInfo.setCatalog(articleDTO.getCatalog());
+                contentInfo.setModifier(info.getModifier());
+                return contentInfoService.modify(businessId, contentInfo);
+            })).map(this::convertOuter);
         });
     }
 

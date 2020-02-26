@@ -1,6 +1,7 @@
 /*
  * Copyright © 2010-2019 Abeille All rights reserved.
  */
+
 package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
@@ -11,12 +12,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for TranslationInfo
+ * Model class for ContentInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "translation_info")
-public class TranslationInfo {
+@Document(collection = "content_info")
+public class ContentInfo {
 
     /**
      * 主键
@@ -30,15 +31,15 @@ public class TranslationInfo {
     @Indexed
     private String businessId;
     /**
-     * 标题
+     * 内容
      */
-    @Field(value = "title")
-    private String title;
+    @Field(value = "content")
+    private String content;
     /**
-     * 原文连接
+     * 目录
      */
-    @Field(value = "originalUrl")
-    private String originalUrl;
+    @Field(value = "catalog")
+    private String catalog;
     /**
      * 是否有效
      */
@@ -71,20 +72,20 @@ public class TranslationInfo {
         this.businessId = businessId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getContent() {
+        return content;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getOriginalUrl() {
-        return originalUrl;
+    public String getCatalog() {
+        return catalog;
     }
 
-    public void setOriginalUrl(String originalUrl) {
-        this.originalUrl = originalUrl;
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
     }
 
     public Boolean getEnabled() {

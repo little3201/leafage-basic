@@ -32,10 +32,6 @@ public class AccountVO implements Serializable {
      */
     private String type;
     /**
-     * 修改人
-     */
-    private Long modifier;
-    /**
      * 修改时间
      */
     private LocalDateTime modifyTime;
@@ -70,14 +66,6 @@ public class AccountVO implements Serializable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Long getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

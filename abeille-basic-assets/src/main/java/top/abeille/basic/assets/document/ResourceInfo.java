@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Document(collection = "source_info")
+@Document(collection = "resource_info")
 public class ResourceInfo {
 
     /**
@@ -46,11 +46,6 @@ public class ResourceInfo {
      */
     @Field(value = "subtitle")
     private String subtitle;
-    /**
-     * 内容
-     */
-    @Field(value = "content")
-    private String content;
     /**
      * 图片url
      */
@@ -110,14 +105,6 @@ public class ResourceInfo {
 
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public String getImageUrl() {

@@ -28,6 +28,10 @@ public class ArticleDTO implements Serializable {
      */
     private String content;
     /**
+     * 目录
+     */
+    private String catalog;
+    /**
      * 图片url
      */
     private String imageUrl;
@@ -55,6 +59,14 @@ public class ArticleDTO implements Serializable {
 
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
+    }
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
     }
 
     public String getImageUrl() {

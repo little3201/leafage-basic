@@ -47,20 +47,10 @@ public class ArticleInfo {
     @Field(value = "subtitle")
     private String subtitle;
     /**
-     * 内容
-     */
-    @Field(value = "content")
-    private String content;
-    /**
      * 图片url
      */
     @Field(value = "image_url")
     private String imageUrl;
-    /**
-     * 目录
-     */
-    @Field(value = "catalog")
-    private String catalog;
     /**
      * 是否有效
      */
@@ -117,14 +107,6 @@ public class ArticleInfo {
         this.subtitle = subtitle;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getImageUrl() {
         return imageUrl;
     }
@@ -135,14 +117,6 @@ public class ArticleInfo {
 
     public Boolean getEnabled() {
         return enabled;
-    }
-
-    public String getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
     }
 
     public void setEnabled(Boolean enabled) {

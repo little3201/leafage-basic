@@ -8,7 +8,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.AccountInfo;
-import top.abeille.basic.assets.document.TranslationInfo;
 import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.basic.assets.service.AccountInfoService;
@@ -35,7 +34,7 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
     public Mono<AccountVO> create(AccountDTO accountDTO) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(accountDTO, info);
-        info.setBusinessId(this.getDateValue());
+        info.setBusinessId(this.generateId());
         info.setEnabled(Boolean.TRUE);
         return accountInfoRepository.save(info).map(this::convertOuter);
     }

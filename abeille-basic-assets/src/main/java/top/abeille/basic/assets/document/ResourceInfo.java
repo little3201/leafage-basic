@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @author liwenqiang
  */
 @Document(collection = "source_info")
-public class SourceInfo {
+public class ResourceInfo {
 
     /**
      * 主键

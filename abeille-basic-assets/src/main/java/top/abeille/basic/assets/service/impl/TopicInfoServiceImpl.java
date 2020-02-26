@@ -47,7 +47,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
     public Mono<TopicVO> create(TopicDTO topicDTO) {
         TopicInfo info = new TopicInfo();
         BeanUtils.copyProperties(topicDTO, info);
-        info.setBusinessId(this.getDateValue());
+        info.setBusinessId(this.generateId());
         info.setEnabled(Boolean.TRUE);
         return topicInfoRepository.save(info).map(this::convertOuter);
     }

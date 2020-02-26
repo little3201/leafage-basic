@@ -9,7 +9,7 @@ spring:
 
   ##=====active=====##
   profiles:
-    active: prod
+    active: dev
 
   ##=====consul config=====##
   cloud:

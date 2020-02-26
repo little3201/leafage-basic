@@ -47,7 +47,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
     public Mono<TranslationVO> create(TranslationDTO translationDTO) {
         TranslationInfo info = new TranslationInfo();
         BeanUtils.copyProperties(translationDTO, info);
-        info.setBusinessId(this.getDateValue());
+        info.setBusinessId(this.generateId());
         info.setEnabled(Boolean.TRUE);
         return translationInfoRepository.save(info).map(this::convertOuter);
     }

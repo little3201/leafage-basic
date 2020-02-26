@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  * @author liwenqiang
  */
-public class SourceVO implements Serializable {
+public class ResourceVO implements Serializable {
 
     private static final long serialVersionUID = -2168494818144125736L;
     /**

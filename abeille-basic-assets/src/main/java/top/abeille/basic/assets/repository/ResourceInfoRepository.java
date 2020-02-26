@@ -5,7 +5,7 @@ package top.abeille.basic.assets.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.assets.document.SourceInfo;
+import top.abeille.basic.assets.document.ResourceInfo;
 
 /**
  * 资源信息repository
@@ -13,5 +13,5 @@ import top.abeille.basic.assets.document.SourceInfo;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface SourceInfoRepository extends ReactiveMongoRepository<SourceInfo, String> {
+public interface ResourceInfoRepository extends ReactiveMongoRepository<ResourceInfo, String> {
 }

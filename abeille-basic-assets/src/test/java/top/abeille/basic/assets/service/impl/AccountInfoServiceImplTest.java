@@ -8,7 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import top.abeille.basic.assets.document.AccountInfo;
+import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.common.test.AbstractTest;
 
@@ -29,6 +32,9 @@ public class AccountInfoServiceImplTest {
 
     @Test
     public void getById() {
-
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setType("applePay");
+        accountInfoService.create(accountDTO);
+        Mockito.verify(accountInfoRepository, Mockito.atLeastOnce()).save(Mockito.any(AccountInfo.class));
     }
 }

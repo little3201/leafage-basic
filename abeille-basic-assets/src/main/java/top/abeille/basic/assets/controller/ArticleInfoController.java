@@ -75,7 +75,7 @@ public class ArticleInfoController extends AbstractController {
      * @param articleDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{articleId}")
+    @PutMapping("/{businessId}")
     public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable String businessId, @RequestBody @Valid ArticleDTO articleDTO) {
         return articleInfoService.modify(businessId, articleDTO)
                 .map(ResponseEntity::ok)

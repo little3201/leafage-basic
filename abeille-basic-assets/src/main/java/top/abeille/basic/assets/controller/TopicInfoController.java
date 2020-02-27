@@ -48,7 +48,7 @@ public class TopicInfoController extends AbstractController {
      * @param businessId 业务id
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{topicId}")
+    @GetMapping("/{businessId}")
     public Mono<ResponseEntity<TopicVO>> fetchTopic(@PathVariable String businessId) {
         return topicInfoService.fetchById(businessId)
                 .map(ResponseEntity::ok)
@@ -75,7 +75,7 @@ public class TopicInfoController extends AbstractController {
      * @param topicDTO   要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{topicId}")
+    @PutMapping("/{businessId}")
     public Mono<ResponseEntity<TopicVO>> modifyTopic(@PathVariable String businessId, @RequestBody @Valid TopicDTO topicDTO) {
         return topicInfoService.modify(businessId, topicDTO)
                 .map(ResponseEntity::ok)

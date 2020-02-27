@@ -37,7 +37,7 @@ public class ResourceInfoController extends AbstractController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<ResourceVO> retrieveArticle() {
+    public Flux<ResourceVO> retrieveResource() {
         Sort sort = super.initSortProperties();
         return resourceInfoService.retrieveAll(sort);
     }
@@ -48,8 +48,8 @@ public class ResourceInfoController extends AbstractController {
      * @param businessId 业务id
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{articleId}")
-    public Mono<ResponseEntity<ResourceVO>> fetchArticle(@PathVariable String businessId) {
+    @GetMapping("/{businessId}")
+    public Mono<ResponseEntity<ResourceVO>> fetchResource(@PathVariable String businessId) {
         return resourceInfoService.fetchById(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -62,7 +62,7 @@ public class ResourceInfoController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ResponseEntity<ResourceVO>> createArticle(@RequestBody @Valid ResourceDTO resourceDTO) {
+    public Mono<ResponseEntity<ResourceVO>> createResource(@RequestBody @Valid ResourceDTO resourceDTO) {
         return resourceInfoService.create(resourceDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
@@ -76,7 +76,7 @@ public class ResourceInfoController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{businessId}")
-    public Mono<ResponseEntity<ResourceVO>> modifyArticle(@PathVariable String businessId, @RequestBody @Valid ResourceDTO resourceDTO) {
+    public Mono<ResponseEntity<ResourceVO>> modifyResource(@PathVariable String businessId, @RequestBody @Valid ResourceDTO resourceDTO) {
         return resourceInfoService.modify(businessId, resourceDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));

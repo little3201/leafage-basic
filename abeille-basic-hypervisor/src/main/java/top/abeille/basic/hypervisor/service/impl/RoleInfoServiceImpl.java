@@ -9,12 +9,12 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.GroupInfo;
-import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.document.RoleInfo;
+import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
+import top.abeille.common.basic.AbstractBasicService;
 
 import java.util.Objects;
 
@@ -24,7 +24,7 @@ import java.util.Objects;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleInfoServiceImpl implements RoleInfoService {
+public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInfoService {
 
     private final RoleInfoRepository roleInfoRepository;
 
@@ -49,6 +49,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     public Mono<RoleVO> create(RoleDTO roleDTO) {
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
+        info.setBusinessId(this.generateId());
         return roleInfoRepository.save(info).map(this::convertOuter);
     }
 

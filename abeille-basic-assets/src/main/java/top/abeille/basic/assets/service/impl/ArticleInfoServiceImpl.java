@@ -19,7 +19,6 @@ import top.abeille.basic.assets.service.ContentInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -46,12 +45,13 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     @Override
     public Mono<ArticleVO> fetchById(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).map(this::convertOuter).flatMap(articleVO -> contentInfoService.fetchByBusinessIdId(businessId)
-                .map(contentInfo -> {
+        return this.fetchByBusinessIdId(businessId).map(this::convertOuter).flatMap(articleVO ->
+                contentInfoService.fetchByBusinessIdId(businessId).map(contentInfo -> {
                     articleVO.setContent(contentInfo.getContent());
                     articleVO.setCatalog(contentInfo.getCatalog());
                     return articleVO;
-                }));
+                })
+        );
     }
 
     @Override
@@ -59,33 +59,31 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(articleDTO, info);
         info.setBusinessId(PrefixEnum.AT + this.generateId());
-        info.setEnabled(Boolean.TRUE);
-        info.setModifyTime(LocalDateTime.now());
         return articleInfoRepository.save(info).doOnSuccess(articleInfo -> {
             ContentInfo contentInfo = new ContentInfo();
+            BeanUtils.copyProperties(articleDTO, contentInfo);
             contentInfo.setBusinessId(articleInfo.getBusinessId());
-            contentInfo.setContent(articleDTO.getContent());
-            contentInfo.setCatalog(articleDTO.getCatalog());
-            contentInfo.setModifier(articleInfo.getModifier());
             contentInfoService.create(contentInfo);
         }).map(this::convertOuter);
     }
 
     @Override
     public Mono<ArticleVO> modify(String businessId, ArticleDTO articleDTO) {
+        Objects.requireNonNull(businessId);
         return this.fetchByBusinessIdId(businessId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(articleDTO, articleInfo);
-            return articleInfoRepository.save(articleInfo).doOnSuccess(info -> contentInfoService.fetchByBusinessIdId(businessId).flatMap(contentInfo -> {
-                contentInfo.setContent(articleDTO.getContent());
-                contentInfo.setCatalog(articleDTO.getCatalog());
-                contentInfo.setModifier(info.getModifier());
-                return contentInfoService.modify(businessId, contentInfo);
-            })).map(this::convertOuter);
+            return articleInfoRepository.save(articleInfo).doOnSuccess(info ->
+                    contentInfoService.fetchByBusinessIdId(businessId).doOnNext(contentInfo -> {
+                        BeanUtils.copyProperties(articleDTO, contentInfo);
+                        contentInfoService.modify(businessId, contentInfo);
+                    })
+            ).map(this::convertOuter);
         });
     }
 
     @Override
     public Mono<Void> removeById(String businessId) {
+        Objects.requireNonNull(businessId);
         return this.fetchByBusinessIdId(businessId).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
     }
 

@@ -9,9 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.RoleInfo;
-import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.document.SourceInfo;
+import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
@@ -48,7 +47,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
     public Mono<SourceVO> create(SourceDTO sourceDTO) {
         SourceInfo info = new SourceInfo();
         BeanUtils.copyProperties(sourceDTO, info);
-        info.setBusinessId(this.getDateValue());
+        info.setBusinessId(this.generateId());
         info.setEnabled(Boolean.TRUE);
         return sourceInfoRepository.save(info).map(this::convertOuter);
     }

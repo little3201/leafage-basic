@@ -39,7 +39,7 @@ public class UserInfoServiceImpl extends AbstractBasicService implements UserInf
     public Mono<UserVO> create(UserDTO groupDTO) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(groupDTO, info);
-        info.setBusinessId(this.getDateValue());
+        info.setBusinessId(this.generateId());
         return userInfoRepository.save(info).map(this::convertOuter);
     }
 

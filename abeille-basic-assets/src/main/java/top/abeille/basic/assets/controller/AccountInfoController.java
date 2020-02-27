@@ -62,7 +62,7 @@ public class AccountInfoController extends AbstractController {
      * @param accountDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{accountId}")
+    @PutMapping("/{businessId}")
     public Mono<ResponseEntity<AccountVO>> modifyAccount(@PathVariable String businessId, @RequestBody @Valid AccountDTO accountDTO) {
         return accountInfoService.modify(businessId, accountDTO)
                 .map(ResponseEntity::ok)
@@ -75,7 +75,7 @@ public class AccountInfoController extends AbstractController {
      * @param businessId 业务id
      * @return 如果删除数据成功，返回删除后的信息，否则返回417状态码
      */
-    @DeleteMapping("/{accountId}")
+    @DeleteMapping("/{businessId}")
     public Mono<ResponseEntity<Void>> removeAccount(@PathVariable String businessId) {
         return accountInfoService.removeById(businessId)
                 .map(ResponseEntity::ok)

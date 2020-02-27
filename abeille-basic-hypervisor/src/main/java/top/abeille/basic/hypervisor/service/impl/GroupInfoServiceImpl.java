@@ -7,11 +7,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.document.GroupInfo;
+import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
+import top.abeille.common.basic.AbstractBasicService;
 
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ import java.util.Objects;
  * @author liwenqiang 2018/12/17 19:25
  **/
 @Service
-public class GroupInfoServiceImpl implements GroupInfoService {
+public class GroupInfoServiceImpl extends AbstractBasicService implements GroupInfoService {
 
     private final GroupInfoRepository groupInfoRepository;
 
@@ -39,6 +40,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     public Mono<GroupVO> create(GroupDTO groupDTO) {
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
+        info.setBusinessId(this.generateId());
         return groupInfoRepository.save(info).map(this::convertOuter);
     }
 

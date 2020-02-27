@@ -46,7 +46,9 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     public Mono<ArticleVO> fetchById(String businessId) {
         Objects.requireNonNull(businessId);
         return this.fetchByBusinessIdId(businessId).map(this::convertOuter).flatMap(articleVO ->
-                contentInfoService.fetchByBusinessIdId(businessId).map(contentInfo -> {
+                // 根据业务id获取相关内容
+                contentInfoService.fetchByBusinessIdId(articleVO.getBusinessId()).map(contentInfo -> {
+                    // 将内容设置到vo对像中
                     articleVO.setContent(contentInfo.getContent());
                     articleVO.setCatalog(contentInfo.getCatalog());
                     return articleVO;
@@ -60,6 +62,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
         BeanUtils.copyProperties(articleDTO, info);
         info.setBusinessId(PrefixEnum.AT + this.generateId());
         return articleInfoRepository.save(info).doOnSuccess(articleInfo -> {
+            // 添加内容信息
             ContentInfo contentInfo = new ContentInfo();
             BeanUtils.copyProperties(articleDTO, contentInfo);
             contentInfo.setBusinessId(articleInfo.getBusinessId());
@@ -70,12 +73,14 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     @Override
     public Mono<ArticleVO> modify(String businessId, ArticleDTO articleDTO) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).flatMap(articleInfo -> {
-            BeanUtils.copyProperties(articleDTO, articleInfo);
-            return articleInfoRepository.save(articleInfo).doOnSuccess(info ->
-                    contentInfoService.fetchByBusinessIdId(businessId).doOnNext(contentInfo -> {
+        return this.fetchByBusinessIdId(businessId).flatMap(info -> {
+            // 将信息复制到info
+            BeanUtils.copyProperties(articleDTO, info);
+            return articleInfoRepository.save(info).doOnSuccess(articleInfo ->
+                    // 更新成功后，将内容信息更新
+                    contentInfoService.fetchByBusinessIdId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(articleDTO, contentInfo);
-                        contentInfoService.modify(businessId, contentInfo);
+                        contentInfoService.modify(contentInfo.getBusinessId(), contentInfo);
                     })
             ).map(this::convertOuter);
         });

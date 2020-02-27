@@ -46,7 +46,9 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
     @Override
     public Mono<TranslationVO> fetchById(String businessId) {
         return fetchByTranslationId(businessId).map(this::convertOuter).flatMap(translationVO ->
+                // 根据业务id获取相关内容
                 contentInfoService.fetchByBusinessIdId(businessId).map(contentInfo -> {
+                    // 将内容设置到vo对像中
                     translationVO.setContent(contentInfo.getContent());
                     translationVO.setCatalog(contentInfo.getCatalog());
                     return translationVO;
@@ -60,6 +62,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
         BeanUtils.copyProperties(translationDTO, info);
         info.setBusinessId(PrefixEnum.TS + this.generateId());
         return translationInfoRepository.save(info).doOnSuccess(translationInfo -> {
+            // 添加内容信息
             ContentInfo contentInfo = new ContentInfo();
             BeanUtils.copyProperties(translationDTO, contentInfo);
             contentInfo.setBusinessId(translationInfo.getBusinessId());
@@ -70,11 +73,13 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
     @Override
     public Mono<TranslationVO> modify(String businessId, TranslationDTO translationDTO) {
         return this.fetchByTranslationId(businessId).flatMap(info -> {
+            // 将信息复制到info
             BeanUtils.copyProperties(translationDTO, info);
             return translationInfoRepository.save(info).doOnSuccess(translationInfo ->
+                    // 更新成功后，将内容信息更新
                     contentInfoService.fetchByBusinessIdId(businessId).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(translationDTO, contentInfo);
-                        contentInfoService.modify(businessId, contentInfo);
+                        contentInfoService.modify(contentInfo.getBusinessId(), contentInfo);
                     })
             ).map(this::convertOuter);
         });

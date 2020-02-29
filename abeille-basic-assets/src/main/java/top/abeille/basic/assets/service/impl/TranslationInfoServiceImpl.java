@@ -20,6 +20,7 @@ import top.abeille.basic.assets.service.TranslationInfoService;
 import top.abeille.basic.assets.vo.TranslationVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -61,6 +62,8 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
         TranslationInfo info = new TranslationInfo();
         BeanUtils.copyProperties(translationDTO, info);
         info.setBusinessId(PrefixEnum.TS + this.generateId());
+        info.setEnabled(Boolean.TRUE);
+        info.setModifyTime(LocalDateTime.now());
         return translationInfoRepository.save(info).doOnSuccess(translationInfo -> {
             // 添加内容信息
             ContentInfo contentInfo = new ContentInfo();

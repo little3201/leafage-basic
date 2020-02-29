@@ -17,6 +17,7 @@ import top.abeille.basic.assets.service.ResourceInfoService;
 import top.abeille.basic.assets.vo.ResourceVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -77,6 +78,7 @@ public class ResourceInfoServiceImpl extends AbstractBasicService implements Res
         ResourceInfo info = new ResourceInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);
+        info.setModifyTime(LocalDateTime.now());
         return resourceInfoRepository.findOne(Example.of(info));
     }
 

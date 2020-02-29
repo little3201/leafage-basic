@@ -19,6 +19,7 @@ import top.abeille.basic.assets.service.ContentInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -60,6 +61,8 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(articleDTO, info);
+        info.setEnabled(Boolean.TRUE);
+        info.setModifyTime(LocalDateTime.now());
         info.setBusinessId(PrefixEnum.AT + this.generateId());
         return articleInfoRepository.save(info).doOnSuccess(articleInfo -> {
             // 添加内容信息

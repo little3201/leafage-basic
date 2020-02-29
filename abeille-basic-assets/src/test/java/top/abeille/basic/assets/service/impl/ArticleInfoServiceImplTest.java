@@ -36,4 +36,8 @@ public class ArticleInfoServiceImplTest {
         Mono<ArticleVO> outerMono = articleInfoService.create(articleDTO);
         Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getContent());
     }
+
+    @Test
+    public void fetchById() {
+    }
 }

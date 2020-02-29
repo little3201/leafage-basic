@@ -17,6 +17,7 @@ import top.abeille.basic.assets.service.TopicInfoService;
 import top.abeille.basic.assets.vo.TopicVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -50,6 +51,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
         BeanUtils.copyProperties(topicDTO, info);
         info.setBusinessId(PrefixEnum.TP + this.generateId());
         info.setEnabled(Boolean.TRUE);
+        info.setModifyTime(LocalDateTime.now());
         return topicInfoRepository.save(info).map(this::convertOuter);
     }
 

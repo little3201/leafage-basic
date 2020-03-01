@@ -51,6 +51,7 @@ public class ResourceInfoServiceImpl extends AbstractBasicService implements Res
         BeanUtils.copyProperties(resourceDTO, info);
         info.setBusinessId(PrefixEnum.RS + this.generateId());
         info.setEnabled(Boolean.TRUE);
+        info.setModifyTime(LocalDateTime.now());
         return resourceInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 

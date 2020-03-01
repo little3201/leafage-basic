@@ -61,9 +61,9 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(articleDTO, info);
+        info.setBusinessId(PrefixEnum.AT + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        info.setBusinessId(PrefixEnum.AT + this.generateId());
         return articleInfoRepository.save(info).doOnSuccess(articleInfo -> {
             // 添加内容信息
             ContentInfo contentInfo = new ContentInfo();

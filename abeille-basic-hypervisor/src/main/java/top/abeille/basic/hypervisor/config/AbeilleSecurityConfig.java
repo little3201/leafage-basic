@@ -23,7 +23,7 @@ import java.security.spec.X509EncodedKeySpec;
 /**
  * spring security 配置
  *
- * @author liwenqiang 2018/7/12 17:51
+ * @author liwenqiang 2019/7/12 17:51
  **/
 @EnableWebFluxSecurity
 public class AbeilleSecurityConfig {
@@ -45,9 +45,7 @@ public class AbeilleSecurityConfig {
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) throws Exception {
         http.csrf().disable().formLogin().disable().httpBasic().disable()
-                .authorizeExchange()
-                .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .anyExchange().authenticated()
+                .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll().anyExchange().authenticated()
                 .and().exceptionHandling()
                 .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
         return http.build();

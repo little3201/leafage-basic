@@ -15,6 +15,7 @@ import top.abeille.basic.assets.service.AccountInfoService;
 import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -37,6 +38,7 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
         BeanUtils.copyProperties(accountDTO, info);
         info.setBusinessId(PrefixEnum.AC + this.generateId());
         info.setEnabled(Boolean.TRUE);
+        info.setModifyTime(LocalDateTime.now());
         return accountInfoRepository.save(info).map(this::convertOuter);
     }
 

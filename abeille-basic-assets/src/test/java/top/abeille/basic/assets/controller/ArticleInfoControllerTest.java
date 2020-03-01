@@ -15,6 +15,11 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.common.test.AbstractTest;
 
+/**
+ * 文章接口测试类
+ *
+ * @author liwenqiang 2020/3/1 22:07
+ */
 @ExtendWith(AbstractTest.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest

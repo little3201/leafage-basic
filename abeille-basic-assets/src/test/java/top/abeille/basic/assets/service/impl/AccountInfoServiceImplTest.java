@@ -16,7 +16,7 @@ import top.abeille.basic.assets.repository.AccountInfoRepository;
 import top.abeille.common.test.AbstractTest;
 
 /**
- * description
+ * 账户接口测试类
  *
  * @author liwenqiang 2019/3/28 20:22
  **/

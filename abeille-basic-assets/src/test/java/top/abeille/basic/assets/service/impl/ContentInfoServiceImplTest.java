@@ -18,6 +18,11 @@ import top.abeille.common.test.AbstractTest;
 
 import java.util.Objects;
 
+/**
+ * 内容接口测试类
+ *
+ * @author liwenqiang 2020/3/1 22:07
+ */
 @ExtendWith(AbstractTest.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest

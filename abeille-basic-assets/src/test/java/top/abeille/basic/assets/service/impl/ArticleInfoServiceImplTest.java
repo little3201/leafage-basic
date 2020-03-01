@@ -16,7 +16,7 @@ import top.abeille.common.test.AbstractTest;
 import java.util.Objects;
 
 /**
- * 文章接口实现类测试
+ * 文章接口测试类
  *
  * @author liwenqiang 2019/9/19 9:27
  */
@@ -32,12 +32,14 @@ public class ArticleInfoServiceImplTest {
     public void create() {
         ArticleDTO articleDTO = new ArticleDTO();
         articleDTO.setTitle("spring");
-        articleDTO.setContent("spring boot 和 spring cloud");
+        articleDTO.setContent("spring boot");
         Mono<ArticleVO> outerMono = articleInfoService.create(articleDTO);
         Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getContent());
     }
 
     @Test
     public void fetchById() {
+        Mono<ArticleVO> outerMono = articleInfoService.fetchById("AT226");
+        Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getContent());
     }
 }

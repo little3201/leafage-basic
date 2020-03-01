@@ -33,7 +33,7 @@ public class ContentInfoServiceImpl implements ContentInfoService {
 
     @Override
     public Mono<ContentInfo> modify(String businessId, ContentInfo contentInfo) {
-        return this.fetchByBusinessIdId(businessId).flatMap(content -> {
+        return this.fetchByBusinessId(businessId).flatMap(content -> {
             BeanUtils.copyProperties(contentInfo, content);
             content.setModifyTime(LocalDateTime.now());
             return contentInfoRepository.save(content);
@@ -41,7 +41,7 @@ public class ContentInfoServiceImpl implements ContentInfoService {
     }
 
     @Override
-    public Mono<ContentInfo> fetchByBusinessIdId(String businessId) {
+    public Mono<ContentInfo> fetchByBusinessId(String businessId) {
         Objects.requireNonNull(businessId);
         ContentInfo info = new ContentInfo();
         info.setBusinessId(businessId);

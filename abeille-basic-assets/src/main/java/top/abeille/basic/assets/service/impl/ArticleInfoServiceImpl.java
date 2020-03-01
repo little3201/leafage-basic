@@ -48,7 +48,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
         Objects.requireNonNull(businessId);
         return this.fetchByBusinessIdId(businessId).map(this::convertOuter).flatMap(articleVO ->
                 // 根据业务id获取相关内容
-                contentInfoService.fetchByBusinessIdId(articleVO.getBusinessId()).map(contentInfo -> {
+                contentInfoService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
                     // 将内容设置到vo对像中
                     articleVO.setContent(contentInfo.getContent());
                     articleVO.setCatalog(contentInfo.getCatalog());
@@ -81,7 +81,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
             BeanUtils.copyProperties(articleDTO, info);
             return articleInfoRepository.save(info).doOnSuccess(articleInfo ->
                     // 更新成功后，将内容信息更新
-                    contentInfoService.fetchByBusinessIdId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {
+                    contentInfoService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(articleDTO, contentInfo);
                         contentInfoService.modify(contentInfo.getBusinessId(), contentInfo);
                     })

@@ -32,5 +32,5 @@ public interface ContentInfoService {
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    Mono<ContentInfo> fetchByBusinessIdId(String businessId);
+    Mono<ContentInfo> fetchByBusinessId(String businessId);
 }

@@ -48,7 +48,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
     public Mono<TranslationVO> fetchById(String businessId) {
         return fetchByTranslationId(businessId).map(this::convertOuter).flatMap(translationVO ->
                 // 根据业务id获取相关内容
-                contentInfoService.fetchByBusinessIdId(businessId).map(contentInfo -> {
+                contentInfoService.fetchByBusinessId(businessId).map(contentInfo -> {
                     // 将内容设置到vo对像中
                     translationVO.setContent(contentInfo.getContent());
                     translationVO.setCatalog(contentInfo.getCatalog());
@@ -80,7 +80,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
             BeanUtils.copyProperties(translationDTO, info);
             return translationInfoRepository.save(info).doOnSuccess(translationInfo ->
                     // 更新成功后，将内容信息更新
-                    contentInfoService.fetchByBusinessIdId(businessId).doOnNext(contentInfo -> {
+                    contentInfoService.fetchByBusinessId(businessId).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(translationDTO, contentInfo);
                         contentInfoService.modify(contentInfo.getBusinessId(), contentInfo);
                     })

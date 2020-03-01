@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -21,6 +22,7 @@ public class AccountDTO implements Serializable {
     /**
      * 类型
      */
+    @NotBlank
     private String type;
 
     public BigDecimal getBalance() {

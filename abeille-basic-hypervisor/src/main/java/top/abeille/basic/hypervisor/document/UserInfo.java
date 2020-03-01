@@ -75,7 +75,6 @@ public class UserInfo {
      */
     @Field(value = "is_credentials_non_expired")
     private Boolean credentialsNonExpired;
-
     /**
      * 是否有效
      */

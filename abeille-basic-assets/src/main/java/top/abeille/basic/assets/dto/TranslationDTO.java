@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -16,10 +17,12 @@ public class TranslationDTO implements Serializable {
     /**
      * 标题
      */
+    @NotBlank
     private String title;
     /**
      * 内容
      */
+    @NotBlank
     private String content;
     /**
      * 目录
@@ -28,6 +31,7 @@ public class TranslationDTO implements Serializable {
     /**
      * 原文连接
      */
+    @NotBlank
     private String originalUrl;
 
     public String getTitle() {

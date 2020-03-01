@@ -22,6 +22,7 @@ public class ResourceDTO implements Serializable {
     /**
      * 副标题
      */
+    @NotBlank
     private String subtitle;
     /**
      * 内容

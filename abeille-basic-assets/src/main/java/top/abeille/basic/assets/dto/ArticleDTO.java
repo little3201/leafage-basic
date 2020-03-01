@@ -22,10 +22,12 @@ public class ArticleDTO implements Serializable {
     /**
      * 描述
      */
+    @NotBlank
     private String subtitle;
     /**
      * 内容
      */
+    @NotBlank
     private String content;
     /**
      * 目录
@@ -35,7 +37,6 @@ public class ArticleDTO implements Serializable {
      * 图片url
      */
     private String imageUrl;
-
 
     public String getTitle() {
         return title;

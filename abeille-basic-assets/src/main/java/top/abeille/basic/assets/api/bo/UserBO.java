@@ -1,19 +1,19 @@
 /*
  * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.hypervisor.vo;
+package top.abeille.basic.assets.api.bo;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * Model class for UserInfo
+ * BO class for UserInfo
  *
  * @author liwenqiang
  */
-public class UserVO implements Serializable {
+public class UserBO implements Serializable {
 
-    private static final long serialVersionUID = 635350278320138075L;
+    private static final long serialVersionUID = 5441310307209449909L;
     /**
      * 业务id
      */

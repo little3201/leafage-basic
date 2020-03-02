@@ -85,6 +85,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
         return this.fetchByBusinessIdId(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(articleDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return articleInfoRepository.save(info).doOnSuccess(articleInfo ->
                     // 更新成功后，将内容信息更新
                     contentInfoService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {

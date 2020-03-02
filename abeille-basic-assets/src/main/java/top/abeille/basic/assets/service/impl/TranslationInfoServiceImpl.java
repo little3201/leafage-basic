@@ -78,6 +78,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
         return this.fetchByTranslationId(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(translationDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return translationInfoRepository.save(info).doOnSuccess(translationInfo ->
                     // 更新成功后，将内容信息更新
                     contentInfoService.fetchByBusinessId(businessId).doOnNext(contentInfo -> {

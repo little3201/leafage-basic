@@ -33,9 +33,7 @@ public class ContentInfoServiceImpl implements ContentInfoService {
     public Mono<ContentInfo> create(ContentInfo contentInfo) {
         contentInfo.setEnabled(Boolean.TRUE);
         contentInfo.setModifyTime(LocalDateTime.now());
-        return contentInfoRepository.save(contentInfo).doOnSuccess(content ->
-                logger.info("结果：id-{}, content-{}", content.getId(), content.getContent()))
-                .doOnError(error -> logger.error("新增异常"));
+        return contentInfoRepository.save(contentInfo);
     }
 
     @Override

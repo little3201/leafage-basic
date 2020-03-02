@@ -3,6 +3,8 @@
  */
 package top.abeille.basic.assets.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -30,6 +32,10 @@ import java.util.Objects;
 @Service
 public class ArticleInfoServiceImpl extends AbstractBasicService implements ArticleInfoService {
 
+    /**
+     * 开启日志
+     */
+    protected static final Logger logger = LoggerFactory.getLogger(ArticleInfoServiceImpl.class);
     private final ArticleInfoRepository articleInfoRepository;
     private final ContentInfoService contentInfoService;
 

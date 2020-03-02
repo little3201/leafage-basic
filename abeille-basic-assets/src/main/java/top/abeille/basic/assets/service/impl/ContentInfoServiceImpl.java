@@ -4,6 +4,8 @@
 
 package top.abeille.basic.assets.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,10 @@ import java.util.Objects;
 
 @Service
 public class ContentInfoServiceImpl implements ContentInfoService {
-
+    /**
+     * 开启日志
+     */
+    protected static final Logger logger = LoggerFactory.getLogger(ContentInfoServiceImpl.class);
     private final ContentInfoRepository contentInfoRepository;
 
     public ContentInfoServiceImpl(ContentInfoRepository contentInfoRepository) {
@@ -28,7 +33,9 @@ public class ContentInfoServiceImpl implements ContentInfoService {
     public Mono<ContentInfo> create(ContentInfo contentInfo) {
         contentInfo.setEnabled(Boolean.TRUE);
         contentInfo.setModifyTime(LocalDateTime.now());
-        return contentInfoRepository.save(contentInfo);
+        return contentInfoRepository.save(contentInfo).doOnSuccess(content ->
+                logger.info("结果：id-{}, content-{}", content.getId(), content.getContent()))
+                .doOnError(error -> logger.error("新增异常"));
     }
 
     @Override

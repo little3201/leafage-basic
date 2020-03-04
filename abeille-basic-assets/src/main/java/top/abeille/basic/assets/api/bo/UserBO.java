@@ -4,7 +4,6 @@
 package top.abeille.basic.assets.api.bo;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * BO class for UserInfo
@@ -42,14 +41,6 @@ public class UserBO implements Serializable {
      * 地址
      */
     private String address;
-    /**
-     * 修改人
-     */
-    private Long modifier;
-    /**
-     * 修改时间
-     */
-    private LocalDateTime modifyTime;
 
     public String getBusinessId() {
         return businessId;
@@ -107,19 +98,4 @@ public class UserBO implements Serializable {
         this.address = address;
     }
 
-    public Long getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

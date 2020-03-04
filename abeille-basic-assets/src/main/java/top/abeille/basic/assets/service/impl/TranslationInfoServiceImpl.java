@@ -17,6 +17,7 @@ import top.abeille.basic.assets.dto.TranslationDTO;
 import top.abeille.basic.assets.repository.TranslationInfoRepository;
 import top.abeille.basic.assets.service.DetailsInfoService;
 import top.abeille.basic.assets.service.TranslationInfoService;
+import top.abeille.basic.assets.vo.TranslationDetailsVO;
 import top.abeille.basic.assets.vo.TranslationVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -45,16 +46,25 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
     }
 
     @Override
-    public Mono<TranslationVO> fetchById(String businessId) {
-        return fetchByTranslationId(businessId).map(this::convertOuter).flatMap(translationVO ->
-                // 根据业务id获取相关内容
-                detailsInfoService.fetchByBusinessId(businessId).map(contentInfo -> {
+    public Mono<TranslationDetailsVO> fetchDetailsByBusinessId(String businessId) {
+        return this.fetchByBusinessId(businessId).flatMap(translationVO -> {
                     // 将内容设置到vo对像中
-                    translationVO.setContent(contentInfo.getContent());
-                    translationVO.setCatalog(contentInfo.getCatalog());
-                    return translationVO;
-                })
+                    TranslationDetailsVO detailsVO = new TranslationDetailsVO();
+                    BeanUtils.copyProperties(translationVO, detailsVO);
+                    // 根据业务id获取相关内容
+                    return detailsInfoService.fetchByBusinessId(businessId).map(contentInfo -> {
+                        detailsVO.setContent(contentInfo.getContent());
+                        detailsVO.setCatalog(contentInfo.getCatalog());
+                        return detailsVO;
+                    }).defaultIfEmpty(detailsVO);
+                }
         );
+    }
+
+    @Override
+    public Mono<TranslationVO> fetchByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     @Override
@@ -75,7 +85,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
 
     @Override
     public Mono<TranslationVO> modify(String businessId, TranslationDTO translationDTO) {
-        return this.fetchByTranslationId(businessId).flatMap(info -> {
+        return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(translationDTO, info);
             return translationInfoRepository.save(info).doOnSuccess(translationInfo ->
@@ -94,7 +104,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<TranslationInfo> fetchByTranslationId(String businessId) {
+    private Mono<TranslationInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         TranslationInfo info = new TranslationInfo();
         info.setBusinessId(businessId);

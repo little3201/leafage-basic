@@ -45,7 +45,7 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
     @Override
     public Mono<AccountVO> modify(String accountId, AccountDTO accountDTO) {
         Objects.requireNonNull(accountId);
-        return fetchById(accountId).flatMap(accountVO -> {
+        return this.fetchByBusinessId(accountId).flatMap(accountVO -> {
             AccountInfo info = new AccountInfo();
             BeanUtils.copyProperties(accountVO, info);
             return accountInfoRepository.save(info).map(this::convertOuter);
@@ -53,13 +53,8 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
     }
 
     @Override
-    public Mono<AccountVO> fetchById(String accountId) {
-        return this.fetchByBusinessId(accountId).map(this::convertOuter);
-    }
-
-    @Override
-    public Mono<Void> removeById(String accountId) {
-        return this.fetchByBusinessId(accountId)
+    public Mono<Void> removeById(String businessId) {
+        return this.fetchInfo(businessId)
                 .flatMap(account -> accountInfoRepository.deleteById(account.getId()));
     }
 
@@ -69,8 +64,19 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<AccountInfo> fetchByBusinessId(String businessId) {
+    @Override
+    public Mono<AccountVO> fetchByBusinessId(String businessId) {
         Objects.requireNonNull(businessId);
+        return this.fetchInfo(businessId).map(this::convertOuter);
+    }
+
+    /**
+     * 根据业务id查询
+     *
+     * @param businessId 业务id
+     * @return 返回查询到的信息，否则返回empty
+     */
+    private Mono<AccountInfo> fetchInfo(String businessId) {
         AccountInfo info = new AccountInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);

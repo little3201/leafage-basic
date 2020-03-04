@@ -40,9 +40,11 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
     }
 
     @Override
-    public Mono<TopicVO> fetchById(String businessId) {
+    public Mono<TopicVO> fetchByBusinessId(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessId(businessId).map(this::convertOuter);
+        TopicInfo info = new TopicInfo();
+        info.setBusinessId(businessId);
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     @Override
@@ -58,7 +60,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
     @Override
     public Mono<TopicVO> modify(String businessId, TopicDTO topicDTO) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessId(businessId).flatMap(topicInfo -> {
+        return this.fetchInfo(businessId).flatMap(topicInfo -> {
             BeanUtils.copyProperties(topicDTO, topicInfo);
             return topicInfoRepository.save(topicInfo).map(this::convertOuter);
         });
@@ -66,7 +68,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
 
     @Override
     public Mono<Void> removeById(String businessId) {
-        return this.fetchByBusinessId(businessId).flatMap(topic -> topicInfoRepository.deleteById(topic.getId()));
+        return this.fetchInfo(businessId).flatMap(topic -> topicInfoRepository.deleteById(topic.getId()));
     }
 
     /**
@@ -75,7 +77,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<TopicInfo> fetchByBusinessId(String businessId) {
+    private Mono<TopicInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         TopicInfo info = new TopicInfo();
         info.setBusinessId(businessId);

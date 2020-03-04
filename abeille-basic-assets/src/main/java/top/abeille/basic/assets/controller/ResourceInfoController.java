@@ -50,9 +50,9 @@ public class ResourceInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public Mono<ResponseEntity<ResourceVO>> fetchResource(@PathVariable String businessId) {
-        return resourceInfoService.fetchById(businessId)
+        return resourceInfoService.fetchByBusinessId(businessId)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .defaultIfEmpty(ResponseEntity.noContent().build());
     }
 
     /**

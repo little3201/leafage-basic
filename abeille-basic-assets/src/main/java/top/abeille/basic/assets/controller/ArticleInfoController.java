@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.service.ArticleInfoService;
+import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -49,10 +50,10 @@ public class ArticleInfoController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{businessId}")
-    public Mono<ResponseEntity<ArticleVO>> fetchArticle(@PathVariable String businessId) {
-        return articleInfoService.fetchById(businessId)
+    public Mono<ResponseEntity<ArticleDetailsVO>> fetchArticle(@PathVariable String businessId) {
+        return articleInfoService.fetchDetailsByBusinessId(businessId)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .defaultIfEmpty(ResponseEntity.noContent().build());
     }
 
     /**

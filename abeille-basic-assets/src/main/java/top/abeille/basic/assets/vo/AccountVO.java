@@ -16,9 +16,9 @@ public class AccountVO implements Serializable {
 
     private static final long serialVersionUID = 2227758644875658137L;
     /**
-     * 用户ID
+     * 用户姓名
      */
-    private String userId;
+    private String name;
     /**
      * 业务ID
      */
@@ -36,12 +36,12 @@ public class AccountVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public String getUserId() {
-        return userId;
+    public String getName() {
+        return name;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getBusinessId() {

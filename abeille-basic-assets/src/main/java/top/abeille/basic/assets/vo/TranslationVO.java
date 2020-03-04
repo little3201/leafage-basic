@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * DTO class for TranslationInfo
+ * VO class for TranslationInfo
  *
  * @author liwenqiang
  */
@@ -26,14 +26,6 @@ public class TranslationVO implements Serializable {
      * 标题
      */
     private String title;
-    /**
-     * 内容
-     */
-    private String content;
-    /**
-     * 目录
-     */
-    private String catalog;
     /**
      * 原文连接
      */
@@ -65,22 +57,6 @@ public class TranslationVO implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
     }
 
     public String getOriginalUrl() {

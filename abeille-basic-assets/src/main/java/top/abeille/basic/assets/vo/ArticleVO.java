@@ -31,14 +31,6 @@ public class ArticleVO implements Serializable {
      */
     private String subtitle;
     /**
-     * 内容
-     */
-    private String content;
-    /**
-     * 目录
-     */
-    private String catalog;
-    /**
      * 图片url
      */
     private String imageUrl;
@@ -69,22 +61,6 @@ public class ArticleVO implements Serializable {
 
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
     }
 
     public String getImageUrl() {

@@ -16,6 +16,7 @@ import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.service.DetailsInfoService;
+import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -44,16 +45,19 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     }
 
     @Override
-    public Mono<ArticleVO> fetchById(String businessId) {
+    public Mono<ArticleDetailsVO> fetchDetailsByBusinessId(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).map(this::convertOuter).flatMap(articleVO ->
-                // 根据业务id获取相关内容
-                detailsInfoService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
+        return this.fetchByBusinessId(businessId).flatMap(articleVO -> {
                     // 将内容设置到vo对像中
-                    articleVO.setContent(contentInfo.getContent());
-                    articleVO.setCatalog(contentInfo.getCatalog());
-                    return articleVO;
-                })
+                    ArticleDetailsVO detailsVO = new ArticleDetailsVO();
+                    BeanUtils.copyProperties(articleVO, detailsVO);
+                    // 根据业务id获取相关内容
+                    return detailsInfoService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
+                        detailsVO.setContent(contentInfo.getContent());
+                        detailsVO.setCatalog(contentInfo.getCatalog());
+                        return detailsVO;
+                    }).defaultIfEmpty(detailsVO);
+                }
         );
     }
 
@@ -76,7 +80,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     @Override
     public Mono<ArticleVO> modify(String businessId, ArticleDTO articleDTO) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).flatMap(info -> {
+        return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(articleDTO, info);
             return articleInfoRepository.save(info).doOnSuccess(articleInfo ->
@@ -92,7 +96,13 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     @Override
     public Mono<Void> removeById(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
+        return this.fetchInfo(businessId).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
+    }
+
+    @Override
+    public Mono<ArticleVO> fetchByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     /**
@@ -101,8 +111,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<ArticleInfo> fetchByBusinessIdId(String businessId) {
-        Objects.requireNonNull(businessId);
+    private Mono<ArticleInfo> fetchInfo(String businessId) {
         ArticleInfo info = new ArticleInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);
@@ -120,4 +129,5 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
         BeanUtils.copyProperties(info, outer);
         return outer;
     }
+
 }

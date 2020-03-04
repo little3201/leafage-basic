@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.TranslationDTO;
 import top.abeille.basic.assets.service.TranslationInfoService;
+import top.abeille.basic.assets.vo.TranslationDetailsVO;
 import top.abeille.basic.assets.vo.TranslationVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -49,10 +50,10 @@ public class TranslationInfoController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{businessId}")
-    public Mono<ResponseEntity<TranslationVO>> fetchTranslation(@PathVariable String businessId) {
-        return translationInfoService.fetchById(businessId)
+    public Mono<ResponseEntity<TranslationDetailsVO>> fetchTranslation(@PathVariable String businessId) {
+        return translationInfoService.fetchDetailsByBusinessId(businessId)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .defaultIfEmpty(ResponseEntity.noContent().build());
     }
 
     /**

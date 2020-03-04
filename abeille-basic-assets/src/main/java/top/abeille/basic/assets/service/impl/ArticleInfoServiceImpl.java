@@ -112,6 +112,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
      * @return 返回查询到的信息，否则返回empty
      */
     private Mono<ArticleInfo> fetchInfo(String businessId) {
+        Objects.requireNonNull(businessId);
         ArticleInfo info = new ArticleInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);

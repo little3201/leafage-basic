@@ -47,6 +47,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
 
     @Override
     public Mono<TranslationDetailsVO> fetchDetailsByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
         return this.fetchByBusinessId(businessId).flatMap(translationVO -> {
                     // 将内容设置到vo对像中
                     TranslationDetailsVO detailsVO = new TranslationDetailsVO();
@@ -85,6 +86,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
 
     @Override
     public Mono<TranslationVO> modify(String businessId, TranslationDTO translationDTO) {
+        Objects.requireNonNull(businessId);
         return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(translationDTO, info);

@@ -3,7 +3,9 @@
  */
 package top.abeille.basic.assets.service;
 
+import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
+import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.BasicService;
 
@@ -13,4 +15,12 @@ import top.abeille.common.basic.BasicService;
  * @author liwenqiang 2018/12/17 19:26
  **/
 public interface ArticleInfoService extends BasicService<ArticleDTO, ArticleVO> {
+
+    /**
+     * 根据业务id查询详细信息
+     *
+     * @param businessId 业务id
+     * @return 详细信息
+     */
+    Mono<ArticleDetailsVO> fetchDetailsByBusinessId(String businessId);
 }

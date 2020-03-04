@@ -37,9 +37,9 @@ public class AccountInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public Mono<ResponseEntity<AccountVO>> fetchAccount(@PathVariable String businessId) {
-        return accountInfoService.fetchById(businessId)
+        return accountInfoService.fetchByBusinessId(businessId)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .defaultIfEmpty(ResponseEntity.noContent().build());
     }
 
     /**

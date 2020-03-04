@@ -40,12 +40,6 @@ public class ResourceInfoServiceImpl extends AbstractBasicService implements Res
     }
 
     @Override
-    public Mono<ResourceVO> fetchById(String businessId) {
-        Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).filter(Objects::nonNull).map(this::convertOuter);
-    }
-
-    @Override
     public Mono<ResourceVO> create(ResourceDTO resourceDTO) {
         ResourceInfo info = new ResourceInfo();
         BeanUtils.copyProperties(resourceDTO, info);
@@ -57,7 +51,7 @@ public class ResourceInfoServiceImpl extends AbstractBasicService implements Res
 
     @Override
     public Mono<ResourceVO> modify(String businessId, ResourceDTO resourceDTO) {
-        return this.fetchByBusinessIdId(businessId).flatMap(articleInfo -> {
+        return this.fetchInfo(businessId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(resourceDTO, articleInfo);
             return resourceInfoRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
         });
@@ -65,7 +59,13 @@ public class ResourceInfoServiceImpl extends AbstractBasicService implements Res
 
     @Override
     public Mono<Void> removeById(String businessId) {
-        return this.fetchByBusinessIdId(businessId).flatMap(article -> resourceInfoRepository.deleteById(article.getId()));
+        return this.fetchInfo(businessId).flatMap(article -> resourceInfoRepository.deleteById(article.getId()));
+    }
+
+    @Override
+    public Mono<ResourceVO> fetchByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     /**
@@ -74,12 +74,10 @@ public class ResourceInfoServiceImpl extends AbstractBasicService implements Res
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<ResourceInfo> fetchByBusinessIdId(String businessId) {
-        Objects.requireNonNull(businessId);
+    private Mono<ResourceInfo> fetchInfo(String businessId) {
         ResourceInfo info = new ResourceInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);
-        info.setModifyTime(LocalDateTime.now());
         return resourceInfoRepository.findOne(Example.of(info));
     }
 

@@ -50,9 +50,9 @@ public class TopicInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public Mono<ResponseEntity<TopicVO>> fetchTopic(@PathVariable String businessId) {
-        return topicInfoService.fetchById(businessId)
+        return topicInfoService.fetchByBusinessId(businessId)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .defaultIfEmpty(ResponseEntity.noContent().build());
     }
 
     /**

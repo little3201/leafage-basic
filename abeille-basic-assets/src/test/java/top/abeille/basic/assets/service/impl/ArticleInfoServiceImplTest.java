@@ -34,12 +34,12 @@ public class ArticleInfoServiceImplTest {
         articleDTO.setTitle("spring");
         articleDTO.setContent("spring boot");
         Mono<ArticleVO> outerMono = articleInfoService.create(articleDTO);
-        Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getContent());
+        Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getTitle());
     }
 
     @Test
     public void fetchById() {
-        Mono<ArticleVO> outerMono = articleInfoService.fetchById("AT226");
-        Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getContent());
+        Mono<? extends ArticleVO> outerMono = articleInfoService.fetchByBusinessId("AT226");
+        Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getTitle());
     }
 }

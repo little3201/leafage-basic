@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.constant.PrefixEnum;
-import top.abeille.basic.assets.document.ContentInfo;
+import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.document.TranslationInfo;
 import top.abeille.basic.assets.dto.TranslationDTO;
 import top.abeille.basic.assets.repository.TranslationInfoRepository;
-import top.abeille.basic.assets.service.ContentInfoService;
+import top.abeille.basic.assets.service.DetailsInfoService;
 import top.abeille.basic.assets.service.TranslationInfoService;
+import top.abeille.basic.assets.vo.TranslationDetailsVO;
 import top.abeille.basic.assets.vo.TranslationVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -32,11 +33,11 @@ import java.util.Objects;
 public class TranslationInfoServiceImpl extends AbstractBasicService implements TranslationInfoService {
 
     private final TranslationInfoRepository translationInfoRepository;
-    private final ContentInfoService contentInfoService;
+    private final DetailsInfoService detailsInfoService;
 
-    public TranslationInfoServiceImpl(TranslationInfoRepository translationInfoRepository, ContentInfoService contentInfoService) {
+    public TranslationInfoServiceImpl(TranslationInfoRepository translationInfoRepository, DetailsInfoService detailsInfoService) {
         this.translationInfoRepository = translationInfoRepository;
-        this.contentInfoService = contentInfoService;
+        this.detailsInfoService = detailsInfoService;
     }
 
     @Override
@@ -45,16 +46,26 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
     }
 
     @Override
-    public Mono<TranslationVO> fetchById(String businessId) {
-        return fetchByTranslationId(businessId).map(this::convertOuter).flatMap(translationVO ->
-                // 根据业务id获取相关内容
-                contentInfoService.fetchByBusinessId(businessId).map(contentInfo -> {
+    public Mono<TranslationDetailsVO> fetchDetailsByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchByBusinessId(businessId).flatMap(translationVO -> {
                     // 将内容设置到vo对像中
-                    translationVO.setContent(contentInfo.getContent());
-                    translationVO.setCatalog(contentInfo.getCatalog());
-                    return translationVO;
-                })
+                    TranslationDetailsVO detailsVO = new TranslationDetailsVO();
+                    BeanUtils.copyProperties(translationVO, detailsVO);
+                    // 根据业务id获取相关内容
+                    return detailsInfoService.fetchByBusinessId(businessId).map(contentInfo -> {
+                        detailsVO.setContent(contentInfo.getContent());
+                        detailsVO.setCatalog(contentInfo.getCatalog());
+                        return detailsVO;
+                    }).defaultIfEmpty(detailsVO);
+                }
         );
+    }
+
+    @Override
+    public Mono<TranslationVO> fetchByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     @Override
@@ -66,24 +77,25 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
         info.setModifyTime(LocalDateTime.now());
         return translationInfoRepository.save(info).doOnSuccess(translationInfo -> {
             // 添加内容信息
-            ContentInfo contentInfo = new ContentInfo();
-            BeanUtils.copyProperties(translationDTO, contentInfo);
-            contentInfo.setBusinessId(translationInfo.getBusinessId());
-            contentInfoService.create(contentInfo);
+            DetailsInfo detailsInfo = new DetailsInfo();
+            BeanUtils.copyProperties(translationDTO, detailsInfo);
+            detailsInfo.setBusinessId(translationInfo.getBusinessId());
+            detailsInfoService.create(detailsInfo);
         }).map(this::convertOuter);
     }
 
     @Override
     public Mono<TranslationVO> modify(String businessId, TranslationDTO translationDTO) {
-        return this.fetchByTranslationId(businessId).flatMap(info -> {
+        Objects.requireNonNull(businessId);
+        return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(translationDTO, info);
             info.setModifyTime(LocalDateTime.now());
             return translationInfoRepository.save(info).doOnSuccess(translationInfo ->
                     // 更新成功后，将内容信息更新
-                    contentInfoService.fetchByBusinessId(businessId).doOnNext(contentInfo -> {
+                    detailsInfoService.fetchByBusinessId(businessId).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(translationDTO, contentInfo);
-                        contentInfoService.modify(contentInfo.getBusinessId(), contentInfo);
+                        detailsInfoService.modify(contentInfo.getBusinessId(), contentInfo);
                     })
             ).map(this::convertOuter);
         });
@@ -95,7 +107,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<TranslationInfo> fetchByTranslationId(String businessId) {
+    private Mono<TranslationInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         TranslationInfo info = new TranslationInfo();
         info.setBusinessId(businessId);

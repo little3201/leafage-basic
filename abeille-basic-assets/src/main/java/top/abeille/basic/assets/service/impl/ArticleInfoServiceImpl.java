@@ -3,8 +3,6 @@
  */
 package top.abeille.basic.assets.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -13,11 +11,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ArticleInfo;
-import top.abeille.basic.assets.document.ContentInfo;
+import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
-import top.abeille.basic.assets.service.ContentInfoService;
+import top.abeille.basic.assets.service.DetailsInfoService;
+import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -32,16 +31,12 @@ import java.util.Objects;
 @Service
 public class ArticleInfoServiceImpl extends AbstractBasicService implements ArticleInfoService {
 
-    /**
-     * 开启日志
-     */
-    protected static final Logger logger = LoggerFactory.getLogger(ArticleInfoServiceImpl.class);
     private final ArticleInfoRepository articleInfoRepository;
-    private final ContentInfoService contentInfoService;
+    private final DetailsInfoService detailsInfoService;
 
-    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ContentInfoService contentInfoService) {
+    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, DetailsInfoService detailsInfoService) {
         this.articleInfoRepository = articleInfoRepository;
-        this.contentInfoService = contentInfoService;
+        this.detailsInfoService = detailsInfoService;
     }
 
     @Override
@@ -50,16 +45,19 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     }
 
     @Override
-    public Mono<ArticleVO> fetchById(String businessId) {
+    public Mono<ArticleDetailsVO> fetchDetailsByBusinessId(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).map(this::convertOuter).flatMap(articleVO ->
-                // 根据业务id获取相关内容
-                contentInfoService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
+        return this.fetchByBusinessId(businessId).flatMap(articleVO -> {
                     // 将内容设置到vo对像中
-                    articleVO.setContent(contentInfo.getContent());
-                    articleVO.setCatalog(contentInfo.getCatalog());
-                    return articleVO;
-                })
+                    ArticleDetailsVO detailsVO = new ArticleDetailsVO();
+                    BeanUtils.copyProperties(articleVO, detailsVO);
+                    // 根据业务id获取相关内容
+                    return detailsInfoService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
+                        detailsVO.setContent(contentInfo.getContent());
+                        detailsVO.setCatalog(contentInfo.getCatalog());
+                        return detailsVO;
+                    }).defaultIfEmpty(detailsVO);
+                }
         );
     }
 
@@ -72,25 +70,25 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
         info.setModifyTime(LocalDateTime.now());
         return articleInfoRepository.save(info).doOnSuccess(articleInfo -> {
             // 添加内容信息
-            ContentInfo contentInfo = new ContentInfo();
-            BeanUtils.copyProperties(articleDTO, contentInfo);
-            contentInfo.setBusinessId(articleInfo.getBusinessId());
-            contentInfoService.create(contentInfo);
+            DetailsInfo detailsInfo = new DetailsInfo();
+            BeanUtils.copyProperties(articleDTO, detailsInfo);
+            detailsInfo.setBusinessId(articleInfo.getBusinessId());
+            detailsInfoService.create(detailsInfo);
         }).map(this::convertOuter);
     }
 
     @Override
     public Mono<ArticleVO> modify(String businessId, ArticleDTO articleDTO) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).flatMap(info -> {
+        return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(articleDTO, info);
             info.setModifyTime(LocalDateTime.now());
             return articleInfoRepository.save(info).doOnSuccess(articleInfo ->
                     // 更新成功后，将内容信息更新
-                    contentInfoService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {
+                    detailsInfoService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(articleDTO, contentInfo);
-                        contentInfoService.modify(contentInfo.getBusinessId(), contentInfo);
+                        detailsInfoService.modify(contentInfo.getBusinessId(), contentInfo);
                     })
             ).map(this::convertOuter);
         });
@@ -99,7 +97,13 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
     @Override
     public Mono<Void> removeById(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessIdId(businessId).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
+        return this.fetchInfo(businessId).flatMap(article -> articleInfoRepository.deleteById(article.getId()));
+    }
+
+    @Override
+    public Mono<ArticleVO> fetchByBusinessId(String businessId) {
+        Objects.requireNonNull(businessId);
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     /**
@@ -108,7 +112,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<ArticleInfo> fetchByBusinessIdId(String businessId) {
+    private Mono<ArticleInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         ArticleInfo info = new ArticleInfo();
         info.setBusinessId(businessId);
@@ -127,4 +131,5 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
         BeanUtils.copyProperties(info, outer);
         return outer;
     }
+
 }

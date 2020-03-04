@@ -5,26 +5,26 @@
 package top.abeille.basic.assets.service;
 
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.ContentInfo;
+import top.abeille.basic.assets.document.DetailsInfo;
 
-public interface ContentInfoService {
+public interface DetailsInfoService {
 
     /**
      * 新增信息
      *
-     * @param contentInfo 内容信息
+     * @param detailsInfo 内容信息
      * @return 返回操作结果，否则返回empty
      */
-    Mono<ContentInfo> create(ContentInfo contentInfo);
+    Mono<DetailsInfo> create(DetailsInfo detailsInfo);
 
     /**
      * 根据业务id修改信息
      *
      * @param businessId  业务id
-     * @param contentInfo 信息
+     * @param detailsInfo 信息
      * @return 返回操作结果，否则返回empty
      */
-    Mono<ContentInfo> modify(String businessId, ContentInfo contentInfo);
+    Mono<DetailsInfo> modify(String businessId, DetailsInfo detailsInfo);
 
     /**
      * 根据业务id查询
@@ -32,5 +32,5 @@ public interface ContentInfoService {
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    Mono<ContentInfo> fetchByBusinessId(String businessId);
+    Mono<DetailsInfo> fetchByBusinessId(String businessId);
 }

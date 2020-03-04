@@ -3,8 +3,6 @@
  */
 package top.abeille.basic.assets.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -13,11 +11,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ArticleInfo;
-import top.abeille.basic.assets.document.ContentInfo;
+import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.repository.ArticleInfoRepository;
 import top.abeille.basic.assets.service.ArticleInfoService;
-import top.abeille.basic.assets.service.ContentInfoService;
+import top.abeille.basic.assets.service.DetailsInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -32,16 +30,12 @@ import java.util.Objects;
 @Service
 public class ArticleInfoServiceImpl extends AbstractBasicService implements ArticleInfoService {
 
-    /**
-     * 开启日志
-     */
-    protected static final Logger logger = LoggerFactory.getLogger(ArticleInfoServiceImpl.class);
     private final ArticleInfoRepository articleInfoRepository;
-    private final ContentInfoService contentInfoService;
+    private final DetailsInfoService detailsInfoService;
 
-    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ContentInfoService contentInfoService) {
+    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, DetailsInfoService detailsInfoService) {
         this.articleInfoRepository = articleInfoRepository;
-        this.contentInfoService = contentInfoService;
+        this.detailsInfoService = detailsInfoService;
     }
 
     @Override
@@ -54,7 +48,7 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
         Objects.requireNonNull(businessId);
         return this.fetchByBusinessIdId(businessId).map(this::convertOuter).flatMap(articleVO ->
                 // 根据业务id获取相关内容
-                contentInfoService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
+                detailsInfoService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
                     // 将内容设置到vo对像中
                     articleVO.setContent(contentInfo.getContent());
                     articleVO.setCatalog(contentInfo.getCatalog());
@@ -72,10 +66,10 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
         info.setModifyTime(LocalDateTime.now());
         return articleInfoRepository.save(info).doOnSuccess(articleInfo -> {
             // 添加内容信息
-            ContentInfo contentInfo = new ContentInfo();
-            BeanUtils.copyProperties(articleDTO, contentInfo);
-            contentInfo.setBusinessId(articleInfo.getBusinessId());
-            contentInfoService.create(contentInfo);
+            DetailsInfo detailsInfo = new DetailsInfo();
+            BeanUtils.copyProperties(articleDTO, detailsInfo);
+            detailsInfo.setBusinessId(articleInfo.getBusinessId());
+            detailsInfoService.create(detailsInfo);
         }).map(this::convertOuter);
     }
 
@@ -87,9 +81,9 @@ public class ArticleInfoServiceImpl extends AbstractBasicService implements Arti
             BeanUtils.copyProperties(articleDTO, info);
             return articleInfoRepository.save(info).doOnSuccess(articleInfo ->
                     // 更新成功后，将内容信息更新
-                    contentInfoService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {
+                    detailsInfoService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(articleDTO, contentInfo);
-                        contentInfoService.modify(contentInfo.getBusinessId(), contentInfo);
+                        detailsInfoService.modify(contentInfo.getBusinessId(), contentInfo);
                     })
             ).map(this::convertOuter);
         });

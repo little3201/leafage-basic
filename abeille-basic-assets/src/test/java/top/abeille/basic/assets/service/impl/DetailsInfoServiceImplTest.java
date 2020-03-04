@@ -12,8 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.ContentInfo;
-import top.abeille.basic.assets.service.ContentInfoService;
+import top.abeille.basic.assets.document.DetailsInfo;
+import top.abeille.basic.assets.service.DetailsInfoService;
 import top.abeille.common.test.AbstractTest;
 
 import java.util.Objects;
@@ -26,17 +26,17 @@ import java.util.Objects;
 @ExtendWith(AbstractTest.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ContentInfoServiceImplTest {
+public class DetailsInfoServiceImplTest {
 
     @Autowired
-    private ContentInfoService contentInfoService;
+    private DetailsInfoService detailsInfoService;
 
     @Test
     public void create() {
-        ContentInfo info = new ContentInfo();
+        DetailsInfo info = new DetailsInfo();
         info.setBusinessId("TP2277FZ0");
         info.setContent("Spring boot");
-        Mono<ContentInfo> mono = contentInfoService.create(info);
+        Mono<DetailsInfo> mono = detailsInfoService.create(info);
         Assert.hasText("Spring boot", Objects.requireNonNull(mono.block()).getContent());
     }
 }

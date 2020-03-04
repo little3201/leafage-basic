@@ -10,47 +10,47 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.ContentInfo;
+import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.repository.ContentInfoRepository;
-import top.abeille.basic.assets.service.ContentInfoService;
+import top.abeille.basic.assets.service.DetailsInfoService;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
-public class ContentInfoServiceImpl implements ContentInfoService {
+public class DetailsInfoServiceImpl implements DetailsInfoService {
     /**
      * 开启日志
      */
-    protected static final Logger logger = LoggerFactory.getLogger(ContentInfoServiceImpl.class);
+    protected static final Logger logger = LoggerFactory.getLogger(DetailsInfoServiceImpl.class);
     private final ContentInfoRepository contentInfoRepository;
 
-    public ContentInfoServiceImpl(ContentInfoRepository contentInfoRepository) {
+    public DetailsInfoServiceImpl(ContentInfoRepository contentInfoRepository) {
         this.contentInfoRepository = contentInfoRepository;
     }
 
     @Override
-    public Mono<ContentInfo> create(ContentInfo contentInfo) {
-        contentInfo.setEnabled(Boolean.TRUE);
-        contentInfo.setModifyTime(LocalDateTime.now());
-        return contentInfoRepository.save(contentInfo).doOnSuccess(content ->
+    public Mono<DetailsInfo> create(DetailsInfo detailsInfo) {
+        detailsInfo.setEnabled(Boolean.TRUE);
+        detailsInfo.setModifyTime(LocalDateTime.now());
+        return contentInfoRepository.save(detailsInfo).doOnSuccess(content ->
                 logger.info("结果：id-{}, content-{}", content.getId(), content.getContent()))
                 .doOnError(error -> logger.error("新增异常"));
     }
 
     @Override
-    public Mono<ContentInfo> modify(String businessId, ContentInfo contentInfo) {
+    public Mono<DetailsInfo> modify(String businessId, DetailsInfo detailsInfo) {
         return this.fetchByBusinessId(businessId).flatMap(content -> {
-            BeanUtils.copyProperties(contentInfo, content);
+            BeanUtils.copyProperties(detailsInfo, content);
             content.setModifyTime(LocalDateTime.now());
             return contentInfoRepository.save(content);
         });
     }
 
     @Override
-    public Mono<ContentInfo> fetchByBusinessId(String businessId) {
+    public Mono<DetailsInfo> fetchByBusinessId(String businessId) {
         Objects.requireNonNull(businessId);
-        ContentInfo info = new ContentInfo();
+        DetailsInfo info = new DetailsInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);
         return contentInfoRepository.findOne(Example.of(info));

@@ -14,9 +14,9 @@ import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.document.TranslationInfo;
 import top.abeille.basic.assets.dto.TranslationDTO;
-import top.abeille.basic.assets.repository.TranslationInfoRepository;
-import top.abeille.basic.assets.service.DetailsInfoService;
-import top.abeille.basic.assets.service.TranslationInfoService;
+import top.abeille.basic.assets.repository.TranslationRepository;
+import top.abeille.basic.assets.service.DetailsService;
+import top.abeille.basic.assets.service.TranslationService;
 import top.abeille.basic.assets.vo.TranslationDetailsVO;
 import top.abeille.basic.assets.vo.TranslationVO;
 import top.abeille.common.basic.AbstractBasicService;
@@ -30,19 +30,19 @@ import java.util.Objects;
  * @author liwenqiang 2020/2/13 20:24
  **/
 @Service
-public class TranslationInfoServiceImpl extends AbstractBasicService implements TranslationInfoService {
+public class TranslationServiceImpl extends AbstractBasicService implements TranslationService {
 
-    private final TranslationInfoRepository translationInfoRepository;
-    private final DetailsInfoService detailsInfoService;
+    private final TranslationRepository translationRepository;
+    private final DetailsService detailsService;
 
-    public TranslationInfoServiceImpl(TranslationInfoRepository translationInfoRepository, DetailsInfoService detailsInfoService) {
-        this.translationInfoRepository = translationInfoRepository;
-        this.detailsInfoService = detailsInfoService;
+    public TranslationServiceImpl(TranslationRepository translationRepository, DetailsService detailsService) {
+        this.translationRepository = translationRepository;
+        this.detailsService = detailsService;
     }
 
     @Override
     public Flux<TranslationVO> retrieveAll(Sort sort) {
-        return translationInfoRepository.findAll(sort).map(this::convertOuter);
+        return translationRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
@@ -53,11 +53,11 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
                     TranslationDetailsVO detailsVO = new TranslationDetailsVO();
                     BeanUtils.copyProperties(translationVO, detailsVO);
                     // 根据业务id获取相关内容
-                    return detailsInfoService.fetchByBusinessId(businessId).map(contentInfo -> {
-                        detailsVO.setContent(contentInfo.getContent());
-                        detailsVO.setCatalog(contentInfo.getCatalog());
-                        return detailsVO;
-                    }).defaultIfEmpty(detailsVO);
+            return detailsService.fetchByBusinessId(businessId).map(contentInfo -> {
+                detailsVO.setContent(contentInfo.getContent());
+                detailsVO.setCatalog(contentInfo.getCatalog());
+                return detailsVO;
+            }).defaultIfEmpty(detailsVO);
                 }
         );
     }
@@ -75,12 +75,12 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
         info.setBusinessId(PrefixEnum.TS + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        return translationInfoRepository.save(info).doOnSuccess(translationInfo -> {
+        return translationRepository.save(info).doOnSuccess(translationInfo -> {
             // 添加内容信息
             DetailsInfo detailsInfo = new DetailsInfo();
             BeanUtils.copyProperties(translationDTO, detailsInfo);
             detailsInfo.setBusinessId(translationInfo.getBusinessId());
-            detailsInfoService.create(detailsInfo);
+            detailsService.create(detailsInfo);
         }).map(this::convertOuter);
     }
 
@@ -90,11 +90,11 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
         return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(translationDTO, info);
-            return translationInfoRepository.save(info).doOnSuccess(translationInfo ->
+            return translationRepository.save(info).doOnSuccess(translationInfo ->
                     // 更新成功后，将内容信息更新
-                    detailsInfoService.fetchByBusinessId(businessId).doOnNext(contentInfo -> {
+                    detailsService.fetchByBusinessId(businessId).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(translationDTO, contentInfo);
-                        detailsInfoService.modify(contentInfo.getBusinessId(), contentInfo);
+                        detailsService.modify(contentInfo.getBusinessId(), contentInfo);
                     })
             ).map(this::convertOuter);
         });
@@ -110,7 +110,7 @@ public class TranslationInfoServiceImpl extends AbstractBasicService implements 
         Objects.requireNonNull(businessId);
         TranslationInfo info = new TranslationInfo();
         info.setBusinessId(businessId);
-        return translationInfoRepository.findOne(Example.of(info));
+        return translationRepository.findOne(Example.of(info));
     }
 
     /**

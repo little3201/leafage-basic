@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.TopicDTO;
-import top.abeille.basic.assets.service.TopicInfoService;
+import top.abeille.basic.assets.service.TopicService;
 import top.abeille.basic.assets.vo.TopicVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -23,12 +23,12 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/topic")
-public class TopicInfoController extends AbstractController {
+public class TopicController extends AbstractController {
 
-    private final TopicInfoService topicInfoService;
+    private final TopicService topicService;
 
-    public TopicInfoController(TopicInfoService topicInfoService) {
-        this.topicInfoService = topicInfoService;
+    public TopicController(TopicService topicService) {
+        this.topicService = topicService;
     }
 
     /**
@@ -39,7 +39,7 @@ public class TopicInfoController extends AbstractController {
     @GetMapping
     public Flux<TopicVO> retrieveTopic() {
         Sort sort = super.initSortProperties();
-        return topicInfoService.retrieveAll(sort);
+        return topicService.retrieveAll(sort);
     }
 
     /**
@@ -50,7 +50,7 @@ public class TopicInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public Mono<ResponseEntity<TopicVO>> fetchTopic(@PathVariable String businessId) {
-        return topicInfoService.fetchByBusinessId(businessId)
+        return topicService.fetchByBusinessId(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.noContent().build());
     }
@@ -63,7 +63,7 @@ public class TopicInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<TopicVO>> createTopic(@RequestBody @Valid TopicDTO topicDTO) {
-        return topicInfoService.create(topicDTO)
+        return topicService.create(topicDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -77,7 +77,7 @@ public class TopicInfoController extends AbstractController {
      */
     @PutMapping("/{businessId}")
     public Mono<ResponseEntity<TopicVO>> modifyTopic(@PathVariable String businessId, @RequestBody @Valid TopicDTO topicDTO) {
-        return topicInfoService.modify(businessId, topicDTO)
+        return topicService.modify(businessId, topicDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }

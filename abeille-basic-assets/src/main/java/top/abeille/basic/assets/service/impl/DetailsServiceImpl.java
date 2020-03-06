@@ -11,29 +11,29 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.DetailsInfo;
-import top.abeille.basic.assets.repository.ContentInfoRepository;
-import top.abeille.basic.assets.service.DetailsInfoService;
+import top.abeille.basic.assets.repository.DetailsRepository;
+import top.abeille.basic.assets.service.DetailsService;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
-public class DetailsInfoServiceImpl implements DetailsInfoService {
+public class DetailsServiceImpl implements DetailsService {
     /**
      * 开启日志
      */
-    protected static final Logger logger = LoggerFactory.getLogger(DetailsInfoServiceImpl.class);
-    private final ContentInfoRepository contentInfoRepository;
+    protected static final Logger logger = LoggerFactory.getLogger(DetailsServiceImpl.class);
+    private final DetailsRepository detailsRepository;
 
-    public DetailsInfoServiceImpl(ContentInfoRepository contentInfoRepository) {
-        this.contentInfoRepository = contentInfoRepository;
+    public DetailsServiceImpl(DetailsRepository detailsRepository) {
+        this.detailsRepository = detailsRepository;
     }
 
     @Override
     public Mono<DetailsInfo> create(DetailsInfo detailsInfo) {
         detailsInfo.setEnabled(Boolean.TRUE);
         detailsInfo.setModifyTime(LocalDateTime.now());
-        return contentInfoRepository.save(detailsInfo).doOnSuccess(content ->
+        return detailsRepository.save(detailsInfo).doOnSuccess(content ->
                 logger.info("结果：id-{}, content-{}", content.getId(), content.getContent()))
                 .doOnError(error -> logger.error("新增异常"));
     }
@@ -43,7 +43,7 @@ public class DetailsInfoServiceImpl implements DetailsInfoService {
         return this.fetchByBusinessId(businessId).flatMap(content -> {
             BeanUtils.copyProperties(detailsInfo, content);
             content.setModifyTime(LocalDateTime.now());
-            return contentInfoRepository.save(content);
+            return detailsRepository.save(content);
         });
     }
 
@@ -53,6 +53,6 @@ public class DetailsInfoServiceImpl implements DetailsInfoService {
         DetailsInfo info = new DetailsInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);
-        return contentInfoRepository.findOne(Example.of(info));
+        return detailsRepository.findOne(Example.of(info));
     }
 }

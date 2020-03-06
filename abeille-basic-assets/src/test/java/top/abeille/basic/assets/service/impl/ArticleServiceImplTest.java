@@ -9,7 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
-import top.abeille.basic.assets.service.ArticleInfoService;
+import top.abeille.basic.assets.service.ArticleService;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.test.AbstractTest;
 
@@ -23,23 +23,23 @@ import java.util.Objects;
 @ExtendWith(AbstractTest.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ArticleInfoServiceImplTest {
+public class ArticleServiceImplTest {
 
     @Autowired
-    private ArticleInfoService articleInfoService;
+    private ArticleService articleService;
 
     @Test
     public void create() {
         ArticleDTO articleDTO = new ArticleDTO();
         articleDTO.setTitle("spring");
         articleDTO.setContent("spring boot");
-        Mono<ArticleVO> outerMono = articleInfoService.create(articleDTO);
+        Mono<ArticleVO> outerMono = articleService.create(articleDTO);
         Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getTitle());
     }
 
     @Test
     public void fetchById() {
-        Mono<? extends ArticleVO> outerMono = articleInfoService.fetchByBusinessId("AT226");
+        Mono<? extends ArticleVO> outerMono = articleService.fetchByBusinessId("AT226");
         Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getTitle());
     }
 }

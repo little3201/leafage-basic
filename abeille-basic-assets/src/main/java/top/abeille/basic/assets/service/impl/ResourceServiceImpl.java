@@ -12,8 +12,8 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ResourceInfo;
 import top.abeille.basic.assets.dto.ResourceDTO;
-import top.abeille.basic.assets.repository.ResourceInfoRepository;
-import top.abeille.basic.assets.service.ResourceInfoService;
+import top.abeille.basic.assets.repository.ResourceRepository;
+import top.abeille.basic.assets.service.ResourceService;
 import top.abeille.basic.assets.vo.ResourceVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -26,17 +26,17 @@ import java.util.Objects;
  * @author liwenqiang 2020/2/24 11:59
  **/
 @Service
-public class ResourceInfoServiceImpl extends AbstractBasicService implements ResourceInfoService {
+public class ResourceServiceImpl extends AbstractBasicService implements ResourceService {
 
-    private final ResourceInfoRepository resourceInfoRepository;
+    private final ResourceRepository resourceRepository;
 
-    public ResourceInfoServiceImpl(ResourceInfoRepository resourceInfoRepository) {
-        this.resourceInfoRepository = resourceInfoRepository;
+    public ResourceServiceImpl(ResourceRepository resourceRepository) {
+        this.resourceRepository = resourceRepository;
     }
 
     @Override
     public Flux<ResourceVO> retrieveAll(Sort sort) {
-        return resourceInfoRepository.findAll(sort).filter(Objects::nonNull).map(this::convertOuter);
+        return resourceRepository.findAll(sort).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
@@ -46,20 +46,20 @@ public class ResourceInfoServiceImpl extends AbstractBasicService implements Res
         info.setBusinessId(PrefixEnum.RS + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        return resourceInfoRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        return resourceRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
     public Mono<ResourceVO> modify(String businessId, ResourceDTO resourceDTO) {
         return this.fetchInfo(businessId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(resourceDTO, articleInfo);
-            return resourceInfoRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
+            return resourceRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
         });
     }
 
     @Override
     public Mono<Void> removeById(String businessId) {
-        return this.fetchInfo(businessId).flatMap(article -> resourceInfoRepository.deleteById(article.getId()));
+        return this.fetchInfo(businessId).flatMap(article -> resourceRepository.deleteById(article.getId()));
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ResourceInfoServiceImpl extends AbstractBasicService implements Res
         ResourceInfo info = new ResourceInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);
-        return resourceInfoRepository.findOne(Example.of(info));
+        return resourceRepository.findOne(Example.of(info));
     }
 
     /**

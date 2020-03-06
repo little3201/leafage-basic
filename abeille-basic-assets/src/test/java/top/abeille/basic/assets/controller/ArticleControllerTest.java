@@ -23,7 +23,7 @@ import top.abeille.common.test.AbstractTest;
 @ExtendWith(AbstractTest.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ArticleInfoControllerTest {
+public class ArticleControllerTest {
 
     private final WebTestClient client = WebTestClient.bindToServer().baseUrl("http://localhost:8764").build();
 

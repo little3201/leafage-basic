@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.TranslationDTO;
-import top.abeille.basic.assets.service.TranslationInfoService;
+import top.abeille.basic.assets.service.TranslationService;
 import top.abeille.basic.assets.vo.TranslationDetailsVO;
 import top.abeille.basic.assets.vo.TranslationVO;
 import top.abeille.common.basic.AbstractController;
@@ -24,12 +24,12 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/translation")
-public class TranslationInfoController extends AbstractController {
+public class TranslationController extends AbstractController {
 
-    private final TranslationInfoService translationInfoService;
+    private final TranslationService translationService;
 
-    public TranslationInfoController(TranslationInfoService translationInfoService) {
-        this.translationInfoService = translationInfoService;
+    public TranslationController(TranslationService translationService) {
+        this.translationService = translationService;
     }
 
     /**
@@ -40,7 +40,7 @@ public class TranslationInfoController extends AbstractController {
     @GetMapping
     public Flux<TranslationVO> retrieveTranslation() {
         Sort sort = super.initSortProperties();
-        return translationInfoService.retrieveAll(sort);
+        return translationService.retrieveAll(sort);
     }
 
     /**
@@ -51,7 +51,7 @@ public class TranslationInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public Mono<ResponseEntity<TranslationDetailsVO>> fetchTranslation(@PathVariable String businessId) {
-        return translationInfoService.fetchDetailsByBusinessId(businessId)
+        return translationService.fetchDetailsByBusinessId(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.noContent().build());
     }
@@ -64,7 +64,7 @@ public class TranslationInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<TranslationVO>> createTranslation(@RequestBody @Valid TranslationDTO translationDTO) {
-        return translationInfoService.create(translationDTO)
+        return translationService.create(translationDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -78,7 +78,7 @@ public class TranslationInfoController extends AbstractController {
      */
     @PutMapping("/{businessId}")
     public Mono<ResponseEntity<TranslationVO>> modifyTranslation(@PathVariable String businessId, @RequestBody @Valid TranslationDTO translationDTO) {
-        return translationInfoService.modify(businessId, translationDTO)
+        return translationService.modify(businessId, translationDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }

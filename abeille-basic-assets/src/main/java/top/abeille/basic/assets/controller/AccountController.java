@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.AccountDTO;
-import top.abeille.basic.assets.service.AccountInfoService;
+import top.abeille.basic.assets.service.AccountService;
 import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -21,12 +21,12 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/account")
-public class AccountInfoController extends AbstractController {
+public class AccountController extends AbstractController {
 
-    private final AccountInfoService accountInfoService;
+    private final AccountService accountService;
 
-    public AccountInfoController(AccountInfoService accountInfoService) {
-        this.accountInfoService = accountInfoService;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     /**
@@ -37,7 +37,7 @@ public class AccountInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public Mono<ResponseEntity<AccountVO>> fetchAccount(@PathVariable String businessId) {
-        return accountInfoService.fetchByBusinessId(businessId)
+        return accountService.fetchByBusinessId(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.noContent().build());
     }
@@ -50,7 +50,7 @@ public class AccountInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<AccountVO>> createAccount(@RequestBody @Valid AccountDTO accountDTO) {
-        return accountInfoService.create(accountDTO)
+        return accountService.create(accountDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -64,7 +64,7 @@ public class AccountInfoController extends AbstractController {
      */
     @PutMapping("/{businessId}")
     public Mono<ResponseEntity<AccountVO>> modifyAccount(@PathVariable String businessId, @RequestBody @Valid AccountDTO accountDTO) {
-        return accountInfoService.modify(businessId, accountDTO)
+        return accountService.modify(businessId, accountDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
@@ -77,7 +77,7 @@ public class AccountInfoController extends AbstractController {
      */
     @DeleteMapping("/{businessId}")
     public Mono<ResponseEntity<Void>> removeAccount(@PathVariable String businessId) {
-        return accountInfoService.removeById(businessId)
+        return accountService.removeById(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

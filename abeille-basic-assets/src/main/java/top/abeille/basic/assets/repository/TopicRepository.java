@@ -13,5 +13,5 @@ import top.abeille.basic.assets.document.TopicInfo;
  * @author liwenqiang 2020/2/13 22:01
  **/
 @Repository
-public interface TopicInfoRepository extends ReactiveMongoRepository<TopicInfo, String> {
+public interface TopicRepository extends ReactiveMongoRepository<TopicInfo, String> {
 }

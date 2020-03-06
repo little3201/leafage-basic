@@ -12,8 +12,8 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.TopicInfo;
 import top.abeille.basic.assets.dto.TopicDTO;
-import top.abeille.basic.assets.repository.TopicInfoRepository;
-import top.abeille.basic.assets.service.TopicInfoService;
+import top.abeille.basic.assets.repository.TopicRepository;
+import top.abeille.basic.assets.service.TopicService;
 import top.abeille.basic.assets.vo.TopicVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -26,17 +26,17 @@ import java.util.Objects;
  * @author liwenqiang 2020/2/13 20:24
  **/
 @Service
-public class TopicInfoServiceImpl extends AbstractBasicService implements TopicInfoService {
+public class TopicServiceImpl extends AbstractBasicService implements TopicService {
 
-    private final TopicInfoRepository topicInfoRepository;
+    private final TopicRepository topicRepository;
 
-    public TopicInfoServiceImpl(TopicInfoRepository topicInfoRepository) {
-        this.topicInfoRepository = topicInfoRepository;
+    public TopicServiceImpl(TopicRepository topicRepository) {
+        this.topicRepository = topicRepository;
     }
 
     @Override
     public Flux<TopicVO> retrieveAll(Sort sort) {
-        return topicInfoRepository.findAll(sort).map(this::convertOuter);
+        return topicRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
         info.setBusinessId(PrefixEnum.TP + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        return topicInfoRepository.save(info).map(this::convertOuter);
+        return topicRepository.save(info).map(this::convertOuter);
     }
 
     @Override
@@ -62,13 +62,13 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
         Objects.requireNonNull(businessId);
         return this.fetchInfo(businessId).flatMap(topicInfo -> {
             BeanUtils.copyProperties(topicDTO, topicInfo);
-            return topicInfoRepository.save(topicInfo).map(this::convertOuter);
+            return topicRepository.save(topicInfo).map(this::convertOuter);
         });
     }
 
     @Override
     public Mono<Void> removeById(String businessId) {
-        return this.fetchInfo(businessId).flatMap(topic -> topicInfoRepository.deleteById(topic.getId()));
+        return this.fetchInfo(businessId).flatMap(topic -> topicRepository.deleteById(topic.getId()));
     }
 
     /**
@@ -81,7 +81,7 @@ public class TopicInfoServiceImpl extends AbstractBasicService implements TopicI
         Objects.requireNonNull(businessId);
         TopicInfo info = new TopicInfo();
         info.setBusinessId(businessId);
-        return topicInfoRepository.findOne(Example.of(info));
+        return topicRepository.findOne(Example.of(info));
     }
 
     /**

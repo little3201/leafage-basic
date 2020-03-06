@@ -14,7 +14,7 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2020/2/13 20:16
  **/
-public interface TranslationInfoService extends BasicService<TranslationDTO, TranslationVO> {
+public interface TranslationService extends BasicService<TranslationDTO, TranslationVO> {
 
     /**
      * 根据业务id查询详细信息

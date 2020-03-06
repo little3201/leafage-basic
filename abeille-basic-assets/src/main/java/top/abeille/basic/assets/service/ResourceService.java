@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2020/2/24 11:59
  **/
-public interface ResourceInfoService extends BasicService<ResourceDTO, ResourceVO> {
+public interface ResourceService extends BasicService<ResourceDTO, ResourceVO> {
 }

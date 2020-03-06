@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import top.abeille.basic.assets.document.AccountInfo;
 import top.abeille.basic.assets.dto.AccountDTO;
-import top.abeille.basic.assets.repository.AccountInfoRepository;
+import top.abeille.basic.assets.repository.AccountRepository;
 import top.abeille.common.test.AbstractTest;
 
 /**
@@ -22,19 +22,19 @@ import top.abeille.common.test.AbstractTest;
  **/
 @ExtendWith(AbstractTest.class)
 @RunWith(MockitoJUnitRunner.class)
-public class AccountInfoServiceImplTest {
+public class AccountServiceImplTest {
 
     @Mock
-    private AccountInfoRepository accountInfoRepository;
+    private AccountRepository accountRepository;
 
     @InjectMocks
-    private AccountInfoServiceImpl accountInfoService;
+    private AccountServiceImpl accountInfoService;
 
     @Test
     public void getById() {
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setType("applePay");
         accountInfoService.create(accountDTO);
-        Mockito.verify(accountInfoRepository, Mockito.atLeastOnce()).save(Mockito.any(AccountInfo.class));
+        Mockito.verify(accountRepository, Mockito.atLeastOnce()).save(Mockito.any(AccountInfo.class));
     }
 }

@@ -14,7 +14,7 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface ArticleInfoService extends BasicService<ArticleDTO, ArticleVO> {
+public interface ArticleService extends BasicService<ArticleDTO, ArticleVO> {
 
     /**
      * 根据业务id查询详细信息

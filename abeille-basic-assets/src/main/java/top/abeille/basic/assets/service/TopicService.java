@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2020/2/13 20:16
  **/
-public interface TopicInfoService extends BasicService<TopicDTO, TopicVO> {
+public interface TopicService extends BasicService<TopicDTO, TopicVO> {
 }

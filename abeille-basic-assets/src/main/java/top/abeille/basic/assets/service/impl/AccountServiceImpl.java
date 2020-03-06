@@ -10,8 +10,8 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.AccountInfo;
 import top.abeille.basic.assets.dto.AccountDTO;
-import top.abeille.basic.assets.repository.AccountInfoRepository;
-import top.abeille.basic.assets.service.AccountInfoService;
+import top.abeille.basic.assets.repository.AccountRepository;
+import top.abeille.basic.assets.service.AccountService;
 import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -24,12 +24,12 @@ import java.util.Objects;
  * @author liwenqiang 2018/12/17 19:27
  **/
 @Service
-public class AccountInfoServiceImpl extends AbstractBasicService implements AccountInfoService {
+public class AccountServiceImpl extends AbstractBasicService implements AccountService {
 
-    private final AccountInfoRepository accountInfoRepository;
+    private final AccountRepository accountRepository;
 
-    public AccountInfoServiceImpl(AccountInfoRepository accountInfoRepository) {
-        this.accountInfoRepository = accountInfoRepository;
+    public AccountServiceImpl(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
         info.setBusinessId(PrefixEnum.AC + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        return accountInfoRepository.save(info).map(this::convertOuter);
+        return accountRepository.save(info).map(this::convertOuter);
     }
 
     @Override
@@ -48,14 +48,14 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
         return this.fetchByBusinessId(accountId).flatMap(accountVO -> {
             AccountInfo info = new AccountInfo();
             BeanUtils.copyProperties(accountVO, info);
-            return accountInfoRepository.save(info).map(this::convertOuter);
+            return accountRepository.save(info).map(this::convertOuter);
         });
     }
 
     @Override
     public Mono<Void> removeById(String businessId) {
         return this.fetchInfo(businessId)
-                .flatMap(account -> accountInfoRepository.deleteById(account.getId()));
+                .flatMap(account -> accountRepository.deleteById(account.getId()));
     }
 
     /**
@@ -80,7 +80,7 @@ public class AccountInfoServiceImpl extends AbstractBasicService implements Acco
         AccountInfo info = new AccountInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);
-        return accountInfoRepository.findOne(Example.of(info));
+        return accountRepository.findOne(Example.of(info));
     }
 
     /**

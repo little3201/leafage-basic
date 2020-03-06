@@ -33,10 +33,10 @@ public class DetailsServiceImpl implements DetailsService {
 
     @Override
     public Mono<DetailsInfo> modify(String businessId, DetailsInfo detailsInfo) {
-        return this.fetchByBusinessId(businessId).flatMap(content -> {
-            BeanUtils.copyProperties(detailsInfo, content);
-            content.setModifyTime(LocalDateTime.now());
-            return detailsRepository.save(content);
+        return this.fetchByBusinessId(businessId).flatMap(details -> {
+            BeanUtils.copyProperties(detailsInfo, details);
+            details.setModifyTime(LocalDateTime.now());
+            return detailsRepository.save(details);
         });
     }
 

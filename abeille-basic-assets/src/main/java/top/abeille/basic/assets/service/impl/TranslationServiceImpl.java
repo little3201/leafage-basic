@@ -80,7 +80,8 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
             DetailsInfo detailsInfo = new DetailsInfo();
             BeanUtils.copyProperties(translationDTO, detailsInfo);
             detailsInfo.setBusinessId(translationInfo.getBusinessId());
-            detailsService.create(detailsInfo);
+            // 这里需要调用subscribe()方法，否则数据不会入库
+            detailsService.create(detailsInfo).subscribe();
         }).map(this::convertOuter);
     }
 
@@ -94,7 +95,8 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
                     // 更新成功后，将内容信息更新
                     detailsService.fetchByBusinessId(businessId).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(translationDTO, contentInfo);
-                        detailsService.modify(contentInfo.getBusinessId(), contentInfo);
+                        // 这里需要调用subscribe()方法，否则数据不会入库
+                        detailsService.modify(contentInfo.getBusinessId(), contentInfo).subscribe();
                     })
             ).map(this::convertOuter);
         });

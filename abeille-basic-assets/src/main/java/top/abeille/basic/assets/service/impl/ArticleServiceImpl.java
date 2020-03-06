@@ -73,7 +73,8 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
             DetailsInfo detailsInfo = new DetailsInfo();
             BeanUtils.copyProperties(articleDTO, detailsInfo);
             detailsInfo.setBusinessId(articleInfo.getBusinessId());
-            detailsService.create(detailsInfo);
+            // 这里需要调用subscribe()方法，否则数据不会入库
+            detailsService.create(detailsInfo).subscribe();
         }).map(this::convertOuter);
     }
 
@@ -87,7 +88,8 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
                     // 更新成功后，将内容信息更新
                     detailsService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {
                         BeanUtils.copyProperties(articleDTO, contentInfo);
-                        detailsService.modify(contentInfo.getBusinessId(), contentInfo);
+                        // 这里需要调用subscribe()方法，否则数据不会入库
+                        detailsService.modify(contentInfo.getBusinessId(), contentInfo).subscribe();
                     })
             ).map(this::convertOuter);
         });

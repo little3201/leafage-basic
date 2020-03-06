@@ -38,9 +38,9 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
     }
 
     @Override
-    public Mono<SourceVO> fetchById(String businessId) {
+    public Mono<SourceVO> fetchByBusinessId(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessId(businessId).map(this::convertOuter);
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
     @Override
     public Mono<SourceVO> modify(String businessId, SourceDTO sourceDTO) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessId(businessId).flatMap(info -> {
+        return this.fetchInfo(businessId).flatMap(info -> {
             BeanUtils.copyProperties(sourceDTO, info);
             return sourceInfoRepository.save(info);
         }).map(this::convertOuter);
@@ -67,7 +67,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<SourceInfo> fetchByBusinessId(String businessId) {
+    private Mono<SourceInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         SourceInfo info = new SourceInfo();
         info.setBusinessId(businessId);

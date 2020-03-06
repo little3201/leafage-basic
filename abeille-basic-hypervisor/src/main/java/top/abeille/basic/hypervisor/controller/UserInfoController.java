@@ -50,7 +50,7 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public Mono<ResponseEntity<UserVO>> fetchUser(@PathVariable String businessId) {
-        return userInfoService.fetchById(businessId)
+        return userInfoService.fetchByBusinessId(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }

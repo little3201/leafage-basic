@@ -41,8 +41,8 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
     }
 
     @Override
-    public Mono<RoleVO> fetchById(String businessId) {
-        return this.fetchByBusinessId(businessId).map(this::convertOuter);
+    public Mono<RoleVO> fetchByBusinessId(String businessId) {
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
 
     @Override
     public Mono<RoleVO> modify(String businessId, RoleDTO roleDTO) {
-        return this.fetchByBusinessId(businessId).flatMap(info -> {
+        return this.fetchInfo(businessId).flatMap(info -> {
             BeanUtils.copyProperties(roleDTO, info);
             return roleInfoRepository.save(info);
         }).map(this::convertOuter);
@@ -67,7 +67,7 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<RoleInfo> fetchByBusinessId(String businessId) {
+    private Mono<RoleInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         RoleInfo info = new RoleInfo();
         info.setBusinessId(businessId);

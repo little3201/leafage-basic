@@ -31,9 +31,9 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
     }
 
     @Override
-    public Mono<GroupVO> fetchById(String businessId) {
+    public Mono<GroupVO> fetchByBusinessId(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessId(businessId).map(this::convertOuter);
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
 
     @Override
     public Mono<GroupVO> modify(String businessId, GroupDTO groupDTO) {
-        return this.fetchByBusinessId(businessId).flatMap(info -> {
+        return this.fetchInfo(businessId).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
             return groupInfoRepository.save(info);
         }).map(this::convertOuter);
@@ -55,7 +55,7 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
     @Override
     public Mono<Void> removeById(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessId(businessId).flatMap(groupInfo -> groupInfoRepository.deleteById(groupInfo.getId()));
+        return this.fetchInfo(businessId).flatMap(groupInfo -> groupInfoRepository.deleteById(groupInfo.getId()));
     }
 
     /**
@@ -64,7 +64,7 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<GroupInfo> fetchByBusinessId(String businessId) {
+    private Mono<GroupInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         GroupInfo info = new GroupInfo();
         info.setBusinessId(businessId);

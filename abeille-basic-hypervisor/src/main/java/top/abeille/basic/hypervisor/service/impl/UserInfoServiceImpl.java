@@ -46,7 +46,7 @@ public class UserInfoServiceImpl extends AbstractBasicService implements UserInf
     @Override
     public Mono<UserVO> modify(String businessId, UserDTO userDTO) {
         Objects.requireNonNull(businessId);
-        return fetchByBusinessId(businessId).flatMap(articleInfo -> {
+        return fetchInfo(businessId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(userDTO, articleInfo);
             return userInfoRepository.save(articleInfo).map(this::convertOuter);
         });
@@ -55,13 +55,12 @@ public class UserInfoServiceImpl extends AbstractBasicService implements UserInf
     @Override
     public Mono<Void> removeById(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessId(businessId).flatMap(userInfo -> userInfoRepository.deleteById(userInfo.getId()));
+        return this.fetchInfo(businessId).flatMap(userInfo -> userInfoRepository.deleteById(userInfo.getId()));
     }
 
-    @Override
-    public Mono<UserVO> fetchById(String businessId) {
+    public Mono<UserVO> fetchByBusinessId(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchByBusinessId(businessId).map(this::convertOuter);
+        return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
     /**
@@ -70,7 +69,7 @@ public class UserInfoServiceImpl extends AbstractBasicService implements UserInf
      * @param businessId 业务id
      * @return UserInfo 用户源数据
      */
-    private Mono<UserInfo> fetchByBusinessId(String businessId) {
+    private Mono<UserInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         ExampleMatcher exampleMatcher = appendConditions();
         UserInfo info = new UserInfo();

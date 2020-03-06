@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
-import top.abeille.basic.hypervisor.service.GroupInfoService;
+import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -23,12 +23,12 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/group")
-public class GroupInfoController extends AbstractController {
+public class GroupController extends AbstractController {
 
-    private final GroupInfoService groupInfoService;
+    private final GroupService groupService;
 
-    public GroupInfoController(GroupInfoService groupInfoService) {
-        this.groupInfoService = groupInfoService;
+    public GroupController(GroupService groupService) {
+        this.groupService = groupService;
     }
 
     /**
@@ -39,7 +39,7 @@ public class GroupInfoController extends AbstractController {
     @GetMapping
     public Flux<GroupVO> retrieveGroup() {
         Sort sort = super.initSortProperties();
-        return groupInfoService.retrieveAll(sort);
+        return groupService.retrieveAll(sort);
     }
 
     /**
@@ -50,7 +50,7 @@ public class GroupInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<GroupVO>> createGroup(@RequestBody @Valid GroupDTO groupDTO) {
-        return groupInfoService.create(groupDTO)
+        return groupService.create(groupDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -64,7 +64,7 @@ public class GroupInfoController extends AbstractController {
      */
     @PutMapping("/{businessId}")
     public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable String businessId, @RequestBody @Valid GroupDTO groupDTO) {
-        return groupInfoService.modify(businessId, groupDTO)
+        return groupService.modify(businessId, groupDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -77,7 +77,7 @@ public class GroupInfoController extends AbstractController {
      */
     @DeleteMapping("/{businessId}")
     public Mono<ResponseEntity<Void>> removeGroup(@PathVariable String businessId) {
-        return groupInfoService.removeById(businessId)
+        return groupService.removeById(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

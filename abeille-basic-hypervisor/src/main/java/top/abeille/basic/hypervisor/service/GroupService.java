@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:24
  **/
-public interface GroupInfoService extends BasicService<GroupDTO, GroupVO> {
+public interface GroupService extends BasicService<GroupDTO, GroupVO> {
 }

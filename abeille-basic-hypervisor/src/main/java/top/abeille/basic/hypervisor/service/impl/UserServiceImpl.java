@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.repository.UserInfoRepository;
-import top.abeille.basic.hypervisor.service.UserInfoService;
+import top.abeille.basic.hypervisor.repository.UserRepository;
+import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -27,12 +27,12 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/7/28 0:30
  **/
 @Service
-public class UserInfoServiceImpl extends AbstractBasicService implements UserInfoService {
+public class UserServiceImpl extends AbstractBasicService implements UserService {
 
-    private final UserInfoRepository userInfoRepository;
+    private final UserRepository userRepository;
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository) {
-        this.userInfoRepository = userInfoRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class UserInfoServiceImpl extends AbstractBasicService implements UserInf
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(groupDTO, info);
         info.setBusinessId(this.generateId());
-        return userInfoRepository.save(info).map(this::convertOuter);
+        return userRepository.save(info).map(this::convertOuter);
     }
 
     @Override
@@ -48,14 +48,14 @@ public class UserInfoServiceImpl extends AbstractBasicService implements UserInf
         Objects.requireNonNull(businessId);
         return fetchInfo(businessId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(userDTO, articleInfo);
-            return userInfoRepository.save(articleInfo).map(this::convertOuter);
+            return userRepository.save(articleInfo).map(this::convertOuter);
         });
     }
 
     @Override
     public Mono<Void> removeById(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchInfo(businessId).flatMap(userInfo -> userInfoRepository.deleteById(userInfo.getId()));
+        return this.fetchInfo(businessId).flatMap(userInfo -> userRepository.deleteById(userInfo.getId()));
     }
 
     public Mono<UserVO> fetchByBusinessId(String businessId) {
@@ -75,7 +75,7 @@ public class UserInfoServiceImpl extends AbstractBasicService implements UserInf
         UserInfo info = new UserInfo();
         info.setBusinessId(businessId);
         this.appendParams(info);
-        return userInfoRepository.findOne(Example.of(info, exampleMatcher));
+        return userRepository.findOne(Example.of(info, exampleMatcher));
     }
 
     /**

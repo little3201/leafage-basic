@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
-import top.abeille.basic.hypervisor.service.RoleInfoService;
+import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -21,12 +21,12 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/role")
-public class RoleInfoController extends AbstractController {
+public class RoleController extends AbstractController {
 
-    private final RoleInfoService roleInfoService;
+    private final RoleService roleService;
 
-    public RoleInfoController(RoleInfoService roleInfoService) {
-        this.roleInfoService = roleInfoService;
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     /**
@@ -37,7 +37,7 @@ public class RoleInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<RoleVO>> createRole(@RequestBody @Valid RoleDTO roleDTO) {
-        return roleInfoService.create(roleDTO)
+        return roleService.create(roleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -51,7 +51,7 @@ public class RoleInfoController extends AbstractController {
      */
     @PutMapping("/{businessId}")
     public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable String businessId, @RequestBody @Valid RoleDTO roleDTO) {
-        return roleInfoService.modify(businessId, roleDTO)
+        return roleService.modify(businessId, roleDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

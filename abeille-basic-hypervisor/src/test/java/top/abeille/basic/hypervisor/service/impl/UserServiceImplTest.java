@@ -12,7 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.repository.UserInfoRepository;
+import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.test.AbstractTest;
 
@@ -23,13 +23,13 @@ import top.abeille.common.test.AbstractTest;
  **/
 @ExtendWith(AbstractTest.class)
 @RunWith(MockitoJUnitRunner.class)
-public class UserInfoServiceImplTest {
+public class UserServiceImplTest {
 
     @Mock
-    private UserInfoRepository userInfoRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
-    private UserInfoServiceImpl userInfoService;
+    private UserServiceImpl userInfoService;
 
     /**
      * 测试修改用户信息

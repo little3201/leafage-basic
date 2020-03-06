@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:36
  **/
-public interface SourceInfoService extends BasicService<SourceDTO, SourceVO> {
+public interface SourceService extends BasicService<SourceDTO, SourceVO> {
 }

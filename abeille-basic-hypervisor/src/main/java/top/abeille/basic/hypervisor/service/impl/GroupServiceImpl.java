@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.GroupInfo;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
-import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
-import top.abeille.basic.hypervisor.service.GroupInfoService;
+import top.abeille.basic.hypervisor.repository.GroupRepository;
+import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -22,12 +22,12 @@ import java.util.Objects;
  * @author liwenqiang 2018/12/17 19:25
  **/
 @Service
-public class GroupInfoServiceImpl extends AbstractBasicService implements GroupInfoService {
+public class GroupServiceImpl extends AbstractBasicService implements GroupService {
 
-    private final GroupInfoRepository groupInfoRepository;
+    private final GroupRepository groupRepository;
 
-    public GroupInfoServiceImpl(GroupInfoRepository groupInfoRepository) {
-        this.groupInfoRepository = groupInfoRepository;
+    public GroupServiceImpl(GroupRepository groupRepository) {
+        this.groupRepository = groupRepository;
     }
 
     @Override
@@ -41,21 +41,21 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
         info.setBusinessId(this.generateId());
-        return groupInfoRepository.save(info).map(this::convertOuter);
+        return groupRepository.save(info).map(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> modify(String businessId, GroupDTO groupDTO) {
         return this.fetchInfo(businessId).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
-            return groupInfoRepository.save(info);
+            return groupRepository.save(info);
         }).map(this::convertOuter);
     }
 
     @Override
     public Mono<Void> removeById(String businessId) {
         Objects.requireNonNull(businessId);
-        return this.fetchInfo(businessId).flatMap(groupInfo -> groupInfoRepository.deleteById(groupInfo.getId()));
+        return this.fetchInfo(businessId).flatMap(groupInfo -> groupRepository.deleteById(groupInfo.getId()));
     }
 
     /**
@@ -68,7 +68,7 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
         Objects.requireNonNull(businessId);
         GroupInfo info = new GroupInfo();
         info.setBusinessId(businessId);
-        return groupInfoRepository.findOne(Example.of(info));
+        return groupRepository.findOne(Example.of(info));
     }
 
     /**

@@ -11,8 +11,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.SourceInfo;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
-import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
-import top.abeille.basic.hypervisor.service.SourceInfoService;
+import top.abeille.basic.hypervisor.repository.SourceRepository;
+import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -24,17 +24,17 @@ import java.util.Objects;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class SourceInfoServiceImpl extends AbstractBasicService implements SourceInfoService {
+public class SourceServiceImpl extends AbstractBasicService implements SourceService {
 
-    private final SourceInfoRepository sourceInfoRepository;
+    private final SourceRepository sourceRepository;
 
-    public SourceInfoServiceImpl(SourceInfoRepository sourceInfoRepository) {
-        this.sourceInfoRepository = sourceInfoRepository;
+    public SourceServiceImpl(SourceRepository sourceRepository) {
+        this.sourceRepository = sourceRepository;
     }
 
     @Override
     public Flux<SourceVO> retrieveAll(Sort sort) {
-        return sourceInfoRepository.findAll(sort).map(this::convertOuter);
+        return sourceRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
         BeanUtils.copyProperties(sourceDTO, info);
         info.setBusinessId(this.generateId());
         info.setEnabled(Boolean.TRUE);
-        return sourceInfoRepository.save(info).map(this::convertOuter);
+        return sourceRepository.save(info).map(this::convertOuter);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
         Objects.requireNonNull(businessId);
         return this.fetchInfo(businessId).flatMap(info -> {
             BeanUtils.copyProperties(sourceDTO, info);
-            return sourceInfoRepository.save(info);
+            return sourceRepository.save(info);
         }).map(this::convertOuter);
     }
 
@@ -71,7 +71,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
         Objects.requireNonNull(businessId);
         SourceInfo info = new SourceInfo();
         info.setBusinessId(businessId);
-        return sourceInfoRepository.findOne(Example.of(info));
+        return sourceRepository.findOne(Example.of(info));
     }
 
     /**

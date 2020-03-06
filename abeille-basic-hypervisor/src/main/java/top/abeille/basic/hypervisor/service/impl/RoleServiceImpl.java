@@ -11,8 +11,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.RoleInfo;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
-import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
-import top.abeille.basic.hypervisor.service.RoleInfoService;
+import top.abeille.basic.hypervisor.repository.RoleRepository;
+import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -24,12 +24,12 @@ import java.util.Objects;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInfoService {
+public class RoleServiceImpl extends AbstractBasicService implements RoleService {
 
-    private final RoleInfoRepository roleInfoRepository;
+    private final RoleRepository roleRepository;
 
-    public RoleInfoServiceImpl(RoleInfoRepository roleInfoRepository) {
-        this.roleInfoRepository = roleInfoRepository;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
         // 创建查询模板实例
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
-        return roleInfoRepository.findAll(Example.of(info, exampleMatcher)).filter(Objects::nonNull).map(this::convertOuter);
+        return roleRepository.findAll(Example.of(info, exampleMatcher)).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
@@ -50,14 +50,14 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
         info.setBusinessId(this.generateId());
-        return roleInfoRepository.save(info).map(this::convertOuter);
+        return roleRepository.save(info).map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> modify(String businessId, RoleDTO roleDTO) {
         return this.fetchInfo(businessId).flatMap(info -> {
             BeanUtils.copyProperties(roleDTO, info);
-            return roleInfoRepository.save(info);
+            return roleRepository.save(info);
         }).map(this::convertOuter);
     }
 
@@ -71,7 +71,7 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
         Objects.requireNonNull(businessId);
         RoleInfo info = new RoleInfo();
         info.setBusinessId(businessId);
-        return roleInfoRepository.findOne(Example.of(info));
+        return roleRepository.findOne(Example.of(info));
     }
 
     /**

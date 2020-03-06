@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/9/27 14:18
  **/
-public interface RoleInfoService extends BasicService<RoleDTO, RoleVO> {
+public interface RoleService extends BasicService<RoleDTO, RoleVO> {
 }

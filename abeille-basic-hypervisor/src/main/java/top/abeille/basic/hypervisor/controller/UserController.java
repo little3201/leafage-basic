@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.service.UserInfoService;
+import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -23,12 +23,12 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/user")
-public class UserInfoController extends AbstractController {
+public class UserController extends AbstractController {
 
-    private final UserInfoService userInfoService;
+    private final UserService userService;
 
-    public UserInfoController(UserInfoService userInfoService) {
-        this.userInfoService = userInfoService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -39,7 +39,7 @@ public class UserInfoController extends AbstractController {
     @GetMapping
     public Flux<UserVO> retrieveUser() {
         Sort sort = super.initSortProperties();
-        return userInfoService.retrieveAll(sort);
+        return userService.retrieveAll(sort);
     }
 
     /**
@@ -50,7 +50,7 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public Mono<ResponseEntity<UserVO>> fetchUser(@PathVariable String businessId) {
-        return userInfoService.fetchByBusinessId(businessId)
+        return userService.fetchByBusinessId(businessId)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
@@ -63,7 +63,7 @@ public class UserInfoController extends AbstractController {
      */
     @PostMapping
     public Mono<ResponseEntity<UserVO>> createUser(@RequestBody @Valid UserDTO userDTO) {
-        return userInfoService.create(userDTO)
+        return userService.create(userDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
@@ -77,7 +77,7 @@ public class UserInfoController extends AbstractController {
      */
     @PutMapping("/{businessId}")
     public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable String businessId, @RequestBody @Valid UserDTO userDTO) {
-        return userInfoService.modify(businessId, userDTO)
+        return userService.modify(businessId, userDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

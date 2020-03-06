@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.document.UserRole;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
-import top.abeille.basic.hypervisor.repository.UserInfoRepository;
+import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 
 import java.util.LinkedHashSet;
@@ -43,13 +43,13 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
      */
     private static final String REGEX_MOBILE = "0?(13|14|15|17|18|19)[0-9]{9}";
 
-    private final UserInfoRepository userInfoRepository;
+    private final UserRepository userRepository;
     private final RoleSourceRepository roleSourceRepository;
     private final UserRoleRepository userRoleRepository;
 
-    public UserDetailsServiceImpl(UserInfoRepository userInfoRepository, RoleSourceRepository roleSourceRepository,
+    public UserDetailsServiceImpl(UserRepository userRepository, RoleSourceRepository roleSourceRepository,
                                   UserRoleRepository userRoleRepository) {
-        this.userInfoRepository = userInfoRepository;
+        this.userRepository = userRepository;
         this.roleSourceRepository = roleSourceRepository;
         this.userRoleRepository = userRoleRepository;
     }
@@ -77,7 +77,7 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
         }
         // 组装查询条件，只查询可用，未被锁定的用户信息
         ExampleMatcher exampleMatcher = appendConditions();
-        return userInfoRepository.findOne(Example.of(info, exampleMatcher)).map(userVO -> {
+        return userRepository.findOne(Example.of(info, exampleMatcher)).map(userVO -> {
             Set<GrantedAuthority> authorities = new LinkedHashSet<>();
             // 获取用户关联角色
             List<UserRole> userRoleList = userRoleRepository.findAllByUserIdAndEnabled(userVO.getId(), Boolean.TRUE);

@@ -5,13 +5,13 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.hypervisor.document.RoleInfo;
+import top.abeille.basic.hypervisor.document.GroupInfo;
 
 /**
- * 角色信息dao接口
+ * 组织信息dao
  *
- * @author liwenqiang 2018/9/26 11:06
+ * @author liwenqiang 2018/12/20 9:52
  **/
 @Repository
-public interface RoleInfoRepository extends ReactiveMongoRepository<RoleInfo, String> {
+public interface GroupRepository extends ReactiveMongoRepository<GroupInfo, String> {
 }

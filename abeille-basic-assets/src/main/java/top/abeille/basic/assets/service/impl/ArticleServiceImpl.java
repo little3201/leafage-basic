@@ -52,11 +52,11 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
                     ArticleDetailsVO detailsVO = new ArticleDetailsVO();
                     BeanUtils.copyProperties(articleVO, detailsVO);
                     // 根据业务id获取相关内容
-            return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
-                detailsVO.setContent(contentInfo.getContent());
-                detailsVO.setCatalog(contentInfo.getCatalog());
-                return detailsVO;
-            }).defaultIfEmpty(detailsVO);
+                    return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
+                        detailsVO.setContent(contentInfo.getContent());
+                        detailsVO.setCatalog(contentInfo.getCatalog());
+                        return detailsVO;
+                    }).defaultIfEmpty(detailsVO);
                 }
         );
     }

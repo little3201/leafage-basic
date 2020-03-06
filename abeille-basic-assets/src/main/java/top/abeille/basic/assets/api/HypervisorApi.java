@@ -25,5 +25,5 @@ public interface HypervisorApi {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/user/{businessId}")
-    Mono<ResponseEntity<UserBO>> fetchUser(@RequestParam String businessId);
+    Mono<ResponseEntity<UserBO>> fetchUserByBusinessId(@RequestParam String businessId);
 }

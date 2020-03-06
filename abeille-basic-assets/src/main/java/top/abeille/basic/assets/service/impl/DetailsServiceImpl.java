@@ -4,8 +4,6 @@
 
 package top.abeille.basic.assets.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -19,10 +17,7 @@ import java.util.Objects;
 
 @Service
 public class DetailsServiceImpl implements DetailsService {
-    /**
-     * 开启日志
-     */
-    protected static final Logger logger = LoggerFactory.getLogger(DetailsServiceImpl.class);
+
     private final DetailsRepository detailsRepository;
 
     public DetailsServiceImpl(DetailsRepository detailsRepository) {
@@ -33,9 +28,7 @@ public class DetailsServiceImpl implements DetailsService {
     public Mono<DetailsInfo> create(DetailsInfo detailsInfo) {
         detailsInfo.setEnabled(Boolean.TRUE);
         detailsInfo.setModifyTime(LocalDateTime.now());
-        return detailsRepository.save(detailsInfo).doOnSuccess(content ->
-                logger.info("结果：id-{}, content-{}", content.getId(), content.getContent()))
-                .doOnError(error -> logger.error("新增异常"));
+        return detailsRepository.save(detailsInfo);
     }
 
     @Override

@@ -28,13 +28,13 @@ public class RoleSource {
      */
     @Indexed
     @Field(value = "role_id")
-    private Long roleId;
+    private String roleId;
     /**
      * 资源ID
      */
     @Indexed
     @Field(value = "source_id")
-    private Long sourceId;
+    private String sourceId;
 
     /**
      * 是否有效
@@ -45,7 +45,7 @@ public class RoleSource {
      * 修改人
      */
     @Field(value = "modifier")
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
@@ -60,19 +60,19 @@ public class RoleSource {
         this.id = id;
     }
 
-    public Long getRoleId() {
+    public String getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Long roleId) {
+    public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 
-    public Long getSourceId() {
+    public String getSourceId() {
         return sourceId;
     }
 
-    public void setSourceId(Long sourceId) {
+    public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
     }
 
@@ -84,11 +84,11 @@ public class RoleSource {
         this.enabled = enabled;
     }
 
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

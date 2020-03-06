@@ -43,10 +43,6 @@ public class UserVO implements Serializable {
      */
     private String address;
     /**
-     * 修改人
-     */
-    private Long modifier;
-    /**
      * 修改时间
      */
     private LocalDateTime modifyTime;
@@ -105,14 +101,6 @@ public class UserVO implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Long getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

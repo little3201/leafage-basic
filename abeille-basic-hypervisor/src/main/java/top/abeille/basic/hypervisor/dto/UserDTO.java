@@ -4,7 +4,6 @@
 package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
@@ -16,11 +15,7 @@ import java.io.Serializable;
 public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = -2259398095472923567L;
-    /**
-     * 用户ID
-     */
-    @NotNull
-    private Long roleId;
+
     /**
      * 昵称
      */
@@ -30,11 +25,6 @@ public class UserDTO implements Serializable {
      * 头像
      */
     private String avatar;
-    /**
-     * 密码
-     */
-    @NotBlank
-    private String password;
     /**
      * 电话
      */
@@ -50,14 +40,6 @@ public class UserDTO implements Serializable {
      */
     private String address;
 
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
-
     public String getNickname() {
         return nickname;
     }
@@ -72,14 +54,6 @@ public class UserDTO implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getMobile() {

@@ -28,13 +28,13 @@ public class UserGroup {
      */
     @Indexed
     @Field(value = "user_id")
-    private Long userId;
+    private String userId;
     /**
      * 组主键
      */
     @Indexed
     @Field(value = "group_id")
-    private Long groupId;
+    private String groupId;
 
     /**
      * 是否有效
@@ -45,7 +45,7 @@ public class UserGroup {
      * 修改人
      */
     @Field(value = "modifier")
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
@@ -60,19 +60,19 @@ public class UserGroup {
         this.id = id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public Long getGroupId() {
+    public String getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(Long groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 
@@ -84,11 +84,11 @@ public class UserGroup {
         this.enabled = enabled;
     }
 
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

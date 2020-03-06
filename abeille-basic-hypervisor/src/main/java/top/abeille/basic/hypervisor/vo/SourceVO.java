@@ -29,7 +29,7 @@ public class SourceVO implements Serializable {
     /**
      * 类型
      */
-    private Integer type;
+    private String type;
     /**
      * 路径
      */
@@ -38,10 +38,6 @@ public class SourceVO implements Serializable {
      * 描述
      */
     private String description;
-    /**
-     * 修改人
-     */
-    private String modifier;
     /**
      * 修改时间
      */
@@ -71,11 +67,11 @@ public class SourceVO implements Serializable {
         this.name = name;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -93,14 +89,6 @@ public class SourceVO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

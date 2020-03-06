@@ -27,10 +27,6 @@ public class RoleVO implements Serializable {
      */
     private String description;
     /**
-     * 修改人
-     */
-    private String modifier;
-    /**
      * 修改时间
      */
     private LocalDateTime modifyTime;
@@ -57,14 +53,6 @@ public class RoleVO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

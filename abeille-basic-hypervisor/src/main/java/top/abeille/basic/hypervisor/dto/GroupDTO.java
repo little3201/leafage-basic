@@ -17,7 +17,7 @@ public class GroupDTO implements Serializable {
     /**
      * 负责人
      */
-    private Long principal;
+    private String principal;
     /**
      * 上级
      */
@@ -32,11 +32,11 @@ public class GroupDTO implements Serializable {
      */
     private String description;
 
-    public Long getPrincipal() {
+    public String getPrincipal() {
         return principal;
     }
 
-    public void setPrincipal(Long principal) {
+    public void setPrincipal(String principal) {
         this.principal = principal;
     }
 

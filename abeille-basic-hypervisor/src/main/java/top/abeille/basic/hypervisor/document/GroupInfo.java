@@ -33,12 +33,12 @@ public class GroupInfo {
      * 负责人
      */
     @Field(value = "principal")
-    private Long principal;
+    private String principal;
     /**
      * 上级
      */
     @Field(value = "superior")
-    private Long superior;
+    private String superior;
     /**
      * 名称
      */
@@ -81,19 +81,19 @@ public class GroupInfo {
         this.businessId = businessId;
     }
 
-    public Long getPrincipal() {
+    public String getPrincipal() {
         return principal;
     }
 
-    public void setPrincipal(Long principal) {
+    public void setPrincipal(String principal) {
         this.principal = principal;
     }
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
     }
 

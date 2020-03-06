@@ -84,7 +84,7 @@ public class UserInfo {
      * 修改人
      */
     @Field(value = "modifier")
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
@@ -187,11 +187,11 @@ public class UserInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

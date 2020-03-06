@@ -40,7 +40,6 @@ public class UserServiceImplTest {
         UserDTO user = new UserDTO();
         user.setNickname("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
-        user.setPassword(pwd);
         Mono<UserVO> userVOMono = userInfoService.create(user);
     }
 

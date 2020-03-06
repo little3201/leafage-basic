@@ -45,7 +45,7 @@ public class SourceInfo {
      * 类型
      */
     @Field(value = "type")
-    private Integer type;
+    private String type;
     /**
      * 路径
      */
@@ -68,7 +68,7 @@ public class SourceInfo {
      */
     @JsonIgnore
     @Field(value = "modifier")
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
@@ -108,11 +108,11 @@ public class SourceInfo {
         this.name = name;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -140,12 +140,11 @@ public class SourceInfo {
         this.enabled = enabled;
     }
 
-
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

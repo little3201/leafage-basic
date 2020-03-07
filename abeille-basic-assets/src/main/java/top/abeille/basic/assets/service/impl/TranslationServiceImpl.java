@@ -97,7 +97,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
                         BeanUtils.copyProperties(translationDTO, contentInfo);
                         // 这里需要调用subscribe()方法，否则数据不会入库
                         detailsService.modify(contentInfo.getBusinessId(), contentInfo).subscribe();
-                    })
+                    }).subscribe()
             ).map(this::convertOuter);
         });
     }

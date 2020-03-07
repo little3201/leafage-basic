@@ -80,7 +80,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
             DetailsInfo detailsInfo = new DetailsInfo();
             BeanUtils.copyProperties(translationDTO, detailsInfo);
             detailsInfo.setBusinessId(translationInfo.getBusinessId());
-            // 这里需要调用subscribe()方法，否则数据不会入库
+            // 这里需要调用subscribe()方法来订阅执行，否则数据不会入库
             detailsService.create(detailsInfo).subscribe();
         }).map(this::convertOuter);
     }

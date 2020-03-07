@@ -86,10 +86,10 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
             BeanUtils.copyProperties(articleDTO, info);
             return articleRepository.save(info).doOnSuccess(articleInfo ->
                     // 更新成功后，将内容信息更新
-                    detailsService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(contentInfo -> {
-                        BeanUtils.copyProperties(articleDTO, contentInfo);
+                    detailsService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(detailsInfo -> {
+                        BeanUtils.copyProperties(articleDTO, detailsInfo);
                         // 这里需要调用subscribe()方法，否则数据不会入库
-                        detailsService.modify(contentInfo.getBusinessId(), contentInfo).subscribe();
+                        detailsService.modify(detailsInfo.getBusinessId(), detailsInfo).subscribe();
                     })
             ).map(this::convertOuter);
         });

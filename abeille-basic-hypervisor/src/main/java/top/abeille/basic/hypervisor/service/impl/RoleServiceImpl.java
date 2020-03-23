@@ -9,6 +9,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.RoleInfo;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.repository.RoleRepository;
@@ -49,7 +50,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     public Mono<RoleVO> create(RoleDTO roleDTO) {
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
-        info.setBusinessId(this.generateId());
+        info.setBusinessId(PrefixEnum.RO + this.generateId());
         return roleRepository.save(info).map(this::convertOuter);
     }
 

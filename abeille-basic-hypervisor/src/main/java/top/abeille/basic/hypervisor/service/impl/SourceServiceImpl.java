@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.SourceInfo;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.repository.SourceRepository;
@@ -47,7 +48,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     public Mono<SourceVO> create(SourceDTO sourceDTO) {
         SourceInfo info = new SourceInfo();
         BeanUtils.copyProperties(sourceDTO, info);
-        info.setBusinessId(this.generateId());
+        info.setBusinessId(PrefixEnum.SR + this.generateId());
         info.setEnabled(Boolean.TRUE);
         return sourceRepository.save(info).map(this::convertOuter);
     }

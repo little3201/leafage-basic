@@ -8,6 +8,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.repository.UserRepository;
@@ -39,7 +40,8 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> create(UserDTO groupDTO) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(groupDTO, info);
-        info.setBusinessId(this.generateId());
+        info.setPassword("$2a$10$hQU4caaXR5brbfG6KqCadu/HvE9Hah37/047x5qEt4sE1UwmEKb..");
+        info.setBusinessId(PrefixEnum.US + this.generateId());
         return userRepository.save(info).map(this::convertOuter);
     }
 
@@ -48,6 +50,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         Objects.requireNonNull(businessId);
         return fetchInfo(businessId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(userDTO, articleInfo);
+            articleInfo.setPassword("$2a$10$hQU4caaXR5brbfG6KqCadu/HvE9Hah37/047x5qEt4sE1UwmEKb..");
             return userRepository.save(articleInfo).map(this::convertOuter);
         });
     }

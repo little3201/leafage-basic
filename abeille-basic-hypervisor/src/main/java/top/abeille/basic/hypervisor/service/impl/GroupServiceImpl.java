@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.GroupInfo;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.repository.GroupRepository;
@@ -40,7 +41,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     public Mono<GroupVO> create(GroupDTO groupDTO) {
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
-        info.setBusinessId(this.generateId());
+        info.setBusinessId(PrefixEnum.GP + this.generateId());
         return groupRepository.save(info).map(this::convertOuter);
     }
 

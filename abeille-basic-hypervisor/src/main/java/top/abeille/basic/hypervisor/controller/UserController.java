@@ -81,4 +81,15 @@ public class UserController extends AbstractController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
+
+    /**
+     * 根据传入的业务id: businessId 删除信息
+     *
+     * @param businessId 业务id
+     * @return 如果删除成功，返回200状态码，否则返回417状态码
+     */
+    @DeleteMapping("/{businessId}")
+    public Mono<ResponseEntity<Void>> removeUser(@PathVariable String businessId) {
+        return userService.removeById(businessId).map(ResponseEntity::ok);
+    }
 }

@@ -6,6 +6,7 @@ package top.abeille.basic.hypervisor.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +25,7 @@ import java.security.interfaces.RSAPublicKey;
  * @author liwenqiang 2019/7/12 17:51
  **/
 @EnableWebFluxSecurity
+@EnableReactiveMethodSecurity
 public class AbeilleSecurityConfig {
 
     private static final String KEY_STORE = "jwt/abeille-top-jwt.jks";
@@ -43,10 +45,11 @@ public class AbeilleSecurityConfig {
      */
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.csrf().disable().formLogin().disable().httpBasic().disable()
-                .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll().anyExchange().authenticated()
-                .and().exceptionHandling()
-                .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
+        http.csrf().disable().httpBasic().disable().formLogin().and()
+                .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
+                .anyExchange().authenticated()
+                .and().exceptionHandling();
+//                .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
         return http.build();
     }
 

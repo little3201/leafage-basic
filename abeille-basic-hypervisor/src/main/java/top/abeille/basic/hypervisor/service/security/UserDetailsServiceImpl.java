@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
@@ -22,8 +21,8 @@ import top.abeille.basic.hypervisor.repository.SourceRepository;
 import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -91,18 +90,18 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
         return userRepository.findOne(Example.of(info, exampleMatcher)).map(userInfo -> {
             // 获取关联的角色，然后获取用户信息
             Set<GrantedAuthority> authorities = new LinkedHashSet<>();
-            userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), Boolean.TRUE).stream().map(userRole ->
-                    roleSourceRepository.findAllByRoleIdAndEnabled(userRole.getRoleId(), Boolean.TRUE)).filter(roleSources ->
-                    !CollectionUtils.isEmpty(roleSources)).forEach(roleSources -> roleSources.forEach(roleSource -> {
-                // 获取所有资源信息，把businessId放在authorities中
-                sourceRepository.findById(roleSource.getSourceId()).subscribe(sourceInfo ->
-                        authorities.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId())));
-            }));
+            userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), Boolean.TRUE).doOnNext(userRole ->
+                    roleSourceRepository.findAllByRoleIdAndEnabled(userRole.getRoleId(), Boolean.TRUE).filter(roleSource ->
+                            !Objects.isNull(roleSource)).toIterable().forEach(roleSource ->
+                            // 获取所有资源信息，把businessId放在authorities中
+                            sourceRepository.findById(roleSource.getSourceId()).subscribe(sourceInfo ->
+                                    authorities.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId())))
+                    )).subscribe();
             // 返回user
             return new User(isMobile(username) ? userInfo.getMobile() : userInfo.getEmail(), userInfo.getPassword(),
                     userInfo.getEnabled(), userInfo.getAccountNonExpired(), userInfo.getCredentialsNonExpired(),
                     userInfo.getAccountNonLocked(), authorities);
-        }).defaultIfEmpty(new User(username, "", Collections.emptyList()));
+        });
     }
 
     /**

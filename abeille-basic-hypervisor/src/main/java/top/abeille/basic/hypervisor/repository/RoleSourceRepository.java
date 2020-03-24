@@ -5,10 +5,10 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.document.RoleSource;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * 角色权限dao接口
@@ -24,5 +24,5 @@ public interface RoleSourceRepository extends ReactiveCrudRepository<RoleSource,
      * @param roleId 角色ID
      * @return List
      */
-    List<RoleSource> findAllByRoleIdAndEnabled(@NotNull String roleId, Boolean enabled);
+    Flux<RoleSource> findAllByRoleIdAndEnabled(@NotNull String roleId, Boolean enabled);
 }

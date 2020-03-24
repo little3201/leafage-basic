@@ -5,12 +5,7 @@ logging:
     root: INFO
     # control org.springframework logger's level for DEBUG
     org:
-      springframework:
-        data:
-          mongodb:
-            core: DEBUG
-      # control org.hibernate logger's level for ERROR
-      hibernate: INFO
+      springframework: INFO
 
 spring:
   cloud:

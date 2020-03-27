@@ -45,11 +45,10 @@ public class AbeilleSecurityConfig {
      */
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.csrf().disable().formLogin().disable().httpBasic().disable()
-                .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll().anyExchange().authenticated()
+        http.csrf().disable().formLogin().disable()
+                .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
+                .anyExchange().authenticated()
                 .and().exceptionHandling()
-                .and().oauth2Login()
-                .and().oauth2Client()
                 .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
         return http.build();
     }

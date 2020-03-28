@@ -27,10 +27,6 @@ public class UserVO implements Serializable {
      */
     private String avatar;
     /**
-     * 用户名
-     */
-    private String username;
-    /**
      * 电话
      */
     private String mobile;
@@ -42,6 +38,18 @@ public class UserVO implements Serializable {
      * 地址
      */
     private String address;
+    /**
+     * 是否有效
+     */
+    private Boolean accountNonExpired;
+    /**
+     * 是否锁定
+     */
+    private Boolean accountNonLocked;
+    /**
+     * 密码是否有效
+     */
+    private Boolean credentialsNonExpired;
     /**
      * 修改时间
      */
@@ -71,14 +79,6 @@ public class UserVO implements Serializable {
         this.avatar = avatar;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getMobile() {
         return mobile;
     }
@@ -101,6 +101,30 @@ public class UserVO implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Boolean getAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(Boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public Boolean getAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(Boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public Boolean getCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
     }
 
     public LocalDateTime getModifyTime() {

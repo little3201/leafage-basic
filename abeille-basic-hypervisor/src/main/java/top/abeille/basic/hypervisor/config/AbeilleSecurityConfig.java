@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
- */
+ *//*
+
 package top.abeille.basic.hypervisor.config;
 
 import org.springframework.context.annotation.Bean;
@@ -19,11 +20,21 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
 
+*/
 /**
  * spring security 配置
  *
  * @author liwenqiang 2019/7/12 17:51
- **/
+ * <p>
+ * 密码配置，使用BCryptPasswordEncoder
+ * <p>
+ * 安全配置
+ * <p>
+ * JWT 解码器
+ * <p>
+ * 获取RSAPublicKey
+ *//*
+
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class AbeilleSecurityConfig {
@@ -32,20 +43,24 @@ public class AbeilleSecurityConfig {
     private static final String KEY_PASS = "abeille-top";
     private static final String ALIAS = "abeille-top-jwt";
 
-    /**
-     * 密码配置，使用BCryptPasswordEncoder
-     */
+    */
+/**
+ * 密码配置，使用BCryptPasswordEncoder
+ *//*
+
     @Bean
     protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * 安全配置
-     */
+    */
+/**
+ * 安全配置
+ *//*
+
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.csrf().disable().formLogin().disable()
+        http.csrf().disable().formLogin().disable().httpBasic().and()
                 .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyExchange().authenticated()
                 .and().exceptionHandling()
@@ -53,16 +68,20 @@ public class AbeilleSecurityConfig {
         return http.build();
     }
 
-    /**
-     * JWT 解码器
-     */
+    */
+/**
+ * JWT 解码器
+ *//*
+
     private ReactiveJwtDecoder jwtDecoder() {
         return new NimbusReactiveJwtDecoder(readRSAPublicKey());
     }
 
-    /**
-     * 获取RSAPublicKey
-     */
+    */
+/**
+ * 获取RSAPublicKey
+ *//*
+
     private RSAPublicKey readRSAPublicKey() {
         ClassPathResource ksFile = new ClassPathResource(KEY_STORE);
         KeyStoreKeyFactory ksFactory = new KeyStoreKeyFactory(ksFile, KEY_PASS.toCharArray());
@@ -70,3 +89,4 @@ public class AbeilleSecurityConfig {
         return (RSAPublicKey) keyPair.getPublic();
     }
 }
+*/

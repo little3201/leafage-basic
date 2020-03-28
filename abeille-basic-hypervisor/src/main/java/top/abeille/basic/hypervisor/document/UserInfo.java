@@ -32,7 +32,6 @@ public class UserInfo {
     /**
      * 昵称
      */
-    @Indexed
     @Field(value = "nickname")
     private String nickname;
     /**
@@ -61,7 +60,7 @@ public class UserInfo {
     @Field(value = "address")
     private String address;
     /**
-     * 是否有效
+     * 账户是否有效
      */
     @Field(value = "is_account_non_expired")
     private Boolean accountNonExpired;
@@ -71,7 +70,7 @@ public class UserInfo {
     @Field(value = "is_account_non_locked")
     private Boolean accountNonLocked;
     /**
-     * 密码是否有效
+     * 认证是否有效
      */
     @Field(value = "is_credentials_non_expired")
     private Boolean credentialsNonExpired;

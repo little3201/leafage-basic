@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -48,6 +49,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         info.setBusinessId(PrefixEnum.US + this.generateId());
         info.setPassword(new BCryptPasswordEncoder().encode("110119"));
         this.appendParams(info);
+        info.setModifyTime(LocalDateTime.now());
         return userRepository.save(info).map(this::convertOuter);
     }
 
@@ -96,6 +98,10 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     private UserVO convertOuter(UserInfo info) {
         UserVO outer = new UserVO();
         BeanUtils.copyProperties(info, outer);
+        // 手机号脱敏
+        if (StringUtils.isNotBlank(outer.getMobile())) {
+            outer.setMobile(outer.getMobile().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+        }
         return outer;
     }
 

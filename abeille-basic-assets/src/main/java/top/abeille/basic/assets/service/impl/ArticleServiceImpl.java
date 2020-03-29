@@ -40,7 +40,8 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     }
 
     @Override
-    public Flux<ArticleVO> retrieveAll(Sort sort) {
+    public Flux<ArticleVO> retrieveAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return articleRepository.findAll(sort).map(this::convertOuter);
     }
 

@@ -38,7 +38,8 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Flux<UserVO> retrieveAll(Sort sort) {
+    public Flux<UserVO> retrieveAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return userRepository.findAll(sort).map(this::convertOuter);
     }
 

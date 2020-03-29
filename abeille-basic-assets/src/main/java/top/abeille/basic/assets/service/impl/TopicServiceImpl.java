@@ -35,7 +35,8 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     }
 
     @Override
-    public Flux<TopicVO> retrieveAll(Sort sort) {
+    public Flux<TopicVO> retrieveAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return topicRepository.findAll(sort).map(this::convertOuter);
     }
 

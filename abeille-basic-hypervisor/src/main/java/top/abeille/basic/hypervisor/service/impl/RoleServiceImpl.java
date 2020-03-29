@@ -5,7 +5,7 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -34,11 +34,9 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Flux<RoleVO> retrieveByExample(RoleDTO roleDTO, ExampleMatcher exampleMatcher) {
-        // 创建查询模板实例
-        RoleInfo info = new RoleInfo();
-        BeanUtils.copyProperties(roleDTO, info);
-        return roleRepository.findAll(Example.of(info, exampleMatcher)).filter(Objects::nonNull).map(this::convertOuter);
+    public Flux<RoleVO> retrieveAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return roleRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override

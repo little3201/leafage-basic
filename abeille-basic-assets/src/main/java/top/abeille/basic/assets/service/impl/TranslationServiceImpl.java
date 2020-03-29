@@ -41,7 +41,8 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
     }
 
     @Override
-    public Flux<TranslationVO> retrieveAll(Sort sort) {
+    public Flux<TranslationVO> retrieveAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return translationRepository.findAll(sort).map(this::convertOuter);
     }
 

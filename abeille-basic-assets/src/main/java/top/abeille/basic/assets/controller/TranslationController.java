@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.assets.controller;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +38,7 @@ public class TranslationController extends AbstractController {
      */
     @GetMapping
     public Flux<TranslationVO> retrieveTranslation() {
-        Sort sort = super.initSortProperties();
-        return translationService.retrieveAll(sort);
+        return translationService.retrieveAll();
     }
 
     /**

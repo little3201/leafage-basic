@@ -34,7 +34,8 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     }
 
     @Override
-    public Flux<SourceVO> retrieveAll(Sort sort) {
+    public Flux<SourceVO> retrieveAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return sourceRepository.findAll(sort).map(this::convertOuter);
     }
 

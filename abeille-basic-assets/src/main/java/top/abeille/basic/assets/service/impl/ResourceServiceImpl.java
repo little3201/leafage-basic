@@ -35,7 +35,8 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     }
 
     @Override
-    public Flux<ResourceVO> retrieveAll(Sort sort) {
+    public Flux<ResourceVO> retrieveAll() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return resourceRepository.findAll(sort).filter(Objects::nonNull).map(this::convertOuter);
     }
 

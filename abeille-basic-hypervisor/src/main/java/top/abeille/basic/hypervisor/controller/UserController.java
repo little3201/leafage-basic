@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +37,7 @@ public class UserController extends AbstractController {
      */
     @GetMapping
     public Flux<UserVO> retrieveUser() {
-        Sort sort = super.initSortProperties();
-        return userService.retrieveAll(sort);
+        return userService.retrieveAll();
     }
 
     /**

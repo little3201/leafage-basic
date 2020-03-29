@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +37,7 @@ public class GroupController extends AbstractController {
      */
     @GetMapping
     public Flux<GroupVO> retrieveGroup() {
-        Sort sort = super.initSortProperties();
-        return groupService.retrieveAll(sort);
+        return groupService.retrieveAll();
     }
 
     /**

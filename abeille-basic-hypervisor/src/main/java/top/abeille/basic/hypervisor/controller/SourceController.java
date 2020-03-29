@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +33,6 @@ public class SourceController extends AbstractController {
      */
     @GetMapping
     public Flux<SourceVO> retrieveSource() {
-        Sort sort = super.initSortProperties();
-        return sourceService.retrieveAll(sort);
+        return sourceService.retrieveAll();
     }
 }

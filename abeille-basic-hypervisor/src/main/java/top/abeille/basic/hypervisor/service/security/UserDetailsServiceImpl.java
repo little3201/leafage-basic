@@ -1,7 +1,6 @@
 /*
  * Copyright © 2010-2019 Abeille All rights reserved.
- *//*
-
+ */
 package top.abeille.basic.hypervisor.service.security;
 
 import org.slf4j.Logger;
@@ -26,52 +25,27 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-*/
 /**
  * 用户认证service实现
  *
  * @author liwenqiang 2018/10/18 21:18
- * <p>
- * 开启日志
- * <p>
- * email 正则
- * <p>
- * 手机号 正则
- * <p>
- * 设置必要参数匹配条件
- * @param username 账号
- * @return ExampleMatcher
- * <p>
- * 是否手机号
- * @param mobile 匹配字符
- * @return true if mather otherwise false
- * <p>
- * 是否邮箱
- * @param email 匹配字符
- * @return true if mather otherwise false
- *//*
-
+ **/
 @Service
 public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
 
-    */
-/**
- * 开启日志
- *//*
-
+    /**
+     * 开启日志
+     */
     protected static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-    */
-/**
- * email 正则
- *//*
-
+    /**
+     * email 正则
+     */
     private static final String REGEX_EMAIL = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}";
-    */
-/**
- * 手机号 正则
- *//*
 
+    /**
+     * 手机号 正则
+     */
     private static final String REGEX_MOBILE = "0?(13|14|15|17|18|19)[0-9]{9}";
 
     private final UserRepository userRepository;
@@ -92,22 +66,12 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
         return this.loadUserByUsername(username).dematerialize();
     }
 
-    */
-/**
- * 设置必要参数匹配条件
- *
- * @param username 账号
- * @return ExampleMatcher
- * <p>
- * 是否手机号
- * @param mobile 匹配字符
- * @return true if mather otherwise false
- * <p>
- * 是否邮箱
- * @param email 匹配字符
- * @return true if mather otherwise false
- *//*
-
+    /**
+     * 设置必要参数匹配条件
+     *
+     * @param username 账号
+     * @return ExampleMatcher
+     */
     private Mono<User> loadUserByUsername(String username) {
         UserInfo info = new UserInfo();
         // 判断是邮箱还是手机号
@@ -116,7 +80,7 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
         } else if (isEmail(username)) {
             info.setEmail(username);
         } else {
-            logger.error("{} 登录信息不正确", username);
+            logger.error("{} 用户信息不存在", username);
             throw new UsernameNotFoundException(username);
         }
         return userRepository.findOne(Example.of(info)).map(userInfo -> {
@@ -136,28 +100,23 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
         });
     }
 
-    */
-/**
- * 是否手机号
- *
- * @param mobile 匹配字符
- * @return true if mather otherwise false
- *//*
-
+    /**
+     * 是否手机号
+     *
+     * @param mobile 匹配字符
+     * @return true if mather otherwise false
+     */
     private boolean isMobile(String mobile) {
         return Pattern.matches(REGEX_MOBILE, mobile);
     }
 
-    */
-/**
+    /**
      * 是否邮箱
      *
      * @param email 匹配字符
      * @return true if mather otherwise false
-     *//*
-
+     */
     private boolean isEmail(String email) {
         return Pattern.matches(REGEX_EMAIL, email);
     }
 }
-*/

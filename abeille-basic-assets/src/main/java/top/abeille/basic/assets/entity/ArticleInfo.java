@@ -23,10 +23,10 @@ public class ArticleInfo {
     @Column(name = "id")
     private Long id;
     /**
-     * 文章ID
+     * 业务ID
      */
-    @Column(name = "article_id")
-    private Long articleId;
+    @Column(name = "business_id")
+    private String businessId;
     /**
      * 标题
      */
@@ -66,12 +66,12 @@ public class ArticleInfo {
         this.id = id;
     }
 
-    public Long getArticleId() {
-        return articleId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getTitle() {

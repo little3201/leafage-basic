@@ -27,16 +27,16 @@ public class AccountInfoController extends AbstractController {
     }
 
     /**
-     * 查询账号信息——根据ID
+     * 根据业务ID查询账号信息
      *
-     * @param accountId 账户ID
+     * @param businessId 业务ID
      * @return ResponseEntity
      */
-    @GetMapping("/{accountId}")
-    public ResponseEntity fetchAccount(@PathVariable Long accountId) {
-        AccountVO account = accountInfoService.fetchById(accountId);
+    @GetMapping("/{businessId}")
+    public ResponseEntity<Object> fetchAccount(@PathVariable String businessId) {
+        AccountVO account = accountInfoService.fetchByBusinessId(businessId);
         if (account == null) {
-            logger.info("Not found anything about account with accountId {}.", accountId);
+            logger.info("Not found anything about account with businessId {}.", businessId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(account);
@@ -49,7 +49,7 @@ public class AccountInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveAccount(@RequestBody AccountDTO account) {
+    public ResponseEntity<Object> saveAccount(@RequestBody AccountDTO account) {
         AccountVO accountVO;
         try {
             accountVO = accountInfoService.create(account);
@@ -63,13 +63,14 @@ public class AccountInfoController extends AbstractController {
     /**
      * 修改账号信息
      *
-     * @param account 账户信息
+     * @param businessId 业务ID
+     * @param accountDTO 账户信息
      * @return ResponseEntity
      */
-    @PutMapping
-    public ResponseEntity modifyAccount(@RequestBody AccountDTO account) {
+    @PutMapping("/{businessId}")
+    public ResponseEntity<Object> modifyAccount(@PathVariable String businessId, @RequestBody AccountDTO accountDTO) {
         try {
-            accountInfoService.create(account);
+            accountInfoService.modify(businessId, accountDTO);
         } catch (Exception e) {
             logger.error("Modify account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
@@ -80,13 +81,13 @@ public class AccountInfoController extends AbstractController {
     /**
      * 删除账号信息
      *
-     * @param accountId 主键
+     * @param businessId 业务ID
      * @return ResponseEntity
      */
-    @DeleteMapping("/{accountId}")
-    public ResponseEntity removeAccount(@PathVariable Long accountId) {
+    @DeleteMapping("/{businessId}")
+    public ResponseEntity<Object> removeAccount(@PathVariable String businessId) {
         try {
-            accountInfoService.removeById(accountId);
+            accountInfoService.removeById(businessId);
         } catch (Exception e) {
             logger.error("Remove account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

@@ -29,10 +29,10 @@ public class AccountInfo {
     @Column(name = "user_id")
     private Long userId;
     /**
-     * 账户ID
+     * 业务ID
      */
-    @Column(name = "account_id")
-    private Long accountId;
+    @Column(name = "business_id")
+    private String businessId;
     /**
      * 余额
      */
@@ -76,12 +76,12 @@ public class AccountInfo {
         this.userId = userId;
     }
 
-    public Long getAccountId() {
-        return accountId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public BigDecimal getBalance() {

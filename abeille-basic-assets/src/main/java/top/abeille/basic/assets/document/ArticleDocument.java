@@ -24,7 +24,7 @@ public class ArticleDocument {
      * 文章ID
      */
     @Indexed
-    private Long articleId;
+    private String businessId;
     /**
      * 标题
      */
@@ -43,12 +43,12 @@ public class ArticleDocument {
         this.id = id;
     }
 
-    public Long getArticleId() {
-        return articleId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getTitle() {

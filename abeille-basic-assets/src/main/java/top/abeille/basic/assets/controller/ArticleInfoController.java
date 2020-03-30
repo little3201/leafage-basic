@@ -39,7 +39,7 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity retrieveArticle(Integer pageNum, Integer pageSize) {
+    public ResponseEntity<Object> retrieveArticle(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
         Page<ArticleVO> articles = articleInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(articles.getContent())) {
@@ -52,14 +52,14 @@ public class ArticleInfoController extends AbstractController {
     /**
      * 查询文章信息——根据ID
      *
-     * @param articleId 文章ID
+     * @param businessId 文章ID
      * @return ResponseEntity
      */
-    @GetMapping("/{articleId}")
-    public ResponseEntity fetchArticle(@PathVariable Long articleId) {
-        ArticleVO article = articleInfoService.fetchById(articleId);
+    @GetMapping("/{businessId}")
+    public ResponseEntity<Object> fetchArticle(@PathVariable String businessId) {
+        ArticleVO article = articleInfoService.fetchByBusinessId(businessId);
         if (article == null) {
-            logger.info("Not found anything about article with articleId {}.", articleId);
+            logger.info("Not found anything about article with businessId {}.", businessId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(article);
@@ -72,7 +72,7 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
+    public ResponseEntity<Object> createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
         ArticleVO articleVO;
         try {
             articleVO = articleInfoService.create(articleDTO);

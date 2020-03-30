@@ -17,7 +17,6 @@ import top.abeille.basic.assets.service.ArticleInfoService;
 import top.abeille.basic.assets.vo.ArticleVO;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -59,20 +58,20 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public ArticleVO fetchById(Long articleId) {
+    public ArticleVO fetchByBusinessId(String businessId) {
         //去mysql中查询基本信息
         ArticleInfo articleInfo = new ArticleInfo();
-        articleInfo.setArticleId(articleId);
+        articleInfo.setBusinessId(businessId);
         articleInfo.setEnabled(true);
         Optional<ArticleInfo> optional = articleInfoRepository.findOne(Example.of(articleInfo));
-        if (!optional.isPresent()) {
+        if (optional.isEmpty()) {
             return null;
         }
         //去mongodb查询具体内容
         ArticleVO articleVO = new ArticleVO();
         BeanUtils.copyProperties(optional.get(), articleVO);
         ArticleDocument document = new ArticleDocument();
-        document.setArticleId(articleId);
+        document.setBusinessId(businessId);
         Optional<ArticleDocument> documentOptional = articleDocumentRepository.findOne(Example.of(document));
         documentOptional.ifPresent(articleDocument -> articleVO.setContent(articleDocument.getContent()));
         return articleVO;
@@ -82,25 +81,23 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     @Transactional
     public ArticleVO create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
-        info.setArticleId(articleDTO.getArticleId());
+        info.setBusinessId(articleDTO.getBusinessId());
         //先查一下，是否已经存在，存在，填充主键id，不存在，填充业务id
         Optional<ArticleInfo> optional = articleInfoRepository.findOne(Example.of(info));
         BeanUtils.copyProperties(articleDTO, info);
         if (optional.isPresent()) {
             info.setId(optional.get().getId());
-            info.setArticleId(optional.get().getArticleId());
+            info.setBusinessId(optional.get().getBusinessId());
         } else {
-            //获得时间作为文章id
-            long articleId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
             //转换入参为数据对象，保存数据库
-            info.setArticleId(articleId);
+            info.setBusinessId("");
             info.setEnabled(true);
         }
-        info.setModifier(0L);
+        info.setModifyTime(LocalDateTime.now());
         articleInfoRepository.save(info);
         //保存文章内容
         ArticleDocument document = new ArticleDocument();
-        document.setArticleId(info.getArticleId());
+        document.setBusinessId(info.getBusinessId());
         //先查一下，是否已经存在，存在，填充主键id，不存在，填充业务id
         Optional<ArticleDocument> documentOptional = articleDocumentRepository.findOne(Example.of(document));
         documentOptional.ifPresent(articleDocument -> document.setId(articleDocument.getId()));
@@ -115,12 +112,27 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     @Override
-    public void removeById(Long articleId) {
-
+    public void removeById(String businessId) {
+        Optional<ArticleInfo> optional = this.fetchInfo(businessId);
+        if (optional.isPresent()) {
+            ArticleInfo info = optional.get();
+            articleInfoRepository.deleteById(info.getId());
+        }
     }
 
     @Override
     public void removeInBatch(List<ArticleDTO> articleDTOs) {
+    }
 
+    /**
+     * 根据业务ID查信息
+     *
+     * @param businessId 业务ID
+     * @return 数据库对象信息
+     */
+    private Optional<ArticleInfo> fetchInfo(String businessId) {
+        ArticleInfo articleInfo = new ArticleInfo();
+        articleInfo.setBusinessId(businessId);
+        return articleInfoRepository.findOne(Example.of(articleInfo));
     }
 }

@@ -17,7 +17,7 @@ import top.abeille.common.basic.AbstractController;
 import javax.validation.Valid;
 
 /**
- * 文章信息controller
+ * 文章信息接口
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -39,9 +39,9 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity fetchArticle(Integer pageNum, Integer pageSize) {
+    public ResponseEntity<Object> retrieveArticle(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<ArticleVO> articles = articleInfoService.fetchByPage(pageable);
+        Page<ArticleVO> articles = articleInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(articles.getContent())) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -52,14 +52,14 @@ public class ArticleInfoController extends AbstractController {
     /**
      * 查询文章信息——根据ID
      *
-     * @param articleId 文章ID
+     * @param businessId 文章ID
      * @return ResponseEntity
      */
-    @GetMapping("/{articleId}")
-    public ResponseEntity queryArticle(@PathVariable Long articleId) {
-        ArticleVO article = articleInfoService.queryById(articleId);
+    @GetMapping("/{businessId}")
+    public ResponseEntity<Object> fetchArticle(@PathVariable String businessId) {
+        ArticleVO article = articleInfoService.fetchByBusinessId(businessId);
         if (article == null) {
-            logger.info("Not found anything about article with articleId {}.", articleId);
+            logger.info("Not found anything about article with businessId {}.", businessId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(article);
@@ -72,10 +72,10 @@ public class ArticleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveArticle(@RequestBody @Valid ArticleDTO articleDTO) {
+    public ResponseEntity<Object> createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
         ArticleVO articleVO;
         try {
-            articleVO = articleInfoService.save(articleDTO);
+            articleVO = articleInfoService.create(articleDTO);
         } catch (Exception e) {
             logger.error("Save article occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

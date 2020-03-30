@@ -4,7 +4,7 @@
 package top.abeille.basic.assets.vo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 用户信息出参
@@ -13,6 +13,7 @@ import java.time.LocalDate;
  **/
 public class ArticleVO implements Serializable {
 
+    private static final long serialVersionUID = 5476089760882093211L;
     /**
      * 文章ID
      */
@@ -40,7 +41,7 @@ public class ArticleVO implements Serializable {
     /**
      * 修改时间
      */
-    private LocalDate modifyTime;
+    private LocalDateTime modifyTime;
 
     public Long getArticleId() {
         return articleId;
@@ -90,11 +91,11 @@ public class ArticleVO implements Serializable {
         this.modifier = modifier;
     }
 
-    public LocalDate getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDate modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

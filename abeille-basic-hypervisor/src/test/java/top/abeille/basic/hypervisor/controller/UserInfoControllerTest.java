@@ -43,7 +43,7 @@ public class UserInfoControllerTest extends AbstractControllerMock<UserInfoContr
         pageMap.add("pageNum", "1");
         pageMap.add("pageSize", "10");
         Pageable pageable = PageRequest.of(0, 10);
-        Mockito.when(userInfoService.fetchByPage(pageable)).thenReturn(Page.empty());
+        Mockito.when(userInfoService.retrieveByPage(pageable)).thenReturn(Page.empty());
         MockHttpServletResponse response = super.getTest("/v1/users", pageMap).getResponse();
         //验证测试结果
         Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.OK.value()));
@@ -60,7 +60,7 @@ public class UserInfoControllerTest extends AbstractControllerMock<UserInfoContr
 //    @Test
 //    public void saveUser() throws Exception {
 //        MockHttpServletResponse response = super.postTest("/v1/hypervisor", Mockito.any(UserInfo.class)).getResponse();
-//        Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfo.class));
+//        Mockito.verify(userInfoService, Mockito.times(1)).create(Mockito.any(UserInfo.class));
 //        //验证测试结果
 //        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.CREATED.value()));
 //    }
@@ -68,7 +68,7 @@ public class UserInfoControllerTest extends AbstractControllerMock<UserInfoContr
 //    @Test
 //    public void modifyUser() throws Exception {
 //        MockHttpServletResponse response = super.putTest("/v1/hypervisor", Mockito.any(UserInfo.class)).getResponse();
-//        Mockito.verify(userInfoService, Mockito.times(1)).save(Mockito.any(UserInfo.class));
+//        Mockito.verify(userInfoService, Mockito.times(1)).create(Mockito.any(UserInfo.class));
 //        //验证测试结果
 //        Assert.assertThat(response.getStatus(), Matchers.equalTo(HttpStatus.ACCEPTED.value()));
 //    }

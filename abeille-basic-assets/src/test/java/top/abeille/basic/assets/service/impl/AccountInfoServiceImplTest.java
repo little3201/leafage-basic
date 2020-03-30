@@ -34,7 +34,7 @@ public class AccountInfoServiceImplTest extends AbstractServiceMock {
         AccountInfo account = new AccountInfo();
         account.setAccountId(1L);
         Mockito.when(accountInfoRepository.findOne(Mockito.any())).thenReturn(Optional.of(account));
-        AccountVO accountVO = accountInfoService.queryById(201910230001L);
+        AccountVO accountVO = accountInfoService.fetchByBusinessId(201910230001L);
         Assert.assertThat(accountVO, Matchers.notNullValue());
     }
 }

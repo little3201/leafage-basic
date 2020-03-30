@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -12,13 +13,11 @@ import java.io.Serializable;
  */
 public class RoleDTO implements Serializable {
 
-    /**
-     * 角色ID
-     */
-    private String roleId;
+    private static final long serialVersionUID = 3695400553311525056L;
     /**
      * 名称
      */
+    @NotBlank
     private String name;
     /**
      * 描述
@@ -29,14 +28,6 @@ public class RoleDTO implements Serializable {
      */
     private String remark;
 
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
 
     public String getName() {
         return name;

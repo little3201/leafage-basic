@@ -28,4 +28,5 @@ public class ArticleInfoServiceImplTest {
         ArticleInfo result = articleInfoRepository.save(article);
         Assert.assertNotNull(result.getId());
     }
+
 }

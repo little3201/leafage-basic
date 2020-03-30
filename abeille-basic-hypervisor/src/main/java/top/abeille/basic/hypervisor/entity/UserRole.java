@@ -7,10 +7,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Model class for UserRole
+ * Model class for UserGroup
  *
- * @author liwenqiang 2018/12/4 10:09
- **/
+ * @author liwenqiang
+ */
 @Entity
 @Table(name = "user_role")
 public class UserRole {
@@ -27,11 +27,10 @@ public class UserRole {
     @Column(name = "user_id")
     private Long userId;
     /**
-     * 角色主键
+     * 组主键
      */
     @Column(name = "role_id")
     private Long roleId;
-
     /**
      * 是否有效
      */

@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 import top.abeille.basic.hypervisor.entity.UserRole;
 
 /**
- * 用户角色Dao
+ * 用户组repository
  *
- * @author liwenqiang 2018-12-06 22:09
+ * @author liwenqiang 2018/12/17 19:37
  **/
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
+
 }

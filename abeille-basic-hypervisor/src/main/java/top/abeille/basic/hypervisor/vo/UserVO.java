@@ -1,7 +1,7 @@
 package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 用户关键信息类
@@ -10,14 +10,11 @@ import java.time.LocalDate;
  **/
 public class UserVO implements Serializable {
 
+    private static final long serialVersionUID = -43247624019806041L;
     /**
      * 用户ID
      */
     private Long userId;
-    /**
-     * 组织主键
-     */
-    private Long groupId;
     /**
      * 昵称
      */
@@ -49,7 +46,7 @@ public class UserVO implements Serializable {
     /**
      * 修改时间
      */
-    private LocalDate modifyTime;
+    private LocalDateTime modifyTime;
 
     public Long getUserId() {
         return userId;
@@ -57,14 +54,6 @@ public class UserVO implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
     }
 
     public String getNickname() {
@@ -123,11 +112,11 @@ public class UserVO implements Serializable {
         this.modifier = modifier;
     }
 
-    public LocalDate getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDate modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

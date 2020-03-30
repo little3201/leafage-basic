@@ -22,10 +22,10 @@ public class SourceInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
-     * 权限ID
+     * 业务ID
      */
-    @Column(name = "source_id")
-    private String sourceId;
+    @Column(name = "business_id")
+    private String businessId;
     /**
      * 上级
      */
@@ -51,7 +51,6 @@ public class SourceInfo {
      */
     @Column(name = "description")
     private String description;
-
     /**
      * 是否有效
      */
@@ -76,12 +75,12 @@ public class SourceInfo {
         this.id = id;
     }
 
-    public String getSourceId() {
-        return sourceId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setSourceId(String sourceId) {
-        this.sourceId = sourceId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getSuperior() {

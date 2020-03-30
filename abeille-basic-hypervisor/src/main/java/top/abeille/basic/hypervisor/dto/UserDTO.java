@@ -1,7 +1,8 @@
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
 /**
@@ -11,15 +12,8 @@ import java.io.Serializable;
  **/
 public class UserDTO implements Serializable {
 
-    /**
-     * 用户ID
-     */
-    private Long userId;
-    /**
-     * 组织主键
-     */
-    @NotNull
-    private Long groupId;
+    private static final long serialVersionUID = -1165865988174734554L;
+
     /**
      * 昵称
      */
@@ -30,40 +24,19 @@ public class UserDTO implements Serializable {
      */
     private String avatar;
     /**
-     * 用户名
-     */
-    @NotBlank
-    private String username;
-    /**
      * 电话
      */
-    @NotBlank
+    @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}", message = "mobile not pattern")
     private String mobile;
     /**
      * 邮箱
      */
+    @Email
     private String email;
     /**
      * 地址
      */
     private String address;
-
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
-    }
 
     public String getNickname() {
         return nickname;
@@ -79,14 +52,6 @@ public class UserDTO implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getMobile() {

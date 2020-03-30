@@ -13,6 +13,7 @@ import java.math.BigDecimal;
  */
 public class AccountDTO implements Serializable {
 
+    private static final long serialVersionUID = 2516536769852195479L;
     /**
      * 用户ID
      */

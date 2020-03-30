@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Model class for RoleInfo
@@ -13,6 +13,7 @@ import java.time.LocalDate;
  */
 public class RoleVO implements Serializable {
 
+    private static final long serialVersionUID = 256108084040535709L;
     /**
      * 角色ID
      */
@@ -26,17 +27,13 @@ public class RoleVO implements Serializable {
      */
     private String description;
     /**
-     * 备注
-     */
-    private String remark;
-    /**
      * 修改人
      */
     private Long modifier;
     /**
      * 修改时间
      */
-    private LocalDate modifyTime;
+    private LocalDateTime modifyTime;
 
 
     public String getRoleId() {
@@ -63,14 +60,6 @@ public class RoleVO implements Serializable {
         this.description = description;
     }
 
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
     public Long getModifier() {
         return modifier;
     }
@@ -79,11 +68,11 @@ public class RoleVO implements Serializable {
         this.modifier = modifier;
     }
 
-    public LocalDate getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(LocalDate modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

@@ -14,8 +14,10 @@ import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractController;
 
+import javax.validation.Valid;
+
 /**
- * 角色信息controller
+ * 角色信息接口
  *
  * @author liwenqiang 2018/12/17 19:38
  **/
@@ -37,9 +39,9 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity fetchRole(Integer pageNum, Integer pageSize) {
+    public ResponseEntity<Object> retrieveRole(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<RoleVO> roles = roleInfoService.fetchByPage(pageable);
+        Page<RoleVO> roles = roleInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             logger.info("Not found anything about role with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -54,9 +56,9 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveRole(@RequestBody RoleDTO roleDTO) {
+    public ResponseEntity<Object> createRole(@RequestBody @Valid RoleDTO roleDTO) {
         try {
-            roleInfoService.save(roleDTO);
+            roleInfoService.create(roleDTO);
         } catch (Exception e) {
             logger.error("Save role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
@@ -65,15 +67,16 @@ public class RoleInfoController extends AbstractController {
     }
 
     /**
-     * 编辑角色
+     * 修改角色
      *
-     * @param roleDTO 角色
+     * @param businessId 业务ID
+     * @param roleDTO    角色
      * @return ResponseEntity
      */
-    @PutMapping
-    public ResponseEntity modifyRole(@RequestBody RoleDTO roleDTO) {
+    @PutMapping("/{businessId}")
+    public ResponseEntity<Object> modifyRole(@PathVariable String businessId, @RequestBody @Valid RoleDTO roleDTO) {
         try {
-            roleInfoService.save(roleDTO);
+            roleInfoService.modify(businessId, roleDTO);
         } catch (Exception e) {
             logger.error("Modify role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
@@ -84,13 +87,13 @@ public class RoleInfoController extends AbstractController {
     /**
      * 删除角色——根据ID
      *
-     * @param id 主键
+     * @param businessId 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity removeRole(@PathVariable Long id) {
+    @DeleteMapping("/{businessId}")
+    public ResponseEntity<Object> removeRole(@PathVariable String businessId) {
         try {
-            roleInfoService.removeById(id);
+            roleInfoService.removeById(businessId);
         } catch (Exception e) {
             logger.error("Remove role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

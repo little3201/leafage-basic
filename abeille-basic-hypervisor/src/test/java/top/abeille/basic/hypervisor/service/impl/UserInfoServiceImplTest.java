@@ -34,7 +34,8 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
         UserDTO user = new UserDTO();
         user.setNickname("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
-        userInfoService.save(user);
+        userInfoService.create(user);
         Mockito.verify(userInfoRepository, Mockito.times(1)).save(Mockito.any());
     }
+
 }

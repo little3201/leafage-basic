@@ -16,7 +16,7 @@ import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
- * 权限资源controller
+ * 权限资源接口
  *
  * @author liwenqiang 2018/12/17 19:39
  **/
@@ -38,9 +38,9 @@ public class SourceInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity fetchSource(Integer pageNum, Integer pageSize) {
+    public ResponseEntity<Object> retrieveSource(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<SourceVO> sources = sourceInfoService.fetchByPage(pageable);
+        Page<SourceVO> sources = sourceInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(sources.getContent())) {
             logger.info("Not found anything about source with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);

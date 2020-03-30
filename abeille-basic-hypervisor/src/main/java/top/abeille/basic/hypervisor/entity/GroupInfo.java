@@ -22,10 +22,15 @@ public class GroupInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
-     * 组ID
+     * 业务ID
      */
-    @Column(name = "group_id")
-    private Long groupId;
+    @Column(name = "business_id")
+    private String businessId;
+    /**
+     * 名称
+     */
+    @Column(name = "name")
+    private String name;
     /**
      * 负责人
      */
@@ -37,10 +42,10 @@ public class GroupInfo {
     @Column(name = "superior")
     private Long superior;
     /**
-     * 名称
+     * 描述
      */
-    @Column(name = "name")
-    private String name;
+    @Column(name = "description")
+    private String description;
     /**
      * 是否有效
      */
@@ -65,12 +70,12 @@ public class GroupInfo {
         this.id = id;
     }
 
-    public Long getGroupId() {
-        return groupId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public Long getPrincipal() {
@@ -95,6 +100,14 @@ public class GroupInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getEnabled() {

@@ -15,7 +15,7 @@ import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractController;
 
 /**
- * 组信息controller
+ * 组信息接口
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -37,9 +37,9 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity fetchGroup(Integer pageNum, Integer pageSize) {
+    public ResponseEntity<Object> retrieveGroup(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<GroupVO> groups = groupInfoService.fetchByPage(pageable);
+        Page<GroupVO> groups = groupInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(groups.getContent())) {
             logger.info("Not found anything about group with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -48,16 +48,16 @@ public class GroupInfoController extends AbstractController {
     }
 
     /**
-     * 查找组信息——根据groupId
+     * 根据businessId查找组信息
      *
-     * @param groupId 业务主键
+     * @param businessId 业务主键
      * @return ResponseEntity
      */
-    @GetMapping("/{groupId}")
-    public ResponseEntity queryGroup(@PathVariable Long groupId) {
-        GroupVO groupInfo = groupInfoService.queryById(groupId);
+    @GetMapping("/{businessId}")
+    public ResponseEntity<Object> fetchGroup(@PathVariable String businessId) {
+        GroupVO groupInfo = groupInfoService.fetchByBusinessId(businessId);
         if (groupInfo == null) {
-            logger.info("Not found anything about group with id {}.", groupId);
+            logger.info("Not found anything about group with id {}.", businessId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(groupInfo);
@@ -70,9 +70,9 @@ public class GroupInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity saveGroup(@RequestBody GroupDTO groupDTO) {
+    public ResponseEntity<Object> createGroup(@RequestBody GroupDTO groupDTO) {
         try {
-            groupInfoService.save(groupDTO);
+            groupInfoService.create(groupDTO);
         } catch (Exception e) {
             logger.error("Save group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
@@ -83,13 +83,14 @@ public class GroupInfoController extends AbstractController {
     /**
      * 修改组信息
      *
-     * @param groupDTO 组
+     * @param businessId 业务主键
+     * @param groupDTO   组信息
      * @return ResponseEntity
      */
-    @PutMapping
-    public ResponseEntity modifyGroup(@RequestBody GroupDTO groupDTO) {
+    @PutMapping("/{businessId}")
+    public ResponseEntity<Object> modifyGroup(@PathVariable String businessId, @RequestBody GroupDTO groupDTO) {
         try {
-            groupInfoService.save(groupDTO);
+            groupInfoService.modify(businessId, groupDTO);
         } catch (Exception e) {
             logger.error("Modify group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
@@ -100,13 +101,13 @@ public class GroupInfoController extends AbstractController {
     /**
      * 删除组信息
      *
-     * @param id 主键
+     * @param businessId 业务主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity removeGroup(@PathVariable Long id) {
+    @DeleteMapping("/{businessId}")
+    public ResponseEntity<Object> removeGroup(@PathVariable String businessId) {
         try {
-            groupInfoService.removeById(id);
+            groupInfoService.removeById(businessId);
         } catch (Exception e) {
             logger.error("Remove group occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

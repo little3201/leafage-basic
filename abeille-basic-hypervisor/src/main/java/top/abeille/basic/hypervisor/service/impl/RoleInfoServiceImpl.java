@@ -50,11 +50,11 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public RoleVO fetchById(Long businessId) {
+    public RoleVO fetchByBusinessId(String businessId) {
         RoleInfo roleInfo = new RoleInfo();
-        roleInfo.setId(businessId);
+        roleInfo.setBusinessId(businessId);
         Optional<RoleInfo> optional = roleInfoRepository.findOne(Example.of(roleInfo));
-        if (!optional.isPresent()) {
+        if (optional.isEmpty()) {
             return null;
         }
         RoleVO roleVO = new RoleVO();
@@ -63,8 +63,12 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public void removeById(Long id) {
-        roleInfoRepository.deleteById(id);
+    public void removeById(String businessId) {
+        Optional<RoleInfo> optional = this.fetchInfo(businessId);
+        if (optional.isPresent()) {
+            RoleInfo info = optional.get();
+            roleInfoRepository.deleteById(info.getId());
+        }
     }
 
     @Override
@@ -74,5 +78,17 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     @Override
     public RoleVO create(RoleDTO entity) {
         return null;
+    }
+
+    /**
+     * 根据业务ID查信息
+     *
+     * @param businessId 业务ID
+     * @return 数据库对象信息
+     */
+    private Optional<RoleInfo> fetchInfo(String businessId) {
+        RoleInfo roleInfo = new RoleInfo();
+        roleInfo.setBusinessId(businessId);
+        return roleInfoRepository.findOne(Example.of(roleInfo));
     }
 }

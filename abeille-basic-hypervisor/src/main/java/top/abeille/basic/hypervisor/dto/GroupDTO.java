@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -24,6 +25,7 @@ public class GroupDTO implements Serializable {
     /**
      * 名称
      */
+    @NotBlank
     private String name;
     /**
      * 描述

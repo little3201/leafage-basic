@@ -15,6 +15,7 @@ import top.abeille.basic.hypervisor.vo.GroupVO;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -54,12 +55,27 @@ public class GroupInfoServiceImpl implements GroupInfoService {
     }
 
     @Override
-    public void removeById(Long id) {
-        groupInfoRepository.deleteById(id);
+    public void removeById(String businessId) {
+        Optional<GroupInfo> optional = this.fetchInfo(businessId);
+        if (optional.isPresent()) {
+            GroupInfo info = optional.get();
+            groupInfoRepository.deleteById(info.getId());
+        }
     }
 
     @Override
     public void removeInBatch(List<GroupDTO> entities) {
+    }
 
+    /**
+     * 根据业务ID查信息
+     *
+     * @param businessId 业务ID
+     * @return 数据库对象信息
+     */
+    private Optional<GroupInfo> fetchInfo(String businessId) {
+        GroupInfo groupInfo = new GroupInfo();
+        groupInfo.setBusinessId(businessId);
+        return groupInfoRepository.findOne(Example.of(groupInfo));
     }
 }

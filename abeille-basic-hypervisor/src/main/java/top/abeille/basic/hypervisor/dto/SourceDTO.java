@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -20,14 +21,17 @@ public class SourceDTO implements Serializable {
     /**
      * 名称
      */
+    @NotBlank
     private String name;
     /**
      * 类型
      */
+    @NotBlank
     private Integer type;
     /**
      * 路径
      */
+    @NotBlank
     private String path;
     /**
      * 描述

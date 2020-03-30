@@ -22,15 +22,10 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
-     * 用户ID
+     * 业务ID
      */
-    @Column(name = "user_id")
-    private Long userId;
-    /**
-     * 角色主键
-     */
-    @Column(name = "role_id")
-    private Long roleId;
+    @Column(name = "business_id")
+    private String businessId;
     /**
      * 昵称
      */
@@ -41,11 +36,6 @@ public class UserInfo {
      */
     @Column(name = "avatar")
     private String avatar;
-    /**
-     * 用户名
-     */
-    @Column(name = "username")
-    private String username;
     /**
      * 密码
      */
@@ -105,20 +95,12 @@ public class UserInfo {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getNickname() {
@@ -135,14 +117,6 @@ public class UserInfo {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {

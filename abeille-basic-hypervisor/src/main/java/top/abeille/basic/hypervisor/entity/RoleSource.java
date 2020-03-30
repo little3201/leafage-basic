@@ -31,7 +31,6 @@ public class RoleSource {
      */
     @Column(name = "source_id")
     private Long sourceId;
-
     /**
      * 是否有效
      */

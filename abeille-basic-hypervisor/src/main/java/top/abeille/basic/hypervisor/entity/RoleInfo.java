@@ -22,10 +22,10 @@ public class RoleInfo {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     /**
-     * 角色ID
+     * 业务ID
      */
-    @Column(name = "role_id")
-    private String roleId;
+    @Column(name = "business_id")
+    private String businessId;
     /**
      * 名称
      */
@@ -61,12 +61,12 @@ public class RoleInfo {
         this.id = id;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getName() {

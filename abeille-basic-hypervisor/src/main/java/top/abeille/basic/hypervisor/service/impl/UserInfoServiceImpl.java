@@ -16,7 +16,6 @@ import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -61,10 +60,8 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserVO create(UserDTO userDTO) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(userDTO, info);
-        Long userId = LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
-        info.setUserId(userId);
-        info.setEnabled(true);
-        info.setModifier(0L);
+        info.setBusinessId("");
+        info.setModifyTime(LocalDateTime.now());
         userInfoRepository.save(info);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(info, userVO);
@@ -72,56 +69,53 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public UserVO modify(Long userId, UserDTO userDTO) {
-        UserInfo info = new UserInfo();
-        info.setUserId(userId);
-        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(info));
-        if (!optional.isPresent()) {
+    public UserVO modify(String businessId, UserDTO userDTO) {
+        Optional<UserInfo> optional = this.fetchInfo(businessId);
+        if (optional.isEmpty()) {
             return null;
         }
+        UserInfo info = optional.get();
         info.setModifier(0L);
         userInfoRepository.save(info);
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(info, userVO);
-        return userVO;
+        return this.convertOuter(info);
     }
 
     @Override
-    public void removeById(Long id) {
-        userInfoRepository.deleteById(id);
+    public void removeById(String businessId) {
+        Optional<UserInfo> optional = this.fetchInfo(businessId);
+        if (optional.isPresent()) {
+            UserInfo info = optional.get();
+            userInfoRepository.deleteById(info.getId());
+        }
     }
 
     @Override
     public void removeInBatch(List<UserDTO> dtoList) {
     }
 
-    //    @Override
-    public UserInfo loadUserByUsername(String username) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setUsername(username);
-        appendParams(userInfo);
-        Optional<UserInfo> infoOptional = userInfoRepository.findOne(Example.of(userInfo));
-        if (!infoOptional.isPresent()) {
-            log.info("no user with username: {} be found", username);
+    @Override
+    public UserVO fetchByBusinessId(String businessId) {
+        UserInfo info = new UserInfo();
+        info.setBusinessId(businessId);
+        this.appendParams(info);
+        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(info));
+        if (optional.isEmpty()) {
             return null;
         }
-        return infoOptional.get();
+        return this.convertOuter(info);
     }
 
-    @Override
-    public UserVO fetchById(Long userId) {
-        // Example对象可以当做查询条件处理，将查询条件得参数对应的属性进行设置即可, 可以通过ExampleMatcher.matching()方法进行进一步得处理
-        ExampleMatcher exampleMatcher = this.appendConditions();
+    /**
+     * 根据业务ID查信息
+     *
+     * @param businessId 业务ID
+     * @return 数据库对象信息
+     */
+    private Optional<UserInfo> fetchInfo(String businessId) {
         UserInfo userInfo = new UserInfo();
-        userInfo.setUserId(userId);
+        userInfo.setBusinessId(businessId);
         this.appendParams(userInfo);
-        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(userInfo, exampleMatcher));
-        if (!optional.isPresent()) {
-            return null;
-        }
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(optional.get(), userVO);
-        return userVO;
+        return userInfoRepository.findOne(Example.of(userInfo));
     }
 
     /**
@@ -149,5 +143,16 @@ public class UserInfoServiceImpl implements UserInfoService {
             matcher.withMatcher(param, exact());
         }
         return matcher;
+    }
+
+    /**
+     * 转换为输出对象
+     *
+     * @return ExampleMatcher
+     */
+    private UserVO convertOuter(UserInfo info) {
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(info, userVO);
+        return userVO;
     }
 }

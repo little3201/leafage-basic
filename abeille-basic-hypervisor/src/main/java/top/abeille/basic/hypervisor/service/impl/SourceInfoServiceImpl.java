@@ -15,6 +15,7 @@ import top.abeille.basic.hypervisor.vo.SourceVO;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
@@ -54,11 +55,27 @@ public class SourceInfoServiceImpl implements SourceInfoService {
     }
 
     @Override
-    public void removeById(Long id) {
-        sourceInfoRepository.deleteById(id);
+    public void removeById(String businessId) {
+        Optional<SourceInfo> optional = this.fetchInfo(businessId);
+        if (optional.isPresent()) {
+            SourceInfo info = optional.get();
+            sourceInfoRepository.deleteById(info.getId());
+        }
     }
 
     @Override
     public void removeInBatch(List<SourceDTO> entities) {
+    }
+
+    /**
+     * 根据业务ID查信息
+     *
+     * @param businessId 业务ID
+     * @return 数据库对象信息
+     */
+    private Optional<SourceInfo> fetchInfo(String businessId) {
+        SourceInfo sourceInfo = new SourceInfo();
+        sourceInfo.setBusinessId(businessId);
+        return sourceInfoRepository.findOne(Example.of(sourceInfo));
     }
 }

@@ -39,7 +39,7 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity fetchRole(Integer pageNum, Integer pageSize) {
+    public ResponseEntity<Object> retrieveRole(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
         Page<RoleVO> roles = roleInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(roles.getContent())) {
@@ -56,7 +56,7 @@ public class RoleInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity createRole(@RequestBody @Valid RoleDTO roleDTO) {
+    public ResponseEntity<Object> createRole(@RequestBody @Valid RoleDTO roleDTO) {
         try {
             roleInfoService.create(roleDTO);
         } catch (Exception e) {
@@ -69,14 +69,14 @@ public class RoleInfoController extends AbstractController {
     /**
      * 修改角色
      *
-     * @param roleId 角色id
-     * @param roleDTO 角色
+     * @param businessId 业务ID
+     * @param roleDTO    角色
      * @return ResponseEntity
      */
-    @PutMapping("/{roleId}")
-    public ResponseEntity modifyRole(@PathVariable Long roleId, @RequestBody @Valid RoleDTO roleDTO) {
+    @PutMapping("/{businessId}")
+    public ResponseEntity<Object> modifyRole(@PathVariable String businessId, @RequestBody @Valid RoleDTO roleDTO) {
         try {
-            roleInfoService.modify(roleId, roleDTO);
+            roleInfoService.modify(businessId, roleDTO);
         } catch (Exception e) {
             logger.error("Modify role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
@@ -87,13 +87,13 @@ public class RoleInfoController extends AbstractController {
     /**
      * 删除角色——根据ID
      *
-     * @param roleId 主键
+     * @param businessId 主键
      * @return ResponseEntity
      */
-    @DeleteMapping("/{roleId}")
-    public ResponseEntity removeRole(@PathVariable Long roleId) {
+    @DeleteMapping("/{businessId}")
+    public ResponseEntity<Object> removeRole(@PathVariable String businessId) {
         try {
-            roleInfoService.removeById(roleId);
+            roleInfoService.removeById(businessId);
         } catch (Exception e) {
             logger.error("Remove role occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

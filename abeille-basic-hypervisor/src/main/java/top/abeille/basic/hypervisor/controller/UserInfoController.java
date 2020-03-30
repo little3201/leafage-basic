@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
@@ -44,7 +43,7 @@ public class UserInfoController extends AbstractController {
      * @since 1.0
      */
     @GetMapping
-    public ResponseEntity fetchUser(Integer pageNum, Integer pageSize) {
+    public ResponseEntity<Object> retrieveUser(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
         Page<UserVO> users = userInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(users.getContent())) {
@@ -57,35 +56,18 @@ public class UserInfoController extends AbstractController {
     /**
      * 用户查询——根据ID
      *
-     * @param userId 用户ID
+     * @param businessId 业务ID
      * @return ResponseEntity
      * @since 1.0
      */
-    @GetMapping("/{userId}")
-    public ResponseEntity queryUser(@PathVariable Long userId) {
-        UserVO userVO = userInfoService.fetchById(userId);
+    @GetMapping("/{businessId}")
+    public ResponseEntity<Object> fetchUser(@PathVariable String businessId) {
+        UserVO userVO = userInfoService.fetchByBusinessId(businessId);
         if (Objects.isNull(userVO)) {
-            logger.info("Not found anything about hypervisor with userId: {}.", userId);
+            logger.info("Not found anything about hypervisor with userId: {}.", businessId);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(userVO);
-    }
-
-    /**
-     * 用户查询——根据用户名
-     *
-     * @param username 用户名
-     * @return ResponseEntity
-     * @since 1.0
-     */
-    @GetMapping("/load/{username}")
-    public ResponseEntity loadUserByUsername(@PathVariable String username) {
-        UserInfo userInfo = userInfoService.loadUserByUsername(username);
-        if (Objects.isNull(userInfo)) {
-            logger.info("Not found anything about user with username: {}.", username);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(userInfo);
     }
 
     /**
@@ -96,7 +78,7 @@ public class UserInfoController extends AbstractController {
      * @since 1.0
      */
     @PostMapping
-    public ResponseEntity createUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<Object> createUser(@RequestBody @Valid UserDTO userDTO) {
         try {
             userInfoService.create(userDTO);
         } catch (Exception e) {
@@ -109,15 +91,15 @@ public class UserInfoController extends AbstractController {
     /**
      * 修改用户
      *
-     * @param userId  用户id
-     * @param userDTO 用户
+     * @param businessId 业务ID
+     * @param userDTO    用户
      * @return ResponseEntity
      * @since 1.0
      */
-    @PutMapping("/{userId}")
-    public ResponseEntity modifyUser(@PathVariable Long userId, @RequestBody @Valid UserDTO userDTO) {
+    @PutMapping("/{businessId}")
+    public ResponseEntity<Object> modifyUser(@PathVariable String businessId, @RequestBody @Valid UserDTO userDTO) {
         try {
-            userInfoService.modify(userId, userDTO);
+            userInfoService.modify(businessId, userDTO);
         } catch (Exception e) {
             logger.error("Modify user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
@@ -128,14 +110,14 @@ public class UserInfoController extends AbstractController {
     /**
      * 删除用户——根据ID
      *
-     * @param userId 用户ID
+     * @param businessId 用户ID
      * @return ResponseEntity
      * @since 1.0
      */
-    @DeleteMapping("/{userId}")
-    public ResponseEntity removeUser(@PathVariable Long userId) {
+    @DeleteMapping("/{businessId}")
+    public ResponseEntity<Object> removeUser(@PathVariable String businessId) {
         try {
-            userInfoService.removeById(userId);
+            userInfoService.removeById(businessId);
         } catch (Exception e) {
             logger.error("Remove user occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

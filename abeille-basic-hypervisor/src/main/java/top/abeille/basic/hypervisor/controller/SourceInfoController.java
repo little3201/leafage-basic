@@ -38,7 +38,7 @@ public class SourceInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity fetchSource(Integer pageNum, Integer pageSize) {
+    public ResponseEntity<Object> retrieveSource(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
         Page<SourceVO> sources = sourceInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(sources.getContent())) {

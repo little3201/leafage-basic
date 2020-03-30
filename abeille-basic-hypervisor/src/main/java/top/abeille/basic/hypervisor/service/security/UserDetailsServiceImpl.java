@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.service.impl;
+package top.abeille.basic.hypervisor.service.security;
 
 import org.springframework.data.domain.Example;
 import org.springframework.security.authentication.InsufficientAuthenticationException;

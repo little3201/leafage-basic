@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.entity.UserInfo;
-import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserVO;
@@ -38,11 +37,9 @@ public class UserInfoServiceImpl implements UserInfoService {
     private static final Logger log = LoggerFactory.getLogger(UserInfoServiceImpl.class);
 
     private final UserInfoRepository userInfoRepository;
-    private final RoleInfoRepository roleInfoRepository;
 
-    public UserInfoServiceImpl(UserInfoRepository userInfoRepository, RoleInfoRepository roleInfoRepository) {
+    public UserInfoServiceImpl(UserInfoRepository userInfoRepository) {
         this.userInfoRepository = userInfoRepository;
-        this.roleInfoRepository = roleInfoRepository;
     }
 
     @Override
@@ -98,7 +95,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void removeInBatch(List<UserDTO> dtoList) {
     }
 
-//    @Override
+    //    @Override
     public UserInfo loadUserByUsername(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(username);

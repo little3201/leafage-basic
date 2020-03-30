@@ -9,11 +9,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.repository.UserInfoRepository;
 import top.abeille.basic.hypervisor.service.UserInfoService;
 import top.abeille.basic.hypervisor.vo.UserVO;
+import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -28,7 +30,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/7/28 0:30
  **/
 @Service
-public class UserInfoServiceImpl implements UserInfoService {
+public class UserInfoServiceImpl extends AbstractBasicService implements UserInfoService {
 
     /**
      * 开启日志
@@ -49,29 +51,24 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
-        return infoPage.map(info -> {
-            UserVO userVO = new UserVO();
-            BeanUtils.copyProperties(info, userVO);
-            return userVO;
-        });
+        return infoPage.map(this::convertOuter);
     }
 
     @Override
     public UserVO create(UserDTO userDTO) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(userDTO, info);
-        info.setBusinessId("");
+        info.setBusinessId(PrefixEnum.US + this.generateId());
         info.setModifyTime(LocalDateTime.now());
         userInfoRepository.save(info);
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(info, userVO);
-        return userVO;
+        return this.convertOuter(info);
     }
 
     @Override
     public UserVO modify(String businessId, UserDTO userDTO) {
         Optional<UserInfo> optional = this.fetchInfo(businessId);
         if (optional.isEmpty()) {
+            log.info("修改对象未找到");
             return null;
         }
         UserInfo info = optional.get();

@@ -7,12 +7,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.entity.GroupInfo;
 import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
 import top.abeille.basic.hypervisor.service.GroupInfoService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
+import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +28,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/12/17 19:25
  **/
 @Service
-public class GroupInfoServiceImpl implements GroupInfoService {
+public class GroupInfoServiceImpl extends AbstractBasicService implements GroupInfoService {
 
     private final GroupInfoRepository groupInfoRepository;
 
@@ -42,16 +45,17 @@ public class GroupInfoServiceImpl implements GroupInfoService {
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
-        return infoPage.map(info -> {
-            GroupVO groupVO = new GroupVO();
-            BeanUtils.copyProperties(info, groupVO);
-            return groupVO;
-        });
+        return infoPage.map(this::convertOuter);
     }
 
     @Override
     public GroupVO create(GroupDTO groupDTO) {
-        return null;
+        GroupInfo info = new GroupInfo();
+        BeanUtils.copyProperties(groupDTO, info);
+        info.setBusinessId(PrefixEnum.GP + this.generateId());
+        info.setModifyTime(LocalDateTime.now());
+        GroupInfo groupInfo = groupInfoRepository.save(info);
+        return this.convertOuter(groupInfo);
     }
 
     @Override
@@ -77,5 +81,17 @@ public class GroupInfoServiceImpl implements GroupInfoService {
         GroupInfo groupInfo = new GroupInfo();
         groupInfo.setBusinessId(businessId);
         return groupInfoRepository.findOne(Example.of(groupInfo));
+    }
+
+    /**
+     * 转换对象
+     *
+     * @param info 基础对象
+     * @return 结果对象
+     */
+    private GroupVO convertOuter(GroupInfo info) {
+        GroupVO groupVO = new GroupVO();
+        BeanUtils.copyProperties(info, groupVO);
+        return groupVO;
     }
 }

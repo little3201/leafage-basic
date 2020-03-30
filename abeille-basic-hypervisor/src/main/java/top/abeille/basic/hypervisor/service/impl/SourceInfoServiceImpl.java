@@ -7,12 +7,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.entity.SourceInfo;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
+import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +28,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class SourceInfoServiceImpl implements SourceInfoService {
+public class SourceInfoServiceImpl extends AbstractBasicService implements SourceInfoService {
 
     private final SourceInfoRepository sourceInfoRepository;
 
@@ -42,11 +45,17 @@ public class SourceInfoServiceImpl implements SourceInfoService {
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
-        return infoPage.map(info -> {
-            SourceVO sourceVO = new SourceVO();
-            BeanUtils.copyProperties(info, sourceVO);
-            return sourceVO;
-        });
+        return infoPage.map(this::convertOuter);
+    }
+
+    @Override
+    public SourceVO create(SourceDTO sourceDTO) {
+        SourceInfo info = new SourceInfo();
+        BeanUtils.copyProperties(sourceDTO, info);
+        info.setBusinessId(PrefixEnum.SR + this.generateId());
+        info.setModifyTime(LocalDateTime.now());
+        SourceInfo sourceInfo = sourceInfoRepository.save(info);
+        return this.convertOuter(sourceInfo);
     }
 
     @Override
@@ -77,5 +86,17 @@ public class SourceInfoServiceImpl implements SourceInfoService {
         SourceInfo sourceInfo = new SourceInfo();
         sourceInfo.setBusinessId(businessId);
         return sourceInfoRepository.findOne(Example.of(sourceInfo));
+    }
+
+    /**
+     * 转换对象
+     *
+     * @param info 基础对象
+     * @return 结果对象
+     */
+    private SourceVO convertOuter(SourceInfo info) {
+        SourceVO sourceVO = new SourceVO();
+        BeanUtils.copyProperties(info, sourceVO);
+        return sourceVO;
     }
 }

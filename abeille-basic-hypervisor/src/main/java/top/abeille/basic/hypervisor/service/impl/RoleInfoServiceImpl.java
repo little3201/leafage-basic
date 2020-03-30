@@ -7,12 +7,15 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
 import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
 import top.abeille.basic.hypervisor.service.RoleInfoService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
+import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +28,7 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleInfoServiceImpl implements RoleInfoService {
+public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInfoService {
 
     private final RoleInfoRepository roleInfoRepository;
 
@@ -42,11 +45,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
-        return infoPage.map(info -> {
-            RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(info, roleVO);
-            return roleVO;
-        });
+        return infoPage.map(this::convertOuter);
     }
 
     @Override
@@ -57,9 +56,7 @@ public class RoleInfoServiceImpl implements RoleInfoService {
         if (optional.isEmpty()) {
             return null;
         }
-        RoleVO roleVO = new RoleVO();
-        BeanUtils.copyProperties(optional.get(), roleVO);
-        return roleVO;
+        return this.convertOuter(roleInfo);
     }
 
     @Override
@@ -76,8 +73,13 @@ public class RoleInfoServiceImpl implements RoleInfoService {
     }
 
     @Override
-    public RoleVO create(RoleDTO entity) {
-        return null;
+    public RoleVO create(RoleDTO roleDTO) {
+        RoleInfo info = new RoleInfo();
+        BeanUtils.copyProperties(roleDTO, info);
+        info.setBusinessId(PrefixEnum.RO + this.generateId());
+        info.setModifyTime(LocalDateTime.now());
+        RoleInfo roleInfo = roleInfoRepository.save(info);
+        return this.convertOuter(roleInfo);
     }
 
     /**
@@ -90,5 +92,17 @@ public class RoleInfoServiceImpl implements RoleInfoService {
         RoleInfo roleInfo = new RoleInfo();
         roleInfo.setBusinessId(businessId);
         return roleInfoRepository.findOne(Example.of(roleInfo));
+    }
+
+    /**
+     * 转换对象
+     *
+     * @param info 基础对象
+     * @return 结果对象
+     */
+    private RoleVO convertOuter(RoleInfo info) {
+        RoleVO roleVO = new RoleVO();
+        BeanUtils.copyProperties(info, roleVO);
+        return roleVO;
     }
 }

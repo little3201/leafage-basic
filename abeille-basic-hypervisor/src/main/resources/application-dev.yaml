@@ -66,13 +66,10 @@ spring:
     # Redis database index(default is 0)
     database: 0
     # Redis server host
-    host: 192.168.31.103
+    host: 127.0.0.1
     # Redis server port
     port: 6379
     # Redis server password(default is non)
-    password: Hh9r08s{qrGJbIl93nZy
-    # shutdown timeout(ms)
-    lettuce:
-      shutdown-timeout: 0ms
+    password:
 
 

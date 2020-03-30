@@ -14,11 +14,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import top.abeille.basic.hypervisor.entity.RoleSource;
+import top.abeille.basic.hypervisor.entity.SourceInfo;
 import top.abeille.basic.hypervisor.entity.UserInfo;
 import top.abeille.basic.hypervisor.entity.UserRole;
-import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
-import top.abeille.basic.hypervisor.repository.UserInfoRepository;
-import top.abeille.basic.hypervisor.repository.UserRoleRepository;
+import top.abeille.basic.hypervisor.repository.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -42,18 +42,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * email 正则
      */
     private static final String REGEX_EMAIL = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}";
-    private final RoleInfoRepository roleInfoRepository;
-    private final UserRoleRepository userRoleRepository;
     /**
      * 手机号 正则
      */
     private static final String REGEX_MOBILE = "0?(13|14|15|17|18|19)[0-9]{9}";
-    private final UserInfoRepository userInfoRepository;
 
-    public UserDetailsServiceImpl(UserInfoRepository userInfoRepository, RoleInfoRepository roleInfoRepository, UserRoleRepository userRoleRepository) {
+    private final UserInfoRepository userInfoRepository;
+    private final UserRoleRepository userRoleRepository;
+    private final RoleInfoRepository roleInfoRepository;
+    private final RoleSourceRepository roleSourceRepository;
+    private final SourceInfoRepository sourceInfoRepository;
+
+    public UserDetailsServiceImpl(UserInfoRepository userInfoRepository, RoleInfoRepository roleInfoRepository,
+                                  UserRoleRepository userRoleRepository, RoleSourceRepository roleSourceRepository, SourceInfoRepository sourceInfoRepository) {
         this.userInfoRepository = userInfoRepository;
         this.roleInfoRepository = roleInfoRepository;
         this.userRoleRepository = userRoleRepository;
+        this.roleSourceRepository = roleSourceRepository;
+        this.sourceInfoRepository = sourceInfoRepository;
     }
 
     @Override
@@ -70,10 +76,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         // 根据登录名查找用户信息
         appendParams(userInfo);
-        Optional<UserInfo> infoOptional = userInfoRepository.findOne(Example.of(userInfo));
-        if (infoOptional.isEmpty()) {
+        Optional<UserInfo> optional = userInfoRepository.findOne(Example.of(userInfo));
+        if (optional.isEmpty()) {
             throw new UsernameNotFoundException("username does not exist");
         }
+        userInfo = optional.get();
         UserRole ur = new UserRole();
         ur.setEnabled(Boolean.TRUE);
         ur.setUserId(userInfo.getId());
@@ -83,8 +90,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new InsufficientAuthenticationException("permission denied");
         }
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        userRoles.stream().map(userRole -> roleInfoRepository.findById(userRole.getRoleId())).filter(Optional::isPresent)
-                .map(Optional::get).forEach(roleInfo -> authorities.add(new SimpleGrantedAuthority(roleInfo.getBusinessId())));
+        userRoles.stream().map(userRole -> roleInfoRepository.findById(userRole.getRoleId())).filter(Optional::isPresent).map(Optional::get)
+                .forEach(roleInfo -> {
+                    RoleSource roleSource = new RoleSource();
+                    roleSource.setRoleId(roleInfo.getId());
+                    // 查询角色资源
+                    Optional<RoleSource> roleSourceOptional = roleSourceRepository.findOne(Example.of(roleSource));
+                    if (roleSourceOptional.isPresent()) {
+                        roleSource = roleSourceOptional.get();
+                        // 查询资源信息
+                        Optional<SourceInfo> sourceInfoOptional = sourceInfoRepository.findById(roleSource.getId());
+                        if (sourceInfoOptional.isPresent()) {
+                            SourceInfo sourceInfo = sourceInfoOptional.get();
+                            // 添加到权限中
+                            authorities.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId()));
+                        }
+                    }
+                });
         return new User(isMobile(username) ? userInfo.getMobile() : userInfo.getEmail(), userInfo.getPassword(), userInfo.getEnabled(), userInfo.getAccountNonExpired(),
                 userInfo.getCredentialsNonExpired(), userInfo.getAccountNonLocked(), authorities);
     }

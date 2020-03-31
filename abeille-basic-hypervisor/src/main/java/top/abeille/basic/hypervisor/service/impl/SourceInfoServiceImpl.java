@@ -8,6 +8,7 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
+import top.abeille.basic.hypervisor.constant.SourceTypeEnum;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.entity.SourceInfo;
 import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
@@ -52,7 +53,21 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
     public SourceVO create(SourceDTO sourceDTO) {
         SourceInfo info = new SourceInfo();
         BeanUtils.copyProperties(sourceDTO, info);
-        info.setBusinessId(PrefixEnum.SR + this.generateId());
+        String prefix;
+        switch (SourceTypeEnum.valueOf(sourceDTO.getType())) {
+            case MENU:
+                prefix = PrefixEnum.SM.name();
+                break;
+            case BUTTON:
+                prefix = PrefixEnum.SB.name();
+                break;
+            case TAB:
+                prefix = PrefixEnum.ST.name();
+                break;
+            default:
+                prefix = "";
+        }
+        info.setBusinessId(prefix + this.generateId());
         info.setModifyTime(LocalDateTime.now());
         SourceInfo sourceInfo = sourceInfoRepository.save(info);
         return this.convertOuter(sourceInfo);

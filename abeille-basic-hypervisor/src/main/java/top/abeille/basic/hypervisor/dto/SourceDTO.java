@@ -27,7 +27,7 @@ public class SourceDTO implements Serializable {
      * 类型
      */
     @NotBlank
-    private Integer type;
+    private String type;
     /**
      * 路径
      */
@@ -55,11 +55,11 @@ public class SourceDTO implements Serializable {
         this.name = name;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 

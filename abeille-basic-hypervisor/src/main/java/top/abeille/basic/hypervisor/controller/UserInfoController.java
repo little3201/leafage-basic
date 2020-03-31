@@ -35,12 +35,11 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 用户查询——分页
+     * 分页查询翻译信息
      *
      * @param pageNum  当前页
      * @param pageSize 页内数据量
-     * @return ResponseEntity
-     * @since 1.0
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
     public ResponseEntity<Object> retrieveUser(Integer pageNum, Integer pageSize) {
@@ -54,11 +53,10 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 用户查询——根据ID
+     * 根据传入的业务id: businessId 查询信息
      *
-     * @param businessId 业务ID
-     * @return ResponseEntity
-     * @since 1.0
+     * @param businessId 业务id
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{businessId}")
     public ResponseEntity<Object> fetchUser(@PathVariable String businessId) {
@@ -71,11 +69,10 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 添加用户
+     * 根据传入的数据添加信息
      *
-     * @param userDTO 用户
-     * @return ResponseEntity
-     * @since 1.0
+     * @param userDTO 要添加的数据
+     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
     public ResponseEntity<Object> createUser(@RequestBody @Valid UserDTO userDTO) {
@@ -89,12 +86,11 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 修改用户
+     * 根据传入的业务id: businessId 和要修改的数据，修改信息
      *
-     * @param businessId 业务ID
-     * @param userDTO    用户
-     * @return ResponseEntity
-     * @since 1.0
+     * @param businessId 业务id
+     * @param userDTO    要修改的数据
+     * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{businessId}")
     public ResponseEntity<Object> modifyUser(@PathVariable String businessId, @RequestBody @Valid UserDTO userDTO) {
@@ -108,11 +104,10 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 删除用户——根据ID
+     * 根据传入的业务id: businessId 删除信息
      *
-     * @param businessId 用户ID
-     * @return ResponseEntity
-     * @since 1.0
+     * @param businessId 业务id
+     * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
     @DeleteMapping("/{businessId}")
     public ResponseEntity<Object> removeUser(@PathVariable String businessId) {

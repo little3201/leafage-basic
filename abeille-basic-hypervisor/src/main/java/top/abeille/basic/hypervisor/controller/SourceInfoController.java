@@ -8,12 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.service.SourceInfoService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractController;
+
+import javax.validation.Valid;
 
 /**
  * 权限资源接口
@@ -46,6 +47,23 @@ public class SourceInfoController extends AbstractController {
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(sources);
+    }
+
+    /**
+     * 根据传入的数据添加信息
+     *
+     * @param sourceDTO 要添加的数据
+     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
+     */
+    @PostMapping
+    public ResponseEntity<Object> createSource(@RequestBody @Valid SourceDTO sourceDTO) {
+        try {
+            sourceInfoService.create(sourceDTO);
+        } catch (Exception e) {
+            logger.error("Save user occurred an error: ", e);
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+        }
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
 }

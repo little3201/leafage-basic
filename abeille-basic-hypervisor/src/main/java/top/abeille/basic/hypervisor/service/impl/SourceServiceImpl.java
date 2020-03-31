@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
+import top.abeille.basic.hypervisor.constant.SourceTypeEnum;
 import top.abeille.basic.hypervisor.document.SourceInfo;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.repository.SourceRepository;

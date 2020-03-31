@@ -68,6 +68,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
                 prefix = "";
         }
         info.setBusinessId(prefix + this.generateId());
+        info.setModifier(0L);
         info.setModifyTime(LocalDateTime.now());
         SourceInfo sourceInfo = sourceInfoRepository.save(info);
         return this.convertOuter(sourceInfo);

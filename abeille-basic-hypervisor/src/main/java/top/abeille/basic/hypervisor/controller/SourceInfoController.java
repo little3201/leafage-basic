@@ -32,11 +32,11 @@ public class SourceInfoController extends AbstractController {
     }
 
     /**
-     * 权限查询——分页
+     * 分页查询翻译信息
      *
      * @param pageNum  当前页
      * @param pageSize 页内数据量
-     * @return ResponseEntity
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
     public ResponseEntity<Object> retrieveSource(Integer pageNum, Integer pageSize) {
@@ -44,7 +44,7 @@ public class SourceInfoController extends AbstractController {
         Page<SourceVO> sources = sourceInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(sources.getContent())) {
             logger.info("Not found anything about source with pageable.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(sources);
     }
@@ -61,7 +61,7 @@ public class SourceInfoController extends AbstractController {
             sourceInfoService.create(sourceDTO);
         } catch (Exception e) {
             logger.error("Save user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
     }

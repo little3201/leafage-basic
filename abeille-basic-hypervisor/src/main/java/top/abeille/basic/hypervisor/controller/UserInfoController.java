@@ -47,7 +47,7 @@ public class UserInfoController extends AbstractController {
         Page<UserVO> users = userInfoService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(users.getContent())) {
             logger.info("Not found anything about user with pageable.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(users);
     }
@@ -63,7 +63,7 @@ public class UserInfoController extends AbstractController {
         UserVO userVO = userInfoService.fetchByBusinessId(businessId);
         if (Objects.isNull(userVO)) {
             logger.info("Not found anything about hypervisor with userId: {}.", businessId);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(userVO);
     }
@@ -80,7 +80,7 @@ public class UserInfoController extends AbstractController {
             userInfoService.create(userDTO);
         } catch (Exception e) {
             logger.error("Save user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
@@ -98,7 +98,7 @@ public class UserInfoController extends AbstractController {
             userInfoService.modify(businessId, userDTO);
         } catch (Exception e) {
             logger.error("Modify user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
         return ResponseEntity.ok(HttpStatus.ACCEPTED);
     }
@@ -115,7 +115,7 @@ public class UserInfoController extends AbstractController {
             userInfoService.removeById(businessId);
         } catch (Exception e) {
             logger.error("Remove user occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(HttpStatus.OK);
     }

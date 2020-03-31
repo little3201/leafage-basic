@@ -49,7 +49,21 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     public Mono<SourceVO> create(SourceDTO sourceDTO) {
         SourceInfo info = new SourceInfo();
         BeanUtils.copyProperties(sourceDTO, info);
-        info.setBusinessId(PrefixEnum.SR + this.generateId());
+        String prefix;
+        switch (SourceTypeEnum.valueOf(sourceDTO.getType())) {
+            case MENU:
+                prefix = PrefixEnum.SM.name();
+                break;
+            case BUTTON:
+                prefix = PrefixEnum.SB.name();
+                break;
+            case TAB:
+                prefix = PrefixEnum.ST.name();
+                break;
+            default:
+                prefix = "";
+        }
+        info.setBusinessId(prefix + this.generateId());
         info.setEnabled(Boolean.TRUE);
         return sourceRepository.save(info).map(this::convertOuter);
     }

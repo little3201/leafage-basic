@@ -87,8 +87,7 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
             // 获取关联的角色，然后获取用户信息
             Set<GrantedAuthority> authorities = new LinkedHashSet<>();
             userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), Boolean.TRUE).doOnNext(userRole ->
-                    roleSourceRepository.findAllByRoleIdAndEnabled(userRole.getRoleId(), Boolean.TRUE).filter(roleSource ->
-                            !Objects.isNull(roleSource)).toIterable().forEach(roleSource ->
+                    roleSourceRepository.findAllByRoleIdAndEnabled(userRole.getRoleId(), Boolean.TRUE).filter(Objects::nonNull).toIterable().forEach(roleSource ->
                             // 获取所有资源信息，把businessId放在authorities中
                             sourceRepository.findById(roleSource.getSourceId()).subscribe(sourceInfo ->
                                     authorities.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId())))

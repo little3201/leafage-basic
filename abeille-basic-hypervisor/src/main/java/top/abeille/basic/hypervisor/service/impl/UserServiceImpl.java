@@ -13,14 +13,19 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.UserInfo;
+import top.abeille.basic.hypervisor.document.UserRole;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.repository.UserRepository;
+import top.abeille.basic.hypervisor.repository.UserRoleRepository;
+import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 /**
@@ -32,9 +37,13 @@ import java.util.Objects;
 public class UserServiceImpl extends AbstractBasicService implements UserService {
 
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
+    private final RoleService roleService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService) {
         this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -44,23 +53,30 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Mono<UserVO> create(UserDTO groupDTO) {
+    public Mono<UserVO> create(UserDTO userDTO) {
         UserInfo info = new UserInfo();
-        BeanUtils.copyProperties(groupDTO, info);
+        BeanUtils.copyProperties(userDTO, info);
         info.setBusinessId(PrefixEnum.US + this.generateId());
         info.setPassword(new BCryptPasswordEncoder().encode("110119"));
         this.appendParams(info);
         info.setModifyTime(LocalDateTime.now());
-        return userRepository.save(info).map(this::convertOuter);
+        return userRepository.insert(info).doOnNext(userInfo -> {
+            List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
+                    this.initUserRole(userInfo.getId(), userInfo.getBusinessId(), role)).collect(Collectors.toList());
+            userRoleRepository.saveAll(userRoleList).subscribe();
+        }).map(this::convertOuter);
     }
 
     @Override
     public Mono<UserVO> modify(String businessId, UserDTO userDTO) {
         Objects.requireNonNull(businessId);
-        return this.fetchInfo(businessId).flatMap(userInfo -> {
-            BeanUtils.copyProperties(userDTO, userInfo);
-            userInfo.setModifyTime(LocalDateTime.now());
-            return userRepository.save(userInfo).map(this::convertOuter);
+        return this.fetchInfo(businessId).flatMap(info -> {
+            BeanUtils.copyProperties(userDTO, info);
+            return userRepository.save(info).doOnNext(userInfo -> {
+                List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
+                        this.initUserRole(userInfo.getId(), userInfo.getBusinessId(), role)).collect(Collectors.toList());
+                userRoleRepository.saveAll(userRoleList).subscribe();
+            }).map(this::convertOuter);
         });
     }
 
@@ -116,6 +132,24 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         info.setAccountNonExpired(Boolean.TRUE);
         info.setAccountNonLocked(Boolean.TRUE);
         info.setCredentialsNonExpired(Boolean.TRUE);
+    }
+
+    /**
+     * 初始设置UserRole参数
+     *
+     * @param userId         用户主键
+     * @param userBusinessId 用户业务ID
+     * @param roleBusinessId 角色业务ID
+     * @return 用户-角色对象
+     */
+    private UserRole initUserRole(String userId, String userBusinessId, String roleBusinessId) {
+        UserRole userRole = new UserRole();
+        userRole.setUserId(userId);
+        roleService.fetchInfo(roleBusinessId).subscribe(roleInfo -> userRole.setRoleId(roleInfo.getId()));
+        userRole.setEnabled(Boolean.TRUE);
+        userRole.setModifier(userBusinessId);
+        userRole.setModifyTime(LocalDateTime.now());
+        return userRole;
     }
 
 }

@@ -76,7 +76,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
         info.setBusinessId(PrefixEnum.TS + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        return translationRepository.save(info).doOnSuccess(translationInfo -> {
+        return translationRepository.insert(info).doOnSuccess(translationInfo -> {
             // 添加内容信息
             DetailsInfo detailsInfo = new DetailsInfo();
             BeanUtils.copyProperties(translationDTO, detailsInfo);

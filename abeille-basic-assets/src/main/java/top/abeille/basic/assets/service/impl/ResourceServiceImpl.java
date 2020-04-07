@@ -47,7 +47,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
         info.setBusinessId(PrefixEnum.RS + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        return resourceRepository.save(info).filter(Objects::nonNull).map(this::convertOuter);
+        return resourceRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override

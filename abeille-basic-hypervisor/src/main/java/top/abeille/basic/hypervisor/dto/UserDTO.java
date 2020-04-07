@@ -6,6 +6,7 @@ package top.abeille.basic.hypervisor.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Model class for UserInfo
@@ -39,6 +40,8 @@ public class UserDTO implements Serializable {
      * 地址
      */
     private String address;
+
+    private List<String> roles;
 
     public String getNickname() {
         return nickname;
@@ -78,5 +81,13 @@ public class UserDTO implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }

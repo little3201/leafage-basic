@@ -5,7 +5,6 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +13,6 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.service.DetailsService;
-import top.abeille.common.test.AbstractTest;
 
 import java.util.Objects;
 
@@ -23,7 +21,6 @@ import java.util.Objects;
  *
  * @author liwenqiang 2020/3/1 22:07
  */
-@ExtendWith(AbstractTest.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DetailsServiceImplTest {

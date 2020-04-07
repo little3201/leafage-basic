@@ -4,7 +4,6 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -13,14 +12,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import top.abeille.basic.assets.document.AccountInfo;
 import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.repository.AccountRepository;
-import top.abeille.common.test.AbstractTest;
 
 /**
  * 账户接口测试类
  *
  * @author liwenqiang 2019/3/28 20:22
  **/
-@ExtendWith(AbstractTest.class)
 @RunWith(MockitoJUnitRunner.class)
 public class AccountServiceImplTest {
 

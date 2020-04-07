@@ -86,12 +86,13 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
         return userRepository.findOne(Example.of(info)).map(userInfo -> {
             // 获取关联的角色，然后获取用户信息
             Set<GrantedAuthority> authorities = new LinkedHashSet<>();
-            userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), Boolean.TRUE).doOnNext(userRole ->
-                    roleSourceRepository.findAllByRoleIdAndEnabled(userRole.getRoleId(), Boolean.TRUE).filter(Objects::nonNull).toIterable().forEach(roleSource ->
-                            // 获取所有资源信息，把businessId放在authorities中
-                            sourceRepository.findById(roleSource.getSourceId()).subscribe(sourceInfo ->
-                                    authorities.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId())))
-                    )).subscribe();
+            // 根据用户主键ID查询关联的资源ID
+            userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), true).doOnEach(userRoleSignal ->
+                    roleSourceRepository.findAllByRoleIdAndEnabled(Objects.requireNonNull(userRoleSignal.get()).getRoleId(), true).doOnEach(roleSourceSignal ->
+                            sourceRepository.findById(Objects.requireNonNull(roleSourceSignal.get()).getSourceId()).subscribe(sourceInfo ->
+                                    authorities.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId()))))
+            ).subscribe();
+            logger.info("用户关联资源数为：{}", authorities.size());
             // 返回user
             return new User(isMobile(username) ? userInfo.getMobile() : userInfo.getEmail(), userInfo.getPassword(),
                     userInfo.getEnabled(), userInfo.getAccountNonExpired(), userInfo.getCredentialsNonExpired(),

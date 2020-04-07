@@ -66,7 +66,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
         }
         info.setBusinessId(prefix + this.generateId());
         info.setEnabled(Boolean.TRUE);
-        return sourceRepository.save(info).map(this::convertOuter);
+        return sourceRepository.insert(info).map(this::convertOuter);
     }
 
     @Override

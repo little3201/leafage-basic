@@ -49,7 +49,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
         info.setBusinessId(PrefixEnum.RO + this.generateId());
-        return roleRepository.save(info).map(this::convertOuter);
+        return roleRepository.insert(info).map(this::convertOuter);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<RoleInfo> fetchInfo(String businessId) {
+    public Mono<RoleInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         RoleInfo info = new RoleInfo();
         info.setBusinessId(businessId);

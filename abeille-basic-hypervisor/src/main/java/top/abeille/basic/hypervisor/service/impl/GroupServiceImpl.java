@@ -42,7 +42,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
         info.setBusinessId(PrefixEnum.GP + this.generateId());
-        return groupRepository.save(info).map(this::convertOuter);
+        return groupRepository.insert(info).map(this::convertOuter);
     }
 
     @Override

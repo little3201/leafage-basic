@@ -84,7 +84,8 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<SourceInfo> fetchInfo(String businessId) {
+    @Override
+    public Mono<SourceInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         SourceInfo info = new SourceInfo();
         info.setBusinessId(businessId);

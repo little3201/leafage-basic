@@ -11,13 +11,19 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.RoleInfo;
+import top.abeille.basic.hypervisor.document.RoleSource;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.repository.RoleRepository;
+import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
 import top.abeille.basic.hypervisor.service.RoleService;
+import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 角色信息service 实现
@@ -28,9 +34,13 @@ import java.util.Objects;
 public class RoleServiceImpl extends AbstractBasicService implements RoleService {
 
     private final RoleRepository roleRepository;
+    private final RoleSourceRepository roleSourceRepository;
+    private final SourceService sourceService;
 
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleSourceRepository roleSourceRepository, SourceService sourceService) {
         this.roleRepository = roleRepository;
+        this.roleSourceRepository = roleSourceRepository;
+        this.sourceService = sourceService;
     }
 
     @Override
@@ -49,14 +59,22 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
         info.setBusinessId(PrefixEnum.RO + this.generateId());
-        return roleRepository.insert(info).map(this::convertOuter);
+        return roleRepository.insert(info).doOnNext(roleInfo -> {
+            List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
+                    this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
+            roleSourceRepository.saveAll(userRoleList).subscribe();
+        }).map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> modify(String businessId, RoleDTO roleDTO) {
         return this.fetchInfo(businessId).flatMap(info -> {
             BeanUtils.copyProperties(roleDTO, info);
-            return roleRepository.save(info);
+            return roleRepository.save(info).doOnNext(roleInfo -> {
+                List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
+                        this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
+                roleSourceRepository.saveAll(userRoleList).subscribe();
+            });
         }).map(this::convertOuter);
     }
 
@@ -66,6 +84,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
+    @Override
     public Mono<RoleInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         RoleInfo info = new RoleInfo();
@@ -83,5 +102,23 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         RoleVO outer = new RoleVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
+    }
+
+    /**
+     * 初始设置UserRole参数
+     *
+     * @param roleId           角色主键
+     * @param userBusinessId   用户业务ID
+     * @param sourceBusinessId 资源业务ID
+     * @return 用户-角色对象
+     */
+    private RoleSource initRoleSource(String roleId, String userBusinessId, String sourceBusinessId) {
+        RoleSource roleSource = new RoleSource();
+        roleSource.setRoleId(roleId);
+        sourceService.fetchInfo(sourceBusinessId).subscribe(roleInfo -> roleSource.setRoleId(roleInfo.getId()));
+        roleSource.setEnabled(Boolean.TRUE);
+        roleSource.setModifier(userBusinessId);
+        roleSource.setModifyTime(LocalDateTime.now());
+        return roleSource;
     }
 }

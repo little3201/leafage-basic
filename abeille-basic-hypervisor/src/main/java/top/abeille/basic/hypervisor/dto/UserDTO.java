@@ -40,7 +40,9 @@ public class UserDTO implements Serializable {
      * 地址
      */
     private String address;
-
+    /**
+     * 角色列表
+     */
     private List<String> roles;
 
     public String getNickname() {

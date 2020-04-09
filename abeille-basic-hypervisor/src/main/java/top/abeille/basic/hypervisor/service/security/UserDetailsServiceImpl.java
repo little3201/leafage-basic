@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.security;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
@@ -21,7 +22,6 @@ import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 
 import java.util.LinkedHashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -63,16 +63,6 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
 
     @Override
     public Mono<UserDetails> findByUsername(String username) {
-        return this.loadUserByUsername(username).dematerialize();
-    }
-
-    /**
-     * 设置必要参数匹配条件
-     *
-     * @param username 账号
-     * @return ExampleMatcher
-     */
-    private Mono<User> loadUserByUsername(String username) {
         UserInfo info = new UserInfo();
         // 判断是邮箱还是手机号
         if (isMobile(username)) {
@@ -83,18 +73,29 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
             logger.error("{} 用户信息不存在", username);
             throw new UsernameNotFoundException(username);
         }
+        return this.loadUser(info);
+    }
+
+    /**
+     * 请求用户信息，并转载为UserDetails
+     *
+     * @param info 请求对象
+     * @return ExampleMatcher
+     */
+    private Mono<UserDetails> loadUser(UserInfo info) {
         return userRepository.findOne(Example.of(info)).map(userInfo -> {
             // 获取关联的角色，然后获取用户信息
             Set<GrantedAuthority> authorities = new LinkedHashSet<>();
             // 根据用户主键ID查询关联的资源ID
-            userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), true).doOnEach(userRoleSignal ->
-                    roleSourceRepository.findAllByRoleIdAndEnabled(Objects.requireNonNull(userRoleSignal.get()).getRoleId(), true).doOnEach(roleSourceSignal ->
-                            sourceRepository.findById(Objects.requireNonNull(roleSourceSignal.get()).getSourceId()).subscribe(sourceInfo ->
-                                    authorities.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId()))))
-            ).subscribe();
-            logger.info("用户关联资源数为：{}", authorities.size());
+            userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), true).subscribe(userRole ->
+                    roleSourceRepository.findAllByRoleIdAndEnabled(userRole.getRoleId(), true).subscribe(roleSource ->
+                            sourceRepository.findById(roleSource.getSourceId()).subscribe(sourceInfo ->
+                                    authorities.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId()))
+                            )
+                    )
+            );
             // 返回user
-            return new User(isMobile(username) ? userInfo.getMobile() : userInfo.getEmail(), userInfo.getPassword(),
+            return new User(StringUtils.isNotBlank(info.getMobile()) ? info.getMobile() : info.getEmail(), userInfo.getPassword(),
                     userInfo.getEnabled(), userInfo.getAccountNonExpired(), userInfo.getCredentialsNonExpired(),
                     userInfo.getAccountNonLocked(), authorities);
         });

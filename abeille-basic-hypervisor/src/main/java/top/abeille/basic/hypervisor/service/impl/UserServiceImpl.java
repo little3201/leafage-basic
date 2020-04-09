@@ -119,6 +119,10 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         if (StringUtils.isNotBlank(outer.getMobile())) {
             outer.setMobile(outer.getMobile().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
         }
+        // 邮箱脱敏
+        if (StringUtils.isNotBlank(outer.getEmail())) {
+            outer.setEmail(outer.getEmail().replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2"));
+        }
         return outer;
     }
 

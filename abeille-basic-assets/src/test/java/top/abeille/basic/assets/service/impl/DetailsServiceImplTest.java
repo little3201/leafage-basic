@@ -14,8 +14,6 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.service.DetailsService;
 
-import java.util.Objects;
-
 /**
  * 内容接口测试类
  *
@@ -34,6 +32,6 @@ public class DetailsServiceImplTest {
         info.setBusinessId("TP2277FZ0");
         info.setContent("Spring boot");
         Mono<DetailsInfo> mono = detailsService.create(info);
-        Assert.hasText("Spring boot", Objects.requireNonNull(mono.block()).getContent());
+        Assert.notNull(mono.block(), "The class must not be null");
     }
 }

@@ -12,7 +12,7 @@ import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.service.ArticleService;
 import top.abeille.basic.assets.vo.ArticleVO;
 
-import java.util.Objects;
+import java.util.Random;
 
 /**
  * 文章接口测试类
@@ -33,18 +33,18 @@ public class ArticleServiceImplTest {
         articleDTO.setTitle("spring");
         articleDTO.setContent("spring boot");
         Mono<ArticleVO> outerMono = articleService.create(articleDTO);
-        Assert.hasText(Objects.requireNonNull(outerMono.block()).getBusinessId(), "businessId must not be null");
+        Assert.notNull(outerMono.block(), "The class must not be null");
     }
 
     @Test
     public void fetchById_returnObject() {
         Mono<? extends ArticleVO> outerMono = articleService.fetchByBusinessId("AT226");
-        Assert.notNull(Objects.requireNonNull(outerMono.block()), "The class must not be null");
+        Assert.notNull(outerMono.block(), "The class must not be null");
     }
 
     @Test
     public void fetchById_returnNull() {
-        Mono<? extends ArticleVO> outerMono = articleService.fetchByBusinessId("AT226");
-        Assert.isNull(Objects.requireNonNull(outerMono.block()).getBusinessId(), "The class must be null");
+        Mono<? extends ArticleVO> outerMono = articleService.fetchByBusinessId(String.valueOf(new Random().nextFloat()));
+        Assert.isNull(outerMono.block(), "The class must be null");
     }
 }

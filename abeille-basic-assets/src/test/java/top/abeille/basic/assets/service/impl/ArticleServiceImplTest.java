@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
@@ -26,17 +27,24 @@ public class ArticleServiceImplTest {
     private ArticleService articleService;
 
     @Test
+    @Rollback
     public void create() {
         ArticleDTO articleDTO = new ArticleDTO();
         articleDTO.setTitle("spring");
         articleDTO.setContent("spring boot");
         Mono<ArticleVO> outerMono = articleService.create(articleDTO);
-        Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getTitle());
+        Assert.hasText(Objects.requireNonNull(outerMono.block()).getBusinessId(), "businessId must not be null");
     }
 
     @Test
-    public void fetchById() {
+    public void fetchById_returnObject() {
         Mono<? extends ArticleVO> outerMono = articleService.fetchByBusinessId("AT226");
-        Assert.hasText("Spring boot", Objects.requireNonNull(outerMono.block()).getTitle());
+        Assert.notNull(Objects.requireNonNull(outerMono.block()), "The class must not be null");
+    }
+
+    @Test
+    public void fetchById_returnNull() {
+        Mono<? extends ArticleVO> outerMono = articleService.fetchByBusinessId("AT226");
+        Assert.isNull(Objects.requireNonNull(outerMono.block()).getBusinessId(), "The class must be null");
     }
 }

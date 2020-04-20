@@ -5,11 +5,13 @@ package top.abeille.basic.hypervisor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 
 /**
  * @author liwenqiang
  */
+@EnableJpaAuditing
 @SpringBootApplication(scanBasePackages = {"top.abeille.basic.hypervisor", "top.abeille.common"})
 public class BasicHypervisorApplication {
 

@@ -6,6 +6,7 @@ package top.abeille.basic.hypervisor.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -34,10 +35,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private static final String ALIAS = "abeille-top-jwt";
 
     private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
     private final DataSource dataSource;
 
-    public AuthorizationServerConfig(AuthenticationManager authenticationManager, DataSource dataSource) {
+    public AuthorizationServerConfig(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, DataSource dataSource) {
         this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
         this.dataSource = dataSource;
     }
 
@@ -61,6 +64,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
                 .accessTokenConverter(jwtAccessTokenConverter())
+                .userDetailsService(userDetailsService)
                 .tokenStore(jwtTokenStore());
     }
 

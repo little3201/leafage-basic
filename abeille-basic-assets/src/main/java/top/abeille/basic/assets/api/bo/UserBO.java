@@ -25,18 +25,6 @@ public class UserBO implements Serializable {
      * 头像
      */
     private String avatar;
-    /**
-     * 电话
-     */
-    private String mobile;
-    /**
-     * 邮箱
-     */
-    private String email;
-    /**
-     * 地址
-     */
-    private String address;
 
     public String getBusinessId() {
         return businessId;
@@ -60,30 +48,6 @@ public class UserBO implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
 }

@@ -10,6 +10,7 @@ package top.abeille.basic.assets.vo;
  */
 public class TranslationDetailsVO extends TranslationVO {
 
+    private static final long serialVersionUID = 7989303162411272898L;
     /**
      * 内容
      */

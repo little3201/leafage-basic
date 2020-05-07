@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.api.HypervisorApi;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ArticleInfo;
 import top.abeille.basic.assets.document.DetailsInfo;
@@ -33,10 +34,13 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
 
     private final ArticleRepository articleRepository;
     private final DetailsService detailsService;
+    private final HypervisorApi hypervisorApi;
 
-    public ArticleServiceImpl(ArticleRepository articleRepository, DetailsService detailsService) {
+    public ArticleServiceImpl(ArticleRepository articleRepository, DetailsService detailsService,
+                              HypervisorApi hypervisorApi) {
         this.articleRepository = articleRepository;
         this.detailsService = detailsService;
+        this.hypervisorApi = hypervisorApi;
     }
 
     @Override
@@ -131,6 +135,8 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     private ArticleVO convertOuter(ArticleInfo info) {
         ArticleVO outer = new ArticleVO();
         BeanUtils.copyProperties(info, outer);
+        hypervisorApi.fetchUserByBusinessId(info.getModifier()).subscribe(response ->
+                outer.setAuthor(response.getBody()));
         return outer;
     }
 

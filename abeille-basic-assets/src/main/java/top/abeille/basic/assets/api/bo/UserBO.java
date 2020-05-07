@@ -6,7 +6,7 @@ package top.abeille.basic.assets.api.bo;
 import java.io.Serializable;
 
 /**
- * BO class for UserInfo
+ * BO class for User
  *
  * @author liwenqiang
  */
@@ -25,10 +25,6 @@ public class UserBO implements Serializable {
      * 头像
      */
     private String avatar;
-    /**
-     * 用户名
-     */
-    private String username;
     /**
      * 电话
      */
@@ -64,14 +60,6 @@ public class UserBO implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getMobile() {

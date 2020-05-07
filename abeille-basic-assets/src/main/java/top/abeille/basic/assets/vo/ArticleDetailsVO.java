@@ -10,6 +10,7 @@ package top.abeille.basic.assets.vo;
  */
 public class ArticleDetailsVO extends ArticleVO {
 
+    private static final long serialVersionUID = -3631862762916498067L;
     /**
      * 内容
      */

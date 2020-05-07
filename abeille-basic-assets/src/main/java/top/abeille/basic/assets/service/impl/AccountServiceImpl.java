@@ -39,7 +39,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
         info.setBusinessId(PrefixEnum.AC + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        return accountRepository.save(info).map(this::convertOuter);
+        return accountRepository.insert(info).map(this::convertOuter);
     }
 
     @Override

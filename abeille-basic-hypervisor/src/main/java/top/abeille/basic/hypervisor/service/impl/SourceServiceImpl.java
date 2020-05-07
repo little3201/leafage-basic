@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
+import top.abeille.basic.hypervisor.constant.SourceTypeEnum;
 import top.abeille.basic.hypervisor.document.SourceInfo;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.repository.SourceRepository;
@@ -49,9 +50,23 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     public Mono<SourceVO> create(SourceDTO sourceDTO) {
         SourceInfo info = new SourceInfo();
         BeanUtils.copyProperties(sourceDTO, info);
-        info.setBusinessId(PrefixEnum.SR + this.generateId());
+        String prefix;
+        switch (SourceTypeEnum.valueOf(sourceDTO.getType())) {
+            case MENU:
+                prefix = PrefixEnum.SM.name();
+                break;
+            case BUTTON:
+                prefix = PrefixEnum.SB.name();
+                break;
+            case TAB:
+                prefix = PrefixEnum.ST.name();
+                break;
+            default:
+                prefix = "";
+        }
+        info.setBusinessId(prefix + this.generateId());
         info.setEnabled(Boolean.TRUE);
-        return sourceRepository.save(info).map(this::convertOuter);
+        return sourceRepository.insert(info).map(this::convertOuter);
     }
 
     @Override
@@ -69,7 +84,8 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
      * @param businessId 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<SourceInfo> fetchInfo(String businessId) {
+    @Override
+    public Mono<SourceInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         SourceInfo info = new SourceInfo();
         info.setBusinessId(businessId);

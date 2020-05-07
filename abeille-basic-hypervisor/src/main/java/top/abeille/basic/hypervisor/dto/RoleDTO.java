@@ -5,6 +5,7 @@ package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * Model class for RoleInfo
@@ -23,6 +24,10 @@ public class RoleDTO implements Serializable {
      * 描述
      */
     private String description;
+    /**
+     * 资源列表
+     */
+    private Set<String> sources;
 
     public String getName() {
         return name;
@@ -38,5 +43,13 @@ public class RoleDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<String> getSources() {
+        return sources;
+    }
+
+    public void setSources(Set<String> sources) {
+        this.sources = sources;
     }
 }

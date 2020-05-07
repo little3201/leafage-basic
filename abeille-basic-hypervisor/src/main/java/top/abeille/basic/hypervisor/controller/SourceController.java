@@ -3,13 +3,17 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractController;
+
+import javax.validation.Valid;
 
 /**
  * 权限资源controller
@@ -35,4 +39,18 @@ public class SourceController extends AbstractController {
     public Flux<SourceVO> retrieveSource() {
         return sourceService.retrieveAll();
     }
+
+    /**
+     * 根据传入的数据添加信息
+     *
+     * @param sourceDTO 要添加的数据
+     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
+     */
+    @PostMapping
+    public Mono<ResponseEntity<SourceVO>> createUser(@RequestBody @Valid SourceDTO sourceDTO) {
+        return sourceService.create(sourceDTO)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    }
+
 }

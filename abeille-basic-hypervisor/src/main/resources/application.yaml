@@ -17,3 +17,7 @@ spring:
       discovery:
         heartbeat:
           enabled: true
+
+    loadbalancer:
+      ribbon:
+        enabled: false

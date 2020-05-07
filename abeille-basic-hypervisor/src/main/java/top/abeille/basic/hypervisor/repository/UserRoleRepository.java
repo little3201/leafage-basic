@@ -24,5 +24,5 @@ public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, Str
      * @param userId 用户ID
      * @return List
      */
-    Flux<UserRole> findAllByUserIdAndEnabled(@NotNull String userId, Boolean enabled);
+    Flux<UserRole> findAllByUserIdAndEnabled(@NotNull String userId, boolean enabled);
 }

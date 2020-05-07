@@ -55,7 +55,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
         info.setBusinessId(PrefixEnum.TP + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        return topicRepository.save(info).map(this::convertOuter);
+        return topicRepository.insert(info).map(this::convertOuter);
     }
 
     @Override

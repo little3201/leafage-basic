@@ -28,7 +28,7 @@ public class DetailsServiceImpl implements DetailsService {
     public Mono<DetailsInfo> create(DetailsInfo detailsInfo) {
         detailsInfo.setEnabled(Boolean.TRUE);
         detailsInfo.setModifyTime(LocalDateTime.now());
-        return detailsRepository.save(detailsInfo);
+        return detailsRepository.insert(detailsInfo);
     }
 
     @Override

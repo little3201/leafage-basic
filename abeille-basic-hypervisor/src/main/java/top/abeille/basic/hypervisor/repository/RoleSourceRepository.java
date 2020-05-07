@@ -24,5 +24,5 @@ public interface RoleSourceRepository extends ReactiveCrudRepository<RoleSource,
      * @param roleId 角色ID
      * @return List
      */
-    Flux<RoleSource> findAllByRoleIdAndEnabled(@NotNull String roleId, Boolean enabled);
+    Flux<RoleSource> findAllByRoleIdAndEnabled(@NotNull String roleId, boolean enabled);
 }

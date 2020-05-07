@@ -69,7 +69,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
         info.setBusinessId(PrefixEnum.AT + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
-        return articleRepository.save(info).doOnSuccess(articleInfo -> {
+        return articleRepository.insert(info).doOnSuccess(articleInfo -> {
             // 添加内容信息
             DetailsInfo detailsInfo = new DetailsInfo();
             BeanUtils.copyProperties(articleDTO, detailsInfo);

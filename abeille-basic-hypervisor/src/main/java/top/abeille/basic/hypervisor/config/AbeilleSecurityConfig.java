@@ -45,7 +45,8 @@ public class AbeilleSecurityConfig {
      */
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
+        http.formLogin().and()
+                .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyExchange().authenticated()
                 .and().exceptionHandling()
                 .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());

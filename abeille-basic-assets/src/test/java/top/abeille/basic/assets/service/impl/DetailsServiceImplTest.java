@@ -5,7 +5,6 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,16 +13,12 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.service.DetailsService;
-import top.abeille.common.test.AbstractTest;
-
-import java.util.Objects;
 
 /**
  * 内容接口测试类
  *
  * @author liwenqiang 2020/3/1 22:07
  */
-@ExtendWith(AbstractTest.class)
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class DetailsServiceImplTest {
@@ -37,6 +32,6 @@ public class DetailsServiceImplTest {
         info.setBusinessId("TP2277FZ0");
         info.setContent("Spring boot");
         Mono<DetailsInfo> mono = detailsService.create(info);
-        Assert.hasText("Spring boot", Objects.requireNonNull(mono.block()).getContent());
+        Assert.notNull(mono.block(), "The class must not be null");
     }
 }

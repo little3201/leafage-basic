@@ -47,8 +47,22 @@ public class SourceController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ResponseEntity<SourceVO>> createUser(@RequestBody @Valid SourceDTO sourceDTO) {
+    public Mono<ResponseEntity<SourceVO>> createSource(@RequestBody @Valid SourceDTO sourceDTO) {
         return sourceService.create(sourceDTO)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    }
+
+    /**
+     * 根据传入的业务id: businessId 和要修改的数据，修改信息
+     *
+     * @param businessId 业务id
+     * @param sourceDTO  要修改的数据
+     * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
+     */
+    @PostMapping("{businessId}")
+    public Mono<ResponseEntity<SourceVO>> modifySource(@PathVariable String businessId, @RequestBody @Valid SourceDTO sourceDTO) {
+        return sourceService.modify(businessId, sourceDTO)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }

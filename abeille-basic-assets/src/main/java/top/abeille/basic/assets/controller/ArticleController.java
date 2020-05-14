@@ -78,7 +78,7 @@ public class ArticleController extends AbstractController {
     public Mono<ResponseEntity<ArticleVO>> modifyArticle(@PathVariable String businessId, @RequestBody @Valid ArticleDTO articleDTO) {
         return articleService.modify(businessId, articleDTO)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
 
 }

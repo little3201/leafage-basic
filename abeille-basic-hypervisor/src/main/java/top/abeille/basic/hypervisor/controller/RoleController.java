@@ -53,7 +53,7 @@ public class RoleController extends AbstractController {
     public Mono<ResponseEntity<RoleVO>> modifyRole(@PathVariable String businessId, @RequestBody @Valid RoleDTO roleDTO) {
         return roleService.modify(businessId, roleDTO)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
 
 }

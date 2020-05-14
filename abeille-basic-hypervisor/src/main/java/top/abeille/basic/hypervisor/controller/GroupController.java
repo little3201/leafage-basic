@@ -64,7 +64,7 @@ public class GroupController extends AbstractController {
     public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable String businessId, @RequestBody @Valid GroupDTO groupDTO) {
         return groupService.modify(businessId, groupDTO)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
 
     /**

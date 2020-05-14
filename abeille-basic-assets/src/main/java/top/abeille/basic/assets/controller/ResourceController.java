@@ -77,7 +77,7 @@ public class ResourceController extends AbstractController {
     public Mono<ResponseEntity<ResourceVO>> modifyResource(@PathVariable String businessId, @RequestBody @Valid ResourceDTO resourceDTO) {
         return resourceService.modify(businessId, resourceDTO)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
 
 }

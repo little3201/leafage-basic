@@ -53,16 +53,16 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
         String prefix;
         switch (SourceTypeEnum.valueOf(sourceDTO.getType())) {
             case MENU:
-                prefix = PrefixEnum.SM.name();
+                prefix = PrefixEnum.SM.name(); // 菜单
                 break;
             case BUTTON:
-                prefix = PrefixEnum.SB.name();
+                prefix = PrefixEnum.SB.name(); // 按钮
                 break;
             case TAB:
-                prefix = PrefixEnum.ST.name();
+                prefix = PrefixEnum.ST.name(); // tab页
                 break;
             default:
-                prefix = "";
+                prefix = PrefixEnum.SU.name(); // 路径
         }
         info.setBusinessId(prefix + this.generateId());
         info.setEnabled(Boolean.TRUE);

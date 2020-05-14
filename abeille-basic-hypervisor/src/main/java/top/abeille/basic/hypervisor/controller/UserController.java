@@ -77,7 +77,7 @@ public class UserController extends AbstractController {
     public Mono<ResponseEntity<UserVO>> modifyUser(@PathVariable String businessId, @RequestBody @Valid UserDTO userDTO) {
         return userService.modify(businessId, userDTO)
                 .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
     }
 
     /**
@@ -88,6 +88,8 @@ public class UserController extends AbstractController {
      */
     @DeleteMapping("/{businessId}")
     public Mono<ResponseEntity<Void>> removeUser(@PathVariable String businessId) {
-        return userService.removeById(businessId).map(ResponseEntity::ok);
+        return userService.removeById(businessId)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
 }

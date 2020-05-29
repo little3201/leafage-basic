@@ -17,44 +17,34 @@ spring:
 
   ##=====datasource config=====##
   datasource:
-    master:
-      # datasource driver
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
-      # datasource username
-      username: root
-      # datasource password
-      password: root
-    slaver:
-      # datasource driver
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
-      # datasource username
-      username: root
-      # datasource password
-      password: root
+    # datasource driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # datasource connection path
+    url: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
+    # datasource username
+    username: root
+    # datasource password
+    password: root
 
   ##=====Jpa config=====##
-  jpa:
-    # datasource dialect
-    database-platform: org.hibernate.dialect.MariaDBDialect
-    # datasource driver
-    database: mysql
-    # whether show execute sql
-    show-sql: true
-    # what hibernate will do when application run
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
+  #  jpa:
+  #    # datasource dialect
+  #    database-platform: org.hibernate.dialect.MariaDBDialect
+  #    # datasource driver
+  #    database: mysql
+  #    # whether show execute sql
+  #    show-sql: true
+  #    # what hibernate will do when application run
+  #    properties:
+  #      hibernate:
+  #        hbm2ddl:
+  #          auto: update
 
   # server jpa run thread config, hibernate will run with another thread
   data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred
+    #    jpa:
+    #      repositories:
+    #        bootstrap-mode: deferred
 
     ##=====mongodb config=====##
     mongodb:

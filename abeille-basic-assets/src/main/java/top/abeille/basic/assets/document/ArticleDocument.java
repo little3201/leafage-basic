@@ -6,6 +6,7 @@ package top.abeille.basic.assets.document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * document for ArticleInfo
@@ -24,6 +25,7 @@ public class ArticleDocument {
      * 文章ID
      */
     @Indexed
+    @Field(name = "business_id")
     private String businessId;
     /**
      * 标题
@@ -31,9 +33,17 @@ public class ArticleDocument {
     @Indexed
     private String title;
     /**
+     * 目录
+     */
+    private String category;
+    /**
      * 内容
      */
     private String content;
+    /**
+     * 源文本——记录富文本或markdown原文
+     */
+    private String sourceText;
 
     public String getId() {
         return id;
@@ -59,11 +69,27 @@ public class ArticleDocument {
         this.title = title;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getSourceText() {
+        return sourceText;
+    }
+
+    public void setSourceText(String sourceText) {
+        this.sourceText = sourceText;
     }
 }

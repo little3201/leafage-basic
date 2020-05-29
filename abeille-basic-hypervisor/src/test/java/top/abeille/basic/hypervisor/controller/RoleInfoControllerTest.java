@@ -11,10 +11,10 @@ import top.abeille.common.mock.AbstractControllerMock;
  *
  * @author liwenqiang 2019/9/14 21:52
  **/
-public class RoleInfoControllerTest extends AbstractControllerMock {
+public class RoleInfoControllerTest extends AbstractControllerMock<RoleInfoController> {
 
     @Override
-    protected Object getController() {
+    protected RoleInfoController getController() {
         return null;
     }
 

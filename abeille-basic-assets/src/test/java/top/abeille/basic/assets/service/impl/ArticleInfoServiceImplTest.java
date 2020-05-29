@@ -24,7 +24,7 @@ public class ArticleInfoServiceImplTest {
     @Test
     public void saveArticle() {
         ArticleInfo article = new ArticleInfo();
-        article.setArticleId(2L);
+        article.setBusinessId("");
         ArticleInfo result = articleInfoRepository.save(article);
         Assert.assertNotNull(result.getId());
     }

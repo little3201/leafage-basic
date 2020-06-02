@@ -55,10 +55,10 @@ public class UserInfo {
     @Field(value = "email")
     private String email;
     /**
-     * 地址
+     * 地址ID
      */
-    @Field(value = "address")
-    private String address;
+    @Field(value = "addressId")
+    private String addressId;
     /**
      * 账户是否有效
      */
@@ -146,12 +146,12 @@ public class UserInfo {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
+    public String getAddressId() {
+        return addressId;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddressId(String addressId) {
+        this.addressId = addressId;
     }
 
     public Boolean getAccountNonExpired() {

@@ -21,6 +21,7 @@ import top.abeille.basic.hypervisor.repository.SourceRepository;
 import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -83,7 +84,32 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
      * @return ExampleMatcher
      */
     private Mono<UserDetails> loadUser(UserInfo info) {
-        return userRepository.findOne(Example.of(info)).map(userInfo -> {
+        Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info));
+        Mono<ArrayList<String>> roleIdListMono = infoMono.switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("用户信息不存在")))
+                .flatMap(userInfo -> userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), true)
+                        .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
+        // 取角色关联的权限ID
+        roleIdListMono.doOnEach(roleId -> roleSourceRepository.findAllByRoleIdAndEnabled(roleId.toString(), true)
+                .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getSourceId())))
+                .doOnEach(sourceId -> sourceRepository.findById(sourceId.toString())).doOnEach(source -> new SimpleGrantedAuthority());
+
+
+        roleIdListMono.flatMap(roleIdList ->
+                roleIdList.stream().flatMap(roleId -> roleSourceRepository.findAllByRoleIdAndEnabled(roleId, true)
+
+                )
+                        .flatMap(roleId -> roleSourceRepository.findAllByRoleIdAndEnabled(roleId, true)
+                                .collect(ArrayList<String>::new, (permissionIdList, roleSource) -> permissionIdList.add(roleSource.getSourceId()))
+                                .flatMap(source -> sourceRepository.findById(roleSource.getSourceId())
+                                        .collect(ArrayList<SimpleGrantedAuthority>::new, (authorities, permission) -> authorities.add(new SimpleGrantedAuthority(permission.getCode())))
+                                )
+                                .zipWith(infoMono, (authorities, userInfo) -> new User(StringUtils.isNotBlank(userInfo.getMobile()) ? userInfo.getMobile() : userInfo.getEmail(),
+                                        userInfo.getPassword(), authorities)));
+
+
+
+
+                .flatMap(userInfo -> {
             // 获取关联的角色，然后获取用户信息
             Set<GrantedAuthority> authorities = new LinkedHashSet<>();
             // 根据用户主键ID查询关联的资源ID

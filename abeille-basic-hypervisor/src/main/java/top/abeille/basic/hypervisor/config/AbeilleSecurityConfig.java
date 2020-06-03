@@ -16,6 +16,10 @@ import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
+import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
+import top.abeille.basic.hypervisor.handler.AbeilleFailureHandler;
+import top.abeille.basic.hypervisor.handler.AbeilleSuccessHandler;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
 import top.abeille.basic.hypervisor.repository.SourceRepository;
 import top.abeille.basic.hypervisor.repository.UserRepository;
@@ -69,12 +73,28 @@ public class AbeilleSecurityConfig {
      */
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.formLogin().and().csrf().disable()
+        http.formLogin().authenticationSuccessHandler(authenticationSuccessHandler())
+                .authenticationFailureHandler(authenticationFailureHandler())
+                .and().csrf().disable()
                 .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyExchange().authenticated()
                 .and().exceptionHandling()
                 .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
         return http.build();
+    }
+
+    /**
+     * 登陆成功后执行的处理器
+     */
+    private ServerAuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new AbeilleSuccessHandler();
+    }
+
+    /**
+     * 登陆失败后执行的处理器
+     */
+    private ServerAuthenticationFailureHandler authenticationFailureHandler() {
+        return new AbeilleFailureHandler();
     }
 
     /**

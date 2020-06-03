@@ -35,12 +35,6 @@ public class UserGroup {
     @Indexed
     @Field(value = "group_id")
     private String groupId;
-
-    /**
-     * 是否有效
-     */
-    @Field(value = "is_enabled")
-    private Boolean enabled;
     /**
      * 修改人
      */
@@ -74,14 +68,6 @@ public class UserGroup {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public String getModifier() {

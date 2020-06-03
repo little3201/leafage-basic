@@ -35,12 +35,6 @@ public class UserRole {
     @Indexed
     @Field(value = "role_id")
     private String roleId;
-
-    /**
-     * 是否有效
-     */
-    @Field(value = "is_enabled")
-    private Boolean enabled;
     /**
      * 修改人
      */
@@ -74,14 +68,6 @@ public class UserRole {
 
     public void setRoleId(String roleId) {
         this.roleId = roleId;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public String getModifier() {

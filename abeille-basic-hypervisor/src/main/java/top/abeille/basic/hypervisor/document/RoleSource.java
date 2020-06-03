@@ -35,12 +35,6 @@ public class RoleSource {
     @Indexed
     @Field(value = "source_id")
     private String sourceId;
-
-    /**
-     * 是否有效
-     */
-    @Field(value = "is_enabled")
-    private Boolean enabled;
     /**
      * 修改人
      */
@@ -74,14 +68,6 @@ public class RoleSource {
 
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
     }
 
     public String getModifier() {

@@ -22,8 +22,6 @@ import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -71,7 +69,7 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
         } else if (isEmail(username)) {
             info.setEmail(username);
         } else {
-            logger.error("{} 用户信息不存在", username);
+            logger.error("账号错误：{}", username);
             throw new UsernameNotFoundException(username);
         }
         return this.loadUser(info);
@@ -86,45 +84,19 @@ public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
     private Mono<UserDetails> loadUser(UserInfo info) {
         Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info));
         Mono<ArrayList<String>> roleIdListMono = infoMono.switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("用户信息不存在")))
-                .flatMap(userInfo -> userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), true)
+                .flatMap(userInfo -> userRoleRepository.findByUserId(userInfo.getId())
                         .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID
-        roleIdListMono.doOnEach(roleId -> roleSourceRepository.findAllByRoleIdAndEnabled(roleId.toString(), true)
-                .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getSourceId())))
-                .doOnEach(sourceId -> sourceRepository.findById(sourceId.toString())).doOnEach(source -> new SimpleGrantedAuthority());
-
-
-        roleIdListMono.flatMap(roleIdList ->
-                roleIdList.stream().flatMap(roleId -> roleSourceRepository.findAllByRoleIdAndEnabled(roleId, true)
-
-                )
-                        .flatMap(roleId -> roleSourceRepository.findAllByRoleIdAndEnabled(roleId, true)
-                                .collect(ArrayList<String>::new, (permissionIdList, roleSource) -> permissionIdList.add(roleSource.getSourceId()))
-                                .flatMap(source -> sourceRepository.findById(roleSource.getSourceId())
-                                        .collect(ArrayList<SimpleGrantedAuthority>::new, (authorities, permission) -> authorities.add(new SimpleGrantedAuthority(permission.getCode())))
-                                )
-                                .zipWith(infoMono, (authorities, userInfo) -> new User(StringUtils.isNotBlank(userInfo.getMobile()) ? userInfo.getMobile() : userInfo.getEmail(),
-                                        userInfo.getPassword(), authorities)));
-
-
-
-
-                .flatMap(userInfo -> {
-            // 获取关联的角色，然后获取用户信息
-            Set<GrantedAuthority> authorities = new LinkedHashSet<>();
-            // 根据用户主键ID查询关联的资源ID
-            userRoleRepository.findAllByUserIdAndEnabled(userInfo.getId(), true).subscribe(userRole ->
-                    roleSourceRepository.findAllByRoleIdAndEnabled(userRole.getRoleId(), true).subscribe(roleSource ->
-                            sourceRepository.findById(roleSource.getSourceId()).subscribe(sourceInfo ->
-                                    authorities.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId()))
-                            )
-                    )
-            );
-            // 返回user
-            return new User(StringUtils.isNotBlank(info.getMobile()) ? info.getMobile() : info.getEmail(), userInfo.getPassword(),
-                    userInfo.getEnabled(), userInfo.getAccountNonExpired(), userInfo.getCredentialsNonExpired(),
-                    userInfo.getAccountNonLocked(), authorities);
-        });
+        Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleSourceRepository.findByRoleIdIn(roleIdList)
+                .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getSourceId())));
+        // 查权限
+        Mono<ArrayList<GrantedAuthority>> authorityList = sourceIdListMono.flatMap(sourceIdList -> sourceRepository.findByIdInAndEnabledTrue(sourceIdList)
+                .collect(ArrayList::new, (sourceList, sourceInfo) -> sourceList.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId()))));
+        // 构造用户信息
+        return authorityList.zipWith(infoMono, (authorities, userInfo) ->
+                new User(StringUtils.isNotBlank(info.getMobile()) ? info.getMobile() : info.getEmail(), userInfo.getPassword(),
+                        userInfo.getEnabled(), userInfo.getAccountNonExpired(), userInfo.getCredentialsNonExpired(),
+                        userInfo.getAccountNonLocked(), authorities));
     }
 
     /**

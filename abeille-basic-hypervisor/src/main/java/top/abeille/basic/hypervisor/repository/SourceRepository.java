@@ -5,7 +5,10 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.document.SourceInfo;
+
+import java.util.List;
 
 /**
  * 权限资源dao
@@ -15,4 +18,5 @@ import top.abeille.basic.hypervisor.document.SourceInfo;
 @Repository
 public interface SourceRepository extends ReactiveMongoRepository<SourceInfo, String> {
 
+    Flux<SourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList);
 }

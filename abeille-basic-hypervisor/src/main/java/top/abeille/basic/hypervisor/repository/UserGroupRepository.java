@@ -5,10 +5,10 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.document.UserGroup;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /**
  * 用户角色Dao
@@ -24,5 +24,5 @@ public interface UserGroupRepository extends ReactiveCrudRepository<UserGroup, S
      * @param userId 用户ID
      * @return List
      */
-    List<UserGroup> findAllByUserIdAndEnabled(@NotNull Long userId, Boolean enabled);
+    Flux<UserGroup> findByUserId(@NotNull Long userId);
 }

@@ -9,6 +9,7 @@ import reactor.core.publisher.Flux;
 import top.abeille.basic.hypervisor.document.RoleSource;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 角色权限dao接口
@@ -19,10 +20,10 @@ import javax.validation.constraints.NotNull;
 public interface RoleSourceRepository extends ReactiveCrudRepository<RoleSource, String> {
 
     /**
-     * 查询所有资源——根据角色id
+     * 查询所有资源——根据角色ID集合
      *
-     * @param roleId 角色ID
-     * @return List
+     * @param roleIdList 角色ID集合
+     * @return Flux
      */
-    Flux<RoleSource> findAllByRoleIdAndEnabled(@NotNull String roleId, boolean enabled);
+    Flux<RoleSource> findByRoleIdIn(@NotNull List<String> roleIdList);
 }

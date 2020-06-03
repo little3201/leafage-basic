@@ -150,7 +150,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         UserRole userRole = new UserRole();
         userRole.setUserId(userId);
         roleService.fetchInfo(roleBusinessId).subscribe(roleInfo -> userRole.setRoleId(roleInfo.getId()));
-        userRole.setEnabled(Boolean.TRUE);
         userRole.setModifier(userBusinessId);
         userRole.setModifyTime(LocalDateTime.now());
         return userRole;

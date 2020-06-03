@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
@@ -29,7 +28,6 @@ import java.util.regex.Pattern;
  *
  * @author liwenqiang 2018/10/18 21:18
  **/
-@Service
 public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
 
     /**

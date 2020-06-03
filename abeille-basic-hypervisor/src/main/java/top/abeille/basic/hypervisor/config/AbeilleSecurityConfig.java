@@ -9,12 +9,18 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
+import top.abeille.basic.hypervisor.repository.SourceRepository;
+import top.abeille.basic.hypervisor.repository.UserRepository;
+import top.abeille.basic.hypervisor.repository.UserRoleRepository;
+import top.abeille.basic.hypervisor.service.security.UserDetailsServiceImpl;
 
 import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
@@ -32,6 +38,19 @@ public class AbeilleSecurityConfig {
     private static final String KEY_PASS = "abeille-top";
     private static final String ALIAS = "abeille-top-jwt";
 
+    private final UserRepository userRepository;
+    private final RoleSourceRepository roleSourceRepository;
+    private final UserRoleRepository userRoleRepository;
+    private final SourceRepository sourceRepository;
+
+    public AbeilleSecurityConfig(UserRepository userRepository, RoleSourceRepository roleSourceRepository,
+                                 UserRoleRepository userRoleRepository, SourceRepository sourceRepository) {
+        this.userRepository = userRepository;
+        this.roleSourceRepository = roleSourceRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.sourceRepository = sourceRepository;
+    }
+
     /**
      * 密码配置，使用BCryptPasswordEncoder
      */
@@ -40,12 +59,17 @@ public class AbeilleSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public ReactiveUserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl(userRepository, roleSourceRepository, userRoleRepository, sourceRepository);
+    }
+
     /**
      * 安全配置
      */
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.formLogin().and()
+        http.formLogin().and().csrf().disable()
                 .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyExchange().authenticated()
                 .and().exceptionHandling()

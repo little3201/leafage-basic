@@ -116,7 +116,6 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         RoleSource roleSource = new RoleSource();
         roleSource.setRoleId(roleId);
         sourceService.fetchInfo(sourceBusinessId).subscribe(roleInfo -> roleSource.setRoleId(roleInfo.getId()));
-        roleSource.setEnabled(Boolean.TRUE);
         roleSource.setModifier(userBusinessId);
         roleSource.setModifyTime(LocalDateTime.now());
         return roleSource;

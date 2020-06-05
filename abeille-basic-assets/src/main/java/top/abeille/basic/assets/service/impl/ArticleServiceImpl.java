@@ -135,8 +135,9 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     private ArticleVO convertOuter(ArticleInfo info) {
         ArticleVO outer = new ArticleVO();
         BeanUtils.copyProperties(info, outer);
-        hypervisorApi.fetchUserByBusinessId(info.getModifier()).subscribe(response ->
-                outer.setAuthor(response.getBody()));
+//        hypervisorApi.fetchUserByBusinessId(info.getModifier())
+//                .switchIfEmpty(Mono.error(() -> new RuntimeException("调用服务发生异常")))
+//                .map(response -> response.getBody()).zipWith();
         return outer;
     }
 

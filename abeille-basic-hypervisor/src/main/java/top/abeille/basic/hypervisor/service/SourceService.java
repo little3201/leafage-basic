@@ -23,4 +23,5 @@ public interface SourceService extends BasicService<SourceDTO, SourceVO> {
      * @return 数据库映射对象
      */
     Mono<SourceInfo> fetchInfo(String businessId);
+
 }

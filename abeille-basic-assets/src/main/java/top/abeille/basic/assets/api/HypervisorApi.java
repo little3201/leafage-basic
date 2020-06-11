@@ -3,9 +3,6 @@
  */
 package top.abeille.basic.assets.api;
 
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.bo.UserBO;
 
@@ -14,7 +11,6 @@ import top.abeille.basic.assets.api.bo.UserBO;
  *
  * @author liwenqiang 2019-03-03 22:55
  **/
-@FeignClient(name = "abeille-basic-hypervisor")
 public interface HypervisorApi {
 
     /**
@@ -23,6 +19,5 @@ public interface HypervisorApi {
      * @param businessId 业务id
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/user/{businessId}")
-    Mono<UserBO> fetchUserByBusinessId(@PathVariable("businessId") String businessId);
+    Mono<UserBO> fetchUserByBusinessId(String businessId);
 }

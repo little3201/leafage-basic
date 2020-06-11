@@ -12,20 +12,15 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.RoleInfo;
 import top.abeille.basic.hypervisor.document.RoleSource;
-import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.repository.RoleRepository;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
-import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.service.SourceService;
-import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.rmi.NoSuchObjectException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -39,18 +34,13 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl extends AbstractBasicService implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final UserRoleRepository userRoleRepository;
     private final RoleSourceRepository roleSourceRepository;
     private final SourceService sourceService;
-    private final UserService userService;
 
-    public RoleServiceImpl(RoleRepository roleRepository, UserRoleRepository userRoleRepository, RoleSourceRepository roleSourceRepository,
-                           SourceService sourceService, UserService userService) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleSourceRepository roleSourceRepository, SourceService sourceService) {
         this.roleRepository = roleRepository;
-        this.userRoleRepository = userRoleRepository;
         this.roleSourceRepository = roleSourceRepository;
         this.sourceService = sourceService;
-        this.userService = userService;
     }
 
     @Override
@@ -86,17 +76,6 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
                 roleSourceRepository.saveAll(userRoleList).subscribe();
             });
         }).map(this::convertOuter);
-    }
-
-    @Override
-    public Mono<ArrayList<String>> retrieveRoles(String businessId) {
-        Mono<UserInfo> infoMono = userService.fetchInfo(businessId);
-        Mono<ArrayList<String>> roleIdListMono = infoMono.switchIfEmpty(Mono.error(() -> new NoSuchObjectException("用户信息不存在")))
-                .flatMap(userInfo -> userRoleRepository.findByUserId(userInfo.getId())
-                        .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
-        // 取角色关联的权限ID
-        return roleIdListMono.flatMap(roleIdList -> roleRepository.findAllById(roleIdList)
-                .collect(ArrayList::new, (roleList, role) -> roleList.add(role.getBusinessId())));
     }
 
     /**

@@ -13,7 +13,6 @@ import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 
 /**
  * 角色信息controller
@@ -28,17 +27,6 @@ public class RoleController extends AbstractController {
 
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
-    }
-
-    /**
-     * 根据用户业务ID查询权限信息，返回角色业务ID集合
-     *
-     * @param businessId 用户业务ID
-     * @return 权限业务ID集合
-     */
-    @GetMapping("/relation/{businessId}")
-    public Mono<ArrayList<String>> retrieveAuthorities(@PathVariable String businessId) {
-        return roleService.retrieveRoles(businessId);
     }
 
     /**

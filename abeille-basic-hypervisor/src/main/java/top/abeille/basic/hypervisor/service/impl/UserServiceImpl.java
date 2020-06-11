@@ -98,7 +98,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * @param businessId 业务id
      * @return UserInfo 用户源数据
      */
-    public Mono<UserInfo> fetchInfo(String businessId) {
+    private Mono<UserInfo> fetchInfo(String businessId) {
         Objects.requireNonNull(businessId);
         UserInfo info = new UserInfo();
         info.setBusinessId(businessId);

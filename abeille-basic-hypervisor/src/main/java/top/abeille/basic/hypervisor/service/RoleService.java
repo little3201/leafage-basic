@@ -9,8 +9,6 @@ import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.BasicService;
 
-import java.util.ArrayList;
-
 /**
  * 角色信息service 接口
  *
@@ -25,12 +23,4 @@ public interface RoleService extends BasicService<RoleDTO, RoleVO> {
      * @return 数据库映射对象
      */
     Mono<RoleInfo> fetchInfo(String businessId);
-
-    /**
-     * 根据用户业务ID查询权限信息，返回角色业务ID集合
-     *
-     * @param businessId 用户业务ID
-     * @return 权限业务ID集合
-     */
-    Mono<ArrayList<String>> retrieveRoles(String businessId);
 }

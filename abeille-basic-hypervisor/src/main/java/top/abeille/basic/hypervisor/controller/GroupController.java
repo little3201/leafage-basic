@@ -4,13 +4,12 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.service.GroupService;
-import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -36,8 +35,9 @@ public class GroupController extends AbstractController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<GroupVO> retrieveGroup() {
-        return groupService.retrieveAll();
+    public Mono<ServerResponse> retrieveGroup() {
+        return ServerResponse.ok().body(BodyInserters.fromValue(groupService.retrieveAll()))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build());
     }
 
     /**
@@ -47,10 +47,9 @@ public class GroupController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ResponseEntity<GroupVO>> createGroup(@RequestBody @Valid GroupDTO groupDTO) {
-        return groupService.create(groupDTO)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    public Mono<ServerResponse> createGroup(@RequestBody @Valid GroupDTO groupDTO) {
+        return ServerResponse.ok().body(BodyInserters.fromValue(groupService.create(groupDTO)))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
     }
 
     /**
@@ -61,10 +60,9 @@ public class GroupController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{businessId}")
-    public Mono<ResponseEntity<GroupVO>> modifyGroup(@PathVariable String businessId, @RequestBody @Valid GroupDTO groupDTO) {
-        return groupService.modify(businessId, groupDTO)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
+    public Mono<ServerResponse> modifyGroup(@PathVariable String businessId, @RequestBody @Valid GroupDTO groupDTO) {
+        return ServerResponse.ok().body(BodyInserters.fromValue(groupService.modify(businessId, groupDTO)))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.NOT_MODIFIED).build());
     }
 
     /**
@@ -74,9 +72,8 @@ public class GroupController extends AbstractController {
      * @return 如果删除数据成功，返回删除后的信息，否则返回417状态码
      */
     @DeleteMapping("/{businessId}")
-    public Mono<ResponseEntity<Void>> removeGroup(@PathVariable String businessId) {
-        return groupService.removeById(businessId)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    public Mono<ServerResponse> removeGroup(@PathVariable String businessId) {
+        return ServerResponse.ok().body(BodyInserters.fromValue(groupService.removeById(businessId)))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
     }
 }

@@ -4,6 +4,7 @@
 
 package top.abeille.basic.assets.api;
 
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -16,6 +17,8 @@ public class HypervisorApiImpl implements HypervisorApi {
 
     @Override
     public Mono<UserBO> fetchUserByBusinessId(String businessId) {
-        return client.get().uri("/user/{businessId}", businessId).retrieve().bodyToMono(UserBO.class);
+        return client.get().uri("/user/{businessId}", businessId)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve().bodyToMono(UserBO.class);
     }
 }

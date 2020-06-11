@@ -4,13 +4,12 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.service.SourceService;
-import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -36,8 +35,9 @@ public class SourceController extends AbstractController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<SourceVO> retrieveSource() {
-        return sourceService.retrieveAll();
+    public Mono<ServerResponse> retrieveSource() {
+        return ServerResponse.ok().body(BodyInserters.fromValue(sourceService.retrieveAll()))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build());
     }
 
     /**
@@ -47,10 +47,9 @@ public class SourceController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ResponseEntity<SourceVO>> createSource(@RequestBody @Valid SourceDTO sourceDTO) {
-        return sourceService.create(sourceDTO)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    public Mono<ServerResponse> createSource(@RequestBody @Valid SourceDTO sourceDTO) {
+        return ServerResponse.ok().body(BodyInserters.fromValue(sourceService.create(sourceDTO)))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
     }
 
     /**
@@ -61,10 +60,9 @@ public class SourceController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PostMapping("{businessId}")
-    public Mono<ResponseEntity<SourceVO>> modifySource(@PathVariable String businessId, @RequestBody @Valid SourceDTO sourceDTO) {
-        return sourceService.modify(businessId, sourceDTO)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    public Mono<ServerResponse> modifySource(@PathVariable String businessId, @RequestBody @Valid SourceDTO sourceDTO) {
+        return ServerResponse.ok().body(BodyInserters.fromValue(sourceService.modify(businessId, sourceDTO)))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
     }
 
 }

@@ -4,13 +4,12 @@
 package top.abeille.basic.assets.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ResourceDTO;
 import top.abeille.basic.assets.service.ResourceService;
-import top.abeille.basic.assets.vo.ResourceVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -36,8 +35,9 @@ public class ResourceController extends AbstractController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<ResourceVO> retrieveResource() {
-        return resourceService.retrieveAll();
+    public Mono<ServerResponse> retrieveResource() {
+        return ServerResponse.ok().body(BodyInserters.fromValue(resourceService.retrieveAll()))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build());
     }
 
     /**
@@ -47,10 +47,9 @@ public class ResourceController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{businessId}")
-    public Mono<ResponseEntity<ResourceVO>> fetchResource(@PathVariable String businessId) {
-        return resourceService.fetchByBusinessId(businessId)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.noContent().build());
+    public Mono<ServerResponse> fetchResource(@PathVariable String businessId) {
+        return ServerResponse.ok().body(BodyInserters.fromValue(resourceService.fetchByBusinessId(businessId)))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build());
     }
 
     /**
@@ -60,10 +59,9 @@ public class ResourceController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ResponseEntity<ResourceVO>> createResource(@RequestBody @Valid ResourceDTO resourceDTO) {
-        return resourceService.create(resourceDTO)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    public Mono<ServerResponse> createResource(@RequestBody @Valid ResourceDTO resourceDTO) {
+        return ServerResponse.ok().body(BodyInserters.fromValue(resourceService.create(resourceDTO)))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
     }
 
     /**
@@ -74,10 +72,9 @@ public class ResourceController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{businessId}")
-    public Mono<ResponseEntity<ResourceVO>> modifyResource(@PathVariable String businessId, @RequestBody @Valid ResourceDTO resourceDTO) {
-        return resourceService.modify(businessId, resourceDTO)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_MODIFIED));
+    public Mono<ServerResponse> modifyResource(@PathVariable String businessId, @RequestBody @Valid ResourceDTO resourceDTO) {
+        return ServerResponse.ok().body(BodyInserters.fromValue(resourceService.modify(businessId, resourceDTO)))
+                .switchIfEmpty(ServerResponse.status(HttpStatus.NOT_MODIFIED).build());
     }
 
 }

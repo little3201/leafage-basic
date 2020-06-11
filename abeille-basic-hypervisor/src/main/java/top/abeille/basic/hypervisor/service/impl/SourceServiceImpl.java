@@ -18,6 +18,7 @@ import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -90,6 +91,11 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
         SourceInfo info = new SourceInfo();
         info.setBusinessId(businessId);
         return sourceRepository.findOne(Example.of(info));
+    }
+
+    @Override
+    public Flux<SourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList) {
+        return sourceRepository.findByIdInAndEnabledTrue(sourceIdList);
     }
 
     /**

@@ -3,13 +3,11 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.service.RoleService;
+import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -36,9 +34,8 @@ public class RoleController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ServerResponse> createRole(@RequestBody @Valid RoleDTO roleDTO) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(roleService.create(roleDTO)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
+    public Mono<RoleVO> createRole(@RequestBody @Valid RoleDTO roleDTO) {
+        return roleService.create(roleDTO);
     }
 
     /**
@@ -49,9 +46,8 @@ public class RoleController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{businessId}")
-    public Mono<ServerResponse> modifyRole(@PathVariable String businessId, @RequestBody @Valid RoleDTO roleDTO) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(roleService.modify(businessId, roleDTO)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.NOT_MODIFIED).build());
+    public Mono<RoleVO> modifyRole(@PathVariable String businessId, @RequestBody @Valid RoleDTO roleDTO) {
+        return roleService.modify(businessId, roleDTO);
     }
 
 }

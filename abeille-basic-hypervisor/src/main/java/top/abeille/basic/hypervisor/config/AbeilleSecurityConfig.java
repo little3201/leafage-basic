@@ -77,7 +77,7 @@ public class AbeilleSecurityConfig {
                 .authenticationFailureHandler(authenticationFailureHandler())
                 .and().csrf().disable()
                 .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .pathMatchers(HttpMethod.GET, "/user").permitAll()
+                .pathMatchers("/user").permitAll()
                 .anyExchange().authenticated()
                 .and().exceptionHandling()
                 .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());

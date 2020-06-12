@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -69,7 +70,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<UserVO> modify(String businessId, UserDTO userDTO) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(info -> {
             BeanUtils.copyProperties(userDTO, info);
             return userRepository.save(info).doOnNext(userInfo -> {
@@ -88,7 +89,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<UserVO> fetchByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).map(this::convertOuter);
     }
 

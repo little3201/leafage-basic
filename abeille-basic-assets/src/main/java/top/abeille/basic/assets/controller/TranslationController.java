@@ -3,13 +3,13 @@
  */
 package top.abeille.basic.assets.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.TranslationDTO;
 import top.abeille.basic.assets.service.TranslationService;
+import top.abeille.basic.assets.vo.TranslationDetailsVO;
+import top.abeille.basic.assets.vo.TranslationVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -35,9 +35,8 @@ public class TranslationController extends AbstractController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Mono<ServerResponse> retrieveTranslation() {
-        return ServerResponse.ok().body(BodyInserters.fromValue(translationService.retrieveAll()))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build());
+    public Flux<TranslationVO> retrieveTranslation() {
+        return translationService.retrieveAll();
     }
 
     /**
@@ -47,9 +46,8 @@ public class TranslationController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{businessId}")
-    public Mono<ServerResponse> fetchTranslation(@PathVariable String businessId) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(translationService.fetchDetailsByBusinessId(businessId)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build());
+    public Mono<TranslationDetailsVO> fetchTranslation(@PathVariable String businessId) {
+        return translationService.fetchDetailsByBusinessId(businessId);
     }
 
     /**
@@ -59,9 +57,8 @@ public class TranslationController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ServerResponse> createTranslation(@RequestBody @Valid TranslationDTO translationDTO) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(translationService.create(translationDTO)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
+    public Mono<TranslationVO> createTranslation(@RequestBody @Valid TranslationDTO translationDTO) {
+        return translationService.create(translationDTO);
     }
 
     /**
@@ -72,9 +69,8 @@ public class TranslationController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{businessId}")
-    public Mono<ServerResponse> modifyTranslation(@PathVariable String businessId, @RequestBody @Valid TranslationDTO translationDTO) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(translationService.modify(businessId, translationDTO)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.NOT_MODIFIED).build());
+    public Mono<TranslationVO> modifyTranslation(@PathVariable String businessId, @RequestBody @Valid TranslationDTO translationDTO) {
+        return translationService.modify(businessId, translationDTO);
     }
 
 }

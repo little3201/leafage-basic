@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.service.impl;
 
+import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -18,7 +19,6 @@ import top.abeille.basic.assets.vo.TopicVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * 话题信息service实现
@@ -42,7 +42,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
 
     @Override
     public Mono<TopicVO> fetchByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         TopicInfo info = new TopicInfo();
         info.setBusinessId(businessId);
         return this.fetchInfo(businessId).map(this::convertOuter);
@@ -60,7 +60,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
 
     @Override
     public Mono<TopicVO> modify(String businessId, TopicDTO topicDTO) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(topicInfo -> {
             BeanUtils.copyProperties(topicDTO, topicInfo);
             return topicRepository.save(topicInfo).map(this::convertOuter);
@@ -69,6 +69,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
 
     @Override
     public Mono<Void> removeById(String businessId) {
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(topic -> topicRepository.deleteById(topic.getId()));
     }
 
@@ -79,7 +80,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
      * @return 返回查询到的信息，否则返回empty
      */
     private Mono<TopicInfo> fetchInfo(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         TopicInfo info = new TopicInfo();
         info.setBusinessId(businessId);
         return topicRepository.findOne(Example.of(info));

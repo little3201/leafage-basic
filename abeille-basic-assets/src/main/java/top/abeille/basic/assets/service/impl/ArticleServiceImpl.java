@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.service.impl;
 
+import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -22,7 +23,6 @@ import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * 文章信息service实现
@@ -51,7 +51,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
 
     @Override
     public Mono<ArticleDetailsVO> fetchDetailsByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchByBusinessId(businessId).flatMap(articleVO -> {
                     // 将内容设置到vo对像中
                     ArticleDetailsVO detailsVO = new ArticleDetailsVO();
@@ -85,7 +85,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
 
     @Override
     public Mono<ArticleVO> modify(String businessId, ArticleDTO articleDTO) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(articleDTO, info);
@@ -102,13 +102,13 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
 
     @Override
     public Mono<Void> removeById(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(article -> articleRepository.deleteById(article.getId()));
     }
 
     @Override
     public Mono<ArticleVO> fetchByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
@@ -119,7 +119,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
      * @return 返回查询到的信息，否则返回empty
      */
     private Mono<ArticleInfo> fetchInfo(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         ArticleInfo info = new ArticleInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);

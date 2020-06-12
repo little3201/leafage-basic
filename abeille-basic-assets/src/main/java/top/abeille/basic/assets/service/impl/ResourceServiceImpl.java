@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.service.impl;
 
+import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -52,6 +53,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
 
     @Override
     public Mono<ResourceVO> modify(String businessId, ResourceDTO resourceDTO) {
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(articleInfo -> {
             BeanUtils.copyProperties(resourceDTO, articleInfo);
             return resourceRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
@@ -60,12 +62,13 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
 
     @Override
     public Mono<Void> removeById(String businessId) {
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(article -> resourceRepository.deleteById(article.getId()));
     }
 
     @Override
     public Mono<ResourceVO> fetchByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
@@ -76,6 +79,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
      * @return 返回查询到的信息，否则返回empty
      */
     private Mono<ResourceInfo> fetchInfo(String businessId) {
+        Asserts.notBlank(businessId, "businessId");
         ResourceInfo info = new ResourceInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);

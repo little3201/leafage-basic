@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> fetchByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
@@ -66,7 +67,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
      * @return 返回查询到的信息，否则返回empty
      */
     private Mono<GroupInfo> fetchInfo(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         GroupInfo info = new GroupInfo();
         info.setBusinessId(businessId);
         return groupRepository.findOne(Example.of(info));

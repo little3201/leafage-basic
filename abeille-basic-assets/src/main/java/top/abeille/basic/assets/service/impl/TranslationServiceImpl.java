@@ -4,6 +4,7 @@
 
 package top.abeille.basic.assets.service.impl;
 
+import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -22,7 +23,6 @@ import top.abeille.basic.assets.vo.TranslationVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * 翻译信息service实现
@@ -48,7 +48,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
 
     @Override
     public Mono<TranslationDetailsVO> fetchDetailsByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchByBusinessId(businessId).flatMap(translationVO -> {
                     // 将内容设置到vo对像中
                     TranslationDetailsVO detailsVO = new TranslationDetailsVO();
@@ -65,7 +65,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
 
     @Override
     public Mono<TranslationVO> fetchByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
@@ -88,7 +88,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
 
     @Override
     public Mono<TranslationVO> modify(String businessId, TranslationDTO translationDTO) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(translationDTO, info);
@@ -110,7 +110,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
      * @return 返回查询到的信息，否则返回empty
      */
     private Mono<TranslationInfo> fetchInfo(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         TranslationInfo info = new TranslationInfo();
         info.setBusinessId(businessId);
         return translationRepository.findOne(Example.of(info));

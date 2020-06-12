@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -42,7 +43,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
 
     @Override
     public Mono<SourceVO> fetchByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
@@ -86,7 +87,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
      */
     @Override
     public Mono<SourceInfo> fetchInfo(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         SourceInfo info = new SourceInfo();
         info.setBusinessId(businessId);
         return sourceRepository.findOne(Example.of(info));

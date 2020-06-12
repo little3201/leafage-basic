@@ -3,13 +3,11 @@
  */
 package top.abeille.basic.assets.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.AccountDTO;
 import top.abeille.basic.assets.service.AccountService;
+import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -36,9 +34,8 @@ public class AccountController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{businessId}")
-    public Mono<ServerResponse> fetchAccount(@PathVariable String businessId) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(accountService.fetchByBusinessId(businessId)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build());
+    public Mono<AccountVO> fetchAccount(@PathVariable String businessId) {
+        return accountService.fetchByBusinessId(businessId);
     }
 
     /**
@@ -48,9 +45,8 @@ public class AccountController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ServerResponse> createAccount(@RequestBody @Valid AccountDTO accountDTO) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(accountService.create(accountDTO)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
+    public Mono<AccountVO> createAccount(@RequestBody @Valid AccountDTO accountDTO) {
+        return accountService.create(accountDTO);
     }
 
     /**
@@ -61,9 +57,8 @@ public class AccountController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{businessId}")
-    public Mono<ServerResponse> modifyAccount(@PathVariable String businessId, @RequestBody @Valid AccountDTO accountDTO) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(accountService.modify(businessId, accountDTO)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.NOT_MODIFIED).build());
+    public Mono<AccountVO> modifyAccount(@PathVariable String businessId, @RequestBody @Valid AccountDTO accountDTO) {
+        return accountService.modify(businessId, accountDTO);
     }
 
     /**
@@ -73,8 +68,7 @@ public class AccountController extends AbstractController {
      * @return 如果删除数据成功，返回删除后的信息，否则返回417状态码
      */
     @DeleteMapping("/{businessId}")
-    public Mono<ServerResponse> removeAccount(@PathVariable String businessId) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(accountService.removeById(businessId)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
+    public Mono<Void> removeAccount(@PathVariable String businessId) {
+        return accountService.removeById(businessId);
     }
 }

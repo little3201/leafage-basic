@@ -3,14 +3,12 @@
  */
 package top.abeille.basic.assets.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.service.ArticleService;
+import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -48,9 +46,8 @@ public class ArticleController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{businessId}")
-    public Mono<ServerResponse> fetchArticle(@PathVariable String businessId) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(articleService.fetchDetailsByBusinessId(businessId)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build());
+    public Mono<ArticleDetailsVO> fetchArticle(@PathVariable String businessId) {
+        return articleService.fetchDetailsByBusinessId(businessId).switchIfEmpty(Mono.empty());
     }
 
     /**
@@ -60,9 +57,8 @@ public class ArticleController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ServerResponse> createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(articleService.create(articleDTO)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.EXPECTATION_FAILED).build());
+    public Mono<ArticleVO> createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
+        return articleService.create(articleDTO);
     }
 
     /**
@@ -73,9 +69,8 @@ public class ArticleController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{businessId}")
-    public Mono<ServerResponse> modifyArticle(@PathVariable String businessId, @RequestBody @Valid ArticleDTO articleDTO) {
-        return ServerResponse.ok().body(BodyInserters.fromValue(articleService.modify(businessId, articleDTO)))
-                .switchIfEmpty(ServerResponse.status(HttpStatus.NOT_MODIFIED).build());
+    public Mono<ArticleVO> modifyArticle(@PathVariable String businessId, @RequestBody @Valid ArticleDTO articleDTO) {
+        return articleService.modify(businessId, articleDTO);
     }
 
 }

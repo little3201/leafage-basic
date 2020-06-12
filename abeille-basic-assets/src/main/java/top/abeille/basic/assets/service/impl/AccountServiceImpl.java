@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.service.impl;
 
+import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * 账户信息Service实现
@@ -43,9 +43,9 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     }
 
     @Override
-    public Mono<AccountVO> modify(String accountId, AccountDTO accountDTO) {
-        Objects.requireNonNull(accountId);
-        return this.fetchByBusinessId(accountId).flatMap(accountVO -> {
+    public Mono<AccountVO> modify(String businessId, AccountDTO accountDTO) {
+        Asserts.notBlank(businessId, "businessId");
+        return this.fetchByBusinessId(businessId).flatMap(accountVO -> {
             AccountInfo info = new AccountInfo();
             BeanUtils.copyProperties(accountVO, info);
             return accountRepository.save(info).map(this::convertOuter);
@@ -54,6 +54,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
 
     @Override
     public Mono<Void> removeById(String businessId) {
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId)
                 .flatMap(account -> accountRepository.deleteById(account.getId()));
     }
@@ -66,7 +67,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
      */
     @Override
     public Mono<AccountVO> fetchByBusinessId(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
@@ -77,6 +78,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
      * @return 返回查询到的信息，否则返回empty
      */
     private Mono<AccountInfo> fetchInfo(String businessId) {
+        Asserts.notBlank(businessId, "businessId");
         AccountInfo info = new AccountInfo();
         info.setBusinessId(businessId);
         info.setEnabled(Boolean.TRUE);

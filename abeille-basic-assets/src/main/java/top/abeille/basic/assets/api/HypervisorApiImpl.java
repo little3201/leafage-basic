@@ -4,6 +4,8 @@
 
 package top.abeille.basic.assets.api;
 
+
+import org.apache.http.util.Asserts;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -13,11 +15,17 @@ import top.abeille.basic.assets.api.bo.UserBO;
 @Service
 public class HypervisorApiImpl implements HypervisorApi {
 
-    private final WebClient client = WebClient.builder().baseUrl("http://abeille-basic-hypervisor").build();
+    private final WebClient.Builder clientBuilder;
+
+    public HypervisorApiImpl(WebClient.Builder clientBuilder) {
+        clientBuilder.baseUrl("http://abeille-basic-hypervisor").build();
+        this.clientBuilder = clientBuilder;
+    }
 
     @Override
     public Mono<UserBO> fetchUserByBusinessId(String businessId) {
-        return client.get().uri("/user/{businessId}", businessId)
+        Asserts.notBlank(businessId, "businessId");
+        return clientBuilder.build().get().uri("/user/{businessId}", businessId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve().bodyToMono(UserBO.class);
     }

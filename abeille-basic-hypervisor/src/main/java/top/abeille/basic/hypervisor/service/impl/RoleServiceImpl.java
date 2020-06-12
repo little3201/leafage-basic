@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
+import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
@@ -22,7 +23,6 @@ import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -86,7 +86,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      */
     @Override
     public Mono<RoleInfo> fetchInfo(String businessId) {
-        Objects.requireNonNull(businessId);
+        Asserts.notBlank(businessId, "businessId");
         RoleInfo info = new RoleInfo();
         info.setBusinessId(businessId);
         return roleRepository.findOne(Example.of(info));

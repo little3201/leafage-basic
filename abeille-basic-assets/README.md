@@ -1,7 +1,21 @@
-# abeille-basic-assets
-assets module of abeille basic
+<p align="center">
+  <a href="https://abeille.top" target="_blank">
+    <img alt="Abeille Logo" width="100" src="https://github.com/little3201/abeille-ui/blob/master/src/assets/logo.png">
+  </a>
+</p>
 
-系统存放经验、学习文章总结，旅行心得，旅拍照片等，
+<p align="center">
+  <br>
+  <a href="https://github.com/vuetifyjs/vuetify/blob/master/LICENSE.md">
+    <img src="https://img.shields.io/npm/l/vuetify.svg" alt="License">
+  </a>
+</p>
+
+<h2 align="center">Supporting Abeille</h2>
+
+# abeille-basic-assets
+
+系统主要内容为：经验、学习文章总结，旅行心得、旅拍照片等，
 
 每一条记录都有一个business_id，其遵循规则如下：
 

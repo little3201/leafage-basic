@@ -6,9 +6,10 @@
 
 <p align="center">
   <br>
-  <a href="https://github.com/vuetifyjs/vuetify/blob/master/LICENSE.md">
-    <img src="https://img.shields.io/npm/l/vuetify.svg" alt="License">
+  <a href="https://github.com/little3201/abeille-basic/blob/develop/LICENSE">
+     <img src="https://img.shields.io/github/license/little3201/abeille-basic.svg" alt="License">
   </a>
+  <img src="https://img.shields.io/coveralls/vcsType/little3201/abeille-basic.svg" alt="License">
 </p>
 
 <h2 align="center">Supporting Abeille</h2>

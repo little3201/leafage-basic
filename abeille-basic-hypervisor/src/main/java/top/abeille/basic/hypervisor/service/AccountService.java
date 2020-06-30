@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.service;
+package top.abeille.basic.hypervisor.service;
 
-import top.abeille.basic.assets.dto.AccountDTO;
-import top.abeille.basic.assets.vo.AccountVO;
+import top.abeille.basic.hypervisor.dto.AccountDTO;
+import top.abeille.basic.hypervisor.vo.AccountVO;
 import top.abeille.common.basic.BasicService;
 
 /**

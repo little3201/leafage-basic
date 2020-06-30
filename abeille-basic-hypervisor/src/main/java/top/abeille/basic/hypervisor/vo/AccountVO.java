@@ -1,7 +1,7 @@
 /*
  * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.assets.vo;
+package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

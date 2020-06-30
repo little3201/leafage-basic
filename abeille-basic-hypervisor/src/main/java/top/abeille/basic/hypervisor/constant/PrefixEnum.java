@@ -6,5 +6,5 @@ package top.abeille.basic.hypervisor.constant;
 
 public enum PrefixEnum {
 
-    US, GP, RO, SM, SB, ST, SU
+    AC, US, GP, RO, SM, SB, ST, SU
 }

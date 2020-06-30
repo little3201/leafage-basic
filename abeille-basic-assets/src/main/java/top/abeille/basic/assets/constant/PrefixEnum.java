@@ -6,5 +6,5 @@ package top.abeille.basic.assets.constant;
 
 public enum PrefixEnum {
 
-    AC, AT, RS, TP, TS
+    AT, RS, TP, TS
 }

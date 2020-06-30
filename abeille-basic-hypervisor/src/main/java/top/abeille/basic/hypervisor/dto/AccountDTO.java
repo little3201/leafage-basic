@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.dto;
+package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;

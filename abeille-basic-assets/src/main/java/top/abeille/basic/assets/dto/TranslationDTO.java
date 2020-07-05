@@ -33,6 +33,11 @@ public class TranslationDTO implements Serializable {
      */
     @NotBlank
     private String originalUrl;
+    /**
+     * 修改人
+     */
+    @NotBlank
+    private String modifier;
 
     public String getTitle() {
         return title;
@@ -66,4 +71,11 @@ public class TranslationDTO implements Serializable {
         this.originalUrl = originalUrl;
     }
 
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
+    }
 }

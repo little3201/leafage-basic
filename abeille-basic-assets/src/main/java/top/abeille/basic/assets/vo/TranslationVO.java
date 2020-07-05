@@ -3,6 +3,8 @@
  */
 package top.abeille.basic.assets.vo;
 
+import top.abeille.basic.assets.api.bo.UserBO;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -21,7 +23,7 @@ public class TranslationVO implements Serializable {
     /**
      * 作者
      */
-    private String author;
+    private UserBO author;
     /**
      * 标题
      */
@@ -43,11 +45,11 @@ public class TranslationVO implements Serializable {
         this.businessId = businessId;
     }
 
-    public String getAuthor() {
+    public UserBO getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(UserBO author) {
         this.author = author;
     }
 

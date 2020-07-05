@@ -24,6 +24,11 @@ public class TopicDTO implements Serializable {
      */
     @NotBlank
     private String content;
+    /**
+     * 修改人
+     */
+    @NotBlank
+    private String modifier;
 
     public String getTitle() {
         return title;
@@ -39,5 +44,13 @@ public class TopicDTO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 }

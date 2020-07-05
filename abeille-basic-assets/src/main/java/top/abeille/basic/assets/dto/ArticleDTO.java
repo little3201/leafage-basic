@@ -36,6 +36,11 @@ public class ArticleDTO implements Serializable {
      * 图片url
      */
     private String imageUrl;
+    /**
+     * 修改人
+     */
+    @NotBlank
+    private String modifier;
 
     public String getTitle() {
         return title;
@@ -75,5 +80,13 @@ public class ArticleDTO implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 }

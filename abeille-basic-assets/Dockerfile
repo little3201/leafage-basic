@@ -1,11 +1,14 @@
 # Start with a base image containing Java runtime
-FROM openjdk:8-jdk-alpine
+FROM openjdk:11-jdk-alpine
 
 # Add Maintainer Info
 LABEL maintainer="little3201@gmail.com"
 
 # Add a volume pointing to /tmp
 VOLUME /tmp
+
+# Tag
+TAG
 
 # Make port 8764 available to the world outside this container
 #EXPOSE 8764

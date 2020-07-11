@@ -20,6 +20,10 @@ public class TranslationDTO implements Serializable {
     @NotBlank
     private String title;
     /**
+     * 原文
+     */
+    private String original;
+    /**
      * 内容
      */
     @NotBlank
@@ -45,6 +49,14 @@ public class TranslationDTO implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
     }
 
     public String getContent() {

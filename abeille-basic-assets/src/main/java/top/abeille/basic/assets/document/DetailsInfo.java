@@ -31,6 +31,10 @@ public class DetailsInfo {
     @Indexed
     private String businessId;
     /**
+     * 原文
+     */
+    private String original;
+    /**
      * 内容
      */
     @Field(value = "content")
@@ -70,6 +74,14 @@ public class DetailsInfo {
 
     public void setBusinessId(String businessId) {
         this.businessId = businessId;
+    }
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
     }
 
     public String getContent() {

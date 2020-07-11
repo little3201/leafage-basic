@@ -25,6 +25,10 @@ public class ArticleDTO implements Serializable {
     @NotBlank
     private String subtitle;
     /**
+     * 原文
+     */
+    private String original;
+    /**
      * 内容
      */
     private String content;
@@ -50,20 +54,28 @@ public class ArticleDTO implements Serializable {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public String getSubtitle() {
         return subtitle;
     }
 
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
+    }
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getCatalog() {

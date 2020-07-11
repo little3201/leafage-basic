@@ -79,7 +79,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
             DetailsInfo detailsInfo = new DetailsInfo();
             BeanUtils.copyProperties(articleDTO, detailsInfo);
             detailsInfo.setBusinessId(articleInfo.getBusinessId());
-            // 这里需要调用subscribe()方法，否则数据不会入库
+            // 调用subscribe()方法，消费create订阅
             detailsService.create(detailsInfo).subscribe();
         }).map(this::convertOuter);
     }
@@ -90,11 +90,12 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
         return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(articleDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return articleRepository.save(info).doOnSuccess(articleInfo ->
                     // 更新成功后，将内容信息更新
                     detailsService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(detailsInfo -> {
                         BeanUtils.copyProperties(articleDTO, detailsInfo);
-                        // 这里需要调用subscribe()方法，否则数据不会入库
+                        // 调用subscribe()方法，消费modify订阅
                         detailsService.modify(detailsInfo.getBusinessId(), detailsInfo).subscribe();
                     }).subscribe()
             ).map(this::convertOuter);

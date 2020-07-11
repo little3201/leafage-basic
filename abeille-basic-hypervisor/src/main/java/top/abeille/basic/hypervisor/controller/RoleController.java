@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.service.RoleService;
@@ -25,6 +26,16 @@ public class RoleController extends AbstractController {
 
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
+    }
+
+    /**
+     * 查询角色信息
+     *
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     */
+    @GetMapping
+    public Flux<RoleVO> retrieveUser() {
+        return roleService.retrieveAll();
     }
 
     /**
@@ -50,4 +61,14 @@ public class RoleController extends AbstractController {
         return roleService.modify(businessId, roleDTO);
     }
 
+    /**
+     * 根据传入的业务id: businessId 查询信息
+     *
+     * @param businessId 业务id
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{businessId}")
+    public Mono<RoleVO> fetchGroup(String businessId) {
+        return roleService.fetchByBusinessId(businessId);
+    }
 }

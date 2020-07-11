@@ -92,6 +92,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
         return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(translationDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return translationRepository.save(info).doOnSuccess(translationInfo ->
                     // 更新成功后，将内容信息更新
                     detailsService.fetchByBusinessId(businessId).doOnNext(contentInfo -> {

@@ -63,6 +63,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(topicInfo -> {
             BeanUtils.copyProperties(topicDTO, topicInfo);
+            topicInfo.setModifyTime(LocalDateTime.now());
             return topicRepository.save(topicInfo).map(this::convertOuter);
         });
     }

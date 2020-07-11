@@ -33,6 +33,7 @@ public class DetailsInfo {
     /**
      * 原文
      */
+    @Field(value = "original")
     private String original;
     /**
      * 内容

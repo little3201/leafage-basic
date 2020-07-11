@@ -72,14 +72,4 @@ public class AccountController extends AbstractController {
         return accountService.removeById(businessId);
     }
 
-    /**
-     * 根据传入的业务id: businessId 查询信息
-     *
-     * @param businessId 业务id
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
-     */
-    @GetMapping("/{businessId}")
-    public Mono<AccountVO> fetchGroup(String businessId) {
-        return accountService.fetchByBusinessId(businessId);
-    }
 }

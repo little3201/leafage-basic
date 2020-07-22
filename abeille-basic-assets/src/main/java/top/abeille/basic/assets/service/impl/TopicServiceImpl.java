@@ -4,12 +4,13 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.api.HypervisorApi;
+import top.abeille.basic.assets.api.bo.UserBO;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.TopicInfo;
 import top.abeille.basic.assets.dto.TopicDTO;
@@ -29,9 +30,11 @@ import java.time.LocalDateTime;
 public class TopicServiceImpl extends AbstractBasicService implements TopicService {
 
     private final TopicRepository topicRepository;
+    private final HypervisorApi hypervisorApi;
 
-    public TopicServiceImpl(TopicRepository topicRepository) {
+    public TopicServiceImpl(TopicRepository topicRepository, HypervisorApi hypervisorApi) {
         this.topicRepository = topicRepository;
+        this.hypervisorApi = hypervisorApi;
     }
 
     @Override
@@ -51,9 +54,10 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     @Override
     public Mono<TopicVO> create(TopicDTO topicDTO) {
         TopicInfo info = new TopicInfo();
-        BeanUtils.copyProperties(topicDTO, info);
         info.setBusinessId(PrefixEnum.TP + this.generateId());
+        info.setTitle(topicDTO.getTitle());
         info.setEnabled(Boolean.TRUE);
+        info.setModifier(topicDTO.getModifier());
         info.setModifyTime(LocalDateTime.now());
         return topicRepository.insert(info).map(this::convertOuter);
     }
@@ -62,7 +66,8 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     public Mono<TopicVO> modify(String businessId, TopicDTO topicDTO) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(topicInfo -> {
-            BeanUtils.copyProperties(topicDTO, topicInfo);
+            topicInfo.setTitle(topicDTO.getTitle());
+            topicInfo.setModifier(topicDTO.getModifier());
             topicInfo.setModifyTime(LocalDateTime.now());
             return topicRepository.save(topicInfo).map(this::convertOuter);
         });
@@ -95,7 +100,12 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
      */
     private TopicVO convertOuter(TopicInfo info) {
         TopicVO outer = new TopicVO();
-        BeanUtils.copyProperties(info, outer);
+        outer.setBusinessId(info.getBusinessId());
+        outer.setTitle(info.getTitle());
+        outer.setContent(info.getContent());
+        outer.setModifyTime(info.getModifyTime());
+        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
+        outer.setAuthor(userBO);
         return outer;
     }
 }

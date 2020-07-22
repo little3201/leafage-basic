@@ -30,15 +30,15 @@ public class TopicInfo {
     @Indexed
     private String businessId;
     /**
-     * 用户ID
-     */
-    @Field(value = "user_id")
-    private String userId;
-    /**
      * 标题
      */
     @Field(value = "title")
     private String title;
+    /**
+     * 内容
+     */
+    @Field(value = "content")
+    private String content;
     /**
      * 是否有效
      */
@@ -71,20 +71,20 @@ public class TopicInfo {
         this.businessId = businessId;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Boolean getEnabled() {

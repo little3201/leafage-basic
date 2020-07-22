@@ -156,6 +156,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
         outer.setTitle(info.getTitle());
         outer.setSubtitle(info.getSubtitle());
         outer.setImageUrl(info.getImageUrl());
+        outer.setModifyTime(info.getModifyTime());
         UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
         outer.setAuthor(userBO);
         return outer;

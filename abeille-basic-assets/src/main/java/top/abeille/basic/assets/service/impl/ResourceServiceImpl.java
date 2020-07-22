@@ -4,12 +4,13 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.api.HypervisorApi;
+import top.abeille.basic.assets.api.bo.UserBO;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ResourceInfo;
 import top.abeille.basic.assets.dto.ResourceDTO;
@@ -30,9 +31,11 @@ import java.util.Objects;
 public class ResourceServiceImpl extends AbstractBasicService implements ResourceService {
 
     private final ResourceRepository resourceRepository;
+    private final HypervisorApi hypervisorApi;
 
-    public ResourceServiceImpl(ResourceRepository resourceRepository) {
+    public ResourceServiceImpl(ResourceRepository resourceRepository, HypervisorApi hypervisorApi) {
         this.resourceRepository = resourceRepository;
+        this.hypervisorApi = hypervisorApi;
     }
 
     @Override
@@ -44,8 +47,10 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     @Override
     public Mono<ResourceVO> create(ResourceDTO resourceDTO) {
         ResourceInfo info = new ResourceInfo();
-        BeanUtils.copyProperties(resourceDTO, info);
         info.setBusinessId(PrefixEnum.RS + this.generateId());
+        info.setTitle(resourceDTO.getTitle());
+        info.setImageUrl(resourceDTO.getImageUrl());
+        info.setModifier(resourceDTO.getModifier());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
         return resourceRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);
@@ -55,7 +60,9 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     public Mono<ResourceVO> modify(String businessId, ResourceDTO resourceDTO) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(articleInfo -> {
-            BeanUtils.copyProperties(resourceDTO, articleInfo);
+            articleInfo.setTitle(resourceDTO.getTitle());
+            articleInfo.setImageUrl(resourceDTO.getImageUrl());
+            articleInfo.setModifier(resourceDTO.getModifier());
             return resourceRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
         });
     }
@@ -94,7 +101,12 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
      */
     private ResourceVO convertOuter(ResourceInfo info) {
         ResourceVO outer = new ResourceVO();
-        BeanUtils.copyProperties(info, outer);
+        outer.setBusinessId(info.getBusinessId());
+        outer.setTitle(info.getTitle());
+        outer.setImageUrl(info.getImageUrl());
+        outer.setModifyTime(info.getModifyTime());
+        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
+        outer.setAuthor(userBO);
         return outer;
     }
 }

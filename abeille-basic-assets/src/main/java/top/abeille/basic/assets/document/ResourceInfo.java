@@ -30,22 +30,11 @@ public class ResourceInfo {
     @Indexed
     private String businessId;
     /**
-     * 文章ID
-     */
-    @Field(value = "user_id")
-    @Indexed
-    private String userId;
-    /**
      * 标题
      */
     @Field(value = "title")
     @Indexed
     private String title;
-    /**
-     * 副标题
-     */
-    @Field(value = "subtitle")
-    private String subtitle;
     /**
      * 图片url
      */
@@ -83,28 +72,12 @@ public class ResourceInfo {
         this.businessId = businessId;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
     }
 
     public String getImageUrl() {

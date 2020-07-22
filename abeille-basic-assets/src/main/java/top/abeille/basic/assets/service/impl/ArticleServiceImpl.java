@@ -4,7 +4,6 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -56,7 +55,10 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
         return this.fetchByBusinessId(businessId).flatMap(articleVO -> {
                     // 将内容设置到vo对像中
                     ArticleDetailsVO detailsVO = new ArticleDetailsVO();
-                    BeanUtils.copyProperties(articleVO, detailsVO);
+                    detailsVO.setBusinessId(articleVO.getBusinessId());
+                    detailsVO.setTitle(articleVO.getTitle());
+                    detailsVO.setSubtitle(articleVO.getSubtitle());
+                    detailsVO.setImageUrl(articleVO.getImageUrl());
                     // 根据业务id获取相关内容
                     return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
                         detailsVO.setContent(contentInfo.getContent());
@@ -70,15 +72,22 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     @Override
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
-        BeanUtils.copyProperties(articleDTO, info);
+        info.setTitle(articleDTO.getTitle());
+        info.setSubtitle(articleDTO.getSubtitle());
+        info.setImageUrl(articleDTO.getImageUrl());
         info.setBusinessId(PrefixEnum.AT + this.generateId());
         info.setEnabled(Boolean.TRUE);
+        info.setModifier(articleDTO.getModifier());
         info.setModifyTime(LocalDateTime.now());
         return articleRepository.insert(info).doOnSuccess(articleInfo -> {
             // 添加内容信息
             DetailsInfo detailsInfo = new DetailsInfo();
-            BeanUtils.copyProperties(articleDTO, detailsInfo);
             detailsInfo.setBusinessId(articleInfo.getBusinessId());
+            detailsInfo.setContent(articleDTO.getContent());
+            detailsInfo.setCatalog(articleDTO.getCatalog());
+            detailsInfo.setModifier(articleInfo.getModifier());
+            detailsInfo.setEnabled(Boolean.TRUE);
+            detailsInfo.setModifyTime(articleInfo.getModifyTime());
             // 调用subscribe()方法，消费create订阅
             detailsService.create(detailsInfo).subscribe();
         }).map(this::convertOuter);
@@ -88,13 +97,20 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     public Mono<ArticleVO> modify(String businessId, ArticleDTO articleDTO) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(info -> {
-            // 将信息复制到info
-            BeanUtils.copyProperties(articleDTO, info);
+            info.setTitle(articleDTO.getTitle());
+            info.setSubtitle(articleDTO.getSubtitle());
+            info.setImageUrl(articleDTO.getImageUrl());
+            info.setModifier(articleDTO.getModifier());
             info.setModifyTime(LocalDateTime.now());
             return articleRepository.save(info).doOnSuccess(articleInfo ->
                     // 更新成功后，将内容信息更新
                     detailsService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(detailsInfo -> {
-                        BeanUtils.copyProperties(articleDTO, detailsInfo);
+                        detailsInfo.setBusinessId(articleInfo.getBusinessId());
+                        detailsInfo.setContent(articleDTO.getContent());
+                        detailsInfo.setCatalog(articleDTO.getCatalog());
+                        detailsInfo.setModifier(articleInfo.getModifier());
+                        detailsInfo.setEnabled(Boolean.TRUE);
+                        detailsInfo.setModifyTime(articleInfo.getModifyTime());
                         // 调用subscribe()方法，消费modify订阅
                         detailsService.modify(detailsInfo.getBusinessId(), detailsInfo).subscribe();
                     }).subscribe()
@@ -136,7 +152,10 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
      */
     private ArticleVO convertOuter(ArticleInfo info) {
         ArticleVO outer = new ArticleVO();
-        BeanUtils.copyProperties(info, outer);
+        outer.setBusinessId(info.getBusinessId());
+        outer.setTitle(info.getTitle());
+        outer.setSubtitle(info.getSubtitle());
+        outer.setImageUrl(info.getImageUrl());
         UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
         outer.setAuthor(userBO);
         return outer;

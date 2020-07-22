@@ -30,7 +30,7 @@ public class ArticleInfo {
     @Indexed
     private String businessId;
     /**
-     * 文章ID
+     * 作者ID
      */
     @Field(value = "user_id")
     @Indexed

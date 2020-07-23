@@ -44,6 +44,10 @@ public class UserDTO implements Serializable {
      * 角色列表
      */
     private Set<String> roles;
+    /**
+     * 修改人
+     */
+    private String modifier;
 
     public String getNickname() {
         return nickname;
@@ -91,5 +95,13 @@ public class UserDTO implements Serializable {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 }

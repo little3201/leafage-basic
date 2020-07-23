@@ -11,6 +11,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.api.HypervisorApi;
+import top.abeille.basic.assets.api.bo.UserBO;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.document.TranslationInfo;
@@ -34,10 +36,12 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
 
     private final TranslationRepository translationRepository;
     private final DetailsService detailsService;
+    private final HypervisorApi hypervisorApi;
 
-    public TranslationServiceImpl(TranslationRepository translationRepository, DetailsService detailsService) {
+    public TranslationServiceImpl(TranslationRepository translationRepository, DetailsService detailsService, HypervisorApi hypervisorApi) {
         this.translationRepository = translationRepository;
         this.detailsService = detailsService;
+        this.hypervisorApi = hypervisorApi;
     }
 
     @Override
@@ -52,7 +56,11 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
         return this.fetchByBusinessId(businessId).flatMap(translationVO -> {
                     // 将内容设置到vo对像中
                     TranslationDetailsVO detailsVO = new TranslationDetailsVO();
-                    BeanUtils.copyProperties(translationVO, detailsVO);
+                    detailsVO.setBusinessId(businessId);
+                    detailsVO.setTitle(translationVO.getTitle());
+                    detailsVO.setOriginalUrl(translationVO.getOriginalUrl());
+                    detailsVO.setAuthor(translationVO.getAuthor());
+                    detailsVO.setModifyTime(translationVO.getModifyTime());
                     // 根据业务id获取相关内容
                     return detailsService.fetchByBusinessId(businessId).map(contentInfo -> {
                         detailsVO.setContent(contentInfo.getContent());
@@ -72,8 +80,10 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
     @Override
     public Mono<TranslationVO> create(TranslationDTO translationDTO) {
         TranslationInfo info = new TranslationInfo();
-        BeanUtils.copyProperties(translationDTO, info);
         info.setBusinessId(PrefixEnum.TS + this.generateId());
+        info.setTitle(translationDTO.getTitle());
+        info.setOriginalUrl(translationDTO.getOriginalUrl());
+        info.setModifier(translationDTO.getModifier());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
         return translationRepository.insert(info).doOnSuccess(translationInfo -> {
@@ -91,12 +101,17 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(info -> {
             // 将信息复制到info
-            BeanUtils.copyProperties(translationDTO, info);
+            info.setTitle(translationDTO.getTitle());
+            info.setOriginalUrl(translationDTO.getOriginalUrl());
+            info.setModifier(translationDTO.getModifier());
             info.setModifyTime(LocalDateTime.now());
             return translationRepository.save(info).doOnSuccess(translationInfo ->
                     // 更新成功后，将内容信息更新
                     detailsService.fetchByBusinessId(businessId).doOnNext(contentInfo -> {
-                        BeanUtils.copyProperties(translationDTO, contentInfo);
+                        contentInfo.setContent(translationDTO.getContent());
+                        contentInfo.setOriginal(translationDTO.getOriginal());
+                        contentInfo.setCatalog(translationDTO.getCatalog());
+                        contentInfo.setModifier(translationDTO.getModifier());
                         // 这里需要调用subscribe()方法，否则数据不会入库
                         detailsService.modify(contentInfo.getBusinessId(), contentInfo).subscribe();
                     }).subscribe()
@@ -125,7 +140,12 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
      */
     private TranslationVO convertOuter(TranslationInfo info) {
         TranslationVO outer = new TranslationVO();
-        BeanUtils.copyProperties(info, outer);
+        outer.setBusinessId(info.getBusinessId());
+        outer.setTitle(info.getTitle());
+        outer.setOriginalUrl(info.getOriginalUrl());
+        outer.setModifyTime(info.getModifyTime());
+        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
+        outer.setAuthor(userBO);
         return outer;
     }
 

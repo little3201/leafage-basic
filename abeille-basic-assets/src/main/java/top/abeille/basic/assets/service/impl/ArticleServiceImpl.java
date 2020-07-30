@@ -57,7 +57,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
         return this.fetchByBusinessId(businessId).flatMap(articleVO -> {
                     // 将内容设置到vo对像中
                     ArticleDetailsVO detailsVO = new ArticleDetailsVO();
-            BeanCopier.create(ArticleVO.class, ArticleDetailsVO.class, false).copy(articleVO, detailsVO, null);
+                    BeanCopier.create(ArticleVO.class, ArticleDetailsVO.class, false).copy(articleVO, detailsVO, null);
                     // 根据业务id获取相关内容
                     return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
                         detailsVO.setContent(contentInfo.getContent());

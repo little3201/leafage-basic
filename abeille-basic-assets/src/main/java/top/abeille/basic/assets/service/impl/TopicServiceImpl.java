@@ -4,7 +4,7 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -53,8 +53,8 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     @Override
     public Mono<TopicVO> create(TopicDTO topicDTO) {
         TopicInfo info = new TopicInfo();
-        BeanCopier.create(TopicDTO.class, TopicInfo.class, false).copy(topicDTO, info, null);
-        info.setEnabled(Boolean.TRUE);
+        BeanUtils.copyProperties(topicDTO, info);
+        info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return topicRepository.insert(info).map(this::convertOuter);
     }
@@ -63,7 +63,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     public Mono<TopicVO> modify(String businessId, TopicDTO topicDTO) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(topicInfo -> {
-            BeanCopier.create(TopicDTO.class, TopicInfo.class, false).copy(topicDTO, topicInfo, null);
+            BeanUtils.copyProperties(topicDTO, topicInfo);
             topicInfo.setModifyTime(LocalDateTime.now());
             return topicRepository.save(topicInfo).map(this::convertOuter);
         });
@@ -96,8 +96,8 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
      */
     private TopicVO convertOuter(TopicInfo info) {
         TopicVO outer = new TopicVO();
-        BeanCopier.create(TopicInfo.class, TopicVO.class, false).copy(info, outer, null);
-        hypervisorApi.fetchUserByBusinessId(info.getModifier()).subscribe(outer::setAuthor);
+        BeanUtils.copyProperties(info, outer);
+        hypervisorApi.fetchUserByBusinessId(info.getModifier()).doOnNext(outer::setAuthor).subscribe();
         return outer;
     }
 }

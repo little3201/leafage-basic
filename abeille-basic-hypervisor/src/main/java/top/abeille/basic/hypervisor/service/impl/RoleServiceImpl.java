@@ -5,7 +5,6 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -58,7 +57,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
         RoleInfo info = new RoleInfo();
-        BeanCopier.create(RoleDTO.class, RoleInfo.class, false).copy(roleDTO, info, null);
+        BeanUtils.copyProperties(roleDTO, info);
         info.setBusinessId(PrefixEnum.RO + this.generateId());
         return roleRepository.insert(info).doOnNext(roleInfo -> {
             List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
@@ -70,7 +69,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Mono<RoleVO> modify(String businessId, RoleDTO roleDTO) {
         return this.fetchInfo(businessId).flatMap(info -> {
-            BeanCopier.create(RoleDTO.class, RoleInfo.class, false).copy(roleDTO, info, null);
+            BeanUtils.copyProperties(roleDTO, info);
             return roleRepository.save(info).doOnNext(roleInfo -> {
                 List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
                         this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
@@ -101,7 +100,6 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      */
     private RoleVO convertOuter(RoleInfo info) {
         RoleVO outer = new RoleVO();
-        BeanCopier.create(RoleInfo.class, RoleVO.class, false).copy(info, outer, null);
         BeanUtils.copyProperties(info, outer);
         return outer;
     }
@@ -119,7 +117,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         roleSource.setRoleId(roleId);
         roleSource.setModifier(modifier);
         roleSource.setModifyTime(LocalDateTime.now());
-        sourceService.fetchInfo(sourceBusinessId).subscribe(sourceInfo -> roleSource.setSourceId(sourceInfo.getId()));
+        sourceService.fetchInfo(sourceBusinessId).doOnNext(sourceInfo -> roleSource.setSourceId(sourceInfo.getId())).subscribe();
         return roleSource;
     }
 }

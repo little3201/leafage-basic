@@ -6,7 +6,6 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -56,7 +55,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
         return this.fetchByBusinessId(businessId).flatMap(translationVO -> {
                     // 将内容设置到vo对像中
                     TranslationDetailsVO detailsVO = new TranslationDetailsVO();
-                    BeanCopier.create(TranslationVO.class, TranslationDetailsVO.class, false).copy(translationVO, detailsVO, null);
+                    BeanUtils.copyProperties(translationVO, detailsVO);
                     // 根据业务id获取相关内容
                     return detailsService.fetchByBusinessId(businessId).map(contentInfo -> {
                         detailsVO.setContent(contentInfo.getContent());
@@ -78,7 +77,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
         TranslationInfo info = new TranslationInfo();
         BeanUtils.copyProperties(translationDTO, info);
         info.setBusinessId(PrefixEnum.TS + this.generateId());
-        info.setEnabled(Boolean.TRUE);
+        info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return translationRepository.insert(info).doOnSuccess(translationInfo -> {
             // 添加内容信息
@@ -130,7 +129,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
     private TranslationVO convertOuter(TranslationInfo info) {
         TranslationVO outer = new TranslationVO();
         BeanUtils.copyProperties(info, outer);
-        hypervisorApi.fetchUserByBusinessId(info.getModifier()).subscribe(outer::setAuthor);
+        hypervisorApi.fetchUserByBusinessId(info.getModifier()).doOnNext(outer::setAuthor).subscribe();
         return outer;
     }
 

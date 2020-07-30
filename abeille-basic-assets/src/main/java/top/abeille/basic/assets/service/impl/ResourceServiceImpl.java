@@ -4,7 +4,7 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     @Override
     public Mono<ResourceVO> create(ResourceDTO resourceDTO) {
         ResourceInfo info = new ResourceInfo();
-        BeanCopier.create(ResourceDTO.class, ResourceInfo.class, false).copy(resourceDTO, info, null);
+        BeanUtils.copyProperties(resourceDTO, info);
         info.setBusinessId(PrefixEnum.RS + this.generateId());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
@@ -57,10 +57,10 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     @Override
     public Mono<ResourceVO> modify(String businessId, ResourceDTO resourceDTO) {
         Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).flatMap(articleInfo -> {
-            BeanCopier.create(ResourceDTO.class, ResourceInfo.class, false).copy(resourceDTO, articleInfo, null);
-            articleInfo.setModifyTime(LocalDateTime.now());
-            return resourceRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
+        return this.fetchInfo(businessId).flatMap(resourceInfo -> {
+            BeanUtils.copyProperties(resourceDTO, resourceInfo);
+            resourceInfo.setModifyTime(LocalDateTime.now());
+            return resourceRepository.save(resourceInfo).filter(Objects::nonNull).map(this::convertOuter);
         });
     }
 
@@ -98,8 +98,8 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
      */
     private ResourceVO convertOuter(ResourceInfo info) {
         ResourceVO outer = new ResourceVO();
-        BeanCopier.create(ResourceInfo.class, ResourceVO.class, false).copy(info, outer, null);
-        hypervisorApi.fetchUserByBusinessId(info.getModifier()).subscribe(outer::setAuthor);
+        BeanUtils.copyProperties(info, outer);
+        hypervisorApi.fetchUserByBusinessId(info.getModifier()).doOnNext(outer::setAuthor).subscribe();
         return outer;
     }
 }

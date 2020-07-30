@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     @Override
     public Mono<SourceVO> create(SourceDTO sourceDTO) {
         SourceInfo info = new SourceInfo();
-        BeanCopier.create(SourceDTO.class, SourceInfo.class, false).copy(sourceDTO, info, null);
+        BeanUtils.copyProperties(sourceDTO, info);
         String prefix;
         switch (SourceTypeEnum.valueOf(sourceDTO.getType())) {
             case MENU:
@@ -74,7 +74,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     public Mono<SourceVO> modify(String businessId, SourceDTO sourceDTO) {
         Objects.requireNonNull(businessId);
         return this.fetchInfo(businessId).flatMap(info -> {
-            BeanCopier.create(SourceDTO.class, SourceInfo.class, false).copy(sourceDTO, info, null);
+            BeanUtils.copyProperties(sourceDTO, info);
             return sourceRepository.save(info);
         }).map(this::convertOuter);
     }
@@ -101,7 +101,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
      */
     private SourceVO convertOuter(SourceInfo info) {
         SourceVO outer = new SourceVO();
-        BeanCopier.create(SourceInfo.class, SourceVO.class, false).copy(info, outer, null);
+        BeanUtils.copyProperties(info, outer);
         return outer;
     }
 }

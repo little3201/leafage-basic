@@ -5,7 +5,7 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -35,7 +35,7 @@ public class DetailsServiceImpl implements DetailsService {
     public Mono<DetailsInfo> modify(String businessId, DetailsInfo detailsInfo) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchByBusinessId(businessId).flatMap(details -> {
-            BeanCopier.create(DetailsInfo.class, DetailsInfo.class, false).copy(detailsInfo, details, null);
+            BeanUtils.copyProperties(detailsInfo, details);
             details.setModifyTime(LocalDateTime.now());
             return detailsRepository.save(details);
         });

@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -41,7 +41,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
         GroupInfo info = new GroupInfo();
-        BeanCopier.create(GroupDTO.class, GroupInfo.class, false).copy(groupDTO, info, null);
+        BeanUtils.copyProperties(groupDTO, info);
         info.setBusinessId(PrefixEnum.GP + this.generateId());
         return groupRepository.insert(info).map(this::convertOuter);
     }
@@ -49,7 +49,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Mono<GroupVO> modify(String businessId, GroupDTO groupDTO) {
         return this.fetchInfo(businessId).flatMap(info -> {
-            BeanCopier.create(GroupDTO.class, GroupInfo.class, false).copy(groupDTO, info, null);
+            BeanUtils.copyProperties(groupDTO, info);
             return groupRepository.save(info);
         }).map(this::convertOuter);
     }
@@ -81,7 +81,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
      */
     private GroupVO convertOuter(GroupInfo info) {
         GroupVO outer = new GroupVO();
-        BeanCopier.create(GroupInfo.class, GroupVO.class, false).copy(info, outer, null);
+        BeanUtils.copyProperties(info, outer);
         return outer;
     }
 }

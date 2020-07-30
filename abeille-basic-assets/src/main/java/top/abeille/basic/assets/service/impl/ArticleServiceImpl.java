@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
-import top.abeille.basic.assets.api.bo.UserBO;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ArticleInfo;
 import top.abeille.basic.assets.document.DetailsInfo;
@@ -57,7 +56,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
         return this.fetchByBusinessId(businessId).flatMap(articleVO -> {
                     // 将内容设置到vo对像中
                     ArticleDetailsVO detailsVO = new ArticleDetailsVO();
-                    BeanCopier.create(ArticleVO.class, ArticleDetailsVO.class, false).copy(articleVO, detailsVO, null);
+                    BeanUtils.copyProperties(articleVO, detailsVO);
                     // 根据业务id获取相关内容
                     return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
                         detailsVO.setContent(contentInfo.getContent());
@@ -78,7 +77,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
         return articleRepository.insert(info).doOnSuccess(articleInfo -> {
             // 添加内容信息
             DetailsInfo detailsInfo = new DetailsInfo();
-            BeanCopier.create(ArticleDTO.class, DetailsInfo.class, false).copy(articleDTO, detailsInfo, null);
+            BeanUtils.copyProperties(articleDTO, detailsInfo);
             detailsInfo.setBusinessId(articleInfo.getBusinessId());
             // 调用subscribe()方法，消费create订阅
             detailsService.create(detailsInfo).subscribe();
@@ -95,7 +94,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
             return articleRepository.save(info).doOnSuccess(articleInfo ->
                     // 更新成功后，将内容信息更新
                     detailsService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(detailsInfo -> {
-                        BeanCopier.create(ArticleDTO.class, DetailsInfo.class, false).copy(articleDTO, detailsInfo, null);
+                        BeanUtils.copyProperties(articleDTO, detailsInfo);
                         // 调用subscribe()方法，消费modify订阅
                         detailsService.modify(detailsInfo.getBusinessId(), detailsInfo).subscribe();
                     }).subscribe()
@@ -137,9 +136,8 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
      */
     private ArticleVO convertOuter(ArticleInfo info) {
         ArticleVO outer = new ArticleVO();
-        BeanCopier.create(ArticleInfo.class, ArticleVO.class, false).copy(info, outer, null);
-        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
-        outer.setAuthor(userBO);
+        BeanUtils.copyProperties(info, outer);
+        hypervisorApi.fetchUserByBusinessId(info.getModifier()).doOnNext(outer::setAuthor).subscribe();
         return outer;
     }
 

@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -35,7 +35,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     @Override
     public Mono<AccountVO> create(AccountDTO accountDTO) {
         AccountInfo info = new AccountInfo();
-        BeanCopier.create(AccountDTO.class, AccountInfo.class, false).copy(accountDTO, info, null);
+        BeanUtils.copyProperties(accountDTO, info);
         info.setBusinessId(PrefixEnum.AC + this.generateId());
         info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
@@ -47,7 +47,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
         Asserts.notBlank(businessId, "businessId");
         return this.fetchByBusinessId(businessId).flatMap(accountVO -> {
             AccountInfo info = new AccountInfo();
-            BeanCopier.create(AccountVO.class, AccountInfo.class, false).copy(accountVO, info, null);
+            BeanUtils.copyProperties(accountDTO, info);
             return accountRepository.save(info).map(this::convertOuter);
         });
     }
@@ -93,7 +93,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
      */
     private AccountVO convertOuter(AccountInfo info) {
         AccountVO outer = new AccountVO();
-        BeanCopier.create(AccountInfo.class, AccountVO.class, false).copy(info, outer, null);
+        BeanUtils.copyProperties(info, outer);
         return outer;
     }
 }

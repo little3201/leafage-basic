@@ -6,6 +6,7 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
         return this.fetchByBusinessId(businessId).flatMap(translationVO -> {
                     // 将内容设置到vo对像中
                     TranslationDetailsVO detailsVO = new TranslationDetailsVO();
-                    BeanUtils.copyProperties(translationVO, detailsVO);
+            BeanCopier.create(TranslationVO.class, TranslationDetailsVO.class, false).copy(translationVO, detailsVO, null);
                     // 根据业务id获取相关内容
                     return detailsService.fetchByBusinessId(businessId).map(contentInfo -> {
                         detailsVO.setContent(contentInfo.getContent());

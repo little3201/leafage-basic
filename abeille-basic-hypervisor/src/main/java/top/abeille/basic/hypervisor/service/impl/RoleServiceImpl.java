@@ -5,6 +5,7 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
         RoleInfo info = new RoleInfo();
-        BeanUtils.copyProperties(roleDTO, info);
+        BeanCopier.create(RoleDTO.class, RoleInfo.class, false).copy(roleDTO, info, null);
         info.setBusinessId(PrefixEnum.RO + this.generateId());
         return roleRepository.insert(info).doOnNext(roleInfo -> {
             List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
@@ -69,7 +70,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Mono<RoleVO> modify(String businessId, RoleDTO roleDTO) {
         return this.fetchInfo(businessId).flatMap(info -> {
-            BeanUtils.copyProperties(roleDTO, info);
+            BeanCopier.create(RoleDTO.class, RoleInfo.class, false).copy(roleDTO, info, null);
             return roleRepository.save(info).doOnNext(roleInfo -> {
                 List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
                         this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
@@ -100,6 +101,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      */
     private RoleVO convertOuter(RoleInfo info) {
         RoleVO outer = new RoleVO();
+        BeanCopier.create(RoleInfo.class, RoleVO.class, false).copy(info, outer, null);
         BeanUtils.copyProperties(info, outer);
         return outer;
     }
@@ -108,16 +110,16 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      * 初始设置UserRole参数
      *
      * @param roleId           角色主键
-     * @param userBusinessId   用户业务ID
+     * @param modifier         修改人
      * @param sourceBusinessId 资源业务ID
      * @return 用户-角色对象
      */
-    private RoleSource initRoleSource(String roleId, String userBusinessId, String sourceBusinessId) {
+    private RoleSource initRoleSource(String roleId, String modifier, String sourceBusinessId) {
         RoleSource roleSource = new RoleSource();
         roleSource.setRoleId(roleId);
-        sourceService.fetchInfo(sourceBusinessId).subscribe(roleInfo -> roleSource.setRoleId(roleInfo.getId()));
-        roleSource.setModifier(userBusinessId);
+        roleSource.setModifier(modifier);
         roleSource.setModifyTime(LocalDateTime.now());
+        sourceService.fetchInfo(sourceBusinessId).subscribe(sourceInfo -> roleSource.setSourceId(sourceInfo.getId()));
         return roleSource;
     }
 }

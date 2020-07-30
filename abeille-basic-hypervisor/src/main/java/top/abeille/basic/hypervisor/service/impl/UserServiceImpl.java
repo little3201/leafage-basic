@@ -5,7 +5,7 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.Asserts;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -56,7 +56,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     @Override
     public Mono<UserVO> create(UserDTO userDTO) {
         UserInfo info = new UserInfo();
-        BeanUtils.copyProperties(userDTO, info);
+        BeanCopier.create(UserDTO.class, UserInfo.class, false).copy(userDTO, info, null);
         info.setBusinessId(PrefixEnum.US + this.generateId());
         info.setPassword(new BCryptPasswordEncoder().encode("110119"));
         this.appendParams(info);
@@ -72,7 +72,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> modify(String businessId, UserDTO userDTO) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(info -> {
-            BeanUtils.copyProperties(userDTO, info);
+            BeanCopier.create(UserDTO.class, UserInfo.class, false).copy(userDTO, info, null);
             return userRepository.save(info).doOnNext(userInfo -> {
                 List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
                         this.initUserRole(userInfo.getId(), userInfo.getBusinessId(), role)).collect(Collectors.toList());
@@ -115,7 +115,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      */
     private UserVO convertOuter(UserInfo info) {
         UserVO outer = new UserVO();
-        BeanUtils.copyProperties(info, outer);
+        BeanCopier.create(UserInfo.class, UserVO.class, false).copy(info, outer, null);
         // 手机号脱敏
         if (StringUtils.isNotBlank(outer.getMobile())) {
             outer.setMobile(outer.getMobile().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));

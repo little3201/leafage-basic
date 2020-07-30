@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -47,10 +48,8 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     @Override
     public Mono<ResourceVO> create(ResourceDTO resourceDTO) {
         ResourceInfo info = new ResourceInfo();
+        BeanCopier.create(ResourceDTO.class, ResourceInfo.class, false).copy(resourceDTO, info, null);
         info.setBusinessId(PrefixEnum.RS + this.generateId());
-        info.setTitle(resourceDTO.getTitle());
-        info.setImageUrl(resourceDTO.getImageUrl());
-        info.setModifier(resourceDTO.getModifier());
         info.setEnabled(Boolean.TRUE);
         info.setModifyTime(LocalDateTime.now());
         return resourceRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);
@@ -60,9 +59,8 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     public Mono<ResourceVO> modify(String businessId, ResourceDTO resourceDTO) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(articleInfo -> {
-            articleInfo.setTitle(resourceDTO.getTitle());
-            articleInfo.setImageUrl(resourceDTO.getImageUrl());
-            articleInfo.setModifier(resourceDTO.getModifier());
+            BeanCopier.create(ResourceDTO.class, ResourceInfo.class, false).copy(resourceDTO, articleInfo, null);
+            articleInfo.setModifyTime(LocalDateTime.now());
             return resourceRepository.save(articleInfo).filter(Objects::nonNull).map(this::convertOuter);
         });
     }
@@ -101,10 +99,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
      */
     private ResourceVO convertOuter(ResourceInfo info) {
         ResourceVO outer = new ResourceVO();
-        outer.setBusinessId(info.getBusinessId());
-        outer.setTitle(info.getTitle());
-        outer.setImageUrl(info.getImageUrl());
-        outer.setModifyTime(info.getModifyTime());
+        BeanCopier.create(ResourceInfo.class, ResourceVO.class, false).copy(info, outer, null);
         UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
         outer.setAuthor(userBO);
         return outer;

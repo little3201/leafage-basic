@@ -56,12 +56,8 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     @Override
     public Mono<UserVO> create(UserDTO userDTO) {
         UserInfo info = new UserInfo();
+        BeanUtils.copyProperties(userDTO, info);
         info.setBusinessId(PrefixEnum.US + this.generateId());
-        info.setNickname(userDTO.getNickname());
-        info.setAvatar(userDTO.getAvatar());
-        info.setMobile(userDTO.getMobile());
-        info.setEmail(userDTO.getEmail());
-        info.setModifier(userDTO.getModifier());
         info.setPassword(new BCryptPasswordEncoder().encode("110119"));
         this.appendParams(info);
         info.setModifyTime(LocalDateTime.now());
@@ -76,11 +72,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> modify(String businessId, UserDTO userDTO) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(info -> {
-            info.setNickname(userDTO.getNickname());
-            info.setAvatar(userDTO.getAvatar());
-            info.setMobile(userDTO.getMobile());
-            info.setEmail(userDTO.getEmail());
-            info.setModifier(userDTO.getModifier());
+            BeanUtils.copyProperties(userDTO, info);
             return userRepository.save(info).doOnNext(userInfo -> {
                 List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
                         this.initUserRole(userInfo.getId(), userInfo.getBusinessId(), role)).collect(Collectors.toList());

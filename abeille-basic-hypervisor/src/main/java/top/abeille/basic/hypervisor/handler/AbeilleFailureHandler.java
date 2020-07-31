@@ -18,13 +18,13 @@ public class AbeilleFailureHandler implements ServerAuthenticationFailureHandler
     public Mono<Void> onAuthenticationFailure(WebFilterExchange webFilterExchange, AuthenticationException exception) {
         ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
         if (exception instanceof UsernameNotFoundException) {
-            return writeErrorMessage(response, "用户不存在");
+            return writeErrorMessage(response, "User Not Found");
         } else if (exception instanceof BadCredentialsException) {
-            return writeErrorMessage(response, "密码错误");
+            return writeErrorMessage(response, "Bad Credentials");
         } else if (exception instanceof LockedException) {
-            return writeErrorMessage(response, "账号锁定");
+            return writeErrorMessage(response, "User Locked");
         }
-        return writeErrorMessage(response, "服务异常");
+        return writeErrorMessage(response, "Service Unavailable");
     }
 
     private Mono<Void> writeErrorMessage(ServerHttpResponse response, String msg) {

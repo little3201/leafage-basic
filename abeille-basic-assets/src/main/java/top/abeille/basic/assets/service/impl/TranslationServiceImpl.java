@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
+import top.abeille.basic.assets.api.bo.UserBO;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.DetailsInfo;
 import top.abeille.basic.assets.document.TranslationInfo;
@@ -129,7 +130,8 @@ public class TranslationServiceImpl extends AbstractBasicService implements Tran
     private TranslationVO convertOuter(TranslationInfo info) {
         TranslationVO outer = new TranslationVO();
         BeanUtils.copyProperties(info, outer);
-        hypervisorApi.fetchUserByBusinessId(info.getModifier()).doOnNext(outer::setAuthor).subscribe();
+        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
+        outer.setAuthor(userBO);
         return outer;
     }
 

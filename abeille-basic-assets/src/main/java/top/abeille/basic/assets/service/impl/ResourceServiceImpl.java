@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
+import top.abeille.basic.assets.api.bo.UserBO;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ResourceInfo;
 import top.abeille.basic.assets.dto.ResourceDTO;
@@ -99,7 +100,8 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     private ResourceVO convertOuter(ResourceInfo info) {
         ResourceVO outer = new ResourceVO();
         BeanUtils.copyProperties(info, outer);
-        hypervisorApi.fetchUserByBusinessId(info.getModifier()).doOnNext(outer::setAuthor).subscribe();
+        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
+        outer.setAuthor(userBO);
         return outer;
     }
 }

@@ -26,7 +26,7 @@ public class DetailsServiceImpl implements DetailsService {
 
     @Override
     public Mono<DetailsInfo> create(DetailsInfo detailsInfo) {
-        detailsInfo.setEnabled(Boolean.TRUE);
+        detailsInfo.setEnabled(true);
         detailsInfo.setModifyTime(LocalDateTime.now());
         return detailsRepository.insert(detailsInfo);
     }
@@ -46,7 +46,7 @@ public class DetailsServiceImpl implements DetailsService {
         Asserts.notBlank(businessId, "businessId");
         DetailsInfo info = new DetailsInfo();
         info.setBusinessId(businessId);
-        info.setEnabled(Boolean.TRUE);
+        info.setEnabled(true);
         return detailsRepository.findOne(Example.of(info));
     }
 }

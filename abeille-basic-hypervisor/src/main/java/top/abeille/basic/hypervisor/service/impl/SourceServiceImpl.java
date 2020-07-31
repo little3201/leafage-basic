@@ -66,7 +66,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
                 prefix = PrefixEnum.SU.name(); // 路径
         }
         info.setBusinessId(prefix + this.generateId());
-        info.setEnabled(Boolean.TRUE);
+        info.setEnabled(true);
         return sourceRepository.insert(info).map(this::convertOuter);
     }
 

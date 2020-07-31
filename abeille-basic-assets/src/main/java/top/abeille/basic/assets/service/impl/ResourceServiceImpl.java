@@ -50,7 +50,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
         ResourceInfo info = new ResourceInfo();
         BeanUtils.copyProperties(resourceDTO, info);
         info.setBusinessId(PrefixEnum.RS + this.generateId());
-        info.setEnabled(Boolean.TRUE);
+        info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return resourceRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);
     }
@@ -87,7 +87,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
         Asserts.notBlank(businessId, "businessId");
         ResourceInfo info = new ResourceInfo();
         info.setBusinessId(businessId);
-        info.setEnabled(Boolean.TRUE);
+        info.setEnabled(true);
         return resourceRepository.findOne(Example.of(info));
     }
 

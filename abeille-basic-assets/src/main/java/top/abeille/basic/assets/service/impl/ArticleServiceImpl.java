@@ -125,7 +125,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
         Asserts.notBlank(businessId, "businessId");
         ArticleInfo info = new ArticleInfo();
         info.setBusinessId(businessId);
-        info.setEnabled(Boolean.TRUE);
+        info.setEnabled(true);
         return articleRepository.findOne(Example.of(info));
     }
 

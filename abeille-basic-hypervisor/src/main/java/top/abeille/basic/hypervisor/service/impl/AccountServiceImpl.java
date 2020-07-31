@@ -81,7 +81,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
         Asserts.notBlank(businessId, "businessId");
         AccountInfo info = new AccountInfo();
         info.setBusinessId(businessId);
-        info.setEnabled(Boolean.TRUE);
+        info.setEnabled(true);
         return accountRepository.findOne(Example.of(info));
     }
 

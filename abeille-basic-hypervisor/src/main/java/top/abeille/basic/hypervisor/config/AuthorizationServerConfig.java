@@ -6,12 +6,10 @@ package top.abeille.basic.hypervisor.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -35,12 +33,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private static final String ALIAS = "abeille-top-jwt";
 
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
     private final DataSource dataSource;
 
-    public AuthorizationServerConfig(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, DataSource dataSource) {
+    public AuthorizationServerConfig(AuthenticationManager authenticationManager, DataSource dataSource) {
         this.authenticationManager = authenticationManager;
-        this.userDetailsService = userDetailsService;
         this.dataSource = dataSource;
     }
 
@@ -64,20 +60,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
                 .accessTokenConverter(jwtAccessTokenConverter())
-                .userDetailsService(userDetailsService)
+//                .userDetailsService(userDetailsService) // refresh_token需要
                 .tokenStore(jwtTokenStore());
-    }
-
-    /**
-     * 认证服务安全配置
-     *
-     * @param security 安全配置参数
-     */
-    @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) {
-        security.allowFormAuthenticationForClients()
-                .tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()");
     }
 
     /**

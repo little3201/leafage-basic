@@ -31,10 +31,17 @@ public class ArticleControllerTest {
     }
 
     @Test
-    public void fetchArticle() {
+    public void retrieveArticle() {
         ArticleDTO articleDTO = new ArticleDTO();
         client.post().uri("/article").contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(articleDTO), ArticleDTO.class)
+                .exchange().expectStatus().isOk()
+                .expectBody().jsonPath("content").isNotEmpty();
+    }
+
+    @Test
+    public void fetchArticle() {
+        client.get().uri("/article/{businessId}", "AT7124EVA")
                 .exchange().expectStatus().isOk()
                 .expectBody().jsonPath("content").isNotEmpty();
     }

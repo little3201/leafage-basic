@@ -1,6 +1,7 @@
 package top.abeille.basic.hypervisor.handler;
 
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
@@ -18,12 +19,16 @@ public class AbeilleFailureHandler implements ServerAuthenticationFailureHandler
     public Mono<Void> onAuthenticationFailure(WebFilterExchange webFilterExchange, AuthenticationException exception) {
         ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
         if (exception instanceof UsernameNotFoundException) {
+            response.setStatusCode(HttpStatus.NO_CONTENT);
             return writeErrorMessage(response, "User Not Found");
         } else if (exception instanceof BadCredentialsException) {
+            response.setStatusCode(HttpStatus.FORBIDDEN);
             return writeErrorMessage(response, "Bad Credentials");
         } else if (exception instanceof LockedException) {
+            response.setStatusCode(HttpStatus.LOCKED);
             return writeErrorMessage(response, "User Locked");
         }
+        response.setStatusCode(HttpStatus.BAD_REQUEST);
         return writeErrorMessage(response, "Service Unavailable");
     }
 

@@ -18,6 +18,7 @@ import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import top.abeille.basic.hypervisor.handler.AbeilleFailureHandler;
 import top.abeille.basic.hypervisor.handler.AbeilleSuccessHandler;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
@@ -75,9 +76,9 @@ public class AbeilleSecurityConfig {
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http.formLogin().authenticationSuccessHandler(authenticationSuccessHandler())
                 .authenticationFailureHandler(authenticationFailureHandler())
-                .and().csrf().disable()
-                .authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
-                .pathMatchers(HttpMethod.GET, "/user/*").permitAll()
+                .and().csrf().csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse())
+                .and().authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
+                .pathMatchers(HttpMethod.GET, "/user/{segment}").permitAll()
                 .anyExchange().authenticated()
                 .and().exceptionHandling()
                 .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());

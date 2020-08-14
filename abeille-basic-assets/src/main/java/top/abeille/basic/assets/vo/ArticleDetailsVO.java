@@ -11,6 +11,11 @@ package top.abeille.basic.assets.vo;
 public class ArticleDetailsVO extends ArticleVO {
 
     private static final long serialVersionUID = -3631862762916498067L;
+
+    /**
+     * 原文
+     */
+    private String original;
     /**
      * 内容
      */
@@ -19,6 +24,14 @@ public class ArticleDetailsVO extends ArticleVO {
      * 目录
      */
     private String catalog;
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
+    }
 
     public String getContent() {
         return content;

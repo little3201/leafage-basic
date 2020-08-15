@@ -74,13 +74,14 @@ public class AbeilleSecurityConfig {
      */
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.formLogin().authenticationSuccessHandler(authenticationSuccessHandler())
-                .authenticationFailureHandler(authenticationFailureHandler())
-                .and().csrf().csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse())
-                .and().authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
+        http.authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers(HttpMethod.GET, "/user/{segment}").permitAll()
                 .anyExchange().authenticated()
                 .and().exceptionHandling()
+                .and().formLogin().authenticationSuccessHandler(authenticationSuccessHandler())
+                .authenticationFailureHandler(authenticationFailureHandler())
+                .and().logout()
+                .and().csrf().csrfTokenRepository(new CookieServerCsrfTokenRepository())
                 .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
         return http.build();
     }

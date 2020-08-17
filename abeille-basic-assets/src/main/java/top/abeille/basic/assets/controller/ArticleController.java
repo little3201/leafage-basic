@@ -73,4 +73,21 @@ public class ArticleController extends AbstractController {
         return articleService.modify(businessId, articleDTO);
     }
 
+    /**
+     * 获取一个月内每周新增数量
+     *
+     * @return 一个月内每周新增数量
+     */
+    public Flux<Integer> fetchCount() {
+        return Flux.empty();
+    }
+
+    /**
+     * 获取周访问量前十的数据
+     *
+     * @return 本周访问量前十的数据
+     */
+    public Flux<Integer> fetchTop10() {
+        return Flux.empty();
+    }
 }

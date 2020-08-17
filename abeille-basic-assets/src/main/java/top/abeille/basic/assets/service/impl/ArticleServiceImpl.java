@@ -70,6 +70,16 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     }
 
     @Override
+    public Flux<Object> fetchCount() {
+        return null;
+    }
+
+    @Override
+    public Flux<ArticleVO> fetchTop10() {
+        return null;
+    }
+
+    @Override
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
         BeanCopier.create(ArticleDTO.class, ArticleInfo.class, false).copy(articleDTO, info, null);

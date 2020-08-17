@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.service;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.vo.ArticleDetailsVO;
@@ -23,4 +24,8 @@ public interface ArticleService extends BasicService<ArticleDTO, ArticleVO> {
      * @return 详细信息
      */
     Mono<ArticleDetailsVO> fetchDetailsByBusinessId(String businessId);
+
+    Flux<Object> fetchCount();
+
+    Flux<ArticleVO> fetchTop10();
 }

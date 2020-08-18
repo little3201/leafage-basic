@@ -5,7 +5,6 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -82,7 +81,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     @Override
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
-        BeanCopier.create(ArticleDTO.class, ArticleInfo.class, false).copy(articleDTO, info, null);
+        BeanUtils.copyProperties(articleDTO, info);
         info.setBusinessId(PrefixEnum.AT + this.generateId());
         info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());

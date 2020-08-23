@@ -1,15 +1,15 @@
 <p align="center">
-  <a href="https://abeille.top" target="_blank">
-    <img alt="Abeille Logo" width="100" src="https://github.com/little3201/abeille-ui/blob/master/src/assets/logo.png">
+  <a href="https://console.abeille.top" target="_blank">
+    <img alt="Abeille Logo" width="100" src="https://github.com/little3201/abeille-manager/blob/develop/src/assets/logo.svg">
   </a>
 </p>
 
 <p align="center">
-  <br>
   <a href="https://github.com/little3201/abeille-basic/blob/develop/LICENSE">
      <img src="https://img.shields.io/github/license/little3201/abeille-basic.svg" alt="License">
   </a>
-  <img src="https://img.shields.io/coveralls/vcsType/little3201/abeille-basic.svg" alt="License">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-Hoxto.RELEASE-blue.svg" alt="Coverage Status">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.1.RELEASE-blue.svg" alt="Downloads">
 </p>
 
 <h2 align="center">Supporting Abeille</h2>
@@ -22,5 +22,3 @@
 
 1. 参照字节码访问标志来存储博文的所属分类;
 2. 前两位为标示位，后四位为随机混淆位，中间2-3位为创建的日期，月份占一位，使用16进制表示；
-
-

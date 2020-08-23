@@ -23,7 +23,10 @@ import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 文章信息service实现
@@ -69,8 +72,14 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     }
 
     @Override
-    public Flux<Object> fetchCount() {
-        return null;
+    public Flux<Map<Integer, Long>> fetchCount() {
+        LocalDate now = LocalDate.now();
+        Map<Integer, Long> monthCount = new HashMap<>(this.lastDayOfMonth(now).getDayOfMonth());
+        for (int i = 1; i < this.lastDayOfMonth(now).getDayOfMonth(); ++i) {
+            Mono<Long> count = articleRepository.countByModifyTimeBetween(this.firstDayOfMonth(now), this.firstDayOfMonth(now).plusDays(i));
+            monthCount.put(i, count.block());
+        }
+        return Flux.just(monthCount);
     }
 
     @Override

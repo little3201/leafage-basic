@@ -5,7 +5,10 @@ package top.abeille.basic.assets.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.ArticleInfo;
+
+import java.time.LocalDate;
 
 /**
  * 文章信息repository
@@ -14,4 +17,6 @@ import top.abeille.basic.assets.document.ArticleInfo;
  **/
 @Repository
 public interface ArticleRepository extends ReactiveMongoRepository<ArticleInfo, String> {
+
+    Mono<Long> countByModifyTimeBetween(LocalDate startDate, LocalDate deadline);
 }

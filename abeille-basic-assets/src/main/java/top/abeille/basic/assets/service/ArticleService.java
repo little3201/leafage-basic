@@ -10,6 +10,8 @@ import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.BasicService;
 
+import java.util.Map;
+
 /**
  * 文章信息Service
  *
@@ -25,7 +27,7 @@ public interface ArticleService extends BasicService<ArticleDTO, ArticleVO> {
      */
     Mono<ArticleDetailsVO> fetchDetailsByBusinessId(String businessId);
 
-    Flux<Object> fetchCount();
+    Flux<Map<Integer, Long>> fetchCount();
 
     Flux<ArticleVO> fetchTop10();
 }

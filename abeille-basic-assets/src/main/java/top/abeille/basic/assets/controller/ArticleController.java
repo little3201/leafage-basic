@@ -13,6 +13,7 @@ import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * 文章信息controller
@@ -78,8 +79,8 @@ public class ArticleController extends AbstractController {
      *
      * @return 一个月内每周新增数量
      */
-    public Flux<Integer> fetchCount() {
-        return Flux.empty();
+    public Flux<Map<Integer, Long>> fetchCount() {
+        return articleService.fetchCount();
     }
 
     /**

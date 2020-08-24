@@ -18,7 +18,6 @@ import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
-import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import top.abeille.basic.hypervisor.handler.AbeilleFailureHandler;
 import top.abeille.basic.hypervisor.handler.AbeilleSuccessHandler;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
@@ -81,8 +80,9 @@ public class AbeilleSecurityConfig {
                 .and().formLogin().authenticationSuccessHandler(authenticationSuccessHandler())
                 .authenticationFailureHandler(authenticationFailureHandler())
                 .and().logout()
-                .and().csrf().csrfTokenRepository(new CookieServerCsrfTokenRepository())
-                .and().oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
+                .and().csrf().disable()
+//                .and().csrf().csrfTokenRepository(new CookieServerCsrfTokenRepository())
+                .oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
         return http.build();
     }
 

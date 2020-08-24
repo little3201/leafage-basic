@@ -27,7 +27,7 @@ public interface ArticleService extends BasicService<ArticleDTO, ArticleVO> {
      */
     Mono<ArticleDetailsVO> fetchDetailsByBusinessId(String businessId);
 
-    Flux<Map<Integer, Long>> fetchCount();
+    Flux<Map<Integer, Long>> monthCount();
 
     Flux<ArticleVO> fetchTop10();
 }

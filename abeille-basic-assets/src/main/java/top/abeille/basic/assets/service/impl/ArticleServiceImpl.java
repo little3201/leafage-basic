@@ -72,12 +72,13 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     }
 
     @Override
-    public Flux<Map<Integer, Long>> fetchCount() {
+    public Flux<Map<Integer, Long>> monthCount() {
         LocalDate now = LocalDate.now();
         Map<Integer, Long> monthCount = new HashMap<>(this.lastDayOfMonth(now).getDayOfMonth());
-        for (int i = 1; i < this.lastDayOfMonth(now).getDayOfMonth(); ++i) {
-            Mono<Long> count = articleRepository.countByModifyTimeBetween(this.firstDayOfMonth(now), this.firstDayOfMonth(now).plusDays(i));
-            monthCount.put(i, count.block());
+        for (int i = 0; i < this.lastDayOfMonth(now).getDayOfMonth(); ++i) {
+            int day = i + 1;
+            articleRepository.countByModifyTimeBetween(this.firstDayOfMonth(now).plusDays(i), this.firstDayOfMonth(now).plusDays(i + 1))
+                    .subscribe(count -> monthCount.put(day, count));
         }
         return Flux.just(monthCount);
     }

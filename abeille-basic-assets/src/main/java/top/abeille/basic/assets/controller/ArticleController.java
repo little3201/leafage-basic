@@ -79,8 +79,9 @@ public class ArticleController extends AbstractController {
      *
      * @return 一个月内每周新增数量
      */
-    public Flux<Map<Integer, Long>> fetchCount() {
-        return articleService.fetchCount();
+    @GetMapping("/monthCount")
+    public Flux<Map<Integer, Long>> monthCount() {
+        return articleService.monthCount();
     }
 
     /**

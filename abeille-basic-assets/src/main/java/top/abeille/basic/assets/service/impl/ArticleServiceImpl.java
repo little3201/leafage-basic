@@ -21,12 +21,14 @@ import top.abeille.basic.assets.service.ArticleService;
 import top.abeille.basic.assets.service.DetailsService;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.basic.assets.vo.DetailsVO;
+import top.abeille.basic.assets.vo.StatisticsVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 文章信息service实现
@@ -57,14 +59,14 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     public Mono<DetailsVO> fetchDetailsByBusinessId(String businessId) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchByBusinessId(businessId).flatMap(articleVO -> {
-            // 将内容设置到vo对像中
-            DetailsVO detailsVO = new DetailsVO();
-            BeanUtils.copyProperties(articleVO, detailsVO);
-            // 根据业务id获取相关内容
-            return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
-                detailsVO.setOriginal(contentInfo.getOriginal());
-                detailsVO.setContent(contentInfo.getContent());
-                detailsVO.setCatalog(contentInfo.getCatalog());
+                    // 将内容设置到vo对像中
+                    DetailsVO detailsVO = new DetailsVO();
+                    BeanUtils.copyProperties(articleVO, detailsVO);
+                    // 根据业务id获取相关内容
+                    return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
+                        detailsVO.setOriginal(contentInfo.getOriginal());
+                        detailsVO.setContent(contentInfo.getContent());
+                        detailsVO.setCatalog(contentInfo.getCatalog());
                         return detailsVO;
                     }).defaultIfEmpty(detailsVO);
                 }
@@ -72,15 +74,21 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     }
 
     @Override
-    public Flux<Map<Integer, Long>> monthCount() {
+    public Flux<StatisticsVO> statistics() {
         LocalDate now = LocalDate.now();
-        Map<Integer, Long> monthCount = new HashMap<>(this.lastDayOfMonth(now).getDayOfMonth());
-        for (int i = 0; i < this.lastDayOfMonth(now).getDayOfMonth(); ++i) {
-            int day = i + 1;
-            articleRepository.countByModifyTimeBetween(this.firstDayOfMonth(now).plusDays(i), this.firstDayOfMonth(now).plusDays(i + 1))
-                    .subscribe(count -> monthCount.put(day, count));
+        int monthSize = this.lastDayOfMonth(now).getDayOfMonth();
+        List<StatisticsVO> voList = new ArrayList<>(monthSize);
+        for (int i = 0; i < monthSize; ++i) {
+            LocalDate firstDay = this.firstDayOfMonth(now);
+            StatisticsVO statisticsVO = new StatisticsVO();
+            statisticsVO.setLabel(i + 1);
+            Optional<Long> optional = articleRepository.countByModifyTimeBetween(firstDay.plusDays(i), firstDay.plusDays(i + 1)).blockOptional();
+            if (optional.isPresent()) {
+                statisticsVO.setValue(optional.get());
+                voList.add(statisticsVO);
+            }
         }
-        return Flux.just(monthCount);
+        return Flux.fromIterable(voList);
     }
 
     @Override

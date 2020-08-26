@@ -10,10 +10,10 @@ import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.service.ArticleService;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.basic.assets.vo.DetailsVO;
+import top.abeille.basic.assets.vo.StatisticsVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * 文章信息controller
@@ -75,13 +75,13 @@ public class ArticleController extends AbstractController {
     }
 
     /**
-     * 获取一个月内每周新增数量
+     * 获取一个月内每日更新数量
      *
-     * @return 一个月内每周新增数量
+     * @return 一个月内每日更新数量
      */
-    @GetMapping("/monthCount")
-    public Flux<Map<Integer, Long>> monthCount() {
-        return articleService.monthCount();
+    @GetMapping("/statistics")
+    public Flux<StatisticsVO> statistics() {
+        return articleService.statistics();
     }
 
     /**

@@ -8,9 +8,8 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.vo.ArticleVO;
 import top.abeille.basic.assets.vo.DetailsVO;
+import top.abeille.basic.assets.vo.StatisticsVO;
 import top.abeille.common.basic.BasicService;
-
-import java.util.Map;
 
 /**
  * 文章信息Service
@@ -27,7 +26,12 @@ public interface ArticleService extends BasicService<ArticleDTO, ArticleVO> {
      */
     Mono<DetailsVO> fetchDetailsByBusinessId(String businessId);
 
-    Flux<Map<Integer, Long>> monthCount();
+    /**
+     * 获取一个月内每日更新数量
+     *
+     * @return 一个月内每日更新数量
+     */
+    Flux<StatisticsVO> statistics();
 
     Flux<ArticleVO> fetchTop10();
 }

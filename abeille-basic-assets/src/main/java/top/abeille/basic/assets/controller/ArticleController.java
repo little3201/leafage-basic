@@ -8,8 +8,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.service.ArticleService;
-import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
+import top.abeille.basic.assets.vo.DetailsVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -47,7 +47,7 @@ public class ArticleController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{businessId}")
-    public Mono<ArticleDetailsVO> fetchArticle(@PathVariable String businessId) {
+    public Mono<DetailsVO> fetchArticle(@PathVariable String businessId) {
         return articleService.fetchDetailsByBusinessId(businessId).switchIfEmpty(Mono.empty());
     }
 

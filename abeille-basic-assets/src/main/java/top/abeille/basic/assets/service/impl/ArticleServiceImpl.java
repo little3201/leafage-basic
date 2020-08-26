@@ -19,8 +19,8 @@ import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.repository.ArticleRepository;
 import top.abeille.basic.assets.service.ArticleService;
 import top.abeille.basic.assets.service.DetailsService;
-import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
+import top.abeille.basic.assets.vo.DetailsVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDate;
@@ -54,17 +54,17 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     }
 
     @Override
-    public Mono<ArticleDetailsVO> fetchDetailsByBusinessId(String businessId) {
+    public Mono<DetailsVO> fetchDetailsByBusinessId(String businessId) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchByBusinessId(businessId).flatMap(articleVO -> {
-                    // 将内容设置到vo对像中
-                    ArticleDetailsVO detailsVO = new ArticleDetailsVO();
-                    BeanUtils.copyProperties(articleVO, detailsVO);
-                    // 根据业务id获取相关内容
-                    return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
-                        detailsVO.setOriginal(contentInfo.getOriginal());
-                        detailsVO.setContent(contentInfo.getContent());
-                        detailsVO.setCatalog(contentInfo.getCatalog());
+            // 将内容设置到vo对像中
+            DetailsVO detailsVO = new DetailsVO();
+            BeanUtils.copyProperties(articleVO, detailsVO);
+            // 根据业务id获取相关内容
+            return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
+                detailsVO.setOriginal(contentInfo.getOriginal());
+                detailsVO.setContent(contentInfo.getContent());
+                detailsVO.setCatalog(contentInfo.getCatalog());
                         return detailsVO;
                     }).defaultIfEmpty(detailsVO);
                 }

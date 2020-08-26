@@ -6,8 +6,8 @@ package top.abeille.basic.assets.service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
-import top.abeille.basic.assets.vo.ArticleDetailsVO;
 import top.abeille.basic.assets.vo.ArticleVO;
+import top.abeille.basic.assets.vo.DetailsVO;
 import top.abeille.common.basic.BasicService;
 
 import java.util.Map;
@@ -25,7 +25,7 @@ public interface ArticleService extends BasicService<ArticleDTO, ArticleVO> {
      * @param businessId 业务id
      * @return 详细信息
      */
-    Mono<ArticleDetailsVO> fetchDetailsByBusinessId(String businessId);
+    Mono<DetailsVO> fetchDetailsByBusinessId(String businessId);
 
     Flux<Map<Integer, Long>> monthCount();
 

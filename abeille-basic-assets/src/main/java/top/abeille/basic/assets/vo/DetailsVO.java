@@ -4,13 +4,18 @@
 package top.abeille.basic.assets.vo;
 
 /**
- * Details VO class for TranslationInfo
+ * Details VO class for ArticleInfo
  *
  * @author liwenqiang
  */
-public class TranslationDetailsVO extends TranslationVO {
+public class DetailsVO extends ArticleVO {
 
-    private static final long serialVersionUID = 7989303162411272898L;
+    private static final long serialVersionUID = -3631862762916498067L;
+
+    /**
+     * 原文
+     */
+    private String original;
     /**
      * 内容
      */
@@ -19,6 +24,14 @@ public class TranslationDetailsVO extends TranslationVO {
      * 目录
      */
     private String catalog;
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
+    }
 
     public String getContent() {
         return content;

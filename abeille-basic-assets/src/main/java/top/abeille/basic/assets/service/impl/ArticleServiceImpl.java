@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
-import top.abeille.basic.assets.api.bo.UserBO;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ArticleInfo;
 import top.abeille.basic.assets.document.DetailsInfo;
@@ -28,7 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 文章信息service实现
@@ -52,7 +51,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     @Override
     public Flux<ArticleVO> retrieveAll() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return articleRepository.findAll(sort).map(this::convertOuter);
+        return articleRepository.findAll(sort).flatMap(this::convertOuter);
     }
 
     @Override
@@ -77,18 +76,17 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     public Flux<StatisticsVO> statistics() {
         LocalDate now = LocalDate.now();
         int monthSize = this.lastDayOfMonth(now).getDayOfMonth();
+        LocalDate firstDay = this.firstDayOfMonth(now);
         List<StatisticsVO> voList = new ArrayList<>(monthSize);
-        for (int i = 0; i < monthSize; ++i) {
-            LocalDate firstDay = this.firstDayOfMonth(now);
-            StatisticsVO statisticsVO = new StatisticsVO();
-            statisticsVO.setLabel(i + 1);
-            Optional<Long> optional = articleRepository.countByModifyTimeBetween(firstDay.plusDays(i), firstDay.plusDays(i + 1)).blockOptional();
-            if (optional.isPresent()) {
-                statisticsVO.setValue(optional.get());
-                voList.add(statisticsVO);
-            }
-        }
-        return Flux.fromIterable(voList);
+        AtomicInteger ai = new AtomicInteger(0);
+        return Flux.fromIterable(voList).map(statisticsVO -> {
+            statisticsVO = new StatisticsVO();
+            int day = ai.incrementAndGet();
+            statisticsVO.setLabel(day);
+            articleRepository.countByModifyTimeBetween(firstDay.plusDays(day), firstDay.plusDays(day + 1))
+                    .subscribe(statisticsVO::setValue);
+            return statisticsVO;
+        });
     }
 
     @Override
@@ -110,7 +108,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
             detailsInfo.setBusinessId(articleInfo.getBusinessId());
             // 调用subscribe()方法，消费create订阅
             detailsService.create(detailsInfo).subscribe();
-        }).map(this::convertOuter);
+        }).flatMap(this::convertOuter);
     }
 
     @Override
@@ -127,7 +125,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
                         // 调用subscribe()方法，消费modify订阅
                         detailsService.modify(detailsInfo.getBusinessId(), detailsInfo).subscribe();
                     }).subscribe()
-            ).map(this::convertOuter);
+            ).flatMap(this::convertOuter);
         });
     }
 
@@ -140,7 +138,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     @Override
     public Mono<ArticleVO> fetchByBusinessId(String businessId) {
         Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).map(this::convertOuter);
+        return this.fetchInfo(businessId).flatMap(this::convertOuter);
     }
 
     /**
@@ -163,12 +161,13 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
      * @param info 信息
      * @return 输出转换后的vo对象
      */
-    private ArticleVO convertOuter(ArticleInfo info) {
-        ArticleVO outer = new ArticleVO();
-        BeanUtils.copyProperties(info, outer);
-        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
-        outer.setAuthor(userBO);
-        return outer;
+    private Mono<ArticleVO> convertOuter(ArticleInfo info) {
+        return Mono.just(info).map(article -> {
+            ArticleVO articleVO = new ArticleVO();
+            BeanUtils.copyProperties(article, articleVO);
+            return articleVO;
+        }).doOnNext(outer -> hypervisorApi.fetchUserByBusinessId(info.getModifier())
+                .subscribe(outer::setAuthor));
     }
 
 }

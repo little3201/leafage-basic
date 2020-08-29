@@ -26,9 +26,6 @@ import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 文章信息service实现
@@ -77,18 +74,15 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     public Flux<StatisticsVO> statistics() {
         LocalDate now = LocalDate.now();
         int monthSize = this.lastDayOfMonth(now).getDayOfMonth();
-        List<StatisticsVO> voList = new ArrayList<>(monthSize);
-        for (int i = 0; i < monthSize; ++i) {
-            LocalDate firstDay = this.firstDayOfMonth(now);
+        LocalDate firstDay = this.firstDayOfMonth(now);
+        return Flux.range(0, monthSize).map(i -> {
+            int day = i + 1;
             StatisticsVO statisticsVO = new StatisticsVO();
-            statisticsVO.setLabel(i + 1);
-            Optional<Long> optional = articleRepository.countByModifyTimeBetween(firstDay.plusDays(i), firstDay.plusDays(i + 1)).blockOptional();
-            if (optional.isPresent()) {
-                statisticsVO.setValue(optional.get());
-                voList.add(statisticsVO);
-            }
-        }
-        return Flux.fromIterable(voList);
+            statisticsVO.setLabel(day);
+            articleRepository.countByModifyTimeBetween(firstDay.plusDays(day), firstDay.plusDays(day + 1))
+                    .subscribe(statisticsVO::setValue);
+            return statisticsVO;
+        });
     }
 
     @Override

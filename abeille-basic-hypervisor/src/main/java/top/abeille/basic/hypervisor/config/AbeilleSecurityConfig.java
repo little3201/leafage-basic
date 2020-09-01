@@ -6,6 +6,7 @@ package top.abeille.basic.hypervisor.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -16,8 +17,11 @@ import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.HttpStatusServerEntryPoint;
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.authentication.logout.HttpStatusReturningServerLogoutSuccessHandler;
+import org.springframework.security.web.server.csrf.CookieServerCsrfTokenRepository;
 import top.abeille.basic.hypervisor.handler.AbeilleFailureHandler;
 import top.abeille.basic.hypervisor.handler.AbeilleSuccessHandler;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
@@ -73,16 +77,15 @@ public class AbeilleSecurityConfig {
      */
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.authorizeExchange().pathMatchers(HttpMethod.OPTIONS).permitAll()
+        http.authorizeExchange(a -> a.pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers(HttpMethod.GET, "/user/{segment}").permitAll()
-                .anyExchange().authenticated()
-                .and().exceptionHandling()
-                .and().formLogin().authenticationSuccessHandler(authenticationSuccessHandler())
-                .authenticationFailureHandler(authenticationFailureHandler())
-                .and().logout()
-                .and().csrf().disable()
-//                .and().csrf().csrfTokenRepository(new CookieServerCsrfTokenRepository())
-                .oauth2ResourceServer().jwt().jwtDecoder(jwtDecoder());
+                .anyExchange().authenticated())
+                .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusServerEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .formLogin(f -> f.authenticationSuccessHandler(authenticationSuccessHandler())
+                        .authenticationFailureHandler(authenticationFailureHandler()))
+                .logout(l -> l.logoutSuccessHandler(new HttpStatusReturningServerLogoutSuccessHandler()))
+                .csrf(c -> c.csrfTokenRepository(CookieServerCsrfTokenRepository.withHttpOnlyFalse()))
+                .oauth2ResourceServer(o -> o.jwt().jwtDecoder(jwtDecoder()));
         return http.build();
     }
 

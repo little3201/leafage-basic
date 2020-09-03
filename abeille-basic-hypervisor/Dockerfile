@@ -11,10 +11,12 @@ VOLUME /tmp
 #EXPOSE 8763
 
 # The application's jar file
-ARG JAR_FILE=target/abeille-basic-hypervisor-0.0.1-SNAPSHOT.jar
+ARG JAR_NAME=abeille-basic-hypervisor
+ARG VERSION=0.0.1-SNAPSHOT
+ARG JAR_FILE=target/${JAR_NAME}-${VERSION}.jar
 
 # Add the application's jar to the container
-ADD ${JAR_FILE} abeille-basic-hypervisor.jar
+ADD ${JAR_FILE} ${JAR_NAME}.jar
 
 # Run the jar file
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/abeille-basic-hypervisor.jar"]

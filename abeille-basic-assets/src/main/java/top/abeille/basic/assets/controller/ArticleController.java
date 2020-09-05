@@ -31,7 +31,7 @@ public class ArticleController extends AbstractController {
     }
 
     /**
-     * 分页查询翻译信息
+     * 分页查询信息
      *
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */

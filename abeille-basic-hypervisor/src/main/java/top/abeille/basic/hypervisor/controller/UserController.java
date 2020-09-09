@@ -3,6 +3,8 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,9 +25,11 @@ import javax.validation.Valid;
 public class UserController extends AbstractController {
 
     private final UserService userService;
+    private final ReactiveUserDetailsService userDetailsService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ReactiveUserDetailsService userDetailsService) {
         this.userService = userService;
+        this.userDetailsService = userDetailsService;
     }
 
     /**
@@ -42,11 +46,22 @@ public class UserController extends AbstractController {
      * 根据传入的业务id: businessId 查询信息
      *
      * @param businessId 业务id
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{businessId}")
     public Mono<UserVO> fetchUser(@PathVariable String businessId) {
         return userService.fetchByBusinessId(businessId);
+    }
+
+    /**
+     * 根据传入的 username 查询信息
+     *
+     * @param username 用户账号
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/load/{username}")
+    public Mono<UserDetails> findByUsername(@PathVariable String username) {
+        return userDetailsService.findByUsername(username);
     }
 
     /**

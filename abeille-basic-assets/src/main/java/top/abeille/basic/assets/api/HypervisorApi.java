@@ -4,7 +4,7 @@
 package top.abeille.basic.assets.api;
 
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.api.bo.UserBO;
+import top.abeille.basic.assets.bo.UserBO;
 
 /**
  * 用户api

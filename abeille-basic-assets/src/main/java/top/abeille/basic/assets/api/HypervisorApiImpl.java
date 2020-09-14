@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.api.bo.UserBO;
+import top.abeille.basic.assets.bo.UserBO;
 
 @Service
 public class HypervisorApiImpl implements HypervisorApi {

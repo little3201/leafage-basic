@@ -1,7 +1,7 @@
 /*
  * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.assets.api.bo;
+package top.abeille.basic.assets.bo;
 
 import java.io.Serializable;
 

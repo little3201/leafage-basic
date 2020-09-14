@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.assets.vo;
 
-import top.abeille.basic.assets.api.bo.UserBO;
+import top.abeille.basic.assets.bo.UserBO;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

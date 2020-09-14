@@ -13,6 +13,6 @@ import top.abeille.basic.hypervisor.entity.SourceInfo;
  * @author liwenqiang 2018/12/17 19:37
  **/
 @Repository
-public interface SourceInfoRepository extends JpaRepository<SourceInfo, Long> {
+public interface SourceRepository extends JpaRepository<SourceInfo, Long> {
 
 }

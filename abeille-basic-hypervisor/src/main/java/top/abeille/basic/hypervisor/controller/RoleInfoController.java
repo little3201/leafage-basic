@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
-import top.abeille.basic.hypervisor.service.RoleInfoService;
+import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -25,10 +25,10 @@ import javax.validation.Valid;
 @RequestMapping("/role")
 public class RoleInfoController extends AbstractController {
 
-    private final RoleInfoService roleInfoService;
+    private final RoleService roleService;
 
-    public RoleInfoController(RoleInfoService roleInfoService) {
-        this.roleInfoService = roleInfoService;
+    public RoleInfoController(RoleService roleService) {
+        this.roleService = roleService;
     }
 
     /**
@@ -41,7 +41,7 @@ public class RoleInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity<Object> retrieveRole(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<RoleVO> roles = roleInfoService.retrieveByPage(pageable);
+        Page<RoleVO> roles = roleService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(roles.getContent())) {
             logger.info("Not found anything about role with pageable.");
             return ResponseEntity.noContent().build();
@@ -58,7 +58,7 @@ public class RoleInfoController extends AbstractController {
     @PostMapping
     public ResponseEntity<Object> createRole(@RequestBody @Valid RoleDTO roleDTO) {
         try {
-            roleInfoService.create(roleDTO);
+            roleService.create(roleDTO);
         } catch (Exception e) {
             logger.error("Save role occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
@@ -76,7 +76,7 @@ public class RoleInfoController extends AbstractController {
     @PutMapping("/{businessId}")
     public ResponseEntity<Object> modifyRole(@PathVariable String businessId, @RequestBody @Valid RoleDTO roleDTO) {
         try {
-            roleInfoService.modify(businessId, roleDTO);
+            roleService.modify(businessId, roleDTO);
         } catch (Exception e) {
             logger.error("Modify role occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
@@ -93,7 +93,7 @@ public class RoleInfoController extends AbstractController {
     @DeleteMapping("/{businessId}")
     public ResponseEntity<Object> removeRole(@PathVariable String businessId) {
         try {
-            roleInfoService.removeById(businessId);
+            roleService.removeById(businessId);
         } catch (Exception e) {
             logger.error("Remove role occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

@@ -5,14 +5,12 @@ package top.abeille.basic.hypervisor.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import top.abeille.basic.hypervisor.service.security.UserDetailsServiceImpl;
 
 /**
  * spring security 配置
@@ -23,11 +21,6 @@ import top.abeille.basic.hypervisor.service.security.UserDetailsServiceImpl;
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsServiceImpl userDetailsService;
-
-    public AbeilleSecurityConfig(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
 
     /**
      * 密码配置，使用BCryptPasswordEncoder
@@ -46,17 +39,6 @@ public class AbeilleSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests(a -> a.antMatchers(HttpMethod.OPTIONS).permitAll());
-    }
-
-    /**
-     * http 请求安全配置
-     *
-     * @param auth 认证管理创建器
-     * @throws Exception 异常
-     */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
 }

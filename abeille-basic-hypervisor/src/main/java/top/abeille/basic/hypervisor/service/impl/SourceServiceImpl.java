@@ -11,8 +11,8 @@ import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.constant.SourceTypeEnum;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.entity.SourceInfo;
-import top.abeille.basic.hypervisor.repository.SourceInfoRepository;
-import top.abeille.basic.hypervisor.service.SourceInfoService;
+import top.abeille.basic.hypervisor.repository.SourceRepository;
+import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -29,12 +29,12 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class SourceInfoServiceImpl extends AbstractBasicService implements SourceInfoService {
+public class SourceServiceImpl extends AbstractBasicService implements SourceService {
 
-    private final SourceInfoRepository sourceInfoRepository;
+    private final SourceRepository sourceRepository;
 
-    public SourceInfoServiceImpl(SourceInfoRepository sourceInfoRepository) {
-        this.sourceInfoRepository = sourceInfoRepository;
+    public SourceServiceImpl(SourceRepository sourceRepository) {
+        this.sourceRepository = sourceRepository;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
         ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("is_enabled", exact());
         SourceInfo roleInfo = new SourceInfo();
         roleInfo.setEnabled(true);
-        Page<SourceInfo> infoPage = sourceInfoRepository.findAll(Example.of(roleInfo, matcher), pageable);
+        Page<SourceInfo> infoPage = sourceRepository.findAll(Example.of(roleInfo, matcher), pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
@@ -70,7 +70,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
         info.setBusinessId(prefix + this.generateId());
         info.setModifier(0L);
         info.setModifyTime(LocalDateTime.now());
-        SourceInfo sourceInfo = sourceInfoRepository.save(info);
+        SourceInfo sourceInfo = sourceRepository.save(info);
         return this.convertOuter(sourceInfo);
     }
 
@@ -84,7 +84,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
         Optional<SourceInfo> optional = this.fetchInfo(businessId);
         if (optional.isPresent()) {
             SourceInfo info = optional.get();
-            sourceInfoRepository.deleteById(info.getId());
+            sourceRepository.deleteById(info.getId());
         }
     }
 
@@ -101,7 +101,7 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
     private Optional<SourceInfo> fetchInfo(String businessId) {
         SourceInfo sourceInfo = new SourceInfo();
         sourceInfo.setBusinessId(businessId);
-        return sourceInfoRepository.findOne(Example.of(sourceInfo));
+        return sourceRepository.findOne(Example.of(sourceInfo));
     }
 
     /**
@@ -114,5 +114,10 @@ public class SourceInfoServiceImpl extends AbstractBasicService implements Sourc
         SourceVO sourceVO = new SourceVO();
         BeanUtils.copyProperties(info, sourceVO);
         return sourceVO;
+    }
+
+    @Override
+    public SourceInfo findById(long id) {
+        return null;
     }
 }

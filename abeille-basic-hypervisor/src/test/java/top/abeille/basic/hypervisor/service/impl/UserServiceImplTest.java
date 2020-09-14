@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.repository.UserInfoRepository;
+import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.common.mock.AbstractServiceMock;
 
 /**
@@ -17,13 +17,13 @@ import top.abeille.common.mock.AbstractServiceMock;
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
-public class UserInfoServiceImplTest extends AbstractServiceMock {
+public class UserServiceImplTest extends AbstractServiceMock {
 
     @Mock
-    private UserInfoRepository userInfoRepository;
+    private UserRepository userRepository;
 
     @InjectMocks
-    private UserInfoServiceImpl userInfoService;
+    private UserServiceImpl userInfoService;
 
     /**
      * 测试修改用户信息
@@ -35,7 +35,7 @@ public class UserInfoServiceImplTest extends AbstractServiceMock {
         user.setNickname("管理员");
         String pwd = new BCryptPasswordEncoder().encode("abeille");
         userInfoService.create(user);
-        Mockito.verify(userInfoRepository, Mockito.times(1)).save(Mockito.any());
+        Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
     }
 
 }

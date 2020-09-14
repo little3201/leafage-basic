@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.BasicService;
@@ -12,5 +13,7 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/7/28 0:29
  **/
-public interface UserInfoService extends BasicService<UserDTO, UserVO> {
+public interface UserService extends BasicService<UserDTO, UserVO> {
+
+    UserDetails loadByUsername(String username);
 }

@@ -10,8 +10,8 @@ import org.springframework.util.CollectionUtils;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.entity.GroupInfo;
-import top.abeille.basic.hypervisor.repository.GroupInfoRepository;
-import top.abeille.basic.hypervisor.service.GroupInfoService;
+import top.abeille.basic.hypervisor.repository.GroupRepository;
+import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -28,12 +28,12 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/12/17 19:25
  **/
 @Service
-public class GroupInfoServiceImpl extends AbstractBasicService implements GroupInfoService {
+public class GroupServiceImpl extends AbstractBasicService implements GroupService {
 
-    private final GroupInfoRepository groupInfoRepository;
+    private final GroupRepository groupRepository;
 
-    public GroupInfoServiceImpl(GroupInfoRepository groupInfoRepository) {
-        this.groupInfoRepository = groupInfoRepository;
+    public GroupServiceImpl(GroupRepository groupRepository) {
+        this.groupRepository = groupRepository;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
         ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("is_enabled", exact());
         GroupInfo groupInfo = new GroupInfo();
         groupInfo.setEnabled(true);
-        Page<GroupInfo> infoPage = groupInfoRepository.findAll(Example.of(groupInfo, matcher), pageable);
+        Page<GroupInfo> infoPage = groupRepository.findAll(Example.of(groupInfo, matcher), pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
@@ -54,7 +54,7 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
         BeanUtils.copyProperties(groupDTO, info);
         info.setBusinessId(PrefixEnum.GP + this.generateId());
         info.setModifyTime(LocalDateTime.now());
-        GroupInfo groupInfo = groupInfoRepository.save(info);
+        GroupInfo groupInfo = groupRepository.save(info);
         return this.convertOuter(groupInfo);
     }
 
@@ -63,7 +63,7 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
         Optional<GroupInfo> optional = this.fetchInfo(businessId);
         if (optional.isPresent()) {
             GroupInfo info = optional.get();
-            groupInfoRepository.deleteById(info.getId());
+            groupRepository.deleteById(info.getId());
         }
     }
 
@@ -80,7 +80,7 @@ public class GroupInfoServiceImpl extends AbstractBasicService implements GroupI
     private Optional<GroupInfo> fetchInfo(String businessId) {
         GroupInfo groupInfo = new GroupInfo();
         groupInfo.setBusinessId(businessId);
-        return groupInfoRepository.findOne(Example.of(groupInfo));
+        return groupRepository.findOne(Example.of(groupInfo));
     }
 
     /**

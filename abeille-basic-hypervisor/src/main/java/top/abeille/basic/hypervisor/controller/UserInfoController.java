@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.service.UserInfoService;
+import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -28,10 +28,10 @@ import java.util.Objects;
 @RequestMapping("/user")
 public class UserInfoController extends AbstractController {
 
-    private final UserInfoService userInfoService;
+    private final UserService userService;
 
-    public UserInfoController(UserInfoService userInfoService) {
-        this.userInfoService = userInfoService;
+    public UserInfoController(UserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -44,7 +44,7 @@ public class UserInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity<Object> retrieveUser(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<UserVO> users = userInfoService.retrieveByPage(pageable);
+        Page<UserVO> users = userService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(users.getContent())) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.noContent().build();
@@ -60,7 +60,7 @@ public class UserInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public ResponseEntity<Object> fetchUser(@PathVariable String businessId) {
-        UserVO userVO = userInfoService.fetchByBusinessId(businessId);
+        UserVO userVO = userService.fetchByBusinessId(businessId);
         if (Objects.isNull(userVO)) {
             logger.info("Not found anything about hypervisor with userId: {}.", businessId);
             return ResponseEntity.noContent().build();
@@ -77,7 +77,7 @@ public class UserInfoController extends AbstractController {
     @PostMapping
     public ResponseEntity<Object> createUser(@RequestBody @Valid UserDTO userDTO) {
         try {
-            userInfoService.create(userDTO);
+            userService.create(userDTO);
         } catch (Exception e) {
             logger.error("Save user occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
@@ -95,7 +95,7 @@ public class UserInfoController extends AbstractController {
     @PutMapping("/{businessId}")
     public ResponseEntity<Object> modifyUser(@PathVariable String businessId, @RequestBody @Valid UserDTO userDTO) {
         try {
-            userInfoService.modify(businessId, userDTO);
+            userService.modify(businessId, userDTO);
         } catch (Exception e) {
             logger.error("Modify user occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
@@ -112,7 +112,7 @@ public class UserInfoController extends AbstractController {
     @DeleteMapping("/{businessId}")
     public ResponseEntity<Object> removeUser(@PathVariable String businessId) {
         try {
-            userInfoService.removeById(businessId);
+            userService.removeById(businessId);
         } catch (Exception e) {
             logger.error("Remove user occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

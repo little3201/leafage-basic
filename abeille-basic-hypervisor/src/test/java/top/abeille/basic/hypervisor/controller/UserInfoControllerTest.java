@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import top.abeille.basic.hypervisor.service.impl.UserInfoServiceImpl;
+import top.abeille.basic.hypervisor.service.impl.UserServiceImpl;
 import top.abeille.common.mock.AbstractControllerMock;
 
 /**
@@ -27,7 +27,7 @@ import top.abeille.common.mock.AbstractControllerMock;
 public class UserInfoControllerTest extends AbstractControllerMock<UserInfoController> {
 
     @Mock
-    private UserInfoServiceImpl userInfoService;
+    private UserServiceImpl userInfoService;
 
     @InjectMocks
     private UserInfoController userInfoController;

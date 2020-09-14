@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
-import top.abeille.basic.hypervisor.service.SourceInfoService;
+import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -25,10 +25,10 @@ import javax.validation.Valid;
 @RequestMapping("/source")
 public class SourceInfoController extends AbstractController {
 
-    private final SourceInfoService sourceInfoService;
+    private final SourceService sourceService;
 
-    public SourceInfoController(SourceInfoService sourceInfoService) {
-        this.sourceInfoService = sourceInfoService;
+    public SourceInfoController(SourceService sourceService) {
+        this.sourceService = sourceService;
     }
 
     /**
@@ -41,7 +41,7 @@ public class SourceInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity<Object> retrieveSource(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<SourceVO> sources = sourceInfoService.retrieveByPage(pageable);
+        Page<SourceVO> sources = sourceService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(sources.getContent())) {
             logger.info("Not found anything about source with pageable.");
             return ResponseEntity.noContent().build();
@@ -58,7 +58,7 @@ public class SourceInfoController extends AbstractController {
     @PostMapping
     public ResponseEntity<Object> createSource(@RequestBody @Valid SourceDTO sourceDTO) {
         try {
-            sourceInfoService.create(sourceDTO);
+            sourceService.create(sourceDTO);
         } catch (Exception e) {
             logger.error("Save user occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

@@ -13,5 +13,5 @@ import top.abeille.basic.hypervisor.entity.RoleInfo;
  * @author liwenqiang 2018/9/26 11:06
  **/
 @Repository
-public interface RoleInfoRepository extends JpaRepository<RoleInfo, Long> {
+public interface RoleRepository extends JpaRepository<RoleInfo, Long> {
 }

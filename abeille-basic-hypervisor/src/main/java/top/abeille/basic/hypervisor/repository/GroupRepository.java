@@ -13,5 +13,5 @@ import top.abeille.basic.hypervisor.entity.GroupInfo;
  * @author liwenqiang 2018/12/20 9:52
  **/
 @Repository
-public interface GroupInfoRepository extends JpaRepository<GroupInfo, Long> {
+public interface GroupRepository extends JpaRepository<GroupInfo, Long> {
 }

@@ -5,7 +5,6 @@ package top.abeille.basic.assets.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -144,7 +143,6 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
     }
 
     private UserBO fetchUser(String businessId) {
-        ResponseEntity<UserBO> responseEntity = hypervisorApi.fetchUser(businessId);
-        return responseEntity.getBody();
+        return hypervisorApi.fetchUser(businessId);
     }
 }

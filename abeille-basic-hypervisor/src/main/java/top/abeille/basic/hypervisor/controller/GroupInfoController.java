@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
-import top.abeille.basic.hypervisor.service.GroupInfoService;
+import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -23,10 +23,10 @@ import top.abeille.common.basic.AbstractController;
 @RequestMapping("/group")
 public class GroupInfoController extends AbstractController {
 
-    private final GroupInfoService groupInfoService;
+    private final GroupService groupService;
 
-    public GroupInfoController(GroupInfoService groupInfoService) {
-        this.groupInfoService = groupInfoService;
+    public GroupInfoController(GroupService groupService) {
+        this.groupService = groupService;
     }
 
     /**
@@ -39,7 +39,7 @@ public class GroupInfoController extends AbstractController {
     @GetMapping
     public ResponseEntity<Object> retrieveGroup(Integer pageNum, Integer pageSize) {
         Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<GroupVO> groups = groupInfoService.retrieveByPage(pageable);
+        Page<GroupVO> groups = groupService.retrieveByPage(pageable);
         if (CollectionUtils.isEmpty(groups.getContent())) {
             logger.info("Not found anything about group with pageable.");
             return ResponseEntity.noContent().build();
@@ -55,7 +55,7 @@ public class GroupInfoController extends AbstractController {
      */
     @GetMapping("/{businessId}")
     public ResponseEntity<Object> fetchGroup(@PathVariable String businessId) {
-        GroupVO groupInfo = groupInfoService.fetchByBusinessId(businessId);
+        GroupVO groupInfo = groupService.fetchByBusinessId(businessId);
         if (groupInfo == null) {
             logger.info("Not found anything about group with id {}.", businessId);
             return ResponseEntity.noContent().build();
@@ -72,7 +72,7 @@ public class GroupInfoController extends AbstractController {
     @PostMapping
     public ResponseEntity<Object> createGroup(@RequestBody GroupDTO groupDTO) {
         try {
-            groupInfoService.create(groupDTO);
+            groupService.create(groupDTO);
         } catch (Exception e) {
             logger.error("Save group occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
@@ -90,7 +90,7 @@ public class GroupInfoController extends AbstractController {
     @PutMapping("/{businessId}")
     public ResponseEntity<Object> modifyGroup(@PathVariable String businessId, @RequestBody GroupDTO groupDTO) {
         try {
-            groupInfoService.modify(businessId, groupDTO);
+            groupService.modify(businessId, groupDTO);
         } catch (Exception e) {
             logger.error("Modify group occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
@@ -107,7 +107,7 @@ public class GroupInfoController extends AbstractController {
     @DeleteMapping("/{businessId}")
     public ResponseEntity<Object> removeGroup(@PathVariable String businessId) {
         try {
-            groupInfoService.removeById(businessId);
+            groupService.removeById(businessId);
         } catch (Exception e) {
             logger.error("Remove group occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

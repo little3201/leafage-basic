@@ -10,8 +10,8 @@ import org.springframework.util.CollectionUtils;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.entity.RoleInfo;
-import top.abeille.basic.hypervisor.repository.RoleInfoRepository;
-import top.abeille.basic.hypervisor.service.RoleInfoService;
+import top.abeille.basic.hypervisor.repository.RoleRepository;
+import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -28,12 +28,12 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInfoService {
+public class RoleServiceImpl extends AbstractBasicService implements RoleService {
 
-    private final RoleInfoRepository roleInfoRepository;
+    private final RoleRepository roleRepository;
 
-    public RoleInfoServiceImpl(RoleInfoRepository roleInfoRepository) {
-        this.roleInfoRepository = roleInfoRepository;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
         ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("is_enabled", exact());
         RoleInfo roleInfo = new RoleInfo();
         roleInfo.setEnabled(true);
-        Page<RoleInfo> infoPage = roleInfoRepository.findAll(Example.of(roleInfo, matcher), pageable);
+        Page<RoleInfo> infoPage = roleRepository.findAll(Example.of(roleInfo, matcher), pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
@@ -52,7 +52,7 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
     public RoleVO fetchByBusinessId(String businessId) {
         RoleInfo roleInfo = new RoleInfo();
         roleInfo.setBusinessId(businessId);
-        Optional<RoleInfo> optional = roleInfoRepository.findOne(Example.of(roleInfo));
+        Optional<RoleInfo> optional = roleRepository.findOne(Example.of(roleInfo));
         if (optional.isEmpty()) {
             return null;
         }
@@ -64,7 +64,7 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
         Optional<RoleInfo> optional = this.fetchInfo(businessId);
         if (optional.isPresent()) {
             RoleInfo info = optional.get();
-            roleInfoRepository.deleteById(info.getId());
+            roleRepository.deleteById(info.getId());
         }
     }
 
@@ -78,7 +78,7 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
         BeanUtils.copyProperties(roleDTO, info);
         info.setBusinessId(PrefixEnum.RO + this.generateId());
         info.setModifyTime(LocalDateTime.now());
-        RoleInfo roleInfo = roleInfoRepository.save(info);
+        RoleInfo roleInfo = roleRepository.save(info);
         return this.convertOuter(roleInfo);
     }
 
@@ -91,7 +91,7 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
     private Optional<RoleInfo> fetchInfo(String businessId) {
         RoleInfo roleInfo = new RoleInfo();
         roleInfo.setBusinessId(businessId);
-        return roleInfoRepository.findOne(Example.of(roleInfo));
+        return roleRepository.findOne(Example.of(roleInfo));
     }
 
     /**
@@ -104,5 +104,10 @@ public class RoleInfoServiceImpl extends AbstractBasicService implements RoleInf
         RoleVO roleVO = new RoleVO();
         BeanUtils.copyProperties(info, roleVO);
         return roleVO;
+    }
+
+    @Override
+    public RoleInfo findById(long id) {
+        return null;
     }
 }

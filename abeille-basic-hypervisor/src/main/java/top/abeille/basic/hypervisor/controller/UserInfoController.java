@@ -39,7 +39,7 @@ public class UserInfoController extends AbstractController {
      *
      * @param pageNum  当前页
      * @param pageSize 页内数据量
-     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回204
      */
     @GetMapping
     public ResponseEntity<Object> retrieveUser(Integer pageNum, Integer pageSize) {
@@ -56,7 +56,7 @@ public class UserInfoController extends AbstractController {
      * 根据传入的业务id: businessId 查询信息
      *
      * @param businessId 业务id
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{businessId}")
     public ResponseEntity<Object> fetchUser(@PathVariable String businessId) {

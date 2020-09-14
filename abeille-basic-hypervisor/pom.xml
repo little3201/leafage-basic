@@ -47,6 +47,7 @@
         <dependency>
             <groupId>top.abeille.common</groupId>
             <artifactId>abeille-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- Spring Cloud Consul -->
         <dependency>

@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -25,11 +24,9 @@ import javax.validation.Valid;
 public class UserController extends AbstractController {
 
     private final UserService userService;
-    private final ReactiveUserDetailsService userDetailsService;
 
-    public UserController(UserService userService, ReactiveUserDetailsService userDetailsService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userDetailsService = userDetailsService;
     }
 
     /**
@@ -59,9 +56,9 @@ public class UserController extends AbstractController {
      * @param username 用户账号
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/load/{username}")
-    public Mono<UserDetails> findByUsername(@PathVariable String username) {
-        return userDetailsService.findByUsername(username);
+    @GetMapping("/info/{username}")
+    public Mono<UserDetails> loadByUsername(@PathVariable String username) {
+        return userService.loadByUsername(username);
     }
 
     /**

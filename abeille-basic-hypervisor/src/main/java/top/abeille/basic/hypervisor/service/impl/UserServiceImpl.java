@@ -5,9 +5,16 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.Asserts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -16,16 +23,20 @@ import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.document.UserRole;
 import top.abeille.basic.hypervisor.dto.UserDTO;
+import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
 import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.RoleService;
+import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -37,14 +48,28 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
 
+    /**
+     * email 正则
+     */
+    private static final String REGEX_EMAIL = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}";
+    /**
+     * 手机号 正则
+     */
+    private static final String REGEX_MOBILE = "0?(13|14|15|17|18|19)[0-9]{9}";
+    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final RoleService roleService;
+    private final RoleSourceRepository roleSourceRepository;
+    private final SourceService sourceService;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService, RoleSourceRepository roleSourceRepository, SourceService sourceService) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.roleService = roleService;
+        this.roleSourceRepository = roleSourceRepository;
+        this.sourceService = sourceService;
     }
 
     @Override
@@ -91,6 +116,26 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> fetchByBusinessId(String businessId) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<UserDetails> loadByUsername(String username) {
+        UserInfo info = this.findByUsername(username);
+        Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info));
+        Mono<ArrayList<String>> roleIdListMono = infoMono.switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("用户信息不存在")))
+                .flatMap(userInfo -> userRoleRepository.findByUserId(userInfo.getId())
+                        .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
+        // 取角色关联的权限ID
+        Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleSourceRepository.findByRoleIdIn(roleIdList)
+                .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getSourceId())));
+        // 查权限
+        Mono<ArrayList<GrantedAuthority>> authorityList = sourceIdListMono.flatMap(sourceIdList -> sourceService.findByIdInAndEnabledTrue(sourceIdList)
+                .collect(ArrayList::new, (sourceList, sourceInfo) -> sourceList.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId()))));
+        // 构造用户信息
+        return authorityList.zipWith(infoMono, (authorities, userInfo) ->
+                new User(StringUtils.isNotBlank(info.getMobile()) ? info.getMobile() : info.getEmail(), userInfo.getPassword(),
+                        userInfo.getEnabled(), userInfo.getAccountNonExpired(), userInfo.getCredentialsNonExpired(),
+                        userInfo.getAccountNonLocked(), authorities));
     }
 
     /**
@@ -156,4 +201,43 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         return userRole;
     }
 
+    /**
+     * 根据username查询账户信息
+     *
+     * @param username 账号
+     * @return 账户信息
+     */
+    private UserInfo findByUsername(String username) {
+        UserInfo info = new UserInfo();
+        // 判断是邮箱还是手机号
+        if (isMobile(username)) {
+            info.setMobile(username);
+        } else if (isEmail(username)) {
+            info.setEmail(username);
+        } else {
+            log.error("账号错误：{}", username);
+            throw new UsernameNotFoundException(username);
+        }
+        return info;
+    }
+
+    /**
+     * 是否手机号
+     *
+     * @param mobile 匹配字符
+     * @return true if mather otherwise false
+     */
+    private boolean isMobile(String mobile) {
+        return Pattern.matches(REGEX_MOBILE, mobile);
+    }
+
+    /**
+     * 是否邮箱
+     *
+     * @param email 匹配字符
+     * @return true if mather otherwise false
+     */
+    private boolean isEmail(String email) {
+        return Pattern.matches(REGEX_EMAIL, email);
+    }
 }

@@ -5,9 +5,12 @@ package top.abeille.basic.assets.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import top.abeille.basic.assets.api.HypervisorApi;
+import top.abeille.basic.assets.bo.UserBO;
 import top.abeille.basic.assets.document.ArticleDocument;
 import top.abeille.basic.assets.dto.ArticleDTO;
 import top.abeille.basic.assets.entity.ArticleInfo;
@@ -33,10 +36,12 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
 
     private final ArticleInfoRepository articleInfoRepository;
     private final ArticleDocumentRepository articleDocumentRepository;
+    private final HypervisorApi hypervisorApi;
 
-    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ArticleDocumentRepository articleDocumentRepository) {
+    public ArticleInfoServiceImpl(ArticleInfoRepository articleInfoRepository, ArticleDocumentRepository articleDocumentRepository, HypervisorApi hypervisorApi) {
         this.articleInfoRepository = articleInfoRepository;
         this.articleDocumentRepository = articleDocumentRepository;
+        this.hypervisorApi = hypervisorApi;
     }
 
     @Override
@@ -53,6 +58,8 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         return infoPage.map(info -> {
             ArticleVO articleVO = new ArticleVO();
             BeanUtils.copyProperties(info, articleVO);
+            UserBO user = this.fetchUser(info.getModifier());
+            articleVO.setAuthor(user);
             return articleVO;
         });
     }
@@ -134,5 +141,10 @@ public class ArticleInfoServiceImpl implements ArticleInfoService {
         ArticleInfo articleInfo = new ArticleInfo();
         articleInfo.setBusinessId(businessId);
         return articleInfoRepository.findOne(Example.of(articleInfo));
+    }
+
+    private UserBO fetchUser(String businessId) {
+        ResponseEntity<UserBO> responseEntity = hypervisorApi.fetchUser(businessId);
+        return responseEntity.getBody();
     }
 }

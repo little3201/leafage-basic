@@ -35,8 +35,8 @@ public class ArticleInfo {
     /**
      * 概览
      */
-    @Column(name = "summary")
-    private String summary;
+    @Column(name = "subtitle")
+    private String subtitle;
     /**
      * 图片url
      */
@@ -51,7 +51,7 @@ public class ArticleInfo {
      * 修改人
      */
     @Column(name = "modifier")
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
@@ -82,12 +82,12 @@ public class ArticleInfo {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
     public String getImageUrl() {
@@ -106,11 +106,11 @@ public class ArticleInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

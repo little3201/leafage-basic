@@ -3,6 +3,8 @@
  */
 package top.abeille.basic.assets.vo;
 
+import top.abeille.basic.assets.bo.UserBO;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,15 +19,15 @@ public class ArticleVO implements Serializable {
     /**
      * 文章ID
      */
-    private Long articleId;
+    private String businessId;
     /**
      * 标题
      */
     private String title;
     /**
-     * 概览
+     * 副标题
      */
-    private String summary;
+    private String subtitle;
     /**
      * 图片url
      */
@@ -37,18 +39,18 @@ public class ArticleVO implements Serializable {
     /**
      * 修改人
      */
-    private Long modifier;
+    private UserBO author;
     /**
      * 修改时间
      */
     private LocalDateTime modifyTime;
 
-    public Long getArticleId() {
-        return articleId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getTitle() {
@@ -59,12 +61,12 @@ public class ArticleVO implements Serializable {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
     public String getImageUrl() {
@@ -83,12 +85,12 @@ public class ArticleVO implements Serializable {
         this.content = content;
     }
 
-    public Long getModifier() {
-        return modifier;
+    public UserBO getAuthor() {
+        return author;
     }
 
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
+    public void setAuthor(UserBO author) {
+        this.author = author;
     }
 
     public LocalDateTime getModifyTime() {

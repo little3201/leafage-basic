@@ -22,9 +22,9 @@ public class ArticleDTO implements Serializable {
      */
     private String title;
     /**
-     * 概览
+     * 副标题
      */
-    private String summary;
+    private String subtitle;
     /**
      * 图片url
      */
@@ -50,12 +50,12 @@ public class ArticleDTO implements Serializable {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
     public String getImageUrl() {

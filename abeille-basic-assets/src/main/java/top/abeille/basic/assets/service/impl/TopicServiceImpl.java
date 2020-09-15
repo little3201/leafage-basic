@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
-import top.abeille.basic.assets.api.bo.UserBO;
+import top.abeille.basic.assets.bo.UserBO;
 import top.abeille.basic.assets.document.TopicInfo;
 import top.abeille.basic.assets.dto.TopicDTO;
 import top.abeille.basic.assets.repository.TopicRepository;

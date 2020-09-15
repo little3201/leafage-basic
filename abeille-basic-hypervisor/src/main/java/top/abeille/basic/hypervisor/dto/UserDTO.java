@@ -1,18 +1,21 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
 package top.abeille.basic.hypervisor.dto;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
- * 用户关键信息类
+ * Model class for UserInfo
  *
- * @author liwenqiang 2019/8/31 15:50
- **/
+ * @author liwenqiang
+ */
 public class UserDTO implements Serializable {
 
-    private static final long serialVersionUID = -1165865988174734554L;
+    private static final long serialVersionUID = -2259398095472923567L;
 
     /**
      * 昵称
@@ -31,12 +34,20 @@ public class UserDTO implements Serializable {
     /**
      * 邮箱
      */
-    @Email
+    @Pattern(regexp = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}", message = "email not pattern")
     private String email;
     /**
      * 地址
      */
     private String address;
+    /**
+     * 角色列表
+     */
+    private Set<String> roles;
+    /**
+     * 修改人
+     */
+    private String modifier;
 
     public String getNickname() {
         return nickname;
@@ -78,4 +89,19 @@ public class UserDTO implements Serializable {
         this.address = address;
     }
 
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
+    }
 }

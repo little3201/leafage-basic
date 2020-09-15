@@ -3,44 +3,48 @@
  */
 package top.abeille.basic.assets.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * 用户信息入参
+ * Enter class for ArticleInfo
  *
- * @author liwenqiang  2019-03-03 22:59
- **/
+ * @author liwenqiang
+ */
 public class ArticleDTO implements Serializable {
 
-    private static final long serialVersionUID = -4116939329295119085L;
-    /**
-     * 文章ID
-     */
-    private String businessId;
+    private static final long serialVersionUID = 248576207213923230L;
     /**
      * 标题
      */
+    @NotBlank
     private String title;
     /**
-     * 概览
+     * 描述
      */
-    private String summary;
+    @NotBlank
+    private String subtitle;
+    /**
+     * 原文
+     */
+    private String original;
+    /**
+     * 内容
+     */
+    private String content;
+    /**
+     * 目录
+     */
+    private String catalog;
     /**
      * 图片url
      */
     private String imageUrl;
     /**
-     * 内容
+     * 修改人
      */
-    private String content;
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
-    }
+    @NotBlank
+    private String modifier;
 
     public String getTitle() {
         return title;
@@ -50,12 +54,36 @@ public class ArticleDTO implements Serializable {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
     }
 
     public String getImageUrl() {
@@ -66,11 +94,11 @@ public class ArticleDTO implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public String getContent() {
-        return content;
+    public String getModifier() {
+        return modifier;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 }

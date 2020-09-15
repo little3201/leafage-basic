@@ -1,4 +1,4 @@
-##=====logger common=====##
+##=====log common=====##
 logging:
   level:
     # control root logger's level for WARN
@@ -6,8 +6,6 @@ logging:
     # control org.springframework logger's level for DEBUG
     org:
       springframework: INFO
-      # control org.hibernate logger's level for ERROR
-      hibernate: INFO
 
 spring:
   cloud:
@@ -16,60 +14,14 @@ spring:
       host: 127.0.0.1
       port: 8500
 
-  ##=====datasource common=====##
-  datasource:
-    master:
-      # datasource driver
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_hypervisor?useSSL=false&serverTimezone=UTC
-      # datasource username
-      username: root
-      # datasource password
-      password: root
-    slaver:
-      # datasource driver
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_hypervisor?useSSL=false&serverTimezone=UTC
-      # datasource username
-      username: root
-      # datasource password
-      password: root
-
-  ##=====Jpa common=====##
-  jpa:
-    # datasource dialect
-    database-platform: org.hibernate.dialect.MariaDBDialect
-    # datasource driver
-    database: mysql
-    # whether show execute sql
-    show-sql: true
-    # what hibernate will do when application run
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
-
-  # spring data config
+  ##=====mongodb config=====##
   data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred
-    redis:
-      repositories:
-        enabled: false
-
-
-  ##=====redis common=====##
-  redis:
-    # Redis database index(default is 0)
-    database: 0
-    # Redis server host
-    host: 127.0.0.1
-    # Redis server port
-    port: 6379
-    # Redis server password(default is non)
-    password:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      #      authentication-database: abeille
+      #      username: abeille
+      #      password: Abeille-top001
+      database: abeille
 
 

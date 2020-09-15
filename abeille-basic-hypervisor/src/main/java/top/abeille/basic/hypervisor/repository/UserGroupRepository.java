@@ -3,16 +3,26 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.hypervisor.entity.UserGroup;
+import reactor.core.publisher.Flux;
+import top.abeille.basic.hypervisor.document.UserGroup;
+
+import javax.validation.constraints.NotNull;
 
 /**
- * 用户组repository
+ * 用户角色Dao
  *
- * @author liwenqiang 2018/12/17 19:37
+ * @author liwenqiang 2018-12-06 22:09
  **/
 @Repository
-public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
+public interface UserGroupRepository extends ReactiveCrudRepository<UserGroup, String> {
 
+    /**
+     * 查询所有角色——根据用户id
+     *
+     * @param userId 用户ID
+     * @return List
+     */
+    Flux<UserGroup> findByUserId(@NotNull Long userId);
 }

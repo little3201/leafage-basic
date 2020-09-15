@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
 package top.abeille.basic.hypervisor.vo;
 
@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
  */
 public class SourceVO implements Serializable {
 
-    private static final long serialVersionUID = 7493821282349624572L;
+    private static final long serialVersionUID = 9207337014543117619L;
     /**
-     * 业务ID
+     * 业务id
      */
     private String businessId;
     /**
@@ -38,10 +38,6 @@ public class SourceVO implements Serializable {
      * 描述
      */
     private String description;
-    /**
-     * 修改人
-     */
-    private Long modifier;
     /**
      * 修改时间
      */
@@ -93,14 +89,6 @@ public class SourceVO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Long getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

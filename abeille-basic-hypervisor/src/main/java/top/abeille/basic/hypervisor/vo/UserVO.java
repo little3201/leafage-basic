@@ -1,18 +1,21 @@
+/*
+ * Copyright © 2010-2019 Abeille All rights reserved.
+ */
 package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户关键信息类
+ * Model class for UserInfo
  *
- * @author liwenqiang 2019/8/31 15:50
- **/
+ * @author liwenqiang
+ */
 public class UserVO implements Serializable {
 
-    private static final long serialVersionUID = -43247624019806041L;
+    private static final long serialVersionUID = 635350278320138075L;
     /**
-     * 业务ID
+     * 业务id
      */
     private String businessId;
     /**
@@ -23,10 +26,6 @@ public class UserVO implements Serializable {
      * 头像
      */
     private String avatar;
-    /**
-     * 用户名
-     */
-    private String username;
     /**
      * 电话
      */
@@ -40,9 +39,17 @@ public class UserVO implements Serializable {
      */
     private String address;
     /**
-     * 修改人
+     * 是否有效
      */
-    private Long modifier;
+    private Boolean accountNonExpired;
+    /**
+     * 是否锁定
+     */
+    private Boolean accountNonLocked;
+    /**
+     * 密码是否有效
+     */
+    private Boolean credentialsNonExpired;
     /**
      * 修改时间
      */
@@ -72,14 +79,6 @@ public class UserVO implements Serializable {
         this.avatar = avatar;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getMobile() {
         return mobile;
     }
@@ -104,12 +103,28 @@ public class UserVO implements Serializable {
         this.address = address;
     }
 
-    public Long getModifier() {
-        return modifier;
+    public Boolean getAccountNonExpired() {
+        return accountNonExpired;
     }
 
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
+    public void setAccountNonExpired(Boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public Boolean getAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(Boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public Boolean getCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
     }
 
     public LocalDateTime getModifyTime() {

@@ -3,9 +3,13 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.hypervisor.entity.RoleSource;
+import reactor.core.publisher.Flux;
+import top.abeille.basic.hypervisor.document.RoleSource;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 角色权限dao接口
@@ -13,5 +17,13 @@ import top.abeille.basic.hypervisor.entity.RoleSource;
  * @author liwenqiang 2018/9/26 11:29
  **/
 @Repository
-public interface RoleSourceRepository extends JpaRepository<RoleSource, Long> {
+public interface RoleSourceRepository extends ReactiveCrudRepository<RoleSource, String> {
+
+    /**
+     * 查询所有资源——根据角色ID集合
+     *
+     * @param roleIdList 角色ID集合
+     * @return Flux
+     */
+    Flux<RoleSource> findByRoleIdIn(@NotNull List<String> roleIdList);
 }

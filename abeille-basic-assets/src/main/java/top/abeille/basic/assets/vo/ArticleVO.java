@@ -1,54 +1,52 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
 package top.abeille.basic.assets.vo;
+
+import top.abeille.basic.assets.bo.UserBO;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 用户信息出参
+ * Enter class for ArticleInfo
  *
- * @author liwenqiang  2019-03-03 22:59
- **/
+ * @author liwenqiang
+ */
 public class ArticleVO implements Serializable {
 
-    private static final long serialVersionUID = 5476089760882093211L;
+    private static final long serialVersionUID = -2692474466082844624L;
     /**
-     * 文章ID
+     * 业务ID
      */
-    private Long articleId;
+    private String businessId;
+    /**
+     * 作者
+     */
+    private UserBO author;
     /**
      * 标题
      */
     private String title;
     /**
-     * 概览
+     * 副标题
      */
-    private String summary;
+    private String subtitle;
     /**
      * 图片url
      */
     private String imageUrl;
     /**
-     * 内容
-     */
-    private String content;
-    /**
-     * 修改人
-     */
-    private Long modifier;
-    /**
      * 修改时间
      */
     private LocalDateTime modifyTime;
 
-    public Long getArticleId() {
-        return articleId;
+    public String getBusinessId() {
+        return businessId;
     }
 
-    public void setArticleId(Long articleId) {
-        this.articleId = articleId;
+    public void setBusinessId(String businessId) {
+        this.businessId = businessId;
     }
 
     public String getTitle() {
@@ -59,12 +57,12 @@ public class ArticleVO implements Serializable {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
     public String getImageUrl() {
@@ -75,20 +73,12 @@ public class ArticleVO implements Serializable {
         this.imageUrl = imageUrl;
     }
 
-    public String getContent() {
-        return content;
+    public UserBO getAuthor() {
+        return author;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Long getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
+    public void setAuthor(UserBO author) {
+        this.author = author;
     }
 
     public LocalDateTime getModifyTime() {

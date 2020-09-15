@@ -38,7 +38,6 @@ public class SourceDTO implements Serializable {
      */
     private String description;
 
-
     public String getSuperior() {
         return superior;
     }

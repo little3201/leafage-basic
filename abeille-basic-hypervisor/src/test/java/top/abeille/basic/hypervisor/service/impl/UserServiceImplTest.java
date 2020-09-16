@@ -48,8 +48,8 @@ public class UserServiceImplTest {
      */
     @Test
     public void fetchByBusinessId_returnObject() {
-        String businessId = "US327SDF9";
-        Mono<UserVO> userVOMono = userInfoService.fetchByCode(businessId);
+        String username = "US327SDF9";
+        Mono<UserVO> userVOMono = userInfoService.fetchByCode(username);
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(UserInfo.class)))).thenReturn(Mockito.any());
         Assert.assertNotNull(userVOMono.map(UserVO::getUsername).block());
     }
@@ -59,8 +59,8 @@ public class UserServiceImplTest {
      */
     @Test
     public void fetchByBusinessId_returnEmpty() {
-        String businessId = "US327SDF9";
-        Mono<UserVO> userVOMono = userInfoService.fetchByCode(businessId);
+        String username = "US327SDF9";
+        Mono<UserVO> userVOMono = userInfoService.fetchByCode(username);
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(UserInfo.class)))).thenReturn(Mockito.isNull());
         Assert.assertNull(userVOMono.map(UserVO::getUsername).block());
     }

@@ -29,7 +29,7 @@ public class DetailsServiceImplTest {
     @Test
     public void create() {
         DetailsInfo info = new DetailsInfo();
-        info.setBusinessId("TP2277FZ0");
+        info.setArticleId("TP2277FZ0");
         info.setContent("Spring boot");
         Mono<DetailsInfo> mono = detailsService.create(info);
         Assert.notNull(mono.block(), "The class must not be null");

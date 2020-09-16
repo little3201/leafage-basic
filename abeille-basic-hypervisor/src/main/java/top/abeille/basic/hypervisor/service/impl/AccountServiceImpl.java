@@ -5,7 +5,6 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
@@ -45,7 +44,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     @Override
     public Mono<AccountVO> modify(String code, AccountDTO accountDTO) {
         Asserts.notBlank(code, "code");
-        return this.fetchByCode(code).flatMap(accountVO -> {
+        return accountRepository.findByCodeAndEnabledTrue(code).flatMap(accountVO -> {
             AccountInfo info = new AccountInfo();
             BeanUtils.copyProperties(accountDTO, info);
             return accountRepository.save(info).map(this::convertOuter);
@@ -55,34 +54,8 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code)
+        return accountRepository.findByCodeAndEnabledTrue(code)
                 .flatMap(account -> accountRepository.deleteById(account.getId()));
-    }
-
-    /**
-     * 根据业务id查询
-     *
-     * @param code 业务id
-     * @return 返回查询到的信息，否则返回empty
-     */
-    @Override
-    public Mono<AccountVO> fetchByCode(String code) {
-        Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).map(this::convertOuter);
-    }
-
-    /**
-     * 根据业务id查询
-     *
-     * @param code 业务id
-     * @return 返回查询到的信息，否则返回empty
-     */
-    private Mono<AccountInfo> fetchInfo(String code) {
-        Asserts.notBlank(code, "code");
-        AccountInfo info = new AccountInfo();
-        info.setCode(code);
-        info.setEnabled(true);
-        return accountRepository.findOne(Example.of(info));
     }
 
     /**

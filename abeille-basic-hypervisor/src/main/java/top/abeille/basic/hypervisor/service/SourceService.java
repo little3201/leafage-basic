@@ -20,12 +20,20 @@ import java.util.List;
 public interface SourceService extends BasicService<SourceDTO, SourceVO> {
 
     /**
-     * 根据业务ID查询资源信息
+     * 根据代码查询资源信息
      *
-     * @param businessId 业务ID
+     * @param code 代码
      * @return 数据库映射对象
      */
-    Mono<SourceInfo> fetchInfo(String businessId);
+    Mono<SourceInfo> findByCodeAndEnabledTrue(String code);
+
+    /**
+     * 根据主键查询资源信息
+     *
+     * @param id 主键
+     * @return 数据库映射对象
+     */
+    Mono<SourceInfo> findByIdAndEnabledTrue(String id);
 
     /**
      * 根据主键批量查询资源信息

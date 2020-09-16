@@ -5,7 +5,6 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
@@ -33,7 +32,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Mono<GroupVO> fetchByCode(String code) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).map(this::convertOuter);
+        return groupRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
@@ -46,7 +45,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
-        return this.fetchInfo(code).flatMap(info -> {
+        return groupRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
             return groupRepository.save(info);
         }).map(this::convertOuter);
@@ -55,20 +54,8 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).flatMap(groupInfo -> groupRepository.deleteById(groupInfo.getId()));
-    }
-
-    /**
-     * 根据code查询
-     *
-     * @param code 代码
-     * @return 返回查询到的信息，否则返回empty
-     */
-    private Mono<GroupInfo> fetchInfo(String code) {
-        Asserts.notBlank(code, "code");
-        GroupInfo info = new GroupInfo();
-        info.setCode(code);
-        return groupRepository.findOne(Example.of(info));
+        return groupRepository.findByCodeAndEnabledTrue(code).flatMap(groupInfo ->
+                groupRepository.deleteById(groupInfo.getId()));
     }
 
     /**

@@ -3,9 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -51,7 +49,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> fetchByCode(String code) {
-        return this.fetchInfo(code).map(this::convertOuter);
+        return roleRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
@@ -68,7 +66,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
-        return this.fetchInfo(code).flatMap(info -> {
+        return roleRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(roleDTO, info);
             return roleRepository.save(info).doOnNext(roleInfo -> {
                 List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
@@ -76,20 +74,6 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
                 roleSourceRepository.saveAll(userRoleList).subscribe();
             });
         }).map(this::convertOuter);
-    }
-
-    /**
-     * 根据业务id查询
-     *
-     * @param code 业务id
-     * @return 返回查询到的信息，否则返回empty
-     */
-    @Override
-    public Mono<RoleInfo> fetchInfo(String code) {
-        Asserts.notBlank(code, "code");
-        RoleInfo info = new RoleInfo();
-        info.setCode(code);
-        return roleRepository.findOne(Example.of(info));
     }
 
     /**
@@ -117,7 +101,13 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         roleSource.setRoleId(roleId);
         roleSource.setModifier(modifier);
         roleSource.setModifyTime(LocalDateTime.now());
-        sourceService.fetchInfo(sourceId).doOnNext(sourceInfo -> roleSource.setSourceId(sourceInfo.getId())).subscribe();
+        sourceService.findByIdAndEnabledTrue(sourceId).doOnNext(sourceInfo ->
+                roleSource.setSourceId(sourceInfo.getId())).subscribe();
         return roleSource;
+    }
+
+    @Override
+    public Mono<RoleInfo> findByCodeAndEnabledTrue(String code) {
+        return roleRepository.findByCodeAndEnabledTrue(code);
     }
 }

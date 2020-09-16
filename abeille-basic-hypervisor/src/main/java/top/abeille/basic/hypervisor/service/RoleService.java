@@ -16,11 +16,5 @@ import top.abeille.common.basic.BasicService;
  **/
 public interface RoleService extends BasicService<RoleDTO, RoleVO> {
 
-    /**
-     * 根据业务ID查询数据库信息，返回数据库映射对象
-     *
-     * @param businessId 业务ID
-     * @return 数据库映射对象
-     */
-    Mono<RoleInfo> fetchInfo(String businessId);
+    Mono<RoleInfo> findByCodeAndEnabledTrue(String code);
 }

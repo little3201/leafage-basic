@@ -180,17 +180,17 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     /**
      * 初始设置UserRole参数
      *
-     * @param userId         用户主键
-     * @param modifier       用户业务ID
-     * @param roleBusinessId 角色业务ID
+     * @param userId   用户主键
+     * @param modifier 用户业务ID
+     * @param roleCode 角色业务ID
      * @return 用户-角色对象
      */
-    private UserRole initUserRole(String userId, String modifier, String roleBusinessId) {
+    private UserRole initUserRole(String userId, String modifier, String roleCode) {
         UserRole userRole = new UserRole();
         userRole.setUserId(userId);
         userRole.setModifier(modifier);
         userRole.setModifyTime(LocalDateTime.now());
-        roleService.fetchInfo(roleBusinessId).doOnNext(roleInfo -> userRole.setRoleId(roleInfo.getId())).subscribe();
+        roleService.findByCodeAndEnabledTrue(roleCode).doOnNext(roleInfo -> userRole.setRoleId(roleInfo.getId())).subscribe();
         return userRole;
     }
 

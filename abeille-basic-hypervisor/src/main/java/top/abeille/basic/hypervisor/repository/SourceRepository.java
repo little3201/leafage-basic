@@ -6,6 +6,7 @@ package top.abeille.basic.hypervisor.repository;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.SourceInfo;
 
 import java.util.List;
@@ -17,6 +18,10 @@ import java.util.List;
  **/
 @Repository
 public interface SourceRepository extends ReactiveMongoRepository<SourceInfo, String> {
+
+    Mono<SourceInfo> findByCodeAndEnabledTrue(String code);
+
+    Mono<SourceInfo> findByIdAndEnabledTrue(String id);
 
     Flux<SourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList);
 }

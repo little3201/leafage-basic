@@ -5,6 +5,7 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.AccountInfo;
 
 /**
@@ -14,4 +15,6 @@ import top.abeille.basic.hypervisor.document.AccountInfo;
  **/
 @Repository
 public interface AccountRepository extends ReactiveMongoRepository<AccountInfo, String> {
+
+    Mono<AccountInfo> findByCodeAndEnabledTrue(String code);
 }

@@ -5,7 +5,6 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -44,7 +43,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     @Override
     public Mono<SourceVO> fetchByCode(String code) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).map(this::convertOuter);
+        return this.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
@@ -73,24 +72,21 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     @Override
     public Mono<SourceVO> modify(String code, SourceDTO sourceDTO) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).flatMap(info -> {
+        return this.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(sourceDTO, info);
             return sourceRepository.save(info);
         }).map(this::convertOuter);
     }
 
-    /**
-     * 根据业务id查询
-     *
-     * @param code 业务id
-     * @return 返回查询到的信息，否则返回empty
-     */
+
     @Override
-    public Mono<SourceInfo> fetchInfo(String code) {
-        Asserts.notBlank(code, "code");
-        SourceInfo info = new SourceInfo();
-        info.setCode(code);
-        return sourceRepository.findOne(Example.of(info));
+    public Mono<SourceInfo> findByCodeAndEnabledTrue(String code) {
+        return sourceRepository.findByCodeAndEnabledTrue(code);
+    }
+
+    @Override
+    public Mono<SourceInfo> findByIdAndEnabledTrue(String id) {
+        return sourceRepository.findByIdAndEnabledTrue(id);
     }
 
     @Override

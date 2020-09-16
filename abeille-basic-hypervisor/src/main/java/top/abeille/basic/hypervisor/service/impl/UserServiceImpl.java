@@ -19,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.document.UserRole;
 import top.abeille.basic.hypervisor.dto.UserDTO;
@@ -35,7 +34,6 @@ import top.abeille.common.basic.AbstractBasicService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -48,6 +46,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
 
+    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
     /**
      * email 正则
      */
@@ -56,7 +56,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * 手机号 正则
      */
     private static final String REGEX_MOBILE = "0?(13|14|15|17|18|19)[0-9]{9}";
-    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
@@ -82,44 +81,39 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> create(UserDTO userDTO) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(userDTO, info);
-        info.setBusinessId(PrefixEnum.US + this.generateId());
         info.setPassword(new BCryptPasswordEncoder().encode("110119"));
         this.appendParams(info);
         info.setModifyTime(LocalDateTime.now());
         return userRepository.insert(info).doOnNext(userInfo -> {
+            log.info("User :{} created.", userInfo.getUsername());
             List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
-                    this.initUserRole(userInfo.getId(), userInfo.getBusinessId(), role)).collect(Collectors.toList());
+                    this.initUserRole(userInfo.getId(), userInfo.getId(), role)).collect(Collectors.toList());
             userRoleRepository.saveAll(userRoleList).subscribe();
         }).map(this::convertOuter);
     }
 
     @Override
-    public Mono<UserVO> modify(String businessId, UserDTO userDTO) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).flatMap(info -> {
+    public Mono<UserVO> modify(String username, UserDTO userDTO) {
+        Asserts.notBlank(username, "username");
+        return this.fetchInfo(username).flatMap(info -> {
             BeanUtils.copyProperties(userDTO, info);
             return userRepository.save(info).doOnNext(userInfo -> {
                 List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
-                        this.initUserRole(userInfo.getId(), userInfo.getBusinessId(), role)).collect(Collectors.toList());
+                        this.initUserRole(userInfo.getId(), userInfo.getId(), role)).collect(Collectors.toList());
                 userRoleRepository.saveAll(userRoleList).subscribe();
             }).map(this::convertOuter);
         });
     }
 
     @Override
-    public Mono<Void> removeById(String businessId) {
-        Objects.requireNonNull(businessId);
-        return this.fetchInfo(businessId).flatMap(userInfo -> userRepository.deleteById(userInfo.getId()));
-    }
-
-    @Override
-    public Mono<UserVO> fetchByBusinessId(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).map(this::convertOuter);
+    public Mono<Void> remove(String username) {
+        Asserts.notBlank(username, "username");
+        return this.fetchInfo(username).flatMap(userInfo -> userRepository.deleteById(userInfo.getId()));
     }
 
     @Override
     public Mono<UserDetails> loadByUsername(String username) {
+        Asserts.notBlank(username, "username");
         UserInfo info = this.findByUsername(username);
         Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info));
         Mono<ArrayList<String>> roleIdListMono = infoMono.switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("用户信息不存在")))
@@ -130,7 +124,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                 .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getSourceId())));
         // 查权限
         Mono<ArrayList<GrantedAuthority>> authorityList = sourceIdListMono.flatMap(sourceIdList -> sourceService.findByIdInAndEnabledTrue(sourceIdList)
-                .collect(ArrayList::new, (sourceList, sourceInfo) -> sourceList.add(new SimpleGrantedAuthority(sourceInfo.getBusinessId()))));
+                .collect(ArrayList::new, (sourceList, sourceInfo) -> sourceList.add(new SimpleGrantedAuthority(sourceInfo.getCode()))));
         // 构造用户信息
         return authorityList.zipWith(infoMono, (authorities, userInfo) ->
                 new User(StringUtils.isNotBlank(info.getMobile()) ? info.getMobile() : info.getEmail(), userInfo.getPassword(),
@@ -139,21 +133,21 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     /**
-     * 设置查询条件的必要参数
+     * 根据账号查信息
      *
-     * @param businessId 业务id
+     * @param username 账号
      * @return UserInfo 用户源数据
      */
-    private Mono<UserInfo> fetchInfo(String businessId) {
-        Objects.requireNonNull(businessId);
+    private Mono<UserInfo> fetchInfo(String username) {
+        Asserts.notBlank(username, "username");
         UserInfo info = new UserInfo();
-        info.setBusinessId(businessId);
+        info.setUsername(username);
         this.appendParams(info);
         return userRepository.findOne(Example.of(info));
     }
 
     /**
-     * 设置查询条件的必要参数
+     * 数据脱敏
      *
      * @param info 信息
      * @return UserVO 输出对象
@@ -215,8 +209,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         } else if (isEmail(username)) {
             info.setEmail(username);
         } else {
-            log.error("账号错误：{}", username);
-            throw new UsernameNotFoundException(username);
+            info.setUsername(username);
         }
         return info;
     }
@@ -235,7 +228,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * 是否邮箱
      *
      * @param email 匹配字符
-     * @return true if mather otherwise false
+     * @return true if mather, otherwise false
      */
     private boolean isEmail(String email) {
         return Pattern.matches(REGEX_EMAIL, email);

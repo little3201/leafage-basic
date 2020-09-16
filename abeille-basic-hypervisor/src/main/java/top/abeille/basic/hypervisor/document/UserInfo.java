@@ -24,11 +24,10 @@ public class UserInfo {
     @Id
     private String id;
     /**
-     * 业务ID
+     * 账号
      */
-    @Field(value = "business_id")
     @Indexed
-    private String businessId;
+    private String username;
     /**
      * 昵称
      */
@@ -42,22 +41,18 @@ public class UserInfo {
     /**
      * 密码
      */
-    @Field(value = "password")
     private String password;
     /**
      * 电话
      */
-    @Field(value = "mobile")
     private String mobile;
     /**
      * 邮箱
      */
-    @Field(value = "email")
     private String email;
     /**
      * 地址ID
      */
-    @Field(value = "addressId")
     private String addressId;
     /**
      * 账户是否有效
@@ -82,7 +77,6 @@ public class UserInfo {
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间
@@ -98,12 +92,12 @@ public class UserInfo {
         this.id = id;
     }
 
-    public String getBusinessId() {
-        return businessId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getNickname() {

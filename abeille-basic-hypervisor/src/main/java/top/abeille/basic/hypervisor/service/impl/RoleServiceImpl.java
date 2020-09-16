@@ -50,15 +50,15 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Mono<RoleVO> fetchByBusinessId(String businessId) {
-        return this.fetchInfo(businessId).map(this::convertOuter);
+    public Mono<RoleVO> fetchByCode(String code) {
+        return this.fetchInfo(code).map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
-        info.setBusinessId(PrefixEnum.RO + this.generateId());
+        info.setCode(PrefixEnum.RO + this.generateId());
         return roleRepository.insert(info).doOnNext(roleInfo -> {
             List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
                     this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
@@ -67,8 +67,8 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Mono<RoleVO> modify(String businessId, RoleDTO roleDTO) {
-        return this.fetchInfo(businessId).flatMap(info -> {
+    public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
+        return this.fetchInfo(code).flatMap(info -> {
             BeanUtils.copyProperties(roleDTO, info);
             return roleRepository.save(info).doOnNext(roleInfo -> {
                 List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
@@ -81,14 +81,14 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     /**
      * 根据业务id查询
      *
-     * @param businessId 业务id
+     * @param code 业务id
      * @return 返回查询到的信息，否则返回empty
      */
     @Override
-    public Mono<RoleInfo> fetchInfo(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
+    public Mono<RoleInfo> fetchInfo(String code) {
+        Asserts.notBlank(code, "code");
         RoleInfo info = new RoleInfo();
-        info.setBusinessId(businessId);
+        info.setCode(code);
         return roleRepository.findOne(Example.of(info));
     }
 
@@ -107,17 +107,17 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     /**
      * 初始设置UserRole参数
      *
-     * @param roleId           角色主键
-     * @param modifier         修改人
-     * @param sourceBusinessId 资源业务ID
+     * @param roleId   角色主键
+     * @param modifier 修改人
+     * @param sourceId 资源ID
      * @return 用户-角色对象
      */
-    private RoleSource initRoleSource(String roleId, String modifier, String sourceBusinessId) {
+    private RoleSource initRoleSource(String roleId, String modifier, String sourceId) {
         RoleSource roleSource = new RoleSource();
         roleSource.setRoleId(roleId);
         roleSource.setModifier(modifier);
         roleSource.setModifyTime(LocalDateTime.now());
-        sourceService.fetchInfo(sourceBusinessId).doOnNext(sourceInfo -> roleSource.setSourceId(sourceInfo.getId())).subscribe();
+        sourceService.fetchInfo(sourceId).doOnNext(sourceInfo -> roleSource.setSourceId(sourceInfo.getId())).subscribe();
         return roleSource;
     }
 }

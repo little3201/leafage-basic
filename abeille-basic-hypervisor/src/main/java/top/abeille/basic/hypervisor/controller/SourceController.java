@@ -50,25 +50,25 @@ public class SourceController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 和要修改的数据，修改信息
+     * 根据传入的代码和要修改的数据，修改信息
      *
-     * @param businessId 业务id
-     * @param sourceDTO  要修改的数据
+     * @param code      代码
+     * @param sourceDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PostMapping("{businessId}")
-    public Mono<SourceVO> modifySource(@PathVariable String businessId, @RequestBody @Valid SourceDTO sourceDTO) {
-        return sourceService.modify(businessId, sourceDTO);
+    @PostMapping("{code}")
+    public Mono<SourceVO> modifySource(@PathVariable String code, @RequestBody @Valid SourceDTO sourceDTO) {
+        return sourceService.modify(code, sourceDTO);
     }
 
     /**
-     * 根据传入的业务id: businessId 查询信息
+     * 根据传入的代码查询信息
      *
-     * @param businessId 业务id
+     * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{businessId}")
-    public Mono<SourceVO> fetchGroup(String businessId) {
-        return sourceService.fetchByBusinessId(businessId);
+    @GetMapping("/{code}")
+    public Mono<SourceVO> fetchGroup(String code) {
+        return sourceService.fetchByCode(code);
     }
 }

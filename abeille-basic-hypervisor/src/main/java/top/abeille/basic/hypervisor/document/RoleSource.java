@@ -38,7 +38,6 @@ public class RoleSource {
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间

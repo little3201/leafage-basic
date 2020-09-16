@@ -20,7 +20,6 @@ import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 权限资源信息Service实现
@@ -43,9 +42,9 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     }
 
     @Override
-    public Mono<SourceVO> fetchByBusinessId(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).map(this::convertOuter);
+    public Mono<SourceVO> fetchByCode(String code) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).map(this::convertOuter);
     }
 
     @Override
@@ -66,15 +65,15 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
             default:
                 prefix = PrefixEnum.SU.name(); // 路径
         }
-        info.setBusinessId(prefix + this.generateId());
+        info.setCode(prefix + this.generateId());
         info.setEnabled(true);
         return sourceRepository.insert(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<SourceVO> modify(String businessId, SourceDTO sourceDTO) {
-        Objects.requireNonNull(businessId);
-        return this.fetchInfo(businessId).flatMap(info -> {
+    public Mono<SourceVO> modify(String code, SourceDTO sourceDTO) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).flatMap(info -> {
             BeanUtils.copyProperties(sourceDTO, info);
             return sourceRepository.save(info);
         }).map(this::convertOuter);
@@ -83,14 +82,14 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
     /**
      * 根据业务id查询
      *
-     * @param businessId 业务id
+     * @param code 业务id
      * @return 返回查询到的信息，否则返回empty
      */
     @Override
-    public Mono<SourceInfo> fetchInfo(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
+    public Mono<SourceInfo> fetchInfo(String code) {
+        Asserts.notBlank(code, "code");
         SourceInfo info = new SourceInfo();
-        info.setBusinessId(businessId);
+        info.setCode(code);
         return sourceRepository.findOne(Example.of(info));
     }
 

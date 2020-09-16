@@ -36,16 +36,16 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     public Mono<AccountVO> create(AccountDTO accountDTO) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(accountDTO, info);
-        info.setBusinessId(PrefixEnum.AC + this.generateId());
+        info.setCode(PrefixEnum.AC + this.generateId());
         info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return accountRepository.insert(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<AccountVO> modify(String businessId, AccountDTO accountDTO) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchByBusinessId(businessId).flatMap(accountVO -> {
+    public Mono<AccountVO> modify(String code, AccountDTO accountDTO) {
+        Asserts.notBlank(code, "code");
+        return this.fetchByCode(code).flatMap(accountVO -> {
             AccountInfo info = new AccountInfo();
             BeanUtils.copyProperties(accountDTO, info);
             return accountRepository.save(info).map(this::convertOuter);
@@ -53,34 +53,34 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     }
 
     @Override
-    public Mono<Void> removeById(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId)
+    public Mono<Void> remove(String code) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code)
                 .flatMap(account -> accountRepository.deleteById(account.getId()));
     }
 
     /**
      * 根据业务id查询
      *
-     * @param businessId 业务id
+     * @param code 业务id
      * @return 返回查询到的信息，否则返回empty
      */
     @Override
-    public Mono<AccountVO> fetchByBusinessId(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).map(this::convertOuter);
+    public Mono<AccountVO> fetchByCode(String code) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).map(this::convertOuter);
     }
 
     /**
      * 根据业务id查询
      *
-     * @param businessId 业务id
+     * @param code 业务id
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<AccountInfo> fetchInfo(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
+    private Mono<AccountInfo> fetchInfo(String code) {
+        Asserts.notBlank(code, "code");
         AccountInfo info = new AccountInfo();
-        info.setBusinessId(businessId);
+        info.setCode(code);
         info.setEnabled(true);
         return accountRepository.findOne(Example.of(info));
     }

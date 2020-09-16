@@ -40,23 +40,12 @@ public class UserController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 查询信息
-     *
-     * @param businessId 业务id
-     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
-     */
-    @GetMapping("/{businessId}")
-    public Mono<UserVO> fetchUser(@PathVariable String businessId) {
-        return userService.fetchByBusinessId(businessId);
-    }
-
-    /**
      * 根据传入的 username 查询信息
      *
      * @param username 用户账号
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/info/{username}")
+    @GetMapping("/{username}")
     public Mono<UserDetails> loadByUsername(@PathVariable String username) {
         return userService.loadByUsername(username);
     }
@@ -73,25 +62,25 @@ public class UserController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 和要修改的数据，修改信息
+     * 根据传入的代码和要修改的数据，修改信息
      *
-     * @param businessId 业务id
-     * @param userDTO    要修改的数据
+     * @param code    代码
+     * @param userDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{businessId}")
-    public Mono<UserVO> modifyUser(@PathVariable String businessId, @RequestBody @Valid UserDTO userDTO) {
-        return userService.modify(businessId, userDTO);
+    @PutMapping("/{code}")
+    public Mono<UserVO> modifyUser(@PathVariable String code, @RequestBody @Valid UserDTO userDTO) {
+        return userService.modify(code, userDTO);
     }
 
     /**
-     * 根据传入的业务id: businessId 删除信息
+     * 根据传入的代码删除信息
      *
-     * @param businessId 业务id
+     * @param code 代码
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
-    @DeleteMapping("/{businessId}")
-    public Mono<Void> removeUser(@PathVariable String businessId) {
-        return userService.removeById(businessId);
+    @DeleteMapping("/{code}")
+    public Mono<Void> removeUser(@PathVariable String code) {
+        return userService.remove(code);
     }
 }

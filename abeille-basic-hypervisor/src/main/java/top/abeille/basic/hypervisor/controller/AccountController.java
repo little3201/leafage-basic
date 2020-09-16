@@ -28,14 +28,14 @@ public class AccountController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 查询信息
+     * 根据传入的代码查询信息
      *
-     * @param businessId 业务id
+     * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{businessId}")
-    public Mono<AccountVO> fetchAccount(@PathVariable String businessId) {
-        return accountService.fetchByBusinessId(businessId);
+    @GetMapping("/{code}")
+    public Mono<AccountVO> fetchAccount(@PathVariable String code) {
+        return accountService.fetchByCode(code);
     }
 
     /**
@@ -50,26 +50,26 @@ public class AccountController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 和要修改的数据，修改信息
+     * 根据传入的代码和要修改的数据，修改信息
      *
-     * @param businessId 业务id
+     * @param code       代码
      * @param accountDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{businessId}")
-    public Mono<AccountVO> modifyAccount(@PathVariable String businessId, @RequestBody @Valid AccountDTO accountDTO) {
-        return accountService.modify(businessId, accountDTO);
+    @PutMapping("/{code}")
+    public Mono<AccountVO> modifyAccount(@PathVariable String code, @RequestBody @Valid AccountDTO accountDTO) {
+        return accountService.modify(code, accountDTO);
     }
 
     /**
-     * 根据传入的业务id: businessId 删除信息（逻辑删除）
+     * 根据传入的代码删除信息（逻辑删除）
      *
-     * @param businessId 业务id
+     * @param code 业务id
      * @return 如果删除数据成功，返回删除后的信息，否则返回417状态码
      */
-    @DeleteMapping("/{businessId}")
-    public Mono<Void> removeAccount(@PathVariable String businessId) {
-        return accountService.removeById(businessId);
+    @DeleteMapping("/{code}")
+    public Mono<Void> removeAccount(@PathVariable String code) {
+        return accountService.remove(code);
     }
 
 }

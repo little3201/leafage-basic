@@ -16,8 +16,6 @@ import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.util.Objects;
-
 /**
  * 组织信息Service实现
  *
@@ -33,43 +31,43 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
-    public Mono<GroupVO> fetchByBusinessId(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).map(this::convertOuter);
+    public Mono<GroupVO> fetchByCode(String code) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).map(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
-        info.setBusinessId(PrefixEnum.GP + this.generateId());
+        info.setCode(PrefixEnum.GP + this.generateId());
         return groupRepository.insert(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<GroupVO> modify(String businessId, GroupDTO groupDTO) {
-        return this.fetchInfo(businessId).flatMap(info -> {
+    public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
+        return this.fetchInfo(code).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
             return groupRepository.save(info);
         }).map(this::convertOuter);
     }
 
     @Override
-    public Mono<Void> removeById(String businessId) {
-        Objects.requireNonNull(businessId);
-        return this.fetchInfo(businessId).flatMap(groupInfo -> groupRepository.deleteById(groupInfo.getId()));
+    public Mono<Void> remove(String code) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).flatMap(groupInfo -> groupRepository.deleteById(groupInfo.getId()));
     }
 
     /**
-     * 根据业务id查询
+     * 根据code查询
      *
-     * @param businessId 业务id
+     * @param code 代码
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<GroupInfo> fetchInfo(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
+    private Mono<GroupInfo> fetchInfo(String code) {
+        Asserts.notBlank(code, "code");
         GroupInfo info = new GroupInfo();
-        info.setBusinessId(businessId);
+        info.setCode(code);
         return groupRepository.findOne(Example.of(info));
     }
 

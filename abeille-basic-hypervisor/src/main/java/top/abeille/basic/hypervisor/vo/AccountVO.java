@@ -15,14 +15,15 @@ import java.time.LocalDateTime;
 public class AccountVO implements Serializable {
 
     private static final long serialVersionUID = 2227758644875658137L;
+
+    /**
+     * 代码
+     */
+    private String code;
     /**
      * 用户姓名
      */
     private String name;
-    /**
-     * 业务ID
-     */
-    private String businessId;
     /**
      * 余额
      */
@@ -36,20 +37,21 @@ public class AccountVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
     }
 
     public BigDecimal getBalance() {

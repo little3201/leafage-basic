@@ -24,11 +24,10 @@ public class TopicInfo {
     @Id
     private String id;
     /**
-     * 业务ID
+     * 代码
      */
-    @Field(value = "business_id")
     @Indexed
-    private String businessId;
+    private String code;
     /**
      * 标题
      */
@@ -63,12 +62,12 @@ public class TopicInfo {
         this.id = id;
     }
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getTitle() {

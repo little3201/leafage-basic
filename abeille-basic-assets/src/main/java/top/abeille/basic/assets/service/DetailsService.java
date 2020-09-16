@@ -27,10 +27,10 @@ public interface DetailsService {
     Mono<DetailsInfo> modify(String businessId, DetailsInfo detailsInfo);
 
     /**
-     * 根据业务id查询
+     * 根据文章ID查询
      *
-     * @param businessId 业务id
+     * @param articleId 文章ID
      * @return 返回查询到的信息，否则返回empty
      */
-    Mono<DetailsInfo> fetchByBusinessId(String businessId);
+    Mono<DetailsInfo> fetchByArticleId(String articleId);
 }

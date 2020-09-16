@@ -19,4 +19,6 @@ import java.time.LocalDate;
 public interface ArticleRepository extends ReactiveMongoRepository<ArticleInfo, String> {
 
     Mono<Long> countByModifyTimeBetween(LocalDate startDate, LocalDate deadline);
+
+    Mono<ArticleInfo> findByCodeAndEnableTrue(String code);
 }

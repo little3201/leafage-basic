@@ -53,19 +53,19 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     }
 
     @Override
-    public Mono<DetailsVO> fetchDetailsByBusinessId(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchByBusinessId(businessId).flatMap(articleVO -> {
-                    // 将内容设置到vo对像中
-                    DetailsVO detailsVO = new DetailsVO();
-                    BeanUtils.copyProperties(articleVO, detailsVO);
-                    // 根据业务id获取相关内容
-                    return detailsService.fetchByBusinessId(articleVO.getBusinessId()).map(contentInfo -> {
-                        detailsVO.setOriginal(contentInfo.getOriginal());
-                        detailsVO.setContent(contentInfo.getContent());
-                        detailsVO.setCatalog(contentInfo.getCatalog());
-                        return detailsVO;
-                    }).defaultIfEmpty(detailsVO);
+    public Mono<DetailsVO> fetchDetailsByArticleId(String code) {
+        Asserts.notBlank(code, "code");
+        return articleRepository.findByCodeAndEnableTrue(code).flatMap(article -> {
+            // 将内容设置到vo对像中
+            DetailsVO detailsVO = new DetailsVO();
+            BeanUtils.copyProperties(article, detailsVO);
+            // 根据业务id获取相关内容
+            return detailsService.fetchByArticleId(article.getId()).map(contentInfo -> {
+                detailsVO.setOriginal(contentInfo.getOriginal());
+                detailsVO.setContent(contentInfo.getContent());
+                detailsVO.setCatalog(contentInfo.getCatalog());
+                return detailsVO;
+            }).defaultIfEmpty(detailsVO);
                 }
         );
     }
@@ -94,59 +94,53 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     public Mono<ArticleVO> create(ArticleDTO articleDTO) {
         ArticleInfo info = new ArticleInfo();
         BeanUtils.copyProperties(articleDTO, info);
-        info.setBusinessId(PrefixEnum.AT + this.generateId());
+        info.setCode(PrefixEnum.AT + this.generateId());
         info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return articleRepository.insert(info).doOnSuccess(articleInfo -> {
             // 添加内容信息
             DetailsInfo detailsInfo = new DetailsInfo();
             BeanUtils.copyProperties(articleDTO, detailsInfo);
-            detailsInfo.setBusinessId(articleInfo.getBusinessId());
+            detailsInfo.setArticleId(articleInfo.getId());
             // 调用subscribe()方法，消费create订阅
             detailsService.create(detailsInfo).subscribe();
         }).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ArticleVO> modify(String businessId, ArticleDTO articleDTO) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).flatMap(info -> {
+    public Mono<ArticleVO> modify(String code, ArticleDTO articleDTO) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(articleDTO, info);
             info.setModifyTime(LocalDateTime.now());
             return articleRepository.save(info).doOnSuccess(articleInfo ->
                     // 更新成功后，将内容信息更新
-                    detailsService.fetchByBusinessId(articleInfo.getBusinessId()).doOnNext(detailsInfo -> {
+                    detailsService.fetchByArticleId(articleInfo.getId()).doOnNext(detailsInfo -> {
                         BeanUtils.copyProperties(articleDTO, detailsInfo);
                         // 调用subscribe()方法，消费modify订阅
-                        detailsService.modify(detailsInfo.getBusinessId(), detailsInfo).subscribe();
+                        detailsService.modify(articleInfo.getId(), detailsInfo).subscribe();
                     }).subscribe()
             ).map(this::convertOuter);
         });
     }
 
     @Override
-    public Mono<Void> removeById(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).flatMap(article -> articleRepository.deleteById(article.getId()));
-    }
-
-    @Override
-    public Mono<ArticleVO> fetchByBusinessId(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).map(this::convertOuter);
+    public Mono<Void> remove(String code) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).flatMap(article -> articleRepository.deleteById(article.getId()));
     }
 
     /**
-     * 根据业务id查询
+     * 根据id查询
      *
-     * @param businessId 业务id
+     * @param id 代码
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<ArticleInfo> fetchInfo(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
+    private Mono<ArticleInfo> fetchInfo(String id) {
+        Asserts.notBlank(id, "id");
         ArticleInfo info = new ArticleInfo();
-        info.setBusinessId(businessId);
+        info.setId(id);
         info.setEnabled(true);
         return articleRepository.findOne(Example.of(info));
     }

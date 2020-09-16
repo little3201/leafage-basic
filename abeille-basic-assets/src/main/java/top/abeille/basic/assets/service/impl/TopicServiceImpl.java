@@ -44,10 +44,10 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     }
 
     @Override
-    public Mono<TopicVO> fetchByBusinessId(String businessId) {
+    public Mono<TopicVO> fetchByCode(String businessId) {
         Asserts.notBlank(businessId, "businessId");
         TopicInfo info = new TopicInfo();
-        info.setBusinessId(businessId);
+        info.setCode(businessId);
         return this.fetchInfo(businessId).map(this::convertOuter);
     }
 
@@ -71,7 +71,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     }
 
     @Override
-    public Mono<Void> removeById(String businessId) {
+    public Mono<Void> remove(String businessId) {
         Asserts.notBlank(businessId, "businessId");
         return this.fetchInfo(businessId).flatMap(topic -> topicRepository.deleteById(topic.getId()));
     }
@@ -85,7 +85,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     private Mono<TopicInfo> fetchInfo(String businessId) {
         Asserts.notBlank(businessId, "businessId");
         TopicInfo info = new TopicInfo();
-        info.setBusinessId(businessId);
+        info.setCode(businessId);
         return topicRepository.findOne(Example.of(info));
     }
 

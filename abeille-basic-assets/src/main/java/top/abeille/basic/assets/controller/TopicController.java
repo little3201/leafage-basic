@@ -39,14 +39,14 @@ public class TopicController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 查询信息
+     * 根据传入的代码查询信息
      *
-     * @param businessId 业务id
+     * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{businessId}")
-    public Mono<TopicVO> fetchTopic(@PathVariable String businessId) {
-        return topicService.fetchByBusinessId(businessId);
+    @GetMapping("/{code}")
+    public Mono<TopicVO> fetchTopic(@PathVariable String code) {
+        return topicService.fetchByCode(code);
     }
 
     /**
@@ -61,15 +61,15 @@ public class TopicController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 和要修改的数据，修改信息
+     * 根据传入的代码和要修改的数据，修改信息
      *
-     * @param businessId 业务id
-     * @param topicDTO   要修改的数据
+     * @param code     代码
+     * @param topicDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{businessId}")
-    public Mono<TopicVO> modifyTopic(@PathVariable String businessId, @RequestBody @Valid TopicDTO topicDTO) {
-        return topicService.modify(businessId, topicDTO);
+    @PutMapping("/{code}")
+    public Mono<TopicVO> modifyTopic(@PathVariable String code, @RequestBody @Valid TopicDTO topicDTO) {
+        return topicService.modify(code, topicDTO);
     }
 
 }

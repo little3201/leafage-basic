@@ -20,7 +20,7 @@ public class HypervisorService implements HypervisorApi {
     @Override
     public Mono<UserBO> fetchUserByBusinessId(String businessId) {
         Asserts.notBlank(businessId, "businessId");
-        return clientBuilder.build().get().uri("/user/{username}", businessId)
+        return clientBuilder.build().get().uri("/user/{businessId}", businessId)
                 .accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(UserBO.class);
     }
 }

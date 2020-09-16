@@ -38,13 +38,13 @@ public class ArticleServiceImplTest {
 
     @Test
     public void fetchById_returnObject() {
-        Mono<? extends ArticleVO> outerMono = articleService.fetchByBusinessId("AT226");
+        Mono<? extends ArticleVO> outerMono = articleService.fetchByCode("AT226");
         Assert.notNull(outerMono.block(), "The class must not be null");
     }
 
     @Test
     public void fetchById_returnNull() {
-        Mono<? extends ArticleVO> outerMono = articleService.fetchByBusinessId(String.valueOf(new Random().nextFloat()));
+        Mono<? extends ArticleVO> outerMono = articleService.fetchByCode(String.valueOf(new Random().nextFloat()));
         Assert.isNull(outerMono.block(), "The class must be null");
     }
 }

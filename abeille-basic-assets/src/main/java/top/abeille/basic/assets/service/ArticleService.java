@@ -24,7 +24,7 @@ public interface ArticleService extends BasicService<ArticleDTO, ArticleVO> {
      * @param businessId 业务id
      * @return 详细信息
      */
-    Mono<DetailsVO> fetchDetailsByBusinessId(String businessId);
+    Mono<DetailsVO> fetchDetailsByArticleId(String businessId);
 
     /**
      * 获取一个月内每日更新数量

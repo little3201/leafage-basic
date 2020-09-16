@@ -32,9 +32,9 @@ public class DetailsServiceImpl implements DetailsService {
     }
 
     @Override
-    public Mono<DetailsInfo> modify(String businessId, DetailsInfo detailsInfo) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchByBusinessId(businessId).flatMap(details -> {
+    public Mono<DetailsInfo> modify(String articleId, DetailsInfo detailsInfo) {
+        Asserts.notBlank(articleId, "articleId");
+        return this.fetchByArticleId(articleId).flatMap(details -> {
             BeanUtils.copyProperties(detailsInfo, details);
             details.setModifyTime(LocalDateTime.now());
             return detailsRepository.save(details);
@@ -42,10 +42,10 @@ public class DetailsServiceImpl implements DetailsService {
     }
 
     @Override
-    public Mono<DetailsInfo> fetchByBusinessId(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
+    public Mono<DetailsInfo> fetchByArticleId(String articleId) {
+        Asserts.notBlank(articleId, "articleId");
         DetailsInfo info = new DetailsInfo();
-        info.setBusinessId(businessId);
+        info.setArticleId(articleId);
         info.setEnabled(true);
         return detailsRepository.findOne(Example.of(info));
     }

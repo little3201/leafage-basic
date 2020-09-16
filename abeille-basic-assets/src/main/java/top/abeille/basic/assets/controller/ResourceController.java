@@ -39,14 +39,14 @@ public class ResourceController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 查询信息
+     * 根据传入的代码查询信息
      *
-     * @param businessId 业务id
+     * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{businessId}")
-    public Mono<ResourceVO> fetchResource(@PathVariable String businessId) {
-        return resourceService.fetchByBusinessId(businessId);
+    @GetMapping("/{code}")
+    public Mono<ResourceVO> fetchResource(@PathVariable String code) {
+        return resourceService.fetchByCode(code);
     }
 
     /**
@@ -61,15 +61,15 @@ public class ResourceController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 和要修改的数据，修改信息
+     * 根据传入的代码和要修改的数据，修改信息
      *
-     * @param businessId  业务id
+     * @param code        代码
      * @param resourceDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{businessId}")
-    public Mono<ResourceVO> modifyResource(@PathVariable String businessId, @RequestBody @Valid ResourceDTO resourceDTO) {
-        return resourceService.modify(businessId, resourceDTO);
+    @PutMapping("/{code}")
+    public Mono<ResourceVO> modifyResource(@PathVariable String code, @RequestBody @Valid ResourceDTO resourceDTO) {
+        return resourceService.modify(code, resourceDTO);
     }
 
 }

@@ -49,16 +49,16 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     public Mono<ResourceVO> create(ResourceDTO resourceDTO) {
         ResourceInfo info = new ResourceInfo();
         BeanUtils.copyProperties(resourceDTO, info);
-        info.setBusinessId(PrefixEnum.RS + this.generateId());
+        info.setCode(PrefixEnum.RS + this.generateId());
         info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return resourceRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ResourceVO> modify(String businessId, ResourceDTO resourceDTO) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).flatMap(resourceInfo -> {
+    public Mono<ResourceVO> modify(String code, ResourceDTO resourceDTO) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).flatMap(resourceInfo -> {
             BeanUtils.copyProperties(resourceDTO, resourceInfo);
             resourceInfo.setModifyTime(LocalDateTime.now());
             return resourceRepository.save(resourceInfo).filter(Objects::nonNull).map(this::convertOuter);
@@ -66,27 +66,27 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     }
 
     @Override
-    public Mono<Void> removeById(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).flatMap(article -> resourceRepository.deleteById(article.getId()));
+    public Mono<Void> remove(String code) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).flatMap(article -> resourceRepository.deleteById(article.getId()));
     }
 
     @Override
-    public Mono<ResourceVO> fetchByBusinessId(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).map(this::convertOuter);
+    public Mono<ResourceVO> fetchByCode(String code) {
+        Asserts.notBlank(code, "code");
+        return this.fetchInfo(code).map(this::convertOuter);
     }
 
     /**
-     * 根据业务id查询
+     * 根据代码查询
      *
-     * @param businessId 业务id
+     * @param code 代码
      * @return 返回查询到的信息，否则返回empty
      */
-    private Mono<ResourceInfo> fetchInfo(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
+    private Mono<ResourceInfo> fetchInfo(String code) {
+        Asserts.notBlank(code, "code");
         ResourceInfo info = new ResourceInfo();
-        info.setBusinessId(businessId);
+        info.setCode(code);
         info.setEnabled(true);
         return resourceRepository.findOne(Example.of(info));
     }

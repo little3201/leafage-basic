@@ -5,7 +5,6 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -58,7 +57,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     @Override
     public Mono<ResourceVO> modify(String code, ResourceDTO resourceDTO) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).flatMap(resourceInfo -> {
+        return resourceRepository.findByCodeAndEnabledTrue(code).flatMap(resourceInfo -> {
             BeanUtils.copyProperties(resourceDTO, resourceInfo);
             resourceInfo.setModifyTime(LocalDateTime.now());
             return resourceRepository.save(resourceInfo).filter(Objects::nonNull).map(this::convertOuter);
@@ -68,27 +67,13 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).flatMap(article -> resourceRepository.deleteById(article.getId()));
+        return resourceRepository.findByCodeAndEnabledTrue(code).flatMap(article -> resourceRepository.deleteById(article.getId()));
     }
 
     @Override
     public Mono<ResourceVO> fetchByCode(String code) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).map(this::convertOuter);
-    }
-
-    /**
-     * 根据代码查询
-     *
-     * @param code 代码
-     * @return 返回查询到的信息，否则返回empty
-     */
-    private Mono<ResourceInfo> fetchInfo(String code) {
-        Asserts.notBlank(code, "code");
-        ResourceInfo info = new ResourceInfo();
-        info.setCode(code);
-        info.setEnabled(true);
-        return resourceRepository.findOne(Example.of(info));
+        return resourceRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     /**

@@ -14,9 +14,9 @@ public class UserBO implements Serializable {
 
     private static final long serialVersionUID = 5441310307209449909L;
     /**
-     * 业务id
+     * 账号
      */
-    private String businessId;
+    private String username;
     /**
      * 昵称
      */
@@ -26,12 +26,12 @@ public class UserBO implements Serializable {
      */
     private String avatar;
 
-    public String getBusinessId() {
-        return businessId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getNickname() {

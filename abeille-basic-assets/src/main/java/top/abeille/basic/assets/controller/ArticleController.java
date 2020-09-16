@@ -41,14 +41,14 @@ public class ArticleController extends AbstractController {
     }
 
     /**
-     * 根据传入的文章ID查询信息
+     * 根据传入的代码查询信息
      *
-     * @param articleId 文章ID
+     * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{articleId}")
-    public Mono<DetailsVO> fetchArticle(@PathVariable String articleId) {
-        return articleService.fetchDetailsByArticleId(articleId).switchIfEmpty(Mono.empty());
+    @GetMapping("/{code}")
+    public Mono<DetailsVO> fetchArticle(@PathVariable String code) {
+        return articleService.fetchDetailsByCode(code).switchIfEmpty(Mono.empty());
     }
 
     /**

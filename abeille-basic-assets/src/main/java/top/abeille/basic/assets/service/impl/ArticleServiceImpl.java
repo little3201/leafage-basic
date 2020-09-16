@@ -5,7 +5,6 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -53,19 +52,19 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     }
 
     @Override
-    public Mono<DetailsVO> fetchDetailsByArticleId(String code) {
+    public Mono<DetailsVO> fetchDetailsByCode(String code) {
         Asserts.notBlank(code, "code");
         return articleRepository.findByCodeAndEnabledTrue(code).flatMap(article -> {
-            // 将内容设置到vo对像中
-            DetailsVO detailsVO = new DetailsVO();
-            BeanUtils.copyProperties(article, detailsVO);
-            // 根据业务id获取相关内容
-            return detailsService.fetchByArticleId(article.getId()).map(contentInfo -> {
-                detailsVO.setOriginal(contentInfo.getOriginal());
-                detailsVO.setContent(contentInfo.getContent());
-                detailsVO.setCatalog(contentInfo.getCatalog());
-                return detailsVO;
-            }).defaultIfEmpty(detailsVO);
+                    // 将内容设置到vo对像中
+                    DetailsVO detailsVO = new DetailsVO();
+                    BeanUtils.copyProperties(article, detailsVO);
+                    // 根据业务id获取相关内容
+                    return detailsService.fetchByArticleId(article.getId()).map(contentInfo -> {
+                        detailsVO.setOriginal(contentInfo.getOriginal());
+                        detailsVO.setContent(contentInfo.getContent());
+                        detailsVO.setCatalog(contentInfo.getCatalog());
+                        return detailsVO;
+                    }).defaultIfEmpty(detailsVO);
                 }
         );
     }
@@ -110,7 +109,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     @Override
     public Mono<ArticleVO> modify(String code, ArticleDTO articleDTO) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).flatMap(info -> {
+        return articleRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(articleDTO, info);
             info.setModifyTime(LocalDateTime.now());
@@ -128,21 +127,8 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return this.fetchInfo(code).flatMap(article -> articleRepository.deleteById(article.getId()));
-    }
-
-    /**
-     * 根据id查询
-     *
-     * @param id 代码
-     * @return 返回查询到的信息，否则返回empty
-     */
-    private Mono<ArticleInfo> fetchInfo(String id) {
-        Asserts.notBlank(id, "id");
-        ArticleInfo info = new ArticleInfo();
-        info.setId(id);
-        info.setEnabled(true);
-        return articleRepository.findOne(Example.of(info));
+        return articleRepository.findByCodeAndEnabledTrue(code).flatMap(article ->
+                articleRepository.deleteById(article.getId()));
     }
 
     /**

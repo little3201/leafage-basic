@@ -6,7 +6,6 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.DetailsInfo;
@@ -43,10 +42,7 @@ public class DetailsServiceImpl implements DetailsService {
 
     @Override
     public Mono<DetailsInfo> fetchByArticleId(String articleId) {
-        Asserts.notBlank(articleId, "articleId");
-        DetailsInfo info = new DetailsInfo();
-        info.setArticleId(articleId);
-        info.setEnabled(true);
-        return detailsRepository.findOne(Example.of(info));
+        return detailsRepository.findByArticleIdAndEnabledTrue(articleId);
     }
+
 }

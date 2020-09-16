@@ -98,7 +98,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     private TopicVO convertOuter(TopicInfo info) {
         TopicVO outer = new TopicVO();
         BeanUtils.copyProperties(info, outer);
-        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
+        UserBO userBO = hypervisorApi.fetchUser(info.getModifier()).block();
         outer.setAuthor(userBO);
         return outer;
     }

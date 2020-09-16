@@ -55,7 +55,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     @Override
     public Mono<DetailsVO> fetchDetailsByArticleId(String code) {
         Asserts.notBlank(code, "code");
-        return articleRepository.findByCodeAndEnableTrue(code).flatMap(article -> {
+        return articleRepository.findByCodeAndEnabledTrue(code).flatMap(article -> {
             // 将内容设置到vo对像中
             DetailsVO detailsVO = new DetailsVO();
             BeanUtils.copyProperties(article, detailsVO);
@@ -154,7 +154,7 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     private ArticleVO convertOuter(ArticleInfo info) {
         ArticleVO outer = new ArticleVO();
         BeanUtils.copyProperties(info, outer);
-        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
+        UserBO userBO = hypervisorApi.fetchUser(info.getModifier()).block();
         outer.setAuthor(userBO);
         return outer;
     }

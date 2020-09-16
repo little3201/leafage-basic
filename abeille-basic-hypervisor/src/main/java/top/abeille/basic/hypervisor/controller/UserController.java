@@ -62,25 +62,25 @@ public class UserController extends AbstractController {
     }
 
     /**
-     * 根据传入的代码和要修改的数据，修改信息
+     * 根据传入的username和要修改的数据，修改信息
      *
-     * @param code    代码
-     * @param userDTO 要修改的数据
+     * @param username 账号
+     * @param userDTO  要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{code}")
-    public Mono<UserVO> modifyUser(@PathVariable String code, @RequestBody @Valid UserDTO userDTO) {
-        return userService.modify(code, userDTO);
+    public Mono<UserVO> modifyUser(@PathVariable String username, @RequestBody @Valid UserDTO userDTO) {
+        return userService.modify(username, userDTO);
     }
 
     /**
-     * 根据传入的代码删除信息
+     * 根据传入的username删除信息
      *
-     * @param code 代码
+     * @param username 账号
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
-    @DeleteMapping("/{code}")
-    public Mono<Void> removeUser(@PathVariable String code) {
-        return userService.remove(code);
+    @DeleteMapping("/{username}")
+    public Mono<Void> removeUser(@PathVariable String username) {
+        return userService.remove(username);
     }
 }

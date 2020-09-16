@@ -20,5 +20,5 @@ public interface ArticleRepository extends ReactiveMongoRepository<ArticleInfo, 
 
     Mono<Long> countByModifyTimeBetween(LocalDate startDate, LocalDate deadline);
 
-    Mono<ArticleInfo> findByCodeAndEnableTrue(String code);
+    Mono<ArticleInfo> findByCodeAndEnabledTrue(String code);
 }

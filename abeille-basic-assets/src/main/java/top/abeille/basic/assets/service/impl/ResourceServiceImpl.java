@@ -100,7 +100,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     private ResourceVO convertOuter(ResourceInfo info) {
         ResourceVO outer = new ResourceVO();
         BeanUtils.copyProperties(info, outer);
-        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
+        UserBO userBO = hypervisorApi.fetchUser(info.getModifier()).block();
         outer.setAuthor(userBO);
         return outer;
     }

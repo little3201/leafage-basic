@@ -16,8 +16,8 @@ public interface HypervisorApi {
     /**
      * 根据传入的业务id: businessId 查询信息
      *
-     * @param businessId 业务id
+     * @param username 业务id
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    Mono<UserBO> fetchUserByBusinessId(String businessId);
+    Mono<UserBO> fetchUser(String username);
 }

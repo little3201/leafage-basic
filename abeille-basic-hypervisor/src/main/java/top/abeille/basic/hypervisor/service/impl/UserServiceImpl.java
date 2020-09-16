@@ -28,6 +28,7 @@ import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.service.UserService;
+import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -129,6 +130,11 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         return authorityList.zipWith(infoMono, (authorities, userInfo) ->
                 new User(info.getUsername(), userInfo.getPassword(), userInfo.getEnabled(), userInfo.getAccountNonExpired(),
                         userInfo.getCredentialsNonExpired(), userInfo.getAccountNonLocked(), authorities));
+    }
+
+    @Override
+    public Mono<UserTidyVO> fetchByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     /**

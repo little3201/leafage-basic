@@ -9,6 +9,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserService;
+import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -45,9 +46,20 @@ public class UserController extends AbstractController {
      * @param username 用户账号
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/{username}")
+    @GetMapping("/details/{username}")
     public Mono<UserDetails> loadByUsername(@PathVariable String username) {
         return userService.loadByUsername(username);
+    }
+
+    /**
+     * 根据传入的 username 查询信息
+     *
+     * @param username 用户账号
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/tidy/{username}")
+    public Mono<UserTidyVO> fetchByUsername(@PathVariable String username) {
+        return userService.fetchByUsername(username);
     }
 
     /**
@@ -68,7 +80,7 @@ public class UserController extends AbstractController {
      * @param userDTO  要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{code}")
+    @PutMapping("/{username}")
     public Mono<UserVO> modifyUser(@PathVariable String username, @RequestBody @Valid UserDTO userDTO) {
         return userService.modify(username, userDTO);
     }

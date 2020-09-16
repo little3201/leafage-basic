@@ -5,7 +5,9 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.UserInfo;
+import top.abeille.basic.hypervisor.vo.UserTidyVO;
 
 /**
  * 用户信息(userInfo)dao接口
@@ -14,4 +16,6 @@ import top.abeille.basic.hypervisor.document.UserInfo;
  **/
 @Repository
 public interface UserRepository extends ReactiveMongoRepository<UserInfo, String> {
+
+    Mono<UserTidyVO> findByUsername(String username);
 }

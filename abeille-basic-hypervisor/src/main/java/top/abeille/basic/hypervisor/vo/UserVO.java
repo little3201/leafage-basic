@@ -11,21 +11,10 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-public class UserVO implements Serializable {
+public class UserVO extends UserTidyVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
-    /**
-     * 账号
-     */
-    private String username;
-    /**
-     * 昵称
-     */
-    private String nickname;
-    /**
-     * 头像
-     */
-    private String avatar;
+
     /**
      * 电话
      */
@@ -54,30 +43,6 @@ public class UserVO implements Serializable {
      * 修改时间
      */
     private LocalDateTime modifyTime;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 
     public String getMobile() {
         return mobile;

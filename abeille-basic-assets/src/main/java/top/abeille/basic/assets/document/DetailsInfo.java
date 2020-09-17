@@ -28,22 +28,19 @@ public class DetailsInfo {
      * 文章ID
      */
     @Field(value = "article_id")
-    @Indexed
+    @Indexed(unique = true)
     private String articleId;
     /**
      * 原文
      */
-    @Field(value = "original")
     private String original;
     /**
      * 内容
      */
-    @Field(value = "content")
     private String content;
     /**
      * 目录
      */
-    @Field(value = "catalog")
     private String catalog;
     /**
      * 是否有效
@@ -53,7 +50,6 @@ public class DetailsInfo {
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间

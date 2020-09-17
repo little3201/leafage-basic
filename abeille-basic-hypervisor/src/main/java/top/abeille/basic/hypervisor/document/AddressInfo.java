@@ -2,7 +2,6 @@ package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "address_info")
 public class AddressInfo {
@@ -15,32 +14,26 @@ public class AddressInfo {
     /**
      * 国家
      */
-    @Field(value = "country")
     private String country;
     /**
      * 省/直辖市
      */
-    @Field(value = "province")
     private String province;
     /**
      * 市
      */
-    @Field(value = "city")
     private String city;
     /**
      * 县/区
      */
-    @Field(value = "region")
     private String region;
     /**
      * 街道
      */
-    @Field(value = "street")
     private String street;
     /**
      * 地址
      */
-    @Field(value = "address")
     private String address;
 
     public String getId() {

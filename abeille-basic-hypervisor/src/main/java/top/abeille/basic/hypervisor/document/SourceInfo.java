@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.document;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,51 +26,41 @@ public class SourceInfo {
     /**
      * 代码
      */
-    @Indexed
+    @Indexed(unique = true)
     private String code;
     /**
      * 上级
      */
-    @Field(value = "superior")
     private String superior;
     /**
      * 名称
      */
-    @Indexed
-    @Field(value = "name")
     private String name;
     /**
      * 类型
      */
-    @Field(value = "type")
     private String type;
     /**
      * 路径
      */
-    @Field(value = "path")
     private String path;
     /**
      * 描述
      */
-    @Field(value = "description")
     private String description;
 
     /**
      * 是否有效
      */
-    @JsonIgnore
     @Field(value = "is_enabled")
     private Boolean enabled;
     /**
      * 修改人
      */
-    @JsonIgnore
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间
      */
-    @JsonIgnore
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 

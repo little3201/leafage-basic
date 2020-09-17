@@ -33,7 +33,7 @@ public class AccountInfo {
     /**
      * 代码
      */
-    @Indexed
+    @Indexed(unique = true)
     private String code;
     /**
      * 余额

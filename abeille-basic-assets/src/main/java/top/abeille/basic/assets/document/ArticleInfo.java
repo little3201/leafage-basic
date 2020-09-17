@@ -26,7 +26,7 @@ public class ArticleInfo {
     /**
      * 代码
      */
-    @Indexed
+    @Indexed(unique = true)
     private String code;
     /**
      * 作者ID
@@ -37,7 +37,6 @@ public class ArticleInfo {
     /**
      * 标题
      */
-    @Indexed
     private String title;
     /**
      * 副标题

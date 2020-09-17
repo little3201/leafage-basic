@@ -26,17 +26,15 @@ public class TopicInfo {
     /**
      * 代码
      */
-    @Indexed
+    @Indexed(unique = true)
     private String code;
     /**
      * 标题
      */
-    @Field(value = "title")
     private String title;
     /**
      * 内容
      */
-    @Field(value = "content")
     private String content;
     /**
      * 是否有效
@@ -46,7 +44,6 @@ public class TopicInfo {
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间

@@ -26,17 +26,15 @@ public class RoleInfo {
     /**
      * 代码
      */
-    @Indexed
+    @Indexed(unique = true)
     private String code;
     /**
      * 名称
      */
-    @Field(value = "name")
     private String name;
     /**
      * 描述
      */
-    @Field(value = "description")
     private String description;
     /**
      * 是否有效
@@ -46,7 +44,6 @@ public class RoleInfo {
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间

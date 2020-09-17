@@ -26,27 +26,23 @@ public class GroupInfo {
     /**
      * 代码
      */
-    @Indexed
+    @Indexed(unique = true)
     private String code;
     /**
      * 负责人
      */
-    @Field(value = "principal")
     private String principal;
     /**
      * 上级
      */
-    @Field(value = "superior")
     private String superior;
     /**
      * 名称
      */
-    @Field(value = "name")
     private String name;
     /**
      * 描述
      */
-    @Field(value = "description")
     private String description;
     /**
      * 是否有效
@@ -56,7 +52,6 @@ public class GroupInfo {
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private Long modifier;
     /**
      * 修改时间

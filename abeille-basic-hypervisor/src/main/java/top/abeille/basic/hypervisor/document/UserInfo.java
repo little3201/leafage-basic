@@ -26,17 +26,15 @@ public class UserInfo {
     /**
      * 账号
      */
-    @Indexed
+    @Indexed(unique = true)
     private String username;
     /**
      * 昵称
      */
-    @Field(value = "nickname")
     private String nickname;
     /**
      * 头像
      */
-    @Field(value = "avatar")
     private String avatar;
     /**
      * 密码

@@ -26,13 +26,11 @@ public class ResourceInfo {
     /**
      * 代码
      */
-    @Indexed
+    @Indexed(unique = true)
     private String code;
     /**
      * 标题
      */
-    @Field(value = "title")
-    @Indexed
     private String title;
     /**
      * 图片url
@@ -47,7 +45,6 @@ public class ResourceInfo {
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间

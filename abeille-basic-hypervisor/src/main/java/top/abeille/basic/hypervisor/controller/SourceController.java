@@ -56,7 +56,7 @@ public class SourceController extends AbstractController {
      * @param sourceDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PostMapping("{code}")
+    @PutMapping("/{code}")
     public Mono<SourceVO> modifySource(@PathVariable String code, @RequestBody @Valid SourceDTO sourceDTO) {
         return sourceService.modify(code, sourceDTO);
     }
@@ -68,7 +68,7 @@ public class SourceController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
-    public Mono<SourceVO> fetchGroup(String code) {
+    public Mono<SourceVO> fetchGroup(@PathVariable String code) {
         return sourceService.fetchByCode(code);
     }
 }

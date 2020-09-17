@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -98,6 +99,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         Asserts.notBlank(username, "username");
         return this.fetchInfo(username).flatMap(info -> {
             BeanUtils.copyProperties(userDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return userRepository.save(info).doOnNext(userInfo -> {
                 List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
                         this.initUserRole(userInfo.getId(), userInfo.getId(), role)).collect(Collectors.toList());
@@ -117,15 +119,17 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         Asserts.notBlank(username, "username");
         UserInfo info = this.findByUsername(username);
         Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info));
-        Mono<ArrayList<String>> roleIdListMono = infoMono.switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("用户信息不存在")))
+        Mono<ArrayList<String>> roleIdListMono = infoMono.switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("user not found")))
                 .flatMap(userInfo -> userRoleRepository.findByUserId(userInfo.getId())
                         .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID
         Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleSourceRepository.findByRoleIdIn(roleIdList)
+                .switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("no roles")))
                 .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getSourceId())));
         // 查权限
-        Mono<ArrayList<GrantedAuthority>> authorityList = sourceIdListMono.flatMap(sourceIdList -> sourceService.findByIdInAndEnabledTrue(sourceIdList)
-                .collect(ArrayList::new, (sourceList, sourceInfo) -> sourceList.add(new SimpleGrantedAuthority(sourceInfo.getCode()))));
+        Mono<ArrayList<GrantedAuthority>> authorityList = sourceIdListMono.flatMap(sourceIdList ->
+                sourceService.findByIdInAndEnabledTrue(sourceIdList).switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("no authorities")))
+                        .collect(ArrayList::new, (sourceList, sourceInfo) -> sourceList.add(new SimpleGrantedAuthority(sourceInfo.getCode()))));
         // 构造用户信息
         return authorityList.zipWith(infoMono, (authorities, userInfo) ->
                 new User(info.getUsername(), userInfo.getPassword(), userInfo.getEnabled(), userInfo.getAccountNonExpired(),

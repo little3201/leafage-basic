@@ -18,6 +18,7 @@ import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.vo.SourceVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -66,6 +67,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
         }
         info.setCode(prefix + this.generateId());
         info.setEnabled(true);
+        info.setModifyTime(LocalDateTime.now());
         return sourceRepository.insert(info).map(this::convertOuter);
     }
 
@@ -74,6 +76,7 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
         Asserts.notBlank(code, "code");
         return this.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(sourceDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return sourceRepository.save(info);
         }).map(this::convertOuter);
     }

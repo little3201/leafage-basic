@@ -138,6 +138,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<UserTidyVO> fetchByUsername(String username) {
+        Asserts.notBlank(username, "username");
         return userRepository.findByUsername(username);
     }
 

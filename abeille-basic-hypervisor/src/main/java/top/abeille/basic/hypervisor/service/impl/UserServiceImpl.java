@@ -89,7 +89,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         return userRepository.insert(info).doOnNext(userInfo -> {
             log.info("User :{} created.", userInfo.getUsername());
             List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
-                    this.initUserRole(userInfo.getId(), userInfo.getId(), role)).collect(Collectors.toList());
+                    this.initUserRole(userInfo.getId(), role)).collect(Collectors.toList());
             userRoleRepository.saveAll(userRoleList).subscribe();
         }).map(this::convertOuter);
     }
@@ -102,7 +102,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
             info.setModifyTime(LocalDateTime.now());
             return userRepository.save(info).doOnNext(userInfo -> {
                 List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
-                        this.initUserRole(userInfo.getId(), userInfo.getId(), role)).collect(Collectors.toList());
+                        this.initUserRole(userInfo.getId(), role)).collect(Collectors.toList());
                 userRoleRepository.saveAll(userRoleList).subscribe();
             }).map(this::convertOuter);
         });
@@ -191,14 +191,15 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * 初始设置UserRole参数
      *
      * @param userId   用户主键
-     * @param modifier 用户业务ID
-     * @param roleCode 角色业务ID
+     * @param roleCode 角色代码
      * @return 用户-角色对象
      */
-    private UserRole initUserRole(String userId, String modifier, String roleCode) {
+    private UserRole initUserRole(String userId, String roleCode) {
+        Asserts.notBlank(userId, "userId");
+        Asserts.notBlank(roleCode, "roleCode");
         UserRole userRole = new UserRole();
         userRole.setUserId(userId);
-        userRole.setModifier(modifier);
+        userRole.setModifier(userId);
         userRole.setModifyTime(LocalDateTime.now());
         roleService.findByCodeAndEnabledTrue(roleCode).doOnNext(roleInfo -> userRole.setRoleId(roleInfo.getId())).subscribe();
         return userRole;

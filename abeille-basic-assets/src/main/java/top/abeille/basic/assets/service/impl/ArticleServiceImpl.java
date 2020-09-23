@@ -57,7 +57,6 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
         return articleRepository.findByCodeAndEnabledTrue(code).flatMap(article -> {
                     // 将内容设置到vo对像中
                     DetailsVO detailsVO = new DetailsVO();
-                    BeanUtils.copyProperties(article, detailsVO);
                     // 根据业务id获取相关内容
                     return detailsService.fetchByArticleId(article.getId()).map(contentInfo -> {
                         detailsVO.setOriginal(contentInfo.getOriginal());

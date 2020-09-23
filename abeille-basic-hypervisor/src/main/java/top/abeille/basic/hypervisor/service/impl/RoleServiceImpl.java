@@ -57,6 +57,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
         info.setCode(PrefixEnum.RO + this.generateId());
+        info.setModifyTime(LocalDateTime.now());
         return roleRepository.insert(info).doOnNext(roleInfo -> {
             List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
                     this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
@@ -68,6 +69,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
         return roleRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(roleDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return roleRepository.save(info).doOnNext(roleInfo -> {
                 List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
                         this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());

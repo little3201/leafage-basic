@@ -38,7 +38,7 @@ public class RoleSource {
     /**
      * 是否可写
      */
-    private Boolean hasWrite;
+    private boolean hasWrite;
     /**
      * 修改人
      */
@@ -73,11 +73,11 @@ public class RoleSource {
         this.sourceId = sourceId;
     }
 
-    public Boolean getHasWrite() {
+    public boolean getHasWrite() {
         return hasWrite;
     }
 
-    public void setHasWrite(Boolean hasWrite) {
+    public void setHasWrite(boolean hasWrite) {
         this.hasWrite = hasWrite;
     }
 

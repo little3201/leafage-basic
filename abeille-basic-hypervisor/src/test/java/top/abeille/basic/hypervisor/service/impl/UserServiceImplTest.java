@@ -51,7 +51,7 @@ public class UserServiceImplTest {
         String username = "US327SDF9";
         Mono<UserVO> userVOMono = userInfoService.fetchByCode(username);
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(UserInfo.class)))).thenReturn(Mockito.any());
-        Assert.assertNotNull(userVOMono.map(UserVO::getUsername).block());
+        Assert.assertNotNull(userVOMono.map(UserVO::getNickname).block());
     }
 
     /**
@@ -62,6 +62,6 @@ public class UserServiceImplTest {
         String username = "US327SDF9";
         Mono<UserVO> userVOMono = userInfoService.fetchByCode(username);
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(UserInfo.class)))).thenReturn(Mockito.isNull());
-        Assert.assertNull(userVOMono.map(UserVO::getUsername).block());
+        Assert.assertNull(userVOMono.map(UserVO::getNickname).block());
     }
 }

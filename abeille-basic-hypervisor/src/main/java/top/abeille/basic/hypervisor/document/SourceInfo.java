@@ -53,7 +53,7 @@ public class SourceInfo {
      * 是否有效
      */
     @Field(value = "is_enabled")
-    private Boolean enabled;
+    private boolean enabled;
     /**
      * 修改人
      */
@@ -120,11 +120,11 @@ public class SourceInfo {
         this.description = description;
     }
 
-    public Boolean getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

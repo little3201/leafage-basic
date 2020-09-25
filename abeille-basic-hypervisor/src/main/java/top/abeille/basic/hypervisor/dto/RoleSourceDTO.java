@@ -13,7 +13,7 @@ public class RoleSourceDTO implements Serializable {
     /**
      * 是否可写
      */
-    private Boolean hasWrite;
+    private boolean hasWrite;
 
     public String getSourceCode() {
         return sourceCode;
@@ -23,11 +23,11 @@ public class RoleSourceDTO implements Serializable {
         this.sourceCode = sourceCode;
     }
 
-    public Boolean getHasWrite() {
+    public boolean getHasWrite() {
         return hasWrite;
     }
 
-    public void setHasWrite(Boolean hasWrite) {
+    public void setHasWrite(boolean hasWrite) {
         this.hasWrite = hasWrite;
     }
 }

@@ -132,7 +132,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                         .collect(ArrayList::new, (sourceList, sourceInfo) -> sourceList.add(new SimpleGrantedAuthority(sourceInfo.getCode()))));
         // 构造用户信息
         return authorityList.zipWith(infoMono, (authorities, userInfo) ->
-                new User(info.getUsername(), userInfo.getPassword(), userInfo.getEnabled(), userInfo.getAccountNonExpired(),
+                new User(userInfo.getUsername(), userInfo.getPassword(), userInfo.getEnabled(), userInfo.getAccountNonExpired(),
                         userInfo.getCredentialsNonExpired(), userInfo.getAccountNonLocked(), authorities));
     }
 

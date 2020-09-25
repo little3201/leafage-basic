@@ -21,11 +21,6 @@ public class UserDTO implements Serializable {
      * 昵称
      */
     @NotBlank
-    private String username;
-    /**
-     * 昵称
-     */
-    @NotBlank
     private String nickname;
     /**
      * 头像
@@ -53,14 +48,6 @@ public class UserDTO implements Serializable {
      * 修改人
      */
     private String modifier;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getNickname() {
         return nickname;

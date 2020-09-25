@@ -36,6 +36,10 @@ public class RoleSource {
     @Field(value = "source_id")
     private String sourceId;
     /**
+     * 是否可写
+     */
+    private Boolean hasWrite;
+    /**
      * 修改人
      */
     private String modifier;
@@ -67,6 +71,14 @@ public class RoleSource {
 
     public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
+    }
+
+    public Boolean getHasWrite() {
+        return hasWrite;
+    }
+
+    public void setHasWrite(Boolean hasWrite) {
+        this.hasWrite = hasWrite;
     }
 
     public String getModifier() {

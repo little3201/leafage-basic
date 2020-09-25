@@ -27,7 +27,7 @@ public class RoleDTO implements Serializable {
     /**
      * 资源列表
      */
-    private Set<String> sources;
+    private Set<RoleSourceDTO> sources;
 
     public String getName() {
         return name;
@@ -45,11 +45,11 @@ public class RoleDTO implements Serializable {
         this.description = description;
     }
 
-    public Set<String> getSources() {
+    public Set<RoleSourceDTO> getSources() {
         return sources;
     }
 
-    public void setSources(Set<String> sources) {
+    public void setSources(Set<RoleSourceDTO> sources) {
         this.sources = sources;
     }
 }

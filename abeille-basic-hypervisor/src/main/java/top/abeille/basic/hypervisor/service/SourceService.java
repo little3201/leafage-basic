@@ -28,14 +28,6 @@ public interface SourceService extends BasicService<SourceDTO, SourceVO> {
     Mono<SourceInfo> findByCodeAndEnabledTrue(String code);
 
     /**
-     * 根据主键查询资源信息
-     *
-     * @param id 主键
-     * @return 数据库映射对象
-     */
-    Mono<SourceInfo> findByIdAndEnabledTrue(String id);
-
-    /**
      * 根据主键批量查询资源信息
      *
      * @param sourceIdList 主键集合

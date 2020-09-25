@@ -21,7 +21,5 @@ public interface SourceRepository extends ReactiveMongoRepository<SourceInfo, St
 
     Mono<SourceInfo> findByCodeAndEnabledTrue(String code);
 
-    Mono<SourceInfo> findByIdAndEnabledTrue(String id);
-
     Flux<SourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList);
 }

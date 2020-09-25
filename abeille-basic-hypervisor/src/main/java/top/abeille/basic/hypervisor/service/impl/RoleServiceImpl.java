@@ -12,6 +12,7 @@ import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.RoleInfo;
 import top.abeille.basic.hypervisor.document.RoleSource;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
+import top.abeille.basic.hypervisor.dto.RoleSourceDTO;
 import top.abeille.basic.hypervisor.repository.RoleRepository;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
 import top.abeille.basic.hypervisor.service.RoleService;
@@ -93,18 +94,20 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     /**
      * 初始设置UserRole参数
      *
-     * @param roleId   角色主键
-     * @param modifier 修改人
-     * @param sourceId 资源ID
+     * @param roleId        角色主键
+     * @param modifier      修改人
+     * @param roleSourceDTO 资源信息
      * @return 用户-角色对象
      */
-    private RoleSource initRoleSource(String roleId, String modifier, String sourceId) {
+    private RoleSource initRoleSource(String roleId, String modifier, RoleSourceDTO roleSourceDTO) {
         RoleSource roleSource = new RoleSource();
         roleSource.setRoleId(roleId);
         roleSource.setModifier(modifier);
         roleSource.setModifyTime(LocalDateTime.now());
-        sourceService.findByIdAndEnabledTrue(sourceId).doOnNext(sourceInfo ->
-                roleSource.setSourceId(sourceInfo.getId())).subscribe();
+        sourceService.findByCodeAndEnabledTrue(roleSourceDTO.getSourceCode()).doOnNext(sourceInfo -> {
+            roleSource.setSourceId(sourceInfo.getId());
+            roleSource.setHasWrite(roleSourceDTO.getHasWrite());
+        }).subscribe();
         return roleSource;
     }
 

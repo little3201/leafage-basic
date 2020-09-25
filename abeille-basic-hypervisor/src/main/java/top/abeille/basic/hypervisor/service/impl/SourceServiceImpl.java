@@ -81,19 +81,21 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
         }).map(this::convertOuter);
     }
 
-
     @Override
     public Mono<SourceInfo> findByCodeAndEnabledTrue(String code) {
+        Asserts.notBlank(code, "code");
         return sourceRepository.findByCodeAndEnabledTrue(code);
     }
 
     @Override
     public Mono<SourceInfo> findByIdAndEnabledTrue(String id) {
+        Asserts.notBlank(id, "id");
         return sourceRepository.findByIdAndEnabledTrue(id);
     }
 
     @Override
     public Flux<SourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList) {
+        Asserts.notNull(sourceIdList, "sourceIdList");
         return sourceRepository.findByIdInAndEnabledTrue(sourceIdList);
     }
 

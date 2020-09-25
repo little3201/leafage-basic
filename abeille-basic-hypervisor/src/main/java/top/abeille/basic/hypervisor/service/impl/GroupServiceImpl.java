@@ -15,6 +15,8 @@ import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.time.LocalDateTime;
+
 /**
  * 组织信息Service实现
  *
@@ -40,6 +42,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         GroupInfo info = new GroupInfo();
         BeanUtils.copyProperties(groupDTO, info);
         info.setCode(PrefixEnum.GP + this.generateId());
+        info.setModifyTime(LocalDateTime.now());
         return groupRepository.insert(info).map(this::convertOuter);
     }
 
@@ -47,6 +50,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
         return groupRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return groupRepository.save(info);
         }).map(this::convertOuter);
     }

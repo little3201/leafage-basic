@@ -47,6 +47,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
         return accountRepository.findByCodeAndEnabledTrue(code).flatMap(accountVO -> {
             AccountInfo info = new AccountInfo();
             BeanUtils.copyProperties(accountDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return accountRepository.save(info).map(this::convertOuter);
         });
     }

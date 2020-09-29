@@ -14,7 +14,7 @@ import top.abeille.common.basic.AbstractController;
 import javax.validation.Valid;
 
 /**
- * 资源信息controller
+ * 作品集信息controller
  *
  * @author liwenqiang 2020/2/20 9:54
  **/

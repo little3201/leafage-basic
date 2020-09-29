@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for SourceInfo
+ * Model class for ResourceInfo
  *
  * @author liwenqiang
  */

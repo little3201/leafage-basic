@@ -11,11 +11,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for RoleSource
+ * Model class for RoleResource
  *
  * @author liwenqiang
  */
-@Document(collection = "role_source")
+@Document(collection = "role_resource")
 public class RoleResource {
 
     /**

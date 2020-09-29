@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.PortfolioInfo;
 
 /**
- * 资源信息repository
+ * 作品集信息repository
  *
  * @author liwenqiang 2018/12/20 9:51
  **/

@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * 资源信息service实现
+ * 作品集信息service实现
  *
  * @author liwenqiang 2020/2/24 11:59
  **/

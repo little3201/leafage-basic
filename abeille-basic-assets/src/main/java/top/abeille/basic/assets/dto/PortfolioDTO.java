@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * DTO for SourceInfo
+ * DTO for PortfolioInfo
  *
  * @author liwenqiang
  */

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * Model class for SourceInfo
+ * Model class for ResourceInfo
  *
  * @author liwenqiang
  */

@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * VO for SourceInfo
+ * VO for PortfolioInfo
  *
  * @author liwenqiang
  */

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
-import top.abeille.basic.assets.bo.UserBO;
+import top.abeille.basic.assets.bo.UserTidyBO;
 import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.ArticleInfo;
 import top.abeille.basic.assets.document.DetailsInfo;
@@ -139,8 +139,8 @@ public class ArticleServiceImpl extends AbstractBasicService implements ArticleS
     private ArticleVO convertOuter(ArticleInfo info) {
         ArticleVO outer = new ArticleVO();
         BeanUtils.copyProperties(info, outer);
-        UserBO userBO = hypervisorApi.fetchUser(info.getModifier()).block();
-        outer.setAuthor(userBO);
+        UserTidyBO userTidyBO = hypervisorApi.fetchUser(info.getModifier()).block();
+        outer.setAuthor(userTidyBO);
         return outer;
     }
 

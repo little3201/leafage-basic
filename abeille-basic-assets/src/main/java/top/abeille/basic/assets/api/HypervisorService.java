@@ -5,7 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.bo.UserBO;
+import top.abeille.basic.assets.bo.UserTidyBO;
 
 @Service
 public class HypervisorService implements HypervisorApi {
@@ -18,9 +18,9 @@ public class HypervisorService implements HypervisorApi {
     }
 
     @Override
-    public Mono<UserBO> fetchUser(String username) {
+    public Mono<UserTidyBO> fetchUser(String username) {
         Asserts.notBlank(username, "username");
         return clientBuilder.build().get().uri("/user/tidy/{username}", username)
-                .accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(UserBO.class);
+                .accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(UserTidyBO.class);
     }
 }

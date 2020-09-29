@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
-import top.abeille.basic.assets.bo.UserBO;
+import top.abeille.basic.assets.bo.UserTidyBO;
 import top.abeille.basic.assets.document.TopicInfo;
 import top.abeille.basic.assets.dto.TopicDTO;
 import top.abeille.basic.assets.repository.TopicRepository;
@@ -84,8 +84,8 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     private TopicVO convertOuter(TopicInfo info) {
         TopicVO outer = new TopicVO();
         BeanUtils.copyProperties(info, outer);
-        UserBO userBO = hypervisorApi.fetchUser(info.getModifier()).block();
-        outer.setAuthor(userBO);
+        UserTidyBO userTidyBO = hypervisorApi.fetchUser(info.getModifier()).block();
+        outer.setAuthor(userTidyBO);
         return outer;
     }
 }

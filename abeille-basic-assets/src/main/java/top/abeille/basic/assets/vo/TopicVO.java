@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.assets.vo;
 
-import top.abeille.basic.assets.bo.UserBO;
+import top.abeille.basic.assets.bo.UserTidyBO;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class TopicVO implements Serializable {
     /**
      * 作者
      */
-    private UserBO author;
+    private UserTidyBO author;
     /**
      * 标题
      */
@@ -45,11 +45,11 @@ public class TopicVO implements Serializable {
         this.code = code;
     }
 
-    public UserBO getAuthor() {
+    public UserTidyBO getAuthor() {
         return author;
     }
 
-    public void setAuthor(UserBO author) {
+    public void setAuthor(UserTidyBO author) {
         this.author = author;
     }
 

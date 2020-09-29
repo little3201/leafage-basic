@@ -4,7 +4,7 @@
 package top.abeille.basic.assets.api;
 
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.bo.UserBO;
+import top.abeille.basic.assets.bo.UserTidyBO;
 
 /**
  * 用户api
@@ -19,5 +19,5 @@ public interface HypervisorApi {
      * @param username 业务id
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    Mono<UserBO> fetchUser(String username);
+    Mono<UserTidyBO> fetchUser(String username);
 }

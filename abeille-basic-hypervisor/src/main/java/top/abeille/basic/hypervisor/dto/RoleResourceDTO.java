@@ -2,7 +2,7 @@ package top.abeille.basic.hypervisor.dto;
 
 import java.io.Serializable;
 
-public class RoleSourceDTO implements Serializable {
+public class RoleResourceDTO implements Serializable {
 
     private static final long serialVersionUID = 1432721617667440537L;
 

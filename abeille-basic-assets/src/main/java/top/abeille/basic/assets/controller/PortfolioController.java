@@ -6,9 +6,9 @@ package top.abeille.basic.assets.controller;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.dto.ResourceDTO;
-import top.abeille.basic.assets.service.ResourceService;
-import top.abeille.basic.assets.vo.ResourceVO;
+import top.abeille.basic.assets.dto.PortfolioDTO;
+import top.abeille.basic.assets.service.PortfolioService;
+import top.abeille.basic.assets.vo.PortfolioVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -20,12 +20,12 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/resource")
-public class ResourceController extends AbstractController {
+public class PortfolioController extends AbstractController {
 
-    private final ResourceService resourceService;
+    private final PortfolioService portfolioService;
 
-    public ResourceController(ResourceService resourceService) {
-        this.resourceService = resourceService;
+    public PortfolioController(PortfolioService portfolioService) {
+        this.portfolioService = portfolioService;
     }
 
     /**
@@ -34,8 +34,8 @@ public class ResourceController extends AbstractController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<ResourceVO> retrieveResource() {
-        return resourceService.retrieveAll();
+    public Flux<PortfolioVO> retrieveResource() {
+        return portfolioService.retrieveAll();
     }
 
     /**
@@ -45,31 +45,31 @@ public class ResourceController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
-    public Mono<ResourceVO> fetchResource(@PathVariable String code) {
-        return resourceService.fetchByCode(code);
+    public Mono<PortfolioVO> fetchResource(@PathVariable String code) {
+        return portfolioService.fetchByCode(code);
     }
 
     /**
      * 根据传入的数据添加信息
      *
-     * @param resourceDTO 要添加的数据
+     * @param portfolioDTO 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<ResourceVO> createResource(@RequestBody @Valid ResourceDTO resourceDTO) {
-        return resourceService.create(resourceDTO);
+    public Mono<PortfolioVO> createResource(@RequestBody @Valid PortfolioDTO portfolioDTO) {
+        return portfolioService.create(portfolioDTO);
     }
 
     /**
      * 根据传入的代码和要修改的数据，修改信息
      *
-     * @param code        代码
-     * @param resourceDTO 要修改的数据
+     * @param code         代码
+     * @param portfolioDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{code}")
-    public Mono<ResourceVO> modifyResource(@PathVariable String code, @RequestBody @Valid ResourceDTO resourceDTO) {
-        return resourceService.modify(code, resourceDTO);
+    public Mono<PortfolioVO> modifyResource(@PathVariable String code, @RequestBody @Valid PortfolioDTO portfolioDTO) {
+        return portfolioService.modify(code, portfolioDTO);
     }
 
 }

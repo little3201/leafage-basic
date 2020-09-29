@@ -3,8 +3,8 @@
  */
 package top.abeille.basic.assets.service;
 
-import top.abeille.basic.assets.dto.ResourceDTO;
-import top.abeille.basic.assets.vo.ResourceVO;
+import top.abeille.basic.assets.dto.PortfolioDTO;
+import top.abeille.basic.assets.vo.PortfolioVO;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2020/2/24 11:59
  **/
-public interface ResourceService extends BasicService<ResourceDTO, ResourceVO> {
+public interface PortfolioService extends BasicService<PortfolioDTO, PortfolioVO> {
 }

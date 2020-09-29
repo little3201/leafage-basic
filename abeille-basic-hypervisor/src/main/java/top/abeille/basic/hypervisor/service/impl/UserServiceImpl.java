@@ -26,8 +26,8 @@ import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
 import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
+import top.abeille.basic.hypervisor.service.ResourceService;
 import top.abeille.basic.hypervisor.service.RoleService;
-import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
@@ -63,14 +63,14 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     private final UserRoleRepository userRoleRepository;
     private final RoleService roleService;
     private final RoleSourceRepository roleSourceRepository;
-    private final SourceService sourceService;
+    private final ResourceService resourceService;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService, RoleSourceRepository roleSourceRepository, SourceService sourceService) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService, RoleSourceRepository roleSourceRepository, ResourceService resourceService) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.roleService = roleService;
         this.roleSourceRepository = roleSourceRepository;
-        this.sourceService = sourceService;
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -125,10 +125,10 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         // 取角色关联的权限ID
         Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleSourceRepository.findByRoleIdIn(roleIdList)
                 .switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("no roles")))
-                .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getSourceId())));
+                .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getResourceId())));
         // 查权限
         Mono<ArrayList<GrantedAuthority>> authorityList = sourceIdListMono.flatMap(sourceIdList ->
-                sourceService.findByIdInAndEnabledTrue(sourceIdList).switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("no authorities")))
+                resourceService.findByIdInAndEnabledTrue(sourceIdList).switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("no authorities")))
                         .collect(ArrayList::new, (sourceList, sourceInfo) -> sourceList.add(new SimpleGrantedAuthority(sourceInfo.getCode()))));
         // 构造用户信息
         return authorityList.zipWith(infoMono, (authorities, userInfo) ->

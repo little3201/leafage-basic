@@ -29,12 +29,6 @@ public class ArticleInfo {
     @Indexed(unique = true)
     private String code;
     /**
-     * 作者ID
-     */
-    @Field(value = "user_id")
-    @Indexed
-    private String userId;
-    /**
      * 标题
      */
     private String title;
@@ -76,14 +70,6 @@ public class ArticleInfo {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getTitle() {

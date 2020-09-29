@@ -11,11 +11,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.constant.SourceTypeEnum;
-import top.abeille.basic.hypervisor.document.SourceInfo;
+import top.abeille.basic.hypervisor.document.ResourceInfo;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
-import top.abeille.basic.hypervisor.repository.SourceRepository;
-import top.abeille.basic.hypervisor.service.SourceService;
-import top.abeille.basic.hypervisor.vo.SourceVO;
+import top.abeille.basic.hypervisor.repository.ResourceRepository;
+import top.abeille.basic.hypervisor.service.ResourceService;
+import top.abeille.basic.hypervisor.vo.ResourceVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
@@ -27,29 +27,29 @@ import java.util.List;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class SourceServiceImpl extends AbstractBasicService implements SourceService {
+public class ResourceServiceImpl extends AbstractBasicService implements ResourceService {
 
-    private final SourceRepository sourceRepository;
+    private final ResourceRepository resourceRepository;
 
-    public SourceServiceImpl(SourceRepository sourceRepository) {
-        this.sourceRepository = sourceRepository;
+    public ResourceServiceImpl(ResourceRepository resourceRepository) {
+        this.resourceRepository = resourceRepository;
     }
 
     @Override
-    public Flux<SourceVO> retrieveAll() {
+    public Flux<ResourceVO> retrieveAll() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return sourceRepository.findAll(sort).map(this::convertOuter);
+        return resourceRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
-    public Mono<SourceVO> fetchByCode(String code) {
+    public Mono<ResourceVO> fetchByCode(String code) {
         Asserts.notBlank(code, "code");
         return this.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
-    public Mono<SourceVO> create(SourceDTO sourceDTO) {
-        SourceInfo info = new SourceInfo();
+    public Mono<ResourceVO> create(SourceDTO sourceDTO) {
+        ResourceInfo info = new ResourceInfo();
         BeanUtils.copyProperties(sourceDTO, info);
         String prefix;
         switch (SourceTypeEnum.valueOf(sourceDTO.getType())) {
@@ -68,29 +68,29 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
         info.setCode(prefix + this.generateId());
         info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
-        return sourceRepository.insert(info).map(this::convertOuter);
+        return resourceRepository.insert(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<SourceVO> modify(String code, SourceDTO sourceDTO) {
+    public Mono<ResourceVO> modify(String code, SourceDTO sourceDTO) {
         Asserts.notBlank(code, "code");
         return this.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(sourceDTO, info);
             info.setModifyTime(LocalDateTime.now());
-            return sourceRepository.save(info);
+            return resourceRepository.save(info);
         }).map(this::convertOuter);
     }
 
     @Override
-    public Mono<SourceInfo> findByCodeAndEnabledTrue(String code) {
+    public Mono<ResourceInfo> findByCodeAndEnabledTrue(String code) {
         Asserts.notBlank(code, "code");
-        return sourceRepository.findByCodeAndEnabledTrue(code);
+        return resourceRepository.findByCodeAndEnabledTrue(code);
     }
 
     @Override
-    public Flux<SourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList) {
+    public Flux<ResourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList) {
         Asserts.notNull(sourceIdList, "sourceIdList");
-        return sourceRepository.findByIdInAndEnabledTrue(sourceIdList);
+        return resourceRepository.findByIdInAndEnabledTrue(sourceIdList);
     }
 
     /**
@@ -99,8 +99,8 @@ public class SourceServiceImpl extends AbstractBasicService implements SourceSer
      * @param info 信息
      * @return 输出转换后的vo对象
      */
-    private SourceVO convertOuter(SourceInfo info) {
-        SourceVO outer = new SourceVO();
+    private ResourceVO convertOuter(ResourceInfo info) {
+        ResourceVO outer = new ResourceVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
     }

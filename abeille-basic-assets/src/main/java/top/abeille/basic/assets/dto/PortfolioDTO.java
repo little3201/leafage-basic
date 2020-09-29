@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author liwenqiang
  */
-public class ResourceDTO implements Serializable {
+public class PortfolioDTO implements Serializable {
 
     private static final long serialVersionUID = 6514393945624239153L;
     /**

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
-import top.abeille.basic.hypervisor.service.SourceService;
-import top.abeille.basic.hypervisor.vo.SourceVO;
+import top.abeille.basic.hypervisor.service.ResourceService;
+import top.abeille.basic.hypervisor.vo.ResourceVO;
 import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
@@ -20,12 +20,12 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/source")
-public class SourceController extends AbstractController {
+public class ResourceController extends AbstractController {
 
-    private final SourceService sourceService;
+    private final ResourceService resourceService;
 
-    public SourceController(SourceService sourceService) {
-        this.sourceService = sourceService;
+    public ResourceController(ResourceService resourceService) {
+        this.resourceService = resourceService;
     }
 
     /**
@@ -34,8 +34,8 @@ public class SourceController extends AbstractController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<SourceVO> retrieveSource() {
-        return sourceService.retrieveAll();
+    public Flux<ResourceVO> retrieveSource() {
+        return resourceService.retrieveAll();
     }
 
     /**
@@ -45,8 +45,8 @@ public class SourceController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public Mono<SourceVO> createSource(@RequestBody @Valid SourceDTO sourceDTO) {
-        return sourceService.create(sourceDTO);
+    public Mono<ResourceVO> createSource(@RequestBody @Valid SourceDTO sourceDTO) {
+        return resourceService.create(sourceDTO);
     }
 
     /**
@@ -57,8 +57,8 @@ public class SourceController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{code}")
-    public Mono<SourceVO> modifySource(@PathVariable String code, @RequestBody @Valid SourceDTO sourceDTO) {
-        return sourceService.modify(code, sourceDTO);
+    public Mono<ResourceVO> modifySource(@PathVariable String code, @RequestBody @Valid SourceDTO sourceDTO) {
+        return resourceService.modify(code, sourceDTO);
     }
 
     /**
@@ -68,7 +68,7 @@ public class SourceController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
-    public Mono<SourceVO> fetchGroup(@PathVariable String code) {
-        return sourceService.fetchByCode(code);
+    public Mono<ResourceVO> fetchGroup(@PathVariable String code) {
+        return resourceService.fetchByCode(code);
     }
 }

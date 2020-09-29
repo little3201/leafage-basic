@@ -1,13 +1,9 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.hypervisor.document;
+package top.abeille.basic.hypervisor.vo;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -15,18 +11,12 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-@Document(collection = "source_info")
-public class SourceInfo {
+public class ResourceVO implements Serializable {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
+    private static final long serialVersionUID = 9207337014543117619L;
     /**
      * 代码
      */
-    @Indexed(unique = true)
     private String code;
     /**
      * 上级
@@ -48,29 +38,10 @@ public class SourceInfo {
      * 描述
      */
     private String description;
-
-    /**
-     * 是否有效
-     */
-    @Field(value = "is_enabled")
-    private boolean enabled;
-    /**
-     * 修改人
-     */
-    private String modifier;
     /**
      * 修改时间
      */
-    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getCode() {
         return code;
@@ -118,22 +89,6 @@ public class SourceInfo {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

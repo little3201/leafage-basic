@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2018/12/17 19:39
  **/
 @RestController
-@RequestMapping("/source")
+@RequestMapping("/resource")
 public class ResourceController extends AbstractController {
 
     private final ResourceService resourceService;

@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2020/2/20 9:54
  **/
 @RestController
-@RequestMapping("/resource")
+@RequestMapping("/portfolio")
 public class PortfolioController extends AbstractController {
 
     private final PortfolioService portfolioService;

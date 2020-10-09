@@ -116,7 +116,8 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserDetails> loadByUsername(String username) {
         Asserts.notBlank(username, "username");
         UserInfo info = this.findByUsername(username);
-        Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info)).switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("User Not Found")));
+        Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info))
+                .switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("User Not Found")));
         Mono<ArrayList<String>> roleIdListMono = infoMono.flatMap(userInfo -> userRoleRepository.findByUserId(userInfo.getId())
                 .switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("No Roles")))
                 .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));

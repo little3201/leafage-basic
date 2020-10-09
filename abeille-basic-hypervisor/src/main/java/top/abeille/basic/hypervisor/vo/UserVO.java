@@ -24,10 +24,6 @@ public class UserVO extends UserTidyVO implements Serializable {
      */
     private String email;
     /**
-     * 地址
-     */
-    private String address;
-    /**
      * 是否有效
      */
     private boolean accountNonExpired;
@@ -58,14 +54,6 @@ public class UserVO extends UserTidyVO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public boolean getAccountNonExpired() {

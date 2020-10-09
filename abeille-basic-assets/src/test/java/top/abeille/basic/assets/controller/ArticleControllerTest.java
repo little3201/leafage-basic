@@ -4,31 +4,37 @@
 
 package top.abeille.basic.assets.controller;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.assets.api.HypervisorApi;
 import top.abeille.basic.assets.dto.ArticleDTO;
+import top.abeille.basic.assets.repository.ArticleRepository;
+import top.abeille.basic.assets.service.DetailsService;
+import top.abeille.basic.assets.service.impl.ArticleServiceImpl;
 
 /**
  * 文章接口测试类
  *
  * @author liwenqiang 2020/3/1 22:07
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class ArticleControllerTest {
 
-    private final WebTestClient client = WebTestClient.bindToServer().baseUrl("http://localhost:8764").build();
+    @MockBean
+    private ArticleRepository articleRepository;
 
-    @Before
-    public void testBefore() {
-        client.get().headers(h -> h.setBearerAuth("token"));
-    }
+    @MockBean
+    private DetailsService detailsService;
+
+    @MockBean
+    private HypervisorApi hypervisorApi;
+
+    private final WebTestClient client = WebTestClient.bindToController(new ArticleController(new ArticleServiceImpl(articleRepository,
+            detailsService, hypervisorApi))).build();
 
     @Test
     public void retrieveArticle() {

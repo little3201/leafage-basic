@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -45,6 +46,7 @@ public class RoleController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<RoleVO> createRole(@RequestBody @Valid RoleDTO roleDTO) {
         return roleService.create(roleDTO);
     }
@@ -57,6 +59,7 @@ public class RoleController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{code}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public Mono<RoleVO> modifyRole(@PathVariable String code, @RequestBody @Valid RoleDTO roleDTO) {
         return roleService.modify(code, roleDTO);
     }

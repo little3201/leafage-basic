@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.AccountDTO;
@@ -45,6 +46,7 @@ public class AccountController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<AccountVO> createAccount(@RequestBody @Valid AccountDTO accountDTO) {
         return accountService.create(accountDTO);
     }
@@ -57,6 +59,7 @@ public class AccountController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{code}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public Mono<AccountVO> modifyAccount(@PathVariable String code, @RequestBody @Valid AccountDTO accountDTO) {
         return accountService.modify(code, accountDTO);
     }
@@ -68,6 +71,7 @@ public class AccountController extends AbstractController {
      * @return 如果删除数据成功，返回删除后的信息，否则返回417状态码
      */
     @DeleteMapping("/{code}")
+    @ResponseStatus(HttpStatus.OK)
     public Mono<Void> removeAccount(@PathVariable String code) {
         return accountService.remove(code);
     }

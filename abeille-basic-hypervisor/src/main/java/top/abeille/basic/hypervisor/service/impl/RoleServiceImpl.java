@@ -14,7 +14,7 @@ import top.abeille.basic.hypervisor.document.RoleResource;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.dto.RoleResourceDTO;
 import top.abeille.basic.hypervisor.repository.RoleRepository;
-import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
+import top.abeille.basic.hypervisor.repository.RoleResourceRepository;
 import top.abeille.basic.hypervisor.service.ResourceService;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
@@ -33,12 +33,12 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl extends AbstractBasicService implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final RoleSourceRepository roleSourceRepository;
+    private final RoleResourceRepository roleResourceRepository;
     private final ResourceService resourceService;
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleSourceRepository roleSourceRepository, ResourceService resourceService) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleResourceRepository roleResourceRepository, ResourceService resourceService) {
         this.roleRepository = roleRepository;
-        this.roleSourceRepository = roleSourceRepository;
+        this.roleResourceRepository = roleResourceRepository;
         this.resourceService = resourceService;
     }
 
@@ -62,7 +62,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         return roleRepository.insert(info).doOnNext(roleInfo -> {
             List<RoleResource> userRoleList = roleDTO.getSources().stream().map(source ->
                     this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
-            roleSourceRepository.saveAll(userRoleList).subscribe();
+            roleResourceRepository.saveAll(userRoleList).subscribe();
         }).map(this::convertOuter);
     }
 
@@ -74,7 +74,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
             return roleRepository.save(info).doOnNext(roleInfo -> {
                 List<RoleResource> userRoleList = roleDTO.getSources().stream().map(source ->
                         this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
-                roleSourceRepository.saveAll(userRoleList).subscribe();
+                roleResourceRepository.saveAll(userRoleList).subscribe();
             });
         }).map(this::convertOuter);
     }

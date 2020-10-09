@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -69,6 +70,7 @@ public class UserController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<UserVO> createUser(@RequestBody @Valid UserDTO userDTO) {
         return userService.create(userDTO);
     }
@@ -81,6 +83,7 @@ public class UserController extends AbstractController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{username}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public Mono<UserVO> modifyUser(@PathVariable String username, @RequestBody @Valid UserDTO userDTO) {
         return userService.modify(username, userDTO);
     }
@@ -92,6 +95,7 @@ public class UserController extends AbstractController {
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
     @DeleteMapping("/{username}")
+    @ResponseStatus(HttpStatus.OK)
     public Mono<Void> removeUser(@PathVariable String username) {
         return userService.remove(username);
     }

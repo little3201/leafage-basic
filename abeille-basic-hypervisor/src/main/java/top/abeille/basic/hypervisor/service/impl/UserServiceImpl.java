@@ -23,7 +23,7 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.document.UserRole;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
+import top.abeille.basic.hypervisor.repository.RoleResourceRepository;
 import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.ResourceService;
@@ -48,8 +48,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
 
-    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-
     /**
      * email 正则
      */
@@ -58,18 +56,18 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * 手机号 正则
      */
     private static final String REGEX_MOBILE = "0?(13|14|15|17|18|19)[0-9]{9}";
-
+    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final RoleService roleService;
-    private final RoleSourceRepository roleSourceRepository;
+    private final RoleResourceRepository roleResourceRepository;
     private final ResourceService resourceService;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService, RoleSourceRepository roleSourceRepository, ResourceService resourceService) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService, RoleResourceRepository roleResourceRepository, ResourceService resourceService) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.roleService = roleService;
-        this.roleSourceRepository = roleSourceRepository;
+        this.roleResourceRepository = roleResourceRepository;
         this.resourceService = resourceService;
     }
 
@@ -118,18 +116,18 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserDetails> loadByUsername(String username) {
         Asserts.notBlank(username, "username");
         UserInfo info = this.findByUsername(username);
-        Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info));
-        Mono<ArrayList<String>> roleIdListMono = infoMono.switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("user not found")))
-                .flatMap(userInfo -> userRoleRepository.findByUserId(userInfo.getId())
-                        .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
+        Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info)).switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("User Not Found")));
+        Mono<ArrayList<String>> roleIdListMono = infoMono.flatMap(userInfo -> userRoleRepository.findByUserId(userInfo.getId())
+                .switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("No Roles")))
+                .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID
-        Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleSourceRepository.findByRoleIdIn(roleIdList)
-                .switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("no roles")))
+        Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleResourceRepository.findByRoleIdIn(roleIdList)
+                .switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("No Authorities")))
                 .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getResourceId())));
         // 查权限
         Mono<ArrayList<GrantedAuthority>> authorityList = sourceIdListMono.flatMap(sourceIdList ->
-                resourceService.findByIdInAndEnabledTrue(sourceIdList).switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("no authorities")))
-                        .collect(ArrayList::new, (sourceList, sourceInfo) -> sourceList.add(new SimpleGrantedAuthority(sourceInfo.getCode()))));
+                resourceService.findByIdInAndEnabledTrue(sourceIdList).collect(ArrayList::new, (sourceList, sourceInfo) ->
+                        sourceList.add(new SimpleGrantedAuthority(sourceInfo.getCode()))));
         // 构造用户信息
         return authorityList.zipWith(infoMono, (authorities, userInfo) ->
                 new User(userInfo.getUsername(), userInfo.getPassword(), userInfo.getEnabled(), userInfo.getAccountNonExpired(),

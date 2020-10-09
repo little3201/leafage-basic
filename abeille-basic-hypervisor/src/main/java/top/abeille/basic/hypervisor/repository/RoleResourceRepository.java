@@ -17,7 +17,7 @@ import java.util.List;
  * @author liwenqiang 2018/9/26 11:29
  **/
 @Repository
-public interface RoleSourceRepository extends ReactiveCrudRepository<RoleResource, String> {
+public interface RoleResourceRepository extends ReactiveCrudRepository<RoleResource, String> {
 
     /**
      * 查询所有资源——根据角色ID集合

@@ -1,11 +1,10 @@
 package top.abeille.basic.assets.service.impl;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.ArticleDTO;
@@ -19,7 +18,6 @@ import java.util.Random;
  *
  * @author liwenqiang 2019/9/19 9:27
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class ArticleServiceImplTest {
 

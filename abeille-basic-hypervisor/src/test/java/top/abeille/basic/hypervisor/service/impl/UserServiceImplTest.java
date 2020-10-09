@@ -4,12 +4,11 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
 import org.springframework.security.core.userdetails.UserDetails;
 import reactor.core.publisher.Mono;
@@ -23,7 +22,7 @@ import top.abeille.basic.hypervisor.vo.UserVO;
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class UserServiceImplTest {
 
     @Mock

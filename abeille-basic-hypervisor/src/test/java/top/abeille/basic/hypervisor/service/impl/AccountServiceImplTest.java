@@ -3,12 +3,11 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 import top.abeille.basic.hypervisor.document.AccountInfo;
 import top.abeille.basic.hypervisor.dto.AccountDTO;
 import top.abeille.basic.hypervisor.repository.AccountRepository;
@@ -18,7 +17,7 @@ import top.abeille.basic.hypervisor.repository.AccountRepository;
  *
  * @author liwenqiang 2019/3/28 20:22
  **/
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class AccountServiceImplTest {
 
     @Mock

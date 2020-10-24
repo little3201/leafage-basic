@@ -1,21 +1,14 @@
-<p align="center">
-  <a href="https://console.abeille.top" target="_blank">
-    <img alt="Abeille Logo" width="100" src="https://github.com/little3201/abeille-manager/blob/develop/src/assets/logo.svg">
-  </a>
-</p>
+<h2 align="center">Abeille</h2>
 
 <p align="center">
   <a href="https://github.com/little3201/abeille-basic/blob/develop/LICENSE">
      <img src="https://img.shields.io/github/license/little3201/abeille-basic.svg" alt="License">
   </a>
  <img src="https://img.shields.io/badge/Spring%20Cloud-Hoxto.RELEASE-blue.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.1.RELEASE-blue.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.3.RELEASE-blue.svg" alt="Downloads">
 </p>
 
-<h2 align="center">Supporting Abeille</h2>
-
-
-- 基于 Spring Cloud Hoxton 、Spring Boot 2.1.2 的RBAC权限管理系统    
+- 基于 Spring Cloud Hoxton 、Spring Boot 2.3 的RBAC权限管理系统    
 - 分两个版本，webmvc 和 webflux 版本
 
 <a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.abeille.top"> 在线体验</a>
@@ -32,8 +25,8 @@
 
 依赖 | 版本
 ---|---
-Spring Boot |  2.1.2.RELEASE
-Spring Cloud | Hoxton.RELEASE 
+Spring Boot |  2.3.4.RELEASE
+Spring Cloud | Hoxton.RS8
 
 ### 目标功能
 - [x] 登录、注册

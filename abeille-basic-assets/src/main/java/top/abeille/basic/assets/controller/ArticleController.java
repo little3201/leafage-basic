@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -41,14 +42,14 @@ public class ArticleController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 查询信息
+     * 根据传入的代码查询信息
      *
-     * @param businessId 业务id
+     * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{businessId}")
-    public Mono<DetailsVO> fetchArticle(@PathVariable String businessId) {
-        return articleService.fetchDetailsByBusinessId(businessId).switchIfEmpty(Mono.empty());
+    @GetMapping("/{code}")
+    public Mono<DetailsVO> fetchArticle(@PathVariable String code) {
+        return articleService.fetchDetailsByCode(code).switchIfEmpty(Mono.empty());
     }
 
     /**
@@ -58,20 +59,22 @@ public class ArticleController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<ArticleVO> createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
         return articleService.create(articleDTO);
     }
 
     /**
-     * 根据传入的业务id: businessId 和要修改的数据，修改信息
+     * 根据传入的 articleId 和要修改的数据，修改信息
      *
-     * @param businessId 业务id
+     * @param code       代码
      * @param articleDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{businessId}")
-    public Mono<ArticleVO> modifyArticle(@PathVariable String businessId, @RequestBody @Valid ArticleDTO articleDTO) {
-        return articleService.modify(businessId, articleDTO);
+    @PutMapping("/{code}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Mono<ArticleVO> modifyArticle(@PathVariable String code, @RequestBody @Valid ArticleDTO articleDTO) {
+        return articleService.modify(code, articleDTO);
     }
 
     /**

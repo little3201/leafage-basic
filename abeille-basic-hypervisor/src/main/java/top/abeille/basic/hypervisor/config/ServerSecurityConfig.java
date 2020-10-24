@@ -44,7 +44,7 @@ public class ServerSecurityConfig {
      */
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.oauth2ResourceServer(o -> o.jwt().jwtDecoder(jwtDecoder()));
+        http.oauth2ResourceServer(o -> o.jwt().jwtDecoder(jwtDecoder())).csrf().disable();
         return http.build();
     }
 

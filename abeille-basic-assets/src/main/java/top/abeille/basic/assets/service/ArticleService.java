@@ -19,12 +19,12 @@ import top.abeille.common.basic.BasicService;
 public interface ArticleService extends BasicService<ArticleDTO, ArticleVO> {
 
     /**
-     * 根据业务id查询详细信息
+     * 根据代码查询详细信息
      *
-     * @param businessId 业务id
+     * @param code 代码
      * @return 详细信息
      */
-    Mono<DetailsVO> fetchDetailsByBusinessId(String businessId);
+    Mono<DetailsVO> fetchDetailsByCode(String code);
 
     /**
      * 获取一个月内每日更新数量

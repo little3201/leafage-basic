@@ -18,19 +18,19 @@ public interface DetailsService {
     Mono<DetailsInfo> create(DetailsInfo detailsInfo);
 
     /**
-     * 根据业务id修改信息
+     * 根据文章ID修改信息
      *
-     * @param businessId  业务id
+     * @param articleId   文章ID
      * @param detailsInfo 信息
      * @return 返回操作结果，否则返回empty
      */
-    Mono<DetailsInfo> modify(String businessId, DetailsInfo detailsInfo);
+    Mono<DetailsInfo> modify(String articleId, DetailsInfo detailsInfo);
 
     /**
-     * 根据业务id查询
+     * 根据文章ID查询
      *
-     * @param businessId 业务id
+     * @param articleId 文章ID
      * @return 返回查询到的信息，否则返回empty
      */
-    Mono<DetailsInfo> fetchByBusinessId(String businessId);
+    Mono<DetailsInfo> fetchByArticleId(String articleId);
 }

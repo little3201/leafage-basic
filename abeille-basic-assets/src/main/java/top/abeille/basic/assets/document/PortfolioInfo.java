@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.document;
+package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for RoleSource
+ * Model class for ArticleInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "role_source")
-public class RoleSource {
+@Document(collection = "portfolio_info")
+public class PortfolioInfo {
 
     /**
      * 主键
@@ -24,21 +24,27 @@ public class RoleSource {
     @Id
     private String id;
     /**
-     * 角色ID
+     * 代码
      */
-    @Indexed
-    @Field(value = "role_id")
-    private String roleId;
+    @Indexed(unique = true)
+    private String code;
     /**
-     * 资源ID
+     * 标题
      */
-    @Indexed
-    @Field(value = "source_id")
-    private String sourceId;
+    private String title;
+    /**
+     * 图片url
+     */
+    @Field(value = "image_url")
+    private String imageUrl;
+    /**
+     * 是否有效
+     */
+    @Field(value = "is_enabled")
+    private boolean enabled;
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间
@@ -54,20 +60,36 @@ public class RoleSource {
         this.id = id;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public String getCode() {
+        return code;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getSourceId() {
-        return sourceId;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSourceId(String sourceId) {
-        this.sourceId = sourceId;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getModifier() {

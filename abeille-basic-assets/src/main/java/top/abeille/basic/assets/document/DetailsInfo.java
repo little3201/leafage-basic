@@ -25,35 +25,31 @@ public class DetailsInfo {
     @Id
     private String id;
     /**
-     * 业务ID
+     * 文章ID
      */
-    @Field(value = "business_id")
-    @Indexed
-    private String businessId;
+    @Field(value = "article_id")
+    @Indexed(unique = true)
+    private String articleId;
     /**
      * 原文
      */
-    @Field(value = "original")
     private String original;
     /**
      * 内容
      */
-    @Field(value = "content")
     private String content;
     /**
      * 目录
      */
-    @Field(value = "catalog")
     private String catalog;
     /**
      * 是否有效
      */
     @Field(value = "is_enabled")
-    private Boolean enabled;
+    private boolean enabled;
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间
@@ -69,12 +65,12 @@ public class DetailsInfo {
         this.id = id;
     }
 
-    public String getBusinessId() {
-        return businessId;
+    public String getArticleId() {
+        return articleId;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setArticleId(String articleId) {
+        this.articleId = articleId;
     }
 
     public String getOriginal() {
@@ -101,11 +97,11 @@ public class DetailsInfo {
         this.catalog = catalog;
     }
 
-    public Boolean getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

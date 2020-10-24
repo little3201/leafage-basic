@@ -11,21 +11,10 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-public class UserVO implements Serializable {
+public class UserVO extends UserTidyVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
-    /**
-     * 业务id
-     */
-    private String businessId;
-    /**
-     * 昵称
-     */
-    private String nickname;
-    /**
-     * 头像
-     */
-    private String avatar;
+
     /**
      * 电话
      */
@@ -35,49 +24,21 @@ public class UserVO implements Serializable {
      */
     private String email;
     /**
-     * 地址
-     */
-    private String address;
-    /**
      * 是否有效
      */
-    private Boolean accountNonExpired;
+    private boolean accountNonExpired;
     /**
      * 是否锁定
      */
-    private Boolean accountNonLocked;
+    private boolean accountNonLocked;
     /**
      * 密码是否有效
      */
-    private Boolean credentialsNonExpired;
+    private boolean credentialsNonExpired;
     /**
      * 修改时间
      */
     private LocalDateTime modifyTime;
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 
     public String getMobile() {
         return mobile;
@@ -95,35 +56,27 @@ public class UserVO implements Serializable {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Boolean getAccountNonExpired() {
+    public boolean getAccountNonExpired() {
         return accountNonExpired;
     }
 
-    public void setAccountNonExpired(Boolean accountNonExpired) {
+    public void setAccountNonExpired(boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public Boolean getAccountNonLocked() {
+    public boolean getAccountNonLocked() {
         return accountNonLocked;
     }
 
-    public void setAccountNonLocked(Boolean accountNonLocked) {
+    public void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public Boolean getCredentialsNonExpired() {
+    public boolean getCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 

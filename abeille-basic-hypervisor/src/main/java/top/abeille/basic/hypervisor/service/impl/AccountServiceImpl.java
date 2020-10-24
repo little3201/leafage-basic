@@ -5,7 +5,6 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
@@ -36,53 +35,28 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     public Mono<AccountVO> create(AccountDTO accountDTO) {
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(accountDTO, info);
-        info.setBusinessId(PrefixEnum.AC + this.generateId());
+        info.setCode(PrefixEnum.AC + this.generateId());
         info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return accountRepository.insert(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<AccountVO> modify(String businessId, AccountDTO accountDTO) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchByBusinessId(businessId).flatMap(accountVO -> {
+    public Mono<AccountVO> modify(String code, AccountDTO accountDTO) {
+        Asserts.notBlank(code, "code");
+        return accountRepository.findByCodeAndEnabledTrue(code).flatMap(accountVO -> {
             AccountInfo info = new AccountInfo();
             BeanUtils.copyProperties(accountDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return accountRepository.save(info).map(this::convertOuter);
         });
     }
 
     @Override
-    public Mono<Void> removeById(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId)
+    public Mono<Void> remove(String code) {
+        Asserts.notBlank(code, "code");
+        return accountRepository.findByCodeAndEnabledTrue(code)
                 .flatMap(account -> accountRepository.deleteById(account.getId()));
-    }
-
-    /**
-     * 根据业务id查询
-     *
-     * @param businessId 业务id
-     * @return 返回查询到的信息，否则返回empty
-     */
-    @Override
-    public Mono<AccountVO> fetchByBusinessId(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).map(this::convertOuter);
-    }
-
-    /**
-     * 根据业务id查询
-     *
-     * @param businessId 业务id
-     * @return 返回查询到的信息，否则返回empty
-     */
-    private Mono<AccountInfo> fetchInfo(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        AccountInfo info = new AccountInfo();
-        info.setBusinessId(businessId);
-        info.setEnabled(true);
-        return accountRepository.findOne(Example.of(info));
     }
 
     /**

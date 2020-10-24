@@ -5,6 +5,7 @@ package top.abeille.basic.assets.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.TopicInfo;
 
 /**
@@ -14,4 +15,6 @@ import top.abeille.basic.assets.document.TopicInfo;
  **/
 @Repository
 public interface TopicRepository extends ReactiveMongoRepository<TopicInfo, String> {
+
+    Mono<TopicInfo> findByCodeAndEnabledTrue(String code);
 }

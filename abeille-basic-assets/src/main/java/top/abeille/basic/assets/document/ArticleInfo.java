@@ -24,27 +24,17 @@ public class ArticleInfo {
     @Id
     private String id;
     /**
-     * 业务ID
+     * 代码
      */
-    @Field(value = "business_id")
-    @Indexed
-    private String businessId;
-    /**
-     * 作者ID
-     */
-    @Field(value = "user_id")
-    @Indexed
-    private String userId;
+    @Indexed(unique = true)
+    private String code;
     /**
      * 标题
      */
-    @Field(value = "title")
-    @Indexed
     private String title;
     /**
      * 副标题
      */
-    @Field(value = "subtitle")
     private String subtitle;
     /**
      * 图片url
@@ -55,11 +45,10 @@ public class ArticleInfo {
      * 是否有效
      */
     @Field(value = "is_enabled")
-    private Boolean enabled;
+    private boolean enabled;
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间
@@ -75,20 +64,12 @@ public class ArticleInfo {
         this.id = id;
     }
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getTitle() {
@@ -115,11 +96,11 @@ public class ArticleInfo {
         this.imageUrl = imageUrl;
     }
 
-    public Boolean getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

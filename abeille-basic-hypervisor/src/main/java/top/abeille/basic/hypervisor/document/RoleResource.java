@@ -1,7 +1,7 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.document;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for TopicInfo
+ * Model class for RoleResource
  *
  * @author liwenqiang
  */
-@Document(collection = "topic_info")
-public class TopicInfo {
+@Document(collection = "role_resource")
+public class RoleResource {
 
     /**
      * 主键
@@ -24,23 +24,21 @@ public class TopicInfo {
     @Id
     private String id;
     /**
-     * 代码
+     * 角色ID
      */
-    @Indexed(unique = true)
-    private String code;
+    @Indexed
+    @Field(value = "role_id")
+    private String roleId;
     /**
-     * 标题
+     * 资源ID
      */
-    private String title;
+    @Indexed
+    @Field(value = "resource_id")
+    private String resourceId;
     /**
-     * 内容
+     * 是否可写
      */
-    private String content;
-    /**
-     * 是否有效
-     */
-    @Field(value = "is_enabled")
-    private boolean enabled;
+    private boolean hasWrite;
     /**
      * 修改人
      */
@@ -59,36 +57,28 @@ public class TopicInfo {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getRoleId() {
+        return roleId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getResourceId() {
+        return resourceId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 
-    public String getContent() {
-        return content;
+    public boolean getHasWrite() {
+        return hasWrite;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setHasWrite(boolean hasWrite) {
+        this.hasWrite = hasWrite;
     }
 
     public String getModifier() {

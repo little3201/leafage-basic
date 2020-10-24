@@ -15,9 +15,9 @@ public class RoleVO implements Serializable {
 
     private static final long serialVersionUID = 1564574233487923178L;
     /**
-     * 业务id
+     * 代码
      */
-    private String businessId;
+    private String code;
     /**
      * 名称
      */
@@ -31,12 +31,12 @@ public class RoleVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {

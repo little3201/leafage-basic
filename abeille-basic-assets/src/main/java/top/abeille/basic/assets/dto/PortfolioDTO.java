@@ -7,11 +7,11 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * DTO for SourceInfo
+ * DTO for PortfolioInfo
  *
  * @author liwenqiang
  */
-public class ResourceDTO implements Serializable {
+public class PortfolioDTO implements Serializable {
 
     private static final long serialVersionUID = 6514393945624239153L;
     /**

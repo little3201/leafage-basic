@@ -5,13 +5,12 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
-import top.abeille.basic.assets.bo.UserBO;
+import top.abeille.basic.assets.bo.UserTidyBO;
 import top.abeille.basic.assets.document.TopicInfo;
 import top.abeille.basic.assets.dto.TopicDTO;
 import top.abeille.basic.assets.repository.TopicRepository;
@@ -44,11 +43,11 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     }
 
     @Override
-    public Mono<TopicVO> fetchByBusinessId(String businessId) {
+    public Mono<TopicVO> fetchByCode(String businessId) {
         Asserts.notBlank(businessId, "businessId");
         TopicInfo info = new TopicInfo();
-        info.setBusinessId(businessId);
-        return this.fetchInfo(businessId).map(this::convertOuter);
+        info.setCode(businessId);
+        return topicRepository.findByCodeAndEnabledTrue(businessId).map(this::convertOuter);
     }
 
     @Override
@@ -61,9 +60,9 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     }
 
     @Override
-    public Mono<TopicVO> modify(String businessId, TopicDTO topicDTO) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).flatMap(topicInfo -> {
+    public Mono<TopicVO> modify(String code, TopicDTO topicDTO) {
+        Asserts.notBlank(code, "code");
+        return topicRepository.findByCodeAndEnabledTrue(code).flatMap(topicInfo -> {
             BeanUtils.copyProperties(topicDTO, topicInfo);
             topicInfo.setModifyTime(LocalDateTime.now());
             return topicRepository.save(topicInfo).map(this::convertOuter);
@@ -71,22 +70,9 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     }
 
     @Override
-    public Mono<Void> removeById(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        return this.fetchInfo(businessId).flatMap(topic -> topicRepository.deleteById(topic.getId()));
-    }
-
-    /**
-     * 根据业务id查询
-     *
-     * @param businessId 业务id
-     * @return 返回查询到的信息，否则返回empty
-     */
-    private Mono<TopicInfo> fetchInfo(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        TopicInfo info = new TopicInfo();
-        info.setBusinessId(businessId);
-        return topicRepository.findOne(Example.of(info));
+    public Mono<Void> remove(String code) {
+        Asserts.notBlank(code, "code");
+        return topicRepository.findByCodeAndEnabledTrue(code).flatMap(topic -> topicRepository.deleteById(topic.getId()));
     }
 
     /**
@@ -98,8 +84,8 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
     private TopicVO convertOuter(TopicInfo info) {
         TopicVO outer = new TopicVO();
         BeanUtils.copyProperties(info, outer);
-        UserBO userBO = hypervisorApi.fetchUserByBusinessId(info.getModifier()).block();
-        outer.setAuthor(userBO);
+        UserTidyBO userTidyBO = hypervisorApi.fetchUser(info.getModifier()).block();
+        outer.setAuthor(userTidyBO);
         return outer;
     }
 }

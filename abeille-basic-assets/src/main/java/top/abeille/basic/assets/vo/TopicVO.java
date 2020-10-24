@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.assets.vo;
 
-import top.abeille.basic.assets.bo.UserBO;
+import top.abeille.basic.assets.bo.UserTidyBO;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,13 +17,13 @@ public class TopicVO implements Serializable {
 
     private static final long serialVersionUID = 6078275280120953852L;
     /**
-     * 业务ID
+     * 代码
      */
-    private String businessId;
+    private String code;
     /**
      * 作者
      */
-    private UserBO author;
+    private UserTidyBO author;
     /**
      * 标题
      */
@@ -37,19 +37,19 @@ public class TopicVO implements Serializable {
      */
     private LocalDateTime modifyTime;
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public UserBO getAuthor() {
+    public UserTidyBO getAuthor() {
         return author;
     }
 
-    public void setAuthor(UserBO author) {
+    public void setAuthor(UserTidyBO author) {
         this.author = author;
     }
 

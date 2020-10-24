@@ -24,30 +24,26 @@ public class RoleInfo {
     @Id
     private String id;
     /**
-     * 业务ID
+     * 代码
      */
-    @Field(value = "business_id")
-    @Indexed
-    private String businessId;
+    @Indexed(unique = true)
+    private String code;
     /**
      * 名称
      */
-    @Field(value = "name")
     private String name;
     /**
      * 描述
      */
-    @Field(value = "description")
     private String description;
     /**
      * 是否有效
      */
     @Field(value = "is_enabled")
-    private Boolean enabled;
+    private boolean enabled;
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间
@@ -64,12 +60,12 @@ public class RoleInfo {
         this.id = id;
     }
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -88,11 +84,11 @@ public class RoleInfo {
         this.description = description;
     }
 
-    public Boolean getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

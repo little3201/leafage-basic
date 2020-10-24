@@ -3,21 +3,20 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.document.RoleInfo;
-import top.abeille.basic.hypervisor.document.RoleSource;
+import top.abeille.basic.hypervisor.document.RoleResource;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
+import top.abeille.basic.hypervisor.dto.RoleResourceDTO;
 import top.abeille.basic.hypervisor.repository.RoleRepository;
-import top.abeille.basic.hypervisor.repository.RoleSourceRepository;
+import top.abeille.basic.hypervisor.repository.RoleResourceRepository;
+import top.abeille.basic.hypervisor.service.ResourceService;
 import top.abeille.basic.hypervisor.service.RoleService;
-import top.abeille.basic.hypervisor.service.SourceService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -34,13 +33,13 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl extends AbstractBasicService implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final RoleSourceRepository roleSourceRepository;
-    private final SourceService sourceService;
+    private final RoleResourceRepository roleResourceRepository;
+    private final ResourceService resourceService;
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleSourceRepository roleSourceRepository, SourceService sourceService) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleResourceRepository roleResourceRepository, ResourceService resourceService) {
         this.roleRepository = roleRepository;
-        this.roleSourceRepository = roleSourceRepository;
-        this.sourceService = sourceService;
+        this.roleResourceRepository = roleResourceRepository;
+        this.resourceService = resourceService;
     }
 
     @Override
@@ -50,46 +49,34 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Mono<RoleVO> fetchByBusinessId(String businessId) {
-        return this.fetchInfo(businessId).map(this::convertOuter);
+    public Mono<RoleVO> fetchByCode(String code) {
+        return roleRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
         RoleInfo info = new RoleInfo();
         BeanUtils.copyProperties(roleDTO, info);
-        info.setBusinessId(PrefixEnum.RO + this.generateId());
+        info.setCode(PrefixEnum.RO + this.generateId());
+        info.setModifyTime(LocalDateTime.now());
         return roleRepository.insert(info).doOnNext(roleInfo -> {
-            List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
+            List<RoleResource> userRoleList = roleDTO.getSources().stream().map(source ->
                     this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
-            roleSourceRepository.saveAll(userRoleList).subscribe();
+            roleResourceRepository.saveAll(userRoleList).subscribe();
         }).map(this::convertOuter);
     }
 
     @Override
-    public Mono<RoleVO> modify(String businessId, RoleDTO roleDTO) {
-        return this.fetchInfo(businessId).flatMap(info -> {
+    public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
+        return roleRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(roleDTO, info);
+            info.setModifyTime(LocalDateTime.now());
             return roleRepository.save(info).doOnNext(roleInfo -> {
-                List<RoleSource> userRoleList = roleDTO.getSources().stream().map(source ->
+                List<RoleResource> userRoleList = roleDTO.getSources().stream().map(source ->
                         this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
-                roleSourceRepository.saveAll(userRoleList).subscribe();
+                roleResourceRepository.saveAll(userRoleList).subscribe();
             });
         }).map(this::convertOuter);
-    }
-
-    /**
-     * 根据业务id查询
-     *
-     * @param businessId 业务id
-     * @return 返回查询到的信息，否则返回empty
-     */
-    @Override
-    public Mono<RoleInfo> fetchInfo(String businessId) {
-        Asserts.notBlank(businessId, "businessId");
-        RoleInfo info = new RoleInfo();
-        info.setBusinessId(businessId);
-        return roleRepository.findOne(Example.of(info));
     }
 
     /**
@@ -107,17 +94,25 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     /**
      * 初始设置UserRole参数
      *
-     * @param roleId           角色主键
-     * @param modifier         修改人
-     * @param sourceBusinessId 资源业务ID
+     * @param roleId          角色主键
+     * @param modifier        修改人
+     * @param roleResourceDTO 资源信息
      * @return 用户-角色对象
      */
-    private RoleSource initRoleSource(String roleId, String modifier, String sourceBusinessId) {
-        RoleSource roleSource = new RoleSource();
-        roleSource.setRoleId(roleId);
-        roleSource.setModifier(modifier);
-        roleSource.setModifyTime(LocalDateTime.now());
-        sourceService.fetchInfo(sourceBusinessId).doOnNext(sourceInfo -> roleSource.setSourceId(sourceInfo.getId())).subscribe();
-        return roleSource;
+    private RoleResource initRoleSource(String roleId, String modifier, RoleResourceDTO roleResourceDTO) {
+        RoleResource roleResource = new RoleResource();
+        roleResource.setRoleId(roleId);
+        roleResource.setModifier(modifier);
+        roleResource.setModifyTime(LocalDateTime.now());
+        resourceService.findByCodeAndEnabledTrue(roleResourceDTO.getSourceCode()).doOnNext(resourceInfo -> {
+            roleResource.setResourceId(resourceInfo.getId());
+            roleResource.setHasWrite(roleResourceDTO.getHasWrite());
+        }).subscribe();
+        return roleResource;
+    }
+
+    @Override
+    public Mono<RoleInfo> findByCodeAndEnabledTrue(String code) {
+        return roleRepository.findByCodeAndEnabledTrue(code);
     }
 }

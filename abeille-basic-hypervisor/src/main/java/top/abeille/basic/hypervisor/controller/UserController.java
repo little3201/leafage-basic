@@ -3,12 +3,14 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserService;
+import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
 
@@ -40,14 +42,14 @@ public class UserController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 查询信息
+     * 根据传入的 username 查询信息
      *
-     * @param businessId 业务id
+     * @param username 用户账号
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/{businessId}")
-    public Mono<UserVO> fetchUser(@PathVariable String businessId) {
-        return userService.fetchByBusinessId(businessId);
+    @GetMapping("/details/{username}")
+    public Mono<UserDetails> loadByUsername(@PathVariable String username) {
+        return userService.loadByUsername(username);
     }
 
     /**
@@ -56,9 +58,9 @@ public class UserController extends AbstractController {
      * @param username 用户账号
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/info/{username}")
-    public Mono<UserDetails> loadByUsername(@PathVariable String username) {
-        return userService.loadByUsername(username);
+    @GetMapping("/tidy/{username}")
+    public Mono<UserTidyVO> fetchByUsername(@PathVariable String username) {
+        return userService.fetchByUsername(username);
     }
 
     /**
@@ -68,30 +70,33 @@ public class UserController extends AbstractController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<UserVO> createUser(@RequestBody @Valid UserDTO userDTO) {
         return userService.create(userDTO);
     }
 
     /**
-     * 根据传入的业务id: businessId 和要修改的数据，修改信息
+     * 根据传入的username和要修改的数据，修改信息
      *
-     * @param businessId 业务id
-     * @param userDTO    要修改的数据
+     * @param username 账号
+     * @param userDTO  要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{businessId}")
-    public Mono<UserVO> modifyUser(@PathVariable String businessId, @RequestBody @Valid UserDTO userDTO) {
-        return userService.modify(businessId, userDTO);
+    @PutMapping("/{username}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public Mono<UserVO> modifyUser(@PathVariable String username, @RequestBody @Valid UserDTO userDTO) {
+        return userService.modify(username, userDTO);
     }
 
     /**
-     * 根据传入的业务id: businessId 删除信息
+     * 根据传入的username删除信息
      *
-     * @param businessId 业务id
+     * @param username 账号
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
-    @DeleteMapping("/{businessId}")
-    public Mono<Void> removeUser(@PathVariable String businessId) {
-        return userService.removeById(businessId);
+    @DeleteMapping("/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<Void> removeUser(@PathVariable String username) {
+        return userService.remove(username);
     }
 }

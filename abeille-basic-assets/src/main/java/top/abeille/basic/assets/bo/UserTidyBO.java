@@ -10,13 +10,10 @@ import java.io.Serializable;
  *
  * @author liwenqiang
  */
-public class UserBO implements Serializable {
+public class UserTidyBO implements Serializable {
 
     private static final long serialVersionUID = 5441310307209449909L;
-    /**
-     * 业务id
-     */
-    private String businessId;
+
     /**
      * 昵称
      */
@@ -25,14 +22,6 @@ public class UserBO implements Serializable {
      * 头像
      */
     private String avatar;
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
-    }
 
     public String getNickname() {
         return nickname;

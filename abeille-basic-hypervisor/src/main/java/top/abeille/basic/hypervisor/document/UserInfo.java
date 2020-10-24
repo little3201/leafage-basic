@@ -24,65 +24,57 @@ public class UserInfo {
     @Id
     private String id;
     /**
-     * 业务ID
+     * 账号
      */
-    @Field(value = "business_id")
-    @Indexed
-    private String businessId;
+    @Indexed(unique = true)
+    private String username;
     /**
      * 昵称
      */
-    @Field(value = "nickname")
     private String nickname;
     /**
      * 头像
      */
-    @Field(value = "avatar")
     private String avatar;
     /**
      * 密码
      */
-    @Field(value = "password")
     private String password;
     /**
      * 电话
      */
-    @Field(value = "mobile")
     private String mobile;
     /**
      * 邮箱
      */
-    @Field(value = "email")
     private String email;
     /**
      * 地址ID
      */
-    @Field(value = "addressId")
     private String addressId;
     /**
      * 账户是否有效
      */
     @Field(value = "is_account_non_expired")
-    private Boolean accountNonExpired;
+    private boolean accountNonExpired;
     /**
      * 是否锁定
      */
     @Field(value = "is_account_non_locked")
-    private Boolean accountNonLocked;
+    private boolean accountNonLocked;
     /**
      * 认证是否有效
      */
     @Field(value = "is_credentials_non_expired")
-    private Boolean credentialsNonExpired;
+    private boolean credentialsNonExpired;
     /**
      * 是否有效
      */
     @Field(value = "is_enabled")
-    private Boolean enabled;
+    private boolean enabled;
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间
@@ -98,12 +90,12 @@ public class UserInfo {
         this.id = id;
     }
 
-    public String getBusinessId() {
-        return businessId;
+    public String getUsername() {
+        return username;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getNickname() {
@@ -154,35 +146,35 @@ public class UserInfo {
         this.addressId = addressId;
     }
 
-    public Boolean getAccountNonExpired() {
+    public boolean getAccountNonExpired() {
         return accountNonExpired;
     }
 
-    public void setAccountNonExpired(Boolean accountNonExpired) {
+    public void setAccountNonExpired(boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public Boolean getAccountNonLocked() {
+    public boolean getAccountNonLocked() {
         return accountNonLocked;
     }
 
-    public void setAccountNonLocked(Boolean accountNonLocked) {
+    public void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public Boolean getCredentialsNonExpired() {
+    public boolean getCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public Boolean getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

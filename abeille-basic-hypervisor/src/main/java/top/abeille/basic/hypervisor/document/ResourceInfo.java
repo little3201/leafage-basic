@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.document;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for ArticleInfo
+ * Model class for ResourceInfo
  *
  * @author liwenqiang
  */
@@ -24,31 +24,39 @@ public class ResourceInfo {
     @Id
     private String id;
     /**
-     * 业务ID
+     * 代码
      */
-    @Field(value = "business_id")
-    @Indexed
-    private String businessId;
+    @Indexed(unique = true)
+    private String code;
     /**
-     * 标题
+     * 上级
      */
-    @Field(value = "title")
-    @Indexed
-    private String title;
+    private String superior;
     /**
-     * 图片url
+     * 名称
      */
-    @Field(value = "image_url")
-    private String imageUrl;
+    private String name;
+    /**
+     * 类型
+     */
+    private String type;
+    /**
+     * 路径
+     */
+    private String path;
+    /**
+     * 描述
+     */
+    private String description;
+
     /**
      * 是否有效
      */
     @Field(value = "is_enabled")
-    private Boolean enabled;
+    private boolean enabled;
     /**
      * 修改人
      */
-    @Field(value = "modifier")
     private String modifier;
     /**
      * 修改时间
@@ -64,35 +72,59 @@ public class ResourceInfo {
         this.id = id;
     }
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSuperior() {
+        return superior;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSuperior(String superior) {
+        this.superior = superior;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getName() {
+        return name;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Boolean getEnabled() {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

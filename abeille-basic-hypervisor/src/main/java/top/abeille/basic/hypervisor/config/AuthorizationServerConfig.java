@@ -9,13 +9,13 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.sql.DataSource;
-import java.security.KeyPair;
 
 
 /**
@@ -61,6 +61,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .tokenStore(jwtTokenStore());
     }
 
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
+        oauthServer.tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()");
+    }
+
     /**
      * 使用 JWT
      */
@@ -76,8 +82,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         // 设置签名密钥
         ClassPathResource ksFile = new ClassPathResource(KEY_STORE);
         KeyStoreKeyFactory ksFactory = new KeyStoreKeyFactory(ksFile, KEY_PASS.toCharArray());
-        KeyPair keyPair = ksFactory.getKeyPair(ALIAS);
-        jwtAccessTokenConverter.setKeyPair(keyPair);
+        jwtAccessTokenConverter.setKeyPair(ksFactory.getKeyPair(ALIAS));
         return jwtAccessTokenConverter;
     }
 }

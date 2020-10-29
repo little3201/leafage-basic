@@ -1,24 +1,23 @@
-<p align="center">
-  <a href="https://console.abeille.top" target="_blank">
-    <img alt="Abeille Logo" width="100" src="https://github.com/little3201/abeille-manager/blob/develop/src/assets/logo.svg">
-  </a>
-</p>
+# abeille-basic-hypervisor
 
 <p align="center">
-  <a href="https://github.com/little3201/abeille-basic/blob/develop/LICENSE">
-     <img src="https://img.shields.io/github/license/little3201/abeille-basic.svg" alt="License">
-  </a>
- <img src="https://img.shields.io/badge/Spring%20Cloud-Hoxto.RELEASE-blue.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.1.RELEASE-blue.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-Hoxto-blue.svg" alt="Coverage Status">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.3.x-blue.svg" alt="Downloads">
 </p>
 
-<h2 align="center">Supporting Abeille</h2>
+## abeille-gateway
 
-# abeille-basic-assets
+#### 目标功能
+- [x] 用户
+- [x] 安全
 
-系统主要内容为：经验、学习文章总结，旅行心得、旅拍照片等，
+<a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.abeille.top"> 在线体验</a>
 
-每一条记录都有一个business_id，其遵循规则如下：
+#### 核心依赖 
 
-1. 参照字节码访问标志来存储博文的所属分类;
-2. 前两位为标示位，后四位为随机混淆位，中间2-3位为创建的日期，月份占一位，使用16进制表示；
+|               依赖               |           版本            |            说明            |
+|:-------------------------------:|:-------------------------:|:-------------------------:|
+|       Spring Cloud Consul       |           2.2.4           |           注册中心         |
+|  Spring Security OAuth2 Server  |           2.3.4           |  表单、oauth2、csrf等安全   |    
+|        Spring Data Redis        |           2.3.4           |           Redis           |
+|         Spring Data JPA         |           2.3.4           |          数据访问层         |

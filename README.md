@@ -28,7 +28,5 @@
 |          依赖           |           版本            |           说明            |
 |:----------------------:|:-------------------------:|:-------------------------:|
 |      Spring Boot       |       2.3.4.RELEASE       |           基础框架          |
-|      Spring Cloud      |          Hoxton.RS8       |          使用consul        |
-| Spring Security OAuth2 |            2.2.1          |   表单、oauth2、csrf等安全   |    
-|       Spring Data      |            2.2.1          |        Mongo、Redis        |
+|      Spring Cloud      |          Hoxton.RS8       |      使用consul\Feign      |
 

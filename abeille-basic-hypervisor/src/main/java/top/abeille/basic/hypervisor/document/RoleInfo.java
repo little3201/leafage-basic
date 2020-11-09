@@ -39,7 +39,6 @@ public class RoleInfo {
     /**
      * 是否有效
      */
-    @Field(value = "is_enabled")
     private boolean enabled;
     /**
      * 修改人
@@ -84,7 +83,7 @@ public class RoleInfo {
         this.description = description;
     }
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

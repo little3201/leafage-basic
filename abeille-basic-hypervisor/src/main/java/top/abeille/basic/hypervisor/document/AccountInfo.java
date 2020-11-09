@@ -42,11 +42,10 @@ public class AccountInfo {
     /**
      * 类型
      */
-    private String type;
+    private char type;
     /**
      * 是否有效
      */
-    @Field(value = "is_enabled")
     private boolean enabled;
     /**
      * 修改人
@@ -90,15 +89,15 @@ public class AccountInfo {
         this.balance = balance;
     }
 
-    public String getType() {
+    public char getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(char type) {
         this.type = type;
     }
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

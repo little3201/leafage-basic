@@ -39,7 +39,6 @@ public class TopicInfo {
     /**
      * 是否有效
      */
-    @Field(value = "is_enabled")
     private boolean enabled;
     /**
      * 修改人
@@ -83,7 +82,7 @@ public class TopicInfo {
         this.content = content;
     }
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

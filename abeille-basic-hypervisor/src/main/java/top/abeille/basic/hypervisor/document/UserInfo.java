@@ -55,22 +55,18 @@ public class UserInfo {
     /**
      * 账户是否有效
      */
-    @Field(value = "is_account_non_expired")
     private boolean accountNonExpired;
     /**
      * 是否锁定
      */
-    @Field(value = "is_account_non_locked")
     private boolean accountNonLocked;
     /**
      * 认证是否有效
      */
-    @Field(value = "is_credentials_non_expired")
     private boolean credentialsNonExpired;
     /**
      * 是否有效
      */
-    @Field(value = "is_enabled")
     private boolean enabled;
     /**
      * 修改人
@@ -146,7 +142,7 @@ public class UserInfo {
         this.addressId = addressId;
     }
 
-    public boolean getAccountNonExpired() {
+    public boolean isAccountNonExpired() {
         return accountNonExpired;
     }
 
@@ -154,7 +150,7 @@ public class UserInfo {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public boolean getAccountNonLocked() {
+    public boolean isAccountNonLocked() {
         return accountNonLocked;
     }
 
@@ -162,7 +158,7 @@ public class UserInfo {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public boolean getCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
@@ -170,7 +166,7 @@ public class UserInfo {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

@@ -33,14 +33,16 @@ public class PortfolioInfo {
      */
     private String title;
     /**
-     * 图片url
+     * url
      */
-    @Field(value = "image_url")
-    private String imageUrl;
+    private String url;
+    /**
+     * 类型：0-图片，1-视频
+     */
+    private char type;
     /**
      * 是否有效
      */
-    @Field(value = "is_enabled")
     private boolean enabled;
     /**
      * 修改人
@@ -76,15 +78,23 @@ public class PortfolioInfo {
         this.title = title;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public boolean getEnabled() {
+    public char getType() {
+        return type;
+    }
+
+    public void setType(char type) {
+        this.type = type;
+    }
+
+    public boolean isEnabled() {
         return enabled;
     }
 

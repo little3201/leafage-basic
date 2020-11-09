@@ -29,9 +29,13 @@ public class PortfolioVO implements Serializable {
      */
     private String title;
     /**
-     * 图片url
+     * url
      */
-    private String imageUrl;
+    private String url;
+    /**
+     * 类型
+     */
+    private char type;
     /**
      * 修改时间
      */
@@ -61,12 +65,20 @@ public class PortfolioVO implements Serializable {
         this.title = title;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public char getType() {
+        return type;
+    }
+
+    public void setType(char type) {
+        this.type = type;
     }
 
     public LocalDateTime getModifyTime() {

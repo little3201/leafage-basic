@@ -45,7 +45,6 @@ public class DetailsInfo {
     /**
      * 是否有效
      */
-    @Field(value = "is_enabled")
     private boolean enabled;
     /**
      * 修改人
@@ -97,7 +96,7 @@ public class DetailsInfo {
         this.catalog = catalog;
     }
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

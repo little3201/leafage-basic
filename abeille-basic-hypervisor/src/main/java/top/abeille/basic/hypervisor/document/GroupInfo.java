@@ -47,7 +47,6 @@ public class GroupInfo {
     /**
      * 是否有效
      */
-    @Field(value = "is_enabled")
     private boolean enabled;
     /**
      * 修改人
@@ -107,7 +106,7 @@ public class GroupInfo {
         this.description = description;
     }
 
-    public boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 

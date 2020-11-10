@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.UserInfo;
@@ -81,14 +82,17 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> create(UserDTO userDTO) {
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(userDTO, info);
+        info.setUsername(info.getEmail().substring(0, info.getEmail().indexOf("@")));
         info.setPassword(new BCryptPasswordEncoder().encode("110119"));
         this.appendParams(info);
         info.setModifyTime(LocalDateTime.now());
         return userRepository.insert(info).doOnNext(userInfo -> {
             log.info("User :{} created.", userInfo.getUsername());
-            List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
-                    this.initUserRole(userInfo.getId(), role)).collect(Collectors.toList());
-            userRoleRepository.saveAll(userRoleList).subscribe();
+            if (!CollectionUtils.isEmpty(userDTO.getRoles())) {
+                List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
+                        this.initUserRole(userInfo.getId(), role)).collect(Collectors.toList());
+                userRoleRepository.saveAll(userRoleList).subscribe();
+            }
         }).map(this::convertOuter);
     }
 

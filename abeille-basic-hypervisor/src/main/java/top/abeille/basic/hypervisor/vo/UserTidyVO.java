@@ -15,6 +15,10 @@ public class UserTidyVO implements Serializable {
     private static final long serialVersionUID = -5782081329816247257L;
 
     /**
+     * 账号
+     */
+    private String username;
+    /**
      * 昵称
      */
     private String nickname;
@@ -22,6 +26,14 @@ public class UserTidyVO implements Serializable {
      * 头像
      */
     private String avatar;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getNickname() {
         return nickname;

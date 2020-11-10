@@ -47,7 +47,9 @@ public class UserDTO implements Serializable {
     /**
      * 修改人
      */
+    @NotBlank
     private String modifier;
+
 
     public String getNickname() {
         return nickname;

@@ -49,20 +49,19 @@ public class UserInfo {
      */
     private String email;
     /**
-     * 地址ID
-     */
-    private String addressId;
-    /**
      * 账户是否有效
      */
+    @Field(name = "account_non_expired")
     private boolean accountNonExpired;
     /**
      * 是否锁定
      */
+    @Field(name = "account_non_locked")
     private boolean accountNonLocked;
     /**
      * 认证是否有效
      */
+    @Field(name = "credentials_non_expired")
     private boolean credentialsNonExpired;
     /**
      * 是否有效
@@ -132,14 +131,6 @@ public class UserInfo {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(String addressId) {
-        this.addressId = addressId;
     }
 
     public boolean isAccountNonExpired() {

@@ -4,13 +4,13 @@
 package top.abeille.basic.hypervisor;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 /**
  * @author liwenqiang
  */
-@SpringCloudApplication
+@SpringBootApplication
 public class BasicHypervisorApplication {
 
     public static void main(String[] args) {

@@ -52,21 +52,21 @@ public class UserInfo {
      * 账户是否有效
      */
     @Field(name = "account_non_expired")
-    private boolean accountNonExpired;
+    private Boolean accountNonExpired;
     /**
      * 是否锁定
      */
     @Field(name = "account_non_locked")
-    private boolean accountNonLocked;
+    private Boolean accountNonLocked;
     /**
      * 认证是否有效
      */
     @Field(name = "credentials_non_expired")
-    private boolean credentialsNonExpired;
+    private Boolean credentialsNonExpired;
     /**
      * 是否有效
      */
-    private boolean enabled;
+    private Boolean enabled;
     /**
      * 修改人
      */
@@ -133,35 +133,35 @@ public class UserInfo {
         this.email = email;
     }
 
-    public boolean isAccountNonExpired() {
+    public Boolean getAccountNonExpired() {
         return accountNonExpired;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
+    public void setAccountNonExpired(Boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public boolean isAccountNonLocked() {
+    public Boolean getAccountNonLocked() {
         return accountNonLocked;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
+    public void setAccountNonLocked(Boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public boolean isCredentialsNonExpired() {
+    public Boolean getCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 

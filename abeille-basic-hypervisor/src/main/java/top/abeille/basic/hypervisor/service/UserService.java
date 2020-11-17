@@ -3,9 +3,9 @@
  */
 package top.abeille.basic.hypervisor.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
+import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.BasicService;
@@ -23,7 +23,7 @@ public interface UserService extends BasicService<UserDTO, UserVO> {
      * @param username 账号
      * @return UserDetails 账户信息
      */
-    Mono<UserDetails> loadByUsername(String username);
+    Mono<UserDetailsVO> fetchDetailsByUsername(String username);
 
     /**
      * 根据username 查询账户最小信息
@@ -31,5 +31,5 @@ public interface UserService extends BasicService<UserDTO, UserVO> {
      * @param username 账号
      * @return UserDetails 账户信息
      */
-    Mono<UserTidyVO> fetchByUsername(String username);
+    Mono<UserTidyVO> fetchTidyByUsername(String username);
 }

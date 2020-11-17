@@ -4,12 +4,12 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserService;
+import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractController;
@@ -47,9 +47,9 @@ public class UserController extends AbstractController {
      * @param username 用户账号
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/details/{username}")
-    public Mono<UserDetails> loadByUsername(@PathVariable String username) {
-        return userService.loadByUsername(username);
+    @GetMapping("/{username}")
+    public Mono<UserDetailsVO> fetchDetailsByUsername(@PathVariable String username) {
+        return userService.fetchDetailsByUsername(username);
     }
 
     /**
@@ -59,8 +59,8 @@ public class UserController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/tidy/{username}")
-    public Mono<UserTidyVO> fetchByUsername(@PathVariable String username) {
-        return userService.fetchByUsername(username);
+    public Mono<UserTidyVO> fetchTidyByUsername(@PathVariable String username) {
+        return userService.fetchTidyByUsername(username);
     }
 
     /**

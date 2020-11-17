@@ -4,25 +4,25 @@
 package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * Model class for UserInfo
  *
  * @author liwenqiang
  */
-public class UserVO extends UserTidyVO implements Serializable {
+public class UserDetailsVO extends UserTidyVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
 
     /**
-     * 电话
+     * 密码
      */
-    private String mobile;
+    private String password;
     /**
-     * 邮箱
+     * 权限
      */
-    private String email;
+    private Set<String> authorities;
     /**
      * 是否有效
      */
@@ -35,25 +35,21 @@ public class UserVO extends UserTidyVO implements Serializable {
      * 密码是否有效
      */
     private boolean credentialsNonExpired;
-    /**
-     * 修改时间
-     */
-    private LocalDateTime modifyTime;
 
-    public String getMobile() {
-        return mobile;
+    public String getPassword() {
+        return password;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public Set<String> getAuthorities() {
+        return authorities;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
     }
 
     public boolean isAccountNonExpired() {
@@ -78,13 +74,5 @@ public class UserVO extends UserTidyVO implements Serializable {
 
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

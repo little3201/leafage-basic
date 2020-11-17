@@ -10,12 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.AuthorizationServiceException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -30,13 +24,17 @@ import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.ResourceService;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.service.UserService;
+import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import javax.naming.NotContextException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -117,30 +115,32 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Mono<UserDetails> loadByUsername(String username) {
+    public Mono<UserDetailsVO> fetchDetailsByUsername(String username) {
         Asserts.notBlank(username, "username");
-        UserInfo info = this.findByUsername(username);
-        Mono<UserInfo> infoMono = userRepository.findOne(Example.of(info))
-                .switchIfEmpty(Mono.error(() -> new UsernameNotFoundException("User Not Found")));
+        Mono<UserInfo> infoMono = userRepository.findOne(Example.of(this.convertCondition(username)))
+                .switchIfEmpty(Mono.error(() -> new NotContextException("User Not Found")));
         Mono<ArrayList<String>> roleIdListMono = infoMono.flatMap(userInfo -> userRoleRepository.findByUserId(userInfo.getId())
-                .switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("No Roles")))
+                .switchIfEmpty(Mono.error(() -> new NotContextException("No Roles")))
                 .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID
         Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleResourceRepository.findByRoleIdIn(roleIdList)
-                .switchIfEmpty(Mono.error(() -> new AuthorizationServiceException("No Authorities")))
+                .switchIfEmpty(Mono.error(() -> new NotContextException("No Authorities")))
                 .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getResourceId())));
         // 查权限
-        Mono<ArrayList<GrantedAuthority>> authorityList = sourceIdListMono.flatMap(sourceIdList ->
-                resourceService.findByIdInAndEnabledTrue(sourceIdList).collect(ArrayList::new, (sourceList, sourceInfo) ->
-                        sourceList.add(new SimpleGrantedAuthority(sourceInfo.getCode()))));
+        Mono<Set<String>> authorityList = sourceIdListMono.flatMap(sourceIdList ->
+                resourceService.findByIdInAndEnabledTrue(sourceIdList).collect(HashSet::new, (sourceList, sourceInfo) ->
+                        sourceList.add(sourceInfo.getCode())));
         // 构造用户信息
-        return authorityList.zipWith(infoMono, (authorities, userInfo) ->
-                new User(userInfo.getUsername(), userInfo.getPassword(), userInfo.isEnabled(), userInfo.isAccountNonExpired(),
-                        userInfo.isCredentialsNonExpired(), userInfo.isAccountNonLocked(), authorities));
+        return authorityList.zipWith(infoMono, (authorities, userInfo) -> {
+            UserDetailsVO detailsVO = new UserDetailsVO();
+            BeanUtils.copyProperties(userInfo, detailsVO);
+            detailsVO.setAuthorities(authorities);
+            return detailsVO;
+        });
     }
 
     @Override
-    public Mono<UserTidyVO> fetchByUsername(String username) {
+    public Mono<UserTidyVO> fetchTidyByUsername(String username) {
         Asserts.notBlank(username, "username");
         return userRepository.findByUsername(username);
     }
@@ -215,7 +215,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * @param username 账号
      * @return 账户信息
      */
-    private UserInfo findByUsername(String username) {
+    private UserInfo convertCondition(String username) {
         UserInfo info = new UserInfo();
         // 判断是邮箱还是手机号
         if (isMobile(username)) {
@@ -225,6 +225,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         } else {
             info.setUsername(username);
         }
+        info.setEnabled(true);
         return info;
     }
 

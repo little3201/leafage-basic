@@ -46,7 +46,7 @@ public class AccountInfo {
     /**
      * 是否有效
      */
-    private boolean enabled;
+    private boolean enabled = true;
     /**
      * 修改人
      */

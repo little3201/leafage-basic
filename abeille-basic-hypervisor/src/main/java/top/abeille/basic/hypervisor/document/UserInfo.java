@@ -66,7 +66,7 @@ public class UserInfo {
     /**
      * 是否有效
      */
-    private Boolean enabled;
+    private boolean enabled = true;
     /**
      * 修改人
      */
@@ -157,11 +157,11 @@ public class UserInfo {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public Boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

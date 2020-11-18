@@ -48,11 +48,10 @@ public class ResourceInfo {
      * 描述
      */
     private String description;
-
     /**
      * 是否有效
      */
-    private boolean enabled;
+    private boolean enabled = true;
     /**
      * 修改人
      */

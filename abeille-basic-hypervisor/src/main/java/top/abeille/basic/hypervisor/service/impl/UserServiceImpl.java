@@ -185,7 +185,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * @param info 用户信息
      */
     private void appendParams(UserInfo info) {
-        info.setEnabled(true);
         info.setAccountNonExpired(true);
         info.setAccountNonLocked(true);
         info.setCredentialsNonExpired(true);
@@ -225,7 +224,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         } else {
             info.setUsername(username);
         }
-        info.setEnabled(true);
         return info;
     }
 

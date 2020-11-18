@@ -36,7 +36,6 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
         AccountInfo info = new AccountInfo();
         BeanUtils.copyProperties(accountDTO, info);
         info.setCode(PrefixEnum.AC + this.generateId());
-        info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return accountRepository.insert(info).map(this::convertOuter);
     }

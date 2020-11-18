@@ -45,6 +45,10 @@ public class ResourceInfo {
      */
     private String path;
     /**
+     * 请求方式, 如：GET、POST、PUT、DELETE等
+     */
+    private String mode;
+    /**
      * 描述
      */
     private String description;
@@ -108,6 +112,14 @@ public class ResourceInfo {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     public String getDescription() {

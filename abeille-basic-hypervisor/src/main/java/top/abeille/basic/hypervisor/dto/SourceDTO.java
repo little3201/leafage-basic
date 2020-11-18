@@ -29,6 +29,11 @@ public class SourceDTO implements Serializable {
     @NotBlank
     private String type;
     /**
+     * 方式
+     */
+    @NotBlank
+    private String mode;
+    /**
      * 路径
      */
     @NotBlank
@@ -60,6 +65,14 @@ public class SourceDTO implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     public String getPath() {

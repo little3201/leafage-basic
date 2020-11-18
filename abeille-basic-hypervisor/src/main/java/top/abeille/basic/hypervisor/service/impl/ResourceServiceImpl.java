@@ -53,20 +53,19 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
         BeanUtils.copyProperties(sourceDTO, info);
         String prefix;
         switch (SourceTypeEnum.valueOf(sourceDTO.getType())) {
-            case MENU:
-                prefix = PrefixEnum.SM.name(); // 菜单
+            case MENU: // 菜单
+                prefix = PrefixEnum.SM.name();
                 break;
-            case BUTTON:
-                prefix = PrefixEnum.SB.name(); // 按钮
+            case BUTTON: // 按钮
+                prefix = PrefixEnum.SB.name();
                 break;
-            case TAB:
-                prefix = PrefixEnum.ST.name(); // tab页
+            case TAB: // tab页
+                prefix = PrefixEnum.ST.name();
                 break;
-            default:
-                prefix = PrefixEnum.SU.name(); // 路径
+            default: // 路径/接口
+                prefix = PrefixEnum.SU.name();
         }
         info.setCode(prefix + this.generateId());
-        info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return resourceRepository.insert(info).map(this::convertOuter);
     }

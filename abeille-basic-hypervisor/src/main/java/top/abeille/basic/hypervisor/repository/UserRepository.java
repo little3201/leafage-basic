@@ -17,5 +17,11 @@ import top.abeille.basic.hypervisor.vo.UserTidyVO;
 @Repository
 public interface UserRepository extends ReactiveMongoRepository<UserInfo, String> {
 
+    /**
+     * 根据username查询enabled信息
+     *
+     * @param username 账户
+     * @return 用户信息
+     */
     Mono<UserTidyVO> findByUsername(String username);
 }

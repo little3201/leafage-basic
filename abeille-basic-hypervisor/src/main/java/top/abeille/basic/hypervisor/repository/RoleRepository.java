@@ -16,5 +16,11 @@ import top.abeille.basic.hypervisor.document.RoleInfo;
 @Repository
 public interface RoleRepository extends ReactiveMongoRepository<RoleInfo, String> {
 
+    /**
+     * 根据code查询enabled信息
+     *
+     * @param code 代码
+     * @return 角色信息
+     */
     Mono<RoleInfo> findByCodeAndEnabledTrue(String code);
 }

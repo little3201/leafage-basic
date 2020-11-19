@@ -19,10 +19,10 @@ import javax.validation.constraints.NotNull;
 public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, String> {
 
     /**
-     * 查询所有角色——根据用户id
+     * 根据用户id查询关联角色
      *
      * @param userId 用户ID
-     * @return List
+     * @return 关联的角色
      */
     Flux<UserRole> findByUserId(@NotNull String userId);
 }

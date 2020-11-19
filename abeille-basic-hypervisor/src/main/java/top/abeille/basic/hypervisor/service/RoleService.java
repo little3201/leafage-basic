@@ -16,5 +16,11 @@ import top.abeille.common.basic.BasicService;
  **/
 public interface RoleService extends BasicService<RoleDTO, RoleVO> {
 
+    /**
+     * 根据code查询关联角色
+     *
+     * @param code 代码
+     * @return 角色信息
+     */
     Mono<RoleInfo> findByCodeAndEnabledTrue(String code);
 }

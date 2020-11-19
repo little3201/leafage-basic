@@ -6,6 +6,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
+/**
+ * 地址信息
+ *
+ * @author liwenqiang 2020-10-06 22:09
+ **/
 @Document(collection = "address_info")
 public class AddressInfo {
 

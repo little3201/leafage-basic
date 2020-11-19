@@ -19,7 +19,19 @@ import java.util.List;
 @Repository
 public interface ResourceRepository extends ReactiveMongoRepository<ResourceInfo, String> {
 
+    /**
+     * 根据code查询enabled信息
+     *
+     * @param code 代码
+     * @return 资源信息
+     */
     Mono<ResourceInfo> findByCodeAndEnabledTrue(String code);
 
+    /**
+     * 根据权限Id集合查询多条enabled信息
+     *
+     * @param sourceIdList id集合
+     * @return 资源信息
+     */
     Flux<ResourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList);
 }

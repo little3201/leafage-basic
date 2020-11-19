@@ -16,5 +16,11 @@ import top.abeille.basic.hypervisor.document.AccountInfo;
 @Repository
 public interface AccountRepository extends ReactiveMongoRepository<AccountInfo, String> {
 
+    /**
+     * 根据code查询enabled信息
+     *
+     * @param code 代码
+     * @return 账户信息
+     */
     Mono<AccountInfo> findByCodeAndEnabledTrue(String code);
 }

@@ -16,5 +16,11 @@ import top.abeille.basic.hypervisor.document.GroupInfo;
 @Repository
 public interface GroupRepository extends ReactiveMongoRepository<GroupInfo, String> {
 
+    /**
+     * 根据code查询enabled信息
+     *
+     * @param code 代码
+     * @return 组织信息
+     */
     Mono<GroupInfo> findByCodeAndEnabledTrue(String code);
 }

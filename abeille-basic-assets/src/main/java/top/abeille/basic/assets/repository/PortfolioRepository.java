@@ -16,5 +16,11 @@ import top.abeille.basic.assets.document.PortfolioInfo;
 @Repository
 public interface PortfolioRepository extends ReactiveMongoRepository<PortfolioInfo, String> {
 
+    /**
+     * 根据code查询enabled信息
+     *
+     * @param code 代码
+     * @return 作品集信息
+     */
     Mono<PortfolioInfo> findByCodeAndEnabledTrue(String code);
 }

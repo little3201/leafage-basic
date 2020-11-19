@@ -7,6 +7,11 @@ package top.abeille.basic.assets.service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.DetailsInfo;
 
+/**
+ * 内容service接口
+ *
+ * @author liwenqiang 2018-12-06 22:09
+ **/
 public interface DetailsService {
 
     /**

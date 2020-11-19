@@ -6,6 +6,11 @@ package top.abeille.basic.assets.vo;
 
 import java.io.Serializable;
 
+/**
+ * 统计对象
+ *
+ * @author liwenqiang 2018-12-06 22:09
+ **/
 public class StatisticsVO implements Serializable {
 
     private static final long serialVersionUID = 5080919936022801892L;

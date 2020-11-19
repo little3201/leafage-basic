@@ -7,6 +7,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.bo.UserTidyBO;
 
+/**
+ * 用户api远程接口
+ *
+ * @author liwenqiang 2018-12-06 22:09
+ **/
 @Service
 public class HypervisorService implements HypervisorApi {
 

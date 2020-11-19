@@ -33,5 +33,10 @@ public interface ArticleService extends BasicService<ArticleDTO, ArticleVO> {
      */
     Flux<StatisticsVO> statistics();
 
+    /**
+     * top10文章查询
+     *
+     * @return top10文章信息
+     **/
     Flux<ArticleVO> fetchTop10();
 }

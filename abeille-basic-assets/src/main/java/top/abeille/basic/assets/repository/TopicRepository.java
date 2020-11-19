@@ -16,5 +16,11 @@ import top.abeille.basic.assets.document.TopicInfo;
 @Repository
 public interface TopicRepository extends ReactiveMongoRepository<TopicInfo, String> {
 
+    /**
+     * 根据code查询enabled信息
+     *
+     * @param code 代码
+     * @return 话题信息
+     */
     Mono<TopicInfo> findByCodeAndEnabledTrue(String code);
 }

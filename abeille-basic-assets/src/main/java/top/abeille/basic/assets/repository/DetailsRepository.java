@@ -16,5 +16,11 @@ import top.abeille.basic.assets.document.DetailsInfo;
 @Repository
 public interface DetailsRepository extends ReactiveMongoRepository<DetailsInfo, String> {
 
+    /**
+     * 根据文章id查询enabled信息
+     *
+     * @param articleId 文章id
+     * @return 文章内容
+     */
     Mono<DetailsInfo> findByArticleIdAndEnabledTrue(String articleId);
 }

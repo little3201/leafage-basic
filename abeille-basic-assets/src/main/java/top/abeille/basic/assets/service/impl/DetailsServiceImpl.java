@@ -14,6 +14,11 @@ import top.abeille.basic.assets.service.DetailsService;
 
 import java.time.LocalDateTime;
 
+/**
+ * 内容service接口实现
+ *
+ * @author liwenqiang 2018-12-06 22:09
+ **/
 @Service
 public class DetailsServiceImpl implements DetailsService {
 

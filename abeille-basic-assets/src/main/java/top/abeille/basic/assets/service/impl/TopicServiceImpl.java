@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
 import top.abeille.basic.assets.bo.UserTidyBO;
+import top.abeille.basic.assets.constant.PrefixEnum;
 import top.abeille.basic.assets.document.TopicInfo;
 import top.abeille.basic.assets.dto.TopicDTO;
 import top.abeille.basic.assets.repository.TopicRepository;
@@ -55,6 +56,7 @@ public class TopicServiceImpl extends AbstractBasicService implements TopicServi
         TopicInfo info = new TopicInfo();
         BeanUtils.copyProperties(topicDTO, info);
         info.setEnabled(true);
+        info.setCode(PrefixEnum.TP + this.generateId());
         info.setModifyTime(LocalDateTime.now());
         return topicRepository.insert(info).map(this::convertOuter);
     }

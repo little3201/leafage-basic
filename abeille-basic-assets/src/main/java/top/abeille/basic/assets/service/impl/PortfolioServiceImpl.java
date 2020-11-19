@@ -48,7 +48,7 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     public Mono<PortfolioVO> create(PortfolioDTO portfolioDTO) {
         PortfolioInfo info = new PortfolioInfo();
         BeanUtils.copyProperties(portfolioDTO, info);
-        info.setCode(PrefixEnum.RS + this.generateId());
+        info.setCode(PrefixEnum.PF + this.generateId());
         info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return portfolioRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);

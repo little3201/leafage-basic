@@ -27,6 +27,7 @@ public class UserTidyVO implements Serializable {
      */
     private String avatar;
 
+
     public String getUsername() {
         return username;
     }

@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import top.abeille.basic.assets.bo.UserTidyBO;
 
 import java.io.Serializable;
@@ -39,6 +40,7 @@ public class ArticleVO implements Serializable {
     /**
      * 修改时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifyTime;
 
     public String getCode() {

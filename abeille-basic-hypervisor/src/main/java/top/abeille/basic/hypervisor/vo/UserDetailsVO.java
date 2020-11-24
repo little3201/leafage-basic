@@ -36,6 +36,7 @@ public class UserDetailsVO extends UserTidyVO implements Serializable {
      */
     private boolean credentialsNonExpired;
 
+
     public String getPassword() {
         return password;
     }

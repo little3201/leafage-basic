@@ -3,6 +3,8 @@
  */
 package top.abeille.basic.hypervisor.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -37,7 +39,9 @@ public class GroupVO implements Serializable {
     /**
      * 修改时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifyTime;
+
 
     public String getCode() {
         return code;

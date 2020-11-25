@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  * @author liwenqiang
  */
 @SpringBootApplication
-public class BasicAssetsApplication {
+public class AssetsApplication {
 
     @Bean
     @LoadBalanced
@@ -22,7 +22,7 @@ public class BasicAssetsApplication {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(BasicAssetsApplication.class, args);
+        SpringApplication.run(AssetsApplication.class, args);
     }
 
 }

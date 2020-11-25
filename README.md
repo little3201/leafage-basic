@@ -7,16 +7,16 @@
 
 ## abeille-basic
 
-**abeille-basic 包含两个模块「abeille-basic-assets」和 「abeille-basic-hypervisor」**
+**abeille-basic 包含两个模块「assets」和 「hypervisor」**
 
-#### 「abeille-basic-assets」目标功能
+#### 「assets」目标功能
 - [x] 博客
 - [x] 作品集 
 - [x] 资源统计
 - [ ] 点赞、留言、评论
 - [ ] 分类、标签、归档
 
-#### 「abeille-basic-hypervisor」目标功能
+#### 「hypervisor」目标功能
 - [x] 用户、角色、权限
 - [x] 账户管理 
 - [x] 安全

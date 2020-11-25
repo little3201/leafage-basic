@@ -1,0 +1,27 @@
+##=====log common=====##
+logging:
+  level:
+    # control root logger's level for WARN
+    root: INFO
+    # control org.springframework logger's level for DEBUG
+    org:
+      springframework: INFO
+
+spring:
+  cloud:
+    ##=====consul=====##
+    consul:
+      host: 127.0.0.1
+      port: 8500
+
+  ##=====mongodb config=====##
+  data:
+    mongodb:
+      host: 47.105.216.65
+      port: 27017
+      username: mongodbHypervisor
+      password: mongodbHypervisor001@@
+      database: abeille_hypervisor
+      authentication-database: abeille_hypervisor
+
+

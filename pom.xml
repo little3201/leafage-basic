@@ -19,8 +19,8 @@
     </developers>
 
     <modules>
-        <module>abeille-basic-hypervisor</module>
-        <module>abeille-basic-assets</module>
+        <module>hypervisor</module>
+        <module>assets</module>
     </modules>
 
 

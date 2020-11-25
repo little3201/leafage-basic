@@ -1,0 +1,23 @@
+##=====log common=====##
+logging:
+  level:
+    # control root logger's level for WARN
+    root: INFO
+    # control org.springframework logger's level for DEBUG
+    org:
+      springframework: INFO
+
+spring:
+  cloud:
+    consul:
+      host: 127.0.0.1
+      port: 8500
+
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      username: mongodbAssets
+      password: mongodbAssets001@@
+      database: abeille_assets
+      authentication-database: abeille_assets

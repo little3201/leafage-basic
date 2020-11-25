@@ -1,11 +1,9 @@
-# abeille-basic-authority
+# hypervisor
 
 <p align="center">
  <img src="https://img.shields.io/badge/Spring%20Cloud-Hoxto-blue.svg" alt="Coverage Status">
  <img src="https://img.shields.io/badge/Spring%20Boot-2.3.x-blue.svg" alt="Downloads">
 </p>
-
-## abeille-gateway
 
 #### 目标功能
 - [x] 用户

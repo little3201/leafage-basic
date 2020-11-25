@@ -5,7 +5,7 @@ server:
 ##=====application name=====##
 spring:
   application:
-    name: abeille-basic-assets
+    name: assets
 
   ##=====active=====##
   profiles:

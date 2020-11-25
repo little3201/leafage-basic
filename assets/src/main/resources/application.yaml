@@ -1,0 +1,19 @@
+##========server port=======##
+server:
+  port: 8764
+
+##=====application name=====##
+spring:
+  application:
+    name: assets
+
+  ##=====active=====##
+  profiles:
+    active: dev
+
+  ##=====consul config=====##
+  cloud:
+    consul:
+      discovery:
+        heartbeat:
+          enabled: true

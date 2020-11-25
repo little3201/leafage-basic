@@ -5,7 +5,7 @@ package top.abeille.basic.hypervisor.constant;
  *
  * @author liwenqiang 2020-10-06 22:09
  **/
-public enum SourceTypeEnum {
+public enum ResourceTypeEnum {
 
     /**
      * 菜单

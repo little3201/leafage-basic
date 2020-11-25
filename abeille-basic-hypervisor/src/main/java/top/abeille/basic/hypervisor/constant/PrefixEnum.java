@@ -26,18 +26,18 @@ public enum PrefixEnum {
     /**
      * 按钮
      */
-    SB,
+    RB,
     /**
      * 菜单
      */
-    SM,
+    RM,
     /**
      * tab
      */
-    ST,
+    RT,
     /**
      * 接口
      */
-    SU
+    RU
 
 }

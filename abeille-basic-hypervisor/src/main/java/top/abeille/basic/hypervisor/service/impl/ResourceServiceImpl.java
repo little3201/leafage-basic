@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
-import top.abeille.basic.hypervisor.constant.SourceTypeEnum;
+import top.abeille.basic.hypervisor.constant.ResourceTypeEnum;
 import top.abeille.basic.hypervisor.document.ResourceInfo;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.repository.ResourceRepository;
@@ -52,22 +52,22 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
         ResourceInfo info = new ResourceInfo();
         BeanUtils.copyProperties(sourceDTO, info);
         String prefix;
-        switch (SourceTypeEnum.valueOf(sourceDTO.getType())) {
+        switch (ResourceTypeEnum.valueOf(sourceDTO.getType())) {
             // 菜单
             case MENU:
-                prefix = PrefixEnum.SM.name();
+                prefix = PrefixEnum.RM.name();
                 break;
             // 按钮
             case BUTTON:
-                prefix = PrefixEnum.SB.name();
+                prefix = PrefixEnum.RB.name();
                 break;
             // tab页
             case TAB:
-                prefix = PrefixEnum.ST.name();
+                prefix = PrefixEnum.RT.name();
                 break;
             // 路径/接口
             default:
-                prefix = PrefixEnum.SU.name();
+                prefix = PrefixEnum.RU.name();
         }
         info.setCode(prefix + this.generateId());
         info.setModifyTime(LocalDateTime.now());

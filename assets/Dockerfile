@@ -5,7 +5,7 @@ FROM openjdk:11-jdk-alpine
 LABEL maintainer="little3201@gmail.com"
 
 # Add param to use in anywhere
-ARG JAR_NAME=abeille-gateway
+ARG JAR_NAME=abeille-basic-assets
 ARG VERSION=0.0.1-SNAPSHOT
 ARG ACTIVE=dev
 

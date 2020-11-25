@@ -11,10 +11,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author liwenqiang
  */
 @SpringBootApplication
-public class BasicHypervisorApplication {
+public class HypervisorApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BasicHypervisorApplication.class, args);
+        SpringApplication.run(HypervisorApplication.class, args);
     }
 
 }

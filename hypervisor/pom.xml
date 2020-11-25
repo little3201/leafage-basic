@@ -9,11 +9,12 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <artifactId>abeille-basic-assets</artifactId>
+    <groupId>top.abeille.basic</groupId>
+    <artifactId>hypervisor</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>abeille-basic-assets</name>
-    <description>assets of abeille basic</description>
+    <name>hypervisor</name>
+    <description>hypervisor of abeille basic</description>
 
     <dependencies>
         <dependency>
@@ -41,7 +42,7 @@
             <artifactId>abeille-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <!-- Spring cloud consul -->
+        <!-- Spring Cloud Consul -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-consul-discovery</artifactId>

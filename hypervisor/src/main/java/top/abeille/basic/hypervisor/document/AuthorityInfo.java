@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "resource_info")
-public class ResourceInfo {
+public class AuthorityInfo {
 
     /**
      * 主键

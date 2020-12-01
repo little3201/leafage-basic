@@ -20,7 +20,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2018/12/20 9:54
  **/
 @RestController
-@RequestMapping("/article")
+@RequestMapping("/posts")
 public class PostsController {
 
     private final PostsService postsService;

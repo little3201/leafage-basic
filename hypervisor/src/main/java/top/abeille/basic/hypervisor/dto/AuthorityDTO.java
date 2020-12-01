@@ -1,25 +1,19 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.vo;
+package top.abeille.basic.hypervisor.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
- * Model class for ResourceInfo
+ * Model class for SourceInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceVO implements Serializable {
+public class AuthorityDTO implements Serializable {
 
-    private static final long serialVersionUID = 9207337014543117619L;
-    /**
-     * 代码
-     */
-    private String code;
+    private static final long serialVersionUID = 8659525799803097800L;
     /**
      * 上级
      */
@@ -27,33 +21,27 @@ public class ResourceVO implements Serializable {
     /**
      * 名称
      */
+    @NotBlank
     private String name;
     /**
      * 类型
      */
+    @NotBlank
     private String type;
+    /**
+     * 方式
+     */
+    @NotBlank
+    private String mode;
     /**
      * 路径
      */
+    @NotBlank
     private String path;
     /**
      * 描述
      */
     private String description;
-    /**
-     * 修改时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime modifyTime;
-
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getSuperior() {
         return superior;
@@ -79,6 +67,14 @@ public class ResourceVO implements Serializable {
         this.type = type;
     }
 
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
     public String getPath() {
         return path;
     }
@@ -93,13 +89,5 @@ public class ResourceVO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
     }
 }

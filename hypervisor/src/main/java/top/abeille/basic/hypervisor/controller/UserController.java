@@ -47,8 +47,8 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{username}")
-    public Mono<UserDetailsVO> fetchDetailsByUsername(@PathVariable String username) {
-        return userService.fetchDetailsByUsername(username);
+    public Mono<UserDetailsVO> fetchDetails(@PathVariable String username) {
+        return userService.fetchDetails(username);
     }
 
     /**
@@ -58,8 +58,8 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/tidy/{username}")
-    public Mono<UserTidyVO> fetchTidyByUsername(@PathVariable String username) {
-        return userService.fetchTidyByUsername(username);
+    public Mono<UserTidyVO> fetchTidy(@PathVariable String username) {
+        return userService.fetchTidy(username);
     }
 
     /**

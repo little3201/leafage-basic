@@ -18,10 +18,10 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.UserInfo;
 import top.abeille.basic.hypervisor.document.UserRole;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.repository.RoleResourceRepository;
+import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
 import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
-import top.abeille.basic.hypervisor.service.ResourceService;
+import top.abeille.basic.hypervisor.service.AuthorityService;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
@@ -50,15 +50,15 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final RoleService roleService;
-    private final RoleResourceRepository roleResourceRepository;
-    private final ResourceService resourceService;
+    private final RoleAuthorityRepository roleAuthorityRepository;
+    private final AuthorityService authorityService;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService, RoleResourceRepository roleResourceRepository, ResourceService resourceService) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService, RoleAuthorityRepository roleAuthorityRepository, AuthorityService authorityService) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.roleService = roleService;
-        this.roleResourceRepository = roleResourceRepository;
-        this.resourceService = resourceService;
+        this.roleAuthorityRepository = roleAuthorityRepository;
+        this.authorityService = authorityService;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Mono<UserDetailsVO> fetchDetailsByUsername(String username) {
+    public Mono<UserDetailsVO> fetchDetails(String username) {
         Asserts.notBlank(username, "username");
         Mono<UserInfo> infoMono = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("User Not Found")));
@@ -113,12 +113,12 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Roles")))
                 .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID
-        Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleResourceRepository.findByRoleIdIn(roleIdList)
+        Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleAuthorityRepository.findByRoleIdIn(roleIdList)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Authorities")))
                 .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getResourceId())));
         // 查权限
         Mono<Set<String>> authorityList = sourceIdListMono.flatMap(sourceIdList ->
-                resourceService.findByIdInAndEnabledTrue(sourceIdList).collect(HashSet::new, (sourceList, sourceInfo) ->
+                authorityService.findByIdInAndEnabledTrue(sourceIdList).collect(HashSet::new, (sourceList, sourceInfo) ->
                         sourceList.add(sourceInfo.getCode())));
         // 构造用户信息
         return authorityList.zipWith(infoMono, (authorities, userInfo) -> {
@@ -130,7 +130,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Mono<UserTidyVO> fetchTidyByUsername(String username) {
+    public Mono<UserTidyVO> fetchTidy(String username) {
         Asserts.notBlank(username, "username");
         return userRepository.findByUsername(username);
     }

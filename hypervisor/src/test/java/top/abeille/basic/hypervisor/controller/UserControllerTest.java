@@ -6,10 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import top.abeille.basic.hypervisor.repository.RoleResourceRepository;
+import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
 import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.repository.UserRoleRepository;
-import top.abeille.basic.hypervisor.service.ResourceService;
+import top.abeille.basic.hypervisor.service.AuthorityService;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.service.impl.UserServiceImpl;
 
@@ -31,13 +31,13 @@ public class UserControllerTest {
     private RoleService roleService;
 
     @MockBean
-    private RoleResourceRepository roleResourceRepository;
+    private RoleAuthorityRepository roleAuthorityRepository;
 
     @MockBean
-    private ResourceService resourceService;
+    private AuthorityService authorityService;
 
     private final WebTestClient client = WebTestClient.bindToController(new UserController(new UserServiceImpl(userRepository,
-            userRoleRepository, roleService, roleResourceRepository, resourceService))).build();
+            userRoleRepository, roleService, roleAuthorityRepository, authorityService))).build();
 
     @Test
     public void loadByUsername() {

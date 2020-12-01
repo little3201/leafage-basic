@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2020/2/16 14:26
  **/
 @RestController
-@RequestMapping("/topic")
+@RequestMapping("/category")
 public class CategoryController {
 
     private final CategoryService categoryService;

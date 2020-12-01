@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for RoleResource
+ * Model class for UserRole
  *
- * @author liwenqiang 2020-10-06 22:09
- */
-@Document(collection = "role_resource")
-public class RoleResource {
+ * @author liwenqiang 2019/9/16 10:09
+ **/
+@Document(collection = "user_group")
+public class GroupUser {
 
     /**
      * 主键
@@ -24,21 +24,17 @@ public class RoleResource {
     @Id
     private String id;
     /**
-     * 角色ID
+     * 用户主键
      */
     @Indexed
-    @Field(value = "role_id")
-    private String roleId;
+    @Field(value = "user_id")
+    private String userId;
     /**
-     * 资源ID
+     * 组主键
      */
     @Indexed
-    @Field(value = "resource_id")
-    private String resourceId;
-    /**
-     * 是否可写
-     */
-    private boolean hasWrite;
+    @Field(value = "group_id")
+    private String groupId;
     /**
      * 修改人
      */
@@ -57,28 +53,20 @@ public class RoleResource {
         this.id = id;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getResourceId() {
-        return resourceId;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
-    }
-
-    public boolean getHasWrite() {
-        return hasWrite;
-    }
-
-    public void setHasWrite(boolean hasWrite) {
-        this.hasWrite = hasWrite;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     public String getModifier() {

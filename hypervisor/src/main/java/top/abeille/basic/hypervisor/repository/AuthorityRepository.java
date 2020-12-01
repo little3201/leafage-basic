@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.ResourceInfo;
+import top.abeille.basic.hypervisor.document.AuthorityInfo;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
  * @author liwenqiang 2018/12/17 19:37
  **/
 @Repository
-public interface ResourceRepository extends ReactiveMongoRepository<ResourceInfo, String> {
+public interface AuthorityRepository extends ReactiveMongoRepository<AuthorityInfo, String> {
 
     /**
      * 根据code查询enabled信息
@@ -25,7 +25,7 @@ public interface ResourceRepository extends ReactiveMongoRepository<ResourceInfo
      * @param code 代码
      * @return 资源信息
      */
-    Mono<ResourceInfo> findByCodeAndEnabledTrue(String code);
+    Mono<AuthorityInfo> findByCodeAndEnabledTrue(String code);
 
     /**
      * 根据权限Id集合查询多条enabled信息
@@ -33,5 +33,5 @@ public interface ResourceRepository extends ReactiveMongoRepository<ResourceInfo
      * @param sourceIdList id集合
      * @return 资源信息
      */
-    Flux<ResourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList);
+    Flux<AuthorityInfo> findByIdInAndEnabledTrue(List<String> sourceIdList);
 }

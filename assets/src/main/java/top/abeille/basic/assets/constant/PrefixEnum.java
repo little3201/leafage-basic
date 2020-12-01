@@ -20,7 +20,7 @@ public enum PrefixEnum {
      */
     PF,
     /**
-     * 话题
+     * 类别
      */
-    TP
+    CG
 }

@@ -24,4 +24,12 @@ public interface UserRepository extends ReactiveMongoRepository<UserInfo, String
      * @return 用户信息
      */
     Mono<UserTidyVO> findByUsername(String username);
+
+    /**
+     * 根据username/mobile/email查询enabled信息
+     *
+     * @param param 参数
+     * @return 用户信息
+     */
+    Mono<UserInfo> findByUsernameOrPhoneOrEmailAndEnabledTrue(String param);
 }

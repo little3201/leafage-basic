@@ -3,8 +3,8 @@
  */
 package top.abeille.basic.assets.service;
 
-import top.abeille.basic.assets.dto.TopicDTO;
-import top.abeille.basic.assets.vo.TopicVO;
+import top.abeille.basic.assets.dto.CategoryDTO;
+import top.abeille.basic.assets.vo.CategoryVO;
 import top.abeille.common.basic.BasicService;
 
 /**
@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2020/2/13 20:16
  **/
-public interface TopicService extends BasicService<TopicDTO, TopicVO> {
+public interface CategoryService extends BasicService<CategoryDTO, CategoryVO> {
 }

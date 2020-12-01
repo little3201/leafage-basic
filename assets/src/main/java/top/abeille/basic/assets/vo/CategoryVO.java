@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang
  */
-public class TopicVO implements Serializable {
+public class CategoryVO implements Serializable {
 
     private static final long serialVersionUID = 6078275280120953852L;
     /**

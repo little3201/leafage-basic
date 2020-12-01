@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for TopicInfo
+ * Model class for CategoryInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "topic_info")
-public class TopicInfo {
+@Document(collection = "category_info")
+public class CategoryInfo {
 
     /**
      * 主键
@@ -29,17 +29,13 @@ public class TopicInfo {
     @Indexed(unique = true)
     private String code;
     /**
-     * 标题
+     * 别名
      */
-    private String title;
-    /**
-     * 内容
-     */
-    private String content;
+    private String alias;
     /**
      * 是否有效
      */
-    private boolean enabled;
+    private boolean enabled = true;
     /**
      * 修改人
      */
@@ -66,20 +62,12 @@ public class TopicInfo {
         this.code = code;
     }
 
-    public String getTitle() {
-        return title;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public boolean isEnabled() {

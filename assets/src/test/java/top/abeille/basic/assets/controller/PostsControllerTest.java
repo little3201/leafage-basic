@@ -11,10 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.api.HypervisorApi;
-import top.abeille.basic.assets.dto.ArticleDTO;
-import top.abeille.basic.assets.repository.ArticleRepository;
+import top.abeille.basic.assets.dto.PostsDTO;
+import top.abeille.basic.assets.repository.PostsRepository;
 import top.abeille.basic.assets.service.DetailsService;
-import top.abeille.basic.assets.service.impl.ArticleServiceImpl;
+import top.abeille.basic.assets.service.impl.PostsServiceImpl;
 
 /**
  * 文章接口测试类
@@ -22,10 +22,10 @@ import top.abeille.basic.assets.service.impl.ArticleServiceImpl;
  * @author liwenqiang 2020/3/1 22:07
  */
 @SpringBootTest
-public class ArticleControllerTest {
+public class PostsControllerTest {
 
     @MockBean
-    private ArticleRepository articleRepository;
+    private PostsRepository postsRepository;
 
     @MockBean
     private DetailsService detailsService;
@@ -33,14 +33,14 @@ public class ArticleControllerTest {
     @MockBean
     private HypervisorApi hypervisorApi;
 
-    private final WebTestClient client = WebTestClient.bindToController(new ArticleController(new ArticleServiceImpl(articleRepository,
+    private final WebTestClient client = WebTestClient.bindToController(new PostsController(new PostsServiceImpl(postsRepository,
             detailsService, hypervisorApi))).build();
 
     @Test
     public void retrieveArticle() {
-        ArticleDTO articleDTO = new ArticleDTO();
+        PostsDTO postsDTO = new PostsDTO();
         client.post().uri("/article").contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(articleDTO), ArticleDTO.class).exchange()
+                .body(Mono.just(postsDTO), PostsDTO.class).exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("content").isNotEmpty();
     }

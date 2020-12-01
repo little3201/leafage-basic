@@ -6,7 +6,7 @@ package top.abeille.basic.assets.repository;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.ArticleInfo;
+import top.abeille.basic.assets.document.PostsInfo;
 
 import java.time.LocalDate;
 
@@ -16,7 +16,7 @@ import java.time.LocalDate;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface ArticleRepository extends ReactiveMongoRepository<ArticleInfo, String> {
+public interface PostsRepository extends ReactiveMongoRepository<PostsInfo, String> {
 
     /**
      * 根据起始和结束日期查询文章数
@@ -33,5 +33,5 @@ public interface ArticleRepository extends ReactiveMongoRepository<ArticleInfo, 
      * @param code 代码
      * @return 文章信息
      */
-    Mono<ArticleInfo> findByCodeAndEnabledTrue(String code);
+    Mono<PostsInfo> findByCodeAndEnabledTrue(String code);
 }

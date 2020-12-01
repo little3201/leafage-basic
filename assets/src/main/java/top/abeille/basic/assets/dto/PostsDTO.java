@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ArticleDTO implements Serializable {
+public class PostsDTO implements Serializable {
 
     private static final long serialVersionUID = 248576207213923230L;
     /**
@@ -37,9 +37,9 @@ public class ArticleDTO implements Serializable {
      */
     private String catalog;
     /**
-     * 图片url
+     * 封面
      */
-    private String imageUrl;
+    private String cover;
     /**
      * 修改人
      */
@@ -86,12 +86,12 @@ public class ArticleDTO implements Serializable {
         this.catalog = catalog;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getCover() {
+        return cover;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public String getModifier() {

@@ -12,9 +12,9 @@ package top.abeille.basic.assets.constant;
 public enum PrefixEnum {
 
     /**
-     * 文章
+     * 帖子
      */
-    AT,
+    PT,
     /**
      * 作品集
      */

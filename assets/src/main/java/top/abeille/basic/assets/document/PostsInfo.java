@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "article_info")
-public class ArticleInfo {
+@Document(collection = "posts_info")
+public class PostsInfo {
 
     /**
      * 主键
@@ -37,10 +37,9 @@ public class ArticleInfo {
      */
     private String subtitle;
     /**
-     * 图片url
+     * 封面
      */
-    @Field(value = "image_url")
-    private String imageUrl;
+    private String cover;
     /**
      * 是否有效
      */
@@ -87,12 +86,12 @@ public class ArticleInfo {
         this.subtitle = subtitle;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getCover() {
+        return cover;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public boolean isEnabled() {

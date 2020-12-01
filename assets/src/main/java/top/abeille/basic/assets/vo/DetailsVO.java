@@ -8,7 +8,7 @@ package top.abeille.basic.assets.vo;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class DetailsVO extends ArticleVO {
+public class DetailsVO extends PostsVO {
 
     private static final long serialVersionUID = -3631862762916498067L;
 

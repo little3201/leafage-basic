@@ -11,9 +11,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for GroupInfo
+ * Model class for Group
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "group_info")
 public class GroupInfo {

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * Model class for ArticleInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "article_info")
 public class ArticleInfo {

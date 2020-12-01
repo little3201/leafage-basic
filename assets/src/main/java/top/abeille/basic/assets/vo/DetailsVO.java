@@ -6,7 +6,7 @@ package top.abeille.basic.assets.vo;
 /**
  * Details VO class for ArticleInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
 public class DetailsVO extends ArticleVO {
 

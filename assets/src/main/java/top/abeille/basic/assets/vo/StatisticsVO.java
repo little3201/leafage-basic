@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * 统计对象
  *
- * @author liwenqiang 2018-12-06 22:09
+ * @author liwenqiang 2020-10-06 22:09
  **/
 public class StatisticsVO implements Serializable {
 

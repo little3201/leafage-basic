@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * Model class for ResourceInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
 public class ResourceVO implements Serializable {
 

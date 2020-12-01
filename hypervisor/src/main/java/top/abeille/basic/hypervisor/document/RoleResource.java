@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * Model class for RoleResource
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "role_resource")
 public class RoleResource {

@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Model class for GroupInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
 public class GroupDTO implements Serializable {
 

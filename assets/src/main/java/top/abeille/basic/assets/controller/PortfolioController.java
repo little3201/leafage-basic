@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.PortfolioDTO;
 import top.abeille.basic.assets.service.PortfolioService;
 import top.abeille.basic.assets.vo.PortfolioVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 
@@ -21,7 +20,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/portfolio")
-public class PortfolioController extends AbstractController {
+public class PortfolioController {
 
     private final PortfolioService portfolioService;
 

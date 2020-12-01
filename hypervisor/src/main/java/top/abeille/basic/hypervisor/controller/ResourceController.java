@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.SourceDTO;
 import top.abeille.basic.hypervisor.service.ResourceService;
 import top.abeille.basic.hypervisor.vo.ResourceVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 
@@ -21,7 +20,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/resource")
-public class ResourceController extends AbstractController {
+public class ResourceController {
 
     private final ResourceService resourceService;
 

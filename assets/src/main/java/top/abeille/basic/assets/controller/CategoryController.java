@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.CategoryDTO;
 import top.abeille.basic.assets.service.CategoryService;
 import top.abeille.basic.assets.vo.CategoryVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 
@@ -21,7 +20,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/topic")
-public class CategoryController extends AbstractController {
+public class CategoryController {
 
     private final CategoryService categoryService;
 

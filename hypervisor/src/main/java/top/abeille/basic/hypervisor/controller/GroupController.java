@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 
@@ -21,7 +20,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/group")
-public class GroupController extends AbstractController {
+public class GroupController {
 
     private final GroupService groupService;
 

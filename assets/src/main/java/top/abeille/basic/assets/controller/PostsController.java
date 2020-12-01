@@ -11,7 +11,6 @@ import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.service.PostsService;
 import top.abeille.basic.assets.vo.DetailsVO;
 import top.abeille.basic.assets.vo.PostsVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 
@@ -22,7 +21,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/article")
-public class PostsController extends AbstractController {
+public class PostsController {
 
     private final PostsService postsService;
 

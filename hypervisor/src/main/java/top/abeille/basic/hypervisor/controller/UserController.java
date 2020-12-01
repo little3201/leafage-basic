@@ -12,7 +12,6 @@ import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 
@@ -23,7 +22,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/user")
-public class UserController extends AbstractController {
+public class UserController {
 
     private final UserService userService;
 

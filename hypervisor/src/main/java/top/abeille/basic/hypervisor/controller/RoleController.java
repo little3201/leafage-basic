@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 
@@ -21,7 +20,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/role")
-public class RoleController extends AbstractController {
+public class RoleController {
 
     private final RoleService roleService;
 

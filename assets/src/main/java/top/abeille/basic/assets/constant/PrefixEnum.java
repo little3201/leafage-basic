@@ -12,15 +12,15 @@ package top.abeille.basic.assets.constant;
 public enum PrefixEnum {
 
     /**
-     * 文章
+     * 帖子
      */
-    AT,
+    PT,
     /**
      * 作品集
      */
     PF,
     /**
-     * 话题
+     * 类别
      */
-    TP
+    CG
 }

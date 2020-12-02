@@ -7,9 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.dto.ArticleDTO;
-import top.abeille.basic.assets.service.ArticleService;
-import top.abeille.basic.assets.vo.ArticleVO;
+import top.abeille.basic.assets.dto.PostsDTO;
+import top.abeille.basic.assets.service.PostsService;
+import top.abeille.basic.assets.vo.PostsVO;
 
 import java.util.Random;
 
@@ -19,30 +19,30 @@ import java.util.Random;
  * @author liwenqiang 2019/9/19 9:27
  */
 @SpringBootTest
-public class ArticleServiceImplTest {
+public class PostsServiceImplTest {
 
     @Autowired
-    private ArticleService articleService;
+    private PostsService postsService;
 
     @Test
     @Rollback
     public void create() {
-        ArticleDTO articleDTO = new ArticleDTO();
-        articleDTO.setTitle("spring");
-        articleDTO.setContent("spring boot");
-        Mono<ArticleVO> outerMono = articleService.create(articleDTO);
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setTitle("spring");
+        postsDTO.setContent("spring boot");
+        Mono<PostsVO> outerMono = postsService.create(postsDTO);
         Assert.notNull(outerMono.block(), "The class must not be null");
     }
 
     @Test
     public void fetchById_returnObject() {
-        Mono<? extends ArticleVO> outerMono = articleService.fetchByCode("AT226");
+        Mono<? extends PostsVO> outerMono = postsService.fetchByCode("AT226");
         Assert.notNull(outerMono.block(), "The class must not be null");
     }
 
     @Test
     public void fetchById_returnNull() {
-        Mono<? extends ArticleVO> outerMono = articleService.fetchByCode(String.valueOf(new Random().nextFloat()));
+        Mono<? extends PostsVO> outerMono = postsService.fetchByCode(String.valueOf(new Random().nextFloat()));
         Assert.isNull(outerMono.block(), "The class must be null");
     }
 }

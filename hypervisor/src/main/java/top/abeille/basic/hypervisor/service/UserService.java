@@ -23,7 +23,7 @@ public interface UserService extends BasicService<UserDTO, UserVO> {
      * @param username 账号
      * @return UserDetails 账户信息
      */
-    Mono<UserDetailsVO> fetchDetailsByUsername(String username);
+    Mono<UserDetailsVO> fetchDetails(String username);
 
     /**
      * 根据username 查询账户最小信息
@@ -31,5 +31,5 @@ public interface UserService extends BasicService<UserDTO, UserVO> {
      * @param username 账号
      * @return UserDetails 账户信息
      */
-    Mono<UserTidyVO> fetchTidyByUsername(String username);
+    Mono<UserTidyVO> fetchTidy(String username);
 }

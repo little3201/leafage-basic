@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.hypervisor.document;
+package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for ResourceInfo
+ * Model class for CategoryInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "resource_info")
-public class ResourceInfo {
+@Document(collection = "category_info")
+public class CategoryInfo {
 
     /**
      * 主键
@@ -29,29 +29,9 @@ public class ResourceInfo {
     @Indexed(unique = true)
     private String code;
     /**
-     * 上级
+     * 别名
      */
-    private String superior;
-    /**
-     * 名称
-     */
-    private String name;
-    /**
-     * 类型
-     */
-    private String type;
-    /**
-     * 路径
-     */
-    private String path;
-    /**
-     * 请求方式, 如：GET、POST、PUT、DELETE等
-     */
-    private String mode;
-    /**
-     * 描述
-     */
-    private String description;
+    private String alias;
     /**
      * 是否有效
      */
@@ -82,52 +62,12 @@ public class ResourceInfo {
         this.code = code;
     }
 
-    public String getSuperior() {
-        return superior;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setSuperior(String superior) {
-        this.superior = superior;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getMode() {
-        return mode;
-    }
-
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public boolean isEnabled() {

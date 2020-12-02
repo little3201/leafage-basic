@@ -9,7 +9,6 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.AccountDTO;
 import top.abeille.basic.hypervisor.service.AccountService;
 import top.abeille.basic.hypervisor.vo.AccountVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 
@@ -20,7 +19,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/account")
-public class AccountController extends AbstractController {
+public class AccountController {
 
     private final AccountService accountService;
 

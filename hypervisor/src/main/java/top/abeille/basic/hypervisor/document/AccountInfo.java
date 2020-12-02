@@ -12,9 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for AccountInfo
+ * Model class for Account
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "account_info")
 public class AccountInfo {

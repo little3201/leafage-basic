@@ -9,9 +9,9 @@ import java.io.Serializable;
 /**
  * Model class for SourceInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
-public class SourceDTO implements Serializable {
+public class AuthorityDTO implements Serializable {
 
     private static final long serialVersionUID = 8659525799803097800L;
     /**

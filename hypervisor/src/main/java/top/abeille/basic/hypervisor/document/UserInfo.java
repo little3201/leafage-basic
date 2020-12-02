@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * Model class for UserInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "user_info")
 public class UserInfo {
@@ -41,9 +41,9 @@ public class UserInfo {
      */
     private String password;
     /**
-     * 电话
+     * 手机号
      */
-    private String mobile;
+    private String phone;
     /**
      * 邮箱
      */
@@ -52,17 +52,17 @@ public class UserInfo {
      * 账户是否有效
      */
     @Field(name = "account_non_expired")
-    private Boolean accountNonExpired;
+    private boolean accountNonExpired = true;
     /**
      * 是否锁定
      */
     @Field(name = "account_non_locked")
-    private Boolean accountNonLocked;
+    private boolean accountNonLocked = true;
     /**
      * 认证是否有效
      */
     @Field(name = "credentials_non_expired")
-    private Boolean credentialsNonExpired;
+    private boolean credentialsNonExpired = true;
     /**
      * 是否有效
      */
@@ -117,12 +117,12 @@ public class UserInfo {
         this.password = password;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -133,27 +133,27 @@ public class UserInfo {
         this.email = email;
     }
 
-    public Boolean getAccountNonExpired() {
+    public boolean isAccountNonExpired() {
         return accountNonExpired;
     }
 
-    public void setAccountNonExpired(Boolean accountNonExpired) {
+    public void setAccountNonExpired(boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public Boolean getAccountNonLocked() {
+    public boolean isAccountNonLocked() {
         return accountNonLocked;
     }
 
-    public void setAccountNonLocked(Boolean accountNonLocked) {
+    public void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public Boolean getCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 

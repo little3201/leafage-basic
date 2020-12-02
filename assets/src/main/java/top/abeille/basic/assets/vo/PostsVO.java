@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 /**
  * Enter class for ArticleInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
-public class ArticleVO implements Serializable {
+public class PostsVO implements Serializable {
 
     private static final long serialVersionUID = -2692474466082844624L;
     /**

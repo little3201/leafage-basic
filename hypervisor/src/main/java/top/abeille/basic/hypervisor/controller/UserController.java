@@ -12,7 +12,6 @@ import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 
@@ -23,7 +22,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/user")
-public class UserController extends AbstractController {
+public class UserController {
 
     private final UserService userService;
 
@@ -48,8 +47,8 @@ public class UserController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{username}")
-    public Mono<UserDetailsVO> fetchDetailsByUsername(@PathVariable String username) {
-        return userService.fetchDetailsByUsername(username);
+    public Mono<UserDetailsVO> fetchDetails(@PathVariable String username) {
+        return userService.fetchDetails(username);
     }
 
     /**
@@ -59,8 +58,8 @@ public class UserController extends AbstractController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/tidy/{username}")
-    public Mono<UserTidyVO> fetchTidyByUsername(@PathVariable String username) {
-        return userService.fetchTidyByUsername(username);
+    public Mono<UserTidyVO> fetchTidy(@PathVariable String username) {
+        return userService.fetchTidy(username);
     }
 
     /**

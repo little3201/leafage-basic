@@ -9,21 +9,17 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * Model class for GroupInfo
+ * Model class for ResourceInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class GroupVO implements Serializable {
+public class AuthorityVO implements Serializable {
 
-    private static final long serialVersionUID = 5740100575689452491L;
+    private static final long serialVersionUID = 9207337014543117619L;
     /**
      * 代码
      */
     private String code;
-    /**
-     * 负责人
-     */
-    private String principal;
     /**
      * 上级
      */
@@ -32,6 +28,14 @@ public class GroupVO implements Serializable {
      * 名称
      */
     private String name;
+    /**
+     * 类型
+     */
+    private String type;
+    /**
+     * 路径
+     */
+    private String path;
     /**
      * 描述
      */
@@ -51,14 +55,6 @@ public class GroupVO implements Serializable {
         this.code = code;
     }
 
-    public String getPrincipal() {
-        return principal;
-    }
-
-    public void setPrincipal(String principal) {
-        this.principal = principal;
-    }
-
     public String getSuperior() {
         return superior;
     }
@@ -73,6 +69,22 @@ public class GroupVO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getDescription() {

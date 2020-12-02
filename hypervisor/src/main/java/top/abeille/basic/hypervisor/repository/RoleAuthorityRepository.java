@@ -6,7 +6,7 @@ package top.abeille.basic.hypervisor.repository;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
-import top.abeille.basic.hypervisor.document.RoleResource;
+import top.abeille.basic.hypervisor.document.RoleAuthority;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author liwenqiang 2018/9/26 11:29
  **/
 @Repository
-public interface RoleResourceRepository extends ReactiveCrudRepository<RoleResource, String> {
+public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuthority, String> {
 
     /**
      * 查询所有资源——根据角色ID集合
@@ -25,5 +25,5 @@ public interface RoleResourceRepository extends ReactiveCrudRepository<RoleResou
      * @param roleIdList 角色ID集合
      * @return Flux
      */
-    Flux<RoleResource> findByRoleIdIn(@NotNull List<String> roleIdList);
+    Flux<RoleAuthority> findByRoleIdIn(@NotNull List<String> roleIdList);
 }

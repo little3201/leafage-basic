@@ -50,7 +50,7 @@ public class UserServiceImplTest {
     public void fetchByUsername_returnObject() {
         String username = "little3201";
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(UserInfo.class)))).thenReturn(Mockito.any());
-        Mono<UserTidyVO> userVOMono = userService.fetchTidyByUsername(username);
+        Mono<UserTidyVO> userVOMono = userService.fetchTidy(username);
         Assert.assertNotNull(userVOMono.map(UserTidyVO::getNickname).subscribe());
     }
 
@@ -61,7 +61,7 @@ public class UserServiceImplTest {
     public void fetchByUsername_returnEmpty() {
         String username = "little3201";
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(UserInfo.class)))).thenReturn(Mockito.isNull());
-        Mono<UserTidyVO> userVOMono = userService.fetchTidyByUsername(username);
+        Mono<UserTidyVO> userVOMono = userService.fetchTidy(username);
         Assert.assertNull(userVOMono.map(UserTidyVO::getNickname).block());
     }
 
@@ -69,7 +69,7 @@ public class UserServiceImplTest {
     public void loadByUsername() {
         String username = "little3201";
         Mockito.when(userRepository.findByUsername(username)).thenReturn(Mockito.any());
-        Mono<UserDetailsVO> detailsMono = userService.fetchDetailsByUsername(username);
+        Mono<UserDetailsVO> detailsMono = userService.fetchDetails(username);
         Assert.assertNotNull(detailsMono.map(UserDetailsVO::getAuthorities).subscribe());
     }
 }

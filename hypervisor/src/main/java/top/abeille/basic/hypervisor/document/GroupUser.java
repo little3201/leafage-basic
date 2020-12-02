@@ -1,7 +1,7 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.document;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for TopicInfo
+ * Model class for UserRole
  *
- * @author liwenqiang
- */
-@Document(collection = "topic_info")
-public class TopicInfo {
+ * @author liwenqiang 2019/9/16 10:09
+ **/
+@Document(collection = "user_group")
+public class GroupUser {
 
     /**
      * 主键
@@ -24,22 +24,17 @@ public class TopicInfo {
     @Id
     private String id;
     /**
-     * 代码
+     * 用户主键
      */
-    @Indexed(unique = true)
-    private String code;
+    @Indexed
+    @Field(value = "user_id")
+    private String userId;
     /**
-     * 标题
+     * 组主键
      */
-    private String title;
-    /**
-     * 内容
-     */
-    private String content;
-    /**
-     * 是否有效
-     */
-    private boolean enabled;
+    @Indexed
+    @Field(value = "group_id")
+    private String groupId;
     /**
      * 修改人
      */
@@ -58,36 +53,20 @@ public class TopicInfo {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     public String getModifier() {

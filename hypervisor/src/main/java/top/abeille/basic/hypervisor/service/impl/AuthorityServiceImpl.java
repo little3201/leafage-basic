@@ -11,11 +11,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.constant.ResourceTypeEnum;
-import top.abeille.basic.hypervisor.document.ResourceInfo;
-import top.abeille.basic.hypervisor.dto.SourceDTO;
-import top.abeille.basic.hypervisor.repository.ResourceRepository;
-import top.abeille.basic.hypervisor.service.ResourceService;
-import top.abeille.basic.hypervisor.vo.ResourceVO;
+import top.abeille.basic.hypervisor.document.AuthorityInfo;
+import top.abeille.basic.hypervisor.dto.AuthorityDTO;
+import top.abeille.basic.hypervisor.repository.AuthorityRepository;
+import top.abeille.basic.hypervisor.service.AuthorityService;
+import top.abeille.basic.hypervisor.vo.AuthorityVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
@@ -27,32 +27,32 @@ import java.util.List;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class ResourceServiceImpl extends AbstractBasicService implements ResourceService {
+public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService {
 
-    private final ResourceRepository resourceRepository;
+    private final AuthorityRepository authorityRepository;
 
-    public ResourceServiceImpl(ResourceRepository resourceRepository) {
-        this.resourceRepository = resourceRepository;
+    public AuthorityServiceImpl(AuthorityRepository authorityRepository) {
+        this.authorityRepository = authorityRepository;
     }
 
     @Override
-    public Flux<ResourceVO> retrieveAll() {
+    public Flux<AuthorityVO> retrieveAll() {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return resourceRepository.findAll(sort).map(this::convertOuter);
+        return authorityRepository.findAll(sort).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ResourceVO> fetchByCode(String code) {
+    public Mono<AuthorityVO> fetchByCode(String code) {
         Asserts.notBlank(code, "code");
         return this.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ResourceVO> create(SourceDTO sourceDTO) {
-        ResourceInfo info = new ResourceInfo();
-        BeanUtils.copyProperties(sourceDTO, info);
+    public Mono<AuthorityVO> create(AuthorityDTO authorityDTO) {
+        AuthorityInfo info = new AuthorityInfo();
+        BeanUtils.copyProperties(authorityDTO, info);
         String prefix;
-        switch (ResourceTypeEnum.valueOf(sourceDTO.getType())) {
+        switch (ResourceTypeEnum.valueOf(authorityDTO.getType())) {
             // 菜单
             case MENU:
                 prefix = PrefixEnum.RM.name();
@@ -71,29 +71,29 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
         }
         info.setCode(prefix + this.generateId());
         info.setModifyTime(LocalDateTime.now());
-        return resourceRepository.insert(info).map(this::convertOuter);
+        return authorityRepository.insert(info).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ResourceVO> modify(String code, SourceDTO sourceDTO) {
+    public Mono<AuthorityVO> modify(String code, AuthorityDTO authorityDTO) {
         Asserts.notBlank(code, "code");
         return this.findByCodeAndEnabledTrue(code).flatMap(info -> {
-            BeanUtils.copyProperties(sourceDTO, info);
+            BeanUtils.copyProperties(authorityDTO, info);
             info.setModifyTime(LocalDateTime.now());
-            return resourceRepository.save(info);
+            return authorityRepository.save(info);
         }).map(this::convertOuter);
     }
 
     @Override
-    public Mono<ResourceInfo> findByCodeAndEnabledTrue(String code) {
+    public Mono<AuthorityInfo> findByCodeAndEnabledTrue(String code) {
         Asserts.notBlank(code, "code");
-        return resourceRepository.findByCodeAndEnabledTrue(code);
+        return authorityRepository.findByCodeAndEnabledTrue(code);
     }
 
     @Override
-    public Flux<ResourceInfo> findByIdInAndEnabledTrue(List<String> sourceIdList) {
+    public Flux<AuthorityInfo> findByIdInAndEnabledTrue(List<String> sourceIdList) {
         Asserts.notNull(sourceIdList, "sourceIdList");
-        return resourceRepository.findByIdInAndEnabledTrue(sourceIdList);
+        return authorityRepository.findByIdInAndEnabledTrue(sourceIdList);
     }
 
     /**
@@ -102,8 +102,8 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
      * @param info 信息
      * @return 输出转换后的vo对象
      */
-    private ResourceVO convertOuter(ResourceInfo info) {
-        ResourceVO outer = new ResourceVO();
+    private AuthorityVO convertOuter(AuthorityInfo info) {
+        AuthorityVO outer = new AuthorityVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
     }

@@ -1,24 +1,32 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.vo;
+package top.abeille.basic.hypervisor.document;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * Model class for ResourceInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceVO implements Serializable {
+@Document(collection = "resource_info")
+public class AuthorityInfo {
 
-    private static final long serialVersionUID = 9207337014543117619L;
+    /**
+     * 主键
+     */
+    @Id
+    private String id;
     /**
      * 代码
      */
+    @Indexed(unique = true)
     private String code;
     /**
      * 上级
@@ -37,15 +45,34 @@ public class ResourceVO implements Serializable {
      */
     private String path;
     /**
+     * 请求方式, 如：GET、POST、PUT、DELETE等
+     */
+    private String mode;
+    /**
      * 描述
      */
     private String description;
     /**
+     * 是否有效
+     */
+    private boolean enabled = true;
+    /**
+     * 修改人
+     */
+    private String modifier;
+    /**
      * 修改时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Field(value = "modify_time")
     private LocalDateTime modifyTime;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getCode() {
         return code;
@@ -87,12 +114,36 @@ public class ResourceVO implements Serializable {
         this.path = path;
     }
 
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 /**
  * VO class for TopicInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
-public class TopicVO implements Serializable {
+public class CategoryVO implements Serializable {
 
     private static final long serialVersionUID = 6078275280120953852L;
     /**

@@ -5,9 +5,9 @@ import java.io.Serializable;
 /**
  * Model class for RoleResource
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
-public class RoleResourceDTO implements Serializable {
+public class RoleAuthorityDTO implements Serializable {
 
     private static final long serialVersionUID = 1432721617667440537L;
 

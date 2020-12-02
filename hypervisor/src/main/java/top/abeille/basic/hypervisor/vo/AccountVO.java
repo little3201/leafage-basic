@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 /**
  * Outer class for AccountInfo
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-10-06 22:09
  */
 public class AccountVO implements Serializable {
 

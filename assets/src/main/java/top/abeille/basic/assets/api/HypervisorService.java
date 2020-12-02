@@ -18,7 +18,7 @@ public class HypervisorService implements HypervisorApi {
     private final WebClient.Builder clientBuilder;
 
     public HypervisorService(WebClient.Builder clientBuilder) {
-        clientBuilder.baseUrl("http://hypervisor").build();
+        clientBuilder.baseUrl("https://hypervisor").build();
         this.clientBuilder = clientBuilder;
     }
 

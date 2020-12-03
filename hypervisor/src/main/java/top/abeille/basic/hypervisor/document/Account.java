@@ -1,22 +1,23 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.document;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for ArticleInfo
+ * Model class for Account
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "posts_info")
-public class PostsInfo {
+@Document(collection = "account")
+public class Account {
 
     /**
      * 主键
@@ -24,26 +25,28 @@ public class PostsInfo {
     @Id
     private String id;
     /**
+     * 用户ID
+     */
+    @Field(value = "user_id")
+    @Indexed
+    private String userId;
+    /**
      * 代码
      */
     @Indexed(unique = true)
     private String code;
     /**
-     * 标题
+     * 余额
      */
-    private String title;
+    private BigDecimal balance;
     /**
-     * 副标题
+     * 类型
      */
-    private String subtitle;
-    /**
-     * 封面
-     */
-    private String cover;
+    private char type;
     /**
      * 是否有效
      */
-    private boolean enabled;
+    private boolean enabled = true;
     /**
      * 修改人
      */
@@ -62,6 +65,14 @@ public class PostsInfo {
         this.id = id;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getCode() {
         return code;
     }
@@ -70,28 +81,20 @@ public class PostsInfo {
         this.code = code;
     }
 
-    public String getTitle() {
-        return title;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
-    public String getSubtitle() {
-        return subtitle;
+    public char getType() {
+        return type;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
+    public void setType(char type) {
+        this.type = type;
     }
 
     public boolean isEnabled() {

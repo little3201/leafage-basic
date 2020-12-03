@@ -10,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.api.HypervisorApi;
 import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.repository.PostsRepository;
 import top.abeille.basic.assets.service.DetailsService;
@@ -30,11 +29,9 @@ public class PostsControllerTest {
     @MockBean
     private DetailsService detailsService;
 
-    @MockBean
-    private HypervisorApi hypervisorApi;
 
-    private final WebTestClient client = WebTestClient.bindToController(new PostsController(new PostsServiceImpl(postsRepository,
-            detailsService, hypervisorApi))).build();
+    private final WebTestClient client = WebTestClient.bindToController(new PostsController(
+            new PostsServiceImpl(postsRepository, detailsService))).build();
 
     @Test
     public void retrieveArticle() {

@@ -11,10 +11,14 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class UserDetailsVO extends UserTidyVO implements Serializable {
+public class UserDetailsVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
 
+    /**
+     * 用户名
+     */
+    private String username;
     /**
      * 密码
      */
@@ -36,6 +40,13 @@ public class UserDetailsVO extends UserTidyVO implements Serializable {
      */
     private boolean credentialsNonExpired;
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getPassword() {
         return password;

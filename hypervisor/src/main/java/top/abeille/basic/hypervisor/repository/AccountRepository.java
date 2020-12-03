@@ -6,7 +6,7 @@ package top.abeille.basic.hypervisor.repository;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.AccountInfo;
+import top.abeille.basic.hypervisor.document.Account;
 
 /**
  * 账户信息repository
@@ -14,7 +14,7 @@ import top.abeille.basic.hypervisor.document.AccountInfo;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface AccountRepository extends ReactiveMongoRepository<AccountInfo, String> {
+public interface AccountRepository extends ReactiveMongoRepository<Account, String> {
 
     /**
      * 根据code查询enabled信息
@@ -22,5 +22,5 @@ public interface AccountRepository extends ReactiveMongoRepository<AccountInfo, 
      * @param code 代码
      * @return 账户信息
      */
-    Mono<AccountInfo> findByCodeAndEnabledTrue(String code);
+    Mono<Account> findByCodeAndEnabledTrue(String code);
 }

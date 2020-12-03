@@ -5,7 +5,7 @@ package top.abeille.basic.hypervisor.service;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.AuthorityInfo;
+import top.abeille.basic.hypervisor.document.Authority;
 import top.abeille.basic.hypervisor.dto.AuthorityDTO;
 import top.abeille.basic.hypervisor.vo.AuthorityVO;
 import top.abeille.common.basic.BasicService;
@@ -25,7 +25,7 @@ public interface AuthorityService extends BasicService<AuthorityDTO, AuthorityVO
      * @param code 代码
      * @return 数据库映射对象
      */
-    Mono<AuthorityInfo> findByCodeAndEnabledTrue(String code);
+    Mono<Authority> findByCodeAndEnabledTrue(String code);
 
     /**
      * 根据主键批量查询资源信息
@@ -33,5 +33,5 @@ public interface AuthorityService extends BasicService<AuthorityDTO, AuthorityVO
      * @param sourceIdList 主键集合
      * @return 数据库映射对象
      */
-    Flux<AuthorityInfo> findByIdInAndEnabledTrue(List<String> sourceIdList);
+    Flux<Authority> findByIdInAndEnabledTrue(List<String> sourceIdList);
 }

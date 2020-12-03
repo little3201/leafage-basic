@@ -6,8 +6,7 @@ package top.abeille.basic.hypervisor.repository;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.UserInfo;
-import top.abeille.basic.hypervisor.vo.UserTidyVO;
+import top.abeille.basic.hypervisor.document.User;
 
 /**
  * 用户信息(userInfo)dao接口
@@ -15,21 +14,15 @@ import top.abeille.basic.hypervisor.vo.UserTidyVO;
  * @author liwenqiang 2018/7/27 17:50
  **/
 @Repository
-public interface UserRepository extends ReactiveMongoRepository<UserInfo, String> {
-
-    /**
-     * 根据username查询enabled信息
-     *
-     * @param username 账户
-     * @return 用户信息
-     */
-    Mono<UserTidyVO> findByUsername(String username);
+public interface UserRepository extends ReactiveMongoRepository<User, String> {
 
     /**
      * 根据username/mobile/email查询enabled信息
      *
-     * @param param 参数
+     * @param username 账号
+     * @param phone    电话
+     * @param email    邮箱
      * @return 用户信息
      */
-    Mono<UserInfo> findByUsernameOrPhoneOrEmailAndEnabledTrue(String param);
+    Mono<User> findByUsernameOrPhoneOrEmailAndEnabledTrue(String username, String phone, String email);
 }

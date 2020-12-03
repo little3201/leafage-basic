@@ -6,7 +6,7 @@ package top.abeille.basic.assets.repository;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.CategoryInfo;
+import top.abeille.basic.assets.document.Category;
 
 /**
  * 类别信息repository
@@ -14,7 +14,7 @@ import top.abeille.basic.assets.document.CategoryInfo;
  * @author liwenqiang 2020/2/13 22:01
  **/
 @Repository
-public interface CategoryRepository extends ReactiveMongoRepository<CategoryInfo, String> {
+public interface CategoryRepository extends ReactiveMongoRepository<Category, String> {
 
     /**
      * 根据code查询enabled信息
@@ -22,5 +22,5 @@ public interface CategoryRepository extends ReactiveMongoRepository<CategoryInfo
      * @param code 代码
      * @return 类别信息
      */
-    Mono<CategoryInfo> findByCodeAndEnabledTrue(String code);
+    Mono<Category> findByCodeAndEnabledTrue(String code);
 }

@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
-import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
 import javax.validation.Valid;
@@ -49,17 +48,6 @@ public class UserController {
     @GetMapping("/{username}")
     public Mono<UserDetailsVO> fetchDetails(@PathVariable String username) {
         return userService.fetchDetails(username);
-    }
-
-    /**
-     * 根据传入的 username 查询信息
-     *
-     * @param username 用户账号
-     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
-     */
-    @GetMapping("/tidy/{username}")
-    public Mono<UserTidyVO> fetchTidy(@PathVariable String username) {
-        return userService.fetchTidy(username);
     }
 
     /**

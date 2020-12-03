@@ -1,18 +1,23 @@
-package top.abeille.basic.hypervisor.document;
+/*
+ * Copyright © 2010-2019 Abeille All rights reserved.
+ */
+
+package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
 /**
- * 地址信息
+ * Model class for ContentInfo
  *
  * @author liwenqiang 2020-10-06 22:09
- **/
-@Document(collection = "address_info")
-public class AddressInfo {
+ */
+@Document(collection = "details")
+public class Details {
 
     /**
      * 主键
@@ -20,29 +25,23 @@ public class AddressInfo {
     @Id
     private String id;
     /**
-     * 国家
+     * 文章ID
      */
-    private String country;
+    @Field(value = "article_id")
+    @Indexed(unique = true)
+    private String articleId;
     /**
-     * 省/直辖市
+     * 原文
      */
-    private String province;
+    private String original;
     /**
-     * 市
+     * 内容
      */
-    private String city;
+    private String content;
     /**
-     * 县/区
+     * 目录
      */
-    private String region;
-    /**
-     * 街道
-     */
-    private String street;
-    /**
-     * 地址
-     */
-    private String address;
+    private String catalog;
     /**
      * 是否有效
      */
@@ -65,52 +64,36 @@ public class AddressInfo {
         this.id = id;
     }
 
-    public String getCountry() {
-        return country;
+    public String getArticleId() {
+        return articleId;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setArticleId(String articleId) {
+        this.articleId = articleId;
     }
 
-    public String getProvince() {
-        return province;
+    public String getOriginal() {
+        return original;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setOriginal(String original) {
+        this.original = original;
     }
 
-    public String getCity() {
-        return city;
+    public String getContent() {
+        return content;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getRegion() {
-        return region;
+    public String getCatalog() {
+        return catalog;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
     }
 
     public boolean isEnabled() {

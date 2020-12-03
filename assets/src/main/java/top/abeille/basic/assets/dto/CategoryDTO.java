@@ -14,17 +14,12 @@ import java.io.Serializable;
 public class CategoryDTO implements Serializable {
 
     private static final long serialVersionUID = -6972802402513706361L;
+
     /**
      * 别名
      */
     @NotBlank
     private String alias;
-    /**
-     * 修改人
-     */
-    @NotBlank
-    private String modifier;
-
 
     public String getAlias() {
         return alias;
@@ -34,11 +29,4 @@ public class CategoryDTO implements Serializable {
         this.alias = alias;
     }
 
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
 }

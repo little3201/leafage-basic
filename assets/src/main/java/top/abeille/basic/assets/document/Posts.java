@@ -1,23 +1,22 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.hypervisor.document;
+package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for Account
+ * Model class for ArticleInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "account_info")
-public class AccountInfo {
+@Document(collection = "posts")
+public class Posts {
 
     /**
      * 主键
@@ -25,28 +24,26 @@ public class AccountInfo {
     @Id
     private String id;
     /**
-     * 用户ID
-     */
-    @Field(value = "user_id")
-    @Indexed
-    private String userId;
-    /**
      * 代码
      */
     @Indexed(unique = true)
     private String code;
     /**
-     * 余额
+     * 标题
      */
-    private BigDecimal balance;
+    private String title;
     /**
-     * 类型
+     * 副标题
      */
-    private char type;
+    private String subtitle;
+    /**
+     * 封面
+     */
+    private String cover;
     /**
      * 是否有效
      */
-    private boolean enabled = true;
+    private boolean enabled;
     /**
      * 修改人
      */
@@ -65,14 +62,6 @@ public class AccountInfo {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public String getCode() {
         return code;
     }
@@ -81,20 +70,28 @@ public class AccountInfo {
         this.code = code;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
+    public String getTitle() {
+        return title;
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public char getType() {
-        return type;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public void setType(char type) {
-        this.type = type;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public boolean isEnabled() {

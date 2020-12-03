@@ -30,15 +30,10 @@ public class PortfolioDTO implements Serializable {
     @NotBlank
     private String content;
     /**
-     * 图片url
+     * 封面
      */
     @NotBlank
-    private String imageUrl;
-    /**
-     * 修改人
-     */
-    @NotBlank
-    private String modifier;
+    private String cover;
 
     public String getTitle() {
         return title;
@@ -64,19 +59,11 @@ public class PortfolioDTO implements Serializable {
         this.content = content;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getCover() {
+        return cover;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }

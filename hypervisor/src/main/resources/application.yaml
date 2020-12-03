@@ -1,10 +1,6 @@
 ##========server port=======##
 server:
   port: 8763
-  ssl:
-    key-store: classpath:ssl/abeille-top-jwt.jks
-    key-alias: abeille-top-jwt
-    key-password: abeille-top
 
 ##=====application name=====##
 spring:

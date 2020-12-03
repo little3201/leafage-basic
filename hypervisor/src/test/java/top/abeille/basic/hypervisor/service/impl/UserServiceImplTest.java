@@ -3,19 +3,19 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.UserInfo;
+import top.abeille.basic.hypervisor.document.User;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.repository.UserRepository;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
-import top.abeille.basic.hypervisor.vo.UserTidyVO;
 
 /**
  * 用户信息service测试
@@ -39,6 +39,7 @@ public class UserServiceImplTest {
     public void save() {
         UserDTO userDTO = new UserDTO();
         userDTO.setNickname("管理员");
+        String password = new BCryptPasswordEncoder().encode("123456");
         userService.create(userDTO);
         Mockito.verify(userRepository, Mockito.atLeastOnce()).save(Mockito.any());
     }
@@ -49,9 +50,9 @@ public class UserServiceImplTest {
     @Test
     public void fetchByUsername_returnObject() {
         String username = "little3201";
-        Mockito.when(userRepository.findOne(Example.of(Mockito.any(UserInfo.class)))).thenReturn(Mockito.any());
-        Mono<UserTidyVO> userVOMono = userService.fetchTidy(username);
-        Assert.assertNotNull(userVOMono.map(UserTidyVO::getNickname).subscribe());
+        Mockito.when(userRepository.findOne(Example.of(Mockito.any(User.class)))).thenReturn(Mockito.any());
+        Mono<UserDetailsVO> userVOMono = userService.fetchDetails(username);
+        Assertions.assertNotNull(userVOMono.map(UserDetailsVO::getAuthorities).subscribe());
     }
 
     /**
@@ -60,16 +61,16 @@ public class UserServiceImplTest {
     @Test
     public void fetchByUsername_returnEmpty() {
         String username = "little3201";
-        Mockito.when(userRepository.findOne(Example.of(Mockito.any(UserInfo.class)))).thenReturn(Mockito.isNull());
-        Mono<UserTidyVO> userVOMono = userService.fetchTidy(username);
-        Assert.assertNull(userVOMono.map(UserTidyVO::getNickname).block());
+        Mockito.when(userRepository.findOne(Example.of(Mockito.any(User.class)))).thenReturn(Mockito.isNull());
+        Mono<UserDetailsVO> userVOMono = userService.fetchDetails(username);
+        Assertions.assertNull(userVOMono.map(UserDetailsVO::getAuthorities).block());
     }
 
     @Test
-    public void loadByUsername() {
+    public void fetchDetails() {
         String username = "little3201";
-        Mockito.when(userRepository.findByUsername(username)).thenReturn(Mockito.any());
+        Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)).thenReturn(Mockito.any());
         Mono<UserDetailsVO> detailsMono = userService.fetchDetails(username);
-        Assert.assertNotNull(detailsMono.map(UserDetailsVO::getAuthorities).subscribe());
+        Assertions.assertNotNull(detailsMono.map(UserDetailsVO::getAuthorities).subscribe());
     }
 }

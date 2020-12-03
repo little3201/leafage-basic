@@ -5,7 +5,7 @@
 package top.abeille.basic.assets.service;
 
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.DetailsInfo;
+import top.abeille.basic.assets.document.Details;
 
 /**
  * 内容service接口
@@ -17,19 +17,19 @@ public interface DetailsService {
     /**
      * 新增信息
      *
-     * @param detailsInfo 内容信息
+     * @param details 内容信息
      * @return 返回操作结果，否则返回empty
      */
-    Mono<DetailsInfo> create(DetailsInfo detailsInfo);
+    Mono<Details> create(Details details);
 
     /**
      * 根据文章ID修改信息
      *
-     * @param articleId   文章ID
-     * @param detailsInfo 信息
+     * @param articleId 文章ID
+     * @param details   信息
      * @return 返回操作结果，否则返回empty
      */
-    Mono<DetailsInfo> modify(String articleId, DetailsInfo detailsInfo);
+    Mono<Details> modify(String articleId, Details details);
 
     /**
      * 根据文章ID查询
@@ -37,5 +37,5 @@ public interface DetailsService {
      * @param articleId 文章ID
      * @return 返回查询到的信息，否则返回empty
      */
-    Mono<DetailsInfo> fetchByArticleId(String articleId);
+    Mono<Details> fetchByArticleId(String articleId);
 }

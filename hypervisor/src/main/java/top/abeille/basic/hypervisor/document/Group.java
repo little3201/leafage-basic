@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for ResourceInfo
+ * Model class for Group
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "resource_info")
-public class AuthorityInfo {
+@Document(collection = "group")
+public class Group {
 
     /**
      * 主键
@@ -29,6 +29,10 @@ public class AuthorityInfo {
     @Indexed(unique = true)
     private String code;
     /**
+     * 负责人
+     */
+    private String principal;
+    /**
      * 上级
      */
     private String superior;
@@ -36,18 +40,6 @@ public class AuthorityInfo {
      * 名称
      */
     private String name;
-    /**
-     * 类型
-     */
-    private String type;
-    /**
-     * 路径
-     */
-    private String path;
-    /**
-     * 请求方式, 如：GET、POST、PUT、DELETE等
-     */
-    private String mode;
     /**
      * 描述
      */
@@ -59,7 +51,7 @@ public class AuthorityInfo {
     /**
      * 修改人
      */
-    private String modifier;
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -82,6 +74,14 @@ public class AuthorityInfo {
         this.code = code;
     }
 
+    public String getPrincipal() {
+        return principal;
+    }
+
+    public void setPrincipal(String principal) {
+        this.principal = principal;
+    }
+
     public String getSuperior() {
         return superior;
     }
@@ -96,30 +96,6 @@ public class AuthorityInfo {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getMode() {
-        return mode;
-    }
-
-    public void setMode(String mode) {
-        this.mode = mode;
     }
 
     public String getDescription() {
@@ -138,11 +114,11 @@ public class AuthorityInfo {
         this.enabled = enabled;
     }
 
-    public String getModifier() {
+    public Long getModifier() {
         return modifier;
     }
 
-    public void setModifier(String modifier) {
+    public void setModifier(Long modifier) {
         this.modifier = modifier;
     }
 

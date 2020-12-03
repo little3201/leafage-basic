@@ -6,7 +6,6 @@ package top.abeille.basic.hypervisor.service;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
-import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.BasicService;
 
@@ -25,11 +24,4 @@ public interface UserService extends BasicService<UserDTO, UserVO> {
      */
     Mono<UserDetailsVO> fetchDetails(String username);
 
-    /**
-     * 根据username 查询账户最小信息
-     *
-     * @param username 账号
-     * @return UserDetails 账户信息
-     */
-    Mono<UserTidyVO> fetchTidy(String username);
 }

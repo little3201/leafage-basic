@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "role_resource")
+@Document(collection = "role_authority")
 public class RoleAuthority {
 
     /**

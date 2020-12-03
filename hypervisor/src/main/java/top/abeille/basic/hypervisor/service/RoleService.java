@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.service;
 
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.RoleInfo;
+import top.abeille.basic.hypervisor.document.Role;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.BasicService;
@@ -22,5 +22,5 @@ public interface RoleService extends BasicService<RoleDTO, RoleVO> {
      * @param code 代码
      * @return 角色信息
      */
-    Mono<RoleInfo> findByCodeAndEnabledTrue(String code);
+    Mono<Role> findByCodeAndEnabledTrue(String code);
 }

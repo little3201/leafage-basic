@@ -40,11 +40,6 @@ public class PostsDTO implements Serializable {
      * 封面
      */
     private String cover;
-    /**
-     * 修改人
-     */
-    @NotBlank
-    private String modifier;
 
     public String getTitle() {
         return title;
@@ -94,11 +89,4 @@ public class PostsDTO implements Serializable {
         this.cover = cover;
     }
 
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
 }

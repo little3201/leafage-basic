@@ -8,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import top.abeille.basic.hypervisor.document.AccountInfo;
+import top.abeille.basic.hypervisor.document.Account;
 import top.abeille.basic.hypervisor.dto.AccountDTO;
 import top.abeille.basic.hypervisor.repository.AccountRepository;
 
@@ -31,6 +31,6 @@ public class AccountServiceImplTest {
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setType("applePay");
         accountInfoService.create(accountDTO);
-        Mockito.verify(accountRepository, Mockito.atLeastOnce()).save(Mockito.any(AccountInfo.class));
+        Mockito.verify(accountRepository, Mockito.atLeastOnce()).save(Mockito.any(Account.class));
     }
 }

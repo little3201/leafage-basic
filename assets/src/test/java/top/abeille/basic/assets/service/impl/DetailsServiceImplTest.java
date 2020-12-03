@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.DetailsInfo;
+import top.abeille.basic.assets.document.Details;
 import top.abeille.basic.assets.service.DetailsService;
 
 /**
@@ -25,10 +25,10 @@ public class DetailsServiceImplTest {
 
     @Test
     public void create() {
-        DetailsInfo info = new DetailsInfo();
+        Details info = new Details();
         info.setArticleId("TP2277FZ0");
         info.setContent("Spring boot");
-        Mono<DetailsInfo> mono = detailsService.create(info);
+        Mono<Details> mono = detailsService.create(info);
         Assert.notNull(mono.block(), "The class must not be null");
     }
 }

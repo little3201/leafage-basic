@@ -47,7 +47,7 @@ public class PostsController {
      */
     @GetMapping("/{code}")
     public Mono<DetailsVO> fetchArticle(@PathVariable String code) {
-        return postsService.fetchDetailsByCode(code).switchIfEmpty(Mono.empty());
+        return postsService.fetchDetailsByCode(code);
     }
 
     /**

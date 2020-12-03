@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.hypervisor.document;
+package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for Group
+ * Model class for CategoryInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "group_info")
-public class GroupInfo {
+@Document(collection = "category")
+public class Category {
 
     /**
      * 主键
@@ -29,21 +29,9 @@ public class GroupInfo {
     @Indexed(unique = true)
     private String code;
     /**
-     * 负责人
+     * 别名
      */
-    private String principal;
-    /**
-     * 上级
-     */
-    private String superior;
-    /**
-     * 名称
-     */
-    private String name;
-    /**
-     * 描述
-     */
-    private String description;
+    private String alias;
     /**
      * 是否有效
      */
@@ -51,7 +39,7 @@ public class GroupInfo {
     /**
      * 修改人
      */
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
@@ -74,36 +62,12 @@ public class GroupInfo {
         this.code = code;
     }
 
-    public String getPrincipal() {
-        return principal;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setPrincipal(String principal) {
-        this.principal = principal;
-    }
-
-    public String getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(String superior) {
-        this.superior = superior;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public boolean isEnabled() {
@@ -114,11 +78,11 @@ public class GroupInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

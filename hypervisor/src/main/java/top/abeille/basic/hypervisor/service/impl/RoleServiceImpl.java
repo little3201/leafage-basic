@@ -8,9 +8,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.constant.PrefixEnum;
+import top.abeille.basic.hypervisor.document.Role;
 import top.abeille.basic.hypervisor.document.RoleAuthority;
-import top.abeille.basic.hypervisor.document.RoleInfo;
 import top.abeille.basic.hypervisor.dto.RoleAuthorityDTO;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
@@ -55,13 +54,13 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
-        RoleInfo info = new RoleInfo();
+        Role info = new Role();
         BeanUtils.copyProperties(roleDTO, info);
-        info.setCode(PrefixEnum.RO + this.generateId());
+        info.setCode(this.generateCode());
         info.setModifyTime(LocalDateTime.now());
-        return roleRepository.insert(info).doOnNext(roleInfo -> {
+        return roleRepository.insert(info).doOnNext(role -> {
             List<RoleAuthority> userRoleList = roleDTO.getSources().stream().map(source ->
-                    this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
+                    this.initRoleSource(role.getId(), role.getModifier(), source)).collect(Collectors.toList());
             roleAuthorityRepository.saveAll(userRoleList).subscribe();
         }).map(this::convertOuter);
     }
@@ -71,9 +70,9 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         return roleRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(roleDTO, info);
             info.setModifyTime(LocalDateTime.now());
-            return roleRepository.save(info).doOnNext(roleInfo -> {
+            return roleRepository.save(info).doOnNext(role -> {
                 List<RoleAuthority> userRoleList = roleDTO.getSources().stream().map(source ->
-                        this.initRoleSource(roleInfo.getId(), roleInfo.getModifier(), source)).collect(Collectors.toList());
+                        this.initRoleSource(role.getId(), role.getModifier(), source)).collect(Collectors.toList());
                 roleAuthorityRepository.saveAll(userRoleList).subscribe();
             });
         }).map(this::convertOuter);
@@ -85,7 +84,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      * @param info 信息
      * @return 输出转换后的vo对象
      */
-    private RoleVO convertOuter(RoleInfo info) {
+    private RoleVO convertOuter(Role info) {
         RoleVO outer = new RoleVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
@@ -112,7 +111,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Mono<RoleInfo> findByCodeAndEnabledTrue(String code) {
+    public Mono<Role> findByCodeAndEnabledTrue(String code) {
         return roleRepository.findByCodeAndEnabledTrue(code);
     }
 }

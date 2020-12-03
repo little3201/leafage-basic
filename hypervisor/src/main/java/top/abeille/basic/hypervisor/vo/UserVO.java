@@ -3,28 +3,35 @@
  */
 package top.abeille.basic.hypervisor.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * Model class for UserInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class UserVO extends UserTidyVO implements Serializable {
+public class UserVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
 
+    private String username;
     /**
      * 电话
      */
-    private String mobile;
+    private String phone;
     /**
      * 邮箱
      */
     private String email;
+    /**
+     * 性别: 0-男 1-女 2-保密
+     */
+    private Integer gender;
+    /**
+     * 出生日期
+     */
+    private LocalDate birthday;
     /**
      * 是否有效
      */
@@ -37,19 +44,21 @@ public class UserVO extends UserTidyVO implements Serializable {
      * 密码是否有效
      */
     private boolean credentialsNonExpired;
-    /**
-     * 修改时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime modifyTime;
 
-
-    public String getMobile() {
-        return mobile;
+    public String getUsername() {
+        return username;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -58,6 +67,22 @@ public class UserVO extends UserTidyVO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public boolean isAccountNonExpired() {
@@ -84,11 +109,4 @@ public class UserVO extends UserTidyVO implements Serializable {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

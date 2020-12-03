@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -15,8 +16,8 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "user_info")
-public class UserInfo {
+@Document(collection = "user")
+public class User {
 
     /**
      * 主键
@@ -48,6 +49,14 @@ public class UserInfo {
      * 邮箱
      */
     private String email;
+    /**
+     * 性别: 0-男 1-女 2-保密
+     */
+    private Integer gender;
+    /**
+     * 出生日期
+     */
+    private LocalDate birthday;
     /**
      * 账户是否有效
      */
@@ -131,6 +140,22 @@ public class UserInfo {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public boolean isAccountNonExpired() {

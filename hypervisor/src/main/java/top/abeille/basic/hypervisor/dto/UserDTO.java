@@ -37,6 +37,10 @@ public class UserDTO implements Serializable {
     @Pattern(regexp = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}", message = "email not pattern")
     private String email;
     /**
+     * 性别: 0-男 1-女 2-保密
+     */
+    private Integer gender;
+    /**
      * 地址
      */
     private String address;

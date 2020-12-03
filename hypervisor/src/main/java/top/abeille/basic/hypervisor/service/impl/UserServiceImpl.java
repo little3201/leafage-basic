@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.UserInfo;
+import top.abeille.basic.hypervisor.document.User;
 import top.abeille.basic.hypervisor.document.UserRole;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
@@ -25,7 +25,6 @@ import top.abeille.basic.hypervisor.service.AuthorityService;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
-import top.abeille.basic.hypervisor.vo.UserTidyVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -69,16 +68,16 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<UserVO> create(UserDTO userDTO) {
-        UserInfo info = new UserInfo();
+        User info = new User();
         BeanUtils.copyProperties(userDTO, info);
         info.setUsername(info.getEmail().substring(0, info.getEmail().indexOf("@")));
         info.setPassword(new BCryptPasswordEncoder().encode("110119"));
         info.setModifyTime(LocalDateTime.now());
-        return userRepository.insert(info).doOnNext(userInfo -> {
-            log.info("User :{} created.", userInfo.getUsername());
+        return userRepository.insert(info).doOnNext(user -> {
+            log.info("User :{} created.", user.getUsername());
             if (!CollectionUtils.isEmpty(userDTO.getRoles())) {
                 List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
-                        this.initUserRole(userInfo.getId(), role)).collect(Collectors.toList());
+                        this.initUserRole(user.getId(), role)).collect(Collectors.toList());
                 userRoleRepository.saveAll(userRoleList).subscribe();
             }
         }).map(this::convertOuter);
@@ -90,9 +89,9 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         return this.fetchInfo(username).flatMap(info -> {
             BeanUtils.copyProperties(userDTO, info);
             info.setModifyTime(LocalDateTime.now());
-            return userRepository.save(info).doOnNext(userInfo -> {
+            return userRepository.save(info).doOnNext(user -> {
                 List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
-                        this.initUserRole(userInfo.getId(), role)).collect(Collectors.toList());
+                        this.initUserRole(user.getId(), role)).collect(Collectors.toList());
                 userRoleRepository.saveAll(userRoleList).subscribe();
             }).map(this::convertOuter);
         });
@@ -101,15 +100,15 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     @Override
     public Mono<Void> remove(String username) {
         Asserts.notBlank(username, "username");
-        return this.fetchInfo(username).flatMap(userInfo -> userRepository.deleteById(userInfo.getId()));
+        return this.fetchInfo(username).flatMap(user -> userRepository.deleteById(user.getId()));
     }
 
     @Override
     public Mono<UserDetailsVO> fetchDetails(String username) {
         Asserts.notBlank(username, "username");
-        Mono<UserInfo> infoMono = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username)
+        Mono<User> infoMono = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("User Not Found")));
-        Mono<ArrayList<String>> roleIdListMono = infoMono.flatMap(userInfo -> userRoleRepository.findByUserId(userInfo.getId())
+        Mono<ArrayList<String>> roleIdListMono = infoMono.flatMap(user -> userRoleRepository.findByUserId(user.getId())
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Roles")))
                 .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID
@@ -121,18 +120,12 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                 authorityService.findByIdInAndEnabledTrue(sourceIdList).collect(HashSet::new, (sourceList, sourceInfo) ->
                         sourceList.add(sourceInfo.getCode())));
         // 构造用户信息
-        return authorityList.zipWith(infoMono, (authorities, userInfo) -> {
+        return authorityList.zipWith(infoMono, (authorities, user) -> {
             UserDetailsVO detailsVO = new UserDetailsVO();
-            BeanUtils.copyProperties(userInfo, detailsVO);
+            BeanUtils.copyProperties(user, detailsVO);
             detailsVO.setAuthorities(authorities);
             return detailsVO;
         });
-    }
-
-    @Override
-    public Mono<UserTidyVO> fetchTidy(String username) {
-        Asserts.notBlank(username, "username");
-        return userRepository.findByUsername(username);
     }
 
     /**
@@ -141,9 +134,9 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * @param username 账号
      * @return UserInfo 用户源数据
      */
-    private Mono<UserInfo> fetchInfo(String username) {
+    private Mono<User> fetchInfo(String username) {
         Asserts.notBlank(username, "username");
-        UserInfo info = new UserInfo();
+        User info = new User();
         info.setUsername(username);
         return userRepository.findOne(Example.of(info));
     }
@@ -154,12 +147,12 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * @param info 信息
      * @return UserVO 输出对象
      */
-    private UserVO convertOuter(UserInfo info) {
+    private UserVO convertOuter(User info) {
         UserVO outer = new UserVO();
         BeanUtils.copyProperties(info, outer);
         // 手机号脱敏
-        if (StringUtils.isNotBlank(outer.getMobile())) {
-            outer.setMobile(outer.getMobile().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+        if (StringUtils.isNotBlank(outer.getPhone())) {
+            outer.setPhone(outer.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
         }
         // 邮箱脱敏
         if (StringUtils.isNotBlank(outer.getEmail())) {

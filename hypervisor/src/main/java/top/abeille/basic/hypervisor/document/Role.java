@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.document;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for ArticleInfo
+ * Model class for RoleInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "portfolio_info")
-public class PortfolioInfo {
+@Document(collection = "role")
+public class Role {
 
     /**
      * 主键
@@ -29,21 +29,17 @@ public class PortfolioInfo {
     @Indexed(unique = true)
     private String code;
     /**
-     * 标题
+     * 名称
      */
-    private String title;
+    private String name;
     /**
-     * url
+     * 描述
      */
-    private String url;
-    /**
-     * 类型：0-图片，1-视频
-     */
-    private char type;
+    private String description;
     /**
      * 是否有效
      */
-    private boolean enabled;
+    private boolean enabled = true;
     /**
      * 修改人
      */
@@ -53,6 +49,7 @@ public class PortfolioInfo {
      */
     @Field(value = "modify_time")
     private LocalDateTime modifyTime;
+
 
     public String getId() {
         return id;
@@ -70,28 +67,20 @@ public class PortfolioInfo {
         this.code = code;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getUrl() {
-        return url;
+    public String getDescription() {
+        return description;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public char getType() {
-        return type;
-    }
-
-    public void setType(char type) {
-        this.type = type;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isEnabled() {

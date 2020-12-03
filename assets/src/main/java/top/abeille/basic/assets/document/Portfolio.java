@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2019. Abeille All Right Reserved.
  */
 package top.abeille.basic.assets.document;
 
@@ -11,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDateTime;
 
 /**
- * Model class for CategoryInfo
+ * Model class for ArticleInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "category_info")
-public class CategoryInfo {
+@Document(collection = "portfolio")
+public class Portfolio {
 
     /**
      * 主键
@@ -29,13 +29,21 @@ public class CategoryInfo {
     @Indexed(unique = true)
     private String code;
     /**
-     * 别名
+     * 标题
      */
-    private String alias;
+    private String title;
+    /**
+     * url
+     */
+    private String url;
+    /**
+     * 类型：0-图片，1-视频
+     */
+    private char type;
     /**
      * 是否有效
      */
-    private boolean enabled = true;
+    private boolean enabled;
     /**
      * 修改人
      */
@@ -62,12 +70,28 @@ public class CategoryInfo {
         this.code = code;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getTitle() {
+        return title;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public char getType() {
+        return type;
+    }
+
+    public void setType(char type) {
+        this.type = type;
     }
 
     public boolean isEnabled() {

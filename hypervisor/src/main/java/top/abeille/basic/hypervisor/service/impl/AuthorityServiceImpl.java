@@ -9,9 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.constant.PrefixEnum;
-import top.abeille.basic.hypervisor.constant.ResourceTypeEnum;
-import top.abeille.basic.hypervisor.document.AuthorityInfo;
+import top.abeille.basic.hypervisor.document.Authority;
 import top.abeille.basic.hypervisor.dto.AuthorityDTO;
 import top.abeille.basic.hypervisor.repository.AuthorityRepository;
 import top.abeille.basic.hypervisor.service.AuthorityService;
@@ -49,27 +47,9 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public Mono<AuthorityVO> create(AuthorityDTO authorityDTO) {
-        AuthorityInfo info = new AuthorityInfo();
+        Authority info = new Authority();
         BeanUtils.copyProperties(authorityDTO, info);
-        String prefix;
-        switch (ResourceTypeEnum.valueOf(authorityDTO.getType())) {
-            // 菜单
-            case MENU:
-                prefix = PrefixEnum.RM.name();
-                break;
-            // 按钮
-            case BUTTON:
-                prefix = PrefixEnum.RB.name();
-                break;
-            // tab页
-            case TAB:
-                prefix = PrefixEnum.RT.name();
-                break;
-            // 路径/接口
-            default:
-                prefix = PrefixEnum.RU.name();
-        }
-        info.setCode(prefix + this.generateId());
+        info.setCode(this.generateCode());
         info.setModifyTime(LocalDateTime.now());
         return authorityRepository.insert(info).map(this::convertOuter);
     }
@@ -85,13 +65,13 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Mono<AuthorityInfo> findByCodeAndEnabledTrue(String code) {
+    public Mono<Authority> findByCodeAndEnabledTrue(String code) {
         Asserts.notBlank(code, "code");
         return authorityRepository.findByCodeAndEnabledTrue(code);
     }
 
     @Override
-    public Flux<AuthorityInfo> findByIdInAndEnabledTrue(List<String> sourceIdList) {
+    public Flux<Authority> findByIdInAndEnabledTrue(List<String> sourceIdList) {
         Asserts.notNull(sourceIdList, "sourceIdList");
         return authorityRepository.findByIdInAndEnabledTrue(sourceIdList);
     }
@@ -102,7 +82,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
      * @param info 信息
      * @return 输出转换后的vo对象
      */
-    private AuthorityVO convertOuter(AuthorityInfo info) {
+    private AuthorityVO convertOuter(Authority info) {
         AuthorityVO outer = new AuthorityVO();
         BeanUtils.copyProperties(info, outer);
         return outer;

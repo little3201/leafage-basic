@@ -3,11 +3,7 @@
  */
 package top.abeille.basic.assets.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import top.abeille.basic.assets.bo.UserTidyBO;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * Enter class for ArticleInfo
@@ -22,9 +18,17 @@ public class PostsVO implements Serializable {
      */
     private String code;
     /**
-     * 作者
+     * 点赞
      */
-    private UserTidyBO author;
+    private int likes;
+    /**
+     * 评论
+     */
+    private int comment;
+    /**
+     * 查看
+     */
+    private int viewed;
     /**
      * 标题
      */
@@ -34,14 +38,9 @@ public class PostsVO implements Serializable {
      */
     private String subtitle;
     /**
-     * 图片url
+     * 封面
      */
-    private String imageUrl;
-    /**
-     * 修改时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime modifyTime;
+    private String cover;
 
     public String getCode() {
         return code;
@@ -67,27 +66,35 @@ public class PostsVO implements Serializable {
         this.subtitle = subtitle;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getCover() {
+        return cover;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
-    public UserTidyBO getAuthor() {
-        return author;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setAuthor(UserTidyBO author) {
-        this.author = author;
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public int getComment() {
+        return comment;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setComment(int comment) {
+        this.comment = comment;
+    }
+
+    public int getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
     }
 }

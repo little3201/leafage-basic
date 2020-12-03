@@ -7,8 +7,7 @@ import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.constant.PrefixEnum;
-import top.abeille.basic.hypervisor.document.GroupInfo;
+import top.abeille.basic.hypervisor.document.Group;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.repository.GroupRepository;
 import top.abeille.basic.hypervisor.service.GroupService;
@@ -39,9 +38,9 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
-        GroupInfo info = new GroupInfo();
+        Group info = new Group();
         BeanUtils.copyProperties(groupDTO, info);
-        info.setCode(PrefixEnum.GP + this.generateId());
+        info.setCode(this.generateCode());
         info.setModifyTime(LocalDateTime.now());
         return groupRepository.insert(info).map(this::convertOuter);
     }
@@ -58,8 +57,8 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return groupRepository.findByCodeAndEnabledTrue(code).flatMap(groupInfo ->
-                groupRepository.deleteById(groupInfo.getId()));
+        return groupRepository.findByCodeAndEnabledTrue(code).flatMap(group ->
+                groupRepository.deleteById(group.getId()));
     }
 
     /**
@@ -68,7 +67,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
      * @param info 信息
      * @return 输出转换后的vo对象
      */
-    private GroupVO convertOuter(GroupInfo info) {
+    private GroupVO convertOuter(Group info) {
         GroupVO outer = new GroupVO();
         BeanUtils.copyProperties(info, outer);
         return outer;

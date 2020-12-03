@@ -9,10 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.api.HypervisorApi;
-import top.abeille.basic.assets.bo.UserTidyBO;
-import top.abeille.basic.assets.constant.PrefixEnum;
-import top.abeille.basic.assets.document.PortfolioInfo;
+import top.abeille.basic.assets.document.Portfolio;
 import top.abeille.basic.assets.dto.PortfolioDTO;
 import top.abeille.basic.assets.repository.PortfolioRepository;
 import top.abeille.basic.assets.service.PortfolioService;
@@ -31,11 +28,9 @@ import java.util.Objects;
 public class PortfolioServiceImpl extends AbstractBasicService implements PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
-    private final HypervisorApi hypervisorApi;
 
-    public PortfolioServiceImpl(PortfolioRepository portfolioRepository, HypervisorApi hypervisorApi) {
+    public PortfolioServiceImpl(PortfolioRepository portfolioRepository) {
         this.portfolioRepository = portfolioRepository;
-        this.hypervisorApi = hypervisorApi;
     }
 
     @Override
@@ -46,9 +41,9 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
 
     @Override
     public Mono<PortfolioVO> create(PortfolioDTO portfolioDTO) {
-        PortfolioInfo info = new PortfolioInfo();
+        Portfolio info = new Portfolio();
         BeanUtils.copyProperties(portfolioDTO, info);
-        info.setCode(PrefixEnum.PF + this.generateId());
+        info.setCode(this.generateCode());
         info.setEnabled(true);
         info.setModifyTime(LocalDateTime.now());
         return portfolioRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);
@@ -57,10 +52,10 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     @Override
     public Mono<PortfolioVO> modify(String code, PortfolioDTO portfolioDTO) {
         Asserts.notBlank(code, "code");
-        return portfolioRepository.findByCodeAndEnabledTrue(code).flatMap(portfolioInfo -> {
-            BeanUtils.copyProperties(portfolioDTO, portfolioInfo);
-            portfolioInfo.setModifyTime(LocalDateTime.now());
-            return portfolioRepository.save(portfolioInfo).filter(Objects::nonNull).map(this::convertOuter);
+        return portfolioRepository.findByCodeAndEnabledTrue(code).flatMap(portfolio -> {
+            BeanUtils.copyProperties(portfolioDTO, portfolio);
+            portfolio.setModifyTime(LocalDateTime.now());
+            return portfolioRepository.save(portfolio).filter(Objects::nonNull).map(this::convertOuter);
         });
     }
 
@@ -82,11 +77,9 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
      * @param info 信息
      * @return 输出转换后的vo对象
      */
-    private PortfolioVO convertOuter(PortfolioInfo info) {
+    private PortfolioVO convertOuter(Portfolio info) {
         PortfolioVO outer = new PortfolioVO();
         BeanUtils.copyProperties(info, outer);
-        UserTidyBO userTidyBO = hypervisorApi.fetchUser(info.getModifier()).block();
-        outer.setAuthor(userTidyBO);
         return outer;
     }
 }

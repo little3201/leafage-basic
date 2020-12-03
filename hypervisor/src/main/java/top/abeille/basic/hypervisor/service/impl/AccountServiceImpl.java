@@ -7,8 +7,7 @@ import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.constant.PrefixEnum;
-import top.abeille.basic.hypervisor.document.AccountInfo;
+import top.abeille.basic.hypervisor.document.Account;
 import top.abeille.basic.hypervisor.dto.AccountDTO;
 import top.abeille.basic.hypervisor.repository.AccountRepository;
 import top.abeille.basic.hypervisor.service.AccountService;
@@ -33,9 +32,9 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
 
     @Override
     public Mono<AccountVO> create(AccountDTO accountDTO) {
-        AccountInfo info = new AccountInfo();
+        Account info = new Account();
         BeanUtils.copyProperties(accountDTO, info);
-        info.setCode(PrefixEnum.AC + this.generateId());
+        info.setCode(this.generateCode());
         info.setModifyTime(LocalDateTime.now());
         return accountRepository.insert(info).map(this::convertOuter);
     }
@@ -44,7 +43,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     public Mono<AccountVO> modify(String code, AccountDTO accountDTO) {
         Asserts.notBlank(code, "code");
         return accountRepository.findByCodeAndEnabledTrue(code).flatMap(accountVO -> {
-            AccountInfo info = new AccountInfo();
+            Account info = new Account();
             BeanUtils.copyProperties(accountDTO, info);
             info.setModifyTime(LocalDateTime.now());
             return accountRepository.save(info).map(this::convertOuter);
@@ -64,7 +63,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
      * @param info 信息
      * @return 输出转换后的vo对象
      */
-    private AccountVO convertOuter(AccountInfo info) {
+    private AccountVO convertOuter(Account info) {
         AccountVO outer = new AccountVO();
         BeanUtils.copyProperties(info, outer);
         return outer;

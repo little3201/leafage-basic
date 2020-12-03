@@ -1,23 +1,18 @@
-/*
- * Copyright © 2010-2019 Abeille All rights reserved.
- */
-
-package top.abeille.basic.assets.document;
+package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
 /**
- * Model class for ContentInfo
+ * 地址信息
  *
  * @author liwenqiang 2020-10-06 22:09
- */
-@Document(collection = "details_info")
-public class DetailsInfo {
+ **/
+@Document(collection = "address")
+public class Address {
 
     /**
      * 主键
@@ -25,23 +20,29 @@ public class DetailsInfo {
     @Id
     private String id;
     /**
-     * 文章ID
+     * 国家
      */
-    @Field(value = "article_id")
-    @Indexed(unique = true)
-    private String articleId;
+    private String country;
     /**
-     * 原文
+     * 省/直辖市
      */
-    private String original;
+    private String province;
     /**
-     * 内容
+     * 市
      */
-    private String content;
+    private String city;
     /**
-     * 目录
+     * 县/区
      */
-    private String catalog;
+    private String region;
+    /**
+     * 街道
+     */
+    private String street;
+    /**
+     * 地址
+     */
+    private String address;
     /**
      * 是否有效
      */
@@ -64,36 +65,52 @@ public class DetailsInfo {
         this.id = id;
     }
 
-    public String getArticleId() {
-        return articleId;
+    public String getCountry() {
+        return country;
     }
 
-    public void setArticleId(String articleId) {
-        this.articleId = articleId;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getOriginal() {
-        return original;
+    public String getProvince() {
+        return province;
     }
 
-    public void setOriginal(String original) {
-        this.original = original;
+    public void setProvince(String province) {
+        this.province = province;
     }
 
-    public String getContent() {
-        return content;
+    public String getCity() {
+        return city;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getCatalog() {
-        return catalog;
+    public String getRegion() {
+        return region;
     }
 
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public boolean isEnabled() {

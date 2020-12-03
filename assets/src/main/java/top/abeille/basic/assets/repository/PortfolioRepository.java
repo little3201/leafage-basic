@@ -6,7 +6,7 @@ package top.abeille.basic.assets.repository;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.PortfolioInfo;
+import top.abeille.basic.assets.document.Portfolio;
 
 /**
  * 作品集信息repository
@@ -14,7 +14,7 @@ import top.abeille.basic.assets.document.PortfolioInfo;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface PortfolioRepository extends ReactiveMongoRepository<PortfolioInfo, String> {
+public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, String> {
 
     /**
      * 根据code查询enabled信息
@@ -22,5 +22,5 @@ public interface PortfolioRepository extends ReactiveMongoRepository<PortfolioIn
      * @param code 代码
      * @return 作品集信息
      */
-    Mono<PortfolioInfo> findByCodeAndEnabledTrue(String code);
+    Mono<Portfolio> findByCodeAndEnabledTrue(String code);
 }

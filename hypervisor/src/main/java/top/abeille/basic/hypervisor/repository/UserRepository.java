@@ -3,8 +3,10 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.User;
 
@@ -15,6 +17,14 @@ import top.abeille.basic.hypervisor.document.User;
  **/
 @Repository
 public interface UserRepository extends ReactiveMongoRepository<User, String> {
+
+    /**
+     * 分页查询用户
+     *
+     * @param pageable 分页参数
+     * @return 有效用户
+     */
+    Flux<User> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据username/mobile/email查询enabled信息

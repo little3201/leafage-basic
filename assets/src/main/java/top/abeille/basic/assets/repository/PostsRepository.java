@@ -3,15 +3,15 @@
  */
 package top.abeille.basic.assets.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.Posts;
 
-import java.time.LocalDate;
-
 /**
- * 文章信息repository
+ * 帖子信息repository
  *
  * @author liwenqiang 2018/12/20 9:51
  **/
@@ -19,19 +19,18 @@ import java.time.LocalDate;
 public interface PostsRepository extends ReactiveMongoRepository<Posts, String> {
 
     /**
-     * 根据起始和结束日期查询文章数
+     * 分页查询帖子
      *
-     * @param startDate 起始日期
-     * @param deadline  截至日期
-     * @return 有效文章数
+     * @param pageable 分页参数
+     * @return 有效帖子
      */
-    Mono<Long> countByModifyTimeBetween(LocalDate startDate, LocalDate deadline);
+    Flux<Posts> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据code查询enabled信息
      *
      * @param code 代码
-     * @return 文章信息
+     * @return 帖子信息
      */
     Mono<Posts> findByCodeAndEnabledTrue(String code);
 }

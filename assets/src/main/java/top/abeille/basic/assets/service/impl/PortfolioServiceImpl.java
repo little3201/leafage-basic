@@ -5,6 +5,7 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -34,9 +35,9 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     }
 
     @Override
-    public Flux<PortfolioVO> retrieveAll() {
+    public Flux<PortfolioVO> retrieveAll(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return portfolioRepository.findAll(sort).filter(Objects::nonNull).map(this::convertOuter);
+        return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override

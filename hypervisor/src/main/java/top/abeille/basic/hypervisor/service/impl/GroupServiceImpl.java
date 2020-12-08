@@ -5,7 +5,10 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Group;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
@@ -28,6 +31,12 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     public GroupServiceImpl(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
+    }
+
+    @Override
+    public Flux<GroupVO> retrieveAll(int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        return groupRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override

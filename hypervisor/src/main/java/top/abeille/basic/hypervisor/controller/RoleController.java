@@ -34,8 +34,8 @@ public class RoleController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<RoleVO> retrieveUser() {
-        return roleService.retrieveAll();
+    public Flux<RoleVO> retrieveUser(@RequestParam int page, @RequestParam int size) {
+        return roleService.retrieveAll(page, size);
     }
 
     /**

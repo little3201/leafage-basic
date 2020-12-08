@@ -5,6 +5,7 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -33,9 +34,9 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Flux<CategoryVO> retrieveAll() {
+    public Flux<CategoryVO> retrieveAll(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return categoryRepository.findAll(sort).map(this::convertOuter);
+        return categoryRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override

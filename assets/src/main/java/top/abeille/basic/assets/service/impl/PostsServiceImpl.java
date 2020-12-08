@@ -5,6 +5,7 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -38,25 +39,25 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Flux<PostsVO> retrieveAll() {
+    public Flux<PostsVO> retrieveAll(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return postsRepository.findAll(sort).map(this::convertOuter);
+        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
     public Mono<DetailsVO> fetchDetailsByCode(String code) {
         Asserts.notBlank(code, "code");
         return postsRepository.findByCodeAndEnabledTrue(code).flatMap(posts -> {
-            // 将内容设置到vo对像中
-            DetailsVO detailsVO = new DetailsVO();
-            BeanUtils.copyProperties(posts, detailsVO);
-            // 根据业务id获取相关内容
-            return detailsService.fetchByArticleId(posts.getId()).map(contentInfo -> {
-                detailsVO.setOriginal(contentInfo.getOriginal());
-                detailsVO.setContent(contentInfo.getContent());
-                detailsVO.setCatalog(contentInfo.getCatalog());
-                return detailsVO;
-            }).defaultIfEmpty(detailsVO);
+                    // 将内容设置到vo对像中
+                    DetailsVO detailsVO = new DetailsVO();
+                    BeanUtils.copyProperties(posts, detailsVO);
+                    // 根据业务id获取相关内容
+                    return detailsService.fetchByArticleId(posts.getId()).map(contentInfo -> {
+                        detailsVO.setOriginal(contentInfo.getOriginal());
+                        detailsVO.setContent(contentInfo.getContent());
+                        detailsVO.setCatalog(contentInfo.getCatalog());
+                        return detailsVO;
+                    }).defaultIfEmpty(detailsVO);
                 }
         );
     }

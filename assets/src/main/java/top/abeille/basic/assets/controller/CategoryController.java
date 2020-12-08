@@ -34,8 +34,8 @@ public class CategoryController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<CategoryVO> retrieveCategory() {
-        return categoryService.retrieveAll();
+    public Flux<CategoryVO> retrieveCategory(@RequestParam int page, @RequestParam int size) {
+        return categoryService.retrieveAll(page, size);
     }
 
     /**

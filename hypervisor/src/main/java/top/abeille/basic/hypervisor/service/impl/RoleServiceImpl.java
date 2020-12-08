@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -42,9 +43,9 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Flux<RoleVO> retrieveAll() {
+    public Flux<RoleVO> retrieveAll(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return roleRepository.findAll(sort).map(this::convertOuter);
+        return roleRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override

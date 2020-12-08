@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.document;
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -39,7 +40,7 @@ public class Authority {
     /**
      * 类型
      */
-    private String type;
+    private Type type;
     /**
      * 路径
      */
@@ -99,10 +100,10 @@ public class Authority {
     }
 
     public String getType() {
-        return type;
+        return type.val;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -152,5 +153,33 @@ public class Authority {
 
     public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
+    }
+
+    enum Type {
+        /**
+         * 菜单
+         */
+        MENU(0, "menu"),
+        /**
+         * 按钮
+         */
+        BTN(1, "btn"),
+        /**
+         * tab页
+         */
+        TAB(2, "tab"),
+        /**
+         * 接口
+         */
+        @JsonEnumDefaultValue
+        URL(3, "url");
+
+        int code;
+        String val;
+
+        Type(int code, String val) {
+            this.code = code;
+            this.val = val;
+        }
     }
 }

@@ -34,8 +34,8 @@ public class PortfolioController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PortfolioVO> retrieveResource() {
-        return portfolioService.retrieveAll();
+    public Flux<PortfolioVO> retrieveResource(@RequestParam int page, @RequestParam int size) {
+        return portfolioService.retrieveAll(page, size);
     }
 
     /**

@@ -5,6 +5,7 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -34,9 +35,9 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Flux<AuthorityVO> retrieveAll() {
+    public Flux<AuthorityVO> retrieveAll(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return authorityRepository.findAll(sort).map(this::convertOuter);
+        return authorityRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override

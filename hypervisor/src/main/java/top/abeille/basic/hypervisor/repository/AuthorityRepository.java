@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -18,6 +19,14 @@ import java.util.List;
  **/
 @Repository
 public interface AuthorityRepository extends ReactiveMongoRepository<Authority, String> {
+
+    /**
+     * 分页查询权限
+     *
+     * @param pageable 分页参数
+     * @return 有效权限
+     */
+    Flux<Authority> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据code查询enabled信息

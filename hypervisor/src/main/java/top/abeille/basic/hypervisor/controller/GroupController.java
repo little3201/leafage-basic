@@ -34,8 +34,8 @@ public class GroupController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<GroupVO> retrieveGroup() {
-        return groupService.retrieveAll();
+    public Flux<GroupVO> retrieveGroup(@RequestParam int page, @RequestParam int size) {
+        return groupService.retrieveAll(page, size);
     }
 
     /**

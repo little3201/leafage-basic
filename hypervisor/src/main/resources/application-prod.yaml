@@ -12,14 +12,14 @@ spring:
     ##=====consul=====##
     consul:
       host: 127.0.0.1
-      port: 8500
+      port: 0000
 
   ##=====mongodb config=====##
   data:
     mongodb:
       host: 127.0.0.1
-      port: 27017
-      username: mongodb
-      password: mongodb
-      database: abeille
-      authentication-database: abeille
+      port: 123456
+      username: xxxx
+      password: xxxx
+      database: xxxx
+      authentication-database: xxxx

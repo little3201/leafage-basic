@@ -3,7 +3,9 @@
  */
 package top.abeille.basic.assets.controller;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,6 +21,7 @@ import javax.validation.Valid;
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
+@Validated
 @RestController
 @RequestMapping("/posts")
 public class PostsController {
@@ -35,7 +38,7 @@ public class PostsController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PostsVO> retrieveArticle(@RequestParam int page, @RequestParam int size) {
+    public Flux<PostsVO> retrieveArticle(@RequestParam int page, @RequestParam @Range(max = 50) int size) {
         return postsService.retrieveAll(page, size);
     }
 

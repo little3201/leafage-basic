@@ -40,8 +40,8 @@ public class UserControllerTest {
             userRoleRepository, roleService, roleAuthorityRepository, authorityService))).build();
 
     @Test
-    public void loadByUsername() {
-        client.get().uri("/user/details/{username}", "little3201")
+    void fetchDetails() {
+        client.get().uri("/user/{username}", "little3201")
                 .accept(MediaType.APPLICATION_JSON).exchange()
                 .expectBody().jsonPath("authorities").isNotEmpty();
     }

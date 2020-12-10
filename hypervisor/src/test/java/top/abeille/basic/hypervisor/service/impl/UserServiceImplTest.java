@@ -33,7 +33,7 @@ public class UserServiceImplTest {
      * 测试新增用户信息
      */
     @Test
-    public void create() {
+    void create() {
         userService.create(Mockito.mock(UserDTO.class));
         Mockito.verify(userRepository, Mockito.atLeastOnce()).save(Mockito.any());
     }
@@ -42,7 +42,7 @@ public class UserServiceImplTest {
      * 测试新增用户信息
      */
     @Test
-    public void createError() {
+    void createError() {
         Mockito.when(userRepository.save(Mockito.mock(User.class))).thenThrow(new RuntimeException());
         userService.create(Mockito.mock(UserDTO.class));
         Mockito.verify(userRepository, Mockito.never()).save(Mockito.any());
@@ -52,7 +52,7 @@ public class UserServiceImplTest {
      * 测试查询用户信息, 正常返回数据
      */
     @Test
-    public void fetchDetails() {
+    void fetchDetails() {
         String username = Mockito.anyString();
         Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .thenReturn(Mockito.any());
@@ -64,7 +64,7 @@ public class UserServiceImplTest {
      * 测试查询用户信息, 返回空数据
      */
     @Test
-    public void fetchDetailsEmpty() {
+    void fetchDetailsEmpty() {
         String username = Mockito.anyString();
         Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .thenReturn(Mono.empty());

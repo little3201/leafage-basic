@@ -27,7 +27,7 @@ public class AccountServiceImplTest {
     private AccountServiceImpl accountInfoService;
 
     @Test
-    public void getById() {
+    void getById() {
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setType("applePay");
         accountInfoService.create(accountDTO);

@@ -9,8 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Example;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.User;
 import top.abeille.basic.hypervisor.dto.UserDTO;
@@ -32,45 +30,45 @@ public class UserServiceImplTest {
     private UserServiceImpl userService;
 
     /**
-     * 测试修改用户信息
-     * 如果使用jpa的getOne(),必须加@Transactional，否则会曝出 hibernate lazyXXXXX - no session
+     * 测试新增用户信息
      */
     @Test
-    public void save() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setNickname("管理员");
-        String password = new BCryptPasswordEncoder().encode("123456");
-        userService.create(userDTO);
+    public void create() {
+        userService.create(Mockito.mock(UserDTO.class));
         Mockito.verify(userRepository, Mockito.atLeastOnce()).save(Mockito.any());
     }
 
     /**
-     * 测试根据业务ID查询用户信息, 正常返回数据
+     * 测试新增用户信息
      */
     @Test
-    public void fetchByUsername_returnObject() {
-        String username = "little3201";
-        Mockito.when(userRepository.findOne(Example.of(Mockito.any(User.class)))).thenReturn(Mockito.any());
-        Mono<UserDetailsVO> userVOMono = userService.fetchDetails(username);
-        Assertions.assertNotNull(userVOMono.map(UserDetailsVO::getAuthorities).subscribe());
+    public void createError() {
+        Mockito.when(userRepository.save(Mockito.mock(User.class))).thenThrow(new RuntimeException());
+        userService.create(Mockito.mock(UserDTO.class));
+        Mockito.verify(userRepository, Mockito.never()).save(Mockito.any());
     }
 
     /**
-     * 测试根据业务ID查询用户信息, 返回空数据
+     * 测试查询用户信息, 正常返回数据
      */
     @Test
-    public void fetchByUsername_returnEmpty() {
-        String username = "little3201";
-        Mockito.when(userRepository.findOne(Example.of(Mockito.any(User.class)))).thenReturn(Mockito.isNull());
-        Mono<UserDetailsVO> userVOMono = userService.fetchDetails(username);
-        Assertions.assertNull(userVOMono.map(UserDetailsVO::getAuthorities).block());
+    public void fetchDetails() {
+        String username = Mockito.anyString();
+        Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
+                .thenReturn(Mockito.any());
+        Mono<UserDetailsVO> detailsMono = userService.fetchDetails(username);
+        Assertions.assertNotNull(detailsMono);
     }
 
+    /**
+     * 测试查询用户信息, 返回空数据
+     */
     @Test
-    public void fetchDetails() {
-        String username = "little3201";
-        Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)).thenReturn(Mockito.any());
+    public void fetchDetailsEmpty() {
+        String username = Mockito.anyString();
+        Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
+                .thenReturn(Mono.empty());
         Mono<UserDetailsVO> detailsMono = userService.fetchDetails(username);
-        Assertions.assertNotNull(detailsMono.map(UserDetailsVO::getAuthorities).subscribe());
+        Assertions.assertNull(detailsMono);
     }
 }

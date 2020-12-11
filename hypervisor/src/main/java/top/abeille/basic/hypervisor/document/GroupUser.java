@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2019/9/16 10:09
  **/
-@Document(collection = "user_group")
+@Document(collection = "group_user")
 public class GroupUser {
 
     /**

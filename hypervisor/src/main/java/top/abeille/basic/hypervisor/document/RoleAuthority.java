@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -47,6 +48,7 @@ public class RoleAuthority {
      * 修改时间
      */
     @Field(value = "modify_time")
+    @LastModifiedDate
     private LocalDateTime modifyTime;
 
     public String getId() {

@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.document;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -60,21 +61,22 @@ public class User {
     /**
      * 账户是否有效
      */
-    @Field(name = "account_non_expired")
+    @Field(name = "is_account_non_expired")
     private boolean accountNonExpired = true;
     /**
      * 是否锁定
      */
-    @Field(name = "account_non_locked")
+    @Field(name = "is_account_non_locked")
     private boolean accountNonLocked = true;
     /**
      * 认证是否有效
      */
-    @Field(name = "credentials_non_expired")
+    @Field(name = "is_credentials_non_expired")
     private boolean credentialsNonExpired = true;
     /**
      * 是否有效
      */
+    @Field(value = "is_enabled")
     private boolean enabled = true;
     /**
      * 修改人
@@ -84,6 +86,7 @@ public class User {
      * 修改时间
      */
     @Field(value = "modify_time")
+    @LastModifiedDate
     private LocalDateTime modifyTime;
 
     public String getId() {

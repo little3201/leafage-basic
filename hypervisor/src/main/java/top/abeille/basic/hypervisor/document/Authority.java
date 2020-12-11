@@ -5,6 +5,7 @@ package top.abeille.basic.hypervisor.document;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -56,6 +57,7 @@ public class Authority {
     /**
      * 是否有效
      */
+    @Field(value = "is_enabled")
     private boolean enabled = true;
     /**
      * 修改人
@@ -65,6 +67,7 @@ public class Authority {
      * 修改时间
      */
     @Field(value = "modify_time")
+    @LastModifiedDate
     private LocalDateTime modifyTime;
 
     public String getId() {

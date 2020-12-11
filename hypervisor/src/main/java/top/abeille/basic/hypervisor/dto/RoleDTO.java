@@ -5,6 +5,7 @@ package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -27,7 +28,7 @@ public class RoleDTO implements Serializable {
     /**
      * 资源列表
      */
-    private Set<RoleAuthorityDTO> sources;
+    private Set<RoleAuthorityDTO> sources = Collections.emptySet();
 
     public String getName() {
         return name;

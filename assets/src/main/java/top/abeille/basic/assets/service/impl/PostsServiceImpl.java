@@ -20,8 +20,6 @@ import top.abeille.basic.assets.vo.DetailsVO;
 import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
-
 /**
  * 文章信息service实现
  *
@@ -68,7 +66,6 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         BeanUtils.copyProperties(postsDTO, info);
         info.setCode(this.generateCode());
         info.setEnabled(true);
-        info.setModifyTime(LocalDateTime.now());
         return postsRepository.insert(info).doOnSuccess(posts -> {
             // 添加内容信息
             Details details = new Details();
@@ -85,7 +82,6 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return postsRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             // 将信息复制到info
             BeanUtils.copyProperties(postsDTO, info);
-            info.setModifyTime(LocalDateTime.now());
             return postsRepository.save(info).doOnSuccess(posts ->
                     // 更新成功后，将内容信息更新
                     detailsService.fetchByArticleId(posts.getId()).doOnNext(detailsInfo -> {

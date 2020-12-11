@@ -102,7 +102,6 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     private RoleAuthority initRoleSource(String roleId, String modifier, RoleAuthorityDTO roleAuthorityDTO) {
         RoleAuthority roleAuthority = new RoleAuthority();
         roleAuthority.setRoleId(roleId);
-        roleAuthority.setModifier(modifier);
         authorityService.findByCodeAndEnabledTrue(roleAuthorityDTO.getSourceCode()).doOnNext(resourceInfo -> {
             roleAuthority.setResourceId(resourceInfo.getId());
             roleAuthority.setHasWrite(roleAuthorityDTO.getHasWrite());

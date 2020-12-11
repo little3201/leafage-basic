@@ -12,8 +12,6 @@ import top.abeille.basic.assets.document.Details;
 import top.abeille.basic.assets.repository.DetailsRepository;
 import top.abeille.basic.assets.service.DetailsService;
 
-import java.time.LocalDateTime;
-
 /**
  * 内容service接口实现
  *
@@ -30,8 +28,6 @@ public class DetailsServiceImpl implements DetailsService {
 
     @Override
     public Mono<Details> create(Details details) {
-        details.setEnabled(true);
-        details.setModifyTime(LocalDateTime.now());
         return detailsRepository.insert(details);
     }
 
@@ -40,7 +36,6 @@ public class DetailsServiceImpl implements DetailsService {
         Asserts.notBlank(articleId, "articleId");
         return this.fetchByArticleId(articleId).flatMap(details -> {
             BeanUtils.copyProperties(detailsInfo, details);
-            details.setModifyTime(LocalDateTime.now());
             return detailsRepository.save(details);
         });
     }

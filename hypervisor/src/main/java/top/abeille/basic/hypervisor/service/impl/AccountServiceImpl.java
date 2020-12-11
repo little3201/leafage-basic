@@ -14,8 +14,6 @@ import top.abeille.basic.hypervisor.service.AccountService;
 import top.abeille.basic.hypervisor.vo.AccountVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
-
 /**
  * 账户信息Service实现
  *
@@ -35,7 +33,6 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
         Account info = new Account();
         BeanUtils.copyProperties(accountDTO, info);
         info.setCode(this.generateCode());
-        info.setModifyTime(LocalDateTime.now());
         return accountRepository.insert(info).map(this::convertOuter);
     }
 
@@ -45,7 +42,6 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
         return accountRepository.findByCodeAndEnabledTrue(code).flatMap(accountVO -> {
             Account info = new Account();
             BeanUtils.copyProperties(accountDTO, info);
-            info.setModifyTime(LocalDateTime.now());
             return accountRepository.save(info).map(this::convertOuter);
         });
     }

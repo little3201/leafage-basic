@@ -17,7 +17,6 @@ import top.abeille.basic.assets.service.PortfolioService;
 import top.abeille.basic.assets.vo.PortfolioVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -45,8 +44,6 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
         Portfolio info = new Portfolio();
         BeanUtils.copyProperties(portfolioDTO, info);
         info.setCode(this.generateCode());
-        info.setEnabled(true);
-        info.setModifyTime(LocalDateTime.now());
         return portfolioRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
@@ -55,7 +52,6 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
         Asserts.notBlank(code, "code");
         return portfolioRepository.findByCodeAndEnabledTrue(code).flatMap(portfolio -> {
             BeanUtils.copyProperties(portfolioDTO, portfolio);
-            portfolio.setModifyTime(LocalDateTime.now());
             return portfolioRepository.save(portfolio).filter(Objects::nonNull).map(this::convertOuter);
         });
     }

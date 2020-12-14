@@ -30,7 +30,6 @@ import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -73,7 +72,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         BeanUtils.copyProperties(userDTO, info);
         info.setUsername(info.getEmail().substring(0, info.getEmail().indexOf("@")));
         info.setPassword(new BCryptPasswordEncoder().encode("110119"));
-        info.setModifyTime(LocalDateTime.now());
         return userRepository.insert(info).doOnNext(user -> {
             log.info("User :{} created.", user.getUsername());
             if (!CollectionUtils.isEmpty(userDTO.getRoles())) {
@@ -89,7 +87,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         Asserts.notBlank(username, "username");
         return this.fetchInfo(username).flatMap(info -> {
             BeanUtils.copyProperties(userDTO, info);
-            info.setModifyTime(LocalDateTime.now());
             return userRepository.save(info).doOnNext(user -> {
                 List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
                         this.initUserRole(user.getId(), role)).collect(Collectors.toList());
@@ -175,7 +172,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         UserRole userRole = new UserRole();
         userRole.setUserId(userId);
         userRole.setModifier(userId);
-        userRole.setModifyTime(LocalDateTime.now());
         roleService.findByCodeAndEnabledTrue(roleCode).doOnNext(roleInfo -> userRole.setRoleId(roleInfo.getId())).subscribe();
         return userRole;
     }

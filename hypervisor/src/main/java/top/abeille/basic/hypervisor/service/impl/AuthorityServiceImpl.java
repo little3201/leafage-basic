@@ -17,7 +17,6 @@ import top.abeille.basic.hypervisor.service.AuthorityService;
 import top.abeille.basic.hypervisor.vo.AuthorityVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -51,7 +50,6 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Authority info = new Authority();
         BeanUtils.copyProperties(authorityDTO, info);
         info.setCode(this.generateCode());
-        info.setModifyTime(LocalDateTime.now());
         return authorityRepository.insert(info).map(this::convertOuter);
     }
 
@@ -60,7 +58,6 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Asserts.notBlank(code, "code");
         return this.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(authorityDTO, info);
-            info.setModifyTime(LocalDateTime.now());
             return authorityRepository.save(info);
         }).map(this::convertOuter);
     }

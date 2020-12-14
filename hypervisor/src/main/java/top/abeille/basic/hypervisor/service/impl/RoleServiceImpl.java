@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Role;
@@ -20,7 +21,6 @@ import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,11 +58,12 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Role info = new Role();
         BeanUtils.copyProperties(roleDTO, info);
         info.setCode(this.generateCode());
-        info.setModifyTime(LocalDateTime.now());
         return roleRepository.insert(info).doOnNext(role -> {
             List<RoleAuthority> userRoleList = roleDTO.getSources().stream().map(source ->
                     this.initRoleSource(role.getId(), role.getModifier(), source)).collect(Collectors.toList());
-            roleAuthorityRepository.saveAll(userRoleList).subscribe();
+            if (!CollectionUtils.isEmpty(userRoleList)) {
+                roleAuthorityRepository.saveAll(userRoleList).subscribe();
+            }
         }).map(this::convertOuter);
     }
 
@@ -70,7 +71,6 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
         return roleRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(roleDTO, info);
-            info.setModifyTime(LocalDateTime.now());
             return roleRepository.save(info).doOnNext(role -> {
                 List<RoleAuthority> userRoleList = roleDTO.getSources().stream().map(source ->
                         this.initRoleSource(role.getId(), role.getModifier(), source)).collect(Collectors.toList());
@@ -102,8 +102,6 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     private RoleAuthority initRoleSource(String roleId, String modifier, RoleAuthorityDTO roleAuthorityDTO) {
         RoleAuthority roleAuthority = new RoleAuthority();
         roleAuthority.setRoleId(roleId);
-        roleAuthority.setModifier(modifier);
-        roleAuthority.setModifyTime(LocalDateTime.now());
         authorityService.findByCodeAndEnabledTrue(roleAuthorityDTO.getSourceCode()).doOnNext(resourceInfo -> {
             roleAuthority.setResourceId(resourceInfo.getId());
             roleAuthority.setHasWrite(roleAuthorityDTO.getHasWrite());

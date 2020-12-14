@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.document;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -43,6 +44,7 @@ public class Portfolio {
     /**
      * 是否有效
      */
+    @Field(value = "is_enabled")
     private boolean enabled;
     /**
      * 修改人
@@ -52,6 +54,7 @@ public class Portfolio {
      * 修改时间
      */
     @Field(value = "modify_time")
+    @LastModifiedDate
     private LocalDateTime modifyTime;
 
     public String getId() {

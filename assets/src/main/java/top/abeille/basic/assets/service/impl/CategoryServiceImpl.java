@@ -17,8 +17,6 @@ import top.abeille.basic.assets.service.CategoryService;
 import top.abeille.basic.assets.vo.CategoryVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
-
 /**
  * 话题信息service实现
  *
@@ -52,7 +50,6 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Category info = new Category();
         BeanUtils.copyProperties(categoryDTO, info);
         info.setCode(this.generateCode());
-        info.setModifyTime(LocalDateTime.now());
         return categoryRepository.insert(info).map(this::convertOuter);
     }
 
@@ -61,7 +58,6 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Asserts.notBlank(code, "code");
         return categoryRepository.findByCodeAndEnabledTrue(code).flatMap(category -> {
             BeanUtils.copyProperties(categoryDTO, category);
-            category.setModifyTime(LocalDateTime.now());
             return categoryRepository.save(category).map(this::convertOuter);
         });
     }

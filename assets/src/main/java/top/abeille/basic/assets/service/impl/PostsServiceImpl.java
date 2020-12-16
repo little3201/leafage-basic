@@ -9,9 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.abeille.basic.assets.document.Content;
 import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.entity.Posts;
+import top.abeille.basic.assets.entity.PostsContent;
 import top.abeille.basic.assets.repository.ContentRepository;
 import top.abeille.basic.assets.repository.PostsRepository;
 import top.abeille.basic.assets.service.PostsService;
@@ -19,7 +19,7 @@ import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 /**
- * 文章信息service实现
+ * 帖子信息service实现
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -48,9 +48,9 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
             return null;
         }
         PostsVO postsVO = this.convertOuter(posts);
-        Content content = contentRepository.findByPostsIdAndEnabledTrue(posts.getId());
-        if (content != null) {
-            postsVO.setContent(content.getContent());
+        PostsContent postsContent = contentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        if (postsContent != null) {
+            postsVO.setContent(postsContent.getContent());
         }
         return postsVO;
     }
@@ -66,13 +66,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
             return null;
         }
         //保存文章内容
-        Content content = contentRepository.findByPostsIdAndEnabledTrue(posts.getId());
-        if (content == null) {
-            content = new Content();
+        PostsContent postsContent = contentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        if (postsContent == null) {
+            postsContent = new PostsContent();
         }
-        content.setTitle(postsDTO.getTitle());
-        content.setContent(postsDTO.getContent());
-        contentRepository.save(content);
+        postsContent.setContent(postsDTO.getContent());
+        contentRepository.save(postsContent);
         //转换结果
         PostsVO postsVO = this.convertOuter(posts);
         postsVO.setContent(postsDTO.getContent());

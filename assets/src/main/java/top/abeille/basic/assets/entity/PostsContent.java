@@ -1,19 +1,22 @@
 /*
  * Copyright © 2010-2019 Everyday Chain. All rights reserved.
  */
-package top.abeille.basic.assets.document;
+package top.abeille.basic.assets.entity;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * document for ArticleInfo
  *
  * @author liwenqiang
  */
-@Document(collection = "article")
-public class Content {
+@Entity
+@Table(name = "posts_content")
+public class PostsContent {
 
     /**
      * 主键
@@ -23,17 +26,12 @@ public class Content {
     /**
      * 文章ID
      */
-    @Indexed
+    @Column(name = "posts_id")
     private Long postsId;
-    /**
-     * 标题
-     */
-    @Indexed
-    private String title;
     /**
      * 目录
      */
-    private String category;
+    private String catalog;
     /**
      * 内容
      */
@@ -41,7 +39,7 @@ public class Content {
     /**
      * 源文本——记录富文本或markdown原文
      */
-    private String sourceText;
+    private String original;
 
     public String getId() {
         return id;
@@ -59,20 +57,20 @@ public class Content {
         this.postsId = postsId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getCatalog() {
+        return catalog;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
     }
 
-    public String getCategory() {
-        return category;
+    public String getOriginal() {
+        return original;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setOriginal(String original) {
+        this.original = original;
     }
 
     public String getContent() {
@@ -83,11 +81,4 @@ public class Content {
         this.content = content;
     }
 
-    public String getSourceText() {
-        return sourceText;
-    }
-
-    public void setSourceText(String sourceText) {
-        this.sourceText = sourceText;
-    }
 }

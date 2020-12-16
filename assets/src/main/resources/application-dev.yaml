@@ -42,15 +42,6 @@ spring:
 
   # server jpa run thread config, hibernate will run with another thread
   data:
-    #    jpa:
-    #      repositories:
-    #        bootstrap-mode: deferred
-
-    ##=====mongodb config=====##
-    mongodb:
-      host: 47.105.216.65
-      port: 27017
-      username: mongodbAssets
-      password: mongodbAssets001@@
-      database: abeille_assets
-      authentication-database: abeille_assets
+    jpa:
+      repositories:
+        bootstrap-mode: deferred

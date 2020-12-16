@@ -9,7 +9,7 @@ import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.BasicService;
 
 /**
- * 文章信息Service
+ * 帖子信息Service
  *
  * @author liwenqiang 2018/12/17 19:26
  **/

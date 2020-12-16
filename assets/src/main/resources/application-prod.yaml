@@ -17,24 +17,14 @@ spring:
 
   ##=====datasource common=====##
   datasource:
-    master:
-      # datasource driver
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC8
-      # datasource username
-      username: abeille
-      # datasource password
-      password: abeille.top@123
-    slaver:
-      # datasource driver
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      # datasource connection path
-      jdbcUrl: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
-      # datasource username
-      username: abeille
-      # datasource password
-      password: abeille.top@123
+    # datasource driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # datasource connection path
+    url: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC8
+    # datasource username
+    username: abeille
+    # datasource password
+    password: abeille.top@123
 
   ##=====Jpa config=====##
   jpa:

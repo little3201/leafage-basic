@@ -16,14 +16,14 @@ import java.util.List;
  *
  * @author liwenqiang 2019/9/14 21:46
  **/
-public class PostsControllerTest extends AbstractControllerMock<ArticleInfoController> {
+public class PostsControllerTest extends AbstractControllerMock<PostsController> {
 
     @Mock
     private PostsServiceImpl articleInfoService;
 
     @Override
-    protected ArticleInfoController getController() {
-        return new ArticleInfoController(articleInfoService);
+    protected PostsController getController() {
+        return new PostsController(articleInfoService);
     }
 
     @Test

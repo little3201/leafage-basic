@@ -23,13 +23,13 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/posts")
-public class ArticleInfoController {
+public class PostsController {
 
-    private final Logger logger = LoggerFactory.getLogger(ArticleInfoController.class);
+    private final Logger logger = LoggerFactory.getLogger(PostsController.class);
 
     private final PostsService postsService;
 
-    public ArticleInfoController(PostsService postsService) {
+    public PostsController(PostsService postsService) {
         this.postsService = postsService;
     }
 

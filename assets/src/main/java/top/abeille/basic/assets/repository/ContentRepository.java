@@ -3,17 +3,17 @@
  */
 package top.abeille.basic.assets.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.assets.document.Content;
+import top.abeille.basic.assets.entity.PostsContent;
 
 /**
- * 文章内容信息dao
+ * 内容信息dao
  *
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface ContentRepository extends MongoRepository<Content, String> {
+public interface ContentRepository extends JpaRepository<PostsContent, String> {
 
-    Content findByPostsIdAndEnabledTrue(Long postsId);
+    PostsContent findByPostsIdAndEnabledTrue(Long postsId);
 }

@@ -11,10 +11,7 @@ import java.time.LocalDateTime;
 public class UserVO implements Serializable {
 
     private static final long serialVersionUID = -43247624019806041L;
-    /**
-     * 业务ID
-     */
-    private String businessId;
+
     /**
      * 昵称
      */
@@ -47,14 +44,6 @@ public class UserVO implements Serializable {
      * 修改时间
      */
     private LocalDateTime modifyTime;
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
-    }
 
     public String getNickname() {
         return nickname;

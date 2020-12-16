@@ -5,7 +5,7 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.hypervisor.entity.UserGroup;
+import top.abeille.basic.hypervisor.entity.GroupUser;
 
 /**
  * 用户组repository
@@ -13,6 +13,6 @@ import top.abeille.basic.hypervisor.entity.UserGroup;
  * @author liwenqiang 2018/12/17 19:37
  **/
 @Repository
-public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
+public interface GroupUserRepository extends JpaRepository<GroupUser, Long> {
 
 }

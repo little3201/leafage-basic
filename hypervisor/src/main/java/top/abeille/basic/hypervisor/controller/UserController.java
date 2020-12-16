@@ -3,8 +3,9 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserVO;
-import top.abeille.common.basic.AbstractController;
 
 import javax.validation.Valid;
 import java.util.Objects;
@@ -26,25 +26,26 @@ import java.util.Objects;
  **/
 @RestController
 @RequestMapping("/user")
-public class UserInfoController extends AbstractController {
+public class UserController {
+
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
 
-    public UserInfoController(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     /**
-     * 分页查询翻译信息
+     * 分页查询
      *
-     * @param pageNum  当前页
-     * @param pageSize 页内数据量
+     * @param page 页码
+     * @param size 大小
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回204
      */
     @GetMapping
-    public ResponseEntity<Object> retrieveUser(Integer pageNum, Integer pageSize) {
-        Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<UserVO> users = userService.retrieveByPage(pageable);
+    public ResponseEntity<Object> retrieve(int page, int size) {
+        Page<UserVO> users = userService.retrieves(page, size);
         if (CollectionUtils.isEmpty(users.getContent())) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.noContent().build();
@@ -53,29 +54,29 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 查询信息
+     * 查询信息
      *
-     * @param businessId 业务id
+     * @param username 账户
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/{businessId}")
-    public ResponseEntity<Object> fetchUser(@PathVariable String businessId) {
-        UserVO userVO = userService.fetchByBusinessId(businessId);
+    @GetMapping("/{username}")
+    public ResponseEntity<Object> fetch(@PathVariable String username) {
+        UserVO userVO = userService.fetch(username);
         if (Objects.isNull(userVO)) {
-            logger.info("Not found anything about hypervisor with userId: {}.", businessId);
+            logger.info("Not found anything with username: {}.", username);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(userVO);
     }
 
     /**
-     * 根据传入的数据添加信息
+     * 添加信息
      *
      * @param userDTO 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Object> createUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<Object> create(@RequestBody @Valid UserDTO userDTO) {
         try {
             userService.create(userDTO);
         } catch (Exception e) {
@@ -86,16 +87,16 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 和要修改的数据，修改信息
+     * 修改信息
      *
-     * @param businessId 业务id
-     * @param userDTO    要修改的数据
+     * @param username 账户
+     * @param userDTO  要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{businessId}")
-    public ResponseEntity<Object> modifyUser(@PathVariable String businessId, @RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<Object> modify(@PathVariable String username, @RequestBody @Valid UserDTO userDTO) {
         try {
-            userService.modify(businessId, userDTO);
+            userService.modify(username, userDTO);
         } catch (Exception e) {
             logger.error("Modify user occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
@@ -104,15 +105,15 @@ public class UserInfoController extends AbstractController {
     }
 
     /**
-     * 根据传入的业务id: businessId 删除信息
+     * 删除信息
      *
-     * @param businessId 业务id
+     * @param username 账户
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
-    @DeleteMapping("/{businessId}")
-    public ResponseEntity<Object> removeUser(@PathVariable String businessId) {
+    @DeleteMapping("/{username}")
+    public ResponseEntity<Object> remove(@PathVariable String username) {
         try {
-            userService.removeById(businessId);
+            userService.remove(username);
         } catch (Exception e) {
             logger.error("Remove user occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

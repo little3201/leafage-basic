@@ -3,8 +3,9 @@
  */
 package top.abeille.basic.hypervisor.entity;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Model class for UserInfo
@@ -12,49 +13,36 @@ import java.time.LocalDateTime;
  * @author liwenqiang
  */
 @Entity
-@Table(name = "user_info")
-public class UserInfo {
+@Table(name = "user")
+public class User extends BaseEntity {
 
     /**
-     * 主键
+     * 账户
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    /**
-     * 业务ID
-     */
-    @Column(name = "business_id")
-    private String businessId;
+    private String username;
     /**
      * 昵称
      */
-    @Column(name = "nickname")
     private String nickname;
     /**
      * 头像
      */
-    @Column(name = "avatar")
     private String avatar;
     /**
      * 密码
      */
-    @Column(name = "password")
     private String password;
     /**
      * 电话
      */
-    @Column(name = "mobile")
-    private String mobile;
+    private String phone;
     /**
      * 邮箱
      */
-    @Column(name = "email")
     private String email;
     /**
      * 地址
      */
-    @Column(name = "address")
     private String address;
     /**
      * 是否无效
@@ -71,36 +59,14 @@ public class UserInfo {
      */
     @Column(name = "is_credentials_non_expired")
     private Boolean credentialsNonExpired;
-    /**
-     * 是否可用
-     */
-    @Column(name = "is_enabled")
-    private Boolean enabled;
-    /**
-     * 修改人
-     */
-    @Column(name = "modifier")
-    private Long modifier;
-    /**
-     * 修改时间
-     */
-    @Column(name = "modify_time")
-    private LocalDateTime modifyTime;
 
-    public Long getId() {
-        return id;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBusinessId() {
-        return businessId;
-    }
-
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getNickname() {
@@ -127,12 +93,12 @@ public class UserInfo {
         this.password = password;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -175,27 +141,4 @@ public class UserInfo {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public Long getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

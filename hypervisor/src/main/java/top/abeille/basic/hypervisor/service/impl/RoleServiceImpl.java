@@ -4,12 +4,14 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
-import top.abeille.basic.hypervisor.entity.RoleInfo;
+import top.abeille.basic.hypervisor.entity.Role;
 import top.abeille.basic.hypervisor.repository.RoleRepository;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
@@ -17,10 +19,6 @@ import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
 /**
  * 角色信息service 实现
@@ -37,11 +35,9 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Page<RoleVO> retrieveByPage(Pageable pageable) {
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("is_enabled", exact());
-        RoleInfo roleInfo = new RoleInfo();
-        roleInfo.setEnabled(true);
-        Page<RoleInfo> infoPage = roleRepository.findAll(Example.of(roleInfo, matcher), pageable);
+    public Page<RoleVO> retrieves(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Role> infoPage = roleRepository.findAll(pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
@@ -49,49 +45,25 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public RoleVO fetchByBusinessId(String businessId) {
-        RoleInfo roleInfo = new RoleInfo();
-        roleInfo.setBusinessId(businessId);
-        Optional<RoleInfo> optional = roleRepository.findOne(Example.of(roleInfo));
-        if (optional.isEmpty()) {
-            return null;
-        }
-        return this.convertOuter(roleInfo);
+    public RoleVO fetch(String code) {
+        Role role = roleRepository.findByCodeAndEnabledTrue(code);
+        return this.convertOuter(role);
     }
 
     @Override
-    public void removeById(String businessId) {
-        Optional<RoleInfo> optional = this.fetchInfo(businessId);
-        if (optional.isPresent()) {
-            RoleInfo info = optional.get();
-            roleRepository.deleteById(info.getId());
-        }
-    }
-
-    @Override
-    public void removeInBatch(List<RoleDTO> entities) {
+    public void remove(String code) {
+        Role role = roleRepository.findByCodeAndEnabledTrue(code);
+        roleRepository.deleteById(role.getId());
     }
 
     @Override
     public RoleVO create(RoleDTO roleDTO) {
-        RoleInfo info = new RoleInfo();
+        Role info = new Role();
         BeanUtils.copyProperties(roleDTO, info);
-        info.setBusinessId(PrefixEnum.RO + this.generateId());
+        info.setCode(this.generateCode());
         info.setModifyTime(LocalDateTime.now());
-        RoleInfo roleInfo = roleRepository.save(info);
-        return this.convertOuter(roleInfo);
-    }
-
-    /**
-     * 根据业务ID查信息
-     *
-     * @param businessId 业务ID
-     * @return 数据库对象信息
-     */
-    private Optional<RoleInfo> fetchInfo(String businessId) {
-        RoleInfo roleInfo = new RoleInfo();
-        roleInfo.setBusinessId(businessId);
-        return roleRepository.findOne(Example.of(roleInfo));
+        Role role = roleRepository.save(info);
+        return this.convertOuter(role);
     }
 
     /**
@@ -100,14 +72,14 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      * @param info 基础对象
      * @return 结果对象
      */
-    private RoleVO convertOuter(RoleInfo info) {
+    private RoleVO convertOuter(Role info) {
         RoleVO roleVO = new RoleVO();
         BeanUtils.copyProperties(info, roleVO);
         return roleVO;
     }
 
     @Override
-    public RoleInfo findById(long id) {
-        return null;
+    public Role findById(long id) {
+        return roleRepository.findById(id).orElse(null);
     }
 }

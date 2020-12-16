@@ -4,12 +4,14 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import top.abeille.basic.hypervisor.constant.PrefixEnum;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
-import top.abeille.basic.hypervisor.entity.GroupInfo;
+import top.abeille.basic.hypervisor.entity.Group;
 import top.abeille.basic.hypervisor.repository.GroupRepository;
 import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
@@ -17,10 +19,6 @@ import top.abeille.common.basic.AbstractBasicService;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
 
 /**
  * 组织信息Service实现
@@ -37,11 +35,9 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
-    public Page<GroupVO> retrieveByPage(Pageable pageable) {
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("is_enabled", exact());
-        GroupInfo groupInfo = new GroupInfo();
-        groupInfo.setEnabled(true);
-        Page<GroupInfo> infoPage = groupRepository.findAll(Example.of(groupInfo, matcher), pageable);
+    public Page<GroupVO> retrieves(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Group> infoPage = groupRepository.findAll(pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }
@@ -50,37 +46,18 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public GroupVO create(GroupDTO groupDTO) {
-        GroupInfo info = new GroupInfo();
+        Group info = new Group();
         BeanUtils.copyProperties(groupDTO, info);
-        info.setBusinessId(PrefixEnum.GP + this.generateId());
+        info.setCode(this.generateCode());
         info.setModifyTime(LocalDateTime.now());
-        GroupInfo groupInfo = groupRepository.save(info);
-        return this.convertOuter(groupInfo);
+        Group group = groupRepository.save(info);
+        return this.convertOuter(group);
     }
 
     @Override
-    public void removeById(String businessId) {
-        Optional<GroupInfo> optional = this.fetchInfo(businessId);
-        if (optional.isPresent()) {
-            GroupInfo info = optional.get();
-            groupRepository.deleteById(info.getId());
-        }
-    }
-
-    @Override
-    public void removeInBatch(List<GroupDTO> entities) {
-    }
-
-    /**
-     * 根据业务ID查信息
-     *
-     * @param businessId 业务ID
-     * @return 数据库对象信息
-     */
-    private Optional<GroupInfo> fetchInfo(String businessId) {
-        GroupInfo groupInfo = new GroupInfo();
-        groupInfo.setBusinessId(businessId);
-        return groupRepository.findOne(Example.of(groupInfo));
+    public void remove(String code) {
+        Group group = groupRepository.findByCodeAndEnabledTrue(code);
+        groupRepository.deleteById(group.getId());
     }
 
     /**
@@ -89,7 +66,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
      * @param info 基础对象
      * @return 结果对象
      */
-    private GroupVO convertOuter(GroupInfo info) {
+    private GroupVO convertOuter(Group info) {
         GroupVO groupVO = new GroupVO();
         BeanUtils.copyProperties(info, groupVO);
         return groupVO;

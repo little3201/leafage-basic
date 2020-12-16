@@ -3,8 +3,9 @@
  */
 package top.abeille.basic.hypervisor.service;
 
+import org.springframework.data.domain.Page;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
-import top.abeille.basic.hypervisor.entity.RoleInfo;
+import top.abeille.basic.hypervisor.entity.Role;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.BasicService;
 
@@ -15,5 +16,7 @@ import top.abeille.common.basic.BasicService;
  **/
 public interface RoleService extends BasicService<RoleDTO, RoleVO> {
 
-    RoleInfo findById(long id);
+    Page<RoleVO> retrieves(int page, int size);
+
+    Role findById(long id);
 }

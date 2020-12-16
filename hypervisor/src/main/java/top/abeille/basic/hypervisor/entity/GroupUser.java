@@ -13,8 +13,8 @@ import javax.persistence.Table;
  * @author liwenqiang
  */
 @Entity
-@Table(name = "user_role")
-public class UserRole extends BaseEntity {
+@Table(name = "group_user")
+public class GroupUser extends BaseEntity {
 
     /**
      * 用户主键
@@ -24,8 +24,8 @@ public class UserRole extends BaseEntity {
     /**
      * 组主键
      */
-    @Column(name = "role_id")
-    private Long roleId;
+    @Column(name = "group_id")
+    private Long groupId;
 
 
     public Long getUserId() {
@@ -36,12 +36,12 @@ public class UserRole extends BaseEntity {
         this.userId = userId;
     }
 
-    public Long getRoleId() {
-        return roleId;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
 }

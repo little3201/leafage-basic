@@ -3,14 +3,14 @@
  */
 package top.abeille.basic.assets.service;
 
-import top.abeille.basic.assets.dto.ArticleDTO;
-import top.abeille.basic.assets.vo.ArticleVO;
+import top.abeille.basic.assets.dto.AccountDTO;
+import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.BasicService;
 
 /**
- * 文章信息Service
+ * 账户信息Service
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface ArticleInfoService extends BasicService<ArticleDTO, ArticleVO> {
+public interface AccountService extends BasicService<AccountDTO, AccountVO> {
 }

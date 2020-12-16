@@ -5,9 +5,8 @@ package top.abeille.basic.assets.controller;
 
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.data.domain.Sort;
-import top.abeille.basic.assets.service.impl.ArticleInfoServiceImpl;
-import top.abeille.basic.assets.vo.ArticleVO;
+import top.abeille.basic.assets.service.impl.PostsServiceImpl;
+import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.mock.AbstractControllerMock;
 
 import java.util.List;
@@ -17,10 +16,10 @@ import java.util.List;
  *
  * @author liwenqiang 2019/9/14 21:46
  **/
-public class ArticleInfoControllerTest extends AbstractControllerMock<ArticleInfoController> {
+public class PostsControllerTest extends AbstractControllerMock<ArticleInfoController> {
 
     @Mock
-    private ArticleInfoServiceImpl articleInfoService;
+    private PostsServiceImpl articleInfoService;
 
     @Override
     protected ArticleInfoController getController() {
@@ -29,8 +28,9 @@ public class ArticleInfoControllerTest extends AbstractControllerMock<ArticleInf
 
     @Test
     public void findArticles() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        List<ArticleVO> voList = articleInfoService.retrieveAll(sort);
+        int page = 0;
+        int size = 10;
+        List<PostsVO> voList = articleInfoService.retrieve(page, size);
     }
 
 }

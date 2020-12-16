@@ -3,12 +3,14 @@
  */
 package top.abeille.basic.assets.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for AccountInfo
+ * Model class for Account
  *
  * @author liwenqiang
  */
@@ -22,7 +24,7 @@ public class AccountVO implements Serializable {
     /**
      * 账户ID
      */
-    private String accountId;
+    private String code;
     /**
      * 余额
      */
@@ -32,12 +34,9 @@ public class AccountVO implements Serializable {
      */
     private String type;
     /**
-     * 修改人
-     */
-    private Long modifier;
-    /**
      * 修改时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifyTime;
 
 
@@ -49,12 +48,12 @@ public class AccountVO implements Serializable {
         this.userId = userId;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getCode() {
+        return code;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public BigDecimal getBalance() {
@@ -71,15 +70,6 @@ public class AccountVO implements Serializable {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-
-    public Long getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
     }
 
     public LocalDateTime getModifyTime() {

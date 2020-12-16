@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.assets.vo;
 
-import top.abeille.basic.assets.bo.UserBO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang  2019-03-03 22:59
  **/
-public class ArticleVO implements Serializable {
+public class PostsVO implements Serializable {
 
     private static final long serialVersionUID = 5476089760882093211L;
     /**
      * 文章ID
      */
-    private String businessId;
+    private String code;
     /**
      * 标题
      */
@@ -29,28 +29,25 @@ public class ArticleVO implements Serializable {
      */
     private String subtitle;
     /**
-     * 图片url
+     * 封面
      */
-    private String imageUrl;
+    private String cover;
     /**
      * 内容
      */
     private String content;
     /**
-     * 修改人
-     */
-    private UserBO author;
-    /**
      * 修改时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifyTime;
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getTitle() {
@@ -69,12 +66,12 @@ public class ArticleVO implements Serializable {
         this.subtitle = subtitle;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getCover() {
+        return cover;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public String getContent() {
@@ -83,14 +80,6 @@ public class ArticleVO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public UserBO getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(UserBO author) {
-        this.author = author;
     }
 
     public LocalDateTime getModifyTime() {

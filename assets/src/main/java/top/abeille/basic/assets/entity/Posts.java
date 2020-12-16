@@ -4,46 +4,40 @@
 package top.abeille.basic.assets.entity;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for AccountInfo
+ * Model class for Posts
  *
  * @author liwenqiang
  */
 @Entity
-@Table(name = "account_info")
-public class AccountInfo {
+@Table(name = "posts")
+public class Posts {
 
     /**
      * 主键
      */
-    @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
-    /**
-     * 用户ID
-     */
-    @Column(name = "user_id")
-    private Long userId;
     /**
      * 业务ID
      */
-    @Column(name = "business_id")
-    private String businessId;
+    private String code;
     /**
-     * 余额
+     * 标题
      */
-    @Column(name = "balance")
-    private BigDecimal balance;
+    private String title;
     /**
-     * 类型
+     * 概览
      */
-    @Column(name = "type")
-    private String type;
-
+    private String subtitle;
+    /**
+     * 图片url
+     */
+    private String cover;
     /**
      * 是否有效
      */
@@ -52,8 +46,7 @@ public class AccountInfo {
     /**
      * 修改人
      */
-    @Column(name = "modifier")
-    private Long modifier;
+    private String modifier;
     /**
      * 修改时间
      */
@@ -68,36 +61,36 @@ public class AccountInfo {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getCode() {
+        return code;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getBusinessId() {
-        return businessId;
+    public String getTitle() {
+        return title;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
+    public String getSubtitle() {
+        return subtitle;
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
-    public String getType() {
-        return type;
+    public String getCover() {
+        return cover;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public Boolean getEnabled() {
@@ -108,11 +101,11 @@ public class AccountInfo {
         this.enabled = enabled;
     }
 
-    public Long getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(Long modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

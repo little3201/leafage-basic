@@ -3,13 +3,14 @@
  */
 package top.abeille.basic.assets.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.assets.dto.AccountDTO;
-import top.abeille.basic.assets.service.AccountInfoService;
+import top.abeille.basic.assets.service.AccountService;
 import top.abeille.basic.assets.vo.AccountVO;
-import top.abeille.common.basic.AbstractController;
 
 /**
  * 账户信息接口
@@ -18,25 +19,27 @@ import top.abeille.common.basic.AbstractController;
  **/
 @RestController
 @RequestMapping("/account")
-public class AccountInfoController extends AbstractController {
+public class AccountController {
 
-    private final AccountInfoService accountInfoService;
+    private final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-    public AccountInfoController(AccountInfoService accountInfoService) {
-        this.accountInfoService = accountInfoService;
+    private final AccountService accountService;
+
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     /**
-     * 根据业务ID查询账号信息
+     * 查询账号信息
      *
-     * @param businessId 业务ID
+     * @param code 代码
      * @return ResponseEntity
      */
     @GetMapping("/{businessId}")
-    public ResponseEntity<Object> fetchAccount(@PathVariable String businessId) {
-        AccountVO account = accountInfoService.fetchByBusinessId(businessId);
+    public ResponseEntity<Object> fetch(@PathVariable String code) {
+        AccountVO account = accountService.fetch(code);
         if (account == null) {
-            logger.info("Not found anything about account with businessId {}.", businessId);
+            logger.info("Not found anything about account with code {}.", code);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(account);
@@ -49,10 +52,10 @@ public class AccountInfoController extends AbstractController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<Object> saveAccount(@RequestBody AccountDTO account) {
+    public ResponseEntity<Object> save(@RequestBody AccountDTO account) {
         AccountVO accountVO;
         try {
-            accountVO = accountInfoService.create(account);
+            accountVO = accountService.create(account);
         } catch (Exception e) {
             logger.error("Save account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
@@ -63,14 +66,14 @@ public class AccountInfoController extends AbstractController {
     /**
      * 修改账号信息
      *
-     * @param businessId 业务ID
+     * @param code       代码
      * @param accountDTO 账户信息
      * @return ResponseEntity
      */
-    @PutMapping("/{businessId}")
-    public ResponseEntity<Object> modifyAccount(@PathVariable String businessId, @RequestBody AccountDTO accountDTO) {
+    @PutMapping("/{code}")
+    public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody AccountDTO accountDTO) {
         try {
-            accountInfoService.modify(businessId, accountDTO);
+            accountService.modify(code, accountDTO);
         } catch (Exception e) {
             logger.error("Modify account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
@@ -81,13 +84,13 @@ public class AccountInfoController extends AbstractController {
     /**
      * 删除账号信息
      *
-     * @param businessId 业务ID
+     * @param code 代码
      * @return ResponseEntity
      */
-    @DeleteMapping("/{businessId}")
-    public ResponseEntity<Object> removeAccount(@PathVariable String businessId) {
+    @DeleteMapping("/{code}")
+    public ResponseEntity<Object> remove(@PathVariable String code) {
         try {
-            accountInfoService.removeById(businessId);
+            accountService.remove(code);
         } catch (Exception e) {
             logger.error("Remove account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

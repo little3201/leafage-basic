@@ -1,4 +1,4 @@
-##=====logger common=====##
+##=====log common=====##
 logging:
   level:
     # control root logger's level for WARN
@@ -6,8 +6,6 @@ logging:
     # control org.springframework logger's level for DEBUG
     org:
       springframework: INFO
-      # control org.hibernate logger's level for ERROR
-      hibernate: INFO
 
 spring:
   cloud:

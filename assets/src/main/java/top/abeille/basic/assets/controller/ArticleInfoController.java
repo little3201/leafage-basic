@@ -3,16 +3,16 @@
  */
 package top.abeille.basic.assets.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.assets.dto.ArticleDTO;
-import top.abeille.basic.assets.service.ArticleInfoService;
-import top.abeille.basic.assets.vo.ArticleVO;
-import top.abeille.common.basic.AbstractController;
+import top.abeille.basic.assets.dto.PostsDTO;
+import top.abeille.basic.assets.service.PostsService;
+import top.abeille.basic.assets.vo.PostsVO;
 
 import javax.validation.Valid;
 
@@ -22,26 +22,27 @@ import javax.validation.Valid;
  * @author liwenqiang 2018/12/20 9:54
  **/
 @RestController
-@RequestMapping("/article")
-public class ArticleInfoController extends AbstractController {
+@RequestMapping("/posts")
+public class ArticleInfoController {
 
-    private final ArticleInfoService articleInfoService;
+    private final Logger logger = LoggerFactory.getLogger(ArticleInfoController.class);
 
-    public ArticleInfoController(ArticleInfoService articleInfoService) {
-        this.articleInfoService = articleInfoService;
+    private final PostsService postsService;
+
+    public ArticleInfoController(PostsService postsService) {
+        this.postsService = postsService;
     }
 
     /**
-     * 文章查询——分页
+     * 分页查询
      *
-     * @param pageNum  当前页
-     * @param pageSize 页内数据量
+     * @param page 页码
+     * @param size 大小
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity<Object> retrieveArticle(Integer pageNum, Integer pageSize) {
-        Pageable pageable = super.initPageParams(pageNum, pageSize);
-        Page<ArticleVO> articles = articleInfoService.retrieveByPage(pageable);
+    public ResponseEntity<Object> retrieve(int page, int size) {
+        Page<PostsVO> articles = postsService.retrieves(page, size);
         if (CollectionUtils.isEmpty(articles.getContent())) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -50,16 +51,16 @@ public class ArticleInfoController extends AbstractController {
     }
 
     /**
-     * 查询文章信息——根据ID
+     * 查询帖子
      *
-     * @param businessId 文章ID
+     * @param code 代码
      * @return ResponseEntity
      */
-    @GetMapping("/{businessId}")
-    public ResponseEntity<Object> fetchArticle(@PathVariable String businessId) {
-        ArticleVO article = articleInfoService.fetchByBusinessId(businessId);
+    @GetMapping("/{code}")
+    public ResponseEntity<Object> fetch(@PathVariable String code) {
+        PostsVO article = postsService.fetch(code);
         if (article == null) {
-            logger.info("Not found anything about article with businessId {}.", businessId);
+            logger.info("Not found anything about article with code {}.", code);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(article);
@@ -68,18 +69,18 @@ public class ArticleInfoController extends AbstractController {
     /**
      * 保存文章信息
      *
-     * @param articleDTO 文章内容
+     * @param postsDTO 文章内容
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<Object> createArticle(@RequestBody @Valid ArticleDTO articleDTO) {
-        ArticleVO articleVO;
+    public ResponseEntity<Object> create(@RequestBody @Valid PostsDTO postsDTO) {
+        PostsVO postsVO;
         try {
-            articleVO = articleInfoService.create(articleDTO);
+            postsVO = postsService.create(postsDTO);
         } catch (Exception e) {
             logger.error("Save article occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(articleVO);
+        return ResponseEntity.ok(postsVO);
     }
 }

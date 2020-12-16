@@ -1,4 +1,4 @@
-##=====logger config=====##
+##=====log common=====##
 logging:
   level:
     # control root logger's level for WARN
@@ -48,9 +48,9 @@ spring:
 
     ##=====mongodb config=====##
     mongodb:
-      host: 127.0.0.1
+      host: 47.105.216.65
       port: 27017
-      database: abeille
-#      username: abeille
-#      password: Abeille0-top001
-#      authentication-database: abeille
+      username: mongodbAssets
+      password: mongodbAssets001@@
+      database: abeille_assets
+      authentication-database: abeille_assets

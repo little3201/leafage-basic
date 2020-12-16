@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -10,36 +11,38 @@ import java.io.Serializable;
  *
  * @author liwenqiang  2019-03-03 22:59
  **/
-public class ArticleDTO implements Serializable {
+public class PostsDTO implements Serializable {
 
     private static final long serialVersionUID = -4116939329295119085L;
     /**
-     * 文章ID
+     * 代码
      */
-    private String businessId;
+    private String code;
     /**
      * 标题
      */
+    @NotBlank
     private String title;
     /**
      * 副标题
      */
     private String subtitle;
     /**
-     * 图片url
+     * 封面
      */
-    private String imageUrl;
+    @NotBlank
+    private String cover;
     /**
      * 内容
      */
     private String content;
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getTitle() {
@@ -58,12 +61,12 @@ public class ArticleDTO implements Serializable {
         this.subtitle = subtitle;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getCover() {
+        return cover;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public String getContent() {

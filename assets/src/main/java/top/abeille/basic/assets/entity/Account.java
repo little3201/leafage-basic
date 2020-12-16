@@ -4,44 +4,42 @@
 package top.abeille.basic.assets.entity;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model class for ArticleInfo
+ * Model class for AccountInfo
  *
  * @author liwenqiang
  */
 @Entity
-@Table(name = "article_info")
-public class ArticleInfo {
+@Table(name = "account")
+public class Account {
 
     /**
      * 主键
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private Long id;
+    /**
+     * 用户ID
+     */
+    @Column(name = "user_id")
+    private Long userId;
     /**
      * 业务ID
      */
-    @Column(name = "business_id")
-    private String businessId;
+    private String code;
     /**
-     * 标题
+     * 余额
      */
-    @Column(name = "title")
-    private String title;
+    private BigDecimal balance;
     /**
-     * 概览
+     * 类型
      */
-    @Column(name = "subtitle")
-    private String subtitle;
-    /**
-     * 图片url
-     */
-    @Column(name = "image_url")
-    private String imageUrl;
+    private String type;
+
     /**
      * 是否有效
      */
@@ -50,8 +48,7 @@ public class ArticleInfo {
     /**
      * 修改人
      */
-    @Column(name = "modifier")
-    private String modifier;
+    private Long modifier;
     /**
      * 修改时间
      */
@@ -66,36 +63,36 @@ public class ArticleInfo {
         this.id = id;
     }
 
-    public String getBusinessId() {
-        return businessId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public String getTitle() {
-        return title;
+    public String getCode() {
+        return code;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getSubtitle() {
-        return subtitle;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getType() {
+        return type;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Boolean getEnabled() {
@@ -106,11 +103,11 @@ public class ArticleInfo {
         this.enabled = enabled;
     }
 
-    public String getModifier() {
+    public Long getModifier() {
         return modifier;
     }
 
-    public void setModifier(String modifier) {
+    public void setModifier(Long modifier) {
         this.modifier = modifier;
     }
 

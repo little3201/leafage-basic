@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor.vo;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.time.LocalDate;
 
 /**
  * Model class for UserInfo
@@ -15,18 +15,23 @@ public class UserVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
 
-    /**
-     * 用户名
-     */
     private String username;
     /**
-     * 密码
+     * 电话
      */
-    private String password;
+    private String phone;
     /**
-     * 权限
+     * 邮箱
      */
-    private Set<String> authorities;
+    private String email;
+    /**
+     * 性别: 0-男 1-女 2-保密
+     */
+    private Integer gender;
+    /**
+     * 出生日期
+     */
+    private LocalDate birthday;
     /**
      * 是否有效
      */
@@ -48,20 +53,36 @@ public class UserVO implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public Set<String> getAuthorities() {
-        return authorities;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAuthorities(Set<String> authorities) {
-        this.authorities = authorities;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public boolean isAccountNonExpired() {
@@ -87,4 +108,5 @@ public class UserVO implements Serializable {
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
+
 }

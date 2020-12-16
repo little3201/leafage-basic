@@ -3,13 +3,9 @@
  */
 package top.abeille.basic.hypervisor.document;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.time.LocalDateTime;
 
 /**
  * Model class for RoleResource
@@ -17,13 +13,8 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "role_authority")
-public class RoleAuthority {
+public class RoleAuthority extends BaseDocument {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 角色ID
      */
@@ -40,24 +31,7 @@ public class RoleAuthority {
      * 是否可写
      */
     private boolean hasWrite;
-    /**
-     * 修改人
-     */
-    private String modifier;
-    /**
-     * 修改时间
-     */
-    @Field(value = "modify_time")
-    @LastModifiedDate
-    private LocalDateTime modifyTime;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getRoleId() {
         return roleId;
@@ -83,19 +57,4 @@ public class RoleAuthority {
         this.hasWrite = hasWrite;
     }
 
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

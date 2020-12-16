@@ -17,6 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.User;
 import top.abeille.basic.hypervisor.document.UserRole;
+import top.abeille.basic.hypervisor.domain.UserDetails;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
 import top.abeille.basic.hypervisor.repository.UserRepository;
@@ -100,7 +101,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Mono<UserVO> fetch(String username) {
+    public Mono<UserDetails> fetchDetails(String username) {
         Asserts.notBlank(username, "username");
         Mono<User> infoMono = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("User Not Found")));
@@ -117,10 +118,10 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                         sourceList.add(sourceInfo.getCode())));
         // 构造用户信息
         return authorityList.zipWith(infoMono, (authorities, user) -> {
-            UserVO userVO = new UserVO();
-            BeanUtils.copyProperties(user, userVO);
-            userVO.setAuthorities(authorities);
-            return userVO;
+            UserDetails userDetails = new UserDetails();
+            BeanUtils.copyProperties(user, userDetails);
+            userDetails.setAuthorities(authorities);
+            return userDetails;
         });
     }
 

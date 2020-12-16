@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.domain.UserDetails;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserVO;
@@ -45,8 +46,8 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{username}")
-    public Mono<UserVO> fetch(@PathVariable String username) {
-        return userService.fetch(username);
+    public Mono<UserDetails> fetch(@PathVariable String username) {
+        return userService.fetchDetails(username);
     }
 
     /**

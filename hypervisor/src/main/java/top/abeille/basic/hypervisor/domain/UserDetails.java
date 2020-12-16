@@ -1,37 +1,32 @@
 /*
  * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.hypervisor.vo;
+package top.abeille.basic.hypervisor.domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * Model class for UserInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class UserDetailVO implements Serializable {
+public class UserDetails implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
 
+    /**
+     * 用户名
+     */
     private String username;
     /**
-     * 电话
+     * 密码
      */
-    private String phone;
+    private String password;
     /**
-     * 邮箱
+     * 权限
      */
-    private String email;
-    /**
-     * 性别: 0-男 1-女 2-保密
-     */
-    private Integer gender;
-    /**
-     * 出生日期
-     */
-    private LocalDate birthday;
+    private Set<String> authorities;
     /**
      * 是否有效
      */
@@ -53,36 +48,20 @@ public class UserDetailVO implements Serializable {
         this.username = username;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public Set<String> getAuthorities() {
+        return authorities;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getGender() {
-        return gender;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
     }
 
     public boolean isAccountNonExpired() {

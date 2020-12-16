@@ -43,13 +43,13 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Flux<RoleVO> retrieveAll(int page, int size) {
+    public Flux<RoleVO> retrieve(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return roleRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<RoleVO> fetchByCode(String code) {
+    public Mono<RoleVO> fetch(String code) {
         return roleRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 

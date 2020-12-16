@@ -32,13 +32,13 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Flux<CategoryVO> retrieveAll(int page, int size) {
+    public Flux<CategoryVO> retrieve(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return categoryRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<CategoryVO> fetchByCode(String code) {
+    public Mono<CategoryVO> fetch(String code) {
         Asserts.notBlank(code, "code");
         Category info = new Category();
         info.setCode(code);

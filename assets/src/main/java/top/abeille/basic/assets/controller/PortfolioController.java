@@ -29,24 +29,24 @@ public class PortfolioController {
     }
 
     /**
-     * 分页查询信息
+     * 分页查询
      *
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
     public Flux<PortfolioVO> retrieveResource(@RequestParam int page, @RequestParam int size) {
-        return portfolioService.retrieveAll(page, size);
+        return portfolioService.retrieve(page, size);
     }
 
     /**
-     * 根据传入的代码查询信息
+     * 查询信息
      *
      * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
     public Mono<PortfolioVO> fetchResource(@PathVariable String code) {
-        return portfolioService.fetchByCode(code);
+        return portfolioService.fetch(code);
     }
 
     /**

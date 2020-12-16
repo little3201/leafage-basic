@@ -34,13 +34,13 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Flux<AuthorityVO> retrieveAll(int page, int size) {
+    public Flux<AuthorityVO> retrieve(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return authorityRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<AuthorityVO> fetchByCode(String code) {
+    public Mono<AuthorityVO> fetch(String code) {
         Asserts.notBlank(code, "code");
         return this.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }

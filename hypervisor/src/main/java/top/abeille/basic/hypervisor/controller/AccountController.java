@@ -34,8 +34,8 @@ public class AccountController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
-    public Mono<AccountVO> fetchAccount(@PathVariable String code) {
-        return accountService.fetchByCode(code);
+    public Mono<AccountVO> fetch(@PathVariable String code) {
+        return accountService.fetch(code);
     }
 
     /**
@@ -46,7 +46,7 @@ public class AccountController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<AccountVO> createAccount(@RequestBody @Valid AccountDTO accountDTO) {
+    public Mono<AccountVO> create(@RequestBody @Valid AccountDTO accountDTO) {
         return accountService.create(accountDTO);
     }
 
@@ -59,7 +59,7 @@ public class AccountController {
      */
     @PutMapping("/{code}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<AccountVO> modifyAccount(@PathVariable String code, @RequestBody @Valid AccountDTO accountDTO) {
+    public Mono<AccountVO> modify(@PathVariable String code, @RequestBody @Valid AccountDTO accountDTO) {
         return accountService.modify(code, accountDTO);
     }
 
@@ -71,7 +71,7 @@ public class AccountController {
      */
     @DeleteMapping("/{code}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> removeAccount(@PathVariable String code) {
+    public Mono<Void> remove(@PathVariable String code) {
         return accountService.remove(code);
     }
 

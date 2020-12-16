@@ -3,7 +3,6 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.Asserts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,6 @@ import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.AuthorityService;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.service.UserService;
-import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -61,7 +59,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Flux<UserVO> retrieveAll(int page, int size) {
+    public Flux<UserVO> retrieve(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return userRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
@@ -102,7 +100,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Mono<UserDetailsVO> fetchDetails(String username) {
+    public Mono<UserVO> fetch(String username) {
         Asserts.notBlank(username, "username");
         Mono<User> infoMono = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("User Not Found")));
@@ -119,10 +117,10 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                         sourceList.add(sourceInfo.getCode())));
         // 构造用户信息
         return authorityList.zipWith(infoMono, (authorities, user) -> {
-            UserDetailsVO detailsVO = new UserDetailsVO();
-            BeanUtils.copyProperties(user, detailsVO);
-            detailsVO.setAuthorities(authorities);
-            return detailsVO;
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+            userVO.setAuthorities(authorities);
+            return userVO;
         });
     }
 
@@ -148,14 +146,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     private UserVO convertOuter(User info) {
         UserVO outer = new UserVO();
         BeanUtils.copyProperties(info, outer);
-        // 手机号脱敏
-        if (StringUtils.isNotBlank(outer.getPhone())) {
-            outer.setPhone(outer.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
-        }
-        // 邮箱脱敏
-        if (StringUtils.isNotBlank(outer.getEmail())) {
-            outer.setEmail(outer.getEmail().replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2"));
-        }
         return outer;
     }
 

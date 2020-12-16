@@ -37,7 +37,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Flux<PostsVO> retrieveAll(int page, int size) {
+    public Flux<PostsVO> retrieve(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
@@ -50,12 +50,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     DetailsVO detailsVO = new DetailsVO();
                     BeanUtils.copyProperties(posts, detailsVO);
                     // 根据业务id获取相关内容
-                    return detailsService.fetchByArticleId(posts.getId()).map(contentInfo -> {
-                        detailsVO.setOriginal(contentInfo.getOriginal());
-                        detailsVO.setContent(contentInfo.getContent());
-                        detailsVO.setCatalog(contentInfo.getCatalog());
-                        return detailsVO;
-                    }).defaultIfEmpty(detailsVO);
+            return detailsService.fetchByPostsId(posts.getId()).map(contentInfo -> {
+                detailsVO.setOriginal(contentInfo.getOriginal());
+                detailsVO.setContent(contentInfo.getContent());
+                detailsVO.setCatalog(contentInfo.getCatalog());
+                return detailsVO;
+            }).defaultIfEmpty(detailsVO);
                 }
         );
     }
@@ -84,7 +84,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
             BeanUtils.copyProperties(postsDTO, info);
             return postsRepository.save(info).doOnSuccess(posts ->
                     // 更新成功后，将内容信息更新
-                    detailsService.fetchByArticleId(posts.getId()).doOnNext(detailsInfo -> {
+                    detailsService.fetchByPostsId(posts.getId()).doOnNext(detailsInfo -> {
                         BeanUtils.copyProperties(postsDTO, detailsInfo);
                         // 调用subscribe()方法，消费modify订阅
                         detailsService.modify(posts.getId(), detailsInfo).subscribe();

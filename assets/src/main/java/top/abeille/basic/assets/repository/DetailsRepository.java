@@ -22,5 +22,5 @@ public interface DetailsRepository extends ReactiveMongoRepository<Details, Stri
      * @param articleId 文章id
      * @return 文章内容
      */
-    Mono<Details> findByArticleIdAndEnabledTrue(String articleId);
+    Mono<Details> findByPostsIdAndEnabledTrue(String articleId);
 }

@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.User;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.repository.UserRepository;
-import top.abeille.basic.hypervisor.vo.UserDetailsVO;
+import top.abeille.basic.hypervisor.vo.UserVO;
 
 /**
  * 用户信息service测试
@@ -51,8 +51,8 @@ public class UserServiceImplTest {
     public void fetchByUsername_returnObject() {
         String username = "little3201";
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(User.class)))).thenReturn(Mockito.any());
-        Mono<UserDetailsVO> userVOMono = userService.fetchDetails(username);
-        Assertions.assertNotNull(userVOMono.map(UserDetailsVO::getAuthorities).subscribe());
+        Mono<UserVO> userVOMono = userService.fetch(username);
+        Assertions.assertNotNull(userVOMono.map(UserVO::getAuthorities).subscribe());
     }
 
     /**
@@ -62,15 +62,15 @@ public class UserServiceImplTest {
     public void fetchByUsername_returnEmpty() {
         String username = "little3201";
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(User.class)))).thenReturn(Mockito.isNull());
-        Mono<UserDetailsVO> userVOMono = userService.fetchDetails(username);
-        Assertions.assertNull(userVOMono.map(UserDetailsVO::getAuthorities).block());
+        Mono<UserVO> userVOMono = userService.fetch(username);
+        Assertions.assertNull(userVOMono.map(UserVO::getAuthorities).block());
     }
 
     @Test
     public void fetchDetails() {
         String username = "little3201";
         Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)).thenReturn(Mockito.any());
-        Mono<UserDetailsVO> detailsMono = userService.fetchDetails(username);
-        Assertions.assertNotNull(detailsMono.map(UserDetailsVO::getAuthorities).subscribe());
+        Mono<UserVO> detailsMono = userService.fetch(username);
+        Assertions.assertNotNull(detailsMono.map(UserVO::getAuthorities).subscribe());
     }
 }

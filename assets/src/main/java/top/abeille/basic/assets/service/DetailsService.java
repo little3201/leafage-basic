@@ -37,5 +37,5 @@ public interface DetailsService {
      * @param articleId 文章ID
      * @return 返回查询到的信息，否则返回empty
      */
-    Mono<Details> fetchByArticleId(String articleId);
+    Mono<Details> fetchByPostsId(String articleId);
 }

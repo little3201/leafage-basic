@@ -34,8 +34,8 @@ public class GroupController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<GroupVO> retrieveGroup(@RequestParam int page, @RequestParam int size) {
-        return groupService.retrieveAll(page, size);
+    public Flux<GroupVO> retrieve(@RequestParam int page, @RequestParam int size) {
+        return groupService.retrieve(page, size);
     }
 
     /**
@@ -46,7 +46,7 @@ public class GroupController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<GroupVO> createGroup(@RequestBody @Valid GroupDTO groupDTO) {
+    public Mono<GroupVO> create(@RequestBody @Valid GroupDTO groupDTO) {
         return groupService.create(groupDTO);
     }
 
@@ -59,7 +59,7 @@ public class GroupController {
      */
     @PutMapping("/{code}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<GroupVO> modifyGroup(@PathVariable String code, @RequestBody @Valid GroupDTO groupDTO) {
+    public Mono<GroupVO> modify(@PathVariable String code, @RequestBody @Valid GroupDTO groupDTO) {
         return groupService.modify(code, groupDTO);
     }
 
@@ -71,7 +71,7 @@ public class GroupController {
      */
     @DeleteMapping("/{code}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> removeGroup(@PathVariable String code) {
+    public Mono<Void> remove(@PathVariable String code) {
         return groupService.remove(code);
     }
 
@@ -82,7 +82,7 @@ public class GroupController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
-    public Mono<GroupVO> fetchGroup(String code) {
-        return groupService.fetchByCode(code);
+    public Mono<GroupVO> fetch(String code) {
+        return groupService.fetch(code);
     }
 }

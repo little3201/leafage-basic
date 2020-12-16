@@ -34,15 +34,15 @@ public class DetailsServiceImpl implements DetailsService {
     @Override
     public Mono<Details> modify(String articleId, Details detailsInfo) {
         Asserts.notBlank(articleId, "articleId");
-        return this.fetchByArticleId(articleId).flatMap(details -> {
+        return this.fetchByPostsId(articleId).flatMap(details -> {
             BeanUtils.copyProperties(detailsInfo, details);
             return detailsRepository.save(details);
         });
     }
 
     @Override
-    public Mono<Details> fetchByArticleId(String articleId) {
-        return detailsRepository.findByArticleIdAndEnabledTrue(articleId);
+    public Mono<Details> fetchByPostsId(String postsId) {
+        return detailsRepository.findByPostsIdAndEnabledTrue(postsId);
     }
 
 }

@@ -36,13 +36,13 @@ public class PostsServiceImplTest {
 
     @Test
     public void fetchById_returnObject() {
-        Mono<? extends PostsVO> outerMono = postsService.fetchByCode("AT226");
+        Mono<? extends PostsVO> outerMono = postsService.fetch("AT226");
         Assert.notNull(outerMono.block(), "The class must not be null");
     }
 
     @Test
     public void fetchById_returnNull() {
-        Mono<? extends PostsVO> outerMono = postsService.fetchByCode(String.valueOf(new Random().nextFloat()));
+        Mono<? extends PostsVO> outerMono = postsService.fetch(String.valueOf(new Random().nextFloat()));
         Assert.isNull(outerMono.block(), "The class must be null");
     }
 }

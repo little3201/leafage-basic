@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 public class BaseVO implements Serializable {
 
+    private static final long serialVersionUID = 4864635163075486414L;
+
     /**
      * 代码
      */

@@ -11,10 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.hypervisor.document.Role;
 import top.abeille.basic.hypervisor.document.User;
 import top.abeille.basic.hypervisor.document.UserRole;
 import top.abeille.basic.hypervisor.domain.UserDetails;
@@ -25,11 +23,7 @@ import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 
 /**
@@ -65,31 +59,28 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<UserVO> create(UserDTO userDTO) {
-        User info = new User();
-        BeanUtils.copyProperties(userDTO, info);
-        info.setUsername(info.getEmail().substring(0, info.getEmail().indexOf("@")));
-        info.setPassword(new BCryptPasswordEncoder().encode("110119"));
-        return userRepository.insert(info).doOnNext(user -> {
-            log.info("User :{} created.", user.getUsername());
-            if (!CollectionUtils.isEmpty(userDTO.getRoles())) {
-                List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
-                        this.initUserRole(user.getId(), role)).collect(Collectors.toList());
-                userRoleRepository.saveAll(userRoleList).subscribe();
-            }
-        }).map(this::convertOuter);
+        User user = new User();
+        BeanUtils.copyProperties(userDTO, user);
+        user.setUsername(user.getEmail().substring(0, user.getEmail().indexOf("@")));
+        user.setPassword(new BCryptPasswordEncoder().encode("110119"));
+        Mono<User> userMono = userRepository.save(user).switchIfEmpty(Mono.error(RuntimeException::new));
+        userMono.flatMap(u -> this.initUserRole(u.getId(), userDTO.getRoles())).doOnNext(userRoleRepository::saveAll);
+        return userMono.map(this::convertOuter);
     }
 
     @Override
     public Mono<UserVO> modify(String username, UserDTO userDTO) {
         Asserts.notBlank(username, "username");
-        return userRepository.findByUsername(username).flatMap(info -> {
-            BeanUtils.copyProperties(userDTO, info);
-            return userRepository.save(info).doOnNext(user -> {
-                List<UserRole> userRoleList = userDTO.getRoles().stream().map(code ->
-                        this.initUserRole(user.getId(), code)).collect(Collectors.toList());
-                userRoleRepository.saveAll(userRoleList).subscribe();
-            }).map(this::convertOuter);
-        });
+        Mono<User> userMono = userRepository.findByUsername(username)
+                .switchIfEmpty(Mono.error(NotContextException::new))
+                .flatMap(user -> {
+                    BeanUtils.copyProperties(userDTO, user);
+                    return userRepository.save(user);
+                });
+        userMono.flatMap(user -> this.initUserRole(user.getId(), userDTO.getRoles()))
+                .switchIfEmpty(Mono.empty())
+                .map(userRoleRepository::saveAll);
+        return userMono.map(this::convertOuter);
     }
 
     @Override
@@ -138,18 +129,17 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     /**
      * 初始设置UserRole参数
      *
-     * @param userId   用户主键
-     * @param roleCode 角色代码
+     * @param userId 用户主键
+     * @param codes  角色代码
      * @return 用户-角色对象
      */
-    private UserRole initUserRole(String userId, String roleCode) {
-        UserRole userRole = new UserRole();
-        userRole.setUserId(userId);
-        userRole.setModifier(userId);
-        Role role = roleRepository.findByCodeAndEnabledTrue(roleCode).block();
-        if (role != null) {
+    private Mono<List<UserRole>> initUserRole(String userId, Collection<String> codes) {
+        return roleRepository.findByCodeInAndEnabledTrue(codes).map(role -> {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(userId);
+            userRole.setModifier(userId);
             userRole.setRoleId(role.getId());
-        }
-        return userRole;
+            return userRole;
+        }).collectList();
     }
 }

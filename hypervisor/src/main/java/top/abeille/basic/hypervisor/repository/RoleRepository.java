@@ -10,6 +10,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Role;
 
+import java.util.Collection;
+
 /**
  * 角色信息dao接口
  *
@@ -33,4 +35,12 @@ public interface RoleRepository extends ReactiveMongoRepository<Role, String> {
      * @return 角色信息
      */
     Mono<Role> findByCodeAndEnabledTrue(String code);
+
+    /**
+     * 查询角色
+     *
+     * @param codes 代码集合
+     * @return 角色信息
+     */
+    Flux<Role> findByCodeInAndEnabledTrue(Collection<String> codes);
 }

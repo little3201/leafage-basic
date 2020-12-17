@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright (c) 2020. Abeille All Right Reserved.
  */
 package top.abeille.basic.hypervisor.service.impl;
 
@@ -7,7 +7,6 @@ import org.apache.http.util.Asserts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,15 +14,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.document.Role;
 import top.abeille.basic.hypervisor.document.User;
 import top.abeille.basic.hypervisor.document.UserRole;
 import top.abeille.basic.hypervisor.domain.UserDetails;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
-import top.abeille.basic.hypervisor.repository.UserRepository;
-import top.abeille.basic.hypervisor.repository.UserRoleRepository;
-import top.abeille.basic.hypervisor.service.AuthorityService;
-import top.abeille.basic.hypervisor.service.RoleService;
+import top.abeille.basic.hypervisor.repository.*;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
@@ -47,16 +43,18 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-    private final RoleService roleService;
+    private final RoleRepository roleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
-    private final AuthorityService authorityService;
+    private final AuthorityRepository authorityRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleService roleService, RoleAuthorityRepository roleAuthorityRepository, AuthorityService authorityService) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
+                           RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository,
+                           AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
-        this.roleService = roleService;
+        this.roleRepository = roleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;
-        this.authorityService = authorityService;
+        this.authorityRepository = authorityRepository;
     }
 
     @Override
@@ -84,11 +82,11 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     @Override
     public Mono<UserVO> modify(String username, UserDTO userDTO) {
         Asserts.notBlank(username, "username");
-        return this.fetchInfo(username).flatMap(info -> {
+        return userRepository.findByUsername(username).flatMap(info -> {
             BeanUtils.copyProperties(userDTO, info);
             return userRepository.save(info).doOnNext(user -> {
-                List<UserRole> userRoleList = userDTO.getRoles().stream().map(role ->
-                        this.initUserRole(user.getId(), role)).collect(Collectors.toList());
+                List<UserRole> userRoleList = userDTO.getRoles().stream().map(code ->
+                        this.initUserRole(user.getId(), code)).collect(Collectors.toList());
                 userRoleRepository.saveAll(userRoleList).subscribe();
             }).map(this::convertOuter);
         });
@@ -97,7 +95,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     @Override
     public Mono<Void> remove(String username) {
         Asserts.notBlank(username, "username");
-        return this.fetchInfo(username).flatMap(user -> userRepository.deleteById(user.getId()));
+        return userRepository.findByUsername(username).flatMap(user -> userRepository.deleteById(user.getId()));
     }
 
     @Override
@@ -111,10 +109,10 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         // 取角色关联的权限ID
         Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleAuthorityRepository.findByRoleIdIn(roleIdList)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Authorities")))
-                .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getResourceId())));
+                .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getAuthorityId())));
         // 查权限
         Mono<Set<String>> authorityList = sourceIdListMono.flatMap(sourceIdList ->
-                authorityService.findByIdInAndEnabledTrue(sourceIdList).collect(HashSet::new, (sourceList, sourceInfo) ->
+                authorityRepository.findByIdInAndEnabledTrue(sourceIdList).collect(HashSet::new, (sourceList, sourceInfo) ->
                         sourceList.add(sourceInfo.getCode())));
         // 构造用户信息
         return authorityList.zipWith(infoMono, (authorities, user) -> {
@@ -123,19 +121,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
             userDetails.setAuthorities(authorities);
             return userDetails;
         });
-    }
-
-    /**
-     * 根据账号查信息
-     *
-     * @param username 账号
-     * @return UserInfo 用户源数据
-     */
-    private Mono<User> fetchInfo(String username) {
-        Asserts.notBlank(username, "username");
-        User info = new User();
-        info.setUsername(username);
-        return userRepository.findOne(Example.of(info));
     }
 
     /**
@@ -158,12 +143,13 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * @return 用户-角色对象
      */
     private UserRole initUserRole(String userId, String roleCode) {
-        Asserts.notBlank(userId, "userId");
-        Asserts.notBlank(roleCode, "roleCode");
         UserRole userRole = new UserRole();
         userRole.setUserId(userId);
         userRole.setModifier(userId);
-        roleService.findByCodeAndEnabledTrue(roleCode).doOnNext(roleInfo -> userRole.setRoleId(roleInfo.getId())).subscribe();
+        Role role = roleRepository.findByCodeAndEnabledTrue(roleCode).block();
+        if (role != null) {
+            userRole.setRoleId(role.getId());
+        }
         return userRole;
     }
 }

@@ -6,6 +6,7 @@ package top.abeille.basic.hypervisor.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -29,8 +30,8 @@ public class UserDTO implements Serializable {
     /**
      * 电话
      */
-    @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}", message = "mobile not pattern")
-    private String mobile;
+    @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}", message = "phone not pattern")
+    private String phone;
     /**
      * 邮箱
      */
@@ -47,7 +48,7 @@ public class UserDTO implements Serializable {
     /**
      * 角色列表
      */
-    private Set<String> roles;
+    private Set<String> roles = Collections.emptySet();
     /**
      * 修改人
      */
@@ -71,12 +72,12 @@ public class UserDTO implements Serializable {
         this.avatar = avatar;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -85,6 +86,14 @@ public class UserDTO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 
     public String getAddress() {

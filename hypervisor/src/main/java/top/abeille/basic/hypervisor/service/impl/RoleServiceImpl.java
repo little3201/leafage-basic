@@ -10,13 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.document.Authority;
 import top.abeille.basic.hypervisor.document.Role;
 import top.abeille.basic.hypervisor.document.RoleAuthority;
 import top.abeille.basic.hypervisor.dto.RoleAuthorityDTO;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
+import top.abeille.basic.hypervisor.repository.AuthorityRepository;
 import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
 import top.abeille.basic.hypervisor.repository.RoleRepository;
-import top.abeille.basic.hypervisor.service.AuthorityService;
 import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
@@ -34,12 +35,13 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     private final RoleRepository roleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
-    private final AuthorityService authorityService;
+    private final AuthorityRepository authorityRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository, AuthorityService authorityService) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository,
+                           AuthorityRepository authorityRepository) {
         this.roleRepository = roleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;
-        this.authorityService = authorityService;
+        this.authorityRepository = authorityRepository;
     }
 
     @Override
@@ -102,15 +104,13 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     private RoleAuthority initRoleSource(String roleId, String modifier, RoleAuthorityDTO roleAuthorityDTO) {
         RoleAuthority roleAuthority = new RoleAuthority();
         roleAuthority.setRoleId(roleId);
-        authorityService.findByCodeAndEnabledTrue(roleAuthorityDTO.getSourceCode()).doOnNext(resourceInfo -> {
-            roleAuthority.setResourceId(resourceInfo.getId());
-            roleAuthority.setHasWrite(roleAuthorityDTO.getHasWrite());
-        }).subscribe();
+        Authority authority = authorityRepository.findByCodeAndEnabledTrue(roleAuthorityDTO.getAuthorityCode()).block();
+        if (authority != null) {
+            roleAuthority.setAuthorityId(authority.getId());
+        }
+        roleAuthority.setHasWrite(roleAuthorityDTO.isHasWrite());
+        roleAuthority.setModifier(modifier);
         return roleAuthority;
     }
 
-    @Override
-    public Mono<Role> findByCodeAndEnabledTrue(String code) {
-        return roleRepository.findByCodeAndEnabledTrue(code);
-    }
 }

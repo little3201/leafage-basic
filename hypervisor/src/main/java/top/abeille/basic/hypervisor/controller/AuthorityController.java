@@ -38,6 +38,18 @@ public class AuthorityController {
         return authorityService.retrieve(page, size);
     }
 
+
+    /**
+     * 根据传入的代码查询信息
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}")
+    public Mono<AuthorityVO> fetch(@PathVariable String code) {
+        return authorityService.fetch(code);
+    }
+
     /**
      * 根据传入的数据添加信息
      *
@@ -63,14 +75,4 @@ public class AuthorityController {
         return authorityService.modify(code, authorityDTO);
     }
 
-    /**
-     * 根据传入的代码查询信息
-     *
-     * @param code 代码
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
-     */
-    @GetMapping("/{code}")
-    public Mono<AuthorityVO> fetch(@PathVariable String code) {
-        return authorityService.fetch(code);
-    }
 }

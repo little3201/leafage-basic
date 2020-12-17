@@ -39,6 +39,17 @@ public class GroupController {
     }
 
     /**
+     * 根据传入的业务id: code 查询信息
+     *
+     * @param code 业务id
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}")
+    public Mono<GroupVO> fetch(@PathVariable String code) {
+        return groupService.fetch(code);
+    }
+
+    /**
      * 根据传入的数据添加信息
      *
      * @param groupDTO 要添加的数据
@@ -75,14 +86,4 @@ public class GroupController {
         return groupService.remove(code);
     }
 
-    /**
-     * 根据传入的业务id: code 查询信息
-     *
-     * @param code 业务id
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
-     */
-    @GetMapping("/{code}")
-    public Mono<GroupVO> fetch(String code) {
-        return groupService.fetch(code);
-    }
 }

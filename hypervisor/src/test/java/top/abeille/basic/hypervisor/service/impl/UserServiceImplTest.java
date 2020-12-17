@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.User;
 import top.abeille.basic.hypervisor.dto.UserDTO;
@@ -39,7 +38,6 @@ public class UserServiceImplTest {
     public void save() {
         UserDTO userDTO = new UserDTO();
         userDTO.setNickname("管理员");
-        String password = new BCryptPasswordEncoder().encode("123456");
         userService.create(userDTO);
         Mockito.verify(userRepository, Mockito.atLeastOnce()).save(Mockito.any());
     }
@@ -52,7 +50,7 @@ public class UserServiceImplTest {
         String username = "little3201";
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(User.class)))).thenReturn(Mockito.any());
         Mono<UserVO> userVOMono = userService.fetch(username);
-        Assertions.assertNotNull(userVOMono.map(UserVO::getAuthorities).subscribe());
+        Assertions.assertNotNull(userVOMono.map(UserVO::getEmail).subscribe());
     }
 
     /**
@@ -63,7 +61,7 @@ public class UserServiceImplTest {
         String username = "little3201";
         Mockito.when(userRepository.findOne(Example.of(Mockito.any(User.class)))).thenReturn(Mockito.isNull());
         Mono<UserVO> userVOMono = userService.fetch(username);
-        Assertions.assertNull(userVOMono.map(UserVO::getAuthorities).block());
+        Assertions.assertNull(userVOMono.map(UserVO::getEmail).block());
     }
 
     @Test
@@ -71,6 +69,6 @@ public class UserServiceImplTest {
         String username = "little3201";
         Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)).thenReturn(Mockito.any());
         Mono<UserVO> detailsMono = userService.fetch(username);
-        Assertions.assertNotNull(detailsMono.map(UserVO::getAuthorities).subscribe());
+        Assertions.assertNotNull(detailsMono.map(UserVO::getEmail).subscribe());
     }
 }

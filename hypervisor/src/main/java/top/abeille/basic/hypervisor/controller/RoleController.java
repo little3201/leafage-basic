@@ -39,6 +39,17 @@ public class RoleController {
     }
 
     /**
+     * 根据传入的代码查询信息
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}")
+    public Mono<RoleVO> fetch(@PathVariable String code) {
+        return roleService.fetch(code);
+    }
+
+    /**
      * 根据传入的数据添加信息
      *
      * @param roleDTO 要添加的数据
@@ -63,14 +74,4 @@ public class RoleController {
         return roleService.modify(code, roleDTO);
     }
 
-    /**
-     * 根据传入的代码查询信息
-     *
-     * @param code 代码
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
-     */
-    @GetMapping("/{code}")
-    public Mono<RoleVO> fetch(String code) {
-        return roleService.fetch(code);
-    }
 }

@@ -25,8 +25,8 @@ public class RoleAuthority extends BaseDocument {
      * 资源ID
      */
     @Indexed
-    @Field(value = "resource_id")
-    private String resourceId;
+    @Field(value = "authority_id")
+    private String authorityId;
     /**
      * 是否可写
      */
@@ -41,20 +41,19 @@ public class RoleAuthority extends BaseDocument {
         this.roleId = roleId;
     }
 
-    public String getResourceId() {
-        return resourceId;
+    public String getAuthorityId() {
+        return authorityId;
     }
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
+    public void setAuthorityId(String authorityId) {
+        this.authorityId = authorityId;
     }
 
-    public boolean getHasWrite() {
+    public boolean isHasWrite() {
         return hasWrite;
     }
 
     public void setHasWrite(boolean hasWrite) {
         this.hasWrite = hasWrite;
     }
-
 }

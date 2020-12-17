@@ -27,6 +27,14 @@ public interface UserRepository extends ReactiveMongoRepository<User, String> {
     Flux<User> findByEnabledTrue(Pageable pageable);
 
     /**
+     * 根据账号查
+     *
+     * @param username 账号
+     * @return 用户信息
+     */
+    Mono<User> findByUsername(String username);
+
+    /**
      * 根据username/mobile/email查询enabled信息
      *
      * @param username 账号

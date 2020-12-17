@@ -11,7 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.service.PostsService;
-import top.abeille.basic.assets.vo.DetailsVO;
+import top.abeille.basic.assets.vo.PostsContentVO;
 import top.abeille.basic.assets.vo.PostsVO;
 
 import javax.validation.Valid;
@@ -38,8 +38,8 @@ public class PostsController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PostsVO> retrieveArticle(@RequestParam int page, @RequestParam @Range(max = 50) int size) {
-        return postsService.retrieveAll(page, size);
+    public Flux<PostsVO> retrieve(@RequestParam int page, @RequestParam @Range(max = 50) int size) {
+        return postsService.retrieve(page, size);
     }
 
     /**
@@ -49,7 +49,7 @@ public class PostsController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
-    public Mono<DetailsVO> fetchArticle(@PathVariable String code) {
+    public Mono<PostsContentVO> fetch(@PathVariable String code) {
         return postsService.fetchDetailsByCode(code);
     }
 
@@ -61,7 +61,7 @@ public class PostsController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<PostsVO> createArticle(@RequestBody @Valid PostsDTO postsDTO) {
+    public Mono<PostsVO> create(@RequestBody @Valid PostsDTO postsDTO) {
         return postsService.create(postsDTO);
     }
 
@@ -74,7 +74,7 @@ public class PostsController {
      */
     @PutMapping("/{code}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<PostsVO> modifyArticle(@PathVariable String code, @RequestBody @Valid PostsDTO postsDTO) {
+    public Mono<PostsVO> modify(@PathVariable String code, @RequestBody @Valid PostsDTO postsDTO) {
         return postsService.modify(code, postsDTO);
     }
 

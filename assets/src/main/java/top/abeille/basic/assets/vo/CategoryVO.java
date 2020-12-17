@@ -3,32 +3,19 @@
  */
 package top.abeille.basic.assets.vo;
 
-import java.io.Serializable;
-
 /**
  * VO class for TopicInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class CategoryVO implements Serializable {
+public class CategoryVO extends BaseVO {
 
     private static final long serialVersionUID = 6078275280120953852L;
-    /**
-     * 代码
-     */
-    private String code;
     /**
      * 别名
      */
     private String alias;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getAlias() {
         return alias;

@@ -17,8 +17,6 @@ import top.abeille.basic.hypervisor.service.AuthorityService;
 import top.abeille.basic.hypervisor.vo.AuthorityVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.util.List;
-
 /**
  * 权限资源信息Service实现
  *
@@ -34,15 +32,15 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Flux<AuthorityVO> retrieveAll(int page, int size) {
+    public Flux<AuthorityVO> retrieve(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return authorityRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<AuthorityVO> fetchByCode(String code) {
+    public Mono<AuthorityVO> fetch(String code) {
         Asserts.notBlank(code, "code");
-        return this.findByCodeAndEnabledTrue(code).map(this::convertOuter);
+        return authorityRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
@@ -56,22 +54,10 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     @Override
     public Mono<AuthorityVO> modify(String code, AuthorityDTO authorityDTO) {
         Asserts.notBlank(code, "code");
-        return this.findByCodeAndEnabledTrue(code).flatMap(info -> {
+        return authorityRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(authorityDTO, info);
             return authorityRepository.save(info);
         }).map(this::convertOuter);
-    }
-
-    @Override
-    public Mono<Authority> findByCodeAndEnabledTrue(String code) {
-        Asserts.notBlank(code, "code");
-        return authorityRepository.findByCodeAndEnabledTrue(code);
-    }
-
-    @Override
-    public Flux<Authority> findByIdInAndEnabledTrue(List<String> sourceIdList) {
-        Asserts.notNull(sourceIdList, "sourceIdList");
-        return authorityRepository.findByIdInAndEnabledTrue(sourceIdList);
     }
 
     /**

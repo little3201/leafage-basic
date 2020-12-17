@@ -10,13 +10,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.Details;
 import top.abeille.basic.assets.document.Posts;
+import top.abeille.basic.assets.document.PostsContent;
 import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.repository.PostsRepository;
-import top.abeille.basic.assets.service.DetailsService;
+import top.abeille.basic.assets.service.PostsContentService;
 import top.abeille.basic.assets.service.PostsService;
-import top.abeille.basic.assets.vo.DetailsVO;
+import top.abeille.basic.assets.vo.PostsContentVO;
 import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.AbstractBasicService;
 
@@ -29,33 +29,33 @@ import top.abeille.common.basic.AbstractBasicService;
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {
 
     private final PostsRepository postsRepository;
-    private final DetailsService detailsService;
+    private final PostsContentService postsContentService;
 
-    public PostsServiceImpl(PostsRepository postsRepository, DetailsService detailsService) {
+    public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService) {
         this.postsRepository = postsRepository;
-        this.detailsService = detailsService;
+        this.postsContentService = postsContentService;
     }
 
     @Override
-    public Flux<PostsVO> retrieveAll(int page, int size) {
+    public Flux<PostsVO> retrieve(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<DetailsVO> fetchDetailsByCode(String code) {
+    public Mono<PostsContentVO> fetchDetailsByCode(String code) {
         Asserts.notBlank(code, "code");
         return postsRepository.findByCodeAndEnabledTrue(code).flatMap(posts -> {
                     // 将内容设置到vo对像中
-                    DetailsVO detailsVO = new DetailsVO();
-                    BeanUtils.copyProperties(posts, detailsVO);
+                    PostsContentVO postsContentVO = new PostsContentVO();
+                    BeanUtils.copyProperties(posts, postsContentVO);
                     // 根据业务id获取相关内容
-                    return detailsService.fetchByArticleId(posts.getId()).map(contentInfo -> {
-                        detailsVO.setOriginal(contentInfo.getOriginal());
-                        detailsVO.setContent(contentInfo.getContent());
-                        detailsVO.setCatalog(contentInfo.getCatalog());
-                        return detailsVO;
-                    }).defaultIfEmpty(detailsVO);
+                    return postsContentService.fetchByPostsId(posts.getId()).map(contentInfo -> {
+                        postsContentVO.setOriginal(contentInfo.getOriginal());
+                        postsContentVO.setContent(contentInfo.getContent());
+                        postsContentVO.setCatalog(contentInfo.getCatalog());
+                        return postsContentVO;
+                    }).defaultIfEmpty(postsContentVO);
                 }
         );
     }
@@ -68,11 +68,11 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         info.setEnabled(true);
         return postsRepository.insert(info).doOnSuccess(posts -> {
             // 添加内容信息
-            Details details = new Details();
-            BeanUtils.copyProperties(postsDTO, details);
-            details.setArticleId(posts.getId());
+            PostsContent postsContent = new PostsContent();
+            BeanUtils.copyProperties(postsDTO, postsContent);
+            postsContent.setPostsId(posts.getId());
             // 调用subscribe()方法，消费create订阅
-            detailsService.create(details).subscribe();
+            postsContentService.create(postsContent).subscribe();
         }).map(this::convertOuter);
     }
 
@@ -84,10 +84,10 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
             BeanUtils.copyProperties(postsDTO, info);
             return postsRepository.save(info).doOnSuccess(posts ->
                     // 更新成功后，将内容信息更新
-                    detailsService.fetchByArticleId(posts.getId()).doOnNext(detailsInfo -> {
+                    postsContentService.fetchByPostsId(posts.getId()).doOnNext(detailsInfo -> {
                         BeanUtils.copyProperties(postsDTO, detailsInfo);
                         // 调用subscribe()方法，消费modify订阅
-                        detailsService.modify(posts.getId(), detailsInfo).subscribe();
+                        postsContentService.modify(posts.getId(), detailsInfo).subscribe();
                     }).subscribe()
             ).map(this::convertOuter);
         });

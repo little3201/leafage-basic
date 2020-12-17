@@ -6,7 +6,7 @@ package top.abeille.basic.assets.repository;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.Details;
+import top.abeille.basic.assets.document.PostsContent;
 
 /**
  * 内容信息repository
@@ -14,7 +14,7 @@ import top.abeille.basic.assets.document.Details;
  * @author liwenqiang 2020/2/26 18:29
  **/
 @Repository
-public interface DetailsRepository extends ReactiveMongoRepository<Details, String> {
+public interface PostsContentRepository extends ReactiveMongoRepository<PostsContent, String> {
 
     /**
      * 根据文章id查询enabled信息
@@ -22,5 +22,5 @@ public interface DetailsRepository extends ReactiveMongoRepository<Details, Stri
      * @param articleId 文章id
      * @return 文章内容
      */
-    Mono<Details> findByArticleIdAndEnabledTrue(String articleId);
+    Mono<PostsContent> findByPostsIdAndEnabledTrue(String articleId);
 }

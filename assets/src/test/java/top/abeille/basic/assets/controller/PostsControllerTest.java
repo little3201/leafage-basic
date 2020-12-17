@@ -12,7 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.repository.PostsRepository;
-import top.abeille.basic.assets.service.DetailsService;
+import top.abeille.basic.assets.service.PostsContentService;
 import top.abeille.basic.assets.service.impl.PostsServiceImpl;
 
 /**
@@ -27,11 +27,11 @@ public class PostsControllerTest {
     private PostsRepository postsRepository;
 
     @MockBean
-    private DetailsService detailsService;
+    private PostsContentService postsContentService;
 
 
     private final WebTestClient client = WebTestClient.bindToController(new PostsController(
-            new PostsServiceImpl(postsRepository, detailsService))).build();
+            new PostsServiceImpl(postsRepository, postsContentService))).build();
 
     @Test
     public void retrieveArticle() {

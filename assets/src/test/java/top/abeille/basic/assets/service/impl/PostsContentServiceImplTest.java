@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.Details;
-import top.abeille.basic.assets.service.DetailsService;
+import top.abeille.basic.assets.document.PostsContent;
+import top.abeille.basic.assets.service.PostsContentService;
 
 /**
  * 内容接口测试类
@@ -18,17 +18,16 @@ import top.abeille.basic.assets.service.DetailsService;
  * @author liwenqiang 2020/3/1 22:07
  */
 @SpringBootTest
-public class DetailsServiceImplTest {
+public class PostsContentServiceImplTest {
 
     @Autowired
-    private DetailsService detailsService;
+    private PostsContentService postsContentService;
 
     @Test
     public void create() {
-        Details info = new Details();
-        info.setArticleId("TP2277FZ0");
+        PostsContent info = new PostsContent();
         info.setContent("Spring boot");
-        Mono<Details> mono = detailsService.create(info);
+        Mono<PostsContent> mono = postsContentService.create(info);
         Assert.notNull(mono.block(), "The class must not be null");
     }
 }

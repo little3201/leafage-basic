@@ -1,17 +1,27 @@
 /*
  * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.assets.vo;
+
+package top.abeille.basic.assets.document;
+
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Details VO class for ArticleInfo
+ * Model class for ContentInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class DetailsVO extends PostsVO {
+@Document(collection = "posts_content")
+public class PostsContent extends BaseDocument {
 
-    private static final long serialVersionUID = -3631862762916498067L;
-
+    /**
+     * 帖子ID
+     */
+    @Field(value = "posts_id")
+    @Indexed(unique = true)
+    private String postsId;
     /**
      * 原文
      */
@@ -24,6 +34,15 @@ public class DetailsVO extends PostsVO {
      * 目录
      */
     private String catalog;
+
+
+    public String getPostsId() {
+        return postsId;
+    }
+
+    public void setPostsId(String postsId) {
+        this.postsId = postsId;
+    }
 
     public String getOriginal() {
         return original;
@@ -48,4 +67,5 @@ public class DetailsVO extends PostsVO {
     public void setCatalog(String catalog) {
         this.catalog = catalog;
     }
+
 }

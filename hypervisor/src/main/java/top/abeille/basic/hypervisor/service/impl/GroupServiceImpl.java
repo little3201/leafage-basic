@@ -32,13 +32,13 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
-    public Flux<GroupVO> retrieveAll(int page, int size) {
+    public Flux<GroupVO> retrieve(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         return groupRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<GroupVO> fetchByCode(String code) {
+    public Mono<GroupVO> fetch(String code) {
         Asserts.notBlank(code, "code");
         return groupRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }

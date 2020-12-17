@@ -1,16 +1,14 @@
 package top.abeille.basic.assets.service.impl;
 
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.Posts;
 import top.abeille.basic.assets.dto.PostsDTO;
-import top.abeille.basic.assets.repository.PostsRepository;
+import top.abeille.basic.assets.service.PostsService;
 import top.abeille.basic.assets.vo.PostsVO;
 
 import java.util.Random;
@@ -23,36 +21,28 @@ import java.util.Random;
 @SpringBootTest
 public class PostsServiceImplTest {
 
-    @Mock
-    private PostsRepository postsRepository;
-
-    @InjectMocks
-    private PostsServiceImpl postsService;
+    @Autowired
+    private PostsService postsService;
 
     @Test
+    @Rollback
     public void create() {
-        postsService.create(Mockito.mock(PostsDTO.class));
-        Mockito.verify(postsRepository, Mockito.atLeastOnce()).save(Mockito.any());
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setTitle("spring");
+        postsDTO.setContent("spring boot");
+        Mono<PostsVO> outerMono = postsService.create(postsDTO);
+        Assert.notNull(outerMono.block(), "The class must not be null");
     }
 
     @Test
-    public void createError() {
-        Mockito.when(postsRepository.save(Mockito.mock(Posts.class))).thenThrow(new RuntimeException());
-        postsService.create(Mockito.mock(PostsDTO.class));
-        Mockito.verify(postsRepository, Mockito.never()).save(Mockito.any());
+    public void fetchById_returnObject() {
+        Mono<? extends PostsVO> outerMono = postsService.fetch("AT226");
+        Assert.notNull(outerMono.block(), "The class must not be null");
     }
 
     @Test
-    public void fetchDetailsByCode() {
-        Mockito.when(postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mockito.any());
-        Mono<? extends PostsVO> outerMono = postsService.fetchDetailsByCode(Mockito.anyString());
-        Assertions.assertNotNull(outerMono);
-    }
-
-    @Test
-    public void fetchDetailsByCodeEmpty() {
-        Mockito.when(postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mono.empty());
-        Mono<? extends PostsVO> outerMono = postsService.fetchDetailsByCode(String.valueOf(new Random().nextFloat()));
-        Assertions.assertNull(outerMono);
+    public void fetchById_returnNull() {
+        Mono<? extends PostsVO> outerMono = postsService.fetch(String.valueOf(new Random().nextFloat()));
+        Assert.isNull(outerMono.block(), "The class must be null");
     }
 }

@@ -14,21 +14,21 @@ public class RoleAuthorityDTO implements Serializable {
     /**
      * 资源code
      */
-    private String sourceCode;
+    private String authorityCode;
     /**
      * 是否可写
      */
     private boolean hasWrite;
 
-    public String getSourceCode() {
-        return sourceCode;
+    public String getAuthorityCode() {
+        return authorityCode;
     }
 
-    public void setSourceCode(String sourceCode) {
-        this.sourceCode = sourceCode;
+    public void setAuthorityCode(String authorityCode) {
+        this.authorityCode = authorityCode;
     }
 
-    public boolean getHasWrite() {
+    public boolean isHasWrite() {
         return hasWrite;
     }
 

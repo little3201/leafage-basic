@@ -1,7 +1,7 @@
 /*
  * Copyright © 2010-2019 Abeille All rights reserved.
  */
-package top.abeille.basic.hypervisor.vo;
+package top.abeille.basic.hypervisor.domain;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class UserDetailsVO implements Serializable {
+public class UserDetails implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
 
@@ -87,4 +87,5 @@ public class UserDetailsVO implements Serializable {
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
+
 }

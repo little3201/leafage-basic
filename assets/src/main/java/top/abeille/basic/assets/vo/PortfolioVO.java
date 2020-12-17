@@ -3,20 +3,15 @@
  */
 package top.abeille.basic.assets.vo;
 
-import java.io.Serializable;
-
 /**
  * VO for PortfolioInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PortfolioVO implements Serializable {
+public class PortfolioVO extends BaseVO {
 
     private static final long serialVersionUID = -2168494818144125736L;
-    /**
-     * 代码
-     */
-    private String code;
+
     /**
      * 点赞
      */
@@ -42,13 +37,6 @@ public class PortfolioVO implements Serializable {
      */
     private char type;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public int getLikes() {
         return likes;

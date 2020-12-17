@@ -4,8 +4,8 @@
 package top.abeille.basic.hypervisor.service;
 
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.domain.UserDetails;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.BasicService;
 
@@ -16,12 +16,5 @@ import top.abeille.common.basic.BasicService;
  **/
 public interface UserService extends BasicService<UserDTO, UserVO> {
 
-    /**
-     * 根据username 查询账户信息
-     *
-     * @param username 账号
-     * @return UserDetails 账户信息
-     */
-    Mono<UserDetailsVO> fetchDetails(String username);
-
+    Mono<UserDetails> fetchDetails(String username);
 }

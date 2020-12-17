@@ -11,7 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.service.PostsService;
-import top.abeille.basic.assets.vo.DetailsVO;
+import top.abeille.basic.assets.vo.PostsContentVO;
 import top.abeille.basic.assets.vo.PostsVO;
 
 import javax.validation.Valid;
@@ -49,7 +49,7 @@ public class PostsController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
-    public Mono<DetailsVO> fetch(@PathVariable String code) {
+    public Mono<PostsContentVO> fetch(@PathVariable String code) {
         return postsService.fetchDetailsByCode(code);
     }
 

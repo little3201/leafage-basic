@@ -3,10 +3,7 @@
  */
 package top.abeille.basic.hypervisor.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * Model class for ResourceInfo
@@ -16,10 +13,7 @@ import java.time.LocalDateTime;
 public class AuthorityVO implements Serializable {
 
     private static final long serialVersionUID = 9207337014543117619L;
-    /**
-     * 代码
-     */
-    private String code;
+
     /**
      * 上级
      */
@@ -40,20 +34,7 @@ public class AuthorityVO implements Serializable {
      * 描述
      */
     private String description;
-    /**
-     * 修改时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime modifyTime;
 
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getSuperior() {
         return superior;
@@ -95,11 +76,4 @@ public class AuthorityVO implements Serializable {
         this.description = description;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

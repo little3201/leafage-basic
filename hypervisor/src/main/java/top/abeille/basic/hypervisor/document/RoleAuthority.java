@@ -28,9 +28,9 @@ public class RoleAuthority extends BaseDocument {
     @Field(value = "authority_id")
     private String authorityId;
     /**
-     * 是否可写
+     * 请求方式, 如：GET、POST、PUT、DELETE等
      */
-    private boolean hasWrite;
+    private String mode;
 
 
     public String getRoleId() {
@@ -49,11 +49,11 @@ public class RoleAuthority extends BaseDocument {
         this.authorityId = authorityId;
     }
 
-    public boolean isHasWrite() {
-        return hasWrite;
+    public String getMode() {
+        return mode;
     }
 
-    public void setHasWrite(boolean hasWrite) {
-        this.hasWrite = hasWrite;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

@@ -63,11 +63,10 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         BeanUtils.copyProperties(userDTO, user);
         user.setUsername(user.getEmail().substring(0, user.getEmail().indexOf("@")));
         user.setPassword(new BCryptPasswordEncoder().encode("110119"));
-        Mono<User> userMono = userRepository.insert(user).switchIfEmpty(Mono.error(RuntimeException::new));
-        // 处理角色
-        userMono.flatMap(u -> this.initUserRole(u.getId(), userDTO.getRoles()))
-                .switchIfEmpty(Mono.empty())
-                .map(userRoleRepository::saveAll);
+        Mono<User> userMono = userRepository.insert(user)
+                .switchIfEmpty(Mono.error(RuntimeException::new))
+                .doOnSuccess(u -> this.initUserRole(u.getId(), userDTO.getRoles()).subscribe(userRoles ->
+                        userRoleRepository.saveAll(userRoles).subscribe()));
         return userMono.map(this::convertOuter);
     }
 
@@ -78,12 +77,12 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(user -> {
                     BeanUtils.copyProperties(userDTO, user);
-                    return userRepository.save(user);
+                    return userRepository.save(user)
+                            .switchIfEmpty(Mono.error(RuntimeException::new))
+                            .doOnSuccess(u ->
+                                    this.initUserRole(u.getId(), userDTO.getRoles()).subscribe(userRoles ->
+                                            userRoleRepository.saveAll(userRoles).subscribe()));
                 });
-        // 处理角色
-        userMono.flatMap(user -> this.initUserRole(user.getId(), userDTO.getRoles()))
-                .switchIfEmpty(Mono.empty())
-                .map(userRoleRepository::saveAll);
         return userMono.map(this::convertOuter);
     }
 
@@ -102,15 +101,15 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Roles")))
                 .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID
-        Mono<ArrayList<String>> sourceIdListMono = roleIdListMono.flatMap(roleIdList -> roleAuthorityRepository.findByRoleIdIn(roleIdList)
+        Mono<ArrayList<String>> authorityIdListMono = roleIdListMono.flatMap(roleIdList -> roleAuthorityRepository.findByRoleIdIn(roleIdList)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Authorities")))
-                .collect(ArrayList::new, (sourceIdList, roleSource) -> sourceIdList.add(roleSource.getAuthorityId())));
+                .collect(ArrayList::new, (authorityIdList, roleAuthority) -> authorityIdList.add(roleAuthority.getAuthorityId())));
         // 查权限
-        Mono<Set<String>> authorityList = sourceIdListMono.flatMap(sourceIdList ->
-                authorityRepository.findByIdInAndEnabledTrue(sourceIdList).collect(HashSet::new, (sourceList, sourceInfo) ->
-                        sourceList.add(sourceInfo.getCode())));
+        Mono<Set<String>> authorityCodeList = authorityIdListMono.flatMap(authorityIdList ->
+                authorityRepository.findByIdInAndEnabledTrue(authorityIdList).collect(HashSet::new, (authorityList, authority) ->
+                        authorityList.add(authority.getCode())));
         // 构造用户信息
-        return authorityList.zipWith(infoMono, (authorities, user) -> {
+        return authorityCodeList.zipWith(infoMono, (authorities, user) -> {
             UserDetails userDetails = new UserDetails();
             BeanUtils.copyProperties(user, userDetails);
             userDetails.setAuthorities(authorities);

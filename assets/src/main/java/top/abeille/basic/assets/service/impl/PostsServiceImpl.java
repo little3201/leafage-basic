@@ -20,6 +20,8 @@ import top.abeille.basic.assets.vo.PostsContentVO;
 import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import javax.naming.NotContextException;
+
 /**
  * 文章信息service实现
  *
@@ -66,31 +68,39 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         BeanUtils.copyProperties(postsDTO, info);
         info.setCode(this.generateCode());
         info.setEnabled(true);
-        return postsRepository.insert(info).doOnSuccess(posts -> {
-            // 添加内容信息
-            PostsContent postsContent = new PostsContent();
-            BeanUtils.copyProperties(postsDTO, postsContent);
-            postsContent.setPostsId(posts.getId());
-            // 调用subscribe()方法，消费create订阅
-            postsContentService.create(postsContent).subscribe();
-        }).map(this::convertOuter);
+        Mono<Posts> postsMono = postsRepository.insert(info)
+                .switchIfEmpty(Mono.error(RuntimeException::new))
+                .doOnSuccess(posts -> {
+                    // 添加内容信息
+                    PostsContent postsContent = new PostsContent();
+                    BeanUtils.copyProperties(postsDTO, postsContent);
+                    postsContent.setPostsId(posts.getId());
+                    // 调用subscribe()方法，消费create订阅
+                    postsContentService.create(postsContent).subscribe();
+                });
+        return postsMono.map(this::convertOuter);
     }
 
     @Override
     public Mono<PostsVO> modify(String code, PostsDTO postsDTO) {
         Asserts.notBlank(code, "code");
-        return postsRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
-            // 将信息复制到info
-            BeanUtils.copyProperties(postsDTO, info);
-            return postsRepository.save(info).doOnSuccess(posts ->
-                    // 更新成功后，将内容信息更新
-                    postsContentService.fetchByPostsId(posts.getId()).doOnNext(detailsInfo -> {
-                        BeanUtils.copyProperties(postsDTO, detailsInfo);
-                        // 调用subscribe()方法，消费modify订阅
-                        postsContentService.modify(posts.getId(), detailsInfo).subscribe();
-                    }).subscribe()
-            ).map(this::convertOuter);
-        });
+        Mono<Posts> postsMono = postsRepository.findByCodeAndEnabledTrue(code)
+                .switchIfEmpty(Mono.error(NotContextException::new))
+                .flatMap(info -> {
+                    // 将信息复制到info
+                    BeanUtils.copyProperties(postsDTO, info);
+                    return postsRepository.save(info)
+                            .switchIfEmpty(Mono.error(RuntimeException::new))
+                            .doOnSuccess(posts ->
+                                    // 更新成功后，将内容信息更新
+                                    postsContentService.fetchByPostsId(posts.getId()).subscribe(detailsInfo -> {
+                                        BeanUtils.copyProperties(postsDTO, detailsInfo);
+                                        // 调用subscribe()方法，消费modify订阅
+                                        postsContentService.modify(posts.getId(), detailsInfo).subscribe();
+                                    })
+                            );
+                });
+        return postsMono.map(this::convertOuter);
     }
 
     @Override

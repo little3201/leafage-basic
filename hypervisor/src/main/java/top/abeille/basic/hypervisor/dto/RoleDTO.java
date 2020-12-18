@@ -29,6 +29,10 @@ public class RoleDTO implements Serializable {
      * 资源列表
      */
     private Set<RoleAuthorityDTO> authorities = Collections.emptySet();
+    /**
+     * 修改人
+     */
+    private String modifier;
 
     public String getName() {
         return name;
@@ -52,5 +56,13 @@ public class RoleDTO implements Serializable {
 
     public void setAuthorities(Set<RoleAuthorityDTO> authorities) {
         this.authorities = authorities;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 }

@@ -3,14 +3,12 @@
  */
 package top.abeille.basic.hypervisor.vo;
 
-import java.io.Serializable;
-
 /**
  * Model class for ResourceInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AuthorityVO implements Serializable {
+public class AuthorityVO extends BaseVO {
 
     private static final long serialVersionUID = 9207337014543117619L;
 

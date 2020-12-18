@@ -12,27 +12,27 @@ public class RoleAuthorityDTO implements Serializable {
     private static final long serialVersionUID = 1432721617667440537L;
 
     /**
-     * 资源code
+     * 权限 code
      */
-    private String authorityCode;
+    private String code;
     /**
      * 是否可写
      */
-    private boolean hasWrite;
+    private String mode;
 
-    public String getAuthorityCode() {
-        return authorityCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setAuthorityCode(String authorityCode) {
-        this.authorityCode = authorityCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public boolean isHasWrite() {
-        return hasWrite;
+    public String getMode() {
+        return mode;
     }
 
-    public void setHasWrite(boolean hasWrite) {
-        this.hasWrite = hasWrite;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

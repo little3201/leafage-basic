@@ -31,7 +31,7 @@ public class Authority extends BaseDocument {
     /**
      * 类型
      */
-    private Type type;
+    private String type;
     /**
      * 路径
      */
@@ -71,11 +71,11 @@ public class Authority extends BaseDocument {
     }
 
     public String getType() {
-        return type.val;
+        return type;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setType(String type) {
+        this.type = Type.valueOf(type.toUpperCase()).name();
     }
 
     public String getPath() {
@@ -106,27 +106,19 @@ public class Authority extends BaseDocument {
         /**
          * 菜单
          */
-        MENU(0, "menu"),
+        MENU,
         /**
          * 按钮
          */
-        BTN(1, "btn"),
+        BTN,
         /**
          * tab页
          */
-        TAB(2, "tab"),
+        TAB,
         /**
          * 接口
          */
         @JsonEnumDefaultValue
-        URL(3, "url");
-
-        int code;
-        String val;
-
-        Type(int code, String val) {
-            this.code = code;
-            this.val = val;
-        }
+        URL
     }
 }

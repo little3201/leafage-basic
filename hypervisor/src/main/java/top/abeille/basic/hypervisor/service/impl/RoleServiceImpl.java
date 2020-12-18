@@ -7,7 +7,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Authority;
@@ -22,6 +21,7 @@ import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import javax.naming.NotContextException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,28 +57,38 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
-        Role info = new Role();
-        BeanUtils.copyProperties(roleDTO, info);
-        info.setCode(this.generateCode());
-        return roleRepository.insert(info).doOnNext(role -> {
-            List<RoleAuthority> userRoleList = roleDTO.getSources().stream().map(source ->
-                    this.initRoleSource(role.getId(), role.getModifier(), source)).collect(Collectors.toList());
-            if (!CollectionUtils.isEmpty(userRoleList)) {
-                roleAuthorityRepository.saveAll(userRoleList).subscribe();
-            }
-        }).map(this::convertOuter);
+        Role role = new Role();
+        BeanUtils.copyProperties(roleDTO, role);
+        role.setCode(this.generateCode());
+        Mono<Role> roleMono = roleRepository.insert(role);
+        // 处理权限
+        roleMono.map(r -> {
+            List<Mono<Authority>> monoList = roleDTO.getAuthorities().stream().map(authorityDTO ->
+                    this.initRoleAuthority(r.getId(), r.getModifier(), authorityDTO)
+                            .switchIfEmpty(Mono.empty()))
+                    .collect(Collectors.toList());
+            return monoList.stream().sequential().map(authorityMono -> authorityMono.map(authorityRepository::save));
+        });
+        return roleMono.map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
-        return roleRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
-            BeanUtils.copyProperties(roleDTO, info);
-            return roleRepository.save(info).doOnNext(role -> {
-                List<RoleAuthority> userRoleList = roleDTO.getSources().stream().map(source ->
-                        this.initRoleSource(role.getId(), role.getModifier(), source)).collect(Collectors.toList());
-                roleAuthorityRepository.saveAll(userRoleList).subscribe();
-            });
-        }).map(this::convertOuter);
+        Mono<Role> roleMono = roleRepository.findByCodeAndEnabledTrue(code)
+                .switchIfEmpty(Mono.error(NotContextException::new))
+                .flatMap(role -> {
+                    BeanUtils.copyProperties(roleDTO, role);
+                    return roleRepository.save(role);
+                });
+        // 处理权限
+        roleMono.map(role -> {
+            List<Mono<Authority>> monoList = roleDTO.getAuthorities().stream().map(authorityDTO ->
+                    this.initRoleAuthority(role.getId(), role.getModifier(), authorityDTO)
+                            .switchIfEmpty(Mono.empty()))
+                    .collect(Collectors.toList());
+            return monoList.stream().sequential().map(authorityMono -> authorityMono.map(authorityRepository::save));
+        });
+        return roleMono.map(this::convertOuter);
     }
 
     /**
@@ -101,16 +111,17 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      * @param roleAuthorityDTO 资源信息
      * @return 用户-角色对象
      */
-    private RoleAuthority initRoleSource(String roleId, String modifier, RoleAuthorityDTO roleAuthorityDTO) {
-        RoleAuthority roleAuthority = new RoleAuthority();
-        roleAuthority.setRoleId(roleId);
-        Authority authority = authorityRepository.findByCodeAndEnabledTrue(roleAuthorityDTO.getAuthorityCode()).block();
-        if (authority != null) {
-            roleAuthority.setAuthorityId(authority.getId());
-        }
-        roleAuthority.setHasWrite(roleAuthorityDTO.isHasWrite());
-        roleAuthority.setModifier(modifier);
-        return roleAuthority;
+    private Mono<Authority> initRoleAuthority(String roleId, String modifier, RoleAuthorityDTO roleAuthorityDTO) {
+        Mono<Authority> authorityMono = authorityRepository.findByCodeAndEnabledTrue(roleAuthorityDTO.getAuthorityCode())
+                .switchIfEmpty(Mono.error(NotContextException::new));
+
+        return authorityMono.map(authority -> {
+            RoleAuthority roleAuthority = new RoleAuthority();
+            roleAuthority.setRoleId(roleId);
+            roleAuthority.setHasWrite(roleAuthorityDTO.isHasWrite());
+            roleAuthority.setModifier(modifier);
+            return authority;
+        });
     }
 
 }

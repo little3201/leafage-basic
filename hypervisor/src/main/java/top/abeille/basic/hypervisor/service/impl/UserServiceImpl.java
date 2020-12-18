@@ -63,8 +63,11 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         BeanUtils.copyProperties(userDTO, user);
         user.setUsername(user.getEmail().substring(0, user.getEmail().indexOf("@")));
         user.setPassword(new BCryptPasswordEncoder().encode("110119"));
-        Mono<User> userMono = userRepository.save(user).switchIfEmpty(Mono.error(RuntimeException::new));
-        userMono.flatMap(u -> this.initUserRole(u.getId(), userDTO.getRoles())).doOnNext(userRoleRepository::saveAll);
+        Mono<User> userMono = userRepository.insert(user).switchIfEmpty(Mono.error(RuntimeException::new));
+        // 处理角色
+        userMono.flatMap(u -> this.initUserRole(u.getId(), userDTO.getRoles()))
+                .switchIfEmpty(Mono.empty())
+                .map(userRoleRepository::saveAll);
         return userMono.map(this::convertOuter);
     }
 
@@ -77,6 +80,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                     BeanUtils.copyProperties(userDTO, user);
                     return userRepository.save(user);
                 });
+        // 处理角色
         userMono.flatMap(user -> this.initUserRole(user.getId(), userDTO.getRoles()))
                 .switchIfEmpty(Mono.empty())
                 .map(userRoleRepository::saveAll);

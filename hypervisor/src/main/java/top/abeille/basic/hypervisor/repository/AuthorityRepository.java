@@ -10,7 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Authority;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * 权限资源dao
@@ -39,8 +39,8 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
     /**
      * 根据权限Id集合查询多条enabled信息
      *
-     * @param sourceIdList id集合
+     * @param ids id集合
      * @return 资源信息
      */
-    Flux<Authority> findByIdInAndEnabledTrue(List<String> sourceIdList);
+    Flux<Authority> findByIdInAndEnabledTrue(Collection<String> ids);
 }

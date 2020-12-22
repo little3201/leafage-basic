@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.hypervisor.document;
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -43,9 +44,9 @@ public class User extends BaseDocument {
      */
     private String email;
     /**
-     * 性别: 0-男 1-女 2-保密
+     * 性别
      */
-    private Integer gender;
+    private String gender;
     /**
      * 出生日期
      */
@@ -66,6 +67,9 @@ public class User extends BaseDocument {
     @Field(name = "is_credentials_non_expired")
     private boolean credentialsNonExpired = true;
 
+    public String getGender() {
+        return gender;
+    }
 
     public String getUsername() {
         return username;
@@ -115,12 +119,24 @@ public class User extends BaseDocument {
         this.email = email;
     }
 
-    public Integer getGender() {
-        return gender;
+    public void setGender(String gender) {
+        this.gender = Gender.valueOf(gender.toUpperCase()).name();
     }
 
-    public void setGender(Integer gender) {
-        this.gender = gender;
+    enum Gender {
+        /**
+         * 男
+         */
+        FEMALE,
+        /**
+         * 女
+         */
+        MALE,
+        /**
+         * 未知
+         */
+        @JsonEnumDefaultValue
+        UNKNOWN
     }
 
     public LocalDate getBirthday() {

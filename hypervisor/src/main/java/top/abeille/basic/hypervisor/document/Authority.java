@@ -45,6 +45,25 @@ public class Authority extends BaseDocument {
      */
     private String description;
 
+    enum Type {
+        /**
+         * 菜单
+         */
+        MENU,
+        /**
+         * 按钮
+         */
+        BTN,
+        /**
+         * tab页
+         */
+        TAB,
+        /**
+         * 接口
+         */
+        @JsonEnumDefaultValue
+        URL
+    }
 
     public String getCode() {
         return code;
@@ -102,23 +121,4 @@ public class Authority extends BaseDocument {
         this.description = description;
     }
 
-    enum Type {
-        /**
-         * 菜单
-         */
-        MENU,
-        /**
-         * 按钮
-         */
-        BTN,
-        /**
-         * tab页
-         */
-        TAB,
-        /**
-         * 接口
-         */
-        @JsonEnumDefaultValue
-        URL
-    }
 }

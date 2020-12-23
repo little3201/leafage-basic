@@ -33,7 +33,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Flux<GroupVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
         return groupRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 

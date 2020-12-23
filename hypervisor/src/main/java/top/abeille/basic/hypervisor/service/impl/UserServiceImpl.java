@@ -53,7 +53,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Flux<UserVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
         return userRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 

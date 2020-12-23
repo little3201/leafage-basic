@@ -35,7 +35,7 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
 
     @Override
     public Flux<PortfolioVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
         return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 

@@ -33,7 +33,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public Flux<AuthorityVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
         return authorityRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 

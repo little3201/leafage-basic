@@ -32,9 +32,9 @@ public class PostsContentServiceImpl implements PostsContentService {
     }
 
     @Override
-    public Mono<PostsContent> modify(String articleId, PostsContent postsContentInfo) {
-        Asserts.notBlank(articleId, "articleId");
-        return this.fetchByPostsId(articleId).flatMap(details -> {
+    public Mono<PostsContent> modify(String postsId, PostsContent postsContentInfo) {
+        Asserts.notBlank(postsId, "postsId");
+        return this.fetchByPostsId(postsId).flatMap(details -> {
             BeanUtils.copyProperties(postsContentInfo, details);
             return postsContentRepository.save(details);
         });

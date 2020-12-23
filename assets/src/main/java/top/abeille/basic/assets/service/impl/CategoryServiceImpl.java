@@ -33,7 +33,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Flux<CategoryVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
         return categoryRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 

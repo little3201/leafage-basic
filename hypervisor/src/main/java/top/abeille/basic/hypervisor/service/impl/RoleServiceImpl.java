@@ -46,7 +46,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Flux<RoleVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
         return roleRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
@@ -100,7 +100,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
             roleAuthorityDTOS.forEach(roleAuthorityDTO ->
                     authorityRepository.findByCodeAndEnabledTrue(roleAuthorityDTO.getCode())
                             .switchIfEmpty(Mono.error(NotContextException::new))
-                            .subscribe(authority -> {
+                            .doOnNext(authority -> {
                                 RoleAuthority roleAuthority = new RoleAuthority();
                                 roleAuthority.setRoleId(roleId);
                                 roleAuthority.setAuthorityId(authority.getId());

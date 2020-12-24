@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.Posts;
@@ -39,8 +40,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Flux<PostsVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
+    public Flux<PostsVO> retrieve(int page, int size, String order) {
+        Sort sort;
+        if (StringUtils.hasText(order)) {
+            sort = Sort.by(Sort.Direction.DESC, order);
+        } else {
+            sort = Sort.by(Sort.Direction.DESC, "modify_time");
+        }
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 

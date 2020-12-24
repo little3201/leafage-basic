@@ -27,7 +27,6 @@ public class PortfolioDTO implements Serializable {
     /**
      * 类型
      */
-    @NotBlank
     private char type;
 
     public String getTitle() {

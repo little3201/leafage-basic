@@ -31,6 +31,18 @@ public class Portfolio extends BaseDocument {
      * 类型：0-图片，1-视频
      */
     private char type;
+    /**
+     * 点赞
+     */
+    private int likes;
+    /**
+     * 评论
+     */
+    private int comment;
+    /**
+     * 查看
+     */
+    private int viewed;
 
 
     public String getCode() {
@@ -65,4 +77,27 @@ public class Portfolio extends BaseDocument {
         this.type = type;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getComment() {
+        return comment;
+    }
+
+    public void setComment(int comment) {
+        this.comment = comment;
+    }
+
+    public int getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
+    }
 }

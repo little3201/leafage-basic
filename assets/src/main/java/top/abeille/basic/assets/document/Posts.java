@@ -31,6 +31,18 @@ public class Posts extends BaseDocument {
      * 封面
      */
     private String cover;
+    /**
+     * 点赞
+     */
+    private int likes;
+    /**
+     * 评论
+     */
+    private int comment;
+    /**
+     * 查看
+     */
+    private int viewed;
 
     public String getCode() {
         return code;

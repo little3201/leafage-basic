@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
@@ -20,10 +21,12 @@ public class RoleDTO implements Serializable {
      * 名称
      */
     @NotBlank
+    @Size(max = 16)
     private String name;
     /**
      * 描述
      */
+    @Size(max = 32)
     private String description;
     /**
      * 资源列表

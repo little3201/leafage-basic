@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,7 @@ public class PortfolioDTO implements Serializable {
      * 标题
      */
     @NotBlank
+    @Size(max = 32)
     private String title;
     /**
      * url

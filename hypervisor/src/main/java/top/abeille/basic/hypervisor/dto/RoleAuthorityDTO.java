@@ -1,5 +1,6 @@
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,7 @@ public class RoleAuthorityDTO implements Serializable {
     /**
      * 权限 code
      */
+    @NotBlank
     private String code;
     /**
      * 是否可写

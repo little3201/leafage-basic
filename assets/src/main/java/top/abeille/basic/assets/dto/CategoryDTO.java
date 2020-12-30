@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -19,6 +20,7 @@ public class CategoryDTO implements Serializable {
      * 别名
      */
     @NotBlank
+    @Size(max = 16)
     private String alias;
 
     public String getAlias() {

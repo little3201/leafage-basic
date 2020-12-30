@@ -4,6 +4,7 @@
 package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -22,6 +23,7 @@ public class AuthorityDTO implements Serializable {
      * 名称
      */
     @NotBlank
+    @Size(max = 16)
     private String name;
     /**
      * 类型

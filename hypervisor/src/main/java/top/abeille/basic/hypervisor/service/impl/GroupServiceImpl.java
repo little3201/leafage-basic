@@ -5,7 +5,10 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Group;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
@@ -13,8 +16,6 @@ import top.abeille.basic.hypervisor.repository.GroupRepository;
 import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractBasicService;
-
-import java.time.LocalDateTime;
 
 /**
  * 组织信息Service实现
@@ -31,7 +32,13 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
-    public Mono<GroupVO> fetchByCode(String code) {
+    public Flux<GroupVO> retrieve(int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
+        return groupRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<GroupVO> fetch(String code) {
         Asserts.notBlank(code, "code");
         return groupRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
@@ -41,7 +48,6 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         Group info = new Group();
         BeanUtils.copyProperties(groupDTO, info);
         info.setCode(this.generateCode());
-        info.setModifyTime(LocalDateTime.now());
         return groupRepository.insert(info).map(this::convertOuter);
     }
 
@@ -49,7 +55,6 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
         return groupRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
-            info.setModifyTime(LocalDateTime.now());
             return groupRepository.save(info);
         }).map(this::convertOuter);
     }

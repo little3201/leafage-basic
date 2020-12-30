@@ -3,13 +3,14 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Authority;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * 权限资源dao
@@ -18,6 +19,14 @@ import java.util.List;
  **/
 @Repository
 public interface AuthorityRepository extends ReactiveMongoRepository<Authority, String> {
+
+    /**
+     * 分页查询权限
+     *
+     * @param pageable 分页参数
+     * @return 有效权限
+     */
+    Flux<Authority> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据code查询enabled信息
@@ -30,8 +39,16 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
     /**
      * 根据权限Id集合查询多条enabled信息
      *
-     * @param sourceIdList id集合
+     * @param ids id集合
      * @return 资源信息
      */
-    Flux<Authority> findByIdInAndEnabledTrue(List<String> sourceIdList);
+    Flux<Authority> findByIdInAndEnabledTrue(Collection<String> ids);
+
+    /**
+     * 根据权限
+     *
+     * @param codes 代码集合
+     * @return 角色信息
+     */
+    Flux<Authority> findByCodeInAndEnabledTrue(Collection<String> codes);
 }

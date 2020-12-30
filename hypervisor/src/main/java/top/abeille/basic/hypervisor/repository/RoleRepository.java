@@ -3,10 +3,14 @@
  */
 package top.abeille.basic.hypervisor.repository;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Role;
+
+import java.util.Collection;
 
 /**
  * 角色信息dao接口
@@ -17,10 +21,26 @@ import top.abeille.basic.hypervisor.document.Role;
 public interface RoleRepository extends ReactiveMongoRepository<Role, String> {
 
     /**
+     * 分页查询角色
+     *
+     * @param pageable 分页参数
+     * @return 有效角色
+     */
+    Flux<Role> findByEnabledTrue(Pageable pageable);
+
+    /**
      * 根据code查询enabled信息
      *
      * @param code 代码
      * @return 角色信息
      */
     Mono<Role> findByCodeAndEnabledTrue(String code);
+
+    /**
+     * 查询角色
+     *
+     * @param codes 代码集合
+     * @return 角色信息
+     */
+    Flux<Role> findByCodeInAndEnabledTrue(Collection<String> codes);
 }

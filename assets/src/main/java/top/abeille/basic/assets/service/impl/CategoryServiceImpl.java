@@ -5,6 +5,7 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -15,8 +16,6 @@ import top.abeille.basic.assets.repository.CategoryRepository;
 import top.abeille.basic.assets.service.CategoryService;
 import top.abeille.basic.assets.vo.CategoryVO;
 import top.abeille.common.basic.AbstractBasicService;
-
-import java.time.LocalDateTime;
 
 /**
  * 话题信息service实现
@@ -33,13 +32,13 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Flux<CategoryVO> retrieveAll() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return categoryRepository.findAll(sort).map(this::convertOuter);
+    public Flux<CategoryVO> retrieve(int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
+        return categoryRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<CategoryVO> fetchByCode(String code) {
+    public Mono<CategoryVO> fetch(String code) {
         Asserts.notBlank(code, "code");
         Category info = new Category();
         info.setCode(code);
@@ -51,7 +50,6 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Category info = new Category();
         BeanUtils.copyProperties(categoryDTO, info);
         info.setCode(this.generateCode());
-        info.setModifyTime(LocalDateTime.now());
         return categoryRepository.insert(info).map(this::convertOuter);
     }
 
@@ -60,7 +58,6 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Asserts.notBlank(code, "code");
         return categoryRepository.findByCodeAndEnabledTrue(code).flatMap(category -> {
             BeanUtils.copyProperties(categoryDTO, category);
-            category.setModifyTime(LocalDateTime.now());
             return categoryRepository.save(category).map(this::convertOuter);
         });
     }

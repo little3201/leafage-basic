@@ -3,12 +3,9 @@
  */
 package top.abeille.basic.hypervisor.document;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.time.LocalDateTime;
 
 /**
  * Model class for RoleResource
@@ -16,13 +13,8 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "role_authority")
-public class RoleAuthority {
+public class RoleAuthority extends BaseDocument {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 角色ID
      */
@@ -33,29 +25,13 @@ public class RoleAuthority {
      * 资源ID
      */
     @Indexed
-    @Field(value = "resource_id")
-    private String resourceId;
+    @Field(value = "authority_id")
+    private String authorityId;
     /**
-     * 是否可写
+     * 请求方式, 如：GET、POST、PUT、DELETE等
      */
-    private boolean hasWrite;
-    /**
-     * 修改人
-     */
-    private String modifier;
-    /**
-     * 修改时间
-     */
-    @Field(value = "modify_time")
-    private LocalDateTime modifyTime;
+    private String mode;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getRoleId() {
         return roleId;
@@ -65,35 +41,19 @@ public class RoleAuthority {
         this.roleId = roleId;
     }
 
-    public String getResourceId() {
-        return resourceId;
+    public String getAuthorityId() {
+        return authorityId;
     }
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId;
+    public void setAuthorityId(String authorityId) {
+        this.authorityId = authorityId;
     }
 
-    public boolean getHasWrite() {
-        return hasWrite;
+    public String getMode() {
+        return mode;
     }
 
-    public void setHasWrite(boolean hasWrite) {
-        this.hasWrite = hasWrite;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

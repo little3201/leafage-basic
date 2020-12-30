@@ -5,21 +5,23 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.document.Details;
 import top.abeille.basic.assets.document.Posts;
+import top.abeille.basic.assets.document.PostsContent;
 import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.repository.PostsRepository;
-import top.abeille.basic.assets.service.DetailsService;
+import top.abeille.basic.assets.service.PostsContentService;
 import top.abeille.basic.assets.service.PostsService;
-import top.abeille.basic.assets.vo.DetailsVO;
+import top.abeille.basic.assets.vo.PostsContentVO;
 import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
+import javax.naming.NotContextException;
 
 /**
  * 文章信息service实现
@@ -30,33 +32,38 @@ import java.time.LocalDateTime;
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {
 
     private final PostsRepository postsRepository;
-    private final DetailsService detailsService;
+    private final PostsContentService postsContentService;
 
-    public PostsServiceImpl(PostsRepository postsRepository, DetailsService detailsService) {
+    public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService) {
         this.postsRepository = postsRepository;
-        this.detailsService = detailsService;
+        this.postsContentService = postsContentService;
     }
 
     @Override
-    public Flux<PostsVO> retrieveAll() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return postsRepository.findAll(sort).map(this::convertOuter);
+    public Flux<PostsVO> retrieve(int page, int size, String order) {
+        Sort sort;
+        if (StringUtils.hasText(order)) {
+            sort = Sort.by(Sort.Direction.DESC, order);
+        } else {
+            sort = Sort.by(Sort.Direction.DESC, "modify_time");
+        }
+        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<DetailsVO> fetchDetailsByCode(String code) {
+    public Mono<PostsContentVO> fetchDetailsByCode(String code) {
         Asserts.notBlank(code, "code");
         return postsRepository.findByCodeAndEnabledTrue(code).flatMap(posts -> {
-            // 将内容设置到vo对像中
-            DetailsVO detailsVO = new DetailsVO();
-            BeanUtils.copyProperties(posts, detailsVO);
-            // 根据业务id获取相关内容
-            return detailsService.fetchByArticleId(posts.getId()).map(contentInfo -> {
-                detailsVO.setOriginal(contentInfo.getOriginal());
-                detailsVO.setContent(contentInfo.getContent());
-                detailsVO.setCatalog(contentInfo.getCatalog());
-                return detailsVO;
-            }).defaultIfEmpty(detailsVO);
+                    // 将内容设置到vo对像中
+                    PostsContentVO postsContentVO = new PostsContentVO();
+                    BeanUtils.copyProperties(posts, postsContentVO);
+                    // 根据业务id获取相关内容
+                    return postsContentService.fetchByPostsId(posts.getId()).map(contentInfo -> {
+                        postsContentVO.setOriginal(contentInfo.getOriginal());
+                        postsContentVO.setContent(contentInfo.getContent());
+                        postsContentVO.setCatalog(contentInfo.getCatalog());
+                        return postsContentVO;
+                    }).defaultIfEmpty(postsContentVO);
                 }
         );
     }
@@ -67,33 +74,39 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         BeanUtils.copyProperties(postsDTO, info);
         info.setCode(this.generateCode());
         info.setEnabled(true);
-        info.setModifyTime(LocalDateTime.now());
-        return postsRepository.insert(info).doOnSuccess(posts -> {
-            // 添加内容信息
-            Details details = new Details();
-            BeanUtils.copyProperties(postsDTO, details);
-            details.setArticleId(posts.getId());
-            // 调用subscribe()方法，消费create订阅
-            detailsService.create(details).subscribe();
-        }).map(this::convertOuter);
+        Mono<Posts> postsMono = postsRepository.insert(info)
+                .switchIfEmpty(Mono.error(RuntimeException::new))
+                .doOnSuccess(posts -> {
+                    // 添加内容信息
+                    PostsContent postsContent = new PostsContent();
+                    BeanUtils.copyProperties(postsDTO, postsContent);
+                    postsContent.setPostsId(posts.getId());
+                    // 调用subscribe()方法，消费create订阅
+                    postsContentService.create(postsContent).subscribe();
+                });
+        return postsMono.map(this::convertOuter);
     }
 
     @Override
     public Mono<PostsVO> modify(String code, PostsDTO postsDTO) {
         Asserts.notBlank(code, "code");
-        return postsRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
-            // 将信息复制到info
-            BeanUtils.copyProperties(postsDTO, info);
-            info.setModifyTime(LocalDateTime.now());
-            return postsRepository.save(info).doOnSuccess(posts ->
-                    // 更新成功后，将内容信息更新
-                    detailsService.fetchByArticleId(posts.getId()).doOnNext(detailsInfo -> {
-                        BeanUtils.copyProperties(postsDTO, detailsInfo);
-                        // 调用subscribe()方法，消费modify订阅
-                        detailsService.modify(posts.getId(), detailsInfo).subscribe();
-                    }).subscribe()
-            ).map(this::convertOuter);
-        });
+        Mono<Posts> postsMono = postsRepository.findByCodeAndEnabledTrue(code)
+                .switchIfEmpty(Mono.error(NotContextException::new))
+                .flatMap(info -> {
+                    // 将信息复制到info
+                    BeanUtils.copyProperties(postsDTO, info);
+                    return postsRepository.save(info)
+                            .switchIfEmpty(Mono.error(RuntimeException::new))
+                            .doOnSuccess(posts ->
+                                    // 更新成功后，将内容信息更新
+                                    postsContentService.fetchByPostsId(posts.getId()).subscribe(detailsInfo -> {
+                                        BeanUtils.copyProperties(postsDTO, detailsInfo);
+                                        // 调用subscribe()方法，消费modify订阅
+                                        postsContentService.modify(posts.getId(), detailsInfo).subscribe();
+                                    })
+                            );
+                });
+        return postsMono.map(this::convertOuter);
     }
 
     @Override

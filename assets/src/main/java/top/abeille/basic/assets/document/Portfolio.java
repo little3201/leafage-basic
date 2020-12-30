@@ -3,12 +3,8 @@
  */
 package top.abeille.basic.assets.document;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.time.LocalDateTime;
 
 /**
  * Model class for ArticleInfo
@@ -16,13 +12,8 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "portfolio")
-public class Portfolio {
+public class Portfolio extends BaseDocument {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 代码
      */
@@ -41,26 +32,18 @@ public class Portfolio {
      */
     private char type;
     /**
-     * 是否有效
+     * 点赞
      */
-    private boolean enabled;
+    private int likes;
     /**
-     * 修改人
+     * 评论
      */
-    private String modifier;
+    private int comment;
     /**
-     * 修改时间
+     * 查看
      */
-    @Field(value = "modify_time")
-    private LocalDateTime modifyTime;
+    private int viewed;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getCode() {
         return code;
@@ -94,27 +77,27 @@ public class Portfolio {
         this.type = type;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
-    public String getModifier() {
-        return modifier;
+    public int getComment() {
+        return comment;
     }
 
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
+    public void setComment(int comment) {
+        this.comment = comment;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public int getViewed() {
+        return viewed;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
     }
 }

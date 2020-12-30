@@ -29,24 +29,24 @@ public class PortfolioController {
     }
 
     /**
-     * 分页查询信息
+     * 分页查询
      *
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PortfolioVO> retrieveResource() {
-        return portfolioService.retrieveAll();
+    public Flux<PortfolioVO> retrieve(@RequestParam int page, @RequestParam int size) {
+        return portfolioService.retrieve(page, size);
     }
 
     /**
-     * 根据传入的代码查询信息
+     * 查询信息
      *
      * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
-    public Mono<PortfolioVO> fetchResource(@PathVariable String code) {
-        return portfolioService.fetchByCode(code);
+    public Mono<PortfolioVO> fetch(@PathVariable String code) {
+        return portfolioService.fetch(code);
     }
 
     /**
@@ -57,7 +57,7 @@ public class PortfolioController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<PortfolioVO> createResource(@RequestBody @Valid PortfolioDTO portfolioDTO) {
+    public Mono<PortfolioVO> create(@RequestBody @Valid PortfolioDTO portfolioDTO) {
         return portfolioService.create(portfolioDTO);
     }
 
@@ -70,7 +70,7 @@ public class PortfolioController {
      */
     @PutMapping("/{code}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<PortfolioVO> modifyResource(@PathVariable String code, @RequestBody @Valid PortfolioDTO portfolioDTO) {
+    public Mono<PortfolioVO> modify(@PathVariable String code, @RequestBody @Valid PortfolioDTO portfolioDTO) {
         return portfolioService.modify(code, portfolioDTO);
     }
 

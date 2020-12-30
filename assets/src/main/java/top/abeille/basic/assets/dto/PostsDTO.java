@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -18,11 +19,13 @@ public class PostsDTO implements Serializable {
      * 标题
      */
     @NotBlank
+    @Size(max = 20)
     private String title;
     /**
      * 描述
      */
     @NotBlank
+    @Size(max = 64)
     private String subtitle;
     /**
      * 原文
@@ -39,6 +42,7 @@ public class PostsDTO implements Serializable {
     /**
      * 封面
      */
+    @NotBlank
     private String cover;
 
     public String getTitle() {

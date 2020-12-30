@@ -34,8 +34,19 @@ public class RoleController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<RoleVO> retrieveUser() {
-        return roleService.retrieveAll();
+    public Flux<RoleVO> retrieve(@RequestParam int page, @RequestParam int size) {
+        return roleService.retrieve(page, size);
+    }
+
+    /**
+     * 根据传入的代码查询信息
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}")
+    public Mono<RoleVO> fetch(@PathVariable String code) {
+        return roleService.fetch(code);
     }
 
     /**
@@ -46,7 +57,7 @@ public class RoleController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<RoleVO> createRole(@RequestBody @Valid RoleDTO roleDTO) {
+    public Mono<RoleVO> create(@RequestBody @Valid RoleDTO roleDTO) {
         return roleService.create(roleDTO);
     }
 
@@ -59,18 +70,8 @@ public class RoleController {
      */
     @PutMapping("/{code}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<RoleVO> modifyRole(@PathVariable String code, @RequestBody @Valid RoleDTO roleDTO) {
+    public Mono<RoleVO> modify(@PathVariable String code, @RequestBody @Valid RoleDTO roleDTO) {
         return roleService.modify(code, roleDTO);
     }
 
-    /**
-     * 根据传入的代码查询信息
-     *
-     * @param code 代码
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
-     */
-    @GetMapping("/{code}")
-    public Mono<RoleVO> fetchGroup(String code) {
-        return roleService.fetchByCode(code);
-    }
 }

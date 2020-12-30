@@ -3,13 +3,12 @@
  */
 package top.abeille.basic.hypervisor.document;
 
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * Model class for UserInfo
@@ -17,13 +16,8 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "user")
-public class User {
+public class User extends BaseDocument {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 账号
      */
@@ -50,9 +44,9 @@ public class User {
      */
     private String email;
     /**
-     * 性别: 0-男 1-女 2-保密
+     * 性别
      */
-    private Integer gender;
+    private String gender;
     /**
      * 出生日期
      */
@@ -60,38 +54,21 @@ public class User {
     /**
      * 账户是否有效
      */
-    @Field(name = "account_non_expired")
+    @Field(name = "is_account_non_expired")
     private boolean accountNonExpired = true;
     /**
      * 是否锁定
      */
-    @Field(name = "account_non_locked")
+    @Field(name = "is_account_non_locked")
     private boolean accountNonLocked = true;
     /**
      * 认证是否有效
      */
-    @Field(name = "credentials_non_expired")
+    @Field(name = "is_credentials_non_expired")
     private boolean credentialsNonExpired = true;
-    /**
-     * 是否有效
-     */
-    private boolean enabled = true;
-    /**
-     * 修改人
-     */
-    private String modifier;
-    /**
-     * 修改时间
-     */
-    @Field(value = "modify_time")
-    private LocalDateTime modifyTime;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public String getGender() {
+        return gender;
     }
 
     public String getUsername() {
@@ -142,12 +119,24 @@ public class User {
         this.email = email;
     }
 
-    public Integer getGender() {
-        return gender;
+    public void setGender(String gender) {
+        this.gender = Gender.valueOf(gender.toUpperCase()).name();
     }
 
-    public void setGender(Integer gender) {
-        this.gender = gender;
+    enum Gender {
+        /**
+         * 男
+         */
+        FEMALE,
+        /**
+         * 女
+         */
+        MALE,
+        /**
+         * 未知
+         */
+        @JsonEnumDefaultValue
+        UNKNOWN
     }
 
     public LocalDate getBirthday() {
@@ -182,27 +171,4 @@ public class User {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

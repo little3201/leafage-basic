@@ -1,5 +1,6 @@
 package top.abeille.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -12,27 +13,28 @@ public class RoleAuthorityDTO implements Serializable {
     private static final long serialVersionUID = 1432721617667440537L;
 
     /**
-     * 资源code
+     * 权限 code
      */
-    private String sourceCode;
+    @NotBlank
+    private String code;
     /**
      * 是否可写
      */
-    private boolean hasWrite;
+    private String mode;
 
-    public String getSourceCode() {
-        return sourceCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setSourceCode(String sourceCode) {
-        this.sourceCode = sourceCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public boolean getHasWrite() {
-        return hasWrite;
+    public String getMode() {
+        return mode;
     }
 
-    public void setHasWrite(boolean hasWrite) {
-        this.hasWrite = hasWrite;
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 }

@@ -3,20 +3,15 @@
  */
 package top.abeille.basic.assets.vo;
 
-import java.io.Serializable;
-
 /**
  * Enter class for ArticleInfo
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PostsVO implements Serializable {
+public class PostsVO extends BaseVO {
 
     private static final long serialVersionUID = -2692474466082844624L;
-    /**
-     * 代码
-     */
-    private String code;
+
     /**
      * 点赞
      */
@@ -42,13 +37,6 @@ public class PostsVO implements Serializable {
      */
     private String cover;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getTitle() {
         return title;

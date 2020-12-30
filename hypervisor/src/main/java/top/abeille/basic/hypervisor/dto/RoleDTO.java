@@ -4,7 +4,9 @@
 package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -19,15 +21,21 @@ public class RoleDTO implements Serializable {
      * 名称
      */
     @NotBlank
+    @Size(max = 16)
     private String name;
     /**
      * 描述
      */
+    @Size(max = 32)
     private String description;
     /**
      * 资源列表
      */
-    private Set<RoleAuthorityDTO> sources;
+    private Set<String> authorities = Collections.emptySet();
+    /**
+     * 修改人
+     */
+    private String modifier;
 
     public String getName() {
         return name;
@@ -45,11 +53,19 @@ public class RoleDTO implements Serializable {
         this.description = description;
     }
 
-    public Set<RoleAuthorityDTO> getSources() {
-        return sources;
+    public Set<String> getAuthorities() {
+        return authorities;
     }
 
-    public void setSources(Set<RoleAuthorityDTO> sources) {
-        this.sources = sources;
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 }

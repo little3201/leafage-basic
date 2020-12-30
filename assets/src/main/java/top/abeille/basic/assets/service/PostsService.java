@@ -5,12 +5,12 @@ package top.abeille.basic.assets.service;
 
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.PostsDTO;
-import top.abeille.basic.assets.vo.DetailsVO;
+import top.abeille.basic.assets.vo.PostsContentVO;
 import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.BasicService;
 
 /**
- * 文章信息Service
+ * 帖子信息Service
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
@@ -22,6 +22,6 @@ public interface PostsService extends BasicService<PostsDTO, PostsVO> {
      * @param code 代码
      * @return 详细信息
      */
-    Mono<DetailsVO> fetchDetailsByCode(String code);
+    Mono<PostsContentVO> fetchDetailsByCode(String code);
 
 }

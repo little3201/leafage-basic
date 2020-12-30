@@ -3,12 +3,9 @@
  */
 package top.abeille.basic.hypervisor.document;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.time.LocalDateTime;
 
 /**
  * Model class for UserRole
@@ -16,13 +13,8 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2019/9/16 10:09
  **/
 @Document(collection = "user_role")
-public class UserRole {
+public class UserRole extends BaseDocument {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 用户主键
      */
@@ -35,23 +27,6 @@ public class UserRole {
     @Indexed
     @Field(value = "role_id")
     private String roleId;
-    /**
-     * 修改人
-     */
-    private String modifier;
-    /**
-     * 修改时间
-     */
-    @Field(value = "modify_time")
-    private LocalDateTime modifyTime;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getUserId() {
         return userId;
@@ -69,19 +44,4 @@ public class UserRole {
         this.roleId = roleId;
     }
 
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

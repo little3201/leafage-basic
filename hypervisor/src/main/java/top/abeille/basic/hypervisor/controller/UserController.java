@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.abeille.basic.hypervisor.domain.UserDetails;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.service.UserService;
-import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 
 import javax.validation.Valid;
@@ -35,8 +35,8 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<UserVO> retrieveUser() {
-        return userService.retrieveAll();
+    public Flux<UserVO> retrieve(@RequestParam int page, @RequestParam int size) {
+        return userService.retrieve(page, size);
     }
 
     /**
@@ -46,7 +46,7 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{username}")
-    public Mono<UserDetailsVO> fetchDetails(@PathVariable String username) {
+    public Mono<UserDetails> fetch(@PathVariable String username) {
         return userService.fetchDetails(username);
     }
 
@@ -71,7 +71,7 @@ public class UserController {
      */
     @PutMapping("/{username}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<UserVO> modifyUser(@PathVariable String username, @RequestBody @Valid UserDTO userDTO) {
+    public Mono<UserVO> modify(@PathVariable String username, @RequestBody @Valid UserDTO userDTO) {
         return userService.modify(username, userDTO);
     }
 
@@ -83,7 +83,7 @@ public class UserController {
      */
     @DeleteMapping("/{username}")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<Void> removeUser(@PathVariable String username) {
+    public Mono<Void> remove(@PathVariable String username) {
         return userService.remove(username);
     }
 }

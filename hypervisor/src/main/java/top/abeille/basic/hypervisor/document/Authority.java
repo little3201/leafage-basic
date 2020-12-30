@@ -3,12 +3,9 @@
  */
 package top.abeille.basic.hypervisor.document;
 
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.time.LocalDateTime;
 
 /**
  * Model class for ResourceInfo
@@ -16,13 +13,8 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "authority")
-public class Authority {
+public class Authority extends BaseDocument {
 
-    /**
-     * 主键
-     */
-    @Id
-    private String id;
     /**
      * 代码
      */
@@ -52,26 +44,25 @@ public class Authority {
      * 描述
      */
     private String description;
-    /**
-     * 是否有效
-     */
-    private boolean enabled = true;
-    /**
-     * 修改人
-     */
-    private String modifier;
-    /**
-     * 修改时间
-     */
-    @Field(value = "modify_time")
-    private LocalDateTime modifyTime;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    enum Type {
+        /**
+         * 菜单
+         */
+        MENU,
+        /**
+         * 按钮
+         */
+        BTN,
+        /**
+         * tab页
+         */
+        TAB,
+        /**
+         * 接口
+         */
+        @JsonEnumDefaultValue
+        URL
     }
 
     public String getCode() {
@@ -103,7 +94,7 @@ public class Authority {
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.type = Type.valueOf(type.toUpperCase()).name();
     }
 
     public String getPath() {
@@ -130,27 +121,4 @@ public class Authority {
         this.description = description;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

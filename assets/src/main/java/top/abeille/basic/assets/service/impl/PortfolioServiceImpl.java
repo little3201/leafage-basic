@@ -5,6 +5,7 @@ package top.abeille.basic.assets.service.impl;
 
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -16,7 +17,6 @@ import top.abeille.basic.assets.service.PortfolioService;
 import top.abeille.basic.assets.vo.PortfolioVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -34,9 +34,9 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     }
 
     @Override
-    public Flux<PortfolioVO> retrieveAll() {
-        Sort sort = Sort.by(Sort.Direction.DESC, "id");
-        return portfolioRepository.findAll(sort).filter(Objects::nonNull).map(this::convertOuter);
+    public Flux<PortfolioVO> retrieve(int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
+        return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
@@ -44,8 +44,6 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
         Portfolio info = new Portfolio();
         BeanUtils.copyProperties(portfolioDTO, info);
         info.setCode(this.generateCode());
-        info.setEnabled(true);
-        info.setModifyTime(LocalDateTime.now());
         return portfolioRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);
     }
 
@@ -54,7 +52,6 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
         Asserts.notBlank(code, "code");
         return portfolioRepository.findByCodeAndEnabledTrue(code).flatMap(portfolio -> {
             BeanUtils.copyProperties(portfolioDTO, portfolio);
-            portfolio.setModifyTime(LocalDateTime.now());
             return portfolioRepository.save(portfolio).filter(Objects::nonNull).map(this::convertOuter);
         });
     }
@@ -66,7 +63,7 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     }
 
     @Override
-    public Mono<PortfolioVO> fetchByCode(String code) {
+    public Mono<PortfolioVO> fetch(String code) {
         Asserts.notBlank(code, "code");
         return portfolioRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
     }

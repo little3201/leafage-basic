@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.hypervisor.dto;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -18,12 +18,12 @@ public class AccountDTO implements Serializable {
     /**
      * 余额
      */
+    @NotNull
     private BigDecimal balance;
     /**
      * 类型
      */
-    @NotBlank
-    private String type;
+    private int type;
 
     public BigDecimal getBalance() {
         return balance;
@@ -33,11 +33,11 @@ public class AccountDTO implements Serializable {
         this.balance = balance;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 }

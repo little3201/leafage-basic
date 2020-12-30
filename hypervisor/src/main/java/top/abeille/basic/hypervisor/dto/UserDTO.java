@@ -5,7 +5,9 @@ package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -21,6 +23,7 @@ public class UserDTO implements Serializable {
      * 昵称
      */
     @NotBlank
+    @Size(min = 8, max = 16)
     private String nickname;
     /**
      * 头像
@@ -29,17 +32,19 @@ public class UserDTO implements Serializable {
     /**
      * 电话
      */
-    @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}", message = "mobile not pattern")
-    private String mobile;
+    @NotBlank
+    @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}")
+    private String phone;
     /**
      * 邮箱
      */
-    @Pattern(regexp = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}", message = "email not pattern")
+    @NotBlank
+    @Pattern(regexp = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}")
     private String email;
     /**
-     * 性别: 0-男 1-女 2-保密
+     * 性别: 0-未知 1-女 2-男
      */
-    private Integer gender;
+    private int gender;
     /**
      * 地址
      */
@@ -47,11 +52,10 @@ public class UserDTO implements Serializable {
     /**
      * 角色列表
      */
-    private Set<String> roles;
+    private Set<String> roles = Collections.emptySet();
     /**
      * 修改人
      */
-    @NotBlank
     private String modifier;
 
 
@@ -71,12 +75,12 @@ public class UserDTO implements Serializable {
         this.avatar = avatar;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {
@@ -85,6 +89,14 @@ public class UserDTO implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
     }
 
     public String getAddress() {

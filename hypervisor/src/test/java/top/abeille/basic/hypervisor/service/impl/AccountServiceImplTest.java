@@ -12,6 +12,8 @@ import top.abeille.basic.hypervisor.document.Account;
 import top.abeille.basic.hypervisor.dto.AccountDTO;
 import top.abeille.basic.hypervisor.repository.AccountRepository;
 
+import java.math.BigDecimal;
+
 /**
  * 账户接口测试类
  *
@@ -27,9 +29,9 @@ public class AccountServiceImplTest {
     private AccountServiceImpl accountInfoService;
 
     @Test
-    public void getById() {
+    void getById() {
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setType("applePay");
+        accountDTO.setBalance(new BigDecimal("12.0"));
         accountInfoService.create(accountDTO);
         Mockito.verify(accountRepository, Mockito.atLeastOnce()).save(Mockito.any(Account.class));
     }

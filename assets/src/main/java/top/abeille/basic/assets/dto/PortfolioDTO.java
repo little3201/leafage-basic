@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -18,22 +19,17 @@ public class PortfolioDTO implements Serializable {
      * 标题
      */
     @NotBlank
+    @Size(max = 32)
     private String title;
     /**
-     * 副标题
+     * url
      */
     @NotBlank
-    private String subtitle;
+    private String url;
     /**
-     * 内容
+     * 类型
      */
-    @NotBlank
-    private String content;
-    /**
-     * 封面
-     */
-    @NotBlank
-    private String cover;
+    private char type;
 
     public String getTitle() {
         return title;
@@ -43,27 +39,19 @@ public class PortfolioDTO implements Serializable {
         this.title = title;
     }
 
-    public String getSubtitle() {
-        return subtitle;
+    public String getUrl() {
+        return url;
     }
 
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getContent() {
-        return content;
+    public char getType() {
+        return type;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
+    public void setType(char type) {
+        this.type = type;
     }
 }

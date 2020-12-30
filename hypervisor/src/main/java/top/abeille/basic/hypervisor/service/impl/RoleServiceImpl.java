@@ -11,7 +11,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Role;
 import top.abeille.basic.hypervisor.document.RoleAuthority;
-import top.abeille.basic.hypervisor.dto.RoleAuthorityDTO;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.repository.AuthorityRepository;
 import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
@@ -21,7 +20,6 @@ import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -75,8 +73,9 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
                     BeanUtils.copyProperties(roleDTO, role);
                     return roleRepository.save(role)
                             .switchIfEmpty(Mono.error(RuntimeException::new))
-                            .doOnSuccess(r -> this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
-                                    .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
+                            .doOnSuccess(r ->
+                                    this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
+                                            .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
                 });
         return roleMono.map(this::convertOuter);
     }
@@ -94,22 +93,14 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     private Mono<List<RoleAuthority>> initRoleAuthority(String roleId, String modifier,
-                                                        Collection<RoleAuthorityDTO> roleAuthorityDTOs) {
-        return Mono.just(roleAuthorityDTOs).flatMap(roleAuthorityDTOS -> {
-            List<RoleAuthority> roleAuthorities = new ArrayList<>(roleAuthorityDTOs.size());
-            roleAuthorityDTOS.forEach(roleAuthorityDTO ->
-                    authorityRepository.findByCodeAndEnabledTrue(roleAuthorityDTO.getCode())
-                            .switchIfEmpty(Mono.error(NotContextException::new))
-                            .doOnNext(authority -> {
-                                RoleAuthority roleAuthority = new RoleAuthority();
-                                roleAuthority.setRoleId(roleId);
-                                roleAuthority.setAuthorityId(authority.getId());
-                                roleAuthority.setMode(roleAuthorityDTO.getMode());
-                                roleAuthority.setModifier(modifier);
-                                roleAuthorities.add(roleAuthority);
-                            }));
-            return Mono.just(roleAuthorities);
-        });
+                                                        Collection<String> authorities) {
+        return authorityRepository.findByCodeInAndEnabledTrue(authorities).map(authority -> {
+            RoleAuthority roleAuthority = new RoleAuthority();
+            roleAuthority.setRoleId(roleId);
+            roleAuthority.setAuthorityId(authority.getId());
+            roleAuthority.setModifier(modifier);
+            return roleAuthority;
+        }).collectList();
     }
 
 }

@@ -33,13 +33,13 @@ public class UserDTO implements Serializable {
      * 电话
      */
     @NotBlank
-    @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}", message = "phone not pattern")
+    @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}")
     private String phone;
     /**
      * 邮箱
      */
     @NotBlank
-    @Pattern(regexp = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}", message = "email not pattern")
+    @Pattern(regexp = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}")
     private String email;
     /**
      * 性别: 0-未知 1-女 2-男

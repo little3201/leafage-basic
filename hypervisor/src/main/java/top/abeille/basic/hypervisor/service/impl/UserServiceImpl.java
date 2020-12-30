@@ -140,8 +140,8 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         return roleRepository.findByCodeInAndEnabledTrue(codes).map(role -> {
             UserRole userRole = new UserRole();
             userRole.setUserId(userId);
-            userRole.setModifier(userId);
             userRole.setRoleId(role.getId());
+            userRole.setModifier(userId);
             return userRole;
         }).collectList();
     }

@@ -43,4 +43,12 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * @return 资源信息
      */
     Flux<Authority> findByIdInAndEnabledTrue(Collection<String> ids);
+
+    /**
+     * 根据权限
+     *
+     * @param codes 代码集合
+     * @return 角色信息
+     */
+    Flux<Authority> findByCodeInAndEnabledTrue(Collection<String> codes);
 }

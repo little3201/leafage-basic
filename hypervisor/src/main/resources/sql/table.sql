@@ -1,9 +1,9 @@
-drop table if exists group;
+drop table if exists organization;
 
 /*==============================================================*/
-/* Table: group                                                 */
+/* Table: organization                                          */
 /*==============================================================*/
-create table group
+create table organization
 (
     id          bigint(11)  not null auto_increment comment '主键',
     code        varchar(16) not null comment '代码',
@@ -18,29 +18,28 @@ create table group
     unique key AK_code (code)
 );
 
-alter table group
-    comment '组';
+alter table organization
+    comment '组织';
 
 
-
-drop table if exists group_user;
+drop table if exists organization_user;
 
 /*==============================================================*/
-/* Table: group_user                                            */
+/* Table: organization_user                                     */
 /*==============================================================*/
-create table group_user
+create table organization_user
 (
-    id          bigint(11) not null auto_increment comment '主键',
-    group_id    bigint(11) not null comment '组主键',
-    user_id     bigint(11) not null comment '用户主键',
-    is_enabled  tinyint(1) default 1 comment '是否启用',
-    modifier    bigint(11) comment '修改人',
-    modify_time datetime   default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    id              bigint(11) not null auto_increment comment '主键',
+    organization_id bigint(11) not null comment '组织主键',
+    user_id         bigint(11) not null comment '用户主键',
+    is_enabled      tinyint(1) default 1 comment '是否启用',
+    modifier        bigint(11) comment '修改人',
+    modify_time     datetime   default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
 );
 
-alter table group_user
-    comment '组用户';
+alter table organization_user
+    comment '组织用户';
 
 
 drop table if exists user;

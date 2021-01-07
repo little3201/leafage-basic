@@ -19,7 +19,7 @@ spring:
     # datasource driver
     driver-class-name: com.mysql.cj.jdbc.Driver
     # datasource connection path
-    url: jdbc:mysql://127.0.0.1:3306/abeille_basic_hypervisor?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/abeille_hypervisor?useSSL=false&serverTimezone=UTC
     # datasource username
     username: root
     # datasource password
@@ -29,7 +29,7 @@ spring:
   ##=====Jpa common=====##
   jpa:
     # datasource dialect
-    database-platform: org.hibernate.dialect.MariaDBDialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     # datasource driver
     database: mysql
     # what hibernate will do when application run

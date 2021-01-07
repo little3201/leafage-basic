@@ -27,18 +27,18 @@ spring:
     password: root
 
   ##=====Jpa config=====##
-  #  jpa:
-  #    # datasource dialect
-  #    database-platform: org.hibernate.dialect.MariaDBDialect
-  #    # datasource driver
-  #    database: mysql
-  #    # whether show execute sql
-  #    show-sql: true
-  #    # what hibernate will do when application run
-  #    properties:
-  #      hibernate:
-  #        hbm2ddl:
-  #          auto: update
+  jpa:
+    # datasource dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
+    # datasource driver
+    database: mysql
+    # whether show execute sql
+    show-sql: true
+    # what hibernate will do when application run
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
 
   # server jpa run thread config, hibernate will run with another thread
   data:

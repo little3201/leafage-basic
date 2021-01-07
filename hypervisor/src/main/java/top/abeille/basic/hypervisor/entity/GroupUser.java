@@ -13,7 +13,7 @@ import javax.persistence.Table;
  * @author liwenqiang
  */
 @Entity
-@Table(name = "group_user")
+@Table(name = "organization_user")
 public class GroupUser extends BaseEntity {
 
     /**

@@ -12,7 +12,7 @@ import javax.persistence.Table;
  * @author liwenqiang
  */
 @Entity
-@Table(name = "group")
+@Table(name = "organization")
 public class Group extends BaseEntity {
 
     /**

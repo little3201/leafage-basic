@@ -4,7 +4,7 @@
 package top.abeille.basic.hypervisor;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 
@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * @author liwenqiang
  */
 @EnableJpaAuditing
-@SpringCloudApplication
+@SpringBootApplication
 public class HypervisorApplication {
 
     public static void main(String[] args) {

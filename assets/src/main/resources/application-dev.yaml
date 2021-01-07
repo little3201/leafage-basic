@@ -20,7 +20,7 @@ spring:
     # datasource driver
     driver-class-name: com.mysql.cj.jdbc.Driver
     # datasource connection path
-    url: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/abeille_assets?useSSL=false&serverTimezone=UTC
     # datasource username
     username: root
     # datasource password
@@ -29,7 +29,7 @@ spring:
   ##=====Jpa config=====##
   jpa:
     # datasource dialect
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQL5Dialect
     # datasource driver
     database: mysql
     # whether show execute sql

@@ -8,7 +8,7 @@ import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.BasicService;
 
 /**
- * 账户信息Service
+ * 分类Service
  *
  * @author liwenqiang 2018/12/17 19:26
  **/

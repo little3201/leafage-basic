@@ -4,14 +4,14 @@
 package top.abeille.basic.assets;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 /**
  * @author liwenqiang
  */
-@EnableFeignClients
-@SpringCloudApplication
+@EnableJpaAuditing
+@SpringBootApplication
 public class AssetsApplication {
 
     public static void main(String[] args) {

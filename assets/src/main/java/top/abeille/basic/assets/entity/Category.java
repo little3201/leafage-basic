@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for AccountInfo
+ * Model class for category
  *
  * @author liwenqiang
  */

@@ -2,15 +2,13 @@ package top.abeille.basic.assets.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
  * 基础对象实体类
  */
+@MappedSuperclass
 public class BaseEntity {
 
     /**

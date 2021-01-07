@@ -20,11 +20,11 @@ spring:
     # datasource driver
     driver-class-name: com.mysql.cj.jdbc.Driver
     # datasource connection path
-    url: jdbc:mysql://127.0.0.1:3306/abeille_basic_assets?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/abeille_hypervisor?useSSL=false&serverTimezone=UTC
     # datasource username
-    username: abeille
+    username: root
     # datasource password
-    password: abeille.top@123
+    password: root
 
   ##=====Jpa common=====##
   jpa:

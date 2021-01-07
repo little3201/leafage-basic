@@ -46,17 +46,3 @@ spring:
     redis:
       repositories:
         enabled: false
-
-
-  ##=====redis common=====##
-  redis:
-    # Redis database index(default is 0)
-    database: 0
-    # Redis server host
-    host: 127.0.0.1
-    # Redis server port
-    port: 6379
-    # Redis server password(default is non)
-    password:
-
-

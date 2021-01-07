@@ -32,13 +32,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     # datasource driver
     database: mysql
-    # whether show execute sql
-    show-sql: true
-    # what hibernate will do when application run
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
 
   # server jpa run thread common, hibernate will run with another thread
   data:

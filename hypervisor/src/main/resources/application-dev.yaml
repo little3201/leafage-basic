@@ -32,11 +32,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     # datasource driver
     database: mysql
-    # what hibernate will do when application run
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
 
   # spring data config
   data:

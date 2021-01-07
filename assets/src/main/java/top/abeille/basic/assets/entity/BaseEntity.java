@@ -1,4 +1,4 @@
-package top.abeille.basic.hypervisor.entity;
+package top.abeille.basic.assets.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;
 

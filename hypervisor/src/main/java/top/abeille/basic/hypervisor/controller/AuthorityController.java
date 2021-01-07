@@ -10,9 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.hypervisor.dto.SourceDTO;
+import top.abeille.basic.hypervisor.dto.AuthorityDTO;
 import top.abeille.basic.hypervisor.service.AuthorityService;
-import top.abeille.basic.hypervisor.vo.SourceVO;
+import top.abeille.basic.hypervisor.vo.AuthorityVO;
 
 import javax.validation.Valid;
 
@@ -42,7 +42,7 @@ public class AuthorityController {
      */
     @GetMapping
     public ResponseEntity<Object> retrieve(int page, int size) {
-        Page<SourceVO> sources = authorityService.retrieves(page, size);
+        Page<AuthorityVO> sources = authorityService.retrieves(page, size);
         if (CollectionUtils.isEmpty(sources.getContent())) {
             logger.info("Not found anything about source with pageable.");
             return ResponseEntity.noContent().build();
@@ -53,13 +53,13 @@ public class AuthorityController {
     /**
      * 添加信息
      *
-     * @param sourceDTO 要添加的数据
+     * @param authorityDTO 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Object> createSource(@RequestBody @Valid SourceDTO sourceDTO) {
+    public ResponseEntity<Object> createSource(@RequestBody @Valid AuthorityDTO authorityDTO) {
         try {
-            authorityService.create(sourceDTO);
+            authorityService.create(authorityDTO);
         } catch (Exception e) {
             logger.error("Save user occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

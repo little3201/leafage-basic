@@ -5,7 +5,7 @@ package top.abeille.basic.assets.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import top.abeille.basic.assets.entity.Account;
+import top.abeille.basic.assets.entity.Category;
 
 /**
  * 账户信息dao
@@ -13,5 +13,5 @@ import top.abeille.basic.assets.entity.Account;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 }

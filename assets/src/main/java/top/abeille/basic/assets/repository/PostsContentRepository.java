@@ -13,7 +13,7 @@ import top.abeille.basic.assets.entity.PostsContent;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface ContentRepository extends JpaRepository<PostsContent, String> {
+public interface PostsContentRepository extends JpaRepository<PostsContent, String> {
 
     PostsContent findByPostsIdAndEnabledTrue(Long postsId);
 }

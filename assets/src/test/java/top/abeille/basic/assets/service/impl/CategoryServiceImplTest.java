@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import top.abeille.basic.assets.entity.Account;
-import top.abeille.basic.assets.repository.AccountRepository;
+import top.abeille.basic.assets.entity.Category;
+import top.abeille.basic.assets.repository.CategoryRepository;
 import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.mock.AbstractServiceMock;
 
@@ -20,17 +20,17 @@ import java.util.Optional;
  *
  * @author liwenqiang 2019/3/28 20:22
  **/
-public class AccountServiceImplTest extends AbstractServiceMock {
+public class CategoryServiceImplTest extends AbstractServiceMock {
 
     @Mock
-    private AccountRepository accountRepository;
+    private CategoryRepository categoryRepository;
 
     @InjectMocks
-    private AccountServiceImpl accountService;
+    private CategoryServiceImpl accountService;
 
     @Test
     public void fetch() {
-        Mockito.when(accountRepository.findOne(Mockito.any())).thenReturn(Optional.of(Mockito.mock(Account.class)));
+        Mockito.when(categoryRepository.findOne(Mockito.any())).thenReturn(Optional.of(Mockito.mock(Category.class)));
         AccountVO accountVO = accountService.fetch(Mockito.anyString());
         Assertions.assertNotNull(accountVO);
     }

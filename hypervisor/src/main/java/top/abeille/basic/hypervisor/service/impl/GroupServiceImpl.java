@@ -17,7 +17,6 @@ import top.abeille.basic.hypervisor.service.GroupService;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 
 /**
@@ -49,7 +48,6 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         Group info = new Group();
         BeanUtils.copyProperties(groupDTO, info);
         info.setCode(this.generateCode());
-        info.setModifyTime(LocalDateTime.now());
         Group group = groupRepository.save(info);
         return this.convertOuter(group);
     }

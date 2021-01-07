@@ -13,8 +13,8 @@ import javax.persistence.Table;
  * @author liwenqiang
  */
 @Entity
-@Table(name = "role_source")
-public class RoleSource extends BaseEntity {
+@Table(name = "role_authority")
+public class RoleAuthority extends BaseEntity {
 
     /**
      * 角色ID

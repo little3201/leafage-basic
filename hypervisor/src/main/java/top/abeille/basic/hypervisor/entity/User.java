@@ -48,17 +48,17 @@ public class User extends BaseEntity {
      * 是否无效
      */
     @Column(name = "is_account_non_expired")
-    private Boolean accountNonExpired;
+    private boolean accountNonExpired = true;
     /**
      * 是否没有锁定
      */
     @Column(name = "is_account_non_locked")
-    private Boolean accountNonLocked;
+    private boolean accountNonLocked = true;
     /**
      * 密码是否有效
      */
     @Column(name = "is_credentials_non_expired")
-    private Boolean credentialsNonExpired;
+    private boolean credentialsNonExpired = true;
 
 
     public String getUsername() {
@@ -117,28 +117,27 @@ public class User extends BaseEntity {
         this.address = address;
     }
 
-    public Boolean getAccountNonExpired() {
+    public boolean isAccountNonExpired() {
         return accountNonExpired;
     }
 
-    public void setAccountNonExpired(Boolean accountNonExpired) {
+    public void setAccountNonExpired(boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public Boolean getAccountNonLocked() {
+    public boolean isAccountNonLocked() {
         return accountNonLocked;
     }
 
-    public void setAccountNonLocked(Boolean accountNonLocked) {
+    public void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public Boolean getCredentialsNonExpired() {
+    public boolean isCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
-    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
-
 }

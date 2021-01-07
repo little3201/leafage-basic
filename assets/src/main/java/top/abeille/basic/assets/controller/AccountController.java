@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.assets.dto.AccountDTO;
-import top.abeille.basic.assets.service.AccountService;
+import top.abeille.basic.assets.service.CategoryService;
 import top.abeille.basic.assets.vo.AccountVO;
 
 /**
@@ -23,10 +23,10 @@ public class AccountController {
 
     private final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-    private final AccountService accountService;
+    private final CategoryService categoryService;
 
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
+    public AccountController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     /**
@@ -37,7 +37,7 @@ public class AccountController {
      */
     @GetMapping("/{businessId}")
     public ResponseEntity<Object> fetch(@PathVariable String code) {
-        AccountVO account = accountService.fetch(code);
+        AccountVO account = categoryService.fetch(code);
         if (account == null) {
             logger.info("Not found anything about account with code {}.", code);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -55,7 +55,7 @@ public class AccountController {
     public ResponseEntity<Object> save(@RequestBody AccountDTO account) {
         AccountVO accountVO;
         try {
-            accountVO = accountService.create(account);
+            accountVO = categoryService.create(account);
         } catch (Exception e) {
             logger.error("Save account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
@@ -73,7 +73,7 @@ public class AccountController {
     @PutMapping("/{code}")
     public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody AccountDTO accountDTO) {
         try {
-            accountService.modify(code, accountDTO);
+            categoryService.modify(code, accountDTO);
         } catch (Exception e) {
             logger.error("Modify account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
@@ -90,7 +90,7 @@ public class AccountController {
     @DeleteMapping("/{code}")
     public ResponseEntity<Object> remove(@PathVariable String code) {
         try {
-            accountService.remove(code);
+            categoryService.remove(code);
         } catch (Exception e) {
             logger.error("Remove account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);

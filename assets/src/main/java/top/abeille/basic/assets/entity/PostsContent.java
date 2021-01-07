@@ -3,28 +3,21 @@
  */
 package top.abeille.basic.assets.entity;
 
-import org.springframework.data.annotation.Id;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * document for ArticleInfo
+ * document for posts
  *
  * @author liwenqiang
  */
 @Entity
 @Table(name = "posts_content")
-public class PostsContent {
+public class PostsContent extends BaseEntity {
 
     /**
-     * 主键
-     */
-    @Id
-    private String id;
-    /**
-     * 文章ID
+     * 帖子ID
      */
     @Column(name = "posts_id")
     private Long postsId;
@@ -40,14 +33,6 @@ public class PostsContent {
      * 源文本——记录富文本或markdown原文
      */
     private String original;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Long getPostsId() {
         return postsId;

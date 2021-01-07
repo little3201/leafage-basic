@@ -17,7 +17,6 @@ import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 
 /**
@@ -61,7 +60,6 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Role info = new Role();
         BeanUtils.copyProperties(roleDTO, info);
         info.setCode(this.generateCode());
-        info.setModifyTime(LocalDateTime.now());
         Role role = roleRepository.save(info);
         return this.convertOuter(role);
     }

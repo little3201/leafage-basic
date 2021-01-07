@@ -3,8 +3,8 @@
  */
 package top.abeille.basic.assets.entity;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Model class for Posts
@@ -13,15 +13,8 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "posts")
-public class Posts {
+public class Posts extends BaseEntity {
 
-    /**
-     * 主键
-     */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Long id;
     /**
      * 业务ID
      */
@@ -38,28 +31,7 @@ public class Posts {
      * 图片url
      */
     private String cover;
-    /**
-     * 是否有效
-     */
-    @Column(name = "is_enabled")
-    private Boolean enabled;
-    /**
-     * 修改人
-     */
-    private String modifier;
-    /**
-     * 修改时间
-     */
-    @Column(name = "modify_time")
-    private LocalDateTime modifyTime;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getCode() {
         return code;
@@ -93,27 +65,4 @@ public class Posts {
         this.cover = cover;
     }
 
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

@@ -1,45 +1,43 @@
-drop table if exists article_info;
+drop table if exists posts;
 
 /*==============================================================*/
-/* Table: article_info                                          */
+/* Table: posts                                                 */
 /*==============================================================*/
-create table article_info
+create table posts
 (
     id          bigint(11) not null auto_increment comment '主键',
-    article_id  bigint(13) not null comment '文章ID',
+    code        varchar(8) not null comment '代码',
     title       varchar(32) comment '标题',
-    summary     varchar(512) comment '概要',
-    url         varchar(128) comment '文件url',
+    subtitle    varchar(216) comment '概要',
+    cover       varchar(128) comment '封面图',
     is_enabled  tinyint(1) not null default 1 comment '是否可用',
     modifier    bigint(11) not null comment '修改人',
-    modify_time timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    modify_time datetime   not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id),
-    unique key AK_article_id (article_id)
+    unique key AK_code (code)
 );
 
-alter table article_info
-    comment '文章信息表';
+alter table posts comment '帖子';
 
 
-drop table if exists account_info;
+drop table if exists posts_content;
 
 /*==============================================================*/
-/* Table: account_info                                          */
+/* Table: posts_content                                         */
 /*==============================================================*/
-create table account_info
+create table posts_content
 (
     id          bigint(11) not null auto_increment comment '主键',
-    user_id     bigint(11) not null comment '用户主键',
-    account_id  bigint(13) not null comment '账户ID',
-    type        char comment '账户类型',
-    balance     decimal(11, 3) comment '账户余额',
+    posts_id    bigint(11) not null comment '帖子主键',
+    original    bigint(13) not null comment '原文',
+    content     char comment '内容',
     is_enabled  tinyint(1) not null default 1 comment '是否可用',
     modifier    bigint(11) not null comment '修改人',
-    modify_time timestamp  not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    modify_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id),
-    unique key AK_account_id (account_id)
+    unique key AK_posts_id (original)
 );
 
-alter table account_info
-    comment '账户信息表';
+alter table posts_content comment '帖子内容';
+
 

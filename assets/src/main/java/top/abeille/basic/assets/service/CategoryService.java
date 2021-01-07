@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface AccountService extends BasicService<AccountDTO, AccountVO> {
+public interface CategoryService extends BasicService<AccountDTO, AccountVO> {
 }

@@ -10,11 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import top.abeille.basic.hypervisor.dto.SourceDTO;
+import top.abeille.basic.hypervisor.dto.AuthorityDTO;
 import top.abeille.basic.hypervisor.entity.Authority;
 import top.abeille.basic.hypervisor.repository.AuthorityRepository;
 import top.abeille.basic.hypervisor.service.AuthorityService;
-import top.abeille.basic.hypervisor.vo.SourceVO;
+import top.abeille.basic.hypervisor.vo.AuthorityVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.util.Collections;
@@ -35,7 +35,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Page<SourceVO> retrieves(int page, int size) {
+    public Page<AuthorityVO> retrieves(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Authority> infoPage = authorityRepository.findAll(pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
@@ -50,16 +50,16 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public SourceVO create(SourceDTO sourceDTO) {
+    public AuthorityVO create(AuthorityDTO authorityDTO) {
         Authority info = new Authority();
-        BeanUtils.copyProperties(sourceDTO, info);
+        BeanUtils.copyProperties(authorityDTO, info);
         info.setCode(this.generateCode());
         Authority authority = authorityRepository.save(info);
         return this.convertOuter(authority);
     }
 
     @Override
-    public List<SourceVO> saveAll(List<SourceDTO> entities) {
+    public List<AuthorityVO> saveAll(List<AuthorityDTO> entities) {
         return null;
     }
 
@@ -75,10 +75,10 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
      * @param info 基础对象
      * @return 结果对象
      */
-    private SourceVO convertOuter(Authority info) {
-        SourceVO sourceVO = new SourceVO();
-        BeanUtils.copyProperties(info, sourceVO);
-        return sourceVO;
+    private AuthorityVO convertOuter(Authority info) {
+        AuthorityVO authorityVO = new AuthorityVO();
+        BeanUtils.copyProperties(info, authorityVO);
+        return authorityVO;
     }
 
 }

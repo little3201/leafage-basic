@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import top.abeille.basic.hypervisor.dto.UserDTO;
 import top.abeille.basic.hypervisor.entity.Authority;
-import top.abeille.basic.hypervisor.entity.RoleSource;
+import top.abeille.basic.hypervisor.entity.RoleAuthority;
 import top.abeille.basic.hypervisor.entity.User;
 import top.abeille.basic.hypervisor.entity.UserRole;
 import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
@@ -25,7 +25,6 @@ import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,7 +75,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public UserVO create(UserDTO userDTO) {
         User info = new User();
         BeanUtils.copyProperties(userDTO, info);
-        info.setModifyTime(LocalDateTime.now());
         userRepository.save(info);
         return this.convertOuter(info);
     }
@@ -109,10 +107,10 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         // 检查角色是否配置
 
         List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
-        List<RoleSource> roleSources = roleAuthorityRepository.findByRoleIdIn(roleIds);
+        List<RoleAuthority> roleAuthorities = roleAuthorityRepository.findByRoleIdIn(roleIds);
 
         // 权限
-        List<Long> sourceIds = roleSources.stream().map(RoleSource::getSourceId).collect(Collectors.toList());
+        List<Long> sourceIds = roleAuthorities.stream().map(RoleAuthority::getSourceId).collect(Collectors.toList());
         List<Authority> authorities = authorityService.findByIdIn(sourceIds);
 
         Set<String> codes = authorities.stream().map(Authority::getCode).collect(Collectors.toSet());

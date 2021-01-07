@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.entity.Posts;
 import top.abeille.basic.assets.entity.PostsContent;
-import top.abeille.basic.assets.repository.ContentRepository;
+import top.abeille.basic.assets.repository.PostsContentRepository;
 import top.abeille.basic.assets.repository.PostsRepository;
 import top.abeille.basic.assets.service.PostsService;
 import top.abeille.basic.assets.vo.PostsVO;
@@ -27,11 +27,11 @@ import top.abeille.common.basic.AbstractBasicService;
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {
 
     private final PostsRepository postsRepository;
-    private final ContentRepository contentRepository;
+    private final PostsContentRepository postsContentRepository;
 
-    public PostsServiceImpl(PostsRepository postsRepository, ContentRepository contentRepository) {
+    public PostsServiceImpl(PostsRepository postsRepository, PostsContentRepository postsContentRepository) {
         this.postsRepository = postsRepository;
-        this.contentRepository = contentRepository;
+        this.postsContentRepository = postsContentRepository;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
             return null;
         }
         PostsVO postsVO = this.convertOuter(posts);
-        PostsContent postsContent = contentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent != null) {
             postsVO.setContent(postsContent.getContent());
         }
@@ -66,12 +66,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
             return null;
         }
         //保存文章内容
-        PostsContent postsContent = contentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent == null) {
             postsContent = new PostsContent();
         }
         postsContent.setContent(postsDTO.getContent());
-        contentRepository.save(postsContent);
+        postsContentRepository.save(postsContent);
         //转换结果
         PostsVO postsVO = this.convertOuter(posts);
         postsVO.setContent(postsDTO.getContent());

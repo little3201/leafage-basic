@@ -3,7 +3,8 @@
  */
 package top.abeille.basic.hypervisor.controller;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import top.abeille.common.mock.AbstractControllerMock;
 
 /**

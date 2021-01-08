@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;

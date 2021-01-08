@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.assets.controller;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import top.abeille.basic.assets.service.impl.PostsServiceImpl;
 import top.abeille.basic.assets.vo.PostsVO;

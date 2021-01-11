@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import top.abeille.basic.assets.dto.AccountDTO;
+import top.abeille.basic.assets.dto.CategoryDTO;
 import top.abeille.basic.assets.entity.Category;
 import top.abeille.basic.assets.repository.CategoryRepository;
 import top.abeille.basic.assets.service.CategoryService;
@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void removeAll(List<AccountDTO> entities) {
+    public void removeAll(List<CategoryDTO> entities) {
     }
 
     /**

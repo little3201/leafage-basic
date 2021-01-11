@@ -3,6 +3,7 @@
  */
 package top.abeille.basic.assets.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -15,9 +16,11 @@ import javax.persistence.Table;
 @Table(name = "category")
 public class Category extends BaseEntity {
 
+
     /**
-     * 业务ID
+     * 唯一标识
      */
+    @Column(name = "code", unique = true, nullable = false)
     private String code;
     /**
      * 名称

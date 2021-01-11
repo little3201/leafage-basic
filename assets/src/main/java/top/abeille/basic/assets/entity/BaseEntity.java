@@ -1,6 +1,7 @@
 package top.abeille.basic.assets.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,8 +9,9 @@ import java.time.LocalDateTime;
 /**
  * 基础对象实体类
  */
+@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
 
     /**
      * 主键

@@ -4,6 +4,7 @@
 package top.abeille.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -14,10 +15,7 @@ import java.io.Serializable;
 public class PostsDTO implements Serializable {
 
     private static final long serialVersionUID = -4116939329295119085L;
-    /**
-     * 代码
-     */
-    private String code;
+
     /**
      * 标题
      */
@@ -28,6 +26,11 @@ public class PostsDTO implements Serializable {
      */
     private String subtitle;
     /**
+     * 分类
+     */
+    @NotNull
+    private Long categoryId;
+    /**
      * 封面
      */
     @NotBlank
@@ -36,14 +39,15 @@ public class PostsDTO implements Serializable {
      * 内容
      */
     private String content;
+    /**
+     * 点赞
+     */
+    private int likes;
+    /**
+     * 查看
+     */
+    private int viewed;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getTitle() {
         return title;
@@ -61,6 +65,14 @@ public class PostsDTO implements Serializable {
         this.subtitle = subtitle;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public String getCover() {
         return cover;
     }
@@ -75,5 +87,21 @@ public class PostsDTO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.abeille.basic.assets.dto.PostsDTO;
@@ -42,12 +43,15 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public PostsVO fetch(String code) {
-        //去mysql中查询基本信息
+        //查询基本信息
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
         if (posts == null) {
             return null;
         }
+        this.flushViewed(posts.getId());
+        posts.setViewed(posts.getViewed() + 1);
         PostsVO postsVO = this.convertOuter(posts);
+        // 获取内容详情
         PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent != null) {
             postsVO.setContent(postsContent.getContent());
@@ -70,8 +74,31 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         if (postsContent == null) {
             postsContent = new PostsContent();
         }
+        postsContent.setPostsId(posts.getId());
         postsContent.setContent(postsDTO.getContent());
         postsContentRepository.save(postsContent);
+        //转换结果
+        PostsVO postsVO = this.convertOuter(posts);
+        postsVO.setContent(postsDTO.getContent());
+        return postsVO;
+    }
+
+    @Override
+    public PostsVO modify(String code, PostsDTO postsDTO) {
+        //查询基本信息
+        Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
+        if (posts == null) {
+            return null;
+        }
+        BeanUtils.copyProperties(postsDTO, posts);
+        postsRepository.saveAndFlush(posts);
+        //保存文章内容
+        PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        if (postsContent == null) {
+            postsContent = new PostsContent();
+        }
+        postsContent.setContent(postsDTO.getContent());
+        postsContentRepository.saveAndFlush(postsContent);
         //转换结果
         PostsVO postsVO = this.convertOuter(posts);
         postsVO.setContent(postsDTO.getContent());
@@ -84,6 +111,11 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         if (posts != null) {
             postsRepository.deleteById(posts.getId());
         }
+    }
+
+    @Async
+    public void flushViewed(long id) {
+        postsRepository.flushViewed(id);
     }
 
     /**

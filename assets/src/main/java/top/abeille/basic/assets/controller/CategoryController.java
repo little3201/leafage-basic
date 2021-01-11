@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.abeille.basic.assets.dto.AccountDTO;
+import top.abeille.basic.assets.dto.CategoryDTO;
 import top.abeille.basic.assets.service.CategoryService;
 import top.abeille.basic.assets.vo.AccountVO;
 
@@ -19,13 +19,13 @@ import top.abeille.basic.assets.vo.AccountVO;
  **/
 @RestController
 @RequestMapping("/account")
-public class AccountController {
+public class CategoryController {
 
-    private final Logger logger = LoggerFactory.getLogger(AccountController.class);
+    private final Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
     private final CategoryService categoryService;
 
-    public AccountController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
@@ -52,7 +52,7 @@ public class AccountController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody AccountDTO account) {
+    public ResponseEntity<Object> save(@RequestBody CategoryDTO account) {
         AccountVO accountVO;
         try {
             accountVO = categoryService.create(account);
@@ -66,14 +66,14 @@ public class AccountController {
     /**
      * 修改账号信息
      *
-     * @param code       代码
-     * @param accountDTO 账户信息
+     * @param code        代码
+     * @param categoryDTO 账户信息
      * @return ResponseEntity
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody AccountDTO accountDTO) {
+    public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody CategoryDTO categoryDTO) {
         try {
-            categoryService.modify(code, accountDTO);
+            categoryService.modify(code, categoryDTO);
         } catch (Exception e) {
             logger.error("Modify account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);

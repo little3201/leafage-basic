@@ -3,7 +3,7 @@
  */
 package top.abeille.basic.assets.service;
 
-import top.abeille.basic.assets.dto.AccountDTO;
+import top.abeille.basic.assets.dto.CategoryDTO;
 import top.abeille.basic.assets.vo.AccountVO;
 import top.abeille.common.basic.BasicService;
 
@@ -12,5 +12,5 @@ import top.abeille.common.basic.BasicService;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface CategoryService extends BasicService<AccountDTO, AccountVO> {
+public interface CategoryService extends BasicService<CategoryDTO, AccountVO> {
 }

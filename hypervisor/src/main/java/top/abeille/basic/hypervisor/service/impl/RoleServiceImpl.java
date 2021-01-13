@@ -5,7 +5,6 @@ package top.abeille.basic.hypervisor.service.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,13 +14,16 @@ import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.repository.AuthorityRepository;
 import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
 import top.abeille.basic.hypervisor.repository.RoleRepository;
+import top.abeille.basic.hypervisor.repository.UserRoleRepository;
 import top.abeille.basic.hypervisor.service.RoleService;
+import top.abeille.basic.hypervisor.vo.CountVO;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 角色信息service 实现
@@ -31,12 +33,14 @@ import java.util.List;
 @Service
 public class RoleServiceImpl extends AbstractBasicService implements RoleService {
 
+    private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository,
+    public RoleServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository,
                            AuthorityRepository authorityRepository) {
+        this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;
         this.authorityRepository = authorityRepository;
@@ -44,13 +48,26 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Flux<RoleVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
-        return roleRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
+        return roleRepository.findByEnabledTrue(PageRequest.of(page, size))
+                .map(this::convertOuter);
+    }
+
+    @Override
+    public Flux<CountVO> countRelations(Set<String> ids) {
+        return Flux.fromIterable(ids).flatMap(roleId ->
+                userRoleRepository.countByRoleIdAndEnabledTrue(roleId).map(count -> {
+                    CountVO countVO = new CountVO();
+                    countVO.setId(roleId);
+                    countVO.setCount(count);
+                    return countVO;
+                })
+        );
     }
 
     @Override
     public Mono<RoleVO> fetch(String code) {
-        return roleRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
+        return roleRepository.findByCodeAndEnabledTrue(code)
+                .map(this::convertOuter);
     }
 
     @Override
@@ -92,6 +109,14 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         return outer;
     }
 
+    /**
+     * 构造 roleAuthority
+     *
+     * @param roleId      角色ID
+     * @param modifier    修改人
+     * @param authorities 权限code
+     * @return 角色权限对象
+     */
     private Mono<List<RoleAuthority>> initRoleAuthority(String roleId, String modifier,
                                                         Collection<String> authorities) {
         return authorityRepository.findByCodeInAndEnabledTrue(authorities).map(authority -> {

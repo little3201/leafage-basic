@@ -6,6 +6,7 @@ package top.abeille.basic.hypervisor.repository;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.UserRole;
 
 import javax.validation.constraints.NotNull;
@@ -24,5 +25,13 @@ public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, Str
      * @param userId 用户ID
      * @return 关联的角色
      */
-    Flux<UserRole> findByUserId(@NotNull String userId);
+    Flux<UserRole> findByUserIdAndEnabledTrue(@NotNull String userId);
+
+    /**
+     * 统计关联用户
+     *
+     * @param roleId 角色ID
+     * @return 用户数
+     */
+    Mono<Long> countByRoleIdAndEnabledTrue(@NotNull String roleId);
 }

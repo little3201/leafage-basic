@@ -4,14 +4,18 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.RoleDTO;
 import top.abeille.basic.hypervisor.service.RoleService;
+import top.abeille.basic.hypervisor.vo.CountVO;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 /**
  * 角色信息controller
@@ -47,6 +51,18 @@ public class RoleController {
     @GetMapping("/{code}")
     public Mono<RoleVO> fetch(@PathVariable String code) {
         return roleService.fetch(code);
+    }
+
+    /**
+     * 统计关联信息
+     *
+     * @param ids ID集合
+     * @return 统计信息
+     */
+    @Validated
+    @GetMapping("/count")
+    public Flux<CountVO> countRelations(@NotEmpty Set<String> ids) {
+        return roleService.countRelations(ids);
     }
 
     /**

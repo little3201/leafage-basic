@@ -6,16 +6,19 @@ package top.abeille.basic.hypervisor.service.impl;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Authority;
 import top.abeille.basic.hypervisor.dto.AuthorityDTO;
 import top.abeille.basic.hypervisor.repository.AuthorityRepository;
+import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
 import top.abeille.basic.hypervisor.service.AuthorityService;
 import top.abeille.basic.hypervisor.vo.AuthorityVO;
+import top.abeille.basic.hypervisor.vo.CountVO;
 import top.abeille.common.basic.AbstractBasicService;
+
+import java.util.Set;
 
 /**
  * 权限资源信息Service实现
@@ -25,22 +28,35 @@ import top.abeille.common.basic.AbstractBasicService;
 @Service
 public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService {
 
+    private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
 
-    public AuthorityServiceImpl(AuthorityRepository authorityRepository) {
+    public AuthorityServiceImpl(RoleAuthorityRepository roleAuthorityRepository, AuthorityRepository authorityRepository) {
+        this.roleAuthorityRepository = roleAuthorityRepository;
         this.authorityRepository = authorityRepository;
     }
 
     @Override
     public Flux<AuthorityVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
-        return authorityRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
+        return authorityRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
     }
 
     @Override
     public Mono<AuthorityVO> fetch(String code) {
         Asserts.notBlank(code, "code");
         return authorityRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
+    }
+
+    @Override
+    public Flux<CountVO> countRelations(Set<String> ids) {
+        return Flux.fromIterable(ids).flatMap(authorityId ->
+                roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authorityId).map(count -> {
+                    CountVO countVO = new CountVO();
+                    countVO.setId(authorityId);
+                    countVO.setCount(count);
+                    return countVO;
+                })
+        );
     }
 
     @Override

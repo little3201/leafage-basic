@@ -6,16 +6,19 @@ package top.abeille.basic.hypervisor.service.impl;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.Group;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.repository.GroupRepository;
+import top.abeille.basic.hypervisor.repository.GroupUserRepository;
 import top.abeille.basic.hypervisor.service.GroupService;
+import top.abeille.basic.hypervisor.vo.CountVO;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 import top.abeille.common.basic.AbstractBasicService;
+
+import java.util.Set;
 
 /**
  * 组织信息Service实现
@@ -26,21 +29,34 @@ import top.abeille.common.basic.AbstractBasicService;
 public class GroupServiceImpl extends AbstractBasicService implements GroupService {
 
     private final GroupRepository groupRepository;
+    private final GroupUserRepository groupUserRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupUserRepository groupUserRepository) {
         this.groupRepository = groupRepository;
+        this.groupUserRepository = groupUserRepository;
     }
 
     @Override
     public Flux<GroupVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
-        return groupRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
+        return groupRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> fetch(String code) {
         Asserts.notBlank(code, "code");
         return groupRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
+    }
+
+    @Override
+    public Flux<CountVO> countRelations(Set<String> ids) {
+        return Flux.fromIterable(ids).flatMap(groupId ->
+                groupUserRepository.countByGroupIdAndEnabledTrue(groupId).map(count -> {
+                    CountVO countVO = new CountVO();
+                    countVO.setId(groupId);
+                    countVO.setCount(count);
+                    return countVO;
+                })
+        );
     }
 
     @Override

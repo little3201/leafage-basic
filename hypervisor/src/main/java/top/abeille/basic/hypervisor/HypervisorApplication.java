@@ -5,13 +5,13 @@ package top.abeille.basic.hypervisor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
 
 
 /**
  * @author liwenqiang
  */
-@EnableMongoAuditing
+@EnableReactiveMongoAuditing
 @SpringBootApplication
 public class HypervisorApplication {
 

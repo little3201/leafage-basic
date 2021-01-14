@@ -43,12 +43,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
-        Sort sort;
-        if (StringUtils.hasText(order)) {
-            sort = Sort.by(Sort.Direction.DESC, order);
-        } else {
-            sort = Sort.by(Sort.Direction.DESC, "modify_time");
-        }
+        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 

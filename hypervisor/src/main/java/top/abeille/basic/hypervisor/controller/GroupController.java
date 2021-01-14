@@ -4,14 +4,18 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.GroupDTO;
 import top.abeille.basic.hypervisor.service.GroupService;
+import top.abeille.basic.hypervisor.vo.CountVO;
 import top.abeille.basic.hypervisor.vo.GroupVO;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 /**
  * 组信息controller
@@ -47,6 +51,18 @@ public class GroupController {
     @GetMapping("/{code}")
     public Mono<GroupVO> fetch(@PathVariable String code) {
         return groupService.fetch(code);
+    }
+
+    /**
+     * 统计关联信息
+     *
+     * @param ids ID集合
+     * @return 统计信息
+     */
+    @Validated
+    @GetMapping("/count")
+    public Flux<CountVO> countRelations(@NotEmpty Set<String> ids) {
+        return groupService.countRelations(ids);
     }
 
     /**

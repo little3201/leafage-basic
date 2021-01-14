@@ -6,6 +6,7 @@ package top.abeille.basic.hypervisor.repository;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.RoleAuthority;
 
 import javax.validation.constraints.NotNull;
@@ -26,4 +27,6 @@ public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuth
      * @return Flux
      */
     Flux<RoleAuthority> findByRoleIdIn(@NotNull List<String> roleIdList);
+
+    Mono<Long> countByAuthorityIdAndEnabledTrue(@NotNull String authorityId);
 }

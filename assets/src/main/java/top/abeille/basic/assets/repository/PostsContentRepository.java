@@ -17,10 +17,11 @@ import top.abeille.basic.assets.document.PostsContent;
 public interface PostsContentRepository extends ReactiveMongoRepository<PostsContent, String> {
 
     /**
-     * 根据文章id查询enabled信息
+     * 查询信息
      *
-     * @param articleId 文章id
-     * @return 文章内容
+     * @param postsId 帖子id
+     * @return 内容
      */
-    Mono<PostsContent> findByPostsIdAndEnabledTrue(String articleId);
+    Mono<PostsContent> findByPostsIdAndEnabledTrue(String postsId);
+
 }

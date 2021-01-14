@@ -5,7 +5,7 @@ package top.abeille.basic.hypervisor.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.document.GroupUser;
 
 import javax.validation.constraints.NotNull;
@@ -16,13 +16,13 @@ import javax.validation.constraints.NotNull;
  * @author liwenqiang 2018-12-06 22:09
  **/
 @Repository
-public interface UserGroupRepository extends ReactiveCrudRepository<GroupUser, String> {
+public interface GroupUserRepository extends ReactiveCrudRepository<GroupUser, String> {
 
     /**
-     * 查询所有角色——根据用户id
+     * 统计关联用户
      *
-     * @param userId 用户ID
-     * @return List
+     * @param groupId 组ID
+     * @return 用户数
      */
-    Flux<GroupUser> findByUserId(@NotNull Long userId);
+    Mono<Long> countByGroupIdAndEnabledTrue(@NotNull String groupId);
 }

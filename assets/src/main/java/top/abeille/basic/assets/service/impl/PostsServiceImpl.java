@@ -17,11 +17,13 @@ import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.repository.PostsRepository;
 import top.abeille.basic.assets.service.PostsContentService;
 import top.abeille.basic.assets.service.PostsService;
+import top.abeille.basic.assets.vo.CountVO;
 import top.abeille.basic.assets.vo.PostsContentVO;
 import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
+import java.util.Set;
 
 /**
  * 文章信息service实现
@@ -65,6 +67,18 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                         return postsContentVO;
                     }).defaultIfEmpty(postsContentVO);
                 }
+        );
+    }
+
+    @Override
+    public Flux<CountVO> countRelations(Set<String> ids) {
+        return Flux.fromIterable(ids).flatMap(postsId ->
+                postsRepository.countByCategoryIdAndEnabledTrue(postsId).map(count -> {
+                    CountVO countVO = new CountVO();
+                    countVO.setId(postsId);
+                    countVO.setCount(count);
+                    return countVO;
+                })
         );
     }
 

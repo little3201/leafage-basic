@@ -4,11 +4,8 @@
 package top.abeille.basic.hypervisor.service.impl;
 
 import org.apache.http.util.Asserts;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -34,7 +31,6 @@ import java.util.*;
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
 
-    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
@@ -53,8 +49,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Flux<UserVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
-        return userRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
+        return userRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
     }
 
     @Override
@@ -97,7 +92,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         Asserts.notBlank(username, "username");
         Mono<User> infoMono = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("User Not Found")));
-        Mono<ArrayList<String>> roleIdListMono = infoMono.flatMap(user -> userRoleRepository.findByUserId(user.getId())
+        Mono<ArrayList<String>> roleIdListMono = infoMono.flatMap(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId())
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Roles")))
                 .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID

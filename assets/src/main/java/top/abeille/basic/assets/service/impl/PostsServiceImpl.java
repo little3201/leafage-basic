@@ -66,15 +66,17 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Flux<CountVO> countRelations(Set<String> ids) {
-        return Flux.fromIterable(ids).flatMap(postsId ->
-                postsRepository.countByCategoryIdAndEnabledTrue(postsId).map(count -> {
-                    CountVO countVO = new CountVO();
-                    countVO.setId(postsId);
-                    countVO.setCount(count);
-                    return countVO;
-                })
-        );
+    public Flux<CountVO> countRelations(Set<String> codes) {
+        return Flux.fromIterable(codes)
+                .flatMap(postsRepository::findByCodeAndEnabledTrue)
+                .flatMap(posts -> postsRepository.countByCategoryIdAndEnabledTrue(posts.getId())
+                        .map(count -> {
+                            CountVO countVO = new CountVO();
+                            countVO.setCode(posts.getCode());
+                            countVO.setCount(count);
+                            return countVO;
+                        })
+                );
     }
 
     @Override

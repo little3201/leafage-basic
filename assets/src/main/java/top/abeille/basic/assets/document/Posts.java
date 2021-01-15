@@ -20,6 +20,10 @@ public class Posts extends BaseDocument {
     @Indexed(unique = true)
     private String code;
     /**
+     * 分类ID
+     */
+    private String categoryId;
+    /**
      * 标题
      */
     private String title;
@@ -50,6 +54,14 @@ public class Posts extends BaseDocument {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getTitle() {

@@ -31,8 +31,8 @@ public interface PostsService extends BasicService<PostsDTO, PostsVO> {
     /**
      * 统计关联信息
      *
-     * @param ids ID集合
+     * @param codes code集合
      * @return 统计信息
      */
-    Flux<CountVO> countRelations(Set<String> ids);
+    Flux<CountVO> countRelations(Set<String> codes);
 }

@@ -59,13 +59,13 @@ public class PostsController {
     /**
      * 统计关联信息
      *
-     * @param ids ID集合
+     * @param codes code集合
      * @return 统计信息
      */
     @Validated
     @GetMapping("/count")
-    public Flux<CountVO> countRelations(@NotEmpty Set<String> ids) {
-        return postsService.countRelations(ids);
+    public Flux<CountVO> countRelations(@NotEmpty Set<String> codes) {
+        return postsService.countRelations(codes);
     }
 
     /**

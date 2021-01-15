@@ -10,20 +10,20 @@ public class CountVO implements Serializable {
     private static final long serialVersionUID = -4797875455929965026L;
 
     /**
-     * 主键
+     * 代码
      */
-    private String id;
+    private String code;
     /**
      * 统计数
      */
     private long count;
 
-    public String getId() {
-        return id;
+    public String getCode() {
+        return code;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public long getCount() {

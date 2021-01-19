@@ -11,28 +11,34 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.abeille.basic.assets.dto.PostsDTO;
+import top.abeille.basic.assets.entity.Category;
 import top.abeille.basic.assets.entity.Posts;
 import top.abeille.basic.assets.entity.PostsContent;
+import top.abeille.basic.assets.repository.CategoryRepository;
 import top.abeille.basic.assets.repository.PostsContentRepository;
 import top.abeille.basic.assets.repository.PostsRepository;
 import top.abeille.basic.assets.service.PostsService;
 import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.AbstractBasicService;
 
+import java.util.Optional;
+
 /**
  * 帖子信息service实现
  *
- * @author liwenqiang 2018/12/20 9:54
+ * @author liwenqiang  2018-12-20 9:54
  **/
 @Service
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {
 
     private final PostsRepository postsRepository;
     private final PostsContentRepository postsContentRepository;
+    private final CategoryRepository categoryRepository;
 
-    public PostsServiceImpl(PostsRepository postsRepository, PostsContentRepository postsContentRepository) {
+    public PostsServiceImpl(PostsRepository postsRepository, PostsContentRepository postsContentRepository, CategoryRepository categoryRepository) {
         this.postsRepository = postsRepository;
         this.postsContentRepository = postsContentRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -127,6 +133,9 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     private PostsVO convertOuter(Posts info) {
         PostsVO outer = new PostsVO();
         BeanUtils.copyProperties(info, outer);
+        // 转换分类
+        Optional<Category> optional = categoryRepository.findById(info.getCategoryId());
+        optional.ifPresent(category -> outer.setCategory(category.getName()));
         return outer;
     }
 

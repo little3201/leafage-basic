@@ -74,6 +74,14 @@ public class Posts extends BaseEntity {
         this.subtitle = subtitle;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public String getCover() {
         return cover;
     }

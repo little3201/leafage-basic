@@ -23,7 +23,7 @@ public class CustomExceptionHandler {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
         StringBuilder builder = new StringBuilder();
         for (FieldError fieldError : fieldErrors) {
-            builder.append(fieldError.getDefaultMessage()).append(",");
+            builder.append(fieldError.getField()).append(fieldError.getDefaultMessage()).append(",");
         }
         return ResponseEntity.of(Optional.of(builder.toString()));
     }

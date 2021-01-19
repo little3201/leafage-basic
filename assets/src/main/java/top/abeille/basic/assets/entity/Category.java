@@ -10,7 +10,7 @@ import javax.persistence.Table;
 /**
  * Model class for category
  *
- * @author liwenqiang
+ * @author liwenqiang  2020-12-03 22:59
  */
 @Entity
 @Table(name = "category")

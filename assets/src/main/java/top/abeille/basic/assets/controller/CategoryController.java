@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import top.abeille.basic.assets.dto.CategoryDTO;
 import top.abeille.basic.assets.service.CategoryService;
-import top.abeille.basic.assets.vo.AccountVO;
+import top.abeille.basic.assets.vo.CategoryVO;
 
 /**
  * 账户信息接口
@@ -37,7 +37,7 @@ public class CategoryController {
      */
     @GetMapping("/{businessId}")
     public ResponseEntity<Object> fetch(@PathVariable String code) {
-        AccountVO account = categoryService.fetch(code);
+        CategoryVO account = categoryService.fetch(code);
         if (account == null) {
             logger.info("Not found anything about account with code {}.", code);
             return ResponseEntity.ok(HttpStatus.NO_CONTENT);
@@ -52,15 +52,15 @@ public class CategoryController {
      * @return ResponseEntity
      */
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody CategoryDTO account) {
-        AccountVO accountVO;
+    public ResponseEntity<Object> create(@RequestBody CategoryDTO account) {
+        CategoryVO categoryVO;
         try {
-            accountVO = categoryService.create(account);
+            categoryVO = categoryService.create(account);
         } catch (Exception e) {
             logger.error("Save account occurred an error: ", e);
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.ok(accountVO);
+        return ResponseEntity.ok(categoryVO);
     }
 
     /**

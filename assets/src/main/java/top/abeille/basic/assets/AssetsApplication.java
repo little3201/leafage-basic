@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
- * @author liwenqiang
+ * 启动类
+ *
+ * @author liwenqiang  2017-12-03 22:59
  */
 @EnableAsync
 @EnableJpaAuditing

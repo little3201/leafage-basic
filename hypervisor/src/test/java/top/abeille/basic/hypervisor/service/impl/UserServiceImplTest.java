@@ -33,7 +33,7 @@ public class UserServiceImplTest extends AbstractServiceMock {
     public void save() {
         UserDTO user = new UserDTO();
         user.setNickname("管理员");
-        String pwd = new BCryptPasswordEncoder().encode("abeille");
+        String pwd = new BCryptPasswordEncoder().encode("zx110119");
         userInfoService.create(user);
         Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
     }

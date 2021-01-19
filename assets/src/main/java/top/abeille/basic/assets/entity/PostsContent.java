@@ -10,7 +10,7 @@ import javax.persistence.Table;
 /**
  * document for posts
  *
- * @author liwenqiang
+ * @author liwenqiang  2020-12-03 22:59
  */
 @Entity
 @Table(name = "posts_content")
@@ -29,10 +29,6 @@ public class PostsContent extends BaseEntity {
      * 内容
      */
     private String content;
-    /**
-     * 源文本——记录富文本或markdown原文
-     */
-    private String original;
 
     public Long getPostsId() {
         return postsId;
@@ -48,14 +44,6 @@ public class PostsContent extends BaseEntity {
 
     public void setCatalog(String catalog) {
         this.catalog = catalog;
-    }
-
-    public String getOriginal() {
-        return original;
-    }
-
-    public void setOriginal(String original) {
-        this.original = original;
     }
 
     public String getContent() {

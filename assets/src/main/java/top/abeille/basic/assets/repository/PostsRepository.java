@@ -26,8 +26,22 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
      */
     Posts findByCodeAndEnabledTrue(String code);
 
+    /**
+     * 更新viewed
+     *
+     * @param id 主键ID
+     */
     @Transactional
     @Modifying
     @Query("update #{#entityName} set viewed = viewed + 1 where id = ?1")
     void flushViewed(long id);
+
+    /**
+     * 统计
+     *
+     * @param categoryId 分类ID
+     * @return 数量
+     */
+    int countByCategoryId(long categoryId);
+
 }

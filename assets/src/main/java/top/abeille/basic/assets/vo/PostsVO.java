@@ -3,23 +3,15 @@
  */
 package top.abeille.basic.assets.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 /**
- * 用户信息出参
+ * VO class for Posts
  *
  * @author liwenqiang  2019-03-03 22:59
  **/
-public class PostsVO implements Serializable {
+public class PostsVO extends BaseVO {
 
     private static final long serialVersionUID = 5476089760882093211L;
-    /**
-     * 文章ID
-     */
-    private String code;
+
     /**
      * 标题
      */
@@ -37,18 +29,18 @@ public class PostsVO implements Serializable {
      */
     private String content;
     /**
-     * 修改时间
+     * 分类
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime modifyTime;
+    private String category;
+    /**
+     * 点赞
+     */
+    private int likes;
+    /**
+     * 查看
+     */
+    private int viewed;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getTitle() {
         return title;
@@ -82,11 +74,27 @@ public class PostsVO implements Serializable {
         this.content = content;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public String getCategory() {
+        return category;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
     }
 }

@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import top.abeille.basic.assets.entity.Category;
 import top.abeille.basic.assets.repository.CategoryRepository;
-import top.abeille.basic.assets.vo.AccountVO;
+import top.abeille.basic.assets.vo.CategoryVO;
 import top.abeille.common.mock.AbstractServiceMock;
 
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class CategoryServiceImplTest extends AbstractServiceMock {
     @Test
     public void fetch() {
         Mockito.when(categoryRepository.findOne(Mockito.any())).thenReturn(Optional.of(Mockito.mock(Category.class)));
-        AccountVO accountVO = accountService.fetch(Mockito.anyString());
-        Assertions.assertNotNull(accountVO);
+        CategoryVO categoryVO = accountService.fetch(Mockito.anyString());
+        Assertions.assertNotNull(categoryVO);
     }
 }

@@ -15,5 +15,13 @@ import top.abeille.common.basic.BasicService;
  **/
 public interface PostsService extends BasicService<PostsDTO, PostsVO> {
 
+    /**
+     * 分页查询
+     *
+     * @param page 查询起点
+     * @param size 大小
+     * @return 查询结果
+     */
     Page<PostsVO> retrieves(int page, int size);
+
 }

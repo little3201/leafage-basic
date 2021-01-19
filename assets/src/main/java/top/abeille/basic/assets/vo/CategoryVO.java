@@ -1,25 +1,22 @@
 /*
  * Copyright (c) 2019. Abeille All Right Reserved.
  */
-package top.abeille.basic.assets.dto;
-
-import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
+package top.abeille.basic.assets.vo;
 
 /**
- * Model class for Category
+ * VO class for Category
  *
  * @author liwenqiang  2020-12-03 22:59
  */
-public class CategoryDTO implements Serializable {
+public class CategoryVO extends BaseVO {
 
-    private static final long serialVersionUID = 2516536769852195479L;
+    private static final long serialVersionUID = 6540470230706397453L;
 
     /**
      * 名称
      */
-    @NotBlank
     private String name;
+
 
     public String getName() {
         return name;

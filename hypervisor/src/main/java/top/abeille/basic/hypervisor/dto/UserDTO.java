@@ -27,7 +27,7 @@ public class UserDTO implements Serializable {
      * 电话
      */
     @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}", message = "mobile not pattern")
-    private String mobile;
+    private String phone;
     /**
      * 邮箱
      */
@@ -54,12 +54,12 @@ public class UserDTO implements Serializable {
         this.avatar = avatar;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {

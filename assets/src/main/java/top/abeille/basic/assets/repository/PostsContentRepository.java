@@ -10,7 +10,7 @@ import top.abeille.basic.assets.entity.PostsContent;
 /**
  * 内容信息dao
  *
- * @author liwenqiang 2018/12/20 9:51
+ * @author liwenqiang  2020-12-03 22:59
  **/
 @Repository
 public interface PostsContentRepository extends JpaRepository<PostsContent, String> {

@@ -39,14 +39,6 @@ public class PostsDTO implements Serializable {
      * 内容
      */
     private String content;
-    /**
-     * 点赞
-     */
-    private int likes;
-    /**
-     * 查看
-     */
-    private int viewed;
 
 
     public String getTitle() {
@@ -89,19 +81,4 @@ public class PostsDTO implements Serializable {
         this.content = content;
     }
 
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getViewed() {
-        return viewed;
-    }
-
-    public void setViewed(int viewed) {
-        this.viewed = viewed;
-    }
 }

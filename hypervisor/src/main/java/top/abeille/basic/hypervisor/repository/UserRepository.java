@@ -15,7 +15,21 @@ import top.abeille.basic.hypervisor.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    /**
+     * 查询用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
     User findByUsernameAndEnabledTrue(String username);
 
+    /**
+     * 查询用户信息
+     *
+     * @param username 用户名
+     * @param phone    电话
+     * @param email    邮箱
+     * @return 用户信息
+     */
     User findByUsernameOrPhoneOrEmailAndEnabledTrue(String username, String phone, String email);
 }

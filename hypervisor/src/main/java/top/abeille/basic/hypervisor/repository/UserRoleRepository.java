@@ -18,5 +18,18 @@ import java.util.List;
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
 
+    /**
+     * 根据用户ID查询
+     *
+     * @param userId 用户主键
+     * @return 集合
+     */
     List<UserRole> findByUserId(@NotNull Long userId);
+
+    /**
+     * 根据用户ID删除
+     *
+     * @param userId 用户主键
+     */
+    void deleteByUserId(@NotNull Long userId);
 }

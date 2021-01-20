@@ -4,16 +4,18 @@
 package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * Model class for GroupInfo
+ * DTO class for Group
  *
  * @author liwenqiang
  */
 public class GroupDTO implements Serializable {
 
     private static final long serialVersionUID = 5146594305386328379L;
+
     /**
      * 负责人
      */
@@ -26,10 +28,12 @@ public class GroupDTO implements Serializable {
      * 名称
      */
     @NotBlank
+    @Size(max = 16)
     private String name;
     /**
      * 描述
      */
+    @Size(max = 64)
     private String description;
 
     public Long getPrincipal() {

@@ -13,12 +13,12 @@ import top.abeille.basic.assets.service.CategoryService;
 import top.abeille.basic.assets.vo.CategoryVO;
 
 /**
- * 账户信息接口
+ * 分类接口
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/category")
 public class CategoryController {
 
     private final Logger logger = LoggerFactory.getLogger(CategoryController.class);
@@ -35,7 +35,7 @@ public class CategoryController {
      * @param code 代码
      * @return ResponseEntity
      */
-    @GetMapping("/{businessId}")
+    @GetMapping("/{code}")
     public ResponseEntity<Object> fetch(@PathVariable String code) {
         CategoryVO account = categoryService.fetch(code);
         if (account == null) {

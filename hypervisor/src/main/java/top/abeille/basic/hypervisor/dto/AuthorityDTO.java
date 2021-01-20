@@ -4,10 +4,11 @@
 package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * Model class for SourceInfo
+ * DTO class for Authority
  *
  * @author liwenqiang
  */
@@ -17,11 +18,12 @@ public class AuthorityDTO implements Serializable {
     /**
      * 上级
      */
-    private String superior;
+    private Long superior;
     /**
      * 名称
      */
     @NotBlank
+    @Size(max = 16)
     private String name;
     /**
      * 类型
@@ -39,11 +41,11 @@ public class AuthorityDTO implements Serializable {
     private String description;
 
 
-    public String getSuperior() {
+    public Long getSuperior() {
         return superior;
     }
 
-    public void setSuperior(String superior) {
+    public void setSuperior(Long superior) {
         this.superior = superior;
     }
 

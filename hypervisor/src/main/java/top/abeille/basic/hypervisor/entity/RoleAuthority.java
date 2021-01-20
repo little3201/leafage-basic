@@ -24,8 +24,8 @@ public class RoleAuthority extends BaseEntity {
     /**
      * 资源ID
      */
-    @Column(name = "source_id")
-    private Long sourceId;
+    @Column(name = "authority_id")
+    private Long authorityId;
 
 
     public Long getRoleId() {
@@ -36,12 +36,11 @@ public class RoleAuthority extends BaseEntity {
         this.roleId = roleId;
     }
 
-    public Long getSourceId() {
-        return sourceId;
+    public Long getAuthorityId() {
+        return authorityId;
     }
 
-    public void setSourceId(Long sourceId) {
-        this.sourceId = sourceId;
+    public void setAuthorityId(Long authorityId) {
+        this.authorityId = authorityId;
     }
-
 }

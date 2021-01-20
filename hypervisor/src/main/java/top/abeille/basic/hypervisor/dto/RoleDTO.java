@@ -4,30 +4,39 @@
 package top.abeille.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Set;
 
 /**
- * Model class for RoleInfo
+ * DTO class for Role
  *
  * @author liwenqiang
  */
 public class RoleDTO implements Serializable {
 
     private static final long serialVersionUID = 3695400553311525056L;
+
     /**
      * 名称
      */
     @NotBlank
+    @Size(max = 16)
     private String name;
     /**
      * 描述
      */
+    @Size(max = 32)
     private String description;
     /**
-     * 备注
+     * 资源列表
      */
-    private String remark;
-
+    private Set<String> authorities = Collections.emptySet();
+    /**
+     * 修改人
+     */
+    private String modifier;
 
     public String getName() {
         return name;
@@ -45,11 +54,19 @@ public class RoleDTO implements Serializable {
         this.description = description;
     }
 
-    public String getRemark() {
-        return remark;
+    public Set<String> getAuthorities() {
+        return authorities;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setAuthorities(Set<String> authorities) {
+        this.authorities = authorities;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 }

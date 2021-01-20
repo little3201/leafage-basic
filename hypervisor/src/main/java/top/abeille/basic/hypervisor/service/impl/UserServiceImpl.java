@@ -3,29 +3,22 @@
  */
 package top.abeille.basic.hypervisor.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import top.abeille.basic.hypervisor.dto.UserDTO;
-import top.abeille.basic.hypervisor.entity.Authority;
-import top.abeille.basic.hypervisor.entity.RoleAuthority;
-import top.abeille.basic.hypervisor.entity.User;
-import top.abeille.basic.hypervisor.entity.UserRole;
-import top.abeille.basic.hypervisor.repository.RoleAuthorityRepository;
-import top.abeille.basic.hypervisor.repository.UserRepository;
-import top.abeille.basic.hypervisor.repository.UserRoleRepository;
-import top.abeille.basic.hypervisor.service.AuthorityService;
-import top.abeille.basic.hypervisor.service.RoleService;
+import top.abeille.basic.hypervisor.entity.*;
+import top.abeille.basic.hypervisor.repository.*;
 import top.abeille.basic.hypervisor.service.UserService;
 import top.abeille.basic.hypervisor.vo.UserDetailsVO;
 import top.abeille.basic.hypervisor.vo.UserVO;
 import top.abeille.common.basic.AbstractBasicService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,32 +30,20 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
 
-    /**
-     * 开启日志
-     */
-    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-
-    /**
-     * email 正则
-     */
-    private static final String REGEX_EMAIL = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}";
-    /**
-     * 手机号 正则
-     */
-    private static final String REGEX_MOBILE = "0?(13|14|15|17|18|19)[0-9]{9}";
-
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
+    private final RoleRepository roleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
-    private final RoleService roleService;
-    private final AuthorityService authorityService;
+    private final AuthorityRepository authorityRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, RoleAuthorityRepository roleAuthorityRepository, RoleService roleService, AuthorityService authorityService) {
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
+                           RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository,
+                           AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
+        this.roleRepository = roleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;
-        this.roleService = roleService;
-        this.authorityService = authorityService;
+        this.authorityRepository = authorityRepository;
     }
 
     @Override
@@ -73,24 +54,43 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public UserVO create(UserDTO userDTO) {
-        User info = new User();
-        BeanUtils.copyProperties(userDTO, info);
-        userRepository.save(info);
-        return this.convertOuter(info);
+        User user = new User();
+        BeanUtils.copyProperties(userDTO, user);
+        userRepository.save(user);
+        if (!CollectionUtils.isEmpty(userDTO.getRoles())) {
+            List<Role> roles = roleRepository.findByCodeInAndEnabledTrue(userDTO.getRoles());
+            this.saveBatch(roles, user.getId());
+        }
+        return this.convertOuter(user);
     }
 
     @Override
     public UserVO modify(String username, UserDTO userDTO) {
         User user = userRepository.findByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(userDTO, user);
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
+        if (CollectionUtils.isEmpty(userDTO.getRoles())) {
+            userRoleRepository.deleteByUserId(user.getId());
+        } else {
+            List<Role> roles = roleRepository.findByCodeInAndEnabledTrue(userDTO.getRoles());
+            // 查已存在的
+            List<UserRole> userRoleList = userRoleRepository.findByUserId(user.getId());
+            // 删除去掉的
+            List<UserRole> userRoles = this.notExisted(userRoleList, roles);
+            userRoles.forEach(userRole -> userRole.setEnabled(false));
+            userRoleRepository.saveAll(userRoles);
+            // 保存新增的
+            List<Role> newRoles = this.addNew(userRoleList, roles);
+            this.saveBatch(newRoles, user.getId());
+        }
         return this.convertOuter(user);
     }
 
     @Override
     public void remove(String username) {
-        User info = userRepository.findByUsernameAndEnabledTrue(username);
-        userRepository.deleteById(info.getId());
+        User user = userRepository.findByUsernameAndEnabledTrue(username);
+        user.setEnabled(false);
+        userRepository.saveAndFlush(user);
     }
 
     @Override
@@ -102,19 +102,15 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     @Override
     public UserDetailsVO fetchDetails(String username) {
         User user = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username);
-
         List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
         // 检查角色是否配置
-
         List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
         List<RoleAuthority> roleAuthorities = roleAuthorityRepository.findByRoleIdIn(roleIds);
-
         // 权限
-        List<Long> sourceIds = roleAuthorities.stream().map(RoleAuthority::getSourceId).collect(Collectors.toList());
-        List<Authority> authorities = authorityService.findByIdIn(sourceIds);
-
+        List<Long> sourceIds = roleAuthorities.stream().map(RoleAuthority::getAuthorityId).collect(Collectors.toList());
+        List<Authority> authorities = authorityRepository.findByIdIn(sourceIds);
         Set<String> codes = authorities.stream().map(Authority::getCode).collect(Collectors.toSet());
-
+        // 转换对象
         UserDetailsVO userDetailsVO = new UserDetailsVO();
         BeanUtils.copyProperties(user, userDetailsVO);
         userDetailsVO.setAuthorities(codes);
@@ -130,5 +126,54 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(info, userVO);
         return userVO;
+    }
+
+    /**
+     * 批量执行
+     *
+     * @param roles  角色
+     * @param userId 用户ID
+     */
+    private void saveBatch(List<Role> roles, long userId) {
+        List<UserRole> userRoles = roles
+                .stream().map(role -> {
+                    UserRole userRole = new UserRole();
+                    userRole.setRoleId(role.getId());
+                    userRole.setUserId(userId);
+                    userRole.setModifier(role.getModifier());
+                    return userRole;
+                }).collect(Collectors.toList());
+        userRoleRepository.saveAll(userRoles);
+    }
+
+    /**
+     * 新增信息
+     *
+     * @param userRoles 已存在
+     * @param roles     新提交
+     * @return 新增信息
+     */
+    private List<Role> addNew(List<UserRole> userRoles, List<Role> roles) {
+        Map<Long, Long> map = userRoles.stream().collect(Collectors.toMap(UserRole::getRoleId, UserRole::getId));
+        // 保存新增的
+        List<Role> existed = roles.stream().filter(role -> map.containsKey(role.getId())).collect(Collectors.toList());
+        roles.removeAll(existed);
+        return roles;
+    }
+
+    /**
+     * 移除信息
+     *
+     * @param userRoles 已存在
+     * @param roles     新提交
+     * @return 移除信息
+     */
+    private List<UserRole> notExisted(List<UserRole> userRoles, List<Role> roles) {
+        Map<Long, String> map = roles.stream().collect(Collectors.toMap(Role::getId, Role::getCode));
+        // 仍旧存在的
+        List<UserRole> existed = userRoles.stream().filter(userRole -> map.containsKey(userRole.getRoleId())).collect(Collectors.toList());
+        userRoles.removeAll(existed);
+        // 不在存在的
+        return userRoles;
     }
 }

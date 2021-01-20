@@ -57,7 +57,7 @@ public class AuthorityController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Object> createSource(@RequestBody @Valid AuthorityDTO authorityDTO) {
+    public ResponseEntity<Object> create(@RequestBody @Valid AuthorityDTO authorityDTO) {
         try {
             authorityService.create(authorityDTO);
         } catch (Exception e) {

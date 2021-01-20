@@ -15,6 +15,7 @@ import top.abeille.basic.hypervisor.service.RoleService;
 import top.abeille.basic.hypervisor.vo.RoleVO;
 
 import javax.validation.Valid;
+import java.util.Objects;
 
 /**
  * 角色信息接口
@@ -23,13 +24,13 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/role")
-public class RoleInfoController {
+public class RoleController {
 
-    private final Logger logger = LoggerFactory.getLogger(RoleInfoController.class);
+    private final Logger logger = LoggerFactory.getLogger(RoleController.class);
 
     private final RoleService roleService;
 
-    public RoleInfoController(RoleService roleService) {
+    public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }
 
@@ -48,6 +49,22 @@ public class RoleInfoController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(roles);
+    }
+
+    /**
+     * 查询信息
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/{code}")
+    public ResponseEntity<Object> fetch(@PathVariable String code) {
+        RoleVO roleVO = roleService.fetch(code);
+        if (Objects.isNull(roleVO)) {
+            logger.info("Not found anything with code: {}.", code);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(roleVO);
     }
 
     /**

@@ -21,13 +21,13 @@ import top.abeille.basic.hypervisor.vo.GroupVO;
  **/
 @RestController
 @RequestMapping("/group")
-public class GroupInfoController {
+public class GroupController {
 
-    private final Logger logger = LoggerFactory.getLogger(GroupInfoController.class);
+    private final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
     private final GroupService groupService;
 
-    public GroupInfoController(GroupService groupService) {
+    public GroupController(GroupService groupService) {
         this.groupService = groupService;
     }
 
@@ -55,7 +55,7 @@ public class GroupInfoController {
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Object> fetchGroup(@PathVariable String code) {
+    public ResponseEntity<Object> fetch(@PathVariable String code) {
         GroupVO groupInfo = groupService.fetch(code);
         if (groupInfo == null) {
             logger.info("Not found anything about group with code {}.", code);
@@ -71,7 +71,7 @@ public class GroupInfoController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Object> createGroup(@RequestBody GroupDTO groupDTO) {
+    public ResponseEntity<Object> create(@RequestBody GroupDTO groupDTO) {
         try {
             groupService.create(groupDTO);
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class GroupInfoController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Object> modifyGroup(@PathVariable String code, @RequestBody GroupDTO groupDTO) {
+    public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody GroupDTO groupDTO) {
         try {
             groupService.modify(code, groupDTO);
         } catch (Exception e) {
@@ -106,7 +106,7 @@ public class GroupInfoController {
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
     @DeleteMapping("/{code}")
-    public ResponseEntity<Object> removeGroup(@PathVariable String code) {
+    public ResponseEntity<Object> remove(@PathVariable String code) {
         try {
             groupService.remove(code);
         } catch (Exception e) {

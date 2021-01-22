@@ -45,14 +45,14 @@ public class PostsServiceImplTest {
     @Test
     public void fetchDetailsByCode() {
         Mockito.when(postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mockito.any());
-        Mono<? extends PostsVO> outerMono = postsService.fetchDetailsByCode(Mockito.anyString());
+        Mono<? extends PostsVO> outerMono = postsService.fetchContent(Mockito.anyString());
         Assertions.assertNotNull(outerMono);
     }
 
     @Test
     public void fetchDetailsByCodeEmpty() {
         Mockito.when(postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mono.empty());
-        Mono<? extends PostsVO> outerMono = postsService.fetchDetailsByCode(String.valueOf(new Random().nextFloat()));
+        Mono<? extends PostsVO> outerMono = postsService.fetchContent(String.valueOf(new Random().nextFloat()));
         Assertions.assertNull(outerMono);
     }
 }

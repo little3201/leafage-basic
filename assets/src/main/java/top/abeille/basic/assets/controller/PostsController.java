@@ -11,13 +11,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.dto.PostsDTO;
 import top.abeille.basic.assets.service.PostsService;
-import top.abeille.basic.assets.vo.CountVO;
 import top.abeille.basic.assets.vo.PostsContentVO;
 import top.abeille.basic.assets.vo.PostsVO;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import java.util.Set;
 
 /**
  * 文章信息controller
@@ -53,19 +50,7 @@ public class PostsController {
      */
     @GetMapping("/{code}")
     public Mono<PostsContentVO> fetch(@PathVariable String code) {
-        return postsService.fetchDetailsByCode(code);
-    }
-
-    /**
-     * 统计关联信息
-     *
-     * @param codes code集合
-     * @return 统计信息
-     */
-    @Validated
-    @GetMapping("/count")
-    public Flux<CountVO> countRelations(@NotEmpty Set<String> codes) {
-        return postsService.countRelations(codes);
+        return postsService.fetchContent(code);
     }
 
     /**

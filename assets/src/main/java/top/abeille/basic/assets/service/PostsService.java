@@ -22,6 +22,5 @@ public interface PostsService extends BasicService<PostsDTO, PostsVO> {
      * @param code 代码
      * @return 详细信息
      */
-    Mono<PostsContentVO> fetchDetailsByCode(String code);
-
+    Mono<PostsContentVO> fetchContent(String code);
 }

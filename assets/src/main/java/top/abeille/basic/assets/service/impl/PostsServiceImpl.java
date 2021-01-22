@@ -24,7 +24,7 @@ import top.abeille.common.basic.AbstractBasicService;
 import javax.naming.NotContextException;
 
 /**
- * 文章信息service实现
+ * posts service实现
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -41,19 +41,19 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
-        Sort sort;
-        if (StringUtils.hasText(order)) {
-            sort = Sort.by(Sort.Direction.DESC, order);
-        } else {
-            sort = Sort.by(Sort.Direction.DESC, "modify_time");
-        }
+        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<PostsContentVO> fetchDetailsByCode(String code) {
+    public Mono<PostsContentVO> fetchContent(String code) {
         Asserts.notBlank(code, "code");
-        return postsRepository.findByCodeAndEnabledTrue(code).flatMap(posts -> {
+        return postsRepository.findByCodeAndEnabledTrue(code)
+                .flatMap(posts -> {
+                    posts.setViewed(posts.getViewed() + 1);
+                    return postsRepository.save(posts);
+                })
+                .flatMap(posts -> {
                     // 将内容设置到vo对像中
                     PostsContentVO postsContentVO = new PostsContentVO();
                     BeanUtils.copyProperties(posts, postsContentVO);
@@ -64,8 +64,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                         postsContentVO.setCatalog(contentInfo.getCatalog());
                         return postsContentVO;
                     }).defaultIfEmpty(postsContentVO);
-                }
-        );
+                });
     }
 
     @Override

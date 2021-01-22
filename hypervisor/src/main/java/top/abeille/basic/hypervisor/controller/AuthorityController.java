@@ -4,14 +4,18 @@
 package top.abeille.basic.hypervisor.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.hypervisor.dto.AuthorityDTO;
 import top.abeille.basic.hypervisor.service.AuthorityService;
 import top.abeille.basic.hypervisor.vo.AuthorityVO;
+import top.abeille.basic.hypervisor.vo.CountVO;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 /**
  * 权限 controller
@@ -38,7 +42,6 @@ public class AuthorityController {
         return authorityService.retrieve(page, size);
     }
 
-
     /**
      * 根据传入的代码查询信息
      *
@@ -48,6 +51,18 @@ public class AuthorityController {
     @GetMapping("/{code}")
     public Mono<AuthorityVO> fetch(@PathVariable String code) {
         return authorityService.fetch(code);
+    }
+
+    /**
+     * 统计关联信息
+     *
+     * @param ids ID集合
+     * @return 统计信息
+     */
+    @Validated
+    @GetMapping("/count")
+    public Flux<CountVO> countRelations(@NotEmpty Set<String> ids) {
+        return authorityService.countRelations(ids);
     }
 
     /**

@@ -5,46 +5,51 @@
 package top.abeille.basic.assets.controller;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Mono;
-import top.abeille.basic.assets.dto.PostsDTO;
+import org.springframework.web.reactive.function.BodyInserters;
+import top.abeille.basic.assets.document.Posts;
 import top.abeille.basic.assets.repository.PostsRepository;
-import top.abeille.basic.assets.service.PostsContentService;
-import top.abeille.basic.assets.service.impl.PostsServiceImpl;
+import top.abeille.basic.assets.service.PostsService;
+
+import static org.mockito.Mockito.atLeastOnce;
 
 /**
  * 文章接口测试类
  *
  * @author liwenqiang 2020/3/1 22:07
  */
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@WebFluxTest
+@Import(PostsService.class)
 public class PostsControllerTest {
 
     @MockBean
     private PostsRepository postsRepository;
 
-    @MockBean
-    private PostsContentService postsContentService;
-
-
-    private final WebTestClient client = WebTestClient.bindToController(new PostsController(
-            new PostsServiceImpl(postsRepository, postsContentService))).build();
+    @Autowired
+    private WebTestClient webClient;
 
     @Test
-    public void retrieveArticle() {
-        PostsDTO postsDTO = new PostsDTO();
-        client.post().uri("/article").contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(postsDTO), PostsDTO.class).exchange()
+    public void retrieve() {
+        Mockito.when(postsRepository.save(Mockito.mock(Posts.class))).thenReturn(Mockito.any());
+        webClient.post().uri("/article").contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(Mockito.mock(Posts.class))).exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("content").isNotEmpty();
+        Mockito.verify(postsRepository, atLeastOnce()).save(Mockito.mock(Posts.class));
     }
 
     @Test
-    public void fetchArticle() {
-        client.get().uri("/article/{businessId}", "AT7124EVA").exchange()
+    public void fetch() {
+        webClient.get().uri("/article/{businessId}", "AT7124EVA").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("content").isNotEmpty();
     }

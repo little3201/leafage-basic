@@ -20,6 +20,10 @@ public class Posts extends BaseDocument {
     @Indexed(unique = true)
     private String code;
     /**
+     * 分类ID
+     */
+    private String categoryId;
+    /**
      * 标题
      */
     private String title;
@@ -52,6 +56,14 @@ public class Posts extends BaseDocument {
         this.code = code;
     }
 
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -76,4 +88,27 @@ public class Posts extends BaseDocument {
         this.cover = cover;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getComment() {
+        return comment;
+    }
+
+    public void setComment(int comment) {
+        this.comment = comment;
+    }
+
+    public int getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
+    }
 }

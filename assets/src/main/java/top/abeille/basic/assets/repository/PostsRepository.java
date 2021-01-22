@@ -10,6 +10,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.Posts;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 帖子信息repository
  *
@@ -33,4 +35,12 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, String> 
      * @return 帖子信息
      */
     Mono<Posts> findByCodeAndEnabledTrue(String code);
+
+    /**
+     * 统计关联帖子
+     *
+     * @param categoryId 分类ID
+     * @return 用户数
+     */
+    Mono<Long> countByCategoryIdAndEnabledTrue(@NotNull String categoryId);
 }

@@ -13,18 +13,6 @@ public class PostsVO extends BaseVO {
     private static final long serialVersionUID = -2692474466082844624L;
 
     /**
-     * 点赞
-     */
-    private int likes;
-    /**
-     * 评论
-     */
-    private int comment;
-    /**
-     * 查看
-     */
-    private int viewed;
-    /**
      * 标题
      */
     private String title;
@@ -36,7 +24,22 @@ public class PostsVO extends BaseVO {
      * 封面
      */
     private String cover;
-
+    /**
+     * 分类
+     */
+    private String category;
+    /**
+     * 点赞
+     */
+    private int likes;
+    /**
+     * 评论
+     */
+    private int comment;
+    /**
+     * 查看
+     */
+    private int viewed;
 
     public String getTitle() {
         return title;
@@ -60,6 +63,14 @@ public class PostsVO extends BaseVO {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public int getLikes() {

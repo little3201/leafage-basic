@@ -50,7 +50,7 @@ public class PostsController {
      */
     @GetMapping("/{code}")
     public Mono<PostsContentVO> fetch(@PathVariable String code) {
-        return postsService.fetchDetailsByCode(code);
+        return postsService.fetchContent(code);
     }
 
     /**

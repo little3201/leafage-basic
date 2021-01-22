@@ -6,16 +6,19 @@ package top.abeille.basic.assets.service.impl;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.abeille.basic.assets.document.Category;
 import top.abeille.basic.assets.dto.CategoryDTO;
 import top.abeille.basic.assets.repository.CategoryRepository;
+import top.abeille.basic.assets.repository.PostsRepository;
 import top.abeille.basic.assets.service.CategoryService;
 import top.abeille.basic.assets.vo.CategoryVO;
+import top.abeille.basic.assets.vo.CountVO;
 import top.abeille.common.basic.AbstractBasicService;
+
+import java.util.Set;
 
 /**
  * 话题信息service实现
@@ -26,15 +29,16 @@ import top.abeille.common.basic.AbstractBasicService;
 public class CategoryServiceImpl extends AbstractBasicService implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final PostsRepository postsRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, PostsRepository postsRepository) {
         this.categoryRepository = categoryRepository;
+        this.postsRepository = postsRepository;
     }
 
     @Override
     public Flux<CategoryVO> retrieve(int page, int size) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "modify_time");
-        return categoryRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
+        return categoryRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
     }
 
     @Override
@@ -43,6 +47,20 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Category info = new Category();
         info.setCode(code);
         return categoryRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
+    }
+
+    @Override
+    public Flux<CountVO> countPosts(Set<String> codes) {
+        return Flux.fromIterable(codes)
+                .flatMap(categoryRepository::findByCodeAndEnabledTrue)
+                .flatMap(category -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
+                        .map(count -> {
+                            CountVO countVO = new CountVO();
+                            countVO.setCode(category.getCode());
+                            countVO.setCount(count);
+                            return countVO;
+                        })
+                );
     }
 
     @Override

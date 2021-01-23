@@ -48,15 +48,17 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
-    public Flux<CountVO> countRelations(Set<String> ids) {
-        return Flux.fromIterable(ids).flatMap(groupId ->
-                groupUserRepository.countByGroupIdAndEnabledTrue(groupId).map(count -> {
-                    CountVO countVO = new CountVO();
-                    countVO.setId(groupId);
-                    countVO.setCount(count);
-                    return countVO;
-                })
-        );
+    public Flux<CountVO> countUsers(Set<String> codes) {
+        return Flux.fromIterable(codes)
+                .flatMap(groupRepository::findByCodeAndEnabledTrue)
+                .flatMap(group ->
+                        groupUserRepository.countByGroupIdAndEnabledTrue(group.getId()).map(count -> {
+                            CountVO countVO = new CountVO();
+                            countVO.setCode(group.getCode());
+                            countVO.setCount(count);
+                            return countVO;
+                        })
+                );
     }
 
     @Override

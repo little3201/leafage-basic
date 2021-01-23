@@ -53,15 +53,17 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Flux<CountVO> countRelations(Set<String> ids) {
-        return Flux.fromIterable(ids).flatMap(roleId ->
-                userRoleRepository.countByRoleIdAndEnabledTrue(roleId).map(count -> {
-                    CountVO countVO = new CountVO();
-                    countVO.setId(roleId);
-                    countVO.setCount(count);
-                    return countVO;
-                })
-        );
+    public Flux<CountVO> countUsers(Set<String> codes) {
+        return Flux.fromIterable(codes)
+                .flatMap(roleRepository::findByCodeAndEnabledTrue)
+                .flatMap(role ->
+                        userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
+                            CountVO countVO = new CountVO();
+                            countVO.setCode(role.getCode());
+                            countVO.setCount(count);
+                            return countVO;
+                        })
+                );
     }
 
     @Override

@@ -5,7 +5,6 @@ package top.abeille.basic.assets.controller;
 
 import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,11 +16,10 @@ import top.abeille.basic.assets.vo.PostsVO;
 import javax.validation.Valid;
 
 /**
- * 文章信息controller
+ * posts controller
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
-@Validated
 @RestController
 @RequestMapping("/posts")
 public class PostsController {

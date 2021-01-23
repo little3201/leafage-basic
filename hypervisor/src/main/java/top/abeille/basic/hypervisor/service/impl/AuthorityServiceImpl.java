@@ -48,15 +48,17 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Flux<CountVO> countRelations(Set<String> ids) {
-        return Flux.fromIterable(ids).flatMap(authorityId ->
-                roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authorityId).map(count -> {
-                    CountVO countVO = new CountVO();
-                    countVO.setId(authorityId);
-                    countVO.setCount(count);
-                    return countVO;
-                })
-        );
+    public Flux<CountVO> countRoles(Set<String> codes) {
+        return Flux.fromIterable(codes)
+                .flatMap(authorityRepository::findByCodeAndEnabledTrue)
+                .flatMap(authority ->
+                        roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId()).map(count -> {
+                            CountVO countVO = new CountVO();
+                            countVO.setCode(authority.getCode());
+                            countVO.setCount(count);
+                            return countVO;
+                        })
+                );
     }
 
     @Override

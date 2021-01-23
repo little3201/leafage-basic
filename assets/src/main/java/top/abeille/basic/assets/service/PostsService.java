@@ -10,7 +10,7 @@ import top.abeille.basic.assets.vo.PostsVO;
 import top.abeille.common.basic.BasicService;
 
 /**
- * 帖子信息Service
+ * posts service
  *
  * @author liwenqiang 2018/12/17 19:26
  **/

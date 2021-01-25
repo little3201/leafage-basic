@@ -13,10 +13,6 @@ public class PostsContentVO extends PostsVO {
     private static final long serialVersionUID = -3631862762916498067L;
 
     /**
-     * 原文
-     */
-    private String original;
-    /**
      * 内容
      */
     private String content;
@@ -25,13 +21,6 @@ public class PostsContentVO extends PostsVO {
      */
     private String catalog;
 
-    public String getOriginal() {
-        return original;
-    }
-
-    public void setOriginal(String original) {
-        this.original = original;
-    }
 
     public String getContent() {
         return content;

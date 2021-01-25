@@ -28,10 +28,6 @@ public class PostsDTO implements Serializable {
     @Size(max = 64)
     private String subtitle;
     /**
-     * 原文
-     */
-    private String original;
-    /**
      * 内容
      */
     private String content;
@@ -59,14 +55,6 @@ public class PostsDTO implements Serializable {
 
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
-    }
-
-    public String getOriginal() {
-        return original;
-    }
-
-    public void setOriginal(String original) {
-        this.original = original;
     }
 
     public String getContent() {

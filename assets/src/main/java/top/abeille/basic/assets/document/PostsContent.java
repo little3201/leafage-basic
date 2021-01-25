@@ -23,10 +23,6 @@ public class PostsContent extends BaseDocument {
     @Indexed(unique = true)
     private String postsId;
     /**
-     * 原文
-     */
-    private String original;
-    /**
      * 内容
      */
     private String content;
@@ -42,14 +38,6 @@ public class PostsContent extends BaseDocument {
 
     public void setPostsId(String postsId) {
         this.postsId = postsId;
-    }
-
-    public String getOriginal() {
-        return original;
-    }
-
-    public void setOriginal(String original) {
-        this.original = original;
     }
 
     public String getContent() {

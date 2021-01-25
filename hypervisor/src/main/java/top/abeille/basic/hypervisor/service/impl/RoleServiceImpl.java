@@ -38,8 +38,8 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
 
-    public RoleServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository,
-                           AuthorityRepository authorityRepository) {
+    public RoleServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository,
+                           RoleAuthorityRepository roleAuthorityRepository, AuthorityRepository authorityRepository) {
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;

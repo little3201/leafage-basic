@@ -1,0 +1,90 @@
+/*
+ * Copyright (c) 2019. Abeille All Right Reserved.
+ */
+package io.leafage.basic.hypervisor.service.impl;
+
+import io.leafage.basic.hypervisor.document.Authority;
+import io.leafage.basic.hypervisor.dto.AuthorityDTO;
+import io.leafage.basic.hypervisor.repository.AuthorityRepository;
+import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
+import io.leafage.basic.hypervisor.service.AuthorityService;
+import io.leafage.basic.hypervisor.vo.AuthorityVO;
+import io.leafage.basic.hypervisor.vo.CountVO;
+import io.leafage.common.basic.AbstractBasicService;
+import org.apache.http.util.Asserts;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.Set;
+
+/**
+ * 权限资源信息Service实现
+ *
+ * @author liwenqiang 2018/12/17 19:36
+ **/
+@Service
+public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService {
+
+    private final RoleAuthorityRepository roleAuthorityRepository;
+    private final AuthorityRepository authorityRepository;
+
+    public AuthorityServiceImpl(RoleAuthorityRepository roleAuthorityRepository, AuthorityRepository authorityRepository) {
+        this.roleAuthorityRepository = roleAuthorityRepository;
+        this.authorityRepository = authorityRepository;
+    }
+
+    @Override
+    public Flux<AuthorityVO> retrieve(int page, int size) {
+        return authorityRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<AuthorityVO> fetch(String code) {
+        Asserts.notBlank(code, "code");
+        return authorityRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
+    }
+
+    @Override
+    public Flux<CountVO> countRelations(Set<String> ids) {
+        return Flux.fromIterable(ids).flatMap(authorityId ->
+                roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authorityId).map(count -> {
+                    CountVO countVO = new CountVO();
+                    countVO.setId(authorityId);
+                    countVO.setCount(count);
+                    return countVO;
+                })
+        );
+    }
+
+    @Override
+    public Mono<AuthorityVO> create(AuthorityDTO authorityDTO) {
+        Authority info = new Authority();
+        BeanUtils.copyProperties(authorityDTO, info);
+        info.setCode(this.generateCode());
+        return authorityRepository.insert(info).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<AuthorityVO> modify(String code, AuthorityDTO authorityDTO) {
+        Asserts.notBlank(code, "code");
+        return authorityRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
+            BeanUtils.copyProperties(authorityDTO, info);
+            return authorityRepository.save(info);
+        }).map(this::convertOuter);
+    }
+
+    /**
+     * 对象转换为输出结果对象
+     *
+     * @param info 信息
+     * @return 输出转换后的vo对象
+     */
+    private AuthorityVO convertOuter(Authority info) {
+        AuthorityVO outer = new AuthorityVO();
+        BeanUtils.copyProperties(info, outer);
+        return outer;
+    }
+}

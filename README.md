@@ -22,11 +22,3 @@
 - [x] 安全
 
 <a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.abeille.top"> 在线体验</a>
-
-#### 核心依赖 
-
-|          依赖           |           版本            |           说明            |
-|:----------------------:|:-------------------------:|:-------------------------:|
-|      Spring Boot       |       2.3.4.RELEASE       |           基础框架          |
-|      Spring Cloud      |          Hoxton.RS8       |      使用consul\Feign      |
-

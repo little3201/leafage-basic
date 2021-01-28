@@ -28,5 +28,11 @@ public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuth
      */
     Flux<RoleAuthority> findByRoleIdIn(@NotNull List<String> roleIdList);
 
+    /**
+     * 统计关联角色
+     *
+     * @param authorityId 权限ID
+     * @return 用户数
+     */
     Mono<Long> countByAuthorityIdAndEnabledTrue(@NotNull String authorityId);
 }

@@ -21,8 +21,8 @@ public interface RoleService extends BasicService<RoleDTO, RoleVO> {
     /**
      * 统计关联信息
      *
-     * @param ids ID集合
+     * @param codes code集合
      * @return 统计信息
      */
-    Flux<CountVO> countRelations(Set<String> ids);
+    Flux<CountVO> countUsers(Set<String> codes);
 }

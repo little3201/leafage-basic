@@ -10,7 +10,7 @@ import io.leafage.common.basic.BasicService;
 import reactor.core.publisher.Mono;
 
 /**
- * 帖子信息Service
+ * posts service
  *
  * @author liwenqiang 2018/12/17 19:26
  **/

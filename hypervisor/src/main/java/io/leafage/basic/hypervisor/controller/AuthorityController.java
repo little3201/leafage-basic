@@ -8,13 +8,11 @@ import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.basic.hypervisor.vo.CountVO;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 /**
@@ -56,13 +54,12 @@ public class AuthorityController {
     /**
      * 统计关联信息
      *
-     * @param ids ID集合
+     * @param codes code集合
      * @return 统计信息
      */
-    @Validated
     @GetMapping("/count")
-    public Flux<CountVO> countRelations(@NotEmpty Set<String> ids) {
-        return authorityService.countRelations(ids);
+    public Flux<CountVO> countRoles(@RequestParam Set<String> codes) {
+        return authorityService.countRoles(codes);
     }
 
     /**

@@ -3,18 +3,18 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>top.abeille</groupId>
-        <artifactId>abeille-start-parent</artifactId>
+        <groupId>io.leafage</groupId>
+        <artifactId>leafage-starter-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>top.abeille.basic</groupId>
+    <groupId>io.leafage.basic</groupId>
     <artifactId>assets</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <name>assets</name>
-    <description>assets of abeille basic</description>
+    <description>assets of leafage basic</description>
 
     <dependencies>
         <dependency>
@@ -38,8 +38,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>top.abeille</groupId>
-            <artifactId>abeille-common</artifactId>
+            <groupId>io.leafage</groupId>
+            <artifactId>leafage-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- Spring cloud consul -->

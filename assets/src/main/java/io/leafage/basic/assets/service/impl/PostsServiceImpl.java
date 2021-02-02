@@ -59,7 +59,6 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     BeanUtils.copyProperties(posts, postsContentVO);
                     // 根据业务id获取相关内容
                     return postsContentService.fetchByPostsId(posts.getId()).map(contentInfo -> {
-                        postsContentVO.setOriginal(contentInfo.getOriginal());
                         postsContentVO.setContent(contentInfo.getContent());
                         postsContentVO.setCatalog(contentInfo.getCatalog());
                         return postsContentVO;

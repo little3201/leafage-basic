@@ -8,7 +8,6 @@ import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.repository.GroupUserRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
-import io.leafage.basic.hypervisor.vo.CountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
@@ -17,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Set;
 
 /**
  * 组织信息Service实现
@@ -38,25 +35,27 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Flux<GroupVO> retrieve(int page, int size) {
-        return groupRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+        return groupRepository.findByEnabledTrue(PageRequest.of(page, size))
+                .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())
+                        .map(count -> {
+                            GroupVO groupVO = new GroupVO();
+                            BeanUtils.copyProperties(group, groupVO);
+                            groupVO.setCount(count);
+                            return groupVO;
+                        })
+                );
     }
 
     @Override
     public Mono<GroupVO> fetch(String code) {
         Asserts.notBlank(code, "code");
-        return groupRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
-    }
-
-    @Override
-    public Flux<CountVO> countUsers(Set<String> codes) {
-        return Flux.fromIterable(codes)
-                .flatMap(groupRepository::findByCodeAndEnabledTrue)
-                .flatMap(group ->
-                        groupUserRepository.countByGroupIdAndEnabledTrue(group.getId()).map(count -> {
-                            CountVO countVO = new CountVO();
-                            countVO.setCode(group.getCode());
-                            countVO.setCount(count);
-                            return countVO;
+        return groupRepository.findByCodeAndEnabledTrue(code)
+                .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())
+                        .map(count -> {
+                            GroupVO groupVO = new GroupVO();
+                            BeanUtils.copyProperties(group, groupVO);
+                            groupVO.setCount(count);
+                            return groupVO;
                         })
                 );
     }

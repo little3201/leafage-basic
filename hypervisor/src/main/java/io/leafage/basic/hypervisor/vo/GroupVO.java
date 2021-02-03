@@ -28,6 +28,10 @@ public class GroupVO extends BaseVO {
      * 描述
      */
     private String description;
+    /**
+     * 用户数
+     */
+    private long count;
 
 
     public String getPrincipal() {
@@ -62,4 +66,11 @@ public class GroupVO extends BaseVO {
         this.description = description;
     }
 
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
 }

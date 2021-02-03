@@ -9,7 +9,6 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
-import io.leafage.basic.assets.vo.CountVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
@@ -17,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Set;
 
 /**
  * 话题信息service实现
@@ -38,7 +35,15 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Flux<CategoryVO> retrieve(int page, int size) {
-        return categoryRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+        return categoryRepository.findByEnabledTrue(PageRequest.of(page, size))
+                .flatMap(category -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
+                        .map(count -> {
+                            CategoryVO categoryVO = new CategoryVO();
+                            BeanUtils.copyProperties(category, categoryVO);
+                            categoryVO.setCount(count);
+                            return categoryVO;
+                        })
+                );
     }
 
     @Override
@@ -46,21 +51,14 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Asserts.notBlank(code, "code");
         Category info = new Category();
         info.setCode(code);
-        return categoryRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
-    }
-
-    @Override
-    public Flux<CountVO> countPosts(Set<String> codes) {
-        return Flux.fromIterable(codes)
-                .flatMap(categoryRepository::findByCodeAndEnabledTrue)
-                .flatMap(category -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
-                        .map(count -> {
-                            CountVO countVO = new CountVO();
-                            countVO.setCode(category.getCode());
-                            countVO.setCount(count);
-                            return countVO;
-                        })
-                );
+        return categoryRepository.findByCodeAndEnabledTrue(code).flatMap(category -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
+                .map(count -> {
+                    CategoryVO categoryVO = new CategoryVO();
+                    BeanUtils.copyProperties(category, categoryVO);
+                    categoryVO.setCount(count);
+                    return categoryVO;
+                })
+        );
     }
 
     @Override

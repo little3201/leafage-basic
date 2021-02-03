@@ -6,15 +6,12 @@ package io.leafage.basic.assets.controller;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
-import io.leafage.basic.assets.vo.CountVO;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.util.Set;
 
 /**
  * 话题信息controller
@@ -50,18 +47,6 @@ public class CategoryController {
     @GetMapping("/{code}")
     public Mono<CategoryVO> fetch(@PathVariable String code) {
         return categoryService.fetch(code);
-    }
-
-    /**
-     * 统计关联信息
-     *
-     * @param codes code集合
-     * @return 统计信息
-     */
-    @Validated
-    @GetMapping("/count")
-    public Flux<CountVO> countPosts(@RequestParam Set<String> codes) {
-        return categoryService.countPosts(codes);
     }
 
     /**

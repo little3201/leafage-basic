@@ -15,5 +15,6 @@ spring:
   cloud:
     consul:
       discovery:
+        prefer-ip-address: true
         heartbeat:
           enabled: true

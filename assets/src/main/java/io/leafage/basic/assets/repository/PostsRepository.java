@@ -10,8 +10,6 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 帖子信息repository
  *
@@ -42,5 +40,5 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, String> 
      * @param categoryId 分类ID
      * @return 用户数
      */
-    Mono<Long> countByCategoryIdAndEnabledTrue(@NotNull String categoryId);
+    Mono<Long> countByCategoryIdAndEnabledTrue(String categoryId);
 }

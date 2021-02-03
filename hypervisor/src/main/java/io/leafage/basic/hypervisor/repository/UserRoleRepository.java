@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 用户角色Dao
  *
@@ -25,7 +23,7 @@ public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, Str
      * @param userId 用户ID
      * @return 关联的角色
      */
-    Flux<UserRole> findByUserIdAndEnabledTrue(@NotNull String userId);
+    Flux<UserRole> findByUserIdAndEnabledTrue(String userId);
 
     /**
      * 统计关联用户
@@ -33,5 +31,5 @@ public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, Str
      * @param roleId 角色ID
      * @return 用户数
      */
-    Mono<Long> countByRoleIdAndEnabledTrue(@NotNull String roleId);
+    Mono<Long> countByRoleIdAndEnabledTrue(String roleId);
 }

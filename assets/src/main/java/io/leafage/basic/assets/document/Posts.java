@@ -5,6 +5,7 @@ package io.leafage.basic.assets.document;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * Model class for posts
@@ -22,6 +23,7 @@ public class Posts extends BaseDocument {
     /**
      * 分类ID
      */
+    @Field(name = "category_id")
     private String categoryId;
     /**
      * 标题

@@ -4,9 +4,9 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Category;
+import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import io.leafage.basic.assets.vo.CountVO;
@@ -14,6 +14,8 @@ import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,11 +31,11 @@ import java.util.Set;
 public class CategoryServiceImpl extends AbstractBasicService implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final PostsRepository postsRepository;
+    private final ReactiveMongoTemplate reactiveMongoTemplate;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, PostsRepository postsRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
         this.categoryRepository = categoryRepository;
-        this.postsRepository = postsRepository;
+        this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
     @Override
@@ -53,14 +55,9 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     public Flux<CountVO> countPosts(Set<String> codes) {
         return Flux.fromIterable(codes)
                 .flatMap(categoryRepository::findByCodeAndEnabledTrue)
-                .flatMap(category -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
-                        .map(count -> {
-                            CountVO countVO = new CountVO();
-                            countVO.setCode(category.getCode());
-                            countVO.setCount(count);
-                            return countVO;
-                        })
-                );
+                .flatMap(category ->
+                        reactiveMongoTemplate.aggregate(Aggregation.newAggregation(Aggregation.group("category_id")
+                                .count().as("count")), Posts.class, CountVO.class));
     }
 
     @Override

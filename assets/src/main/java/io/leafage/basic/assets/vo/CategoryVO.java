@@ -15,7 +15,10 @@ public class CategoryVO extends BaseVO {
      * 别名
      */
     private String alias;
-
+    /**
+     * 贴子数
+     */
+    private long count;
 
     public String getAlias() {
         return alias;
@@ -23,5 +26,13 @@ public class CategoryVO extends BaseVO {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 }

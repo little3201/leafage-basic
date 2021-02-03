@@ -5,7 +5,6 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupService;
-import io.leafage.basic.hypervisor.vo.CountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.util.Set;
 
 /**
  * 组信息controller
@@ -49,17 +47,6 @@ public class GroupController {
     @GetMapping("/{code}")
     public Mono<GroupVO> fetch(@PathVariable String code) {
         return groupService.fetch(code);
-    }
-
-    /**
-     * 统计关联信息
-     *
-     * @param codes code集合
-     * @return 统计信息
-     */
-    @GetMapping("/count")
-    public Flux<CountVO> countUsers(@RequestParam Set<String> codes) {
-        return groupService.countUsers(codes);
     }
 
     /**

@@ -9,7 +9,6 @@ import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
-import io.leafage.basic.hypervisor.vo.CountVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
@@ -17,8 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Set;
 
 /**
  * 权限资源信息Service实现
@@ -38,25 +35,27 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public Flux<AuthorityVO> retrieve(int page, int size) {
-        return authorityRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+        return authorityRepository.findByEnabledTrue(PageRequest.of(page, size))
+                .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
+                        .map(count -> {
+                            AuthorityVO authorityVO = new AuthorityVO();
+                            BeanUtils.copyProperties(authority, authorityVO);
+                            authorityVO.setCount(count);
+                            return authorityVO;
+                        })
+                );
     }
 
     @Override
     public Mono<AuthorityVO> fetch(String code) {
         Asserts.notBlank(code, "code");
-        return authorityRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
-    }
-
-    @Override
-    public Flux<CountVO> countRoles(Set<String> codes) {
-        return Flux.fromIterable(codes)
-                .flatMap(authorityRepository::findByCodeAndEnabledTrue)
-                .flatMap(authority ->
-                        roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId()).map(count -> {
-                            CountVO countVO = new CountVO();
-                            countVO.setCode(authority.getCode());
-                            countVO.setCount(count);
-                            return countVO;
+        return authorityRepository.findByCodeAndEnabledTrue(code)
+                .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
+                        .map(count -> {
+                            AuthorityVO authorityVO = new AuthorityVO();
+                            BeanUtils.copyProperties(authority, authorityVO);
+                            authorityVO.setCount(count);
+                            return authorityVO;
                         })
                 );
     }

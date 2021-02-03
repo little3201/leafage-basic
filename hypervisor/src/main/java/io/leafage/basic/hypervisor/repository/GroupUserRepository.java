@@ -8,8 +8,6 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * 用户角色Dao
  *
@@ -24,5 +22,5 @@ public interface GroupUserRepository extends ReactiveCrudRepository<GroupUser, S
      * @param groupId 组ID
      * @return 用户数
      */
-    Mono<Long> countByGroupIdAndEnabledTrue(@NotNull String groupId);
+    Mono<Long> countByGroupIdAndEnabledTrue(String groupId);
 }

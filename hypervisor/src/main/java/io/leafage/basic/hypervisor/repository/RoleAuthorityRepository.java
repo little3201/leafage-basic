@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuth
      * @param roleIdList 角色ID集合
      * @return Flux
      */
-    Flux<RoleAuthority> findByRoleIdIn(@NotNull List<String> roleIdList);
+    Flux<RoleAuthority> findByRoleIdIn(List<String> roleIdList);
 
     /**
      * 统计关联角色
@@ -34,5 +33,5 @@ public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuth
      * @param authorityId 权限ID
      * @return 用户数
      */
-    Mono<Long> countByAuthorityIdAndEnabledTrue(@NotNull String authorityId);
+    Mono<Long> countByAuthorityIdAndEnabledTrue(String authorityId);
 }

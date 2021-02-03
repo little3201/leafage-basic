@@ -11,7 +11,6 @@ import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
-import io.leafage.basic.hypervisor.vo.CountVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.springframework.beans.BeanUtils;
@@ -23,7 +22,6 @@ import reactor.core.publisher.Mono;
 import javax.naming.NotContextException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 角色信息service 实现
@@ -49,19 +47,11 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Flux<RoleVO> retrieve(int page, int size) {
         return roleRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .map(this::convertOuter);
-    }
-
-    @Override
-    public Flux<CountVO> countUsers(Set<String> codes) {
-        return Flux.fromIterable(codes)
-                .flatMap(roleRepository::findByCodeAndEnabledTrue)
-                .flatMap(role ->
-                        userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
-                            CountVO countVO = new CountVO();
-                            countVO.setCode(role.getCode());
-                            countVO.setCount(count);
-                            return countVO;
+                .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
+                            RoleVO roleVO = new RoleVO();
+                            BeanUtils.copyProperties(role, roleVO);
+                            roleVO.setCount(count);
+                            return roleVO;
                         })
                 );
     }
@@ -69,7 +59,13 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Mono<RoleVO> fetch(String code) {
         return roleRepository.findByCodeAndEnabledTrue(code)
-                .map(this::convertOuter);
+                .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
+                            RoleVO roleVO = new RoleVO();
+                            BeanUtils.copyProperties(role, roleVO);
+                            roleVO.setCount(count);
+                            return roleVO;
+                        })
+                );
     }
 
     @Override

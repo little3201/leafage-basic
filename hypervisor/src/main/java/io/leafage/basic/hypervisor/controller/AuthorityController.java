@@ -6,14 +6,12 @@ package io.leafage.basic.hypervisor.controller;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
-import io.leafage.basic.hypervisor.vo.CountVO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.util.Set;
 
 /**
  * 权限 controller
@@ -49,17 +47,6 @@ public class AuthorityController {
     @GetMapping("/{code}")
     public Mono<AuthorityVO> fetch(@PathVariable String code) {
         return authorityService.fetch(code);
-    }
-
-    /**
-     * 统计关联信息
-     *
-     * @param codes code集合
-     * @return 统计信息
-     */
-    @GetMapping("/count")
-    public Flux<CountVO> countRoles(@RequestParam Set<String> codes) {
-        return authorityService.countRoles(codes);
     }
 
     /**

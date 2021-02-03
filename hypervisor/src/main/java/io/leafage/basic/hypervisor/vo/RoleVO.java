@@ -20,6 +20,10 @@ public class RoleVO extends BaseVO {
      * 描述
      */
     private String description;
+    /**
+     * 用户数
+     */
+    private long count;
 
 
     public String getName() {
@@ -38,4 +42,11 @@ public class RoleVO extends BaseVO {
         this.description = description;
     }
 
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
 }

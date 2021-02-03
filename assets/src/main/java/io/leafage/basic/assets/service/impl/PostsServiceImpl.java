@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.assets.service.impl;
 
+import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.dto.PostsDTO;
@@ -16,6 +17,10 @@ import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
@@ -33,10 +38,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     private final PostsRepository postsRepository;
     private final PostsContentService postsContentService;
+    private final ReactiveMongoTemplate reactiveMongoTemplate;
 
-    public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService) {
+    public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService, ReactiveMongoTemplate reactiveMongoTemplate) {
         this.postsRepository = postsRepository;
         this.postsContentService = postsContentService;
+        this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
     @Override
@@ -49,9 +56,11 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Mono<PostsContentVO> fetchContent(String code) {
         Asserts.notBlank(code, "code");
         return postsRepository.findByCodeAndEnabledTrue(code)
-                .flatMap(posts -> {
+                .map(posts -> {
                     posts.setViewed(posts.getViewed() + 1);
-                    return postsRepository.save(posts);
+                    // 更新viewed
+                    this.incrementViewed(posts.getId(), posts.getViewed()).subscribe();
+                    return posts;
                 })
                 .flatMap(posts -> {
                     // 将内容设置到vo对像中
@@ -112,6 +121,17 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Asserts.notBlank(code, "code");
         return postsRepository.findByCodeAndEnabledTrue(code).flatMap(article ->
                 postsRepository.deleteById(article.getId()));
+    }
+
+    /**
+     * 跟新viewed
+     *
+     * @param id     主键
+     * @param viewed viewed值
+     * @return UpdateResult
+     */
+    private Mono<UpdateResult> incrementViewed(String id, int viewed) {
+        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)), Update.update("viewed", viewed), Posts.class);
     }
 
     /**

@@ -17,7 +17,7 @@ public class BaseDocument {
     /**
      * 是否有效
      */
-    @Field(value = "is_enabled")
+    @Field(name = "is_enabled")
     private boolean enabled = true;
     /**
      * 修改人
@@ -26,7 +26,7 @@ public class BaseDocument {
     /**
      * 修改时间
      */
-    @Field(value = "modify_time")
+    @Field(name = "modify_time")
     @LastModifiedDate
     private LocalDateTime modifyTime;
 

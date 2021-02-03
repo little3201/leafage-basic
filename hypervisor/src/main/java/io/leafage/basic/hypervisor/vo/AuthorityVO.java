@@ -32,6 +32,10 @@ public class AuthorityVO extends BaseVO {
      * 描述
      */
     private String description;
+    /**
+     * 角色数
+     */
+    private long count;
 
 
     public String getSuperior() {
@@ -74,4 +78,11 @@ public class AuthorityVO extends BaseVO {
         this.description = description;
     }
 
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
 }

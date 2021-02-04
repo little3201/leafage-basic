@@ -33,4 +33,12 @@ public interface CategoryRepository extends ReactiveMongoRepository<Category, St
      * @return 类别信息
      */
     Mono<Category> findByCodeAndEnabledTrue(String code);
+
+    /**
+     * 根据ID查询alias
+     *
+     * @param id 主键
+     * @return alias
+     */
+    Mono<String> findAliasById(String id);
 }

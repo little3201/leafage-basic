@@ -7,6 +7,7 @@ import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.dto.PostsDTO;
+import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import io.leafage.basic.assets.service.PostsService;
@@ -39,17 +40,26 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     private final PostsRepository postsRepository;
     private final PostsContentService postsContentService;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
+    private final CategoryRepository categoryRepository;
 
-    public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService, ReactiveMongoTemplate reactiveMongoTemplate) {
+    public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService, ReactiveMongoTemplate reactiveMongoTemplate, CategoryRepository categoryRepository) {
         this.postsRepository = postsRepository;
         this.postsContentService = postsContentService;
         this.reactiveMongoTemplate = reactiveMongoTemplate;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
         Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
-        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
+        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
+                .flatMap(posts -> categoryRepository.findAliasById(posts.getCategoryId()).map(alias -> {
+                            PostsVO vo = new PostsVO();
+                            BeanUtils.copyProperties(posts, vo);
+                            vo.setCategory(alias);
+                            return vo;
+                        }
+                ));
     }
 
     @Override
@@ -62,17 +72,20 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     this.incrementViewed(posts.getId(), posts.getViewed()).subscribe();
                     return posts;
                 })
-                .flatMap(posts -> {
-                    // 将内容设置到vo对像中
-                    PostsContentVO postsContentVO = new PostsContentVO();
-                    BeanUtils.copyProperties(posts, postsContentVO);
-                    // 根据业务id获取相关内容
-                    return postsContentService.fetchByPostsId(posts.getId()).map(contentInfo -> {
-                        postsContentVO.setContent(contentInfo.getContent());
-                        postsContentVO.setCatalog(contentInfo.getCatalog());
-                        return postsContentVO;
-                    }).defaultIfEmpty(postsContentVO);
-                });
+                .flatMap(posts -> categoryRepository.findAliasById(posts.getCategoryId()).map(alias -> {
+                            PostsContentVO pcv = new PostsContentVO();
+                            BeanUtils.copyProperties(posts, pcv);
+                            pcv.setCategory(alias);
+                            return pcv;
+                        }).flatMap(pcv -> {
+                            // 根据业务id获取相关内容
+                            return postsContentService.fetchByPostsId(posts.getId()).map(contentInfo -> {
+                                pcv.setContent(contentInfo.getContent());
+                                pcv.setCatalog(contentInfo.getCatalog());
+                                return pcv;
+                            }).defaultIfEmpty(pcv);
+                        })
+                );
     }
 
     @Override

@@ -32,7 +32,7 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>io.leafage.common</groupId>
+            <groupId>io.leafage</groupId>
             <artifactId>leafage-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <optional>true</optional>

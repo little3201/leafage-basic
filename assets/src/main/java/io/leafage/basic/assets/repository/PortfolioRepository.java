@@ -32,5 +32,5 @@ public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, 
      * @param code 代码
      * @return 作品集信息
      */
-    Mono<Portfolio> findByCodeAndEnabledTrue(String code);
+    Mono<Portfolio> getByCodeAndEnabledTrue(String code);
 }

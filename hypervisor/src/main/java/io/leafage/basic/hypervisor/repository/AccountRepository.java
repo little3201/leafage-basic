@@ -22,5 +22,5 @@ public interface AccountRepository extends ReactiveMongoRepository<Account, Stri
      * @param code 代码
      * @return 账户信息
      */
-    Mono<Account> findByCodeAndEnabledTrue(String code);
+    Mono<Account> getByCodeAndEnabledTrue(String code);
 }

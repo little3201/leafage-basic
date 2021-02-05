@@ -32,7 +32,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, String> 
      * @param code 代码
      * @return 帖子信息
      */
-    Mono<Posts> findByCodeAndEnabledTrue(String code);
+    Mono<Posts> getByCodeAndEnabledTrue(String code);
 
     /**
      * 统计关联帖子

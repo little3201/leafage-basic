@@ -53,10 +53,10 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Flux<PostsVO> retrieve(int page, int size, String order) {
         Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
-                .flatMap(posts -> categoryRepository.findAliasById(posts.getCategoryId()).map(alias -> {
+                .flatMap(posts -> categoryRepository.getAliasById(posts.getCategoryId()).map(category -> {
                             PostsVO vo = new PostsVO();
                             BeanUtils.copyProperties(posts, vo);
-                            vo.setCategory(alias);
+                            vo.setCategory(category.getAlias());
                             return vo;
                         }
                 ));
@@ -65,17 +65,17 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Mono<PostsContentVO> fetchContent(String code) {
         Asserts.notBlank(code, "code");
-        return postsRepository.findByCodeAndEnabledTrue(code)
+        return postsRepository.getByCodeAndEnabledTrue(code)
                 .map(posts -> {
                     posts.setViewed(posts.getViewed() + 1);
                     // 更新viewed
                     this.incrementViewed(posts.getId(), posts.getViewed()).subscribe();
                     return posts;
                 })
-                .flatMap(posts -> categoryRepository.findAliasById(posts.getCategoryId()).map(alias -> {
+                .flatMap(posts -> categoryRepository.getAliasById(posts.getCategoryId()).map(category -> {
                             PostsContentVO pcv = new PostsContentVO();
                             BeanUtils.copyProperties(posts, pcv);
-                            pcv.setCategory(alias);
+                            pcv.setCategory(category.getAlias());
                             return pcv;
                         }).flatMap(pcv -> {
                             // 根据业务id获取相关内容
@@ -110,7 +110,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Mono<PostsVO> modify(String code, PostsDTO postsDTO) {
         Asserts.notBlank(code, "code");
-        Mono<Posts> postsMono = postsRepository.findByCodeAndEnabledTrue(code)
+        Mono<Posts> postsMono = postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(info -> {
                     // 将信息复制到info
@@ -132,7 +132,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return postsRepository.findByCodeAndEnabledTrue(code).flatMap(article ->
+        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(article ->
                 postsRepository.deleteById(article.getId()));
     }
 

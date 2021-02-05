@@ -39,7 +39,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     @Override
     public Mono<AccountVO> modify(String code, AccountDTO accountDTO) {
         Asserts.notBlank(code, "code");
-        return accountRepository.findByCodeAndEnabledTrue(code).flatMap(accountVO -> {
+        return accountRepository.getByCodeAndEnabledTrue(code).flatMap(accountVO -> {
             Account info = new Account();
             BeanUtils.copyProperties(accountDTO, info);
             return accountRepository.save(info).map(this::convertOuter);
@@ -49,7 +49,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return accountRepository.findByCodeAndEnabledTrue(code)
+        return accountRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(account -> accountRepository.deleteById(account.getId()));
     }
 

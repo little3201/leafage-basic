@@ -51,7 +51,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Asserts.notBlank(code, "code");
         Category info = new Category();
         info.setCode(code);
-        return categoryRepository.findByCodeAndEnabledTrue(code).flatMap(category -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
+        return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(category -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
                 .map(count -> {
                     CategoryVO categoryVO = new CategoryVO();
                     BeanUtils.copyProperties(category, categoryVO);
@@ -72,7 +72,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     @Override
     public Mono<CategoryVO> modify(String code, CategoryDTO categoryDTO) {
         Asserts.notBlank(code, "code");
-        return categoryRepository.findByCodeAndEnabledTrue(code).flatMap(category -> {
+        return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(category -> {
             BeanUtils.copyProperties(categoryDTO, category);
             return categoryRepository.save(category).map(this::convertOuter);
         });
@@ -81,7 +81,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return categoryRepository.findByCodeAndEnabledTrue(code).flatMap(topic -> categoryRepository.deleteById(topic.getId()));
+        return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(topic -> categoryRepository.deleteById(topic.getId()));
     }
 
     /**

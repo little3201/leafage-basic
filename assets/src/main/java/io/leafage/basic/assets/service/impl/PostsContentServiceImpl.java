@@ -42,7 +42,7 @@ public class PostsContentServiceImpl implements PostsContentService {
 
     @Override
     public Mono<PostsContent> fetchByPostsId(String postsId) {
-        return postsContentRepository.findByPostsIdAndEnabledTrue(postsId);
+        return postsContentRepository.getByPostsIdAndEnabledTrue(postsId);
     }
 
 }

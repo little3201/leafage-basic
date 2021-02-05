@@ -48,7 +48,7 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     @Override
     public Mono<PortfolioVO> modify(String code, PortfolioDTO portfolioDTO) {
         Asserts.notBlank(code, "code");
-        return portfolioRepository.findByCodeAndEnabledTrue(code).flatMap(portfolio -> {
+        return portfolioRepository.getByCodeAndEnabledTrue(code).flatMap(portfolio -> {
             BeanUtils.copyProperties(portfolioDTO, portfolio);
             return portfolioRepository.save(portfolio).filter(Objects::nonNull).map(this::convertOuter);
         });
@@ -57,13 +57,13 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return portfolioRepository.findByCodeAndEnabledTrue(code).flatMap(article -> portfolioRepository.deleteById(article.getId()));
+        return portfolioRepository.getByCodeAndEnabledTrue(code).flatMap(article -> portfolioRepository.deleteById(article.getId()));
     }
 
     @Override
     public Mono<PortfolioVO> fetch(String code) {
         Asserts.notBlank(code, "code");
-        return portfolioRepository.findByCodeAndEnabledTrue(code).map(this::convertOuter);
+        return portfolioRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     /**

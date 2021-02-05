@@ -5,6 +5,7 @@ package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.document.Category;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -32,7 +33,7 @@ public interface CategoryRepository extends ReactiveMongoRepository<Category, St
      * @param code 代码
      * @return 类别信息
      */
-    Mono<Category> findByCodeAndEnabledTrue(String code);
+    Mono<Category> getByCodeAndEnabledTrue(String code);
 
     /**
      * 根据ID查询alias
@@ -40,5 +41,6 @@ public interface CategoryRepository extends ReactiveMongoRepository<Category, St
      * @param id 主键
      * @return alias
      */
-    Mono<String> findAliasById(String id);
+    @Query(value = "{ 'id' : ?0 }", fields = "{ 'alias' : 1}")
+    Mono<Category> getAliasById(String id);
 }

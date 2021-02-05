@@ -68,7 +68,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     @Override
     public Mono<UserVO> modify(String username, UserDTO userDTO) {
         Asserts.notBlank(username, "username");
-        Mono<User> userMono = userRepository.findByUsername(username)
+        Mono<User> userMono = userRepository.getByUsername(username)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(user -> {
                     BeanUtils.copyProperties(userDTO, user);
@@ -84,13 +84,13 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     @Override
     public Mono<Void> remove(String username) {
         Asserts.notBlank(username, "username");
-        return userRepository.findByUsername(username).flatMap(user -> userRepository.deleteById(user.getId()));
+        return userRepository.getByUsername(username).flatMap(user -> userRepository.deleteById(user.getId()));
     }
 
     @Override
     public Mono<UserDetails> fetchDetails(String username) {
         Asserts.notBlank(username, "username");
-        Mono<User> infoMono = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
+        Mono<User> infoMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("User Not Found")));
         Mono<ArrayList<String>> roleIdListMono = infoMono.flatMap(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId())
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Roles")))

@@ -49,7 +49,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     @Override
     public Mono<AuthorityVO> fetch(String code) {
         Asserts.notBlank(code, "code");
-        return authorityRepository.findByCodeAndEnabledTrue(code)
+        return authorityRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
                         .map(count -> {
                             AuthorityVO authorityVO = new AuthorityVO();
@@ -71,7 +71,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     @Override
     public Mono<AuthorityVO> modify(String code, AuthorityDTO authorityDTO) {
         Asserts.notBlank(code, "code");
-        return authorityRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
+        return authorityRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(authorityDTO, info);
             return authorityRepository.save(info);
         }).map(this::convertOuter);

@@ -49,7 +49,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Mono<GroupVO> fetch(String code) {
         Asserts.notBlank(code, "code");
-        return groupRepository.findByCodeAndEnabledTrue(code)
+        return groupRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())
                         .map(count -> {
                             GroupVO groupVO = new GroupVO();
@@ -70,7 +70,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
-        return groupRepository.findByCodeAndEnabledTrue(code).flatMap(info -> {
+        return groupRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
             return groupRepository.save(info);
         }).map(this::convertOuter);
@@ -79,7 +79,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return groupRepository.findByCodeAndEnabledTrue(code).flatMap(group ->
+        return groupRepository.getByCodeAndEnabledTrue(code).flatMap(group ->
                 groupRepository.deleteById(group.getId()));
     }
 

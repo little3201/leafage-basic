@@ -34,7 +34,7 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * @param code 代码
      * @return 资源信息
      */
-    Mono<Authority> findByCodeAndEnabledTrue(String code);
+    Mono<Authority> getByCodeAndEnabledTrue(String code);
 
     /**
      * 根据权限Id集合查询多条enabled信息

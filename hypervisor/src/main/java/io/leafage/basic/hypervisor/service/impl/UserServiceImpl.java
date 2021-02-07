@@ -60,7 +60,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         user.setPassword(new BCryptPasswordEncoder().encode("110119"));
         Mono<User> userMono = userRepository.insert(user)
                 .switchIfEmpty(Mono.error(RuntimeException::new))
-                .doOnSuccess(u -> this.initUserRole(u.getId(), userDTO.getRoles()).subscribe(userRoles ->
+                .doOnSuccess(u -> this.initUserRole(u.getId(), userDTO.getRoles()).doOnNext(userRoles ->
                         userRoleRepository.saveAll(userRoles).subscribe()));
         return userMono.map(this::convertOuter);
     }

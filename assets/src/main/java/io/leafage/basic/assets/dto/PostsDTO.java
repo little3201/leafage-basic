@@ -4,11 +4,10 @@
 package io.leafage.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * Enter class for ArticleInfo
+ * Enter class for Posts
  *
  * @author liwenqiang 2020-10-06 22:09
  */
@@ -19,13 +18,11 @@ public class PostsDTO implements Serializable {
      * 标题
      */
     @NotBlank
-    @Size(max = 20)
     private String title;
     /**
      * 描述
      */
     @NotBlank
-    @Size(max = 64)
     private String subtitle;
     /**
      * 内容

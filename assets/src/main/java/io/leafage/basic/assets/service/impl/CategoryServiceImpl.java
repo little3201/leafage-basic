@@ -34,6 +34,11 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
+    public Flux<CategoryVO> retrieve() {
+        return categoryRepository.findByEnabledTrue().map(this::convertOuter);
+    }
+
+    @Override
     public Flux<CategoryVO> retrieve(int page, int size) {
         return categoryRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(category -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())

@@ -20,6 +20,13 @@ import reactor.core.publisher.Mono;
 public interface CategoryRepository extends ReactiveMongoRepository<Category, String> {
 
     /**
+     * 查询所有类别
+     *
+     * @return 有效类别
+     */
+    Flux<Category> findByEnabledTrue();
+
+    /**
      * 分页查询类别
      *
      * @param pageable 分页参数

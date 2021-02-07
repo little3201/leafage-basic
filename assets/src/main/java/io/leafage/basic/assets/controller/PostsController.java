@@ -7,7 +7,6 @@ import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
-import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -36,7 +35,7 @@ public class PostsController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PostsVO> retrieve(@RequestParam int page, @RequestParam @Range(max = 50) int size, String order) {
+    public Flux<PostsVO> retrieve(@RequestParam int page, @RequestParam int size, String order) {
         return postsService.retrieve(page, size, order);
     }
 
@@ -64,7 +63,7 @@ public class PostsController {
     }
 
     /**
-     * 根据传入的 articleId 和要修改的数据，修改信息
+     * 根据传入的数据修改信息
      *
      * @param code     代码
      * @param postsDTO 要修改的数据

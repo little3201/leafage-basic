@@ -54,7 +54,7 @@ public class UserServiceImplTest {
     @Test
     void fetchDetails() {
         String username = Mockito.anyString();
-        Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
+        Mockito.when(userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .thenReturn(Mockito.any());
         Mono<UserDetails> detailsMono = userService.fetchDetails(username);
         Assertions.assertNotNull(detailsMono);
@@ -66,7 +66,7 @@ public class UserServiceImplTest {
     @Test
     void fetchDetailsEmpty() {
         String username = Mockito.anyString();
-        Mockito.when(userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
+        Mockito.when(userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .thenReturn(Mono.empty());
         Mono<UserDetails> detailsMono = userService.fetchDetails(username);
         Assertions.assertNull(detailsMono);

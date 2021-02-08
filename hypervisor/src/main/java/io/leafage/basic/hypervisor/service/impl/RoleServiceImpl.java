@@ -58,7 +58,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> fetch(String code) {
-        return roleRepository.findByCodeAndEnabledTrue(code)
+        return roleRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
                             RoleVO roleVO = new RoleVO();
                             BeanUtils.copyProperties(role, roleVO);
@@ -82,7 +82,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
-        Mono<Role> roleMono = roleRepository.findByCodeAndEnabledTrue(code)
+        Mono<Role> roleMono = roleRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);

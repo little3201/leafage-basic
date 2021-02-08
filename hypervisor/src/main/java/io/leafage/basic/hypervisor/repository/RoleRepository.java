@@ -34,7 +34,7 @@ public interface RoleRepository extends ReactiveMongoRepository<Role, String> {
      * @param code 代码
      * @return 角色信息
      */
-    Mono<Role> findByCodeAndEnabledTrue(String code);
+    Mono<Role> getByCodeAndEnabledTrue(String code);
 
     /**
      * 查询角色

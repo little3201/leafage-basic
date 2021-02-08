@@ -32,5 +32,5 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, String> 
      * @param code 代码
      * @return 组织信息
      */
-    Mono<Group> findByCodeAndEnabledTrue(String code);
+    Mono<Group> getByCodeAndEnabledTrue(String code);
 }

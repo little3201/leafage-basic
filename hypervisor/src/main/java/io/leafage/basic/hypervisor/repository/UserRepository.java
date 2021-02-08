@@ -32,7 +32,7 @@ public interface UserRepository extends ReactiveMongoRepository<User, String> {
      * @param username 账号
      * @return 用户信息
      */
-    Mono<User> findByUsername(String username);
+    Mono<User> getByUsername(String username);
 
     /**
      * 根据username/mobile/email查询enabled信息
@@ -42,5 +42,5 @@ public interface UserRepository extends ReactiveMongoRepository<User, String> {
      * @param email    邮箱
      * @return 用户信息
      */
-    Mono<User> findByUsernameOrPhoneOrEmailAndEnabledTrue(String username, String phone, String email);
+    Mono<User> getByUsernameOrPhoneOrEmailAndEnabledTrue(String username, String phone, String email);
 }

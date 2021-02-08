@@ -88,6 +88,11 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
+    public Mono<UserVO> fetch(String username) {
+        return userRepository.getByUsername(username).map(this::convertOuter);
+    }
+
+    @Override
     public Mono<UserDetails> fetchDetails(String username) {
         Asserts.notBlank(username, "username");
         Mono<User> infoMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)

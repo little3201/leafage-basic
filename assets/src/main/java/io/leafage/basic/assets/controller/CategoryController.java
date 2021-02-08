@@ -31,14 +31,16 @@ public class CategoryController {
     /**
      * 列表查询
      *
+     * @param page 分页位置
+     * @param size 分页大小
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<CategoryVO> retrieve(Integer page, Integer size, String order) {
+    public Flux<CategoryVO> retrieve(Integer page, Integer size) {
         if (page == null || size == null) {
             return categoryService.retrieve();
         }
-        return categoryService.retrieve(page, size, order);
+        return categoryService.retrieve(page, size);
     }
 
     /**

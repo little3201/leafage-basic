@@ -137,14 +137,15 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     /**
-     * 跟新viewed
+     * 更新viewed
      *
      * @param id     主键
      * @param viewed viewed值
      * @return UpdateResult
      */
     private Mono<UpdateResult> incrementViewed(String id, int viewed) {
-        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)), Update.update("viewed", viewed), Posts.class);
+        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
+                Update.update("viewed", viewed), Posts.class);
     }
 
     /**

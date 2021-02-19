@@ -56,6 +56,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
+        // 默认设置用户名为邮箱地址，密码为110119
         user.setUsername(user.getEmail().substring(0, user.getEmail().indexOf("@")));
         user.setPassword(new BCryptPasswordEncoder().encode("110119"));
         Mono<User> userMono = userRepository.insert(user)
@@ -89,6 +90,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<UserVO> fetch(String username) {
+        Asserts.notBlank(username, "username");
         return userRepository.getByUsername(username).map(this::convertOuter);
     }
 

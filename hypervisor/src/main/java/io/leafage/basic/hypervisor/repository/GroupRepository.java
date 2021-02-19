@@ -5,6 +5,7 @@ package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.document.Group;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -33,4 +34,13 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, String> 
      * @return 组织信息
      */
     Mono<Group> getByCodeAndEnabledTrue(String code);
+
+    /**
+     * 根据id查询name
+     *
+     * @param id 主键
+     * @return 组织信息
+     */
+    @Query(value = "{ 'id' : ?0 }", fields = "{ 'name' : 1}")
+    Mono<Group> getById(String id);
 }

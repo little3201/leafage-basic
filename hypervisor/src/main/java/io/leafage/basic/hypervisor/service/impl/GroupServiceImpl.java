@@ -36,6 +36,11 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Flux<GroupVO> retrieve(int page, int size) {
         return groupRepository.findByEnabledTrue(PageRequest.of(page, size))
+                .flatMap(group -> groupRepository.getById(group.getSuperior()).map(superior -> {
+                            group.setSuperior(superior.getName());
+                            return group;
+                        })
+                )
                 .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())
                         .map(count -> {
                             GroupVO groupVO = new GroupVO();
@@ -70,6 +75,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
+        Asserts.notBlank(code, "code");
         return groupRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
             return groupRepository.save(info);

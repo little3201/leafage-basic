@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.document;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -23,7 +24,7 @@ public class Authority extends BaseDocument {
     /**
      * 上级
      */
-    private String superior;
+    private ObjectId superior;
     /**
      * 名称
      */
@@ -73,11 +74,11 @@ public class Authority extends BaseDocument {
         this.code = code;
     }
 
-    public String getSuperior() {
+    public ObjectId getSuperior() {
         return superior;
     }
 
-    public void setSuperior(String superior) {
+    public void setSuperior(ObjectId superior) {
         this.superior = superior;
     }
 

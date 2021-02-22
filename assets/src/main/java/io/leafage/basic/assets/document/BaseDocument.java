@@ -1,5 +1,6 @@
 package io.leafage.basic.assets.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -12,17 +13,19 @@ public class BaseDocument {
      * 主键
      */
     @Id
-    private String id;
+    private ObjectId id;
 
     /**
      * 是否有效
      */
     @Field(name = "is_enabled")
     private boolean enabled = true;
+
     /**
-     * 修改人
+     * 修改人(存放 username)
      */
     private String modifier;
+
     /**
      * 修改时间
      */
@@ -30,11 +33,11 @@ public class BaseDocument {
     @LastModifiedDate
     private LocalDateTime modifyTime;
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

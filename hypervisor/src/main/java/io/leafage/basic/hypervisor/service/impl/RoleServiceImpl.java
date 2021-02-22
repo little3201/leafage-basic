@@ -13,6 +13,7 @@ import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.common.basic.AbstractBasicService;
+import org.bson.types.ObjectId;
 import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
@@ -118,7 +119,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
      * @param authorities 权限code
      * @return 角色权限对象
      */
-    private Mono<List<RoleAuthority>> initRoleAuthority(String roleId, String modifier,
+    private Mono<List<RoleAuthority>> initRoleAuthority(ObjectId roleId, ObjectId modifier,
                                                         Collection<String> authorities) {
         return authorityRepository.findByCodeInAndEnabledTrue(authorities).map(authority -> {
             RoleAuthority roleAuthority = new RoleAuthority();

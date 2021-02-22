@@ -4,6 +4,7 @@
 package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.document.Portfolio;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, String> {
+public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, ObjectId> {
 
     /**
      * 分页查询作品集

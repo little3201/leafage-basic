@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -22,11 +23,11 @@ public class Group extends BaseDocument {
     /**
      * 负责人
      */
-    private String principal;
+    private ObjectId principal;
     /**
      * 上级
      */
-    private String superior;
+    private ObjectId superior;
     /**
      * 名称
      */
@@ -45,19 +46,19 @@ public class Group extends BaseDocument {
         this.code = code;
     }
 
-    public String getPrincipal() {
+    public ObjectId getPrincipal() {
         return principal;
     }
 
-    public void setPrincipal(String principal) {
+    public void setPrincipal(ObjectId principal) {
         this.principal = principal;
     }
 
-    public String getSuperior() {
+    public ObjectId getSuperior() {
         return superior;
     }
 
-    public void setSuperior(String superior) {
+    public void setSuperior(ObjectId superior) {
         this.superior = superior;
     }
 

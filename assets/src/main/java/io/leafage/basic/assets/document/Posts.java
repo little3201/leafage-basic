@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.assets.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -24,7 +25,7 @@ public class Posts extends BaseDocument {
      * 分类ID
      */
     @Field(name = "category_id")
-    private String categoryId;
+    private ObjectId categoryId;
     /**
      * 标题
      */
@@ -58,11 +59,11 @@ public class Posts extends BaseDocument {
         this.code = code;
     }
 
-    public String getCategoryId() {
+    public ObjectId getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(String categoryId) {
+    public void setCategoryId(ObjectId categoryId) {
         this.categoryId = categoryId;
     }
 

@@ -4,6 +4,7 @@
 
 package io.leafage.basic.assets.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -21,7 +22,7 @@ public class PostsContent extends BaseDocument {
      */
     @Field(value = "posts_id")
     @Indexed(unique = true)
-    private String postsId;
+    private ObjectId postsId;
     /**
      * 内容
      */
@@ -32,11 +33,11 @@ public class PostsContent extends BaseDocument {
     private String catalog;
 
 
-    public String getPostsId() {
+    public ObjectId getPostsId() {
         return postsId;
     }
 
-    public void setPostsId(String postsId) {
+    public void setPostsId(ObjectId postsId) {
         this.postsId = postsId;
     }
 

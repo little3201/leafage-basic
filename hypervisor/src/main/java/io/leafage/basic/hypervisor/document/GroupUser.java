@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -20,28 +21,28 @@ public class GroupUser extends BaseDocument {
      */
     @Indexed
     @Field(value = "user_id")
-    private String userId;
+    private ObjectId userId;
     /**
      * 组主键
      */
     @Indexed
     @Field(value = "group_id")
-    private String groupId;
+    private ObjectId groupId;
 
 
-    public String getUserId() {
+    public ObjectId getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(ObjectId userId) {
         this.userId = userId;
     }
 
-    public String getGroupId() {
+    public ObjectId getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(String groupId) {
+    public void setGroupId(ObjectId groupId) {
         this.groupId = groupId;
     }
 

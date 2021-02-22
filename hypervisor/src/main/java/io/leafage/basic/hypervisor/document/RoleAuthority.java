@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -20,32 +21,32 @@ public class RoleAuthority extends BaseDocument {
      */
     @Indexed
     @Field(value = "role_id")
-    private String roleId;
+    private ObjectId roleId;
     /**
      * 资源ID
      */
     @Indexed
     @Field(value = "authority_id")
-    private String authorityId;
+    private ObjectId authorityId;
     /**
      * 请求方式, 如：GET、POST、PUT、DELETE等
      */
     private String mode;
 
 
-    public String getRoleId() {
+    public ObjectId getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(String roleId) {
+    public void setRoleId(ObjectId roleId) {
         this.roleId = roleId;
     }
 
-    public String getAuthorityId() {
+    public ObjectId getAuthorityId() {
         return authorityId;
     }
 
-    public void setAuthorityId(String authorityId) {
+    public void setAuthorityId(ObjectId authorityId) {
         this.authorityId = authorityId;
     }
 

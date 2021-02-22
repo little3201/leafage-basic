@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.document.Authority;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
@@ -43,7 +44,7 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * @param ids id集合
      * @return 权限信息
      */
-    Flux<Authority> findByIdInAndEnabledTrue(Collection<String> ids);
+    Flux<Authority> findByIdInAndEnabledTrue(Collection<ObjectId> ids);
 
     /**
      * 根据权限

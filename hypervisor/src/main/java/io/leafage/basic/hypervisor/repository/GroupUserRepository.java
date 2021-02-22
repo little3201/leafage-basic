@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.document.GroupUser;
+import org.bson.types.ObjectId;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
@@ -14,7 +15,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018-12-06 22:09
  **/
 @Repository
-public interface GroupUserRepository extends ReactiveCrudRepository<GroupUser, String> {
+public interface GroupUserRepository extends ReactiveCrudRepository<GroupUser, ObjectId> {
 
     /**
      * 统计关联用户
@@ -22,5 +23,5 @@ public interface GroupUserRepository extends ReactiveCrudRepository<GroupUser, S
      * @param groupId 组ID
      * @return 用户数
      */
-    Mono<Long> countByGroupIdAndEnabledTrue(String groupId);
+    Mono<Long> countByGroupIdAndEnabledTrue(ObjectId groupId);
 }

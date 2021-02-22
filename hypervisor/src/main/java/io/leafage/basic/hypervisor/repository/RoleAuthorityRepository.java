@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.document.RoleAuthority;
+import org.bson.types.ObjectId;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -17,7 +18,7 @@ import java.util.List;
  * @author liwenqiang 2018/9/26 11:29
  **/
 @Repository
-public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuthority, String> {
+public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuthority, ObjectId> {
 
     /**
      * 查询所有资源——根据角色ID集合
@@ -25,7 +26,7 @@ public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuth
      * @param roleIdList 角色ID集合
      * @return Flux
      */
-    Flux<RoleAuthority> findByRoleIdIn(List<String> roleIdList);
+    Flux<RoleAuthority> findByRoleIdIn(List<ObjectId> roleIdList);
 
     /**
      * 统计关联角色
@@ -33,5 +34,5 @@ public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuth
      * @param authorityId 权限ID
      * @return 用户数
      */
-    Mono<Long> countByAuthorityIdAndEnabledTrue(String authorityId);
+    Mono<Long> countByAuthorityIdAndEnabledTrue(ObjectId authorityId);
 }

@@ -20,10 +20,12 @@ public class BaseDocument {
      */
     @Field(name = "is_enabled")
     private boolean enabled = true;
+
     /**
-     * 修改人
+     * 修改人(存放 username)
      */
-    private ObjectId modifier;
+    private String modifier;
+
     /**
      * 修改时间
      */
@@ -47,11 +49,11 @@ public class BaseDocument {
         this.enabled = enabled;
     }
 
-    public ObjectId getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(ObjectId modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

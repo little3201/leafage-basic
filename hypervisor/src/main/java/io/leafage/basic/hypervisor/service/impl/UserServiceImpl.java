@@ -12,6 +12,7 @@ import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -97,11 +98,11 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         Asserts.notBlank(username, "username");
         Mono<User> infoMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("User Not Found")));
-        Mono<ArrayList<String>> roleIdListMono = infoMono.flatMap(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId())
+        Mono<ArrayList<ObjectId>> roleIdListMono = infoMono.flatMap(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId())
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Roles")))
                 .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID
-        Mono<ArrayList<String>> authorityIdListMono = roleIdListMono.flatMap(roleIdList -> roleAuthorityRepository.findByRoleIdIn(roleIdList)
+        Mono<ArrayList<ObjectId>> authorityIdListMono = roleIdListMono.flatMap(roleIdList -> roleAuthorityRepository.findByRoleIdIn(roleIdList)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Authorities")))
                 .collect(ArrayList::new, (authorityIdList, roleAuthority) -> authorityIdList.add(roleAuthority.getAuthorityId())));
         // 查权限
@@ -136,7 +137,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * @param codes  角色代码
      * @return 用户-角色对象
      */
-    private Mono<List<UserRole>> initUserRole(String userId, Collection<String> codes) {
+    private Mono<List<UserRole>> initUserRole(ObjectId userId, Collection<String> codes) {
         return roleRepository.findByCodeInAndEnabledTrue(codes).map(role -> {
             UserRole userRole = new UserRole();
             userRole.setUserId(userId);

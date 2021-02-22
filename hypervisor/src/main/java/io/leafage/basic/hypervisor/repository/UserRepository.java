@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.document.User;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018/7/27 17:50
  **/
 @Repository
-public interface UserRepository extends ReactiveMongoRepository<User, String> {
+public interface UserRepository extends ReactiveMongoRepository<User, ObjectId> {
 
     /**
      * 分页查询用户

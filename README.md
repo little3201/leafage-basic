@@ -1,8 +1,8 @@
 # Leafage Basic
 
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-Hoxto-blue.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.3.x-blue.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2020.0.1-green.svg" alt="Coverage Status">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.4.3-green.svg" alt="Downloads">
 </p>
 
 

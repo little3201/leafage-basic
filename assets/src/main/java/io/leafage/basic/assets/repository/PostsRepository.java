@@ -4,6 +4,7 @@
 package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.document.Posts;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface PostsRepository extends ReactiveMongoRepository<Posts, String> {
+public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId> {
 
     /**
      * 分页查询帖子
@@ -40,5 +41,5 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, String> 
      * @param categoryId 分类ID
      * @return 用户数
      */
-    Mono<Long> countByCategoryIdAndEnabledTrue(String categoryId);
+    Mono<Long> countByCategoryIdAndEnabledTrue(ObjectId categoryId);
 }

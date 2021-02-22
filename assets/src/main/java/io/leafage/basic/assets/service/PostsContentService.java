@@ -5,6 +5,7 @@
 package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.document.PostsContent;
+import org.bson.types.ObjectId;
 import reactor.core.publisher.Mono;
 
 /**
@@ -23,19 +24,19 @@ public interface PostsContentService {
     Mono<PostsContent> create(PostsContent postsContent);
 
     /**
-     * 根据文章ID修改信息
+     * 根据帖子ID修改信息
      *
-     * @param articleId    文章ID
+     * @param postsId      帖子ID
      * @param postsContent 信息
      * @return 返回操作结果，否则返回empty
      */
-    Mono<PostsContent> modify(String articleId, PostsContent postsContent);
+    Mono<PostsContent> modify(ObjectId postsId, PostsContent postsContent);
 
     /**
-     * 根据文章ID查询
+     * 根据帖子ID查询
      *
-     * @param articleId 文章ID
+     * @param postsId 帖子ID
      * @return 返回查询到的信息，否则返回empty
      */
-    Mono<PostsContent> fetchByPostsId(String articleId);
+    Mono<PostsContent> fetchByPostsId(ObjectId postsId);
 }

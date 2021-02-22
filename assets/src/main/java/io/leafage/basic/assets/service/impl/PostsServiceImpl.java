@@ -15,6 +15,7 @@ import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -132,8 +133,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
-        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(article ->
-                postsRepository.deleteById(article.getId()));
+        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
+                postsRepository.deleteById(posts.getId()));
     }
 
     /**
@@ -143,7 +144,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
      * @param viewed viewed值
      * @return UpdateResult
      */
-    private Mono<UpdateResult> incrementViewed(String id, int viewed) {
+    private Mono<UpdateResult> incrementViewed(ObjectId id, int viewed) {
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)), Update.update("viewed", viewed), Posts.class);
     }
 

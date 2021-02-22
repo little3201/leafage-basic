@@ -43,5 +43,5 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId
      * @return 组织信息
      */
     @Query(value = "{ 'id' : ?0 }", fields = "{ 'name' : 1}")
-    Mono<Group> getById(String id);
+    Mono<Group> getById(ObjectId id);
 }

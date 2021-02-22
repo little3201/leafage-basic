@@ -11,6 +11,7 @@ import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -36,16 +37,15 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Flux<GroupVO> retrieve(int page, int size) {
         return groupRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .flatMap(group -> groupRepository.getById(group.getSuperior()).map(superior -> {
-                            group.setSuperior(superior.getName());
-                            return group;
-                        })
-                )
                 .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())
                         .map(count -> {
                             GroupVO groupVO = new GroupVO();
                             BeanUtils.copyProperties(group, groupVO);
                             groupVO.setCount(count);
+                            return groupVO;
+                        })
+                ).flatMap(groupVO -> groupRepository.getById(new ObjectId(groupVO.getSuperior())).map(superior -> {
+                            groupVO.setSuperior(superior.getName());
                             return groupVO;
                         })
                 );

@@ -61,5 +61,5 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * @return 权限信息
      */
     @Query(value = "{ 'id' : ?0 }", fields = "{ 'name' : 1}")
-    Mono<Authority> getById(String id);
+    Mono<Authority> getById(ObjectId id);
 }

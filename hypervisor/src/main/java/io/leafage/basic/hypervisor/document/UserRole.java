@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -20,27 +21,27 @@ public class UserRole extends BaseDocument {
      */
     @Indexed
     @Field(value = "user_id")
-    private String userId;
+    private ObjectId userId;
     /**
      * 组主键
      */
     @Indexed
     @Field(value = "role_id")
-    private String roleId;
+    private ObjectId roleId;
 
-    public String getUserId() {
+    public ObjectId getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(ObjectId userId) {
         this.userId = userId;
     }
 
-    public String getRoleId() {
+    public ObjectId getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(String roleId) {
+    public void setRoleId(ObjectId roleId) {
         this.roleId = roleId;
     }
 

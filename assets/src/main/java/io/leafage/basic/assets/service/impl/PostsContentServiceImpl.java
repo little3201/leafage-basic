@@ -8,6 +8,7 @@ import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.repository.PostsContentRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import org.apache.http.util.Asserts;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -32,8 +33,8 @@ public class PostsContentServiceImpl implements PostsContentService {
     }
 
     @Override
-    public Mono<PostsContent> modify(String postsId, PostsContent postsContentInfo) {
-        Asserts.notBlank(postsId, "postsId");
+    public Mono<PostsContent> modify(ObjectId postsId, PostsContent postsContentInfo) {
+        Asserts.notBlank(postsId.toHexString(), "postsId");
         return this.fetchByPostsId(postsId).flatMap(details -> {
             BeanUtils.copyProperties(postsContentInfo, details);
             return postsContentRepository.save(details);
@@ -41,7 +42,7 @@ public class PostsContentServiceImpl implements PostsContentService {
     }
 
     @Override
-    public Mono<PostsContent> fetchByPostsId(String postsId) {
+    public Mono<PostsContent> fetchByPostsId(ObjectId postsId) {
         return postsContentRepository.getByPostsIdAndEnabledTrue(postsId);
     }
 

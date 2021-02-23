@@ -51,6 +51,28 @@ public class PostsController {
     }
 
     /**
+     * 根据传入的代码查询下一条记录
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}/next")
+    public Mono<PostsVO> fetchNext(@PathVariable String code) {
+        return postsService.nextPosts(code);
+    }
+
+    /**
+     * 根据传入的代码查询上一条记录
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}/previous")
+    public Mono<PostsVO> fetchPrevious(@PathVariable String code) {
+        return postsService.previousPosts(code);
+    }
+
+    /**
      * 根据传入的数据添加信息
      *
      * @param postsDTO 要添加的数据

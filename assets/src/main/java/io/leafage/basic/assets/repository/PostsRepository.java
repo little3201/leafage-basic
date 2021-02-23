@@ -39,7 +39,25 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * 统计关联帖子
      *
      * @param categoryId 分类ID
-     * @return 用户数
+     * @return 帖子数
      */
     Mono<Long> countByCategoryIdAndEnabledTrue(ObjectId categoryId);
+
+    /**
+     * 查询下一相邻的记录
+     *
+     * @param id       主键
+     * @param pageable 分页对象
+     * @return 帖子信息
+     */
+    Flux<Posts> findByIdGreaterThanAndEnabledTrue(ObjectId id, Pageable pageable);
+
+    /**
+     * 查询上一相邻的记录
+     *
+     * @param id       主键
+     * @param pageable 分页对象
+     * @return 帖子信息
+     */
+    Flux<Posts> findByIdLessThanAndEnabledTrue(ObjectId id, Pageable pageable);
 }

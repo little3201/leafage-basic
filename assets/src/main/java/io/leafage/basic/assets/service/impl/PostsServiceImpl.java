@@ -52,7 +52,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
-        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
+        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modifyTime");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
                 .flatMap(posts -> categoryRepository.getAliasById(posts.getCategoryId()).map(category -> {
                             PostsVO vo = new PostsVO();
@@ -135,6 +135,24 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Asserts.notBlank(code, "code");
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.deleteById(posts.getId()));
+    }
+
+    @Override
+    public Mono<PostsVO> nextPosts(String code) {
+        Asserts.notBlank(code, "code");
+        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
+                postsRepository.findByIdGreaterThanAndEnabledTrue(posts.getId(),
+                        PageRequest.of(0, 1, Sort.Direction.ASC, "id")).next()
+        ).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<PostsVO> previousPosts(String code) {
+        Asserts.notBlank(code, "code");
+        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
+                postsRepository.findByIdLessThanAndEnabledTrue(posts.getId(),
+                        PageRequest.of(0, 1, Sort.Direction.DESC, "id")).next()
+        ).map(this::convertOuter);
     }
 
     /**

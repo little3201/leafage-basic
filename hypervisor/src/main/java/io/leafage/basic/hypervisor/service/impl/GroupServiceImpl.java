@@ -15,6 +15,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -44,10 +45,15 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
                             groupVO.setCount(count);
                             return groupVO;
                         })
-                ).flatMap(groupVO -> groupRepository.getById(new ObjectId(groupVO.getSuperior())).map(superior -> {
-                            groupVO.setSuperior(superior.getName());
-                            return groupVO;
-                        })
+                ).flatMap(groupVO -> {
+                            if (StringUtils.hasText(groupVO.getSuperior())) {
+                                return groupRepository.getById(new ObjectId(groupVO.getSuperior())).map(superior -> {
+                                    groupVO.setSuperior(superior.getName());
+                                    return groupVO;
+                                });
+                            }
+                            return Mono.just(groupVO);
+                        }
                 );
     }
 

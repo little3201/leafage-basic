@@ -15,6 +15,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -45,12 +46,17 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
                             return authorityVO;
                         })
                 )
-                .flatMap(authorityVO -> authorityRepository.getById(new ObjectId(authorityVO.getSuperior()))
-                        .map(superior -> {
-                                    authorityVO.setSuperior(superior.getName());
-                                    return authorityVO;
-                                }
-                        ));
+                .flatMap(authorityVO -> {
+                    if (StringUtils.hasText(authorityVO.getSuperior())) {
+                        return authorityRepository.getById(new ObjectId(authorityVO.getSuperior()))
+                                .map(superior -> {
+                                            authorityVO.setSuperior(superior.getName());
+                                            return authorityVO;
+                                        }
+                                );
+                    }
+                    return Mono.just(authorityVO);
+                });
     }
 
     @Override

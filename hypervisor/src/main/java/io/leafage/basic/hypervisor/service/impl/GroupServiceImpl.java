@@ -7,6 +7,7 @@ import io.leafage.basic.hypervisor.document.Group;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.repository.GroupUserRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.common.basic.AbstractBasicService;
@@ -19,6 +20,8 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.naming.NotContextException;
+
 /**
  * 组织信息Service实现
  *
@@ -29,10 +32,13 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     private final GroupRepository groupRepository;
     private final GroupUserRepository groupUserRepository;
+    private final UserRepository userRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupUserRepository groupUserRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupUserRepository groupUserRepository,
+                            UserRepository userRepository) {
         this.groupRepository = groupRepository;
         this.groupUserRepository = groupUserRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -78,10 +84,24 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
+        Mono<Group> groupMono;
         Group info = new Group();
         BeanUtils.copyProperties(groupDTO, info);
         info.setCode(this.generateCode());
-        return groupRepository.insert(info).map(this::convertOuter);
+        if (StringUtils.hasLength(groupDTO.getSuperior())) {
+            groupMono = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
+                    .switchIfEmpty(Mono.error(NotContextException::new))
+                    .map(superior -> {
+                        info.setSuperior(superior.getId());
+                        return info;
+                    });
+        } else {
+            groupMono = Mono.just(info);
+        }
+        return groupMono.flatMap(group -> userRepository.getByUsername(groupDTO.getPrincipal()).map(principal -> {
+            group.setSuperior(principal.getId());
+            return group;
+        })).flatMap(groupRepository::insert).map(this::convertOuter);
     }
 
     @Override
@@ -89,6 +109,15 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         Asserts.notBlank(code, "code");
         return groupRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
+            // 判断是否设置上级
+            if (StringUtils.hasText(groupDTO.getSuperior())) {
+                groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
+                        .switchIfEmpty(Mono.error(NotContextException::new))
+                        .map(superior -> {
+                            info.setSuperior(superior.getId());
+                            return info;
+                        });
+            }
             return groupRepository.save(info);
         }).map(this::convertOuter);
     }

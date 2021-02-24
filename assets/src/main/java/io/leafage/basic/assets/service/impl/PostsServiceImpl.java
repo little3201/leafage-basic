@@ -91,20 +91,23 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsVO> create(PostsDTO postsDTO) {
-        Posts info = new Posts();
-        BeanUtils.copyProperties(postsDTO, info);
-        info.setCode(this.generateCode());
-        info.setEnabled(true);
-        Mono<Posts> postsMono = postsRepository.insert(info)
-                .switchIfEmpty(Mono.error(RuntimeException::new))
-                .doOnSuccess(posts -> {
-                    // 添加内容信息
-                    PostsContent postsContent = new PostsContent();
-                    BeanUtils.copyProperties(postsDTO, postsContent);
-                    postsContent.setPostsId(posts.getId());
-                    // 调用subscribe()方法，消费create订阅
-                    postsContentService.create(postsContent).subscribe();
-                });
+        Mono<Posts> postsMono = categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
+                .switchIfEmpty(Mono.error(NotContextException::new))
+                .map(category -> {
+                    Posts info = new Posts();
+                    BeanUtils.copyProperties(postsDTO, info);
+                    info.setCode(this.generateCode());
+                    info.setCategoryId(category.getId());
+                    return info;
+                }).flatMap(info -> postsRepository.insert(info).switchIfEmpty(Mono.error(RuntimeException::new))
+                        .doOnSuccess(posts -> {
+                            // 添加内容信息
+                            PostsContent postsContent = new PostsContent();
+                            BeanUtils.copyProperties(postsDTO, postsContent);
+                            postsContent.setPostsId(posts.getId());
+                            // 调用subscribe()方法，消费create订阅
+                            postsContentService.create(postsContent).subscribe();
+                        }));
         return postsMono.map(this::convertOuter);
     }
 
@@ -113,20 +116,22 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Asserts.notBlank(code, "code");
         Mono<Posts> postsMono = postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(info -> {
-                    // 将信息复制到info
-                    BeanUtils.copyProperties(postsDTO, info);
-                    return postsRepository.save(info)
-                            .switchIfEmpty(Mono.error(RuntimeException::new))
-                            .doOnSuccess(posts ->
-                                    // 更新成功后，将内容信息更新
-                                    postsContentService.fetchByPostsId(posts.getId()).subscribe(detailsInfo -> {
-                                        BeanUtils.copyProperties(postsDTO, detailsInfo);
-                                        // 调用subscribe()方法，消费modify订阅
-                                        postsContentService.modify(posts.getId(), detailsInfo).subscribe();
-                                    })
-                            );
-                });
+                .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory()).map(category -> {
+                            // 将信息复制到info
+                            BeanUtils.copyProperties(postsDTO, info);
+                            info.setCategoryId(category.getId());
+                            return info;
+                        }).flatMap(postsInfo -> postsRepository.save(postsInfo)
+                                .switchIfEmpty(Mono.error(RuntimeException::new))
+                                .doOnSuccess(posts ->
+                                        // 更新成功后，将内容信息更新
+                                        postsContentService.fetchByPostsId(posts.getId()).subscribe(detailsInfo -> {
+                                            BeanUtils.copyProperties(postsDTO, detailsInfo);
+                                            // 调用subscribe()方法，消费modify订阅
+                                            postsContentService.modify(posts.getId(), detailsInfo).subscribe();
+                                        })
+                                ))
+                );
         return postsMono.map(this::convertOuter);
     }
 
@@ -134,7 +139,9 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Mono<Void> remove(String code) {
         Asserts.notBlank(code, "code");
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
-                postsRepository.deleteById(posts.getId()));
+                reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(posts.getId())),
+                        Update.update("enabled", false), Posts.class).then()
+        );
     }
 
     @Override

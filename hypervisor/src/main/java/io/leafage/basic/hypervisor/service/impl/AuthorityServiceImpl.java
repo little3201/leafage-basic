@@ -36,6 +36,11 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
+    public Flux<AuthorityVO> retrieve() {
+        return authorityRepository.findByEnabledTrue().map(this::convertOuter);
+    }
+
+    @Override
     public Flux<AuthorityVO> retrieve(int page, int size) {
         return authorityRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())

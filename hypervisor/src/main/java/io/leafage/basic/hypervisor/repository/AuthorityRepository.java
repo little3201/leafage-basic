@@ -23,6 +23,13 @@ import java.util.Collection;
 public interface AuthorityRepository extends ReactiveMongoRepository<Authority, String> {
 
     /**
+     * 查询所有权限
+     *
+     * @return 有效权限
+     */
+    Flux<Authority> findByEnabledTrue();
+
+    /**
      * 分页查询权限
      *
      * @param pageable 分页参数

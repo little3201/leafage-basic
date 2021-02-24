@@ -36,6 +36,11 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
+    public Flux<GroupVO> retrieve() {
+        return groupRepository.findByEnabledTrue().map(this::convertOuter);
+    }
+
+    @Override
     public Flux<GroupVO> retrieve(int page, int size) {
         return groupRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())

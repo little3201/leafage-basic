@@ -21,6 +21,13 @@ import reactor.core.publisher.Mono;
 public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId> {
 
     /**
+     * 查询所有组
+     *
+     * @return 有效组
+     */
+    Flux<Group> findByEnabledTrue();
+
+    /**
      * 分页查询组
      *
      * @param pageable 分页参数

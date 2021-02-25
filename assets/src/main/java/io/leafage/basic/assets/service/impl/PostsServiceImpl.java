@@ -68,15 +68,15 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Asserts.notBlank(code, "code");
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .map(posts -> {
-                    posts.setViewed(posts.getViewed() + 1);
                     // 更新viewed
-                    this.incrementViewed(posts.getId(), posts.getViewed()).subscribe();
+                    this.incrementViewed(posts.getId()).subscribe();
                     return posts;
                 })
                 .flatMap(posts -> categoryRepository.getAliasById(posts.getCategoryId()).map(category -> {
                             PostsContentVO pcv = new PostsContentVO();
-                            BeanUtils.copyProperties(posts, pcv);
-                            pcv.setCategory(category.getAlias());
+                    BeanUtils.copyProperties(posts, pcv);
+                    pcv.setViewed(posts.getViewed() + 1);
+                    pcv.setCategory(category.getAlias());
                             return pcv;
                         }).flatMap(pcv -> {
                             // 根据业务id获取相关内容
@@ -163,14 +163,14 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     /**
-     * 更新viewed
+     * viewed 原子更新（自增 1）
      *
-     * @param id     主键
-     * @param viewed viewed值
+     * @param id 主键
      * @return UpdateResult
      */
-    private Mono<UpdateResult> incrementViewed(ObjectId id, int viewed) {
-        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)), Update.update("viewed", viewed), Posts.class);
+    private Mono<UpdateResult> incrementViewed(ObjectId id) {
+        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
+                new Update().inc("viewed", 1), Posts.class);
     }
 
     /**

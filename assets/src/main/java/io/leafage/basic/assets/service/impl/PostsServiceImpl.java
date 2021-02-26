@@ -74,9 +74,9 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                 })
                 .flatMap(posts -> categoryRepository.getAliasById(posts.getCategoryId()).map(category -> {
                             PostsContentVO pcv = new PostsContentVO();
-                    BeanUtils.copyProperties(posts, pcv);
-                    pcv.setViewed(posts.getViewed() + 1);
-                    pcv.setCategory(category.getAlias());
+                            BeanUtils.copyProperties(posts, pcv);
+                            pcv.setViewed(posts.getViewed() + 1);
+                            pcv.setCategory(category.getAlias());
                             return pcv;
                         }).flatMap(pcv -> {
                             // 根据业务id获取相关内容

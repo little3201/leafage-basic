@@ -11,11 +11,9 @@ import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
-import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -44,24 +42,21 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     public Flux<AuthorityVO> retrieve(int page, int size) {
         return authorityRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
-                        .map(count -> {
+                        .flatMap(count -> {
                             AuthorityVO authorityVO = new AuthorityVO();
                             BeanUtils.copyProperties(authority, authorityVO);
                             authorityVO.setCount(count);
-                            return authorityVO;
+                            if (authority.getSuperior() != null) {
+                                return authorityRepository.getById(authority.getSuperior())
+                                        .map(superior -> {
+                                                    authorityVO.setSuperior(superior.getName());
+                                                    return authorityVO;
+                                                }
+                                        );
+                            }
+                            return Mono.just(authorityVO);
                         })
-                )
-                .flatMap(authorityVO -> {
-                    if (StringUtils.hasText(authorityVO.getSuperior())) {
-                        return authorityRepository.getById(new ObjectId(authorityVO.getSuperior()))
-                                .map(superior -> {
-                                            authorityVO.setSuperior(superior.getName());
-                                            return authorityVO;
-                                        }
-                                );
-                    }
-                    return Mono.just(authorityVO);
-                });
+                );
     }
 
     @Override

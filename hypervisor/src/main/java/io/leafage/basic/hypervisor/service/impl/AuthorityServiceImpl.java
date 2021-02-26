@@ -64,11 +64,19 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Asserts.notBlank(code, "code");
         return authorityRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
-                        .map(count -> {
+                        .flatMap(count -> {
                             AuthorityVO authorityVO = new AuthorityVO();
                             BeanUtils.copyProperties(authority, authorityVO);
                             authorityVO.setCount(count);
-                            return authorityVO;
+                            if (authority.getSuperior() != null) {
+                                return authorityRepository.getById(authority.getSuperior())
+                                        .map(superior -> {
+                                                    authorityVO.setSuperior(superior.getCode());
+                                                    return authorityVO;
+                                                }
+                                        );
+                            }
+                            return Mono.just(authorityVO);
                         })
                 );
     }

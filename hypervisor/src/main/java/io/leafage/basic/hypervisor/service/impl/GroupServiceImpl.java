@@ -69,11 +69,17 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         Asserts.notBlank(code, "code");
         return groupRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())
-                        .map(count -> {
+                        .flatMap(count -> {
                             GroupVO groupVO = new GroupVO();
                             BeanUtils.copyProperties(group, groupVO);
                             groupVO.setCount(count);
-                            return groupVO;
+                            if (group.getSuperior() != null) {
+                                return groupRepository.getById(group.getSuperior()).map(superior -> {
+                                    groupVO.setSuperior(superior.getCode());
+                                    return groupVO;
+                                });
+                            }
+                            return Mono.just(groupVO);
                         })
                 );
     }

@@ -6,7 +6,6 @@ package io.leafage.basic.hypervisor.repository;
 import io.leafage.basic.hypervisor.document.Authority;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -67,6 +66,5 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * @param id 主键
      * @return 权限信息
      */
-    @Query(value = "{ 'id' : ?0 }", fields = "{ 'name' : 1}")
     Mono<Authority> getById(ObjectId id);
 }

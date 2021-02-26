@@ -17,7 +17,7 @@ class CategoryServiceImplTest {
 
     @Test
     public void getAliasById() {
-        Mono<Category> alias = categoryRepository.getAliasById(new ObjectId("5fc88e8a014016148493c5cd"));
+        Mono<Category> alias = categoryRepository.getById(new ObjectId("5fc88e8a014016148493c5cd"));
         Assertions.assertNotNull(alias);
     }
 }

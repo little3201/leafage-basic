@@ -46,8 +46,8 @@ public class PostsController {
      * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{code}/detail")
-    public Mono<PostsContentVO> fetchDetail(@PathVariable String code) {
+    @GetMapping("/{code}/details")
+    public Mono<PostsContentVO> fetchDetails(@PathVariable String code) {
         return postsService.fetchDetails(code);
     }
 
@@ -57,7 +57,7 @@ public class PostsController {
      * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{code}/detail")
+    @GetMapping("/{code}")
     public Mono<PostsVO> fetch(@PathVariable String code) {
         return postsService.fetch(code);
     }

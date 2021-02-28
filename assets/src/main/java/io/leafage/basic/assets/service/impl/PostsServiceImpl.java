@@ -11,6 +11,7 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import io.leafage.common.basic.AbstractBasicService;
@@ -64,7 +65,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<PostsContentVO> fetchContent(String code) {
+    public Mono<PostsContentVO> fetchDetails(String code) {
         Asserts.notBlank(code, "code");
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .map(posts -> {
@@ -87,6 +88,32 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                             }).defaultIfEmpty(pcv);
                         })
                 );
+    }
+
+    @Override
+    public Mono<PostsVO> fetch(String code) {
+        Asserts.notBlank(code, "code");
+        return postsRepository.getByCodeAndEnabledTrue(code)
+                .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
+                            PostsVO pcv = new PostsVO();
+                            BeanUtils.copyProperties(posts, pcv);
+                            pcv.setViewed(posts.getViewed() + 1);
+                            pcv.setCategory(category.getCode());
+                            return pcv;
+                        })
+                );
+    }
+
+    @Override
+    public Mono<ContentVO> fetchContent(String code) {
+        Asserts.notBlank(code, "code");
+        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
+                postsContentService.fetchByPostsId(posts.getId()).map(postsContent -> {
+                    ContentVO contentVO = new ContentVO();
+                    BeanUtils.copyProperties(postsContent, contentVO);
+                    return contentVO;
+                })
+        );
     }
 
     @Override

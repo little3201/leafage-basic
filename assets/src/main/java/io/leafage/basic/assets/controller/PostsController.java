@@ -5,6 +5,7 @@ package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.springframework.http.HttpStatus;
@@ -45,8 +46,30 @@ public class PostsController {
      * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
-    @GetMapping("/{code}")
-    public Mono<PostsContentVO> fetch(@PathVariable String code) {
+    @GetMapping("/{code}/detail")
+    public Mono<PostsContentVO> fetchDetail(@PathVariable String code) {
+        return postsService.fetchDetails(code);
+    }
+
+    /**
+     * 根据传入的代码查询信息
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}/detail")
+    public Mono<PostsVO> fetch(@PathVariable String code) {
+        return postsService.fetch(code);
+    }
+
+    /**
+     * 根据传入的代码查询信息
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}/content")
+    public Mono<ContentVO> fetchContent(@PathVariable String code) {
         return postsService.fetchContent(code);
     }
 

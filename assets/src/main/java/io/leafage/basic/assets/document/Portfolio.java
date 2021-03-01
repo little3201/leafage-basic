@@ -28,9 +28,9 @@ public class Portfolio extends BaseDocument {
      */
     private String url;
     /**
-     * 类型：0-图片，1-视频
+     * 类型
      */
-    private char type;
+    private String type;
     /**
      * 点赞
      */
@@ -69,11 +69,11 @@ public class Portfolio extends BaseDocument {
         this.url = url;
     }
 
-    public char getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(char type) {
+    public void setType(String type) {
         this.type = type;
     }
 

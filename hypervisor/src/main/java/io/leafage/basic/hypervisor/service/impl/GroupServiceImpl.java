@@ -90,7 +90,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         Group info = new Group();
         BeanUtils.copyProperties(groupDTO, info);
         info.setCode(this.generateCode());
-        if (StringUtils.hasLength(groupDTO.getSuperior())) {
+        if (StringUtils.hasText(groupDTO.getSuperior())) {
             groupMono = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
                     .switchIfEmpty(Mono.error(NotContextException::new))
                     .map(superior -> {

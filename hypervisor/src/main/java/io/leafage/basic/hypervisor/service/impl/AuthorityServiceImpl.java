@@ -14,8 +14,11 @@ import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.naming.NotContextException;
 
 /**
  * 权限资源信息Service实现
@@ -86,7 +89,18 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Authority info = new Authority();
         BeanUtils.copyProperties(authorityDTO, info);
         info.setCode(this.generateCode());
-        return authorityRepository.insert(info).map(this::convertOuter);
+        Mono<Authority> authorityMono;
+        if (StringUtils.hasText(authorityDTO.getSuperior())) {
+            authorityMono = authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
+                    .switchIfEmpty(Mono.error(NotContextException::new))
+                    .map(superior -> {
+                        info.setSuperior(superior.getId());
+                        return info;
+                    });
+        } else {
+            authorityMono = Mono.just(info);
+        }
+        return authorityMono.flatMap(authorityRepository::insert).map(this::convertOuter);
     }
 
     @Override
@@ -94,6 +108,15 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Asserts.notBlank(code, "code");
         return authorityRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(authorityDTO, info);
+            // 判断是否设置上级
+            if (StringUtils.hasText(authorityDTO.getSuperior())) {
+                authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
+                        .switchIfEmpty(Mono.error(NotContextException::new))
+                        .map(superior -> {
+                            info.setSuperior(superior.getId());
+                            return info;
+                        });
+            }
             return authorityRepository.save(info);
         }).map(this::convertOuter);
     }

@@ -85,11 +85,17 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
+    public Mono<Long> count() {
+        return authorityRepository.count();
+    }
+
+    @Override
     public Mono<AuthorityVO> create(AuthorityDTO authorityDTO) {
         Authority info = new Authority();
         BeanUtils.copyProperties(authorityDTO, info);
         info.setCode(this.generateCode());
         Mono<Authority> authorityMono;
+        // 如果设置上级，进行处理
         if (StringUtils.hasText(authorityDTO.getSuperior())) {
             authorityMono = authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
                     .switchIfEmpty(Mono.error(NotContextException::new))

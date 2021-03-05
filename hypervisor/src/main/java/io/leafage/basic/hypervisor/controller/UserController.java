@@ -56,9 +56,19 @@ public class UserController {
      * @param username 用户账号
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/details/{username}")
+    @GetMapping("/{username}/details")
     public Mono<UserDetails> fetchDetails(@PathVariable String username) {
         return userService.fetchDetails(username);
+    }
+
+    /**
+     * 统计记录数
+     *
+     * @return 记录数
+     */
+    @GetMapping("/count")
+    public Mono<Long> count() {
+        return userService.count();
     }
 
     /**

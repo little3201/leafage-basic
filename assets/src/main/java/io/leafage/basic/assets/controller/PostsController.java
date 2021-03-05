@@ -74,6 +74,16 @@ public class PostsController {
     }
 
     /**
+     * 统计记录数
+     *
+     * @return 记录数
+     */
+    @GetMapping("/count")
+    public Mono<Long> count() {
+        return postsService.count();
+    }
+
+    /**
      * 根据传入的代码查询下一条记录
      *
      * @param code 代码

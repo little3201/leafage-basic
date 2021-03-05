@@ -53,6 +53,16 @@ public class AuthorityController {
     }
 
     /**
+     * 统计记录数
+     *
+     * @return 记录数
+     */
+    @GetMapping("/count")
+    public Mono<Long> count() {
+        return authorityService.count();
+    }
+
+    /**
      * 根据传入的数据添加信息
      *
      * @param authorityDTO 要添加的数据

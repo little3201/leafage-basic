@@ -54,6 +54,11 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
+    public Mono<Long> count() {
+        return userRepository.count();
+    }
+
+    @Override
     public Mono<UserVO> create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);

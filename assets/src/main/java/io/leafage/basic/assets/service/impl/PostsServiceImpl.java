@@ -53,7 +53,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
-        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modifyTime");
+        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
                 .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
                             PostsVO vo = new PostsVO();
@@ -114,6 +114,11 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     return contentVO;
                 })
         );
+    }
+
+    @Override
+    public Mono<Long> count() {
+        return postsRepository.count();
     }
 
     @Override

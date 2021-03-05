@@ -13,8 +13,8 @@ import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.common.basic.AbstractBasicService;
-import org.bson.types.ObjectId;
 import org.apache.http.util.Asserts;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -69,6 +69,11 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
                             return roleVO;
                         })
                 );
+    }
+
+    @Override
+    public Mono<Long> count() {
+        return roleRepository.count();
     }
 
     @Override

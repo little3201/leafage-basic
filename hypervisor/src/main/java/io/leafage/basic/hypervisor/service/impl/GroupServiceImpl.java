@@ -85,11 +85,17 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
+    public Mono<Long> count() {
+        return groupRepository.count();
+    }
+
+    @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
-        Mono<Group> groupMono;
         Group info = new Group();
         BeanUtils.copyProperties(groupDTO, info);
         info.setCode(this.generateCode());
+        Mono<Group> groupMono;
+        // 如果设置上级，进行处理
         if (StringUtils.hasText(groupDTO.getSuperior())) {
             groupMono = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
                     .switchIfEmpty(Mono.error(NotContextException::new))

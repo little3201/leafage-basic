@@ -62,6 +62,17 @@ public class UserController {
     }
 
     /**
+     * 根据组code查询关联用户信息
+     *
+     * @param code 组code
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/{code}/relation")
+    public Flux<UserVO> relation(@PathVariable String code) {
+        return userService.relation(code);
+    }
+
+    /**
      * 统计记录数
      *
      * @return 记录数

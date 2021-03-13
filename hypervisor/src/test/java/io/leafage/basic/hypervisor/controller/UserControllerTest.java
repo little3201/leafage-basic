@@ -32,8 +32,15 @@ public class UserControllerTest {
     @MockBean
     private AuthorityRepository authorityRepository;
 
-    private final WebTestClient client = WebTestClient.bindToController(new UserController(new UserServiceImpl(userRepository,
-            userRoleRepository, roleRepository, roleAuthorityRepository, authorityRepository))).build();
+    @MockBean
+    private GroupRepository groupRepository;
+
+    @MockBean
+    private GroupUserRepository groupUserRepository;
+
+    private final WebTestClient client = WebTestClient.bindToController(new UserController(
+            new UserServiceImpl(userRepository, userRoleRepository, roleRepository, roleAuthorityRepository,
+                    authorityRepository, groupRepository, groupUserRepository))).build();
 
     @Test
     void fetchDetails() {

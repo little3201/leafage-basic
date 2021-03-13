@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.document.GroupUser;
 import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.domain.UserDetails;
@@ -37,20 +38,34 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     private final RoleRepository roleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
+    private final GroupRepository groupRepository;
+    private final GroupUserRepository groupUserRepository;
 
     public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
                            RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository,
-                           AuthorityRepository authorityRepository) {
+                           AuthorityRepository authorityRepository, GroupRepository groupRepository,
+                           GroupUserRepository groupUserRepository) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;
         this.authorityRepository = authorityRepository;
+        this.groupRepository = groupRepository;
+        this.groupUserRepository = groupUserRepository;
     }
 
     @Override
     public Flux<UserVO> retrieve(int page, int size) {
         return userRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+    }
+
+    @Override
+    public Flux<UserVO> relation(String code) {
+        return groupRepository.getByCodeAndEnabledTrue(code).flatMapMany(group ->
+                groupUserRepository.findByGroupId(group.getId()).flatMap(groupUser ->
+                        userRepository.findById(groupUser.getUserId()).map(this::convertOuter)
+                )
+        );
     }
 
     @Override
@@ -67,8 +82,12 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         user.setPassword(new BCryptPasswordEncoder().encode("110119"));
         Mono<User> userMono = userRepository.insert(user)
                 .switchIfEmpty(Mono.error(RuntimeException::new))
+                // 处理roles
                 .doOnSuccess(u -> this.initUserRole(u.getId(), userDTO.getRoles()).doOnNext(userRoles ->
-                        userRoleRepository.saveAll(userRoles).subscribe()));
+                        userRoleRepository.saveAll(userRoles).subscribe()))
+                // 处理groups
+                .doOnSuccess(info -> this.initGroupUser(info.getId(), userDTO.getGroups()).doOnNext(groupUsers ->
+                        groupUserRepository.saveAll(groupUsers).subscribe()));
         return userMono.map(this::convertOuter);
     }
 
@@ -81,9 +100,13 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                     BeanUtils.copyProperties(userDTO, user);
                     return userRepository.save(user)
                             .switchIfEmpty(Mono.error(RuntimeException::new))
+                            // 处理roles
                             .doOnSuccess(u ->
                                     this.initUserRole(u.getId(), userDTO.getRoles()).subscribe(userRoles ->
-                                            userRoleRepository.saveAll(userRoles).subscribe()));
+                                            userRoleRepository.saveAll(userRoles).subscribe()))
+                            // 处理groups
+                            .doOnSuccess(info -> this.initGroupUser(info.getId(), userDTO.getGroups()).doOnNext(groupUsers ->
+                                    groupUserRepository.saveAll(groupUsers).subscribe()));
                 });
         return userMono.map(this::convertOuter);
     }
@@ -141,7 +164,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * 初始设置UserRole参数
      *
      * @param userId 用户主键
-     * @param codes  角色代码
+     * @param codes  role
      * @return 用户-角色对象
      */
     private Mono<List<UserRole>> initUserRole(ObjectId userId, Collection<String> codes) {
@@ -151,6 +174,23 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
             userRole.setRoleId(role.getId());
             userRole.setModifier(userId);
             return userRole;
+        }).collectList();
+    }
+
+    /**
+     * 初始设置GroupUser参数
+     *
+     * @param userId 用户主键
+     * @param codes  group
+     * @return 用户-角色对象
+     */
+    private Mono<List<GroupUser>> initGroupUser(ObjectId userId, Collection<String> codes) {
+        return groupRepository.findByCodeInAndEnabledTrue(codes).map(group -> {
+            GroupUser groupUser = new GroupUser();
+            groupUser.setUserId(userId);
+            groupUser.setGroupId(group.getId());
+            groupUser.setModifier(userId);
+            return groupUser;
         }).collectList();
     }
 }

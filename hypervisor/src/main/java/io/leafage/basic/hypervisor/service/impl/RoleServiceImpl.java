@@ -47,6 +47,11 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
+    public Flux<RoleVO> retrieve() {
+        return roleRepository.findAll().map(this::convertOuter);
+    }
+
+    @Override
     public Flux<RoleVO> retrieve(int page, int size) {
         return roleRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {

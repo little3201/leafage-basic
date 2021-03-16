@@ -46,6 +46,6 @@ public class UserControllerTest {
     void fetchDetails() {
         client.get().uri("/user/{username}", "little3201")
                 .accept(MediaType.APPLICATION_JSON).exchange()
-                .expectBody().jsonPath("authorities").isNotEmpty();
+                .expectBody().jsonPath("nickname").isNotEmpty();
     }
 }

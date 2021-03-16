@@ -6,21 +6,20 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.service.AbstractMockTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 
 /**
- * 账户接口测试类
+ * 账户service测试
  *
  * @author liwenqiang 2019/3/28 20:22
  **/
-@SpringBootTest
-public class AccountServiceImplTest {
+class AccountMockImplTest extends AbstractMockTest {
 
     @Mock
     private AccountRepository accountRepository;

@@ -101,9 +101,8 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                     return userRepository.save(user)
                             .switchIfEmpty(Mono.error(RuntimeException::new))
                             // 处理roles
-                            .doOnSuccess(u ->
-                                    this.initUserRole(u.getId(), userDTO.getRoles()).subscribe(userRoles ->
-                                            userRoleRepository.saveAll(userRoles).subscribe()))
+                            .doOnSuccess(u -> this.initUserRole(u.getId(), userDTO.getRoles()).subscribe(userRoles ->
+                                    userRoleRepository.saveAll(userRoles).subscribe()))
                             // 处理groups
                             .doOnSuccess(info -> this.initGroupUser(info.getId(), userDTO.getGroups()).doOnNext(groupUsers ->
                                     groupUserRepository.saveAll(groupUsers).subscribe()));

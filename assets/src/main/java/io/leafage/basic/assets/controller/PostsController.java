@@ -36,7 +36,10 @@ public class PostsController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PostsVO> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+    public Flux<PostsVO> retrieve(Integer page, Integer size, String order) {
+        if (page == null || size == null) {
+            return postsService.retrieve();
+        }
         return postsService.retrieve(page, size, order);
     }
 

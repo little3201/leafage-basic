@@ -52,6 +52,11 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
+    public Flux<PostsVO> retrieve() {
+        return postsRepository.findAll().map(this::convertOuter);
+    }
+
+    @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
         Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))

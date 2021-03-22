@@ -13,6 +13,7 @@ import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.common.basic.AbstractBasicService;
+import org.apache.http.util.Asserts;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
@@ -46,6 +47,11 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
+    public Flux<RoleVO> retrieve() {
+        return roleRepository.findAll().map(this::convertOuter);
+    }
+
+    @Override
     public Flux<RoleVO> retrieve(int page, int size) {
         return roleRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
@@ -59,6 +65,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> fetch(String code) {
+        Asserts.notBlank(code, "code");
         return roleRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
                             RoleVO roleVO = new RoleVO();
@@ -70,6 +77,11 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
+    public Mono<Long> count() {
+        return roleRepository.count();
+    }
+
+    @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
         Role role = new Role();
         BeanUtils.copyProperties(roleDTO, role);
@@ -77,21 +89,21 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Mono<Role> roleMono = roleRepository.insert(role)
                 .switchIfEmpty(Mono.error(RuntimeException::new))
                 .doOnSuccess(r -> this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
-                        .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
+                        .doOnNext(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).then()));
         return roleMono.map(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
+        Asserts.notBlank(code, "code");
         Mono<Role> roleMono = roleRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
                     return roleRepository.save(role)
                             .switchIfEmpty(Mono.error(RuntimeException::new))
-                            .doOnSuccess(r ->
-                                    this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
-                                            .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
+                            .doOnSuccess(r -> this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
+                                    .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
                 });
         return roleMono.map(this::convertOuter);
     }

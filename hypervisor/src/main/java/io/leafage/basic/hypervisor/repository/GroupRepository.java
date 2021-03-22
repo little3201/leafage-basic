@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collection;
+
 /**
  * 组织信息dao
  *
@@ -18,6 +20,21 @@ import reactor.core.publisher.Mono;
  **/
 @Repository
 public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId> {
+
+    /**
+     * 查询所有组
+     *
+     * @return 有效组
+     */
+    Flux<Group> findByEnabledTrue();
+
+    /**
+     * 查询组
+     *
+     * @param codes 代码集合
+     * @return 角色信息
+     */
+    Flux<Group> findByCodeInAndEnabledTrue(Collection<String> codes);
 
     /**
      * 分页查询组
@@ -34,4 +51,12 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId
      * @return 组织信息
      */
     Mono<Group> getByCodeAndEnabledTrue(String code);
+
+    /**
+     * 根据id查询
+     *
+     * @param id 主键
+     * @return 组织信息
+     */
+    Mono<Group> getById(ObjectId id);
 }

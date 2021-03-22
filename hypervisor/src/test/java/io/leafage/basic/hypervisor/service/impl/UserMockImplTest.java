@@ -7,21 +7,20 @@ import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.service.AbstractMockTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Mono;
 
 /**
- * 用户信息service测试
+ * 用户service测试
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
-@SpringBootTest
-public class UserServiceImplTest {
+class UserMockImplTest extends AbstractMockTest {
 
     @Mock
     private UserRepository userRepository;
@@ -53,7 +52,7 @@ public class UserServiceImplTest {
      */
     @Test
     void fetchDetails() {
-        String username = Mockito.anyString();
+        String username = "little3201";
         Mockito.when(userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .thenReturn(Mockito.any());
         Mono<UserDetails> detailsMono = userService.fetchDetails(username);
@@ -65,7 +64,7 @@ public class UserServiceImplTest {
      */
     @Test
     void fetchDetailsEmpty() {
-        String username = Mockito.anyString();
+        String username = "little3201";
         Mockito.when(userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .thenReturn(Mono.empty());
         Mono<UserDetails> detailsMono = userService.fetchDetails(username);

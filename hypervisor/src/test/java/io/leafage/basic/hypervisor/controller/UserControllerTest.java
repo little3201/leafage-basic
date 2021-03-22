@@ -32,13 +32,20 @@ public class UserControllerTest {
     @MockBean
     private AuthorityRepository authorityRepository;
 
-    private final WebTestClient client = WebTestClient.bindToController(new UserController(new UserServiceImpl(userRepository,
-            userRoleRepository, roleRepository, roleAuthorityRepository, authorityRepository))).build();
+    @MockBean
+    private GroupRepository groupRepository;
+
+    @MockBean
+    private GroupUserRepository groupUserRepository;
+
+    private final WebTestClient client = WebTestClient.bindToController(new UserController(
+            new UserServiceImpl(userRepository, userRoleRepository, roleRepository, roleAuthorityRepository,
+                    authorityRepository, groupRepository, groupUserRepository))).build();
 
     @Test
     void fetchDetails() {
         client.get().uri("/user/{username}", "little3201")
                 .accept(MediaType.APPLICATION_JSON).exchange()
-                .expectBody().jsonPath("authorities").isNotEmpty();
+                .expectBody().jsonPath("nickname").isNotEmpty();
     }
 }

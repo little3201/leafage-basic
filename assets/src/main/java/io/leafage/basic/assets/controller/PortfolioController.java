@@ -50,6 +50,16 @@ public class PortfolioController {
     }
 
     /**
+     * 统计记录数
+     *
+     * @return 记录数
+     */
+    @GetMapping("/count")
+    public Mono<Long> count() {
+        return portfolioService.count();
+    }
+
+    /**
      * 根据传入的数据添加信息
      *
      * @param portfolioDTO 要添加的数据

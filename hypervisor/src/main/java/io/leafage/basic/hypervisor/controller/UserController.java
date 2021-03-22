@@ -56,9 +56,30 @@ public class UserController {
      * @param username 用户账号
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/details/{username}")
+    @GetMapping("/{username}/details")
     public Mono<UserDetails> fetchDetails(@PathVariable String username) {
         return userService.fetchDetails(username);
+    }
+
+    /**
+     * 根据组code查询关联用户信息
+     *
+     * @param code 组code
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/{code}/relation")
+    public Flux<UserVO> relation(@PathVariable String code) {
+        return userService.relation(code);
+    }
+
+    /**
+     * 统计记录数
+     *
+     * @return 记录数
+     */
+    @GetMapping("/count")
+    public Mono<Long> count() {
+        return userService.count();
     }
 
     /**

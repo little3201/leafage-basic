@@ -66,6 +66,11 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
+    public Mono<Long> count() {
+        return categoryRepository.count();
+    }
+
+    @Override
     public Mono<CategoryVO> create(CategoryDTO categoryDTO) {
         Category info = new Category();
         BeanUtils.copyProperties(categoryDTO, info);

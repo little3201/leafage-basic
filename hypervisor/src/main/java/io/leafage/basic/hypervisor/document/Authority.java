@@ -56,14 +56,10 @@ public class Authority extends BaseDocument {
          */
         BTN,
         /**
-         * tab页
-         */
-        TAB,
-        /**
          * 接口
          */
         @JsonEnumDefaultValue
-        URL
+        ROUTER
     }
 
     public String getCode() {

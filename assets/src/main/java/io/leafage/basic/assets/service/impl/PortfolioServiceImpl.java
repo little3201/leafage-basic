@@ -38,6 +38,11 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     }
 
     @Override
+    public Mono<Long> count() {
+        return portfolioRepository.count();
+    }
+
+    @Override
     public Mono<PortfolioVO> create(PortfolioDTO portfolioDTO) {
         Portfolio info = new Portfolio();
         BeanUtils.copyProperties(portfolioDTO, info);

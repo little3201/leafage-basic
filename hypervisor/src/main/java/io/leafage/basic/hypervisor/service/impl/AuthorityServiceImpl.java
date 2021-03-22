@@ -11,11 +11,15 @@ import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import javax.naming.NotContextException;
 
 /**
  * 权限资源信息Service实现
@@ -37,13 +41,25 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     public Flux<AuthorityVO> retrieve(int page, int size) {
         return authorityRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
-                        .map(count -> {
+                        .flatMap(count -> {
                             AuthorityVO authorityVO = new AuthorityVO();
                             BeanUtils.copyProperties(authority, authorityVO);
                             authorityVO.setCount(count);
-                            return authorityVO;
+                            if (authority.getSuperior() != null) {
+                                return authorityRepository.getById(authority.getSuperior())
+                                        .map(superior -> {
+                                                    authorityVO.setSuperior(superior.getName());
+                                                    return authorityVO;
+                                                }
+                                        );
+                            }
+                            return Mono.just(authorityVO);
                         })
                 );
+    }
+
+    public void tree(ObjectId superior, String type) {
+        authorityRepository.findBySuperiorAndTypeAndEnabledTrue(superior, type);
     }
 
     @Override
@@ -51,13 +67,26 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Asserts.notBlank(code, "code");
         return authorityRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
-                        .map(count -> {
+                        .flatMap(count -> {
                             AuthorityVO authorityVO = new AuthorityVO();
                             BeanUtils.copyProperties(authority, authorityVO);
                             authorityVO.setCount(count);
-                            return authorityVO;
+                            if (authority.getSuperior() != null) {
+                                return authorityRepository.getById(authority.getSuperior())
+                                        .map(superior -> {
+                                                    authorityVO.setSuperior(superior.getCode());
+                                                    return authorityVO;
+                                                }
+                                        );
+                            }
+                            return Mono.just(authorityVO);
                         })
                 );
+    }
+
+    @Override
+    public Mono<Long> count() {
+        return authorityRepository.count();
     }
 
     @Override
@@ -65,7 +94,16 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Authority info = new Authority();
         BeanUtils.copyProperties(authorityDTO, info);
         info.setCode(this.generateCode());
-        return authorityRepository.insert(info).map(this::convertOuter);
+        Mono<Authority> authorityMono;
+        // 如果设置上级，进行处理
+        if (StringUtils.hasText(authorityDTO.getSuperior())) {
+            authorityMono = authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
+                    .switchIfEmpty(Mono.error(NotContextException::new))
+                    .doOnNext(superior -> info.setSuperior(superior.getId()));
+        } else {
+            authorityMono = Mono.just(info);
+        }
+        return authorityMono.flatMap(authorityRepository::insert).map(this::convertOuter);
     }
 
     @Override
@@ -73,6 +111,12 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Asserts.notBlank(code, "code");
         return authorityRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(authorityDTO, info);
+            // 判断是否设置上级
+            if (StringUtils.hasText(authorityDTO.getSuperior())) {
+                authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
+                        .switchIfEmpty(Mono.error(NotContextException::new))
+                        .doOnNext(superior -> info.setSuperior(superior.getId())).then();
+            }
             return authorityRepository.save(info);
         }).map(this::convertOuter);
     }

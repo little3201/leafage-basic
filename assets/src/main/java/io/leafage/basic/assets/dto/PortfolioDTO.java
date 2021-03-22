@@ -4,11 +4,13 @@
 package io.leafage.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
- * DTO for PortfolioInfo
+ * DTO for Portfolio
  *
  * @author liwenqiang 2020-10-06 22:09
  */
@@ -24,8 +26,8 @@ public class PortfolioDTO implements Serializable {
     /**
      * url
      */
-    @NotBlank
-    private String url;
+    @NotEmpty
+    private Set<String> url;
     /**
      * 类型
      */
@@ -39,11 +41,11 @@ public class PortfolioDTO implements Serializable {
         this.title = title;
     }
 
-    public String getUrl() {
+    public Set<String> getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(Set<String> url) {
         this.url = url;
     }
 

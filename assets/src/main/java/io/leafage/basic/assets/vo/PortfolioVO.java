@@ -35,7 +35,7 @@ public class PortfolioVO extends BaseVO {
     /**
      * 类型
      */
-    private char type;
+    private String type;
 
 
     public int getLikes() {
@@ -78,11 +78,11 @@ public class PortfolioVO extends BaseVO {
         this.url = url;
     }
 
-    public char getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(char type) {
+    public void setType(String type) {
         this.type = type;
     }
 

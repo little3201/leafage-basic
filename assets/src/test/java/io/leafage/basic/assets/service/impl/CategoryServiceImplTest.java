@@ -1,23 +1,33 @@
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import org.bson.types.ObjectId;
+import io.leafage.basic.assets.service.AbstractMockTest;
+import io.leafage.basic.assets.service.CategoryService;
+import io.leafage.basic.assets.vo.CategoryVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import reactor.core.publisher.Mono;
 
-@SpringBootTest
-class CategoryServiceImplTest {
+/**
+ * 分类service测试
+ *
+ * @author liwenqiang 2020/3/1 22:07
+ */
+class CategoryServiceImplTest extends AbstractMockTest {
 
-    @Autowired
+    @Mock
     private CategoryRepository categoryRepository;
 
+    @InjectMocks
+    private CategoryService categoryService;
+
     @Test
-    public void getAliasById() {
-        Mono<Category> alias = categoryRepository.getAliasById(new ObjectId("5fc88e8a014016148493c5cd"));
-        Assertions.assertNotNull(alias);
+    public void fetch() {
+        Mockito.when(categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mockito.any());
+        Mono<CategoryVO> categoryVOMono = categoryService.fetch(Mockito.anyString());
+        Assertions.assertNotNull(categoryVOMono);
     }
 }

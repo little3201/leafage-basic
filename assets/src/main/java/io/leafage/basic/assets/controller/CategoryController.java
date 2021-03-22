@@ -55,6 +55,16 @@ public class CategoryController {
     }
 
     /**
+     * 统计记录数
+     *
+     * @return 记录数
+     */
+    @GetMapping("/count")
+    public Mono<Long> count() {
+        return categoryService.count();
+    }
+
+    /**
      * 根据传入的数据添加信息
      *
      * @param categoryDTO 要添加的数据

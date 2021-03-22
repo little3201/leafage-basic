@@ -34,7 +34,10 @@ public class GroupController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<GroupVO> retrieve(@RequestParam int page, @RequestParam int size) {
+    public Flux<GroupVO> retrieve(Integer page, Integer size) {
+        if (page == null || size == null) {
+            return groupService.retrieve();
+        }
         return groupService.retrieve(page, size);
     }
 
@@ -47,6 +50,16 @@ public class GroupController {
     @GetMapping("/{code}")
     public Mono<GroupVO> fetch(@PathVariable String code) {
         return groupService.fetch(code);
+    }
+
+    /**
+     * 统计记录数
+     *
+     * @return 记录数
+     */
+    @GetMapping("/count")
+    public Mono<Long> count() {
+        return groupService.count();
     }
 
     /**

@@ -4,24 +4,23 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.service.AbstractMockTest;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Mono;
 
 import java.util.Random;
 
 /**
- * 文章接口测试类
+ * 帖子service测试
  *
  * @author liwenqiang 2019/9/19 9:27
  */
-@SpringBootTest
-public class PostsServiceImplTest {
+class PostsServiceImplTest extends AbstractMockTest {
 
     @Mock
     private PostsRepository postsRepository;
@@ -45,14 +44,14 @@ public class PostsServiceImplTest {
     @Test
     public void fetchDetailsByCode() {
         Mockito.when(postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mockito.any());
-        Mono<? extends PostsVO> outerMono = postsService.fetchContent(Mockito.anyString());
+        Mono<? extends PostsVO> outerMono = postsService.fetchDetails(Mockito.anyString());
         Assertions.assertNotNull(outerMono);
     }
 
     @Test
     public void fetchDetailsByCodeEmpty() {
         Mockito.when(postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mono.empty());
-        Mono<? extends PostsVO> outerMono = postsService.fetchContent(String.valueOf(new Random().nextFloat()));
+        Mono<? extends PostsVO> outerMono = postsService.fetchDetails(String.valueOf(new Random().nextFloat()));
         Assertions.assertNull(outerMono);
     }
 }

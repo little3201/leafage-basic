@@ -5,6 +5,7 @@ package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,10 @@ public class PostsController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PostsVO> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+    public Flux<PostsVO> retrieve(Integer page, Integer size, String order) {
+        if (page == null || size == null) {
+            return postsService.retrieve();
+        }
         return postsService.retrieve(page, size, order);
     }
 
@@ -45,9 +49,63 @@ public class PostsController {
      * @param code 代码
      * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
      */
+    @GetMapping("/{code}/details")
+    public Mono<PostsContentVO> fetchDetails(@PathVariable String code) {
+        return postsService.fetchDetails(code);
+    }
+
+    /**
+     * 根据传入的代码查询信息
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
     @GetMapping("/{code}")
-    public Mono<PostsContentVO> fetch(@PathVariable String code) {
+    public Mono<PostsVO> fetch(@PathVariable String code) {
+        return postsService.fetch(code);
+    }
+
+    /**
+     * 根据传入的代码查询信息
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}/content")
+    public Mono<ContentVO> fetchContent(@PathVariable String code) {
         return postsService.fetchContent(code);
+    }
+
+    /**
+     * 统计记录数
+     *
+     * @return 记录数
+     */
+    @GetMapping("/count")
+    public Mono<Long> count() {
+        return postsService.count();
+    }
+
+    /**
+     * 根据传入的代码查询下一条记录
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}/next")
+    public Mono<PostsVO> fetchNext(@PathVariable String code) {
+        return postsService.nextPosts(code);
+    }
+
+    /**
+     * 根据传入的代码查询上一条记录
+     *
+     * @param code 代码
+     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     */
+    @GetMapping("/{code}/previous")
+    public Mono<PostsVO> fetchPrevious(@PathVariable String code) {
+        return postsService.previousPosts(code);
     }
 
     /**

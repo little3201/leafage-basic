@@ -6,7 +6,6 @@ package io.leafage.basic.assets.repository;
 import io.leafage.basic.assets.document.Category;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -49,6 +48,5 @@ public interface CategoryRepository extends ReactiveMongoRepository<Category, Ob
      * @param id 主键
      * @return alias
      */
-    @Query(value = "{ 'id' : ?0 }", fields = "{ 'alias' : 1}")
-    Mono<Category> getAliasById(ObjectId id);
+    Mono<Category> getById(ObjectId id);
 }

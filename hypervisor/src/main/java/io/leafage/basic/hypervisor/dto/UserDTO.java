@@ -54,6 +54,10 @@ public class UserDTO implements Serializable {
      */
     private Set<String> roles = Collections.emptySet();
     /**
+     * 组列表
+     */
+    private Set<String> groups = Collections.emptySet();
+    /**
      * 修改人
      */
     private String modifier;
@@ -113,6 +117,14 @@ public class UserDTO implements Serializable {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public Set<String> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<String> groups) {
+        this.groups = groups;
     }
 
     public String getModifier() {

@@ -33,7 +33,7 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * 根据code查询enabled信息
      *
      * @param code 代码
-     * @return 资源信息
+     * @return 权限信息
      */
     Mono<Authority> getByCodeAndEnabledTrue(String code);
 
@@ -41,7 +41,7 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * 根据权限Id集合查询多条enabled信息
      *
      * @param ids id集合
-     * @return 资源信息
+     * @return 权限信息
      */
     Flux<Authority> findByIdInAndEnabledTrue(Collection<ObjectId> ids);
 
@@ -49,7 +49,24 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * 根据权限
      *
      * @param codes 代码集合
-     * @return 角色信息
+     * @return 权限信息
      */
     Flux<Authority> findByCodeInAndEnabledTrue(Collection<String> codes);
+
+    /**
+     * 根据id查询name
+     *
+     * @param id 主键
+     * @return 权限信息
+     */
+    Mono<Authority> getById(ObjectId id);
+
+    /**
+     * 根据superior和type查询
+     *
+     * @param superior 上级ID
+     * @param type     类型
+     * @return 权限信息
+     */
+    Flux<Authority> findBySuperiorAndTypeAndEnabledTrue(ObjectId superior, String type);
 }

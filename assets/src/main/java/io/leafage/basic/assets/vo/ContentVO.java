@@ -1,16 +1,13 @@
-/*
- * Copyright © 2010-2019 Abeille All rights reserved.
- */
 package io.leafage.basic.assets.vo;
 
-/**
- * Details VO class for Posts
- *
- * @author liwenqiang 2020-10-06 22:09
- */
-public class PostsContentVO extends PostsVO {
+import java.io.Serializable;
 
-    private static final long serialVersionUID = -3631862762916498067L;
+/**
+ * VO class for posts content
+ *
+ * @author liwenqiang 2021-02-26 22:17
+ */
+public class ContentVO implements Serializable {
 
     /**
      * 内容
@@ -20,7 +17,6 @@ public class PostsContentVO extends PostsVO {
      * 目录
      */
     private String catalog;
-
 
     public String getContent() {
         return content;

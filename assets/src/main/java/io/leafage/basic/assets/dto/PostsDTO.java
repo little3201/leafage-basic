@@ -37,6 +37,11 @@ public class PostsDTO implements Serializable {
      */
     @NotBlank
     private String cover;
+    /**
+     * 分类
+     */
+    @NotBlank
+    private String category;
 
     public String getTitle() {
         return title;
@@ -78,4 +83,11 @@ public class PostsDTO implements Serializable {
         this.cover = cover;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }

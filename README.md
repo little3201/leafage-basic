@@ -76,6 +76,6 @@ CMS服务相关接口，包括个人网站的资料维护，大体包含：
 - [x] 组
 - [ ] 账户
 
-<a href="LICENSE">
+<a href="https://github.com/little3201/leafge-basic/master/LICENSE">
   <h2>Apache 2.0</h2>
 </a>

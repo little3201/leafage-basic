@@ -109,6 +109,17 @@ public class PostsController {
     }
 
     /**
+     * 自增likes
+     *
+     * @param code 代码
+     * @return 帖子信息
+     */
+    @PatchMapping("/{code}/like")
+    public Mono<PostsVO> incrementLikes(@PathVariable String code) {
+        return postsService.incrementLikes(code);
+    }
+
+    /**
      * 根据传入的数据添加信息
      *
      * @param postsDTO 要添加的数据

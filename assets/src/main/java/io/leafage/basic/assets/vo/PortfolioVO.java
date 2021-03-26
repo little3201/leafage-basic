@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.assets.vo;
 
+import java.util.Set;
+
 /**
  * VO for PortfolioInfo
  *
@@ -31,7 +33,7 @@ public class PortfolioVO extends BaseVO {
     /**
      * url
      */
-    private String url;
+    private Set<String> url;
     /**
      * 类型
      */

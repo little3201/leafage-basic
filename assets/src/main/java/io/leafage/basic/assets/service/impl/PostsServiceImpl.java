@@ -52,6 +52,11 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
+    public Flux<PostsVO> retrieve() {
+        return postsRepository.findAll().map(this::convertOuter);
+    }
+
+    @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
         Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
@@ -192,6 +197,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                 postsRepository.findByIdLessThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.DESC, "id")).next()
         ).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<PostsVO> incrementLikes(String code) {
+        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
+                new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
+                postsRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter));
     }
 
     /**

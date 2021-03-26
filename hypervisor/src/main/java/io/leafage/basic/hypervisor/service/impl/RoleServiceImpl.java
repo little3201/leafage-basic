@@ -47,6 +47,11 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
+    public Flux<RoleVO> retrieve() {
+        return roleRepository.findAll().map(this::convertOuter);
+    }
+
+    @Override
     public Flux<RoleVO> retrieve(int page, int size) {
         return roleRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
@@ -84,7 +89,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Mono<Role> roleMono = roleRepository.insert(role)
                 .switchIfEmpty(Mono.error(RuntimeException::new))
                 .doOnSuccess(r -> this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
-                        .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
+                        .doOnNext(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).then()));
         return roleMono.map(this::convertOuter);
     }
 
@@ -97,9 +102,8 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
                     BeanUtils.copyProperties(roleDTO, role);
                     return roleRepository.save(role)
                             .switchIfEmpty(Mono.error(RuntimeException::new))
-                            .doOnSuccess(r ->
-                                    this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
-                                            .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
+                            .doOnSuccess(r -> this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
+                                    .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
                 });
         return roleMono.map(this::convertOuter);
     }

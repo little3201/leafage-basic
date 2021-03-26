@@ -22,13 +22,6 @@ import java.util.Collection;
 public interface AuthorityRepository extends ReactiveMongoRepository<Authority, String> {
 
     /**
-     * 查询所有权限
-     *
-     * @return 有效权限
-     */
-    Flux<Authority> findByEnabledTrue();
-
-    /**
      * 分页查询权限
      *
      * @param pageable 分页参数
@@ -67,4 +60,13 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * @return 权限信息
      */
     Mono<Authority> getById(ObjectId id);
+
+    /**
+     * 根据superior和type查询
+     *
+     * @param superior 上级ID
+     * @param type     类型
+     * @return 权限信息
+     */
+    Flux<Authority> findBySuperiorAndTypeAndEnabledTrue(ObjectId superior, String type);
 }

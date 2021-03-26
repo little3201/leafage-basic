@@ -7,6 +7,7 @@ import io.leafage.basic.hypervisor.document.GroupUser;
 import org.bson.types.ObjectId;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -24,4 +25,6 @@ public interface GroupUserRepository extends ReactiveCrudRepository<GroupUser, O
      * @return 用户数
      */
     Mono<Long> countByGroupIdAndEnabledTrue(ObjectId groupId);
+
+    Flux<GroupUser> findByGroupId(ObjectId groupId);
 }

@@ -5,22 +5,21 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.PostsContent;
+import io.leafage.basic.assets.service.AbstractMockTest;
 import io.leafage.basic.assets.service.PostsContentService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 /**
- * 内容接口测试类
+ * 内容service测试
  *
  * @author liwenqiang 2020/3/1 22:07
  */
-@SpringBootTest
-public class PostsContentServiceImplTest {
+class PostsContentServiceImplTest extends AbstractMockTest {
 
-    @Autowired
+    @InjectMocks
     private PostsContentService postsContentService;
 
     @Test

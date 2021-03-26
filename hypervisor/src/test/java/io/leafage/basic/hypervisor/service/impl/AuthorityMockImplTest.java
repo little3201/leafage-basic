@@ -1,10 +1,14 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.service.AbstractMockTest;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class RoleServiceImplTest {
+/**
+ * 权限service测试
+ *
+ * @author liwenqiang 2019/1/29 17:10
+ **/
+class AuthorityMockImplTest extends AbstractMockTest {
 
     @Test
     void retrieveAll() {
@@ -24,5 +28,9 @@ class RoleServiceImplTest {
 
     @Test
     void findByCodeAndEnabledTrue() {
+    }
+
+    @Test
+    void findByIdInAndEnabledTrue() {
     }
 }

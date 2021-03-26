@@ -6,6 +6,8 @@ package io.leafage.basic.assets.document;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Set;
+
 /**
  * Model class for ArticleInfo
  *
@@ -26,7 +28,7 @@ public class Portfolio extends BaseDocument {
     /**
      * url
      */
-    private String url;
+    private Set<String> url;
     /**
      * 类型
      */
@@ -61,11 +63,11 @@ public class Portfolio extends BaseDocument {
         this.title = title;
     }
 
-    public String getUrl() {
+    public Set<String> getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(Set<String> url) {
         this.url = url;
     }
 

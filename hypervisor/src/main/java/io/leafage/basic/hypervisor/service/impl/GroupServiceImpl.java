@@ -99,10 +99,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         if (StringUtils.hasText(groupDTO.getSuperior())) {
             groupMono = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
                     .switchIfEmpty(Mono.error(NotContextException::new))
-                    .map(superior -> {
-                        info.setSuperior(superior.getId());
-                        return info;
-                    });
+                    .doOnNext(superior -> info.setSuperior(superior.getId()));
         } else {
             groupMono = Mono.just(info);
         }
@@ -121,10 +118,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
             if (StringUtils.hasText(groupDTO.getSuperior())) {
                 groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
                         .switchIfEmpty(Mono.error(NotContextException::new))
-                        .map(superior -> {
-                            info.setSuperior(superior.getId());
-                            return info;
-                        });
+                        .doOnNext(superior -> info.setSuperior(superior.getId())).then();
             }
             return groupRepository.save(info);
         }).map(this::convertOuter);

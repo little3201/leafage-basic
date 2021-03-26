@@ -34,10 +34,7 @@ public class AuthorityController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<AuthorityVO> retrieve(Integer page, Integer size) {
-        if (page == null || size == null) {
-            return authorityService.retrieve();
-        }
+    public Flux<AuthorityVO> retrieve(@RequestParam int page, @RequestParam int size) {
         return authorityService.retrieve(page, size);
     }
 

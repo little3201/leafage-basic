@@ -11,6 +11,7 @@ import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -37,11 +38,6 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Flux<AuthorityVO> retrieve() {
-        return authorityRepository.findByEnabledTrue().map(this::convertOuter);
-    }
-
-    @Override
     public Flux<AuthorityVO> retrieve(int page, int size) {
         return authorityRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
@@ -60,6 +56,10 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
                             return Mono.just(authorityVO);
                         })
                 );
+    }
+
+    public void tree(ObjectId superior, String type) {
+        authorityRepository.findBySuperiorAndTypeAndEnabledTrue(superior, type);
     }
 
     @Override
@@ -99,10 +99,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         if (StringUtils.hasText(authorityDTO.getSuperior())) {
             authorityMono = authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
                     .switchIfEmpty(Mono.error(NotContextException::new))
-                    .map(superior -> {
-                        info.setSuperior(superior.getId());
-                        return info;
-                    });
+                    .doOnNext(superior -> info.setSuperior(superior.getId()));
         } else {
             authorityMono = Mono.just(info);
         }
@@ -118,10 +115,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
             if (StringUtils.hasText(authorityDTO.getSuperior())) {
                 authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
                         .switchIfEmpty(Mono.error(NotContextException::new))
-                        .map(superior -> {
-                            info.setSuperior(superior.getId());
-                            return info;
-                        });
+                        .doOnNext(superior -> info.setSuperior(superior.getId())).then();
             }
             return authorityRepository.save(info);
         }).map(this::convertOuter);

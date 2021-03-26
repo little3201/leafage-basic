@@ -72,11 +72,11 @@ public class PortfolioVO extends BaseVO {
         this.title = title;
     }
 
-    public String getUrl() {
+    public Set<String> getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(Set<String> url) {
         this.url = url;
     }
 

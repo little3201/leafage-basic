@@ -48,4 +48,12 @@ public interface PostsService extends BasicService<PostsDTO, PostsVO> {
      * @return 帖子信息
      */
     Mono<PostsVO> previousPosts(String code);
+
+    /**
+     * 自增likes
+     *
+     * @param code 代码
+     * @return 帖子信息
+     */
+    Mono<PostsVO> incrementLikes(String code);
 }

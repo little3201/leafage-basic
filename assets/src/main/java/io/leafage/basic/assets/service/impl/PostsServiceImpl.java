@@ -199,6 +199,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         ).map(this::convertOuter);
     }
 
+    @Override
+    public Mono<PostsVO> incrementLikes(String code) {
+        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
+                new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
+                postsRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter));
+    }
+
     /**
      * viewed 原子更新（自增 1）
      *

@@ -19,14 +19,6 @@ import reactor.core.publisher.Mono;
 public interface PostsService extends BasicService<PostsDTO, PostsVO> {
 
     /**
-     * 按照分类进行查询
-     *
-     * @param category 分类
-     * @return 结果集
-     */
-    Flux<PostsVO> retrieve(String category);
-
-    /**
      * 按照分页和分类进行查询并排序
      *
      * @param page     分页

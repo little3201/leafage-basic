@@ -36,11 +36,22 @@ public class PostsController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PostsVO> retrieve(Integer page, Integer size, String category, String order) {
+    public Flux<PostsVO> retrieve(Integer page, Integer size, String order) {
         if (page == null || size == null) {
-            return postsService.retrieve(category);
+            return postsService.retrieve();
         }
-        return postsService.retrieve(page, size, order, category);
+        return postsService.retrieve(page, size, order);
+    }
+
+    /**
+     * 按照分类，分页查询信息
+     *
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     */
+    @GetMapping("/category")
+    public Flux<PostsVO> retrieve(@RequestParam int page, @RequestParam int size,
+                                  @RequestParam String category, String order) {
+        return postsService.retrieve(page, size, category, order);
     }
 
     /**

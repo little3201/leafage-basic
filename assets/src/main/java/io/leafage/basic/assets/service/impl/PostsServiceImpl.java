@@ -18,6 +18,7 @@ import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -52,18 +53,22 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Flux<PostsVO> retrieve() {
-        return postsRepository.findAll().map(this::convertOuter);
+    public Flux<PostsVO> retrieve(String category) {
+        return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c -> {
+            Posts posts = new Posts();
+            posts.setCategoryId(c.getId());
+            return postsRepository.findAll(Example.of(posts));
+        }).map(this::convertOuter);
     }
 
     @Override
-    public Flux<PostsVO> retrieve(int page, int size, String order) {
+    public Flux<PostsVO> retrieve(int page, int size, String category, String order) {
         Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
-        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
-                .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
+        return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
+                postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, sort)).map(posts -> {
                             PostsVO vo = new PostsVO();
                             BeanUtils.copyProperties(posts, vo);
-                            vo.setCategory(category.getAlias());
+                            vo.setCategory(c.getAlias());
                             return vo;
                         }
                 ));

@@ -5,6 +5,7 @@ package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Portfolio;
 import io.leafage.basic.assets.dto.PortfolioDTO;
+import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PortfolioRepository;
 import io.leafage.basic.assets.service.PortfolioService;
 import io.leafage.basic.assets.vo.PortfolioVO;
@@ -27,14 +28,18 @@ import java.util.Objects;
 public class PortfolioServiceImpl extends AbstractBasicService implements PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
+    private final CategoryRepository categoryRepository;
 
-    public PortfolioServiceImpl(PortfolioRepository portfolioRepository) {
+    public PortfolioServiceImpl(PortfolioRepository portfolioRepository, CategoryRepository categoryRepository) {
         this.portfolioRepository = portfolioRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public Flux<PortfolioVO> retrieve(int page, int size) {
-        return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+    public Flux<PortfolioVO> retrieve(int page, int size, String category, String order) {
+        return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
+                portfolioRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size)))
+                .map(this::convertOuter);
     }
 
     @Override

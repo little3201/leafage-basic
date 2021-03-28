@@ -7,6 +7,7 @@ import io.leafage.basic.assets.dto.PortfolioDTO;
 import io.leafage.basic.assets.service.PortfolioService;
 import io.leafage.basic.assets.vo.PortfolioVO;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -35,8 +36,11 @@ public class PortfolioController {
      */
     @GetMapping
     public Flux<PortfolioVO> retrieve(@RequestParam int page, @RequestParam int size,
-                                      @RequestParam String category, String order) {
-        return portfolioService.retrieve(page, size, category, order);
+                                      String category, String order) {
+        if (StringUtils.hasText(category)) {
+            return portfolioService.retrieve(page, size, category, order);
+        }
+        return portfolioService.retrieve(page, size);
     }
 
     /**

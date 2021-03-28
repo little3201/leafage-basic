@@ -36,6 +36,12 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     }
 
     @Override
+    public Flux<PortfolioVO> retrieve(int page, int size) {
+        return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size))
+                .map(this::convertOuter);
+    }
+
+    @Override
     public Flux<PortfolioVO> retrieve(int page, int size, String category, String order) {
         return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
                 portfolioRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size)))

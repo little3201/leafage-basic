@@ -59,7 +59,14 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
         Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
-        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort)).map(this::convertOuter);
+        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
+                .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
+                            PostsVO vo = new PostsVO();
+                            BeanUtils.copyProperties(posts, vo);
+                            vo.setCategory(category.getAlias());
+                            return vo;
+                        }
+                ));
     }
 
     @Override
@@ -67,10 +74,10 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
         return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
                 postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, sort)).map(posts -> {
-                    PostsVO vo = new PostsVO();
-                    BeanUtils.copyProperties(posts, vo);
-                    vo.setCategory(c.getAlias());
-                    return vo;
+                            PostsVO vo = new PostsVO();
+                            BeanUtils.copyProperties(posts, vo);
+                            vo.setCategory(c.getAlias());
+                            return vo;
                         }
                 ));
     }

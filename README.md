@@ -13,7 +13,7 @@
 
 ### leafage-basic
 
-<a target="_blank" href="https://console.abeille.top"> 在线体验</a>， 目前仅开放assets模块的查询
+<a target="_blank" href="https://console.leafage.top"> 在线体验</a>， 目前仅开放assets模块的查询
 
 ### 介绍：
 

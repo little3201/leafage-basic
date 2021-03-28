@@ -41,7 +41,7 @@ public class PostsController {
         if (page == null || size == null) {
             return postsService.retrieve();
         } else if (StringUtils.hasText(category)) {
-            postsService.retrieve(page, size, category, order);
+            return postsService.retrieve(page, size, category, order);
         }
         return postsService.retrieve(page, size, order);
     }

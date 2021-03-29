@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,13 +40,13 @@ public class PostsController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity<Object> retrieve(int page, int size) {
-        Page<PostsVO> articles = postsService.retrieves(page, size);
-        if (CollectionUtils.isEmpty(articles.getContent())) {
-            logger.info("Not found anything about user with pageable.");
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+        Page<PostsVO> voPage = postsService.retrieve(page, size, order);
+        if (voPage.hasContent()) {
+            return ResponseEntity.ok(voPage);
         }
-        return ResponseEntity.ok(articles);
+        logger.info("Not found anything about posts with pageable.");
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 
     /**

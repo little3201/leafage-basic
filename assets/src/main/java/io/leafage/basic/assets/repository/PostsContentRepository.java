@@ -15,5 +15,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostsContentRepository extends JpaRepository<PostsContent, String> {
 
+    /**
+     * 根据postsId查询enabled信息
+     *
+     * @param postsId 帖子ID
+     * @return 查询结果
+     */
     PostsContent findByPostsIdAndEnabledTrue(Long postsId);
 }

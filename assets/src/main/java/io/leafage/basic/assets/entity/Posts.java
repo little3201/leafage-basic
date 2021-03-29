@@ -6,7 +6,6 @@ package io.leafage.basic.assets.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  * Model class for Posts
@@ -16,7 +15,6 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "posts")
 public class Posts extends BaseEntity {
-
 
     /**
      * 唯一标识
@@ -34,7 +32,7 @@ public class Posts extends BaseEntity {
     /**
      * 分类
      */
-    @NotNull
+    @Column(name = "category_id", nullable = false)
     private Long categoryId;
     /**
      * 封面

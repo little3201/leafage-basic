@@ -11,17 +11,22 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsContentRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 帖子信息service实现
@@ -42,8 +47,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Page<PostsVO> retrieves(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public List<PostsVO> retrieve() {
+        return postsRepository.findAll().stream().map(this::convertOuter).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<PostsVO> retrieve(int page, int size, String order) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modify_time"));
         return postsRepository.findAll(pageable).map(this::convertOuter);
     }
 
@@ -54,15 +64,28 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         if (posts == null) {
             return null;
         }
+        return this.convertOuter(posts);
+    }
+
+    @Override
+    public PostsContentVO fetchDetails(String code) {
+        //查询基本信息
+        Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
+        // viewed自增一，异步执行
         this.flushViewed(posts.getId());
-        posts.setViewed(posts.getViewed() + 1);
-        PostsVO postsVO = this.convertOuter(posts);
+        PostsContentVO postsContentVO = new PostsContentVO();
+        BeanUtils.copyProperties(posts, postsContentVO);
+        postsContentVO.setPostsId(posts.getId());
+        postsContentVO.setViewed(posts.getViewed() + 1);
+        // 转换分类
+        Optional<Category> optional = categoryRepository.findById(posts.getCategoryId());
+        optional.ifPresent(category -> postsContentVO.setCategory(category.getName()));
         // 获取内容详情
         PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent != null) {
-            postsVO.setContent(postsContent.getContent());
+            postsContentVO.setContent(postsContent.getContent());
         }
-        return postsVO;
+        return postsContentVO;
     }
 
     @Override
@@ -71,11 +94,11 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Posts posts = new Posts();
         BeanUtils.copyProperties(postsDTO, posts);
         posts.setCode(this.generateCode());
-        postsRepository.save(posts);
+        posts = postsRepository.save(posts);
         if (posts.getId() == null) {
             return null;
         }
-        //保存文章内容
+        //保存帖子内容
         PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent == null) {
             postsContent = new PostsContent();

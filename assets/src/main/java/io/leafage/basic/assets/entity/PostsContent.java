@@ -19,7 +19,7 @@ public class PostsContent extends BaseEntity {
     /**
      * 帖子ID
      */
-    @Column(name = "posts_id")
+    @Column(name = "posts_id", nullable = false)
     private Long postsId;
     /**
      * 目录

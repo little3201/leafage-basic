@@ -17,8 +17,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,8 +49,8 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Page<CategoryVO> retrieves(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<CategoryVO> retrieve(int page, int size, String order) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modify_time"));
         return categoryRepository.findAll(pageable).map(this::convertOuter);
     }
 

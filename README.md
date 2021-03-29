@@ -65,11 +65,7 @@ CMS服务相关接口，包括个人网站的资料维护，大体包含：
 - 用户 user
 - 角色 role
 - 权限 authority
-<<<<<<< HEAD
-- 组 group
-=======
 - 分组 group
->>>>>>> 15111785a944fbb47a394ea03303ab38301afc0e
 - 账户 account
 
 #### 目标功能：

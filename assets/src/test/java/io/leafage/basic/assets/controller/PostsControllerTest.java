@@ -8,8 +8,7 @@ import io.leafage.basic.assets.vo.PostsVO;
 import io.leafage.common.mock.AbstractControllerMock;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 /**
  * 文章管理接口测试类
@@ -19,18 +18,18 @@ import java.util.List;
 public class PostsControllerTest extends AbstractControllerMock<PostsController> {
 
     @Mock
-    private PostsServiceImpl articleInfoService;
+    private PostsServiceImpl postsService;
 
     @Override
     protected PostsController getController() {
-        return new PostsController(articleInfoService);
+        return new PostsController(postsService);
     }
 
     @Test
     public void findArticles() {
         int page = 0;
         int size = 10;
-        List<PostsVO> voList = articleInfoService.retrieve(page, size);
+        Page<PostsVO> voPage = postsService.retrieve(page, size, "");
     }
 
 }

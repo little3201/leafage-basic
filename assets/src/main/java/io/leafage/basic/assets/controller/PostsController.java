@@ -47,6 +47,17 @@ public class PostsController {
     }
 
     /**
+     * 查询信息
+     *
+     * @param keyword 关键字
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     */
+    @GetMapping("/search")
+    public Flux<PostsVO> search(@RequestParam String keyword) {
+        return postsService.search(keyword);
+    }
+
+    /**
      * 根据传入的代码查询信息
      *
      * @param code 代码

@@ -68,4 +68,12 @@ public interface PostsService extends BasicService<PostsDTO, PostsVO> {
      * @return 帖子信息
      */
     Mono<PostsVO> incrementLikes(String code);
+
+    /**
+     * 全文搜索
+     *
+     * @param keyword 关键字
+     * @return 匹配结果
+     */
+    Flux<PostsVO> search(String keyword);
 }

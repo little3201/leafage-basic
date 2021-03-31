@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -217,6 +218,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
                 new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
                 postsRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter));
+    }
+
+    @Override
+    public Flux<PostsVO> search(String keyword) {
+        TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matchingAny(keyword);
+        return postsRepository.findAllBy(textCriteria).map(this::convertOuter);
     }
 
     /**

@@ -16,7 +16,21 @@ import org.springframework.data.domain.Page;
  **/
 public interface UserService extends BasicService<UserDTO, UserVO> {
 
-    Page<UserVO> retrieves(int page, int size);
+    /**
+     * 分页查询
+     *
+     * @param page  页码
+     * @param size  大小
+     * @param order 排序字段
+     * @return 查询结果
+     */
+    Page<UserVO> retrieve(int page, int size, String order);
 
+    /**
+     * 查询details信息, for security
+     *
+     * @param username 账户
+     * @return 查询结果
+     */
     UserDetails fetchDetails(String username);
 }

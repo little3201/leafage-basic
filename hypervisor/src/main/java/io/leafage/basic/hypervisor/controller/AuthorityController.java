@@ -41,8 +41,8 @@ public class AuthorityController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public ResponseEntity<Object> retrieve(int page, int size) {
-        Page<AuthorityVO> sources = authorityService.retrieves(page, size);
+    public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+        Page<AuthorityVO> sources = authorityService.retrieve(page, size, order);
         if (CollectionUtils.isEmpty(sources.getContent())) {
             logger.info("Not found anything about source with pageable.");
             return ResponseEntity.noContent().build();

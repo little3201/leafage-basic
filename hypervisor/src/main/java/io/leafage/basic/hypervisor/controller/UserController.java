@@ -45,8 +45,8 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回204
      */
     @GetMapping
-    public ResponseEntity<Object> retrieve(int page, int size) {
-        Page<UserVO> users = userService.retrieves(page, size);
+    public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+        Page<UserVO> users = userService.retrieve(page, size, order);
         if (CollectionUtils.isEmpty(users.getContent())) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.noContent().build();

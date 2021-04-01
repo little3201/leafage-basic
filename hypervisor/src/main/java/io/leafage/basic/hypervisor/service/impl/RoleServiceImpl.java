@@ -10,12 +10,10 @@ import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 
@@ -34,8 +32,8 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Page<RoleVO> retrieves(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<RoleVO> retrieves(int page, int size, String order) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modify_time"));
         Page<Role> infoPage = roleRepository.findAll(pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
@@ -76,8 +74,4 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         return roleVO;
     }
 
-    @Override
-    public Role findById(long id) {
-        return roleRepository.findById(id).orElse(null);
-    }
 }

@@ -39,8 +39,8 @@ public class GroupController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public ResponseEntity<Object> retrieve(int page, int size) {
-        Page<GroupVO> groups = groupService.retrieves(page, size);
+    public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+        Page<GroupVO> groups = groupService.retrieves(page, size, order);
         if (CollectionUtils.isEmpty(groups.getContent())) {
             logger.info("Not found anything about group with pageable.");
             return ResponseEntity.noContent().build();

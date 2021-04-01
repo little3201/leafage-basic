@@ -11,13 +11,12 @@ import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,18 +34,9 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Page<AuthorityVO> retrieves(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Authority> infoPage = authorityRepository.findAll(pageable);
-        if (CollectionUtils.isEmpty(infoPage.getContent())) {
-            return new PageImpl<>(Collections.emptyList());
-        }
-        return infoPage.map(this::convertOuter);
-    }
-
-    @Override
-    public List<Authority> findByIdIn(List<Long> idList) {
-        return authorityRepository.findByIdIn(idList);
+    public Page<AuthorityVO> retrieve(int page, int size, String order) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modify_time"));
+        return authorityRepository.findAll(pageable).map(this::convertOuter);
     }
 
     @Override

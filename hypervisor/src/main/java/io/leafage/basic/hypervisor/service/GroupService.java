@@ -15,5 +15,13 @@ import org.springframework.data.domain.Page;
  **/
 public interface GroupService extends BasicService<GroupDTO, GroupVO> {
 
-    Page<GroupVO> retrieves(int page, int size);
+    /**
+     * 分页查询
+     *
+     * @param page  页码
+     * @param size  大小
+     * @param order 排序字段
+     * @return 查询结果
+     */
+    Page<GroupVO> retrieves(int page, int size, String order);
 }

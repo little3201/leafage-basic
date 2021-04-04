@@ -42,9 +42,9 @@ public class UserDTO implements Serializable {
     @Pattern(regexp = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}")
     private String email;
     /**
-     * 性别: 0-未知 1-女 2-男
+     * 性别: null-未知 F-女 M-男
      */
-    private int gender;
+    private Character gender;
     /**
      * 地址
      */
@@ -95,11 +95,11 @@ public class UserDTO implements Serializable {
         this.email = email;
     }
 
-    public int getGender() {
+    public Character getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(Character gender) {
         this.gender = gender;
     }
 

@@ -36,9 +36,9 @@ public class UserVO implements Serializable {
      */
     private String email;
     /**
-     * 性别: 0-男 1-女 2-保密
+     * 性别: null-未知 F-女 M-男
      */
-    private Integer gender;
+    private Character gender;
     /**
      * 出生日期
      */
@@ -81,7 +81,7 @@ public class UserVO implements Serializable {
     }
 
     public String getPhone() {
-        return phone;
+        return phone.replaceAll("(^\\d{3})\\d.*(\\d{4})", "$1****$2");
     }
 
     public void setPhone(String phone) {
@@ -89,18 +89,18 @@ public class UserVO implements Serializable {
     }
 
     public String getEmail() {
-        return email;
+        return email.replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2");
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public Integer getGender() {
+    public Character getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
+    public void setGender(Character gender) {
         this.gender = gender;
     }
 

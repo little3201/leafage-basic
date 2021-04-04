@@ -11,8 +11,8 @@ import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.common.basic.AbstractBasicService;
 import org.apache.http.util.Asserts;
-import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -38,6 +38,13 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
+    public Flux<AuthorityVO> retrieve(String type) {
+        Authority authority = new Authority();
+        authority.setType(type);
+        return authorityRepository.findAll(Example.of(authority)).map(this::convertOuter);
+    }
+
+    @Override
     public Flux<AuthorityVO> retrieve(int page, int size) {
         return authorityRepository.findByEnabledTrue(PageRequest.of(page, size))
                 .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
@@ -56,10 +63,6 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
                             return Mono.just(authorityVO);
                         })
                 );
-    }
-
-    public void tree(ObjectId superior, String type) {
-        authorityRepository.findBySuperiorAndTypeAndEnabledTrue(superior, type);
     }
 
     @Override
@@ -132,4 +135,5 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         BeanUtils.copyProperties(info, outer);
         return outer;
     }
+
 }

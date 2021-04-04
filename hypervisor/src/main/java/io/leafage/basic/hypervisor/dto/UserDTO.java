@@ -23,7 +23,7 @@ public class UserDTO implements Serializable {
      * 昵称
      */
     @NotBlank
-    @Size(min = 8, max = 16)
+    @Size(max = 16)
     private String nickname;
     /**
      * 头像

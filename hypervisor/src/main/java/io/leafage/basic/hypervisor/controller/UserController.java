@@ -90,7 +90,7 @@ public class UserController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<UserVO> createUser(@RequestBody @Valid UserDTO userDTO) {
+    public Mono<UserVO> create(@RequestBody @Valid UserDTO userDTO) {
         return userService.create(userDTO);
     }
 

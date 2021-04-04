@@ -19,6 +19,10 @@ public class CategoryVO extends BaseVO {
      * 贴子数
      */
     private long count;
+    /**
+     * 描述
+     */
+    private String description;
 
     public String getAlias() {
         return alias;
@@ -34,5 +38,13 @@ public class CategoryVO extends BaseVO {
 
     public void setCount(long count) {
         this.count = count;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

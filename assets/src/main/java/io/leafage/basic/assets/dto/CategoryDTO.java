@@ -22,6 +22,10 @@ public class CategoryDTO implements Serializable {
     @NotBlank
     @Size(max = 16)
     private String alias;
+    /**
+     * 描述
+     */
+    private String description;
 
     public String getAlias() {
         return alias;
@@ -31,4 +35,11 @@ public class CategoryDTO implements Serializable {
         this.alias = alias;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

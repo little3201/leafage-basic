@@ -16,7 +16,6 @@ import org.apache.http.util.Asserts;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -77,9 +76,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
-        // 默认设置用户名为邮箱地址，密码为110119
-        user.setUsername(user.getEmail().substring(0, user.getEmail().indexOf("@")));
-        user.setPassword(new BCryptPasswordEncoder().encode("110119"));
         Mono<User> userMono = userRepository.insert(user)
                 .switchIfEmpty(Mono.error(RuntimeException::new))
                 // 处理roles

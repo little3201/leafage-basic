@@ -23,6 +23,10 @@ public class Category extends BaseDocument {
      * 别名
      */
     private String alias;
+    /**
+     * 描述
+     */
+    private String description;
 
 
     public String getCode() {
@@ -41,4 +45,11 @@ public class Category extends BaseDocument {
         this.alias = alias;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

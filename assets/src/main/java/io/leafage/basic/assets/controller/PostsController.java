@@ -9,6 +9,7 @@ import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -36,11 +37,24 @@ public class PostsController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PostsVO> retrieve(Integer page, Integer size, String order) {
+    public Flux<PostsVO> retrieve(Integer page, Integer size, String category, String order) {
         if (page == null || size == null) {
             return postsService.retrieve();
+        } else if (StringUtils.hasText(category)) {
+            return postsService.retrieve(page, size, category, order);
         }
         return postsService.retrieve(page, size, order);
+    }
+
+    /**
+     * 查询信息
+     *
+     * @param keyword 关键字
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     */
+    @GetMapping("/search")
+    public Flux<PostsVO> search(@RequestParam String keyword) {
+        return postsService.search(keyword);
     }
 
     /**

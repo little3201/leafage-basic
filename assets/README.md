@@ -13,16 +13,17 @@ CMS服务相关接口，包括个人网站的资料维护，大体包含：
 
 #### 目标功能：
 
-- [x] 博客
-- [x] 作品集
+- [x] 帖子
+- [ ] 作品
 - [x] 类目
 - [x] 浏览量统计
-- [ ] 点赞
-- [ ] 权限
-- [ ] 留言
+- [x] 喜欢
 - [ ] 评论
+- [ ] 统计分析
+- [ ] 资源下载
+- [ ] 书籍
 
-<a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.abeille.top"> 在线体验</a>
+<a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.leafage.top"> 在线体验</a>
 
 #### 核心依赖
 

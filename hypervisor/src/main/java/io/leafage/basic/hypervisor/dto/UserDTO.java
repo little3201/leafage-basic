@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -20,10 +21,19 @@ public class UserDTO implements Serializable {
     private static final long serialVersionUID = -2259398095472923567L;
 
     /**
-     * 昵称
+     * 账号
      */
     @NotBlank
-    @Size(min = 8, max = 16)
+    @Size(min = 4, max = 16)
+    private String username;
+    /**
+     * 密码
+     */
+    private String password;
+    /**
+     * 昵称
+     */
+    @Size(max = 16)
     private String nickname;
     /**
      * 头像
@@ -32,19 +42,18 @@ public class UserDTO implements Serializable {
     /**
      * 电话
      */
-    @NotBlank
     @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}")
     private String phone;
     /**
      * 邮箱
      */
     @NotBlank
-    @Pattern(regexp = "\\w[-\\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\\.)+[A-Za-z]{2,14}")
+    @Email
     private String email;
     /**
-     * 性别: 0-未知 1-女 2-男
+     * 性别: null-未知 F-女 M-男
      */
-    private int gender;
+    private Character gender;
     /**
      * 地址
      */
@@ -62,6 +71,22 @@ public class UserDTO implements Serializable {
      */
     private String modifier;
 
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getNickname() {
         return nickname;
@@ -95,11 +120,11 @@ public class UserDTO implements Serializable {
         this.email = email;
     }
 
-    public int getGender() {
+    public Character getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(Character gender) {
         this.gender = gender;
     }
 

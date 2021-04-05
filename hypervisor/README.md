@@ -10,18 +10,19 @@
 - 用户 user
 - 角色 role
 - 权限 authority
-- 组 group
+- 分组 group
 - 账户 account
 
 #### 目标功能：
 
 - [x] 用户
-- [x] 角色
+- [ ] 角色
 - [x] 权限
-- [x] 组
+- [ ] 分组
 - [ ] 账户
+- [ ] 统计分析
 
-<a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.abeille.top"> 在线体验</a>
+<a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.leafage.top"> 在线体验</a>
 
 #### 核心依赖
 

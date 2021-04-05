@@ -7,6 +7,7 @@ import io.leafage.basic.assets.dto.PortfolioDTO;
 import io.leafage.basic.assets.service.PortfolioService;
 import io.leafage.basic.assets.vo.PortfolioVO;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -34,7 +35,11 @@ public class PortfolioController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public Flux<PortfolioVO> retrieve(@RequestParam int page, @RequestParam int size) {
+    public Flux<PortfolioVO> retrieve(@RequestParam int page, @RequestParam int size,
+                                      String category, String order) {
+        if (StringUtils.hasText(category)) {
+            return portfolioService.retrieve(page, size, category, order);
+        }
         return portfolioService.retrieve(page, size);
     }
 

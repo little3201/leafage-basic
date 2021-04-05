@@ -3,8 +3,10 @@
  */
 package io.leafage.basic.assets.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Set;
 
@@ -21,6 +23,11 @@ public class Portfolio extends BaseDocument {
      */
     @Indexed(unique = true)
     private String code;
+    /**
+     * 分类ID
+     */
+    @Field(name = "category_id")
+    private ObjectId categoryId;
     /**
      * 标题
      */
@@ -53,6 +60,14 @@ public class Portfolio extends BaseDocument {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public ObjectId getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(ObjectId categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getTitle() {

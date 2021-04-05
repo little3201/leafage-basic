@@ -28,6 +28,14 @@ public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, 
     Flux<Portfolio> findByEnabledTrue(Pageable pageable);
 
     /**
+     * 按照分类，分页查询作品集
+     *
+     * @param pageable 分页参数
+     * @return 有效作品集
+     */
+    Flux<Portfolio> findByCategoryIdAndEnabledTrue(ObjectId categoryId, Pageable pageable);
+
+    /**
      * 根据code查询enabled信息
      *
      * @param code 代码

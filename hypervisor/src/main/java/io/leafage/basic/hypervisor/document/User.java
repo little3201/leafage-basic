@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.document;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -44,9 +43,9 @@ public class User extends BaseDocument {
      */
     private String email;
     /**
-     * 性别
+     * 性别: null-未知 F-女 M-男
      */
-    private String gender;
+    private Character gender;
     /**
      * 出生日期
      */
@@ -67,7 +66,7 @@ public class User extends BaseDocument {
     @Field(name = "is_credentials_non_expired")
     private boolean credentialsNonExpired = true;
 
-    public String getGender() {
+    public Character getGender() {
         return gender;
     }
 
@@ -119,24 +118,8 @@ public class User extends BaseDocument {
         this.email = email;
     }
 
-    public void setGender(String gender) {
-        this.gender = Gender.valueOf(gender.toUpperCase()).name();
-    }
-
-    enum Gender {
-        /**
-         * 男
-         */
-        FEMALE,
-        /**
-         * 女
-         */
-        MALE,
-        /**
-         * 未知
-         */
-        @JsonEnumDefaultValue
-        UNKNOWN
+    public void setGender(Character gender) {
+        this.gender = gender;
     }
 
     public LocalDate getBirthday() {

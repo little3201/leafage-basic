@@ -5,6 +5,7 @@ package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Portfolio;
 import io.leafage.basic.assets.dto.PortfolioDTO;
+import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PortfolioRepository;
 import io.leafage.basic.assets.service.PortfolioService;
 import io.leafage.basic.assets.vo.PortfolioVO;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Objects;
+import javax.naming.NotContextException;
 
 /**
  * 作品集信息service实现
@@ -27,14 +28,24 @@ import java.util.Objects;
 public class PortfolioServiceImpl extends AbstractBasicService implements PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
+    private final CategoryRepository categoryRepository;
 
-    public PortfolioServiceImpl(PortfolioRepository portfolioRepository) {
+    public PortfolioServiceImpl(PortfolioRepository portfolioRepository, CategoryRepository categoryRepository) {
         this.portfolioRepository = portfolioRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public Flux<PortfolioVO> retrieve(int page, int size) {
-        return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+        return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size))
+                .map(this::convertOuter);
+    }
+
+    @Override
+    public Flux<PortfolioVO> retrieve(int page, int size, String category, String order) {
+        return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
+                portfolioRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size))
+                        .map(this::convertOuter));
     }
 
     @Override
@@ -44,19 +55,27 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
 
     @Override
     public Mono<PortfolioVO> create(PortfolioDTO portfolioDTO) {
-        Portfolio info = new Portfolio();
-        BeanUtils.copyProperties(portfolioDTO, info);
-        info.setCode(this.generateCode());
-        return portfolioRepository.insert(info).filter(Objects::nonNull).map(this::convertOuter);
+        return categoryRepository.getByCodeAndEnabledTrue(portfolioDTO.getCategory()).map(category -> {
+            Portfolio info = new Portfolio();
+            BeanUtils.copyProperties(portfolioDTO, info);
+            info.setCode(this.generateCode());
+            info.setCategoryId(category.getId());
+            return info;
+        }).flatMap(portfolio -> portfolioRepository.insert(portfolio).map(this::convertOuter));
     }
 
     @Override
     public Mono<PortfolioVO> modify(String code, PortfolioDTO portfolioDTO) {
         Asserts.notBlank(code, "code");
-        return portfolioRepository.getByCodeAndEnabledTrue(code).flatMap(portfolio -> {
-            BeanUtils.copyProperties(portfolioDTO, portfolio);
-            return portfolioRepository.save(portfolio).filter(Objects::nonNull).map(this::convertOuter);
-        });
+        return portfolioRepository.getByCodeAndEnabledTrue(code)
+                .switchIfEmpty(Mono.error(NotContextException::new))
+                .flatMap(portfolio -> {
+                    BeanUtils.copyProperties(portfolioDTO, portfolio);
+                    return categoryRepository.getByCodeAndEnabledTrue(portfolioDTO.getCategory()).map(category -> {
+                        portfolio.setCategoryId(category.getId());
+                        return portfolio;
+                    }).flatMap(portfolioRepository::save).map(this::convertOuter);
+                });
     }
 
     @Override

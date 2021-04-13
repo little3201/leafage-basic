@@ -17,7 +17,13 @@
             <email>little3201@gmail.com</email>
         </developer>
     </developers>
-
+         
+    <properties>
+        <sonar.projectKey>little3201_leafage-basic</sonar.projectKey>
+        <sonar.organization>little3201</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
+         
     <modules>
         <module>hypervisor</module>
         <module>assets</module>

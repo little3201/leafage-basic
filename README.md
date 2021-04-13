@@ -3,6 +3,7 @@
 <p align="center">
  <img src="https://img.shields.io/badge/Spring%20Cloud-2020.0.2-green.svg" alt="Coverage Status">
  <img src="https://img.shields.io/badge/Spring%20Boot-2.4.4-green.svg" alt="Downloads">
+ <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=alert_status" alt="Quality Gate Status">
 </p>
 
 ### 本模块依赖

@@ -6,7 +6,7 @@ package io.leafage.basic.assets.service;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.vo.CategoryVO;
 import io.leafage.basic.assets.vo.CountVO;
-import io.leafage.common.basic.BasicService;
+import io.leafage.common.servlet.BasicService;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

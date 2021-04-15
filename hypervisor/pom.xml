@@ -5,13 +5,13 @@
     <parent>
         <groupId>io.leafage</groupId>
         <artifactId>leafage-starter-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.1.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>io.leafage.basic</groupId>
     <artifactId>hypervisor</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
 
     <name>hypervisor</name>
     <description>hypervisor of leafage basic</description>
@@ -20,6 +20,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
         </dependency>
         <!-- jpa -->
         <dependency>
@@ -34,7 +38,7 @@
         <dependency>
             <groupId>io.leafage</groupId>
             <artifactId>leafage-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.1.0</version>
         </dependency>
         <!-- Spring Cloud Consul -->
         <dependency>

@@ -76,7 +76,7 @@ public class UserController {
      * @param username 账户
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/details/{username}")
+    @GetMapping("/{username}/details")
     public ResponseEntity<Object> fetchDetails(@PathVariable String username) {
         UserDetails userDetails = userService.fetchDetails(username);
         if (Objects.isNull(userDetails)) {

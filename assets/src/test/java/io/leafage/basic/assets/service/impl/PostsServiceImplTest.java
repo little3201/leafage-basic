@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * 文章接口测试
+ * 帖子接口测试
  *
  * @author liwenqiang 2019-08-20 22:38
  **/

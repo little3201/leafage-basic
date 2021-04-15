@@ -3,33 +3,38 @@
  */
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.service.impl.PostsServiceImpl;
-import io.leafage.basic.assets.vo.PostsVO;
-import io.leafage.common.mock.AbstractControllerMock;
+import io.leafage.basic.assets.service.PostsService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.data.domain.Page;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
- * 文章管理接口测试类
+ * 帖子接口测试类
  *
  * @author liwenqiang 2019/9/14 21:46
  **/
-public class PostsControllerTest extends AbstractControllerMock<PostsController> {
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(PostsController.class)
+public class PostsControllerTest {
 
-    @Mock
-    private PostsServiceImpl postsService;
+    @MockBean
+    private PostsService postsService;
 
-    @Override
-    protected PostsController getController() {
-        return new PostsController(postsService);
-    }
+    @Autowired
+    private MockMvc mvc;
 
     @Test
-    public void findArticles() {
-        int page = 0;
-        int size = 10;
-        Page<PostsVO> voPage = postsService.retrieve(page, size, "");
+    public void retrieve() throws Exception {
+        given(this.postsService.retrieve()).willReturn(Mockito.anyList());
+        mvc.perform(get(""));
     }
 
 }

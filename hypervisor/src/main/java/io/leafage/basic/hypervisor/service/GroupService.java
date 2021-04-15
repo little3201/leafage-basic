@@ -5,7 +5,7 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import io.leafage.common.basic.BasicService;
+import io.leafage.common.servlet.BasicService;
 import org.springframework.data.domain.Page;
 
 /**

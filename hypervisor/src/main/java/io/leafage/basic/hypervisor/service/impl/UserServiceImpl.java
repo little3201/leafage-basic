@@ -18,7 +18,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.sockjs.client.RestTemplateXhrTransport;
+import org.springframework.web.socket.sockjs.client.SockJsClient;
+import org.springframework.web.socket.sockjs.client.Transport;
+import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -97,6 +103,11 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public UserVO fetch(String username) {
+        List<Transport> transports = new ArrayList<>(2);
+        transports.add(new WebSocketTransport(new StandardWebSocketClient()));
+        transports.add(new RestTemplateXhrTransport());
+        SockJsClient client = new SockJsClient(transports);
+
         User user = userRepository.findByUsernameAndEnabledTrue(username);
         return this.convertOuter(user);
     }
@@ -104,6 +115,9 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     @Override
     public UserDetails fetchDetails(String username) {
         User user = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username);
+        if (user == null) {
+            return null;
+        }
         List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
         // 检查角色是否配置
         List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());

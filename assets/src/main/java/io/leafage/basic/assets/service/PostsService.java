@@ -6,7 +6,7 @@ package io.leafage.basic.assets.service;
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
-import io.leafage.common.basic.BasicService;
+import io.leafage.common.servlet.BasicService;
 import org.springframework.data.domain.Page;
 
 /**

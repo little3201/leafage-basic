@@ -6,7 +6,7 @@ package io.leafage.basic.hypervisor.service;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.vo.UserVO;
-import io.leafage.common.basic.BasicService;
+import io.leafage.common.servlet.BasicService;
 import org.springframework.data.domain.Page;
 
 /**

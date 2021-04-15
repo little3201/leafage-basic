@@ -5,11 +5,12 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.PostsContent;
+import io.leafage.basic.assets.repository.PostsContentRepository;
 import io.leafage.basic.assets.service.AbstractMockTest;
-import io.leafage.basic.assets.service.PostsContentService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.springframework.util.Assert;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import reactor.core.publisher.Mono;
 
 /**
@@ -19,14 +20,17 @@ import reactor.core.publisher.Mono;
  */
 class PostsContentServiceImplTest extends AbstractMockTest {
 
+    @Mock
+    private PostsContentRepository postsContentRepository;
+
     @InjectMocks
-    private PostsContentService postsContentService;
+    private PostsContentServiceImpl postsContentService;
 
     @Test
     public void create() {
-        PostsContent info = new PostsContent();
-        info.setContent("Spring boot");
-        Mono<PostsContent> mono = postsContentService.create(info);
-        Assert.notNull(mono.block(), "The class must not be null");
+        Mockito.when(postsContentRepository.save(Mockito.mock(PostsContent.class)))
+                .thenReturn(Mono.just(Mockito.mock(PostsContent.class)));
+        postsContentService.create(Mockito.mock(PostsContent.class));
+        Mockito.verify(postsContentRepository, Mockito.atLeastOnce()).save(Mockito.any());
     }
 }

@@ -35,21 +35,22 @@ class PostsServiceImplTest extends AbstractMockTest {
     }
 
     @Test
-    public void createError() {
+    public void create_error() {
         Mockito.when(postsRepository.save(Mockito.mock(Posts.class))).thenThrow(new RuntimeException());
         postsService.create(Mockito.mock(PostsDTO.class));
         Mockito.verify(postsRepository, Mockito.never()).save(Mockito.any());
     }
 
     @Test
-    public void fetchDetailsByCode() {
-        Mockito.when(postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mockito.any());
+    public void fetchDetails() {
+        Mockito.when(postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
+                .thenReturn(Mono.just(Mockito.mock(Posts.class)));
         Mono<? extends PostsVO> outerMono = postsService.fetchDetails(Mockito.anyString());
         Assertions.assertNotNull(outerMono);
     }
 
     @Test
-    public void fetchDetailsByCodeEmpty() {
+    public void fetchDetails_empty() {
         Mockito.when(postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mono.empty());
         Mono<? extends PostsVO> outerMono = postsService.fetchDetails(String.valueOf(new Random().nextFloat()));
         Assertions.assertNull(outerMono);

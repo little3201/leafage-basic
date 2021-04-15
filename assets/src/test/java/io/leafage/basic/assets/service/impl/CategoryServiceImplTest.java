@@ -1,8 +1,8 @@
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.service.AbstractMockTest;
-import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,12 +22,13 @@ class CategoryServiceImplTest extends AbstractMockTest {
     private CategoryRepository categoryRepository;
 
     @InjectMocks
-    private CategoryService categoryService;
+    private CategoryServiceImpl categoryService;
 
     @Test
     public void fetch() {
-        Mockito.when(categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mockito.any());
-        Mono<CategoryVO> categoryVOMono = categoryService.fetch(Mockito.anyString());
+        Mockito.when(categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
+                .thenReturn(Mono.just(Mockito.mock(Category.class)));
+        Mono<CategoryVO> categoryVOMono = categoryService.fetch("21318H9FH");
         Assertions.assertNotNull(categoryVOMono);
     }
 }

@@ -11,8 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import java.math.BigDecimal;
+import reactor.core.publisher.Mono;
 
 /**
  * 账户service测试
@@ -28,10 +27,10 @@ class AccountMockImplTest extends AbstractMockTest {
     private AccountServiceImpl accountInfoService;
 
     @Test
-    void getById() {
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setBalance(new BigDecimal("12.0"));
-        accountInfoService.create(accountDTO);
+    void create() {
+        Mockito.when(accountRepository.save(Mockito.any(Account.class)))
+                .thenReturn(Mono.just(Mockito.mock(Account.class)));
+        accountInfoService.create(Mockito.mock(AccountDTO.class));
         Mockito.verify(accountRepository, Mockito.atLeastOnce()).save(Mockito.any(Account.class));
     }
 }

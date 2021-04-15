@@ -3,29 +3,24 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.service.impl.UserServiceImpl;
-import io.leafage.common.mock.AbstractControllerMock;
+import io.leafage.basic.hypervisor.service.UserService;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * 用户测试
  *
  * @author liwenqiang 2019/1/29 17:09
  **/
-public class UserControllerTest extends AbstractControllerMock<UserController> {
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(UserController.class)
+public class UserControllerTest {
 
-    @Mock
-    private UserServiceImpl userInfoService;
-
-    @InjectMocks
-    private UserController userController;
-
-    @Override
-    protected UserController getController() {
-        return userController;
-    }
+    @MockBean
+    private UserService userInfoService;
 
     @Test
     public void findUsers() {

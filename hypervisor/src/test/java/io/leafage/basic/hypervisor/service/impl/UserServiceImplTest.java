@@ -5,7 +5,6 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.common.mock.AbstractServiceMock;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,7 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
-public class UserServiceImplTest extends AbstractServiceMock {
+public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;

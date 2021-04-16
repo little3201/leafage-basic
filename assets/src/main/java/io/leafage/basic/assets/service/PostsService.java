@@ -7,7 +7,7 @@ import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
-import io.leafage.common.basic.BasicService;
+import io.leafage.common.reactive.ReactiveBasicService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface PostsService extends BasicService<PostsDTO, PostsVO> {
+public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
 
     /**
      * 按照分页和分类进行查询并排序

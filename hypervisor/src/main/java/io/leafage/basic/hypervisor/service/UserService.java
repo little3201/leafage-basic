@@ -6,7 +6,7 @@ package io.leafage.basic.hypervisor.service;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.vo.UserVO;
-import io.leafage.common.basic.BasicService;
+import io.leafage.common.reactive.ReactiveBasicService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
  *
  * @author liwenqiang 2018/7/28 0:29
  **/
-public interface UserService extends BasicService<UserDTO, UserVO> {
+public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
 
     /**
      * 查用户details

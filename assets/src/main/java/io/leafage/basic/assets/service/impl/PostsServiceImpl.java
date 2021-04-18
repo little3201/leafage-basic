@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 package io.leafage.basic.assets.service.impl;
 
@@ -15,7 +15,6 @@ import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import io.leafage.common.basic.AbstractBasicService;
-import org.apache.http.util.Asserts;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -85,7 +85,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsContentVO> fetchDetails(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .map(posts -> {
                     // 更新viewed
@@ -111,7 +111,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsVO> fetch(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
                             PostsVO pcv = new PostsVO();
@@ -125,7 +125,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<ContentVO> fetchContent(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsContentService.fetchByPostsId(posts.getId()).map(postsContent -> {
                     ContentVO contentVO = new ContentVO();
@@ -164,7 +164,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsVO> modify(String code, PostsDTO postsDTO) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         Mono<Posts> postsMono = postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory()).map(category -> {
@@ -188,7 +188,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<Void> remove(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(posts.getId())),
                         Update.update("enabled", false), Posts.class).then()
@@ -197,7 +197,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsVO> nextPosts(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdGreaterThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.ASC, "id")).next()
@@ -206,7 +206,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsVO> previousPosts(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdLessThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.DESC, "id")).next()

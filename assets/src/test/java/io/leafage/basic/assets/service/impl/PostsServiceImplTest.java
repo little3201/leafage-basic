@@ -1,16 +1,20 @@
+/*
+ * Copyright (c) 2021. Leafage All Right Reserved.
+ */
 package io.leafage.basic.assets.service.impl;
 
 
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.repository.PostsRepository;
-import io.leafage.basic.assets.service.AbstractMockTest;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
 import java.util.Random;
@@ -20,7 +24,8 @@ import java.util.Random;
  *
  * @author liwenqiang 2019/9/19 9:27
  */
-class PostsServiceImplTest extends AbstractMockTest {
+@ExtendWith(MockitoExtension.class)
+class PostsServiceImplTest {
 
     @Mock
     private PostsRepository postsRepository;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 package io.leafage.basic.hypervisor.service.impl;
 
@@ -11,10 +11,10 @@ import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.common.basic.AbstractBasicService;
-import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -66,7 +66,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> fetch(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return groupRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())
                         .flatMap(count -> {
@@ -111,7 +111,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return groupRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(groupDTO, info);
             // 判断是否设置上级
@@ -126,7 +126,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<Void> remove(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return groupRepository.getByCodeAndEnabledTrue(code).flatMap(group ->
                 groupRepository.deleteById(group.getId()));
     }

@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021. Leafage All Right Reserved.
+ */
 package io.leafage.basic.assets.controller;
 
 import org.junit.jupiter.api.Test;

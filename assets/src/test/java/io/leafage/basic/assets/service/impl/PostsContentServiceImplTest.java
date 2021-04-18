@@ -1,16 +1,16 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.repository.PostsContentRepository;
-import io.leafage.basic.assets.service.AbstractMockTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
 /**
@@ -18,7 +18,8 @@ import reactor.core.publisher.Mono;
  *
  * @author liwenqiang 2020/3/1 22:07
  */
-class PostsContentServiceImplTest extends AbstractMockTest {
+@ExtendWith(MockitoExtension.class)
+class PostsContentServiceImplTest {
 
     @Mock
     private PostsContentRepository postsContentRepository;

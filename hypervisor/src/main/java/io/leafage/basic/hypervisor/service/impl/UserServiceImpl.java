@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. Abeille All Right Reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 package io.leafage.basic.hypervisor.service.impl;
 
@@ -12,11 +12,11 @@ import io.leafage.basic.hypervisor.repository.*;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import io.leafage.common.basic.AbstractBasicService;
-import org.apache.http.util.Asserts;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -89,7 +89,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<UserVO> modify(String username, UserDTO userDTO) {
-        Asserts.notBlank(username, "username");
+        Assert.hasText(username, "username is blank");
         Mono<User> userMono = userRepository.getByUsername(username)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(user -> {
@@ -108,19 +108,19 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<Void> remove(String username) {
-        Asserts.notBlank(username, "username");
+        Assert.hasText(username, "username is blank");
         return userRepository.getByUsername(username).flatMap(user -> userRepository.deleteById(user.getId()));
     }
 
     @Override
     public Mono<UserVO> fetch(String username) {
-        Asserts.notBlank(username, "username");
+        Assert.hasText(username, "username is blank");
         return userRepository.getByUsername(username).map(this::convertOuter);
     }
 
     @Override
     public Mono<UserDetails> fetchDetails(String username) {
-        Asserts.notBlank(username, "username");
+        Assert.hasText(username, "username is blank");
         Mono<User> infoMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("User Not Found")));
         Mono<ArrayList<ObjectId>> roleIdListMono = infoMono.flatMap(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId())

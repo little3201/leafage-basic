@@ -1,14 +1,18 @@
+/*
+ * Copyright (c) 2021. Leafage All Right Reserved.
+ */
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.service.AbstractMockTest;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 
 /**
@@ -16,7 +20,8 @@ import reactor.core.publisher.Mono;
  *
  * @author liwenqiang 2020/3/1 22:07
  */
-class CategoryServiceImplTest extends AbstractMockTest {
+@ExtendWith(MockitoExtension.class)
+class CategoryServiceImplTest {
 
     @Mock
     private CategoryRepository categoryRepository;

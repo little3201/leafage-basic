@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021. Leafage All Right Reserved.
+ */
 package io.leafage.basic.hypervisor.document;
 
 import org.springframework.data.mongodb.core.mapping.Document;

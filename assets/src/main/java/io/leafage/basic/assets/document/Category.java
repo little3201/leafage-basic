@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 package io.leafage.basic.assets.document;
 

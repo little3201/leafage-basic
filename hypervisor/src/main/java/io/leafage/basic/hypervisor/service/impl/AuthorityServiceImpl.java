@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 package io.leafage.basic.hypervisor.service.impl;
 
@@ -10,11 +10,11 @@ import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.common.basic.AbstractBasicService;
-import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -67,7 +67,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public Mono<AuthorityVO> fetch(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return authorityRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(authority -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
                         .flatMap(count -> {
@@ -111,7 +111,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public Mono<AuthorityVO> modify(String code, AuthorityDTO authorityDTO) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return authorityRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
             BeanUtils.copyProperties(authorityDTO, info);
             // 判断是否设置上级

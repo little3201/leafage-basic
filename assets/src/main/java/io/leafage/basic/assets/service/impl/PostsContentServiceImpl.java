@@ -1,5 +1,5 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 
 package io.leafage.basic.assets.service.impl;
@@ -7,10 +7,10 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.repository.PostsContentRepository;
 import io.leafage.basic.assets.service.PostsContentService;
-import org.apache.http.util.Asserts;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 /**
@@ -34,7 +34,7 @@ public class PostsContentServiceImpl implements PostsContentService {
 
     @Override
     public Mono<PostsContent> modify(ObjectId postsId, PostsContent postsContentInfo) {
-        Asserts.notBlank(postsId.toHexString(), "postsId");
+        Assert.notNull(postsId, "postsId is null");
         return this.fetchByPostsId(postsId).flatMap(details -> {
             BeanUtils.copyProperties(postsContentInfo, details);
             return postsContentRepository.save(details);
@@ -43,6 +43,7 @@ public class PostsContentServiceImpl implements PostsContentService {
 
     @Override
     public Mono<PostsContent> fetchByPostsId(ObjectId postsId) {
+        Assert.notNull(postsId, "postsId is null");
         return postsContentRepository.getByPostsIdAndEnabledTrue(postsId);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 package io.leafage.basic.assets.service.impl;
 
@@ -10,10 +10,10 @@ import io.leafage.basic.assets.repository.PortfolioRepository;
 import io.leafage.basic.assets.service.PortfolioService;
 import io.leafage.basic.assets.vo.PortfolioVO;
 import io.leafage.common.basic.AbstractBasicService;
-import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -66,7 +66,7 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
 
     @Override
     public Mono<PortfolioVO> modify(String code, PortfolioDTO portfolioDTO) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return portfolioRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(portfolio -> {
@@ -80,13 +80,13 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
 
     @Override
     public Mono<Void> remove(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return portfolioRepository.getByCodeAndEnabledTrue(code).flatMap(article -> portfolioRepository.deleteById(article.getId()));
     }
 
     @Override
     public Mono<PortfolioVO> fetch(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return portfolioRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 

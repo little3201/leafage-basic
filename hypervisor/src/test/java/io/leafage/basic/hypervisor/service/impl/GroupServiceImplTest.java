@@ -1,6 +1,8 @@
+/*
+ * Copyright (c) 2021. Leafage All Right Reserved.
+ */
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.service.AbstractMockTest;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -8,7 +10,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
-class GroupMockImplTest extends AbstractMockTest {
+class GroupServiceImplTest {
 
     @Test
     void retrieveAll() {

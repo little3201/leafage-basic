@@ -1,11 +1,9 @@
 /*
- * Copyright © 2010-2019 Abeille All rights reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.document.Posts;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,12 +11,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.BodyInserters;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeastOnce;
 
 /**
@@ -27,30 +24,42 @@ import static org.mockito.Mockito.atLeastOnce;
  * @author liwenqiang 2020/3/1 22:07
  */
 @ExtendWith(SpringExtension.class)
-@WebFluxTest
-@Import(PostsService.class)
-public class PostsControllerTest {
+@WebFluxTest(PostsController.class)
+class PostsControllerTest {
 
     @MockBean
-    private PostsRepository postsRepository;
+    private PostsService postsService;
 
     @Autowired
     private WebTestClient webClient;
 
     @Test
     public void retrieve() {
-        Mockito.when(postsRepository.save(Mockito.mock(Posts.class))).thenReturn(Mockito.any());
-        webClient.post().uri("/article").contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(Mockito.mock(Posts.class))).exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("content").isNotEmpty();
-        Mockito.verify(postsRepository, atLeastOnce()).save(Mockito.mock(Posts.class));
+        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+                .willReturn(Mockito.any());
+        webClient.get().uri("/posts").exchange().expectStatus().isOk();
+        Mockito.verify(postsService, atLeastOnce()).create(Mockito.mock(PostsDTO.class));
     }
 
     @Test
     public void fetch() {
-        webClient.get().uri("/article/{businessId}", "AT7124EVA").exchange()
+        given(this.postsService.fetch(Mockito.anyString())).willReturn(Mockito.any());
+        webClient.get().uri("/posts/{code}", Mockito.anyString()).exchange()
                 .expectStatus().isOk()
-                .expectBody().jsonPath("content").isNotEmpty();
+                .expectBody().jsonPath("$:title").isNotEmpty();
+    }
+
+    @Test
+    public void create() {
+        webClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(Mockito.mock(PostsDTO.class)).exchange().expectStatus().isOk();
+        Mockito.verify(postsService, atLeastOnce()).create(Mockito.mock(PostsDTO.class));
+    }
+
+    @Test
+    public void modify() {
+        webClient.put().uri("/posts/{code}", Mockito.anyString()).contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(Mockito.mock(PostsDTO.class)).exchange().expectStatus().isOk();
+        Mockito.verify(postsService, atLeastOnce()).modify(Mockito.anyString(), Mockito.mock(PostsDTO.class));
     }
 }

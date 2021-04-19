@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 package io.leafage.basic.hypervisor.service.impl;
 
@@ -13,11 +13,11 @@ import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.common.basic.AbstractBasicService;
-import org.apache.http.util.Asserts;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -65,7 +65,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> fetch(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return roleRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
                             RoleVO roleVO = new RoleVO();
@@ -95,7 +95,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         Mono<Role> roleMono = roleRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(role -> {

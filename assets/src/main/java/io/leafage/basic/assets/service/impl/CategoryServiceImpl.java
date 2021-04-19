@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019. Abeille All Right Reserved.
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 package io.leafage.basic.assets.service.impl;
 
@@ -10,10 +10,10 @@ import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import io.leafage.common.basic.AbstractBasicService;
-import org.apache.http.util.Asserts;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -53,7 +53,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Mono<CategoryVO> fetch(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(category ->
                 postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
                         .map(count -> {
@@ -80,7 +80,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Mono<CategoryVO> modify(String code, CategoryDTO categoryDTO) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(category -> {
             BeanUtils.copyProperties(categoryDTO, category);
             return categoryRepository.save(category).map(this::convertOuter);
@@ -89,7 +89,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Mono<Void> remove(String code) {
-        Asserts.notBlank(code, "code");
+        Assert.hasText(code, "code is blank");
         return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(topic -> categoryRepository.deleteById(topic.getId()));
     }
 

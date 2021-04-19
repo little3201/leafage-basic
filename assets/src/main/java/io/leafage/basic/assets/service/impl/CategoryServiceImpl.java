@@ -55,6 +55,12 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
+    public CategoryVO fetch(String code) {
+        Category category = categoryRepository.findByCodeAndEnabledTrue(code);
+        return this.convertOuter(category);
+    }
+
+    @Override
     public List<CountVO> countByCategory(Set<String> codes) {
         List<Category> ids = categoryRepository.findByCodeInAndEnabledTrue(codes);
         if (CollectionUtils.isEmpty(ids)) {

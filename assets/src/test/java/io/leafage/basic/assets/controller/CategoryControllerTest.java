@@ -1,10 +1,7 @@
-/*
- * Copyright (c) 2021. Leafage All Right Reserved.
- */
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.service.PostsService;
-import io.leafage.basic.assets.vo.PostsVO;
+import io.leafage.basic.assets.service.CategoryService;
+import io.leafage.basic.assets.vo.CategoryVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -26,32 +23,42 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * 帖子接口测试类
- *
- * @author liwenqiang 2019/9/14 21:46
- **/
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(PostsController.class)
-public class PostsControllerTest {
+@WebMvcTest(CategoryController.class)
+class CategoryControllerTest {
 
     @MockBean
-    private PostsService postsService;
+    private CategoryService categoryService;
 
     @Autowired
     private MockMvc mvc;
 
     @Test
-    public void retrieve() throws Exception {
-        List<PostsVO> voList = new ArrayList<>(2);
-        voList.add(new PostsVO());
-        Page<PostsVO> postsPage = new PageImpl<>(voList);
-        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(postsPage);
+    void retrieve() throws Exception {
+        List<CategoryVO> voList = new ArrayList<>(2);
+        voList.add(new CategoryVO());
+        Page<CategoryVO> postsPage = new PageImpl<>(voList);
+        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(postsPage);
         MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
         multiValueMap.add("page", "0");
         multiValueMap.add("size", "2");
         multiValueMap.add("order", "id");
-        mvc.perform(get("/posts").queryParams(multiValueMap)).andExpect(status().isOk()).andDo(print()).andReturn();
+        mvc.perform(get("/category").queryParams(multiValueMap)).andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
+    @Test
+    void fetch() {
+    }
+
+    @Test
+    void create() {
+    }
+
+    @Test
+    void modify() {
+    }
+
+    @Test
+    void remove() {
+    }
 }

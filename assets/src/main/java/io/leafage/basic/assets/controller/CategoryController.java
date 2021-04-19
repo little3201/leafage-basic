@@ -40,7 +40,7 @@ public class CategoryController {
      * @return ResponseEntity
      */
     @GetMapping
-    public ResponseEntity<Object> retrieve(int page, int size, String order) {
+    public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
         Page<CategoryVO> voPage = categoryService.retrieve(page, size, order);
         if (voPage.hasContent()) {
             return ResponseEntity.ok(voPage);

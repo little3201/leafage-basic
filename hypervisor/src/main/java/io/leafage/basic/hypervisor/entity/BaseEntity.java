@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2021. Leafage All Right Reserved.
+ */
 package io.leafage.basic.hypervisor.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;

@@ -5,18 +5,21 @@ package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.PostsVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.atLeastOnce;
 
 /**
  * 文章接口测试类
@@ -35,31 +38,55 @@ class PostsControllerTest {
 
     @Test
     public void retrieve() {
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
-                .willReturn(Mockito.any());
-        webClient.get().uri("/posts").exchange().expectStatus().isOk();
-        Mockito.verify(postsService, atLeastOnce()).create(Mockito.mock(PostsDTO.class));
+                .willReturn(Flux.just(postsVO));
+        webClient.get().uri("/posts").exchange()
+                .expectStatus().isOk();
     }
 
     @Test
     public void fetch() {
-        given(this.postsService.fetch(Mockito.anyString())).willReturn(Mockito.any());
-        webClient.get().uri("/posts/{code}", Mockito.anyString()).exchange()
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.fetch(Mockito.anyString())).willReturn(Mono.just(postsVO));
+        webClient.get().uri("/posts/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk()
-                .expectBody().jsonPath("$:title").isNotEmpty();
+                .expectBody().jsonPath("$.title").isEqualTo("test");
     }
 
     @Test
     public void create() {
+        // 构造请求对象
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setTitle("test");
+        postsDTO.setSubtitle("create posts test");
+        postsDTO.setCover("../test.jpg");
+        postsDTO.setCategory("21213G0J2");
+        // 构造返回对象
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.create(postsDTO)).willReturn(Mono.just(postsVO));
         webClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Mockito.mock(PostsDTO.class)).exchange().expectStatus().isOk();
-        Mockito.verify(postsService, atLeastOnce()).create(Mockito.mock(PostsDTO.class));
+                .bodyValue(postsDTO).exchange()
+                .expectStatus().isEqualTo(HttpStatus.CREATED)
+                .expectBody().jsonPath("$.title").isNotEmpty();
     }
 
     @Test
     public void modify() {
-        webClient.put().uri("/posts/{code}", Mockito.anyString()).contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Mockito.mock(PostsDTO.class)).exchange().expectStatus().isOk();
-        Mockito.verify(postsService, atLeastOnce()).modify(Mockito.anyString(), Mockito.mock(PostsDTO.class));
+        // 构造请求对象
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setTitle("test");
+        postsDTO.setSubtitle("create posts test");
+        postsDTO.setCover("../test.jpg");
+        postsDTO.setCategory("21213G0J2");
+        // 构造返回对象
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.modify("21213G0J2", postsDTO)).willReturn(Mono.just(postsVO));
+        webClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(postsDTO).exchange().expectStatus().isEqualTo(HttpStatus.ACCEPTED);
     }
 }

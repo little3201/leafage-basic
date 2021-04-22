@@ -5,6 +5,8 @@ package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.ContentVO;
+import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +45,29 @@ class PostsControllerTest {
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
                 .willReturn(Flux.just(postsVO));
         webClient.get().uri("/posts").exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk().expectBodyList(PostsVO.class);
+    }
+
+    @Test
+    public void retrieve_page() {
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+                .willReturn(Flux.just(postsVO));
+        webClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
+                .queryParam("size", 2).build()).exchange()
+                .expectStatus().isOk().expectBodyList(PostsVO.class);
+    }
+
+    @Test
+    public void retrieve_page_category() {
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+                .willReturn(Flux.just(postsVO));
+        webClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
+                .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
+                .expectStatus().isOk().expectBodyList(PostsVO.class);
     }
 
     @Test
@@ -57,6 +81,72 @@ class PostsControllerTest {
     }
 
     @Test
+    public void fetchDetails() {
+        PostsContentVO postsContentVO = new PostsContentVO();
+        postsContentVO.setContent("test");
+        given(this.postsService.fetchDetails(Mockito.anyString())).willReturn(Mono.just(postsContentVO));
+        webClient.get().uri("/posts/{code}/details", "21213G0J2").exchange()
+                .expectStatus().isOk()
+                .expectBody().jsonPath("$.content").isEqualTo("test");
+    }
+
+    @Test
+    public void fetchContent() {
+        ContentVO contentVO = new ContentVO();
+        contentVO.setContent("test");
+        given(this.postsService.fetchContent(Mockito.anyString())).willReturn(Mono.just(contentVO));
+        webClient.get().uri("/posts/{code}/content", "21213G0J2").exchange()
+                .expectStatus().isOk()
+                .expectBody().jsonPath("$.content").isEqualTo("test");
+    }
+
+    @Test
+    public void incrementLikes() {
+        PostsVO postsVO = new PostsVO();
+        postsVO.setViewed(2);
+        given(this.postsService.incrementLikes(Mockito.anyString())).willReturn(Mono.just(postsVO));
+        webClient.patch().uri("/posts/{code}/like", "21213G0J2").exchange()
+                .expectStatus().isOk()
+                .expectBody().jsonPath("$.viewed").isEqualTo("2");
+    }
+
+    @Test
+    public void previousPosts() {
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.previousPosts(Mockito.anyString())).willReturn(Mono.just(postsVO));
+        webClient.get().uri("/posts/{code}/previous", "21213G0J2").exchange()
+                .expectStatus().isOk()
+                .expectBody().jsonPath("$.title").isEqualTo("test");
+    }
+
+    @Test
+    public void nextPosts() {
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.nextPosts(Mockito.anyString())).willReturn(Mono.just(postsVO));
+        webClient.get().uri("/posts/{code}/next", "21213G0J2").exchange()
+                .expectStatus().isOk()
+                .expectBody().jsonPath("$.title").isEqualTo("test");
+    }
+
+    @Test
+    public void search() {
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.search(Mockito.anyString())).willReturn(Flux.just(postsVO));
+        webClient.get().uri(uriBuilder ->
+                uriBuilder.path("/posts/search").queryParam("keyword", "test").build()).exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    public void count() {
+        given(this.postsService.count()).willReturn(Mono.just(2L));
+        webClient.get().uri("/posts/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
     public void create() {
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
@@ -67,7 +157,7 @@ class PostsControllerTest {
         // 构造返回对象
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
-        given(this.postsService.create(postsDTO)).willReturn(Mono.just(postsVO));
+        given(this.postsService.create(Mockito.any(PostsDTO.class))).willReturn(Mono.just(postsVO));
         webClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postsDTO).exchange()
                 .expectStatus().isEqualTo(HttpStatus.CREATED)
@@ -85,7 +175,7 @@ class PostsControllerTest {
         // 构造返回对象
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
-        given(this.postsService.modify("21213G0J2", postsDTO)).willReturn(Mono.just(postsVO));
+        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willReturn(Mono.just(postsVO));
         webClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postsDTO).exchange().expectStatus().isEqualTo(HttpStatus.ACCEPTED);
     }

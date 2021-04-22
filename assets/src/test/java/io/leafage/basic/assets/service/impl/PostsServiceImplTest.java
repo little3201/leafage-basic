@@ -4,8 +4,10 @@
 package io.leafage.basic.assets.service.impl;
 
 
+import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.dto.PostsDTO;
+import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.junit.jupiter.api.Assertions;
@@ -16,8 +18,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.Random;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 
 /**
  * 帖子service测试
@@ -30,18 +36,25 @@ class PostsServiceImplTest {
     @Mock
     private PostsRepository postsRepository;
 
+    @Mock
+    private CategoryRepository categoryRepository;
+
     @InjectMocks
     private PostsServiceImpl postsService;
 
     @Test
     public void create() {
-        postsService.create(Mockito.mock(PostsDTO.class));
-        Mockito.verify(postsRepository, Mockito.atLeastOnce()).save(Mockito.any());
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setCategory("21213G0J2");
+        given(categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Category.class)));
+        given(postsRepository.insert(Mockito.any(Posts.class))).willReturn(Mono.just(Mockito.mock(Posts.class)));
+        postsService.create(postsDTO);
+        Mockito.verify(this.postsRepository, times(1)).insert(Mockito.any(Posts.class));
     }
 
     @Test
     public void create_error() {
-        Mockito.when(postsRepository.save(Mockito.mock(Posts.class))).thenThrow(new RuntimeException());
+        given(this.postsRepository.save(Mockito.mock(Posts.class))).willThrow(new RuntimeException());
         postsService.create(Mockito.mock(PostsDTO.class));
         Mockito.verify(postsRepository, Mockito.never()).save(Mockito.any());
     }
@@ -50,8 +63,7 @@ class PostsServiceImplTest {
     public void fetchDetails() {
         Mockito.when(postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .thenReturn(Mono.just(Mockito.mock(Posts.class)));
-        Mono<? extends PostsVO> outerMono = postsService.fetchDetails(Mockito.anyString());
-        Assertions.assertNotNull(outerMono);
+        StepVerifier.create(postsService.fetchDetails("21213G0J2")).expectSubscription().verifyComplete();
     }
 
     @Test

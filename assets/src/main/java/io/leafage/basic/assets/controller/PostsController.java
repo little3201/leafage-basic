@@ -46,7 +46,7 @@ public class PostsController {
             return ResponseEntity.ok(voPage);
         }
         logger.info("Not found anything about posts with pageable.");
-        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     /**
@@ -60,7 +60,7 @@ public class PostsController {
         PostsVO article = postsService.fetch(code);
         if (article == null) {
             logger.info("Not found anything about article with code {}.", code);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.ok(article);
     }
@@ -76,7 +76,7 @@ public class PostsController {
         PostsVO article = postsService.fetchDetails(code);
         if (article == null) {
             logger.info("Not found anything about article with code {}.", code);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
         return ResponseEntity.ok(article);
     }
@@ -94,7 +94,7 @@ public class PostsController {
             postsVO = postsService.create(postsDTO);
         } catch (Exception e) {
             logger.error("Save article occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok(postsVO);
     }
@@ -112,9 +112,9 @@ public class PostsController {
             postsService.modify(code, postsDTO);
         } catch (Exception e) {
             logger.error("Modify posts occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     /**
@@ -129,8 +129,8 @@ public class PostsController {
             postsService.remove(code);
         } catch (Exception e) {
             logger.error("Remove posts occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

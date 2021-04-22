@@ -78,7 +78,7 @@ public class CategoryController {
             categoryVO = categoryService.create(categoryDTO);
         } catch (Exception e) {
             logger.error("Save category occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok(categoryVO);
     }
@@ -96,9 +96,9 @@ public class CategoryController {
             categoryService.modify(code, categoryDTO);
         } catch (Exception e) {
             logger.error("Modify category occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     /**
@@ -113,8 +113,8 @@ public class CategoryController {
             categoryService.remove(code);
         } catch (Exception e) {
             logger.error("Remove category occurred an error: ", e);
-            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

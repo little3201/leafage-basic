@@ -29,12 +29,12 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
     /**
      * 更新viewed
      *
-     * @param id 主键ID
+     * @param code 唯一码
      */
     @Transactional
     @Modifying
-    @Query("update #{#entityName} set viewed = viewed + 1 where id = ?1")
-    void flushViewed(long id);
+    @Query("update #{#entityName} set viewed = viewed + 1 where code = ?1")
+    void flushViewed(String code);
 
     /**
      * 统计
@@ -42,6 +42,6 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
      * @param categoryId 分类ID
      * @return 数量
      */
-    int countByCategoryId(long categoryId);
+    long countByCategoryId(long categoryId);
 
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 文章信息接口
+ * 帖子信息接口
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -37,7 +37,7 @@ public class PostsController {
      *
      * @param page 页码
      * @param size 大小
-     * @return ResponseEntity
+     * @return 分页结果集
      */
     @GetMapping
     public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
@@ -53,7 +53,7 @@ public class PostsController {
      * 查询帖子
      *
      * @param code 代码
-     * @return ResponseEntity
+     * @return 帖子信息，不包括内容
      */
     @GetMapping("/{code}")
     public ResponseEntity<Object> fetch(@PathVariable String code) {
@@ -66,10 +66,26 @@ public class PostsController {
     }
 
     /**
+     * 查询帖子详细信息，同时viewed自增1
+     *
+     * @param code 代码
+     * @return 帖子所有信息，包括内容
+     */
+    @GetMapping("/{code}/details")
+    public ResponseEntity<Object> fetchDetails(@PathVariable String code) {
+        PostsVO article = postsService.fetchDetails(code);
+        if (article == null) {
+            logger.info("Not found anything about article with code {}.", code);
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(article);
+    }
+
+    /**
      * 保存文章信息
      *
      * @param postsDTO 文章内容
-     * @return ResponseEntity
+     * @return 帖子信息
      */
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody @Valid PostsDTO postsDTO) {
@@ -81,5 +97,40 @@ public class PostsController {
             return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok(postsVO);
+    }
+
+    /**
+     * 修改帖子信息
+     *
+     * @param code     代码
+     * @param postsDTO 帖子信息
+     * @return 修改后的帖子信息
+     */
+    @PutMapping("/{code}")
+    public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody @Valid PostsDTO postsDTO) {
+        try {
+            postsService.modify(code, postsDTO);
+        } catch (Exception e) {
+            logger.error("Modify posts occurred an error: ", e);
+            return ResponseEntity.ok(HttpStatus.NOT_MODIFIED);
+        }
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+    }
+
+    /**
+     * 删除帖子信息
+     *
+     * @param code 代码
+     * @return 删除结果
+     */
+    @DeleteMapping("/{code}")
+    public ResponseEntity<Object> remove(@PathVariable String code) {
+        try {
+            postsService.remove(code);
+        } catch (Exception e) {
+            logger.error("Remove posts occurred an error: ", e);
+            return ResponseEntity.ok(HttpStatus.EXPECTATION_FAILED);
+        }
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

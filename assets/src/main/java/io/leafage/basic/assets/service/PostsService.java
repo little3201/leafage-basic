@@ -6,8 +6,8 @@ package io.leafage.basic.assets.service;
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
-import io.leafage.common.servlet.BasicService;
 import org.springframework.data.domain.Page;
+import top.leafage.common.servlet.BasicService;
 
 /**
  * 帖子信息Service

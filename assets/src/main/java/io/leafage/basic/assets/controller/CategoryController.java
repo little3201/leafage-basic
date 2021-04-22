@@ -33,11 +33,11 @@ public class CategoryController {
     }
 
     /**
-     * 查询类目
+     * 分页查询类目
      *
      * @param page 页码
      * @param size 大小
-     * @return ResponseEntity
+     * @return 分页结果集
      */
     @GetMapping
     public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
@@ -53,7 +53,7 @@ public class CategoryController {
      * 查询类目信息
      *
      * @param code 代码
-     * @return ResponseEntity
+     * @return 匹配到的类目信息
      */
     @GetMapping("/{code}")
     public ResponseEntity<Object> fetch(@PathVariable String code) {
@@ -69,7 +69,7 @@ public class CategoryController {
      * 保存类目信息
      *
      * @param categoryDTO 类目信息
-     * @return ResponseEntity
+     * @return 类目信息
      */
     @PostMapping
     public ResponseEntity<Object> create(@RequestBody @Valid CategoryDTO categoryDTO) {
@@ -88,7 +88,7 @@ public class CategoryController {
      *
      * @param code        代码
      * @param categoryDTO 类目信息
-     * @return ResponseEntity
+     * @return 修改后的类目信息
      */
     @PutMapping("/{code}")
     public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
@@ -105,7 +105,7 @@ public class CategoryController {
      * 删除类目信息
      *
      * @param code 代码
-     * @return ResponseEntity
+     * @return 删除结果
      */
     @DeleteMapping("/{code}")
     public ResponseEntity<Object> remove(@PathVariable String code) {

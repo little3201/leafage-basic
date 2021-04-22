@@ -13,7 +13,6 @@ import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
-import io.leafage.common.basic.AbstractBasicService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +21,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import top.leafage.common.basic.AbstractBasicService;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,12 +54,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Page<PostsVO> retrieve(int page, int size, String order) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modify_time"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modifyTime"));
         return postsRepository.findAll(pageable).map(this::convertOuter);
     }
 
     @Override
     public PostsVO fetch(String code) {
+        Assert.hasText(code, "code is blank");
         //查询基本信息
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
         if (posts == null) {
@@ -69,14 +71,17 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public PostsContentVO fetchDetails(String code) {
+        Assert.hasText(code, "code is blank");
+        // viewed自增一，异步执行
+        this.flushViewed(code);
         //查询基本信息
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
-        // viewed自增一，异步执行
-        this.flushViewed(posts.getId());
+        if (posts == null) {
+            return null;
+        }
         PostsContentVO postsContentVO = new PostsContentVO();
         BeanUtils.copyProperties(posts, postsContentVO);
         postsContentVO.setPostsId(posts.getId());
-        postsContentVO.setViewed(posts.getViewed() + 1);
         // 转换分类
         Optional<Category> optional = categoryRepository.findById(posts.getCategoryId());
         optional.ifPresent(category -> postsContentVO.setCategory(category.getName()));
@@ -84,6 +89,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent != null) {
             postsContentVO.setContent(postsContent.getContent());
+            postsContentVO.setCategory(postsContent.getCatalog());
         }
         return postsContentVO;
     }
@@ -114,6 +120,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public PostsVO modify(String code, PostsDTO postsDTO) {
+        Assert.hasText(code, "code is blank");
         //查询基本信息
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
         if (posts == null) {
@@ -136,6 +143,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public void remove(String code) {
+        Assert.hasText(code, "code is blank");
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
         if (posts != null) {
             postsRepository.deleteById(posts.getId());
@@ -143,8 +151,9 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Async
-    public void flushViewed(long id) {
-        postsRepository.flushViewed(id);
+    public void flushViewed(String code) {
+        Assert.hasText(code, "code is blank");
+        postsRepository.flushViewed(code);
     }
 
     /**

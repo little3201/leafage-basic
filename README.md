@@ -7,6 +7,8 @@
 
 ### 本模块依赖
 
+> 现在leafage-starter-parent 和 leafage-common 已经可以在maven repository 中存在了（groupId 替换成了top.leafage），可以直接使用
+
 #### [leafage-starter-parent](https://github.com/little3201/) —— 不包含任何代码，仅仅作为所有模块依赖的版本控制；
 
 #### [leafage-common](https://github.com/little3201/leafage-common) —— 包含非业务代码，提供通用工具类；

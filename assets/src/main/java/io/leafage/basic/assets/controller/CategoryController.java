@@ -57,12 +57,12 @@ public class CategoryController {
      */
     @GetMapping("/{code}")
     public ResponseEntity<Object> fetch(@PathVariable String code) {
-        CategoryVO account = categoryService.fetch(code);
-        if (account == null) {
+        CategoryVO categoryVO = categoryService.fetch(code);
+        if (categoryVO == null) {
             logger.info("Not found anything about category with code {}.", code);
-            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return ResponseEntity.ok(account);
+        return ResponseEntity.ok(categoryVO);
     }
 
     /**

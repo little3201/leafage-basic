@@ -19,13 +19,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -52,16 +52,25 @@ public class PostsControllerTest {
     @Test
     public void retrieve() throws Exception {
         List<PostsVO> voList = new ArrayList<>(2);
-        voList.add(new PostsVO());
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        voList.add(postsVO);
+        voList.add(postsVO);
         Page<PostsVO> postsPage = new PageImpl<>(voList);
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(postsPage);
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.add("page", "0");
-        multiValueMap.add("size", "2");
-        multiValueMap.add("order", "id");
-        mvc.perform(get("/posts").queryParams(multiValueMap)).andExpect(status().isOk()).andDo(print()).andReturn();
+        mvc.perform(get("/posts").queryParam("page", "0")
+                .queryParam("size", "2").queryParam("order", "id")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
+    @Test
+    public void retrieve_empty() throws Exception {
+        Page<PostsVO> postsPage = new PageImpl<>(Collections.emptyList());
+        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(postsPage);
+        mvc.perform(get("/posts").queryParam("page", "0")
+                .queryParam("size", "2").queryParam("order", "id")).andExpect(status().is(204))
+                .andDo(print()).andReturn();
+    }
 
     @Test
     void fetch() throws Exception {
@@ -73,12 +82,26 @@ public class PostsControllerTest {
     }
 
     @Test
+    void fetch_null() throws Exception {
+        given(this.postsService.fetch(Mockito.anyString())).willReturn(null);
+        mvc.perform(get("/posts/{code}", "21389KO6")).andExpect(status().is(204))
+                .andDo(print()).andReturn();
+    }
+
+    @Test
     void fetchDetails() throws Exception {
         PostsContentVO contentVO = new PostsContentVO();
         contentVO.setTitle("test");
         given(this.postsService.fetchDetails(Mockito.anyString())).willReturn(contentVO);
         mvc.perform(get("/posts/{code}/details", "21389KO6")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
+    }
+
+    @Test
+    void fetchDetails_null() throws Exception {
+        given(this.postsService.fetchDetails(Mockito.anyString())).willReturn(null);
+        mvc.perform(get("/posts/{code}/details", "21389KO6")).andExpect(status().is(204))
+                .andDo(print()).andReturn();
     }
 
     @Test
@@ -99,6 +122,19 @@ public class PostsControllerTest {
     }
 
     @Test
+    void create_error() throws Exception {
+        // 构造请求对象
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setTitle("test");
+        postsDTO.setCover("../test.jpg");
+        postsDTO.setCategoryId(1L);
+        given(this.postsService.create(Mockito.any(PostsDTO.class))).willThrow(new RuntimeException());
+        mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(postsDTO))).andExpect(status().is(417))
+                .andDo(print()).andReturn();
+    }
+
+    @Test
     void modify() throws Exception {
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
@@ -114,9 +150,31 @@ public class PostsControllerTest {
     }
 
     @Test
+    void modify_error() throws Exception {
+        // 构造请求对象
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setTitle("test");
+        postsDTO.setSubtitle("test line");
+        postsDTO.setCover("../test.jpg");
+        postsDTO.setCategoryId(1L);
+        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willThrow(new RuntimeException());
+        mvc.perform(put("/posts/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(postsDTO)))
+                .andExpect(status().is(304))
+                .andDo(print()).andReturn();
+    }
+
+    @Test
     void remove() throws Exception {
         this.postsService.remove(Mockito.anyString());
         mvc.perform(delete("/posts/{code}", "21389KO6")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void remove_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.postsService).remove(Mockito.anyString());
+        mvc.perform(delete("/posts/{code}", "21389KO6")).andExpect(status().is(417))
                 .andDo(print()).andReturn();
     }
 

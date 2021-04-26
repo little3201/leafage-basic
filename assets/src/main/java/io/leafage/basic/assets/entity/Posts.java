@@ -6,6 +6,7 @@ package io.leafage.basic.assets.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Set;
 
 /**
  * Model class for Posts
@@ -38,6 +39,10 @@ public class Posts extends BaseEntity {
      * 封面
      */
     private String cover;
+    /**
+     * 标签
+     */
+    private Set<String> tags;
     /**
      * 点赞
      */
@@ -86,6 +91,14 @@ public class Posts extends BaseEntity {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 
     public int getLikes() {

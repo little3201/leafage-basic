@@ -4,8 +4,10 @@
 package io.leafage.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * 用户信息入参
@@ -30,6 +32,11 @@ public class PostsDTO implements Serializable {
      */
     @NotNull
     private Long categoryId;
+    /**
+     * 标签
+     */
+    @NotEmpty
+    private Set<String> tags;
     /**
      * 封面
      */
@@ -71,6 +78,14 @@ public class PostsDTO implements Serializable {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 
     public String getContent() {

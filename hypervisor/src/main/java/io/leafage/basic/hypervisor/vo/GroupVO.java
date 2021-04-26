@@ -3,15 +3,12 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 /**
- * Model class for GroupInfo
+ * a class for Group
  *
  * @author liwenqiang
  */
-public class GroupVO implements Serializable {
+public class GroupVO extends BaseVO {
 
     private static final long serialVersionUID = 5740100575689452491L;
     /**
@@ -34,14 +31,6 @@ public class GroupVO implements Serializable {
      * 描述
      */
     private String description;
-    /**
-     * 修改人
-     */
-    private Long modifier;
-    /**
-     * 修改时间
-     */
-    private LocalDateTime modifyTime;
 
     public String getBusinessId() {
         return businessId;
@@ -83,19 +72,4 @@ public class GroupVO implements Serializable {
         this.description = description;
     }
 
-    public Long getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

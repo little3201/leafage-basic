@@ -1,14 +1,11 @@
 package io.leafage.basic.hypervisor.vo;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 /**
- * 用户关键信息类
+ * a class for User
  *
  * @author liwenqiang 2019/8/31 15:50
  **/
-public class UserVO implements Serializable {
+public class UserVO extends BaseVO {
 
     private static final long serialVersionUID = -43247624019806041L;
 
@@ -37,13 +34,9 @@ public class UserVO implements Serializable {
      */
     private String address;
     /**
-     * 修改人
+     * 性别: null-未知 0-女 1-男
      */
-    private Long modifier;
-    /**
-     * 修改时间
-     */
-    private LocalDateTime modifyTime;
+    private Character gender;
 
     public String getNickname() {
         return nickname;
@@ -93,19 +86,12 @@ public class UserVO implements Serializable {
         this.address = address;
     }
 
-    public Long getModifier() {
-        return modifier;
+    public Character getGender() {
+        return gender;
     }
 
-    public void setModifier(Long modifier) {
-        this.modifier = modifier;
+    public void setGender(Character gender) {
+        this.gender = gender;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

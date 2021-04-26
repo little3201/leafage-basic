@@ -45,6 +45,10 @@ public class User extends BaseEntity {
      */
     private String address;
     /**
+     * 性别: null-未知 0-女 1-男
+     */
+    private Character gender;
+    /**
      * 是否无效
      */
     @Column(name = "is_account_non_expired")
@@ -115,6 +119,14 @@ public class User extends BaseEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Character getGender() {
+        return gender;
+    }
+
+    public void setGender(Character gender) {
+        this.gender = gender;
     }
 
     public boolean isAccountNonExpired() {

@@ -5,7 +5,7 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.vo.AccountVO;
-import io.leafage.common.reactive.ReactiveBasicService;
+import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
  * 账户信息Service

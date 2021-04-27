@@ -14,7 +14,6 @@ import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
-import io.leafage.common.basic.AbstractBasicService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
@@ -30,6 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
 

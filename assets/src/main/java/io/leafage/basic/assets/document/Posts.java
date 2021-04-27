@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Set;
+
 /**
  * Model class for posts
  *
@@ -38,6 +40,10 @@ public class Posts extends BaseDocument {
      * 封面
      */
     private String cover;
+    /**
+     * 标签
+     */
+    private Set<String> tags;
     /**
      * 点赞
      */
@@ -89,6 +95,14 @@ public class Posts extends BaseDocument {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 
     public int getLikes() {

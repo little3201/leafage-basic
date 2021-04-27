@@ -5,7 +5,7 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import io.leafage.common.reactive.ReactiveBasicService;
+import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
  * 组织信息Service

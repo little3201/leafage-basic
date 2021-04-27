@@ -5,7 +5,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.vo.CategoryVO;
-import io.leafage.common.reactive.ReactiveBasicService;
+import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
  * 话题信息Service

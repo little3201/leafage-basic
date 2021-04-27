@@ -23,7 +23,6 @@ public class UserDTO implements Serializable {
     /**
      * 账号
      */
-    @NotBlank
     @Size(min = 4, max = 16)
     private String username;
     /**

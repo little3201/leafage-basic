@@ -5,8 +5,8 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
-import io.leafage.common.reactive.ReactiveBasicService;
 import reactor.core.publisher.Flux;
+import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
  * 权限资源信息Service

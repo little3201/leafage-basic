@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.assets.vo;
 
+import java.util.Set;
+
 /**
  * Enter class for ArticleInfo
  *
@@ -24,6 +26,10 @@ public class PostsVO extends BaseVO {
      * 封面
      */
     private String cover;
+    /**
+     * 标签
+     */
+    private Set<String> tags;
     /**
      * 分类
      */
@@ -63,6 +69,14 @@ public class PostsVO extends BaseVO {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 
     public String getCategory() {

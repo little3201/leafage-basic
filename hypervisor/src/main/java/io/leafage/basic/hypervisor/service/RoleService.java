@@ -5,7 +5,7 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import io.leafage.common.reactive.ReactiveBasicService;
+import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
  * 角色信息service 接口

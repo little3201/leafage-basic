@@ -5,7 +5,6 @@ package io.leafage.basic.assets.document;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -32,12 +31,10 @@ public class Posts extends BaseDocument {
     /**
      * 标题
      */
-    @TextIndexed
     private String title;
     /**
      * 副标题
      */
-    @TextIndexed
     private String subtitle;
     /**
      * 封面

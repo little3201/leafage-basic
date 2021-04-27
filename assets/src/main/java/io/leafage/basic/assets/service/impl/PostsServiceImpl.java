@@ -16,12 +16,13 @@ import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -59,7 +60,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
-        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
+        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modifyTime");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
                 .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
                             PostsVO vo = new PostsVO();
@@ -72,7 +73,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String category, String order) {
-        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modify_time");
+        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modifyTime");
         return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
                 postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, sort)).map(posts -> {
                             PostsVO vo = new PostsVO();
@@ -222,8 +223,10 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> search(String keyword) {
-        TextCriteria textCriteria = TextCriteria.forDefaultLanguage().matchingAny(keyword);
-        return postsRepository.findAllBy(textCriteria).map(this::convertOuter);
+        Posts posts = new Posts();
+        posts.setTitle(keyword);
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase(keyword);
+        return postsRepository.findAll(Example.of(posts, matcher)).map(this::convertOuter);
     }
 
     /**

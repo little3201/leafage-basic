@@ -89,7 +89,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Mono<Role> roleMono = roleRepository.insert(role)
                 .switchIfEmpty(Mono.error(RuntimeException::new))
                 .doOnSuccess(r -> this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
-                        .doOnNext(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).then()));
+                        .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
         return roleMono.map(this::convertOuter);
     }
 

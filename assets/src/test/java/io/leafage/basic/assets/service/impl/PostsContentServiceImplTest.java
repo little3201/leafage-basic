@@ -45,8 +45,7 @@ class PostsContentServiceImplTest {
                 .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
         given(this.postsContentRepository.save(Mockito.any(PostsContent.class)))
                 .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
-        ObjectId id = new ObjectId();
-        this.postsContentService.modify(id, new PostsContent());
+        this.postsContentService.modify(new ObjectId(), new PostsContent());
         Mockito.verify(this.postsContentRepository, times(1)).save(Mockito.any(PostsContent.class));
     }
 }

@@ -29,6 +29,7 @@ public class PostsDTO implements Serializable {
     /**
      * 内容
      */
+    @NotBlank
     private String content;
     /**
      * 目录

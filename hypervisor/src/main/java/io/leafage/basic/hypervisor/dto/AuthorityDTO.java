@@ -33,7 +33,6 @@ public class AuthorityDTO implements Serializable {
     /**
      * 路径
      */
-    @NotBlank
     private String path;
     /**
      * 描述

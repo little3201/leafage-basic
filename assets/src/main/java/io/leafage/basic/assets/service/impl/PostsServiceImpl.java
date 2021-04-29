@@ -168,7 +168,9 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Assert.hasText(code, "code is blank");
         Mono<Posts> postsMono = postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory()).map(category -> {
+                .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
+                        .switchIfEmpty(Mono.error(NotContextException::new))
+                        .map(category -> {
                             // 将信息复制到info
                             BeanUtils.copyProperties(postsDTO, info);
                             info.setCategoryId(category.getId());

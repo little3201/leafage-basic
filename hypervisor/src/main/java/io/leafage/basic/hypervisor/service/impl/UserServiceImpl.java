@@ -82,7 +82,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                 .doOnSuccess(u -> this.initUserRole(u.getId(), userDTO.getRoles()).doOnNext(userRoles ->
                         userRoleRepository.saveAll(userRoles).subscribe()))
                 // 处理groups
-                .doOnSuccess(info -> this.initGroupUser(info.getId(), userDTO.getGroups()).doOnNext(groupUsers ->
+                .doOnSuccess(info -> this.initGroupUser(info.getId(), userDTO.getGroups()).subscribe(groupUsers ->
                         groupUserRepository.saveAll(groupUsers).subscribe()));
         return userMono.map(this::convertOuter);
     }
@@ -100,7 +100,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                             .doOnSuccess(u -> this.initUserRole(u.getId(), userDTO.getRoles()).subscribe(userRoles ->
                                     userRoleRepository.saveAll(userRoles).subscribe()))
                             // 处理groups
-                            .doOnSuccess(info -> this.initGroupUser(info.getId(), userDTO.getGroups()).doOnNext(groupUsers ->
+                            .doOnSuccess(info -> this.initGroupUser(info.getId(), userDTO.getGroups()).subscribe(groupUsers ->
                                     groupUserRepository.saveAll(groupUsers).subscribe()));
                 });
         return userMono.map(this::convertOuter);

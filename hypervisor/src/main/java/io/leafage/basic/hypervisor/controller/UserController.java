@@ -21,8 +21,6 @@ import java.util.Objects;
  * 用户信息接口.
  *
  * @author liwenqiang 2018/8/2 21:02
- * @version 0.0.1
- * @since 1.0
  **/
 @RestController
 @RequestMapping("/user")

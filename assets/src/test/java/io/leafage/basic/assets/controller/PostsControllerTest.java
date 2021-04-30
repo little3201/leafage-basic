@@ -102,9 +102,7 @@ class PostsControllerTest {
 
     @Test
     public void incrementLikes() {
-        PostsVO postsVO = new PostsVO();
-        postsVO.setViewed(2);
-        given(this.postsService.incrementLikes(Mockito.anyString())).willReturn(Mono.just(postsVO));
+        given(this.postsService.incrementLikes(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Integer.class)));
         webClient.patch().uri("/posts/{code}/like", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.viewed").isEqualTo("2");

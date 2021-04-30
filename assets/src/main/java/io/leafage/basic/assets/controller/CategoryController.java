@@ -6,7 +6,10 @@ package io.leafage.basic.assets.controller;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -22,6 +25,8 @@ import javax.validation.Valid;
 @RequestMapping("/category")
 public class CategoryController {
 
+    private final Logger logger = LoggerFactory.getLogger(CategoryController.class);
+
     private final CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {
@@ -33,47 +38,75 @@ public class CategoryController {
      *
      * @param page 分页位置
      * @param size 分页大小
-     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public Flux<CategoryVO> retrieve(Integer page, Integer size) {
-        if (page == null || size == null) {
-            return categoryService.retrieve();
+    public ResponseEntity<Flux<CategoryVO>> retrieve(Integer page, Integer size) {
+        Flux<CategoryVO> voFlux;
+        try {
+            if (page == null || size == null) {
+                voFlux = categoryService.retrieve();
+            } else {
+                voFlux = categoryService.retrieve(page, size);
+            }
+        } catch (Exception e) {
+            logger.error("Retrieve category occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-        return categoryService.retrieve(page, size);
+        return ResponseEntity.ok(voFlux);
     }
 
     /**
      * 查询信息
      *
      * @param code 代码
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     * @return 查询到数据，异常时返回204
      */
     @GetMapping("/{code}")
-    public Mono<CategoryVO> fetch(@PathVariable String code) {
-        return categoryService.fetch(code);
+    public ResponseEntity<Mono<CategoryVO>> fetch(@PathVariable String code) {
+        Mono<CategoryVO> voMono;
+        try {
+            voMono = categoryService.fetch(code);
+        } catch (Exception e) {
+            logger.error("Fetch category occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(voMono);
     }
 
     /**
      * 统计记录数
      *
-     * @return 记录数
+     * @return 查询到数据，异常时返回204
      */
     @GetMapping("/count")
-    public Mono<Long> count() {
-        return categoryService.count();
+    public ResponseEntity<Mono<Long>> count() {
+        Mono<Long> count;
+        try {
+            count = categoryService.count();
+        } catch (Exception e) {
+            logger.error("Count category occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.ok(count);
     }
 
     /**
      * 根据传入的数据添加信息
      *
      * @param categoryDTO 要添加的数据
-     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
+     * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<CategoryVO> create(@RequestBody @Valid CategoryDTO categoryDTO) {
-        return categoryService.create(categoryDTO);
+    public ResponseEntity<Mono<CategoryVO>> create(@RequestBody @Valid CategoryDTO categoryDTO) {
+        Mono<CategoryVO> voMono;
+        try {
+            voMono = categoryService.create(categoryDTO);
+        } catch (Exception e) {
+            logger.error("Create category occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
     }
 
     /**
@@ -81,12 +114,35 @@ public class CategoryController {
      *
      * @param code        代码
      * @param categoryDTO 要修改的数据
-     * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
+     * @return 修改后的信息，异常时返回304状态码
      */
     @PutMapping("/{code}")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<CategoryVO> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
-        return categoryService.modify(code, categoryDTO);
+    public ResponseEntity<Mono<CategoryVO>> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
+        Mono<CategoryVO> voMono;
+        try {
+            voMono = categoryService.modify(code, categoryDTO);
+        } catch (Exception e) {
+            logger.error("Modify category occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        }
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(voMono);
+    }
+
+    /**
+     * 删除信息
+     *
+     * @param code 代码
+     * @return 200状态码，异常时返回417状态码
+     */
+    @PutMapping("/{code}")
+    public ResponseEntity<Mono<Void>> remove(@PathVariable String code) {
+        try {
+            categoryService.remove(code);
+        } catch (Exception e) {
+            logger.error("Remove category occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok().build();
     }
 
 }

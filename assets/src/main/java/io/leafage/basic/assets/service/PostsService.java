@@ -65,9 +65,9 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
      * 自增likes
      *
      * @param code 代码
-     * @return 帖子信息
+     * @return 最新 likes
      */
-    Mono<PostsVO> incrementLikes(String code);
+    Mono<Integer> incrementLikes(String code);
 
     /**
      * 全文搜索

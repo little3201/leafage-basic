@@ -4,11 +4,27 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.service.UserService;
+import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * 用户测试
@@ -20,11 +36,28 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class UserControllerTest {
 
     @MockBean
-    private UserService userInfoService;
+    private UserService userService;
+
+    @Autowired
+    private MockMvc mvc;
 
     @Test
-    public void findUsers() {
+    public void retrieve() throws Exception {
+        List<UserVO> voList = new ArrayList<>(2);
+        voList.add(new UserVO());
+        Page<UserVO> userVOPage = new PageImpl<>(voList);
+        given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(userVOPage);
+        mvc.perform(get("/user").queryParam("page", "0").queryParam("size", "2")
+                .queryParam("order", "")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
+    }
 
+    @Test
+    public void retrieve_empty() throws Exception {
+        Page<UserVO> userVOPage = new PageImpl<>(Collections.emptyList());
+        given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(userVOPage);
+        mvc.perform(get("/user").queryParam("page", "0").queryParam("size", "2")
+                .queryParam("order", "")).andExpect(status().is(204)).andDo(print()).andReturn();
     }
 
 }

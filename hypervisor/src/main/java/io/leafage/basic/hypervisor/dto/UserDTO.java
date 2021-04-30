@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.dto;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -19,6 +20,12 @@ public class UserDTO implements Serializable {
 
     private static final long serialVersionUID = -1165865988174734554L;
 
+    /**
+     * 账号
+     */
+    @NotBlank
+    @Size(min = 4, max = 16)
+    private String username;
     /**
      * 昵称
      */
@@ -54,6 +61,14 @@ public class UserDTO implements Serializable {
      * 修改人
      */
     private String modifier;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getNickname() {
         return nickname;

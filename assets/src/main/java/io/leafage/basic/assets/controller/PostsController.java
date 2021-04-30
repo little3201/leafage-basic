@@ -88,15 +88,14 @@ public class PostsController {
      * @return 帖子信息
      */
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid PostsDTO postsDTO) {
-        PostsVO postsVO;
+    public ResponseEntity<Void> create(@RequestBody @Valid PostsDTO postsDTO) {
         try {
-            postsVO = postsService.create(postsDTO);
+            postsService.create(postsDTO);
         } catch (Exception e) {
             logger.error("Save article occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok(postsVO);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -107,7 +106,7 @@ public class PostsController {
      * @return 修改后的帖子信息
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody @Valid PostsDTO postsDTO) {
+    public ResponseEntity<Void> modify(@PathVariable String code, @RequestBody @Valid PostsDTO postsDTO) {
         try {
             postsService.modify(code, postsDTO);
         } catch (Exception e) {
@@ -124,7 +123,7 @@ public class PostsController {
      * @return 删除结果
      */
     @DeleteMapping("/{code}")
-    public ResponseEntity<Object> remove(@PathVariable String code) {
+    public ResponseEntity<Void> remove(@PathVariable String code) {
         try {
             postsService.remove(code);
         } catch (Exception e) {

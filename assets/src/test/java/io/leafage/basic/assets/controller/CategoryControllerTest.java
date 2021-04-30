@@ -47,7 +47,8 @@ class CategoryControllerTest {
         Page<CategoryVO> postsPage = new PageImpl<>(voList);
         given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(postsPage);
         mvc.perform(get("/category").queryParam("page", "0")
-                .queryParam("size", "2").queryParam("order", "id")).andExpect(status().isOk()).andDo(print()).andReturn();
+                .queryParam("size", "2").queryParam("order", "id"))
+                .andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
 

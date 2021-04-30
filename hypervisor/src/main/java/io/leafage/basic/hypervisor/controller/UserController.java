@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,9 +44,9 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回204
      */
     @GetMapping
-    public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+    public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
         Page<UserVO> users = userService.retrieve(page, size, order);
-        if (CollectionUtils.isEmpty(users.getContent())) {
+        if (!users.hasContent()) {
             logger.info("Not found anything about user with pageable.");
             return ResponseEntity.noContent().build();
         }
@@ -61,7 +60,7 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{username}")
-    public ResponseEntity<Object> fetch(@PathVariable String username) {
+    public ResponseEntity<UserVO> fetch(@PathVariable String username) {
         UserVO userVO = userService.fetch(username);
         if (Objects.isNull(userVO)) {
             logger.info("Not found anything with username: {}.", username);
@@ -77,7 +76,7 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{username}/details")
-    public ResponseEntity<Object> fetchDetails(@PathVariable String username) {
+    public ResponseEntity<UserDetails> fetchDetails(@PathVariable String username) {
         UserDetails userDetails = userService.fetchDetails(username);
         if (Objects.isNull(userDetails)) {
             logger.info("Not found anything with username: {}.", username);
@@ -93,14 +92,14 @@ public class UserController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<Void> create(@RequestBody @Valid UserDTO userDTO) {
         try {
             userService.create(userDTO);
         } catch (Exception e) {
             logger.error("Save user occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -111,15 +110,15 @@ public class UserController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{username}")
-    public ResponseEntity<Object> modify(@PathVariable String username,
-                                         @RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<Void> modify(@PathVariable String username,
+                                       @RequestBody @Valid UserDTO userDTO) {
         try {
             userService.modify(username, userDTO);
         } catch (Exception e) {
             logger.error("Modify user occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     /**
@@ -129,13 +128,13 @@ public class UserController {
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
     @DeleteMapping("/{username}")
-    public ResponseEntity<Object> remove(@PathVariable String username) {
+    public ResponseEntity<Void> remove(@PathVariable String username) {
         try {
             userService.remove(username);
         } catch (Exception e) {
             logger.error("Remove user occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

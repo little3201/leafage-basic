@@ -40,7 +40,7 @@ public class CategoryController {
      * @return 分页结果集
      */
     @GetMapping
-    public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+    public ResponseEntity<Page<CategoryVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
         Page<CategoryVO> voPage = categoryService.retrieve(page, size, order);
         if (voPage.hasContent()) {
             return ResponseEntity.ok(voPage);
@@ -56,7 +56,7 @@ public class CategoryController {
      * @return 匹配到的类目信息
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Object> fetch(@PathVariable String code) {
+    public ResponseEntity<CategoryVO> fetch(@PathVariable String code) {
         CategoryVO categoryVO = categoryService.fetch(code);
         if (categoryVO == null) {
             logger.info("Not found anything about category with code {}.", code);
@@ -72,15 +72,14 @@ public class CategoryController {
      * @return 类目信息
      */
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid CategoryDTO categoryDTO) {
-        CategoryVO categoryVO;
+    public ResponseEntity<Void> create(@RequestBody @Valid CategoryDTO categoryDTO) {
         try {
-            categoryVO = categoryService.create(categoryDTO);
+            categoryService.create(categoryDTO);
         } catch (Exception e) {
             logger.error("Save category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok(categoryVO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -91,7 +90,7 @@ public class CategoryController {
      * @return 修改后的类目信息
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
+    public ResponseEntity<Void> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
         try {
             categoryService.modify(code, categoryDTO);
         } catch (Exception e) {
@@ -108,7 +107,7 @@ public class CategoryController {
      * @return 删除结果
      */
     @DeleteMapping("/{code}")
-    public ResponseEntity<Object> remove(@PathVariable String code) {
+    public ResponseEntity<Void> remove(@PathVariable String code) {
         try {
             categoryService.remove(code);
         } catch (Exception e) {

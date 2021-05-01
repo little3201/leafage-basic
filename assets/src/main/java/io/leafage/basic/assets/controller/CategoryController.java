@@ -134,7 +134,7 @@ public class CategoryController {
      * @param code 代码
      * @return 200状态码，异常时返回417状态码
      */
-    @PutMapping("/{code}")
+    @DeleteMapping("/{code}")
     public ResponseEntity<Mono<Void>> remove(@PathVariable String code) {
         try {
             categoryService.remove(code);

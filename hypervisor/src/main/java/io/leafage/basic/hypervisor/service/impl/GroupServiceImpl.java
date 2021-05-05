@@ -22,7 +22,7 @@ import top.leafage.common.basic.AbstractBasicService;
 import javax.naming.NotContextException;
 
 /**
- * 组织信息Service实现
+ * 分组信息Service 接口实现
  *
  * @author liwenqiang 2018/12/17 19:25
  **/

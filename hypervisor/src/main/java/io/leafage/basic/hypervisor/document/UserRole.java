@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Model class for UserRole
+ * Model class for User Role
  *
  * @author liwenqiang 2019/9/16 10:09
  **/

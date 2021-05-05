@@ -25,7 +25,7 @@ import java.util.*;
 
 
 /**
- * 用户信息service实现
+ * 用户信息service 接口实现
  *
  * @author liwenqiang 2018/7/28 0:30
  **/

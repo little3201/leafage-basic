@@ -34,7 +34,7 @@ import top.leafage.common.basic.AbstractBasicService;
 import javax.naming.NotContextException;
 
 /**
- * posts service实现
+ * 帖子信心 service 接口实现
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -217,17 +217,17 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<PostsVO> incrementLikes(String code) {
+    public Mono<Integer> incrementLikes(String code) {
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
                 new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
-                postsRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter));
+                postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes));
     }
 
     @Override
     public Flux<PostsVO> search(String keyword) {
         Posts posts = new Posts();
         posts.setTitle(keyword);
-        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase(keyword);
+        ExampleMatcher matcher = ExampleMatcher.matchingAny().withIgnoreCase("title", "subtitle");
         return postsRepository.findAll(Example.of(posts, matcher)).map(this::convertOuter);
     }
 

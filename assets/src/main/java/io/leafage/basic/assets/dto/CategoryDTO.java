@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * DTO class for CategoryInfo
+ * DTO class for Category
  *
  * @author liwenqiang 2020-10-06 22:09
  */

@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 /**
- * 角色权限dao接口
+ * 角色权限repository
  *
  * @author liwenqiang 2018/9/26 11:29
  **/

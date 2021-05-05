@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * Enter class for AccountInfo
+ * DTO class for Account
  *
  * @author liwenqiang 2020-10-06 22:09
  */

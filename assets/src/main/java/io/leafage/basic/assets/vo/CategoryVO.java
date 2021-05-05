@@ -4,7 +4,7 @@
 package io.leafage.basic.assets.vo;
 
 /**
- * VO class for TopicInfo
+ * VO class for Category
  *
  * @author liwenqiang 2020-10-06 22:09
  */

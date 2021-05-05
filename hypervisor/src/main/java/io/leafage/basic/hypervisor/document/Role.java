@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Model class for RoleInfo
+ * Model class for Role
  *
  * @author liwenqiang 2020-10-06 22:09
  */

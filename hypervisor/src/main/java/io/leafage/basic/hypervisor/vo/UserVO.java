@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * Model class for UserInfo
+ * VO class for User
  *
  * @author liwenqiang 2020-10-06 22:09
  */

@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 
 /**
- * 账户信息Service实现
+ * 账户信息Service 接口实现
  *
  * @author liwenqiang 2018/12/17 19:27
  **/

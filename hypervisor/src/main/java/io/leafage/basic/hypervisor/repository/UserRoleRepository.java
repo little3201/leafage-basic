@@ -11,7 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * 用户角色Dao
+ * 用户角色repository
  *
  * @author liwenqiang 2018-12-06 22:09
  **/

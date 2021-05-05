@@ -4,7 +4,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 /**
- * Model class for RoleInfo
+ * VO class for Role
  *
  * @author liwenqiang 2020-10-06 22:09
  */

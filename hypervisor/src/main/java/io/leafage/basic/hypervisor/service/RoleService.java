@@ -8,7 +8,7 @@ import io.leafage.basic.hypervisor.vo.RoleVO;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
- * 角色信息service 接口
+ * 角色信息service
  *
  * @author liwenqiang 2018/9/27 14:18
  **/

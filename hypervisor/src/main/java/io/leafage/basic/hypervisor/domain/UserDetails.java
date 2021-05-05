@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * Model class for UserInfo
+ * Model class for User Details only with security content
  *
  * @author liwenqiang 2020-10-06 22:09
  */

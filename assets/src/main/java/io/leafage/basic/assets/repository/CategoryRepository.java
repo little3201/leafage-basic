@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * 类别信息repository
+ * 类目信息repository
  *
  * @author liwenqiang 2020/2/13 22:01
  **/

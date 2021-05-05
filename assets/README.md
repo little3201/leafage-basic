@@ -21,7 +21,6 @@ CMS服务相关接口，包括个人网站的资料维护，大体包含：
 - [ ] 评论
 - [ ] 统计分析
 - [ ] 资源下载
-- [ ] 书籍
 
 <a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.leafage.top"> 在线体验</a>
 

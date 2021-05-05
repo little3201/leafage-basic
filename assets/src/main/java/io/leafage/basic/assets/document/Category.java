@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Model class for CategoryInfo
+ * Model class for Category
  *
  * @author liwenqiang 2020-10-06 22:09
  */

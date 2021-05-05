@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * Model class for SourceInfo
+ * DTO class for Authority
  *
  * @author liwenqiang 2020-10-06 22:09
  */

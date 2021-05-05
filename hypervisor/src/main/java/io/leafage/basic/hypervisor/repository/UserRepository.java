@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * 用户信息(userInfo)dao接口
+ * 用户repository
  *
  * @author liwenqiang 2018/7/27 17:50
  **/

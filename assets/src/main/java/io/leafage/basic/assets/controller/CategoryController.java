@@ -51,7 +51,7 @@ public class CategoryController {
             }
         } catch (Exception e) {
             logger.error("Retrieve category occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
@@ -69,7 +69,7 @@ public class CategoryController {
             voMono = categoryService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch category occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -86,7 +86,7 @@ public class CategoryController {
             count = categoryService.count();
         } catch (Exception e) {
             logger.error("Count category occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
     }
@@ -125,7 +125,7 @@ public class CategoryController {
             logger.error("Modify category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(voMono);
+        return ResponseEntity.accepted().body(voMono);
     }
 
     /**

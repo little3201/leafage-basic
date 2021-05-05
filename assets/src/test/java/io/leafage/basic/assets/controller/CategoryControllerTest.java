@@ -93,4 +93,11 @@ class CategoryControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.ACCEPTED)
                 .expectBody().jsonPath("$.alias").isNotEmpty();
     }
+
+    @Test
+    void remove() {
+        given(this.categoryService.remove(Mockito.anyString())).willReturn(Mono.empty());
+        webClient.delete().uri("/category/{code}", "21213G0J2").exchange()
+                .expectStatus().isOk();
+    }
 }

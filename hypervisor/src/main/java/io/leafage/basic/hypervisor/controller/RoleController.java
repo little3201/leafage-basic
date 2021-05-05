@@ -49,7 +49,7 @@ public class RoleController {
             }
         } catch (Exception e) {
             logger.error("Retrieve role occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
@@ -67,7 +67,7 @@ public class RoleController {
             voMono = roleService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch role occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -84,7 +84,7 @@ public class RoleController {
             count = roleService.count();
         } catch (Exception e) {
             logger.error("Count role occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
     }
@@ -96,7 +96,6 @@ public class RoleController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Mono<RoleVO>> create(@RequestBody @Valid RoleDTO roleDTO) {
         Mono<RoleVO> voMono;
         try {
@@ -124,7 +123,7 @@ public class RoleController {
             logger.error("Modify role occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(voMono);
+        return ResponseEntity.accepted().body(voMono);
     }
 
 }

@@ -51,7 +51,7 @@ public class PortfolioController {
             }
         } catch (Exception e) {
             logger.error("Retrieve portfolio occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
@@ -69,7 +69,7 @@ public class PortfolioController {
             voMono = portfolioService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch portfolio occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -86,7 +86,7 @@ public class PortfolioController {
             count = portfolioService.count();
         } catch (Exception e) {
             logger.error("Count portfolio occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
     }
@@ -125,7 +125,7 @@ public class PortfolioController {
             logger.error("Modify portfolio occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(voMono);
+        return ResponseEntity.accepted().body(voMono);
     }
 
 }

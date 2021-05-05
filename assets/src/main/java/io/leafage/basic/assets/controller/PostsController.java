@@ -57,7 +57,7 @@ public class PostsController {
             }
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
@@ -75,7 +75,7 @@ public class PostsController {
             voFlux = postsService.search(keyword);
         } catch (Exception e) {
             logger.error("Search posts occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
@@ -93,7 +93,7 @@ public class PostsController {
             voMono = postsService.fetchDetails(code);
         } catch (Exception e) {
             logger.error("Fetch posts details occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -111,7 +111,7 @@ public class PostsController {
             voMono = postsService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch posts occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -129,7 +129,7 @@ public class PostsController {
             voMono = postsService.fetchContent(code);
         } catch (Exception e) {
             logger.error("Fetch posts occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -146,7 +146,7 @@ public class PostsController {
             count = postsService.count();
         } catch (Exception e) {
             logger.error("Count posts occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
     }
@@ -164,7 +164,7 @@ public class PostsController {
             voMono = postsService.nextPosts(code);
         } catch (Exception e) {
             logger.error("Fetch next posts occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -182,7 +182,7 @@ public class PostsController {
             voMono = postsService.previousPosts(code);
         } catch (Exception e) {
             logger.error("Fetch previous posts occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -239,7 +239,7 @@ public class PostsController {
             logger.error("Modify posts occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(voMono);
+        return ResponseEntity.accepted().body(voMono);
     }
 
 }

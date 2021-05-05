@@ -45,7 +45,7 @@ public class AccountController {
             voMono = accountService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch account occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -63,7 +63,7 @@ public class AccountController {
             voMono = accountService.create(accountDTO);
         } catch (Exception e) {
             logger.error("Create account occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
     }
@@ -84,7 +84,7 @@ public class AccountController {
             logger.error("Modify account occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(voMono);
+        return ResponseEntity.accepted().body(voMono);
     }
 
     /**

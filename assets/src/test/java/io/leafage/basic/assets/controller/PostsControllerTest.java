@@ -14,14 +14,16 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
+
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 
 /**
  * 文章接口测试类
@@ -102,10 +104,10 @@ class PostsControllerTest {
 
     @Test
     public void incrementLikes() {
-        given(this.postsService.incrementLikes(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Integer.class)));
+        given(this.postsService.incrementLikes(Mockito.anyString())).willReturn(Mono.just(2));
         webClient.patch().uri("/posts/{code}/like", "21213G0J2").exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.viewed").isEqualTo("2");
+                .expectStatus().isOk();
+        Mockito.verify(postsService, times(1)).incrementLikes(Mockito.anyString());
     }
 
     @Test
@@ -149,16 +151,18 @@ class PostsControllerTest {
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
+        postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setSubtitle("create posts test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("21213G0J2");
+        postsDTO.setContent("content");
         // 构造返回对象
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
         given(this.postsService.create(Mockito.any(PostsDTO.class))).willReturn(Mono.just(postsVO));
         webClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postsDTO).exchange()
-                .expectStatus().isEqualTo(HttpStatus.CREATED)
+                .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isNotEmpty();
     }
 
@@ -167,14 +171,16 @@ class PostsControllerTest {
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
+        postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setSubtitle("create posts test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("21213G0J2");
+        postsDTO.setContent("content");
         // 构造返回对象
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
         given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willReturn(Mono.just(postsVO));
         webClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(postsDTO).exchange().expectStatus().isEqualTo(HttpStatus.ACCEPTED);
+                .bodyValue(postsDTO).exchange().expectStatus().isAccepted();
     }
 }

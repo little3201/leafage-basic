@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Model class for ResourceInfo
+ * Model class for Authority
  *
  * @author liwenqiang 2020-10-06 22:09
  */

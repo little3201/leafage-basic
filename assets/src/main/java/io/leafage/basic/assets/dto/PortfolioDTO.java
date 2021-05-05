@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * DTO for Portfolio
+ * DTO class for Portfolio
  *
  * @author liwenqiang 2020-10-06 22:09
  */

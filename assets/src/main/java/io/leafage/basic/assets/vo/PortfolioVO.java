@@ -6,7 +6,7 @@ package io.leafage.basic.assets.vo;
 import java.util.Set;
 
 /**
- * VO for PortfolioInfo
+ * VO for Portfolio
  *
  * @author liwenqiang 2020-10-06 22:09
  */

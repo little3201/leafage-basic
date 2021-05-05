@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 /**
- * 组信息controller
+ * 分组信息controller
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

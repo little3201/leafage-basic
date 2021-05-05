@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.LocalDate;
 
 /**
- * Model class for UserInfo
+ * Model class for User
  *
  * @author liwenqiang 2020-10-06 22:09
  */

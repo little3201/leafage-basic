@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * Enter class for Posts
+ * DTO class for Posts
  *
  * @author liwenqiang 2020-10-06 22:09
  */

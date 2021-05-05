@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 /**
- * 内容信息repository
+ * 帖子内容信息repository
  *
  * @author liwenqiang 2020/2/26 18:29
  **/

@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 
 /**
- * 组织信息dao
+ * 分组信息repository
  *
  * @author liwenqiang 2018/12/20 9:52
  **/

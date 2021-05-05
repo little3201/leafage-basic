@@ -6,7 +6,7 @@ package io.leafage.basic.hypervisor.document;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * 地址信息
+ * Model class for Address
  *
  * @author liwenqiang 2020-10-06 22:09
  **/

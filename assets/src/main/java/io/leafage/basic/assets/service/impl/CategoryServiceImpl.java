@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 
 /**
- * 话题信息service实现
+ * 类目信息service实现
  *
  * @author liwenqiang 2020/2/13 20:24
  **/

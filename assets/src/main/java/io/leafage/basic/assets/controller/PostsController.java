@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 /**
- * posts controller
+ * 帖子信心controller
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Set;
 
 /**
- * Model class for ArticleInfo
+ * Model class for Portfolio
  *
  * @author liwenqiang 2020-10-06 22:09
  */

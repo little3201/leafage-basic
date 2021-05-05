@@ -6,12 +6,16 @@ package io.leafage.basic.assets.vo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * base vo
+ *
+ * @author liwenqiang 2020-10-06 22:09
+ */
 public class BaseVO implements Serializable {
 
     private static final long serialVersionUID = -5454263056607645027L;
 
     /**
-     *
      * 代码
      */
     private String code;

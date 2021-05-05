@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 
 /**
- * 权限资源dao
+ * 权限资源repository
  *
  * @author liwenqiang 2018/12/17 19:37
  **/

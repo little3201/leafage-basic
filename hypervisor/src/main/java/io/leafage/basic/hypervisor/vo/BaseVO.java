@@ -6,6 +6,11 @@ package io.leafage.basic.hypervisor.vo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * base vo
+ *
+ * @author liwenqiang 2020-10-06 22:09
+ */
 public class BaseVO implements Serializable {
 
     private static final long serialVersionUID = 4864635163075486414L;

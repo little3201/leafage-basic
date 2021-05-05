@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * Model class for RoleResource
+ * DTO class for Role Authority
  *
  * @author liwenqiang 2020-10-06 22:09
  */

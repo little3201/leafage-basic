@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * Model class for UserInfo
+ * DTO class for User
  *
  * @author liwenqiang 2020-10-06 22:09
  */

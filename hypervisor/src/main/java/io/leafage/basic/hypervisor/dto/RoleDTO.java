@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * Model class for RoleInfo
+ * DTO class for Role
  *
  * @author liwenqiang 2020-10-06 22:09
  */

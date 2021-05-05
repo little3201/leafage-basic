@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Model class for RoleResource
+ * Model class for Role Authority
  *
  * @author liwenqiang 2020-10-06 22:09
  */

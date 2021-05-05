@@ -4,7 +4,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 /**
- * Model class for ResourceInfo
+ * VO class for Authority
  *
  * @author liwenqiang 2020-10-06 22:09
  */

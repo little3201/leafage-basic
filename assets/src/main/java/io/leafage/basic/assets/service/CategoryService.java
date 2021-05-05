@@ -8,7 +8,7 @@ import io.leafage.basic.assets.vo.CategoryVO;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
- * 话题信息Service
+ * 类目信息Service
  *
  * @author liwenqiang 2020/2/13 20:16
  **/

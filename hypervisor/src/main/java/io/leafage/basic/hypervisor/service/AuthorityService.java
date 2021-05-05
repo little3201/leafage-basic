@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
- * 权限资源信息Service
+ * 权限信息Service
  *
  * @author liwenqiang 2018/12/17 19:36
  **/

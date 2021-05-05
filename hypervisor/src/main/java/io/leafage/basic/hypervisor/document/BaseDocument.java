@@ -10,6 +10,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
+/**
+ * base document
+ *
+ * @author liwenqiang 2020-10-06 22:09
+ */
 public class BaseDocument {
 
     /**

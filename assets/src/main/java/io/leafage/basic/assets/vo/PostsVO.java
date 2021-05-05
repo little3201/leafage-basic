@@ -6,7 +6,7 @@ package io.leafage.basic.assets.vo;
 import java.util.Set;
 
 /**
- * Enter class for ArticleInfo
+ * VO class for Posts
  *
  * @author liwenqiang 2020-10-06 22:09
  */

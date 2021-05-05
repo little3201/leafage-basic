@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 角色信息service 实现
+ * 角色信息service 接口实现
  *
  * @author liwenqiang 2018/9/27 14:20
  **/

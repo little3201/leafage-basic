@@ -34,7 +34,7 @@ import top.leafage.common.basic.AbstractBasicService;
 import javax.naming.NotContextException;
 
 /**
- * posts service实现
+ * 帖子信心 service 接口实现
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

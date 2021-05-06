@@ -6,14 +6,16 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
-import io.leafage.basic.hypervisor.service.AccountService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
+import static org.mockito.BDDMockito.given;
 
 /**
  * 账户service测试
@@ -26,14 +28,12 @@ class AccountServiceImplTest {
     @Mock
     private AccountRepository accountRepository;
 
-    @MockBean
-    private AccountService accountInfoService;
+    @InjectMocks
+    private AccountServiceImpl accountService;
 
     @Test
     void create() {
-        Mockito.when(accountRepository.save(Mockito.any(Account.class)))
-                .thenReturn(Mono.just(Mockito.mock(Account.class)));
-        accountInfoService.create(Mockito.mock(AccountDTO.class));
-        Mockito.verify(accountRepository, Mockito.atLeastOnce()).save(Mockito.any(Account.class));
+        given(accountRepository.insert(Mockito.any(Account.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
+        StepVerifier.create(this.accountService.create(Mockito.mock(AccountDTO.class))).expectNextCount(1).verifyComplete();
     }
 }

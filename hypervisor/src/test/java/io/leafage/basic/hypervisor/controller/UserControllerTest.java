@@ -11,11 +11,10 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 /**
  * 用户接口测试类
@@ -35,9 +34,11 @@ class UserControllerTest {
     void fetch() {
         UserVO userVO = new UserVO();
         userVO.setNickname("布吉岛");
-        when(userService.fetch(Mockito.anyString())).thenReturn(Mono.just(userVO));
-        webTestClient.get().uri("/user/{username}", Mockito.anyString())
-                .accept(MediaType.APPLICATION_JSON).exchange()
+        userVO.setPhone("18710339898");
+        userVO.setEmail("test@test.com");
+        given(this.userService.fetch(Mockito.anyString())).willReturn(Mono.just(userVO));
+        webTestClient.get().uri("/user/{username}", "little3201").exchange()
+                .expectStatus().isOk()
                 .expectBody().jsonPath("$.nickname").isNotEmpty();
     }
 }

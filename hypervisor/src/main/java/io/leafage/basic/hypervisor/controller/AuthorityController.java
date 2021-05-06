@@ -49,7 +49,7 @@ public class AuthorityController {
             }
         } catch (Exception e) {
             logger.error("Retrieve authority occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
@@ -67,7 +67,7 @@ public class AuthorityController {
             voMono = authorityService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch authority occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -84,7 +84,7 @@ public class AuthorityController {
             count = authorityService.count();
         } catch (Exception e) {
             logger.error("Count authority occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
     }
@@ -123,7 +123,7 @@ public class AuthorityController {
             logger.error("Modify authority occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(voMono);
+        return ResponseEntity.accepted().body(voMono);
     }
 
 }

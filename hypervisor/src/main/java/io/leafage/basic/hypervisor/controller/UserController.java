@@ -46,7 +46,7 @@ public class UserController {
             voFlux = userService.retrieve(page, size);
         } catch (Exception e) {
             logger.error("Retrieve user occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
@@ -64,7 +64,7 @@ public class UserController {
             voMono = userService.fetch(username);
         } catch (Exception e) {
             logger.error("Fetch user occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -82,7 +82,7 @@ public class UserController {
             voMono = userService.fetchDetails(username);
         } catch (Exception e) {
             logger.error("Fetch user details occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -100,7 +100,7 @@ public class UserController {
             voFlux = userService.relation(code);
         } catch (Exception e) {
             logger.error("Retrieve group users occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
@@ -117,7 +117,7 @@ public class UserController {
             count = userService.count();
         } catch (Exception e) {
             logger.error("Count user occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
     }
@@ -156,7 +156,7 @@ public class UserController {
             logger.error("Modify user occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(voMono);
+        return ResponseEntity.accepted().body(voMono);
     }
 
     /**
@@ -171,7 +171,7 @@ public class UserController {
             userService.remove(username);
         } catch (Exception e) {
             logger.error("Remove user occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();
     }

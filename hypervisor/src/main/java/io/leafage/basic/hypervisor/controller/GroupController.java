@@ -49,7 +49,7 @@ public class GroupController {
             }
         } catch (Exception e) {
             logger.error("Retrieve group occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
@@ -67,7 +67,7 @@ public class GroupController {
             voMono = groupService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch group occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
     }
@@ -84,7 +84,7 @@ public class GroupController {
             count = groupService.count();
         } catch (Exception e) {
             logger.error("Count group occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
     }
@@ -123,7 +123,7 @@ public class GroupController {
             logger.error("Modify group occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(voMono);
+        return ResponseEntity.accepted().body(voMono);
     }
 
     /**

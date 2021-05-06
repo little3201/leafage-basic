@@ -12,20 +12,24 @@ import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
 
 /**
  * 帖子service测试
@@ -52,7 +56,31 @@ class PostsServiceImplTest {
 
     @Test
     public void retrieve() {
-        StepVerifier.create(postsService.retrieve(0, 2)).expectNextCount(2).verifyComplete();
+        given(this.postsRepository.findAll()).willReturn(Flux.just(Mockito.mock(Posts.class)));
+        StepVerifier.create(this.postsService.retrieve()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    public void retrieve_page() {
+        Posts posts = new Posts();
+        ObjectId categoryId = new ObjectId();
+        posts.setCategoryId(categoryId);
+        given(this.postsRepository.findByEnabledTrue(PageRequest.of(0, 2,
+                Sort.by(Sort.Direction.DESC, "id")))).willReturn(Flux.just(posts));
+        given(this.categoryRepository.getById(categoryId)).willReturn(Mono.just(Mockito.mock(Category.class)));
+        StepVerifier.create(this.postsService.retrieve(0, 2, "id")).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    public void retrieve_page_category() {
+        Category category = new Category();
+        ObjectId id = new ObjectId();
+        category.setId(id);
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
+        given(this.postsRepository.findByCategoryIdAndEnabledTrue(id, PageRequest.of(0, 2,
+                Sort.by(Sort.Direction.DESC, "id")))).willReturn(Flux.just(Mockito.mock(Posts.class)));
+        StepVerifier.create(this.postsService.retrieve(0, 2, "21213G0J2", "id"))
+                .expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -62,9 +90,8 @@ class PostsServiceImplTest {
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(Mockito.mock(Category.class)));
         given(this.postsRepository.insert(Mockito.any(Posts.class))).willReturn(Mono.just(Mockito.mock(Posts.class)));
-        this.postsContentService.create(Mockito.any(PostsContent.class));
-        StepVerifier.create(this.postsService.create(postsDTO))
-                .expectSubscription().verifyComplete();
+        given(this.postsContentService.create(Mockito.any(PostsContent.class))).willReturn(Mono.empty());
+        StepVerifier.create(this.postsService.create(postsDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -87,18 +114,24 @@ class PostsServiceImplTest {
 
     @Test
     public void fetchDetails() {
+        Posts posts = new Posts();
+        ObjectId id = new ObjectId();
+        posts.setId(id);
+        ObjectId categoryId = new ObjectId();
+        posts.setCategoryId(categoryId);
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
-                .willReturn(Mono.just(Mockito.mock(Posts.class)));
-        given(this.reactiveMongoTemplate.upsert(Mockito.any(Query.class), Mockito.any(Update.class),
-                Posts.class)).willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
-        StepVerifier.create(this.postsService.fetchDetails("21213G0J2")).verifyComplete();
+                .willReturn(Mono.just(posts));
+        given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
+                new Update().inc("viewed", 1), Posts.class))
+                .willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
+        given(this.categoryRepository.getById(categoryId)).willReturn(Mono.just(Mockito.mock(Category.class)));
+        given(this.postsContentService.fetchByPostsId(id)).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
+        StepVerifier.create(this.postsService.fetchDetails("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 
     @Test
     public void fetchDetails_empty() {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.empty());
-        doThrow(new RuntimeException()).when(this.reactiveMongoTemplate.upsert(Mockito.any(Query.class),
-                Mockito.any(Update.class), Posts.class));
         StepVerifier.create(this.postsService.fetchDetails("21213G0J2")).verifyError();
     }
 }

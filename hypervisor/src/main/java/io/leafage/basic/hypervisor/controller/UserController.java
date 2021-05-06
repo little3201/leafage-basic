@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 /**
  * 用户信息接口.
@@ -43,9 +42,11 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
-        Page<UserVO> users = userService.retrieve(page, size, order);
-        if (!users.hasContent()) {
-            logger.info("Not found anything about user with pageable.");
+        Page<UserVO> users;
+        try {
+            users = userService.retrieve(page, size, order);
+        } catch (Exception e) {
+            logger.info("Retrieve user occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(users);
@@ -59,9 +60,11 @@ public class UserController {
      */
     @GetMapping("/{username}")
     public ResponseEntity<UserVO> fetch(@PathVariable String username) {
-        UserVO userVO = userService.fetch(username);
-        if (Objects.isNull(userVO)) {
-            logger.info("Not found anything with username: {}.", username);
+        UserVO userVO;
+        try {
+            userVO = userService.fetch(username);
+        } catch (Exception e) {
+            logger.info("Fetch user occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(userVO);
@@ -75,9 +78,11 @@ public class UserController {
      */
     @GetMapping("/{username}/details")
     public ResponseEntity<UserDetails> fetchDetails(@PathVariable String username) {
-        UserDetails userDetails = userService.fetchDetails(username);
-        if (Objects.isNull(userDetails)) {
-            logger.info("Not found anything with username: {}.", username);
+        UserDetails userDetails;
+        try {
+            userDetails = userService.fetchDetails(username);
+        } catch (Exception e) {
+            logger.info("Fetch user details occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(userDetails);
@@ -90,14 +95,15 @@ public class UserController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<UserVO> create(@RequestBody @Valid UserDTO userDTO) {
+        UserVO userVO;
         try {
-            userService.create(userDTO);
+            userVO = userService.create(userDTO);
         } catch (Exception e) {
             logger.error("Save user occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(userVO);
     }
 
     /**
@@ -108,15 +114,16 @@ public class UserController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{username}")
-    public ResponseEntity<Void> modify(@PathVariable String username,
-                                       @RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<UserVO> modify(@PathVariable String username,
+                                         @RequestBody @Valid UserDTO userDTO) {
+        UserVO userVO;
         try {
-            userService.modify(username, userDTO);
+            userVO = userService.modify(username, userDTO);
         } catch (Exception e) {
             logger.error("Modify user occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return ResponseEntity.accepted().body(userVO);
     }
 
     /**

@@ -41,12 +41,14 @@ public class CategoryController {
      */
     @GetMapping
     public ResponseEntity<Page<CategoryVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
-        Page<CategoryVO> voPage = categoryService.retrieve(page, size, order);
-        if (voPage.hasContent()) {
-            return ResponseEntity.ok(voPage);
+        Page<CategoryVO> voPage;
+        try {
+            voPage = categoryService.retrieve(page, size, order);
+        } catch (Exception e) {
+            logger.error("Retrieve posts occurred an error: ", e);
+            return ResponseEntity.noContent().build();
         }
-        logger.info("Not found anything about category with pageable.");
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(voPage);
     }
 
     /**
@@ -57,10 +59,12 @@ public class CategoryController {
      */
     @GetMapping("/{code}")
     public ResponseEntity<CategoryVO> fetch(@PathVariable String code) {
-        CategoryVO categoryVO = categoryService.fetch(code);
-        if (categoryVO == null) {
-            logger.info("Not found anything about category with code {}.", code);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        CategoryVO categoryVO;
+        try {
+            categoryVO = categoryService.fetch(code);
+        } catch (Exception e) {
+            logger.error("Fetch posts occurred an error: ", e);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(categoryVO);
     }
@@ -72,14 +76,15 @@ public class CategoryController {
      * @return 类目信息
      */
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryVO> create(@RequestBody @Valid CategoryDTO categoryDTO) {
+        CategoryVO categoryVO;
         try {
-            categoryService.create(categoryDTO);
+            categoryVO = categoryService.create(categoryDTO);
         } catch (Exception e) {
             logger.error("Save category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryVO);
     }
 
     /**
@@ -90,14 +95,15 @@ public class CategoryController {
      * @return 修改后的类目信息
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Void> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryVO> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
+        CategoryVO categoryVO;
         try {
-            categoryService.modify(code, categoryDTO);
+            categoryVO = categoryService.modify(code, categoryDTO);
         } catch (Exception e) {
             logger.error("Modify category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return ResponseEntity.accepted().body(categoryVO);
     }
 
     /**

@@ -39,9 +39,11 @@ public class GroupController {
      */
     @GetMapping
     public ResponseEntity<Page<GroupVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
-        Page<GroupVO> groups = groupService.retrieves(page, size, order);
-        if (!groups.hasContent()) {
-            logger.info("Not found anything about group with pageable.");
+        Page<GroupVO> groups;
+        try {
+            groups = groupService.retrieves(page, size, order);
+        } catch (Exception e) {
+            logger.info("Retrieve group occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(groups);
@@ -55,12 +57,14 @@ public class GroupController {
      */
     @GetMapping("/{code}")
     public ResponseEntity<GroupVO> fetch(@PathVariable String code) {
-        GroupVO groupInfo = groupService.fetch(code);
-        if (groupInfo == null) {
-            logger.info("Not found anything about group with code {}.", code);
+        GroupVO groupVO;
+        try {
+            groupVO = groupService.fetch(code);
+        } catch (Exception e) {
+            logger.info("Fetch group occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(groupInfo);
+        return ResponseEntity.ok(groupVO);
     }
 
     /**
@@ -70,14 +74,15 @@ public class GroupController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody GroupDTO groupDTO) {
+    public ResponseEntity<GroupVO> create(@RequestBody GroupDTO groupDTO) {
+        GroupVO groupVO;
         try {
-            groupService.create(groupDTO);
+            groupVO = groupService.create(groupDTO);
         } catch (Exception e) {
             logger.error("Create group occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(groupVO);
     }
 
     /**
@@ -88,14 +93,15 @@ public class GroupController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Void> modify(@PathVariable String code, @RequestBody GroupDTO groupDTO) {
+    public ResponseEntity<GroupVO> modify(@PathVariable String code, @RequestBody GroupDTO groupDTO) {
+        GroupVO groupVO;
         try {
-            groupService.modify(code, groupDTO);
+            groupVO = groupService.modify(code, groupDTO);
         } catch (Exception e) {
             logger.error("Modify group occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.accepted().body(groupVO);
     }
 
     /**

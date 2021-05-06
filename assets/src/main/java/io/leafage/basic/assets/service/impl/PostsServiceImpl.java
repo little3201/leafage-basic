@@ -113,9 +113,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         postsContent.setContent(postsDTO.getContent());
         postsContentRepository.save(postsContent);
         //转换结果
-        PostsVO postsVO = this.convertOuter(posts);
-        postsVO.setContent(postsDTO.getContent());
-        return postsVO;
+        return this.convertOuter(posts);
     }
 
     @Override
@@ -136,9 +134,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         postsContent.setContent(postsDTO.getContent());
         postsContentRepository.saveAndFlush(postsContent);
         //转换结果
-        PostsVO postsVO = this.convertOuter(posts);
-        postsVO.setContent(postsDTO.getContent());
-        return postsVO;
+        return this.convertOuter(posts);
     }
 
     @Override

@@ -64,11 +64,10 @@ public class PostsControllerTest {
     }
 
     @Test
-    public void retrieve_empty() throws Exception {
-        Page<PostsVO> postsPage = new PageImpl<>(Collections.emptyList());
-        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(postsPage);
+    public void retrieve_error() throws Exception {
+        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
         mvc.perform(get("/posts").queryParam("page", "0")
-                .queryParam("size", "2").queryParam("order", "id")).andExpect(status().is(204))
+                .queryParam("size", "2").queryParam("order", "id")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -82,9 +81,9 @@ public class PostsControllerTest {
     }
 
     @Test
-    void fetch_null() throws Exception {
-        given(this.postsService.fetch(Mockito.anyString())).willReturn(null);
-        mvc.perform(get("/posts/{code}", "21389KO6")).andExpect(status().is(204))
+    void fetch_error() throws Exception {
+        given(this.postsService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+        mvc.perform(get("/posts/{code}", "21389KO6")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -98,9 +97,9 @@ public class PostsControllerTest {
     }
 
     @Test
-    void fetchDetails_null() throws Exception {
-        given(this.postsService.fetchDetails(Mockito.anyString())).willReturn(null);
-        mvc.perform(get("/posts/{code}/details", "21389KO6")).andExpect(status().is(204))
+    void fetchDetails_error() throws Exception {
+        given(this.postsService.fetchDetails(Mockito.anyString())).willThrow(new RuntimeException());
+        mvc.perform(get("/posts/{code}/details", "21389KO6")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -111,12 +110,14 @@ public class PostsControllerTest {
         postsDTO.setTitle("test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategoryId(1L);
+        postsDTO.setTags(Collections.singleton("java"));
+        postsDTO.setContent("java");
         // 构造返回对象
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
         given(this.postsService.create(Mockito.any(PostsDTO.class))).willReturn(postsVO);
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(postsDTO))).andExpect(status().isOk())
+                .content(mapper.writeValueAsString(postsDTO))).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("test"))
                 .andDo(print()).andReturn();
     }
@@ -128,9 +129,11 @@ public class PostsControllerTest {
         postsDTO.setTitle("test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategoryId(1L);
+        postsDTO.setTags(Collections.singleton("java"));
+        postsDTO.setContent("java");
         given(this.postsService.create(Mockito.any(PostsDTO.class))).willThrow(new RuntimeException());
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(postsDTO))).andExpect(status().is(417))
+                .content(mapper.writeValueAsString(postsDTO))).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -142,10 +145,15 @@ public class PostsControllerTest {
         postsDTO.setSubtitle("test line");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategoryId(1L);
-        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willReturn(Mockito.mock(PostsVO.class));
+        postsDTO.setTags(Collections.singleton("java"));
+        postsDTO.setContent("java");
+        // 构造返回对象
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willReturn(postsVO);
         mvc.perform(put("/posts/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(postsDTO)))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
 
@@ -157,10 +165,12 @@ public class PostsControllerTest {
         postsDTO.setSubtitle("test line");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategoryId(1L);
+        postsDTO.setTags(Collections.singleton("java"));
+        postsDTO.setContent("java");
         given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willThrow(new RuntimeException());
         mvc.perform(put("/posts/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(postsDTO)))
-                .andExpect(status().is(304))
+                .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
 
@@ -174,7 +184,7 @@ public class PostsControllerTest {
     @Test
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.postsService).remove(Mockito.anyString());
-        mvc.perform(delete("/posts/{code}", "21389KO6")).andExpect(status().is(417))
+        mvc.perform(delete("/posts/{code}", "21389KO6")).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 /**
  * 角色信息接口
@@ -42,9 +41,11 @@ public class RoleController {
      */
     @GetMapping
     public ResponseEntity<Page<RoleVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
-        Page<RoleVO> roles = roleService.retrieves(page, size, order);
-        if (!roles.hasContent()) {
-            logger.info("Not found anything about role with pageable.");
+        Page<RoleVO> roles;
+        try {
+            roles = roleService.retrieves(page, size, order);
+        } catch (Exception e) {
+            logger.info("Retrieve role occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(roles);
@@ -58,9 +59,11 @@ public class RoleController {
      */
     @GetMapping("/{code}")
     public ResponseEntity<RoleVO> fetch(@PathVariable String code) {
-        RoleVO roleVO = roleService.fetch(code);
-        if (Objects.isNull(roleVO)) {
-            logger.info("Not found anything with code: {}.", code);
+        RoleVO roleVO;
+        try {
+            roleVO = roleService.fetch(code);
+        } catch (Exception e) {
+            logger.info("Fetch role occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(roleVO);
@@ -73,14 +76,15 @@ public class RoleController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid RoleDTO roleDTO) {
+    public ResponseEntity<RoleVO> create(@RequestBody @Valid RoleDTO roleDTO) {
+        RoleVO roleVO;
         try {
-            roleService.create(roleDTO);
+            roleVO = roleService.create(roleDTO);
         } catch (Exception e) {
             logger.error("Create role occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(roleVO);
     }
 
     /**
@@ -91,14 +95,15 @@ public class RoleController {
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Void> modify(@PathVariable String code, @RequestBody @Valid RoleDTO roleDTO) {
+    public ResponseEntity<RoleVO> modify(@PathVariable String code, @RequestBody @Valid RoleDTO roleDTO) {
+        RoleVO roleVO;
         try {
-            roleService.modify(code, roleDTO);
+            roleVO = roleService.modify(code, roleDTO);
         } catch (Exception e) {
             logger.error("Modify role occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return ResponseEntity.accepted().body(roleVO);
     }
 
     /**

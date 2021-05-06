@@ -41,9 +41,11 @@ public class AuthorityController {
      */
     @GetMapping
     public ResponseEntity<Page<AuthorityVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
-        Page<AuthorityVO> authorities = authorityService.retrieve(page, size, order);
-        if (!authorities.hasContent()) {
-            logger.info("Not found anything about authority with pageable.");
+        Page<AuthorityVO> authorities;
+        try {
+            authorities = authorityService.retrieve(page, size, order);
+        } catch (Exception e) {
+            logger.info("Retrieve authority occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(authorities);
@@ -57,9 +59,11 @@ public class AuthorityController {
      */
     @GetMapping("/{code}")
     public ResponseEntity<AuthorityVO> fetch(@PathVariable String code) {
-        AuthorityVO authorityVO = authorityService.fetch(code);
-        if (authorityVO == null) {
-            logger.info("Not found anything about authority with code {}.", code);
+        AuthorityVO authorityVO;
+        try {
+            authorityVO = authorityService.fetch(code);
+        } catch (Exception e) {
+            logger.info("Fetch authority occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(authorityVO);
@@ -72,14 +76,15 @@ public class AuthorityController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody @Valid AuthorityDTO authorityDTO) {
+    public ResponseEntity<AuthorityVO> create(@RequestBody @Valid AuthorityDTO authorityDTO) {
+        AuthorityVO authorityVO;
         try {
-            authorityService.create(authorityDTO);
+            authorityVO = authorityService.create(authorityDTO);
         } catch (Exception e) {
             logger.error("Create authority occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(authorityVO);
     }
 
     /**
@@ -90,13 +95,14 @@ public class AuthorityController {
      */
     @PutMapping("/{code}")
     public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody @Valid AuthorityDTO authorityDTO) {
+        AuthorityVO authorityVO;
         try {
-            authorityService.modify(code, authorityDTO);
+            authorityVO = authorityService.modify(code, authorityDTO);
         } catch (Exception e) {
             logger.error("Modify authority occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return ResponseEntity.accepted().body(authorityVO);
     }
 
     /**

@@ -14,6 +14,10 @@ public class PostsContentVO extends PostsVO {
      * 帖子ID
      */
     private Long postsId;
+    /**
+     * 内容
+     */
+    private String content;
 
 
     public Long getPostsId() {
@@ -24,4 +28,11 @@ public class PostsContentVO extends PostsVO {
         this.postsId = postsId;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -53,11 +52,10 @@ class CategoryControllerTest {
 
 
     @Test
-    public void retrieve_empty() throws Exception {
-        Page<CategoryVO> postsPage = new PageImpl<>(Collections.emptyList());
-        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(postsPage);
+    public void retrieve_error() throws Exception {
+        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
         mvc.perform(get("/category").queryParam("page", "0")
-                .queryParam("size", "2").queryParam("order", "id")).andExpect(status().is(204))
+                .queryParam("size", "2").queryParam("order", "id")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -72,9 +70,9 @@ class CategoryControllerTest {
     }
 
     @Test
-    void fetch_null() throws Exception {
-        given(this.categoryService.fetch(Mockito.anyString())).willReturn(null);
-        mvc.perform(get("/category/{code}", "21389KO6")).andExpect(status().is(204))
+    void fetch_error() throws Exception {
+        given(this.categoryService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+        mvc.perform(get("/category/{code}", "21389KO6")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -86,7 +84,7 @@ class CategoryControllerTest {
         categoryDTO.setName("test");
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
         mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(categoryDTO))).andExpect(status().isOk())
+                .content(mapper.writeValueAsString(categoryDTO))).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
@@ -98,7 +96,7 @@ class CategoryControllerTest {
         categoryDTO.setName("test");
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
         mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(categoryDTO))).andExpect(status().is(417))
+                .content(mapper.writeValueAsString(categoryDTO))).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -107,10 +105,13 @@ class CategoryControllerTest {
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
-        given(this.categoryService.modify(Mockito.anyString(), Mockito.any(CategoryDTO.class))).willReturn(Mockito.mock(CategoryVO.class));
+        // 构造结果对象
+        CategoryVO categoryVO = new CategoryVO();
+        categoryVO.setName("test");
+        given(this.categoryService.modify(Mockito.anyString(), Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
         mvc.perform(put("/category/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(categoryDTO)))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
 
@@ -122,7 +123,7 @@ class CategoryControllerTest {
         given(this.categoryService.modify(Mockito.anyString(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
         mvc.perform(put("/category/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(categoryDTO)))
-                .andExpect(status().is(304))
+                .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
 
@@ -136,7 +137,7 @@ class CategoryControllerTest {
     @Test
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.categoryService).remove(Mockito.anyString());
-        mvc.perform(delete("/category/{code}", "21389KO6")).andExpect(status().is(417))
+        mvc.perform(delete("/category/{code}", "21389KO6")).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 }

@@ -41,12 +41,14 @@ public class PostsController {
      */
     @GetMapping
     public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String order) {
-        Page<PostsVO> voPage = postsService.retrieve(page, size, order);
-        if (voPage.hasContent()) {
-            return ResponseEntity.ok(voPage);
+        Page<PostsVO> voPage;
+        try {
+            voPage = postsService.retrieve(page, size, order);
+        } catch (Exception e) {
+            logger.error("Retrieve posts occurred an error: ", e);
+            return ResponseEntity.noContent().build();
         }
-        logger.info("Not found anything about posts with pageable.");
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(voPage);
     }
 
     /**
@@ -57,10 +59,12 @@ public class PostsController {
      */
     @GetMapping("/{code}")
     public ResponseEntity<Object> fetch(@PathVariable String code) {
-        PostsVO article = postsService.fetch(code);
-        if (article == null) {
-            logger.info("Not found anything about article with code {}.", code);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        PostsVO article;
+        try {
+            article = postsService.fetch(code);
+        } catch (Exception e) {
+            logger.error("Fetch posts occurred an error: ", e);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(article);
     }
@@ -73,10 +77,12 @@ public class PostsController {
      */
     @GetMapping("/{code}/details")
     public ResponseEntity<Object> fetchDetails(@PathVariable String code) {
-        PostsVO article = postsService.fetchDetails(code);
-        if (article == null) {
-            logger.info("Not found anything about article with code {}.", code);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        PostsVO article;
+        try {
+            article = postsService.fetchDetails(code);
+        } catch (Exception e) {
+            logger.info("Fetch posts details occurred an error: ", e);
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(article);
     }
@@ -88,14 +94,15 @@ public class PostsController {
      * @return 帖子信息
      */
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody @Valid PostsDTO postsDTO) {
+    public ResponseEntity<PostsVO> create(@RequestBody @Valid PostsDTO postsDTO) {
+        PostsVO postsVO;
         try {
-            postsService.create(postsDTO);
+            postsVO = postsService.create(postsDTO);
         } catch (Exception e) {
-            logger.error("Save article occurred an error: ", e);
+            logger.error("Save posts occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(postsVO);
     }
 
     /**
@@ -106,14 +113,15 @@ public class PostsController {
      * @return 修改后的帖子信息
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Void> modify(@PathVariable String code, @RequestBody @Valid PostsDTO postsDTO) {
+    public ResponseEntity<PostsVO> modify(@PathVariable String code, @RequestBody @Valid PostsDTO postsDTO) {
+        PostsVO postsVO;
         try {
-            postsService.modify(code, postsDTO);
+            postsVO = postsService.modify(code, postsDTO);
         } catch (Exception e) {
             logger.error("Modify posts occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return ResponseEntity.accepted().body(postsVO);
     }
 
     /**

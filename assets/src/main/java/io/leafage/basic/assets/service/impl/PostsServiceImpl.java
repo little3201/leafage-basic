@@ -88,6 +88,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Mono<PostsContentVO> fetchDetails(String code) {
         Assert.hasText(code, "code is blank");
         return postsRepository.getByCodeAndEnabledTrue(code)
+                .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(posts -> {
                     // 更新viewed
                     this.incrementViewed(posts.getId()).subscribe();
@@ -96,7 +97,6 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                 .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
                             PostsContentVO pcv = new PostsContentVO();
                             BeanUtils.copyProperties(posts, pcv);
-                            pcv.setViewed(posts.getViewed() + 1);
                             pcv.setCategory(category.getAlias());
                             return pcv;
                         }).flatMap(pcv -> {

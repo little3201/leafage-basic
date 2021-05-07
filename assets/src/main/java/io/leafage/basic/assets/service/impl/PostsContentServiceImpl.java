@@ -33,10 +33,10 @@ public class PostsContentServiceImpl implements PostsContentService {
     }
 
     @Override
-    public Mono<PostsContent> modify(ObjectId postsId, PostsContent postsContentInfo) {
+    public Mono<PostsContent> modify(ObjectId postsId, PostsContent postsContent) {
         Assert.notNull(postsId, "postsId is null");
         return this.fetchByPostsId(postsId).flatMap(details -> {
-            BeanUtils.copyProperties(postsContentInfo, details);
+            BeanUtils.copyProperties(postsContent, details);
             return postsContentRepository.save(details);
         });
     }

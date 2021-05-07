@@ -13,9 +13,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 
 /**
  * 内容service测试
@@ -36,16 +36,19 @@ class PostsContentServiceImplTest {
         given(this.postsContentRepository.insert(Mockito.any(PostsContent.class)))
                 .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
         this.postsContentService.create(Mockito.mock(PostsContent.class));
-        Mockito.verify(this.postsContentRepository, times(1)).insert(Mockito.any(PostsContent.class));
+        StepVerifier.create(this.postsContentService.create(Mockito.mock(PostsContent.class)))
+                .expectNextCount(1).verifyComplete();
     }
 
     @Test
     public void modify() {
+        PostsContent postsContent = new PostsContent();
+        postsContent.setId(new ObjectId());
+        postsContent.setContent("test");
         given(this.postsContentRepository.getByPostsIdAndEnabledTrue(Mockito.any(ObjectId.class)))
-                .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
+                .willReturn(Mono.just(postsContent));
         given(this.postsContentRepository.save(Mockito.any(PostsContent.class)))
                 .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
-        this.postsContentService.modify(new ObjectId(), new PostsContent());
-        Mockito.verify(this.postsContentRepository, times(1)).save(Mockito.any(PostsContent.class));
+        StepVerifier.create(this.postsContentService.modify(new ObjectId(), postsContent)).expectNextCount(1).verifyComplete();
     }
 }

@@ -84,14 +84,23 @@ class UserServiceImplTest {
     @Test
     void fetchDetails() {
         String username = "little3201";
+        ObjectId userId = new ObjectId();
+        User user = new User();
+        user.setId(userId);
+        user.setUsername(username);
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
-                .willReturn(Mono.just(Mockito.mock(User.class)));
-        given(this.userRoleRepository.findByUserIdAndEnabledTrue(new ObjectId("6073d0d27b12374dac93a3bf")))
-                .willReturn(Flux.just(Mockito.mock(UserRole.class)));
-        given(this.roleAuthorityRepository.findByRoleIdIn(Mockito.anyList())).willReturn(Flux.just(Mockito.mock(RoleAuthority.class)));
+                .willReturn(Mono.just(user));
+        UserRole userRole = new UserRole();
+        ObjectId roleId = new ObjectId();
+        userRole.setUserId(userId);
+        userRole.setRoleId(roleId);
+        given(this.userRoleRepository.findByUserIdAndEnabledTrue(userId))
+                .willReturn(Flux.just(userRole));
+        RoleAuthority roleAuthority = new RoleAuthority();
+        roleAuthority.setAuthorityId(new ObjectId());
+        given(this.roleAuthorityRepository.findByRoleIdIn(Mockito.anyList())).willReturn(Flux.just(roleAuthority));
         given(this.authorityRepository.findByIdInAndEnabledTrue(Mockito.anyList())).willReturn(Flux.just(Mockito.mock(Authority.class)));
-        Mono<UserDetails> detailsMono = userService.fetchDetails(username);
-        StepVerifier.create(detailsMono).expectNext(Mockito.mock(UserDetails.class)).verifyComplete();
+        StepVerifier.create(userService.fetchDetails(username)).expectNextCount(1).verifyComplete();
     }
 
     /**

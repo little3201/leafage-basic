@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * 用户组repository
+ * 用户角色repository
  *
  * @author liwenqiang 2018/12/17 19:37
  **/

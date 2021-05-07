@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 
 /**
  * 基础对象实体类
+ *
+ * @author liwenqiang  2020-12-20 9:54
  */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass

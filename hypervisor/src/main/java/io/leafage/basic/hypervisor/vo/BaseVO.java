@@ -3,6 +3,11 @@ package io.leafage.basic.hypervisor.vo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * base vo
+ *
+ * @author liwenqiang  2020-12-20 9:54
+ */
 public class BaseVO implements Serializable {
 
     /**

@@ -4,7 +4,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 /**
- * a class for Authority
+ * VO class for Authority
  *
  * @author liwenqiang
  */

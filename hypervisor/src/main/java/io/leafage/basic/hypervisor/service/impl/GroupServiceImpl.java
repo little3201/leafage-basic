@@ -18,7 +18,7 @@ import org.springframework.util.StringUtils;
 import java.util.Collections;
 
 /**
- * 组织信息Service实现
+ * 分组信息Service实现
  *
  * @author liwenqiang 2018/12/17 19:25
  **/

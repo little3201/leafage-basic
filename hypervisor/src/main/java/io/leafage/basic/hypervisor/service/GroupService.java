@@ -9,7 +9,7 @@ import io.leafage.common.servlet.BasicService;
 import org.springframework.data.domain.Page;
 
 /**
- * 组织信息Service
+ * 分组信息Service
  *
  * @author liwenqiang 2018/12/17 19:24
  **/

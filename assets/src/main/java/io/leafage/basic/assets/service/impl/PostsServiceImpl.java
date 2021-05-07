@@ -95,7 +95,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public PostsVO create(PostsDTO postsDTO) {
         Posts posts = new Posts();
         BeanUtils.copyProperties(postsDTO, posts);

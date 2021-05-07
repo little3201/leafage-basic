@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for RoleInfo
+ * Model class for Role
  *
  * @author liwenqiang
  */

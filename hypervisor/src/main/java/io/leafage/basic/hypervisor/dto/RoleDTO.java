@@ -6,7 +6,6 @@ package io.leafage.basic.hypervisor.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -32,7 +31,7 @@ public class RoleDTO implements Serializable {
     /**
      * 资源列表
      */
-    private Set<String> authorities = Collections.emptySet();
+    private Set<String> authorities;
     /**
      * 修改人
      */

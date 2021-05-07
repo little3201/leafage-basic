@@ -1,7 +1,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 /**
- * a class for User
+ * VO class for User
  *
  * @author liwenqiang 2019/8/31 15:50
  **/

@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 组信息接口
+ * 分组信息接口
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

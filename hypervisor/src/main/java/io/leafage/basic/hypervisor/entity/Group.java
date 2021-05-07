@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for GroupInfo
+ * Model class for Group
  *
  * @author liwenqiang
  */

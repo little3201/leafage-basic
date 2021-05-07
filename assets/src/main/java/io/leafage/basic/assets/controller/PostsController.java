@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 帖子信息接口
+ * posts api .
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -33,7 +33,7 @@ public class PostsController {
     }
 
     /**
-     * 分页查询
+     * retrieve with page .
      *
      * @param page 页码
      * @param size 大小
@@ -52,7 +52,7 @@ public class PostsController {
     }
 
     /**
-     * 查询帖子
+     * fetch with code .
      *
      * @param code 代码
      * @return 帖子信息，不包括内容

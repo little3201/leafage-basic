@@ -10,7 +10,7 @@ import io.leafage.common.servlet.BasicService;
 import org.springframework.data.domain.Page;
 
 /**
- * java类描述
+ * 用户信息service
  *
  * @author liwenqiang 2018/7/28 0:29
  **/

@@ -15,6 +15,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * 异常处理类
+ *
+ * @author liwenqiang  2020-12-20 9:54
+ */
 @RestControllerAdvice
 public class CustomExceptionHandler {
 

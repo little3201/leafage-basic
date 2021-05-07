@@ -8,7 +8,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -56,7 +55,7 @@ public class UserDTO implements Serializable {
     /**
      * 角色列表
      */
-    private Set<String> roles = Collections.emptySet();
+    private Set<String> roles;
     /**
      * 修改人
      */

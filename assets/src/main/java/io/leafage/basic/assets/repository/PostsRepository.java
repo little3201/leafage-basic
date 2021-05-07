@@ -31,7 +31,7 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
      *
      * @param code 唯一码
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     @Modifying
     @Query("update #{#entityName} set viewed = viewed + 1 where code = ?1")
     void flushViewed(String code);

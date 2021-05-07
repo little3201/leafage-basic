@@ -18,8 +18,9 @@ public interface CategoryService extends BasicService<CategoryDTO, CategoryVO> {
     /**
      * 分页查询
      *
-     * @param page 查询起点
-     * @param size 大小
+     * @param page  页码
+     * @param size  大小
+     * @param order 排序字段
      * @return 查询结果
      */
     Page<CategoryVO> retrieve(int page, int size, String order);

@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 /**
  * 统计类
+ *
+ * @author liwenqiang  2020-12-20 9:54
  */
 public class CountVO implements Serializable {
 

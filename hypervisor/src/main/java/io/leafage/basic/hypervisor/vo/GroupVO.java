@@ -4,7 +4,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 /**
- * a class for Group
+ * VO class for Group
  *
  * @author liwenqiang
  */

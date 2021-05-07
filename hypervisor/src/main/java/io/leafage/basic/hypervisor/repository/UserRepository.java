@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * 用户信息(userInfo)dao接口
+ * 用户信息repository
  *
  * @author liwenqiang 2018/7/27 17:50
  **/

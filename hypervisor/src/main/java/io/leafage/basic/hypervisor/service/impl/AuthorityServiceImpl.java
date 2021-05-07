@@ -17,10 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-
 /**
- * 权限资源信息Service实现
+ * 权限信息Service实现
  *
  * @author liwenqiang 2018/12/17 19:36
  **/
@@ -46,11 +44,6 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         info.setCode(this.generateCode());
         Authority authority = authorityRepository.save(info);
         return this.convertOuter(authority);
-    }
-
-    @Override
-    public List<AuthorityVO> saveAll(List<AuthorityDTO> entities) {
-        return null;
     }
 
     @Override

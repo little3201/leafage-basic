@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for UserGroup
+ * Model class for User Role
  *
  * @author liwenqiang
  */

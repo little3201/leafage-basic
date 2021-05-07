@@ -9,7 +9,7 @@ import io.leafage.common.servlet.BasicService;
 import org.springframework.data.domain.Page;
 
 /**
- * 权限资源信息Service
+ * 权限信息Service
  *
  * @author liwenqiang 2018/12/17 19:36
  **/

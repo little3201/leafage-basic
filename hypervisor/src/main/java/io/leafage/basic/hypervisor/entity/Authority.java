@@ -7,9 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for SourceInfo
+ * Model class for Authority
  *
- * @author liwenqiang
+ * @author liwenqiang 2019/8/31 15:50
  */
 @Entity
 @Table(name = "authority")

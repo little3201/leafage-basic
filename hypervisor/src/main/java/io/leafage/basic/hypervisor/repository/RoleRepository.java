@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 角色信息dao接口
+ * 角色信息repository
  *
  * @author liwenqiang 2018/9/26 11:06
  **/

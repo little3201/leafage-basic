@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for RoleSource
+ * Model class for Role Authority
  *
  * @author liwenqiang
  */

@@ -4,7 +4,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 /**
- * a class for Role
+ * VO class for Role
  *
  * @author liwenqiang
  */

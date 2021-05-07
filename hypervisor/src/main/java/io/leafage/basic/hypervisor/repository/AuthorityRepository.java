@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 权限资源dao
+ * 权限 repository
  *
  * @author liwenqiang 2018/12/17 19:37
  **/

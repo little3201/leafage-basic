@@ -36,6 +36,9 @@ public class AuthorityController {
     /**
      * 查询资源信息
      *
+     * @param page 页码
+     * @param size 大小
+     * @param type 类型
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping

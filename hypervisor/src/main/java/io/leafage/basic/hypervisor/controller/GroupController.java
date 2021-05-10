@@ -36,7 +36,9 @@ public class GroupController {
     /**
      * 查询组信息
      *
-     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     * @param page 页码
+     * @param size 大小
+     * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
     public ResponseEntity<Flux<GroupVO>> retrieve(Integer page, Integer size) {
@@ -58,7 +60,7 @@ public class GroupController {
      * 根据传入的业务id: code 查询信息
      *
      * @param code 业务id
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     * @return 查询的数据，异常时返回204状态码
      */
     @GetMapping("/{code}")
     public ResponseEntity<Mono<GroupVO>> fetch(@PathVariable String code) {
@@ -75,7 +77,7 @@ public class GroupController {
     /**
      * 统计记录数
      *
-     * @return 记录数
+     * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping("/count")
     public ResponseEntity<Mono<Long>> count() {

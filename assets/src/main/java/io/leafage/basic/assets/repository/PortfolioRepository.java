@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * 作品集信息repository
+ * 作品信息repository
  *
  * @author liwenqiang 2018/12/20 9:51
  **/
@@ -30,8 +30,9 @@ public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, 
     /**
      * 按照分类，分页查询作品集
      *
-     * @param pageable 分页参数
-     * @return 有效作品集
+     * @param categoryId 分类ID
+     * @param pageable   分页参数
+     * @return 作品集
      */
     Flux<Portfolio> findByCategoryIdAndEnabledTrue(ObjectId categoryId, Pageable pageable);
 
@@ -39,7 +40,7 @@ public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, 
      * 根据code查询enabled信息
      *
      * @param code 代码
-     * @return 作品集信息
+     * @return 作品信息
      */
     Mono<Portfolio> getByCodeAndEnabledTrue(String code);
 }

@@ -36,8 +36,9 @@ public class UserController {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
+     * @param page  页码
+     * @param size  大小
+     * @param order 排序字段
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回204
      */
     @GetMapping

@@ -35,8 +35,9 @@ public class AuthorityController {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
+     * @param page  页码
+     * @param size  大小
+     * @param order 排序字段
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
@@ -90,6 +91,7 @@ public class AuthorityController {
     /**
      * 修改信息
      *
+     * @param code         代码
      * @param authorityDTO 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */

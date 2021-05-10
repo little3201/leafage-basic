@@ -35,8 +35,9 @@ public class CategoryController {
     /**
      * 分页查询类目
      *
-     * @param page 页码
-     * @param size 大小
+     * @param page  页码
+     * @param size  大小
+     * @param order 排序字段
      * @return 分页结果集
      */
     @GetMapping

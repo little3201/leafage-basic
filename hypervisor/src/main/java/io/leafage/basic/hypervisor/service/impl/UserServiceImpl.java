@@ -9,7 +9,6 @@ import io.leafage.basic.hypervisor.entity.*;
 import io.leafage.basic.hypervisor.repository.*;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
-import io.leafage.common.basic.AbstractBasicService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import top.leafage.common.basic.AbstractBasicService;
 
 import java.util.List;
 import java.util.Map;

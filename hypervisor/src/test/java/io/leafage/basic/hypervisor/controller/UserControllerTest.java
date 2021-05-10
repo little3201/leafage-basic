@@ -17,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -33,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  **/
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
 
     @MockBean
     private UserService userService;
@@ -42,7 +41,7 @@ public class UserControllerTest {
     private MockMvc mvc;
 
     @Test
-    public void retrieve() throws Exception {
+    void retrieve() throws Exception {
         List<UserVO> voList = new ArrayList<>(2);
         voList.add(new UserVO());
         Page<UserVO> userVOPage = new PageImpl<>(voList);
@@ -53,9 +52,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void retrieve_empty() throws Exception {
-        Page<UserVO> userVOPage = new PageImpl<>(Collections.emptyList());
-        given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(userVOPage);
+    void retrieve_error() throws Exception {
+        given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
         mvc.perform(get("/user").queryParam("page", "0").queryParam("size", "2")
                 .queryParam("order", "")).andExpect(status().is(204)).andDo(print()).andReturn();
     }

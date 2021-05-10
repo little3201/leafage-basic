@@ -25,10 +25,13 @@ public class CustomExceptionHandler {
 
     /**
      * 处理参数校验异常
+     *
+     * @param exception exception of MethodArgumentNotValidException
+     * @return a construct of ResponseEntity
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
         StringBuilder builder = new StringBuilder();
         for (FieldError fieldError : fieldErrors) {
             builder.append(fieldError.getField()).append(fieldError.getDefaultMessage()).append(",");
@@ -38,6 +41,9 @@ public class CustomExceptionHandler {
 
     /**
      * 处理递归参数校验异常
+     *
+     * @param exception exception of ConstraintViolationException
+     * @return a construct of ResponseEntity
      */
     @ExceptionHandler
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception) {

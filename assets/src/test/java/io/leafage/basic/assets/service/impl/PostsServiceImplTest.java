@@ -31,7 +31,7 @@ import static org.mockito.Mockito.times;
  * @author liwenqiang 2019-08-20 22:38
  **/
 @ExtendWith(MockitoExtension.class)
-public class PostsServiceImplTest {
+class PostsServiceImplTest {
 
     @Mock
     private PostsRepository postsRepository;
@@ -46,7 +46,7 @@ public class PostsServiceImplTest {
     private PostsServiceImpl postsService;
 
     @Test
-    public void create() {
+    void create() {
         given(postsRepository.save(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
         given(postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostsContent.class));
         given(categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Category.class)));

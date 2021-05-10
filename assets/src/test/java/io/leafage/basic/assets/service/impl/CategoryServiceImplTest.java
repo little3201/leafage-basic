@@ -19,13 +19,15 @@ import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
 
+import static org.mockito.BDDMockito.given;
+
 /**
  * 类目接口测试
  *
  * @author liwenqiang 2019/3/28 20:22
  **/
 @ExtendWith(MockitoExtension.class)
-public class CategoryServiceImplTest {
+class CategoryServiceImplTest {
 
     @Mock
     private CategoryRepository categoryRepository;
@@ -34,17 +36,17 @@ public class CategoryServiceImplTest {
     private CategoryServiceImpl categoryService;
 
     @Test
-    public void retrieve() {
+    void retrieve() {
         Page<Category> categoryPage = new PageImpl<>(new ArrayList<>(2));
-        Mockito.when(categoryRepository.findAll(Mockito.any(PageRequest.class))).thenReturn(categoryPage);
+        given(categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(categoryPage);
         Page<CategoryVO> voPage = categoryService.retrieve(0, 2, "id");
         Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test
-    public void fetch() {
-        Mockito.when(categoryRepository.findByCodeAndEnabledTrue(Mockito.anyString())).thenReturn(Mockito.mock(Category.class));
-        CategoryVO categoryVO = categoryService.fetch(Mockito.anyString());
+    void fetch() {
+        given(categoryRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
+        CategoryVO categoryVO = categoryService.fetch("21319IDJ0");
         Assertions.assertNotNull(categoryVO);
     }
 }

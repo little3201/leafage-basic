@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  **/
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(PostsController.class)
-public class PostsControllerTest {
+class PostsControllerTest {
 
     @MockBean
     private PostsService postsService;
@@ -50,7 +50,7 @@ public class PostsControllerTest {
     private ObjectMapper mapper;
 
     @Test
-    public void retrieve() throws Exception {
+    void retrieve() throws Exception {
         List<PostsVO> voList = new ArrayList<>(2);
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
@@ -64,7 +64,7 @@ public class PostsControllerTest {
     }
 
     @Test
-    public void retrieve_error() throws Exception {
+    void retrieve_error() throws Exception {
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
         mvc.perform(get("/posts").queryParam("page", "0")
                 .queryParam("size", "2").queryParam("order", "id")).andExpect(status().isNoContent())

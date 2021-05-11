@@ -48,18 +48,18 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public void remove(String code) {
-        Role role = roleRepository.findByCodeAndEnabledTrue(code);
-        roleRepository.deleteById(role.getId());
+    public RoleVO create(RoleDTO roleDTO) {
+        Role role = new Role();
+        BeanUtils.copyProperties(roleDTO, role);
+        role.setCode(this.generateCode());
+        role = roleRepository.save(role);
+        return this.convertOuter(role);
     }
 
     @Override
-    public RoleVO create(RoleDTO roleDTO) {
-        Role info = new Role();
-        BeanUtils.copyProperties(roleDTO, info);
-        info.setCode(this.generateCode());
-        Role role = roleRepository.save(info);
-        return this.convertOuter(role);
+    public void remove(String code) {
+        Role role = roleRepository.findByCodeAndEnabledTrue(code);
+        roleRepository.deleteById(role.getId());
     }
 
     /**

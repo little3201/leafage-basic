@@ -39,10 +39,10 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public AuthorityVO create(AuthorityDTO authorityDTO) {
-        Authority info = new Authority();
-        BeanUtils.copyProperties(authorityDTO, info);
-        info.setCode(this.generateCode());
-        Authority authority = authorityRepository.save(info);
+        Authority authority = new Authority();
+        BeanUtils.copyProperties(authorityDTO, authority);
+        authority.setCode(this.generateCode());
+        authority = authorityRepository.save(authority);
         return this.convertOuter(authority);
     }
 

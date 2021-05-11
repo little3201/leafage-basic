@@ -58,10 +58,12 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public UserVO create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
-        userRepository.save(user);
+        user = userRepository.save(user);
         if (!CollectionUtils.isEmpty(userDTO.getRoles())) {
             List<Role> roles = roleRepository.findByCodeInAndEnabledTrue(userDTO.getRoles());
-            this.saveBatch(roles, user.getId());
+            if (!CollectionUtils.isEmpty(roles)) {
+                this.saveBatch(roles, user.getId());
+            }
         }
         return this.convertOuter(user);
     }
@@ -70,7 +72,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public UserVO modify(String username, UserDTO userDTO) {
         User user = userRepository.findByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(userDTO, user);
-        userRepository.saveAndFlush(user);
+        user = userRepository.saveAndFlush(user);
         if (CollectionUtils.isEmpty(userDTO.getRoles())) {
             userRoleRepository.deleteByUserId(user.getId());
         } else {

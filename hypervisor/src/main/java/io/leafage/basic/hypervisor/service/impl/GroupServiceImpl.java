@@ -43,10 +43,10 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public GroupVO create(GroupDTO groupDTO) {
-        Group info = new Group();
-        BeanUtils.copyProperties(groupDTO, info);
-        info.setCode(this.generateCode());
-        Group group = groupRepository.save(info);
+        Group group = new Group();
+        BeanUtils.copyProperties(groupDTO, group);
+        group.setCode(this.generateCode());
+        group = groupRepository.save(group);
         return this.convertOuter(group);
     }
 

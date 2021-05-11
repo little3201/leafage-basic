@@ -23,5 +23,5 @@ public interface GroupService extends BasicService<GroupDTO, GroupVO> {
      * @param order 排序字段
      * @return 查询结果
      */
-    Page<GroupVO> retrieves(int page, int size, String order);
+    Page<GroupVO> retrieve(int page, int size, String order);
 }

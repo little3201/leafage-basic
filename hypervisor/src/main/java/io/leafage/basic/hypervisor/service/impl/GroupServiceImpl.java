@@ -32,7 +32,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
-    public Page<GroupVO> retrieves(int page, int size, String order) {
+    public Page<GroupVO> retrieve(int page, int size, String order) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modify_time"));
         Page<Group> infoPage = groupRepository.findAll(pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {

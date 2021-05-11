@@ -42,7 +42,7 @@ public class GroupController {
     public ResponseEntity<Page<GroupVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
         Page<GroupVO> groups;
         try {
-            groups = groupService.retrieves(page, size, order);
+            groups = groupService.retrieve(page, size, order);
         } catch (Exception e) {
             logger.info("Retrieve group occurred an error: ", e);
             return ResponseEntity.noContent().build();

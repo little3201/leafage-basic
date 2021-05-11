@@ -53,8 +53,8 @@ class UserServiceImplTest {
 
     @Test
     void retrieve() {
-        List<User> voList = new ArrayList<>(2);
-        Page<User> postsPage = new PageImpl<>(voList);
+        List<User> users = new ArrayList<>(2);
+        Page<User> postsPage = new PageImpl<>(users);
         given(this.userRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
         Page<UserVO> voPage = userService.retrieve(0, 2, "id");
         Assertions.assertNotNull(voPage);
@@ -118,7 +118,7 @@ class UserServiceImplTest {
         userDTO.setNickname("管理员");
         userDTO.setRoles(Collections.singleton("admin"));
         userService.create(userDTO);
-        verify(userRepository, Mockito.times(1)).save(Mockito.any());
+        verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
     }
 
 
@@ -150,16 +150,16 @@ class UserServiceImplTest {
         userDTO.setNickname("管理员");
         userDTO.setRoles(Collections.singleton("admin"));
         userService.modify("test", userDTO);
-        verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any());
+        verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any(User.class));
         // 一次逻辑删除，一次新增
-        verify(userRoleRepository, Mockito.times(2)).saveAll(Mockito.any());
+        verify(userRoleRepository, Mockito.times(2)).saveAll(Mockito.anyList());
     }
 
     @Test
     void remove() {
         given(this.userRepository.findByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
         userService.remove("test");
-        verify(this.userRepository, times(1)).saveAndFlush(Mockito.any());
+        verify(this.userRepository, times(1)).saveAndFlush(Mockito.any(User.class));
     }
 
 }

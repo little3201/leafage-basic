@@ -33,6 +33,8 @@ import top.leafage.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
 
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
+
 /**
  * 帖子信心 service 接口实现
  *
@@ -227,7 +229,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Flux<PostsVO> search(String keyword) {
         Posts posts = new Posts();
         posts.setTitle(keyword);
-        ExampleMatcher matcher = ExampleMatcher.matchingAny().withIgnoreCase("title", "subtitle");
+        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("title", contains())
+                .withMatcher("subtitle", contains());
         return postsRepository.findAll(Example.of(posts, matcher)).map(this::convertOuter);
     }
 

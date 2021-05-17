@@ -36,7 +36,9 @@ public class RoleController {
     /**
      * 查询角色信息
      *
-     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     * @param page 页码
+     * @param size 大小
+     * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
     public ResponseEntity<Flux<RoleVO>> retrieve(Integer page, Integer size) {
@@ -58,7 +60,7 @@ public class RoleController {
      * 根据传入的代码查询信息
      *
      * @param code 代码
-     * @return 如果查询到数据，返回查询到的信息，否则返回404状态码
+     * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping("/{code}")
     public ResponseEntity<Mono<RoleVO>> fetch(@PathVariable String code) {
@@ -75,7 +77,7 @@ public class RoleController {
     /**
      * 统计记录数
      *
-     * @return 记录数
+     * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping("/count")
     public ResponseEntity<Mono<Long>> count() {
@@ -93,7 +95,7 @@ public class RoleController {
      * 根据传入的数据添加信息
      *
      * @param roleDTO 要添加的数据
-     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
+     * @return 添加后的信息，否则返回417状态码
      */
     @PostMapping
     public ResponseEntity<Mono<RoleVO>> create(@RequestBody @Valid RoleDTO roleDTO) {

@@ -39,9 +39,10 @@ public class PostsController {
     /**
      * 分页查询信息
      *
-     * @param page  页码
-     * @param size  大小
-     * @param order 排序字段
+     * @param page     页码
+     * @param size     大小
+     * @param category 分类
+     * @param order    排序字段
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping

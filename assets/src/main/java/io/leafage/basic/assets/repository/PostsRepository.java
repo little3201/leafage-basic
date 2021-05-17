@@ -31,7 +31,8 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
     /**
      * 根据分类分页查询帖子
      *
-     * @param pageable 分页参数
+     * @param categoryId 分类ID
+     * @param pageable   分页参数
      * @return 有效帖子
      */
     Flux<Posts> findByCategoryIdAndEnabledTrue(ObjectId categoryId, Pageable pageable);

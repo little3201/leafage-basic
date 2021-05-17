@@ -37,6 +37,8 @@ public class UserController {
     /**
      * 查询用户信息
      *
+     * @param page 页码
+     * @param size 大小
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping

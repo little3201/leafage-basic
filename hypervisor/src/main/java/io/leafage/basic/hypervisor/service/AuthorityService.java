@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import reactor.core.publisher.Flux;
@@ -15,5 +16,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
  **/
 public interface AuthorityService extends ReactiveBasicService<AuthorityDTO, AuthorityVO> {
 
-    Flux<AuthorityVO> retrieve(String type);
+    Flux<AuthorityVO> retrieve(Character type);
+
+    Flux<TreeNode> tree();
 }

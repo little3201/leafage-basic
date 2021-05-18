@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Authority;
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
@@ -20,6 +21,9 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 权限信息Service 接口实现
@@ -38,9 +42,10 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Flux<AuthorityVO> retrieve(String type) {
+    public Flux<AuthorityVO> retrieve(Character type) {
         Authority authority = new Authority();
         authority.setType(type);
+        authority.setEnabled(true);
         return authorityRepository.findAll(Example.of(authority)).map(this::convertOuter);
     }
 
@@ -63,6 +68,19 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
                             return Mono.just(authorityVO);
                         })
                 );
+    }
+
+    @Override
+    public Flux<TreeNode> tree() {
+        Authority authority = new Authority();
+        authority.setType('M');
+        authority.setEnabled(true);
+        Flux<Authority> authorities = authorityRepository.findAll(Example.of(authority));
+        return authorities.filter(a -> a.getSuperior() == null).map(a -> {
+            TreeNode treeNode = this.constructNode(a.getCode(), a);
+            this.addChildren(authority, authorities);
+            return treeNode;
+        });
     }
 
     @Override
@@ -134,6 +152,47 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         AuthorityVO outer = new AuthorityVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
+    }
+
+    /**
+     * construct tree node
+     *
+     * @param superior  superior code
+     * @param authority data
+     * @return tree node
+     */
+    private TreeNode constructNode(String superior, Authority authority) {
+        TreeNode treeNode = new TreeNode();
+        treeNode.setCode(authority.getCode());
+        treeNode.setName(authority.getName());
+        treeNode.setSuperior(superior);
+        Map<String, String> expand = new HashMap<>();
+        expand.put("icon", authority.getIcon());
+        expand.put("path", authority.getPath());
+        treeNode.setExpand(expand);
+        return treeNode;
+    }
+
+    /**
+     * add child node
+     *
+     * @param superior    superior node
+     * @param authorities to be build source data
+     * @return tree node
+     */
+    private List<TreeNode> addChildren(Authority superior, Flux<Authority> authorities) {
+        authorities.filter(authority -> superior.getId().equals(authority.getSuperior())).doOnEach(authoritySignal ->
+                authoritySignal.get());
+
+
+//        return authorities.filter(authority -> superior.getId().equals(authority.getSuperior())).map(authority -> {
+//            TreeNode treeNode = this.constructNode(superior.getCode(), authority);
+//            return this.addChildren(authority, authorities).map(treeNodes -> {
+//                treeNode.setChildren(treeNodes);
+//                return treeNode;
+//            });
+//        });
+        return null;
     }
 
 }

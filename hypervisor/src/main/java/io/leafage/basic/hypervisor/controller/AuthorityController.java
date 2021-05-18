@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
@@ -42,7 +43,7 @@ public class AuthorityController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Flux<AuthorityVO>> retrieve(Integer page, Integer size, String type) {
+    public ResponseEntity<Flux<AuthorityVO>> retrieve(Integer page, Integer size, Character type) {
         Flux<AuthorityVO> voFlux;
         try {
             if (page != null && size != null) {
@@ -55,6 +56,23 @@ public class AuthorityController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
+    }
+
+    /**
+     * 查询树形数据
+     *
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("/tree")
+    public ResponseEntity<Flux<TreeNode>> tree() {
+        Flux<TreeNode> authorities;
+        try {
+            authorities = authorityService.tree();
+        } catch (Exception e) {
+            logger.info("Retrieve authority occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(authorities);
     }
 
     /**

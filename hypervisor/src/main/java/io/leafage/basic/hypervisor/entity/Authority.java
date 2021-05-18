@@ -20,9 +20,9 @@ public class Authority extends BaseEntity {
      */
     private String code;
     /**
-     * 上级
+     * 上级主键
      */
-    private String superior;
+    private Long superior;
     /**
      * 名称
      */
@@ -30,7 +30,11 @@ public class Authority extends BaseEntity {
     /**
      * 类型
      */
-    private String type;
+    private Character type;
+    /**
+     * 图标
+     */
+    private String icon;
     /**
      * 路径
      */
@@ -48,11 +52,11 @@ public class Authority extends BaseEntity {
         this.code = code;
     }
 
-    public String getSuperior() {
+    public Long getSuperior() {
         return superior;
     }
 
-    public void setSuperior(String superior) {
+    public void setSuperior(Long superior) {
         this.superior = superior;
     }
 
@@ -64,12 +68,20 @@ public class Authority extends BaseEntity {
         this.name = name;
     }
 
-    public String getType() {
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getPath() {

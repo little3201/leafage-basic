@@ -50,7 +50,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Page<UserVO> retrieve(int page, int size, String order) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modify_time"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modifyTime"));
         return userRepository.findAll(pageable).map(this::convertOuter);
     }
 

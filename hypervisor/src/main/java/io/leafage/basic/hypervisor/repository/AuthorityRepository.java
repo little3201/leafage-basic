@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,12 +33,4 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
      * @return 信息
      */
     List<Authority> findByIdIn(@NotNull List<Long> ids);
-
-    /**
-     * 根据codes查询
-     *
-     * @param codes 代码集合
-     * @return 信息
-     */
-    List<Authority> findByCodeInAndEnabledTrue(Collection<String> codes);
 }

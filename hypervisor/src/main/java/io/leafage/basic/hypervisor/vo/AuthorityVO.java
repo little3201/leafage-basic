@@ -12,9 +12,9 @@ public class AuthorityVO extends BaseVO {
 
     private static final long serialVersionUID = 7493821282349624572L;
     /**
-     * 业务ID
+     * 代码
      */
-    private String businessId;
+    private String code;
     /**
      * 上级
      */
@@ -26,7 +26,11 @@ public class AuthorityVO extends BaseVO {
     /**
      * 类型
      */
-    private String type;
+    private Character type;
+    /**
+     * 图标
+     */
+    private String icon;
     /**
      * 路径
      */
@@ -36,12 +40,12 @@ public class AuthorityVO extends BaseVO {
      */
     private String description;
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getSuperior() {
@@ -60,12 +64,20 @@ public class AuthorityVO extends BaseVO {
         this.name = name;
     }
 
-    public String getType() {
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getPath() {

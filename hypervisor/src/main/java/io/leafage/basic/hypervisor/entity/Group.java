@@ -24,11 +24,11 @@ public class Group extends BaseEntity {
      */
     private String name;
     /**
-     * 负责人
+     * 负责人主键
      */
     private Long principal;
     /**
-     * 上级
+     * 上级主键
      */
     private Long superior;
     /**

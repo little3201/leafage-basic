@@ -24,6 +24,10 @@ public class Role extends BaseEntity {
      */
     private String name;
     /**
+     * 上级主键
+     */
+    private Long superior;
+    /**
      * 描述
      */
     private String description;
@@ -42,6 +46,14 @@ public class Role extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(Long superior) {
+        this.superior = superior;
     }
 
     public String getDescription() {

@@ -33,7 +33,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Page<RoleVO> retrieve(int page, int size, String order) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modify_time"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modifyTime"));
         Page<Role> infoPage = roleRepository.findAll(pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());

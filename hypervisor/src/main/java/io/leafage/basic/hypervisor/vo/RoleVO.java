@@ -14,22 +14,26 @@ public class RoleVO extends BaseVO {
     /**
      * 业务ID
      */
-    private String businessId;
+    private String code;
     /**
      * 名称
      */
     private String name;
     /**
+     * 上级
+     */
+    private String superior;
+    /**
      * 描述
      */
     private String description;
 
-    public String getBusinessId() {
-        return businessId;
+    public String getCode() {
+        return code;
     }
 
-    public void setBusinessId(String businessId) {
-        this.businessId = businessId;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {
@@ -38,6 +42,14 @@ public class RoleVO extends BaseVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
     }
 
     public String getDescription() {

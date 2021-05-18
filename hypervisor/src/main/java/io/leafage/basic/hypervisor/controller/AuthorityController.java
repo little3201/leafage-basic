@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 权限资源接口
@@ -38,7 +40,7 @@ public class AuthorityController {
      * @param page  页码
      * @param size  大小
      * @param order 排序字段
-     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     * @return 查询到的数据，否则返回空
      */
     @GetMapping
     public ResponseEntity<Page<AuthorityVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
@@ -53,10 +55,27 @@ public class AuthorityController {
     }
 
     /**
+     * 查询树形数据
+     *
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("tree")
+    public ResponseEntity<List<TreeNode>> tree() {
+        List<TreeNode> authorities;
+        try {
+            authorities = authorityService.tree();
+        } catch (Exception e) {
+            logger.info("Retrieve authority occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(authorities);
+    }
+
+    /**
      * 查询信息
      *
      * @param code 代码
-     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     * @return 查询到的信息，否则返回204状态码
      */
     @GetMapping("/{code}")
     public ResponseEntity<AuthorityVO> fetch(@PathVariable String code) {
@@ -74,7 +93,7 @@ public class AuthorityController {
      * 添加信息
      *
      * @param authorityDTO 要添加的数据
-     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
+     * @return 添加后的信息，否则返回417状态码
      */
     @PostMapping
     public ResponseEntity<AuthorityVO> create(@RequestBody @Valid AuthorityDTO authorityDTO) {
@@ -93,7 +112,7 @@ public class AuthorityController {
      *
      * @param code         代码
      * @param authorityDTO 要添加的数据
-     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
+     * @return 编辑后的信息，否则返回417状态码
      */
     @PutMapping("/{code}")
     public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody @Valid AuthorityDTO authorityDTO) {
@@ -111,7 +130,7 @@ public class AuthorityController {
      * 删除信息
      *
      * @param code 代码
-     * @return 如果删除成功，返回200状态码，否则返回417状态码
+     * @return 200状态码，否则返回417状态码
      */
     @DeleteMapping("/{code}")
     public ResponseEntity<Object> remove(@PathVariable String code) {

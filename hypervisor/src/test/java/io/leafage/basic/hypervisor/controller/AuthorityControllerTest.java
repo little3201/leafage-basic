@@ -83,7 +83,7 @@ class AuthorityControllerTest {
         // 构造请求对象
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
-        authorityDTO.setType("M");
+        authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         // 构造返回对象
         AuthorityVO authorityVO = new AuthorityVO();
@@ -100,7 +100,7 @@ class AuthorityControllerTest {
         // 构造请求对象
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
-        authorityDTO.setType("M");
+        authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         given(this.authorityService.create(Mockito.any(AuthorityDTO.class))).willThrow(new RuntimeException());
         mvc.perform(post("/authority").contentType(MediaType.APPLICATION_JSON)
@@ -113,7 +113,7 @@ class AuthorityControllerTest {
         // 构造请求对象
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
-        authorityDTO.setType("M");
+        authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         // 构造返回对象
         AuthorityVO authorityVO = new AuthorityVO();
@@ -130,7 +130,7 @@ class AuthorityControllerTest {
         // 构造请求对象
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
-        authorityDTO.setType("M");
+        authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         given(this.authorityService.modify(Mockito.anyString(), Mockito.any(AuthorityDTO.class))).willThrow(new RuntimeException());
         mvc.perform(put("/authority/{code}", "test").contentType(MediaType.APPLICATION_JSON)

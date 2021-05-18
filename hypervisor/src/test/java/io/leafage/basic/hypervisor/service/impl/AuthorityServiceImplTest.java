@@ -51,7 +51,7 @@ class AuthorityServiceImplTest {
         given(this.authorityRepository.save(Mockito.any(Authority.class))).willReturn(Mockito.mock(Authority.class));
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
-        authorityDTO.setType("M");
+        authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         AuthorityVO authorityVO = authorityService.create(authorityDTO);
         verify(this.authorityRepository, times(1)).save(Mockito.any(Authority.class));

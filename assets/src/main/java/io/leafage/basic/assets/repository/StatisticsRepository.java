@@ -10,5 +10,11 @@ import java.time.LocalDate;
 @Repository
 public interface StatisticsRepository extends ReactiveMongoRepository<Statistics, ObjectId> {
 
+    /**
+     * 根据data查询当日数据
+     *
+     * @param date 日期
+     * @return 统计数据
+     */
     Mono<Statistics> getByDate(LocalDate date);
 }

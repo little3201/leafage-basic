@@ -5,6 +5,7 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.document.RoleAuthority;
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
@@ -14,13 +15,13 @@ import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 import java.util.Collection;
 import java.util.List;
@@ -61,6 +62,22 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
                             return roleVO;
                         })
                 );
+    }
+
+    @Override
+    public Flux<TreeNode> tree() {
+        Role role = new Role();
+        role.setEnabled(true);
+        Flux<Role> roleFlux = roleRepository.findAll(Example.of(role));
+        return roleFlux.filter(r -> r.getSuperior() == null).flatMap(r -> {
+            TreeNode treeNode = new TreeNode();
+            treeNode.setCode(r.getCode());
+            treeNode.setName(r.getName());
+            return this.addChildren(r, roleFlux).collectList().map(treeNodes -> {
+                treeNode.setChildren(treeNodes);
+                return treeNode;
+            });
+        });
     }
 
     @Override
@@ -139,4 +156,23 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         }).collectList();
     }
 
+    /**
+     * add child node
+     *
+     * @param superior superior node
+     * @param roleFlux to be build source data
+     * @return tree node
+     */
+    private Flux<TreeNode> addChildren(Role superior, Flux<Role> roleFlux) {
+        return roleFlux.filter(role -> superior.getId().equals(role.getSuperior())).flatMap(role -> {
+            TreeNode treeNode = new TreeNode();
+            treeNode.setCode(role.getCode());
+            treeNode.setName(role.getName());
+            treeNode.setSuperior(superior.getCode());
+            return this.addChildren(role, roleFlux).collectList().map(treeNodes -> {
+                treeNode.setChildren(treeNodes);
+                return treeNode;
+            });
+        });
+    }
 }

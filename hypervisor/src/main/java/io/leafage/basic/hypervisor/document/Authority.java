@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.document;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -32,7 +31,11 @@ public class Authority extends BaseDocument {
     /**
      * 类型
      */
-    private String type;
+    private Character type;
+    /**
+     * 图标
+     */
+    private String icon;
     /**
      * 路径
      */
@@ -45,22 +48,6 @@ public class Authority extends BaseDocument {
      * 描述
      */
     private String description;
-
-    enum Type {
-        /**
-         * 菜单
-         */
-        MENU,
-        /**
-         * 按钮
-         */
-        BTN,
-        /**
-         * 接口
-         */
-        @JsonEnumDefaultValue
-        ROUTER
-    }
 
     public String getCode() {
         return code;
@@ -86,12 +73,20 @@ public class Authority extends BaseDocument {
         this.name = name;
     }
 
-    public String getType() {
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = Type.valueOf(type.toUpperCase()).name();
+    public void setType(Character type) {
+        this.type = type;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getPath() {

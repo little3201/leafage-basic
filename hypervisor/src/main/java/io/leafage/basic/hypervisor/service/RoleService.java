@@ -3,8 +3,10 @@
  */
 package io.leafage.basic.hypervisor.service;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
+import reactor.core.publisher.Flux;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -14,4 +16,5 @@ import top.leafage.common.reactive.ReactiveBasicService;
  **/
 public interface RoleService extends ReactiveBasicService<RoleDTO, RoleVO> {
 
+    Flux<TreeNode> tree();
 }

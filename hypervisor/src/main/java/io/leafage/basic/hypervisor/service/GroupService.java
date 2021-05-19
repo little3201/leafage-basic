@@ -3,8 +3,10 @@
  */
 package io.leafage.basic.hypervisor.service;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
+import reactor.core.publisher.Flux;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -14,4 +16,5 @@ import top.leafage.common.reactive.ReactiveBasicService;
  **/
 public interface GroupService extends ReactiveBasicService<GroupDTO, GroupVO> {
 
+    Flux<TreeNode> tree();
 }

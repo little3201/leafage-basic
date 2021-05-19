@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
@@ -13,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.Valid;
 
 /**
@@ -54,6 +54,23 @@ public class RoleController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
+    }
+
+    /**
+     * 查询树形数据
+     *
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("/tree")
+    public ResponseEntity<Flux<TreeNode>> tree() {
+        Flux<TreeNode> authorities;
+        try {
+            authorities = roleService.tree();
+        } catch (Exception e) {
+            logger.info("Retrieve role occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(authorities);
     }
 
     /**

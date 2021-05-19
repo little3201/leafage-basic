@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Group;
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.repository.GroupUserRepository;
@@ -18,7 +19,6 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 
 /**
@@ -62,6 +62,20 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
                             return Mono.just(groupVO);
                         })
                 );
+    }
+
+    @Override
+    public Flux<TreeNode> tree() {
+        Flux<Group> groupFlux = groupRepository.findByEnabledTrue();
+        return groupFlux.filter(g -> g.getSuperior() == null).flatMap(group -> {
+            TreeNode treeNode = new TreeNode();
+            treeNode.setCode(group.getCode());
+            treeNode.setName(group.getName());
+            return this.addChildren(group, groupFlux).collectList().map(treeNodes -> {
+                treeNode.setChildren(treeNodes);
+                return treeNode;
+            });
+        });
     }
 
     @Override
@@ -141,5 +155,25 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         GroupVO outer = new GroupVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
+    }
+
+    /**
+     * add child node
+     *
+     * @param superior  superior node
+     * @param groupFlux to be build source data
+     * @return tree node
+     */
+    private Flux<TreeNode> addChildren(Group superior, Flux<Group> groupFlux) {
+        return groupFlux.filter(group -> superior.getId().equals(group.getSuperior())).flatMap(group -> {
+            TreeNode treeNode = new TreeNode();
+            treeNode.setCode(group.getCode());
+            treeNode.setName(group.getName());
+            treeNode.setSuperior(superior.getCode());
+            return this.addChildren(group, groupFlux).collectList().map(treeNodes -> {
+                treeNode.setChildren(treeNodes);
+                return treeNode;
+            });
+        });
     }
 }

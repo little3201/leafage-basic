@@ -16,8 +16,6 @@ import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -30,13 +28,10 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.contains;
-
 /**
- * 帖子信心 service 接口实现
+ * 帖子信息 service 接口实现
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -57,7 +52,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> retrieve() {
-        return postsRepository.findAll().map(this::convertOuter);
+        return postsRepository.findByEnabledTrue().map(this::convertOuter);
     }
 
     @Override
@@ -227,11 +222,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> search(String keyword) {
-        Posts posts = new Posts();
-        posts.setTitle(keyword);
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("title", contains())
-                .withMatcher("subtitle", contains());
-        return postsRepository.findAll(Example.of(posts, matcher)).map(this::convertOuter);
+        return postsRepository.findByTitleIgnoreCaseLikeAndEnabledTrue(keyword).map(this::convertOuter);
     }
 
     /**

@@ -16,11 +16,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.Valid;
 
 /**
- * 帖子信心controller
+ * 帖子信息controller
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

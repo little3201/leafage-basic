@@ -6,7 +6,6 @@ package io.leafage.basic.assets.repository;
 import io.leafage.basic.assets.document.Posts;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -19,6 +18,13 @@ import reactor.core.publisher.Mono;
  **/
 @Repository
 public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId> {
+
+    /**
+     * 查询帖子
+     *
+     * @return 有效帖子
+     */
+    Flux<Posts> findByEnabledTrue();
 
     /**
      * 分页查询帖子
@@ -72,10 +78,10 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
     Flux<Posts> findByIdLessThanAndEnabledTrue(ObjectId id, Pageable pageable);
 
     /**
-     * 全文搜索
+     * 根据title查询
      *
-     * @param criteria 搜索内容
+     * @param title 标题
      * @return 匹配结果
      */
-    Flux<Posts> findAllBy(TextCriteria criteria);
+    Flux<Posts> findByTitleIgnoreCaseLikeAndEnabledTrue(String title);
 }

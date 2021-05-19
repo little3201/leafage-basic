@@ -15,10 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -60,7 +58,7 @@ class AuthorityServiceImplTest {
 
     @Test
     void remove() {
-        given(this.authorityRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Authority.class));
+        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Authority.class));
         authorityService.remove("2119JD09");
         verify(this.authorityRepository, times(1)).deleteById(Mockito.anyLong());
     }

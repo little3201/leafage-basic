@@ -19,11 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -62,7 +60,7 @@ class UserServiceImplTest {
 
     @Test
     void fetch() {
-        given(this.userRepository.findByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
+        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
         UserVO userVO = userService.fetch("test");
         Assertions.assertNotNull(userVO);
     }
@@ -70,7 +68,7 @@ class UserServiceImplTest {
     @Test
     void fetchDetails() {
         String username = "test";
-        given(this.userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
+        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .willReturn(Mockito.mock(User.class));
 
         List<UserRole> userRoleList = new ArrayList<>(1);
@@ -98,7 +96,7 @@ class UserServiceImplTest {
     @Test
     void fetchDetails_null() {
         String username = "test";
-        given(this.userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
+        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .willReturn(null);
         UserDetails userDetails = userService.fetchDetails("test");
         Assertions.assertNull(userDetails);
@@ -125,7 +123,7 @@ class UserServiceImplTest {
     @Test
     void modify() {
         // 根据code查询信息
-        given(this.userRepository.findByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
+        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
         User user = new User();
         user.setId(1L);
         // 保存更新信息
@@ -157,7 +155,7 @@ class UserServiceImplTest {
 
     @Test
     void remove() {
-        given(this.userRepository.findByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
+        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
         userService.remove("test");
         verify(this.userRepository, times(1)).saveAndFlush(Mockito.any(User.class));
     }

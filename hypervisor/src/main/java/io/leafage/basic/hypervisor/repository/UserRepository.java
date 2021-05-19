@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username 用户名
      * @return 用户信息
      */
-    User findByUsernameAndEnabledTrue(String username);
+    User getByUsernameAndEnabledTrue(String username);
 
     /**
      * 查询用户信息
@@ -31,5 +31,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param email    邮箱
      * @return 用户信息
      */
-    User findByUsernameOrPhoneOrEmailAndEnabledTrue(String username, String phone, String email);
+    User getByUsernameOrPhoneOrEmailAndEnabledTrue(String username, String phone, String email);
 }

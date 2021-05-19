@@ -6,7 +6,6 @@ package io.leafage.basic.hypervisor.repository;
 import io.leafage.basic.hypervisor.entity.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -24,7 +23,15 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
      * @param code 唯一标识
      * @return 信息
      */
-    Authority findByCodeAndEnabledTrue(String code);
+    Authority getByCodeAndEnabledTrue(String code);
+
+    /**
+     * 根据type查询
+     *
+     * @param type 类型
+     * @return 信息
+     */
+    List<Authority> findByTypeAndEnabledTrue(Character type);
 
     /**
      * 根据 ids 查询

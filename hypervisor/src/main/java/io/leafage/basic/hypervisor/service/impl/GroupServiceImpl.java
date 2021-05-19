@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-
 import java.util.Collections;
 
 /**
@@ -52,7 +51,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public void remove(String code) {
-        Group group = groupRepository.findByCodeAndEnabledTrue(code);
+        Group group = groupRepository.getByCodeAndEnabledTrue(code);
         groupRepository.deleteById(group.getId());
     }
 

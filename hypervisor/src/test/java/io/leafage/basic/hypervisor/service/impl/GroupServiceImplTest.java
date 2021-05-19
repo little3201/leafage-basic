@@ -15,10 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,7 +56,7 @@ class GroupServiceImplTest {
 
     @Test
     void remove() {
-        given(this.groupRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Group.class));
+        given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Group.class));
         groupService.remove("2119JD09");
         verify(this.groupRepository, times(1)).deleteById(Mockito.anyLong());
     }

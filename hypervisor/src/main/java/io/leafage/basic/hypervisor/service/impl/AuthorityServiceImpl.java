@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-
 import java.util.*;
 
 /**
@@ -67,7 +66,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public void remove(String code) {
-        Authority authority = authorityRepository.findByCodeAndEnabledTrue(code);
+        Authority authority = authorityRepository.getByCodeAndEnabledTrue(code);
         authorityRepository.deleteById(authority.getId());
     }
 

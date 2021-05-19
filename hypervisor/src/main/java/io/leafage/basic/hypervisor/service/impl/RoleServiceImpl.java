@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-
 import java.util.Collections;
 
 /**
@@ -43,7 +42,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public RoleVO fetch(String code) {
-        Role role = roleRepository.findByCodeAndEnabledTrue(code);
+        Role role = roleRepository.getByCodeAndEnabledTrue(code);
         return this.convertOuter(role);
     }
 
@@ -58,7 +57,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public void remove(String code) {
-        Role role = roleRepository.findByCodeAndEnabledTrue(code);
+        Role role = roleRepository.getByCodeAndEnabledTrue(code);
         roleRepository.deleteById(role.getId());
     }
 

@@ -21,5 +21,5 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      * @param code 代码
      * @return 结果信息
      */
-    Group findByCodeAndEnabledTrue(String code);
+    Group getByCodeAndEnabledTrue(String code);
 }

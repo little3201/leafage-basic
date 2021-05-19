@@ -15,10 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,7 +46,7 @@ class RoleServiceImplTest {
 
     @Test
     void fetch() {
-        given(this.roleRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Role.class));
+        given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Role.class));
         RoleVO roleVO = roleService.fetch("2109JJL8");
         Assertions.assertNotNull(roleVO);
     }
@@ -65,7 +63,7 @@ class RoleServiceImplTest {
 
     @Test
     void remove() {
-        given(this.roleRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Role.class));
+        given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Role.class));
         roleService.remove("2119JD09");
         verify(this.roleRepository, times(1)).deleteById(Mockito.anyLong());
     }

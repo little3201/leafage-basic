@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -70,7 +69,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public UserVO modify(String username, UserDTO userDTO) {
-        User user = userRepository.findByUsernameAndEnabledTrue(username);
+        User user = userRepository.getByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(userDTO, user);
         user = userRepository.saveAndFlush(user);
         if (CollectionUtils.isEmpty(userDTO.getRoles())) {
@@ -92,20 +91,20 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public void remove(String username) {
-        User user = userRepository.findByUsernameAndEnabledTrue(username);
+        User user = userRepository.getByUsernameAndEnabledTrue(username);
         user.setEnabled(false);
         userRepository.saveAndFlush(user);
     }
 
     @Override
     public UserVO fetch(String username) {
-        User user = userRepository.findByUsernameAndEnabledTrue(username);
+        User user = userRepository.getByUsernameAndEnabledTrue(username);
         return this.convertOuter(user);
     }
 
     @Override
     public UserDetails fetchDetails(String username) {
-        User user = userRepository.findByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username);
+        User user = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username);
         if (user == null) {
             return null;
         }

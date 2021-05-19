@@ -10,5 +10,5 @@ import java.time.LocalDate;
 @Repository
 public interface StatisticsRepository extends ReactiveMongoRepository<Statistics, ObjectId> {
 
-    Mono<Statistics> getByTimestamp(LocalDate timestamp);
+    Mono<Statistics> getByDate(LocalDate date);
 }

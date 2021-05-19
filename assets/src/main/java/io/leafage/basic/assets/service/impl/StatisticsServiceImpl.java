@@ -27,7 +27,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Mono<Statistics> viewed() {
-        return statisticsRepository.getByTimestamp(LocalDate.now().minusDays(1));
+        return statisticsRepository.getByDate(LocalDate.now().minusDays(1));
     }
 
     @Override

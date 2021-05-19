@@ -28,7 +28,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -56,7 +55,7 @@ class PostsServiceImplTest {
 
     @Test
     public void retrieve() {
-        given(this.postsRepository.findAll()).willReturn(Flux.just(Mockito.mock(Posts.class)));
+        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(Mockito.mock(Posts.class)));
         StepVerifier.create(this.postsService.retrieve()).expectNextCount(1).verifyComplete();
     }
 

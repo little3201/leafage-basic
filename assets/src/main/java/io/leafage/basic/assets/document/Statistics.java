@@ -1,51 +1,55 @@
 package io.leafage.basic.assets.document;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+import java.time.LocalDate;
+
+@Document(collection = "statistics")
 public class Statistics extends BaseDocument {
 
-    private long timestamp;
+    private LocalDate date;
 
-    private long viewed;
+    private int viewed;
 
-    private long likes;
+    private int likes;
 
-    private long comment;
+    private int comment;
 
-    public Statistics(long timestamp, long viewed, long likes, long comment) {
-        this.timestamp = timestamp;
+    public Statistics(LocalDate date, int viewed, int likes, int comment) {
+        this.date = date;
         this.viewed = viewed;
         this.likes = likes;
         this.comment = comment;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public long getViewed() {
+    public int getViewed() {
         return viewed;
     }
 
-    public void setViewed(long viewed) {
+    public void setViewed(int viewed) {
         this.viewed = viewed;
     }
 
-    public long getLikes() {
+    public int getLikes() {
         return likes;
     }
 
-    public void setLikes(long likes) {
+    public void setLikes(int likes) {
         this.likes = likes;
     }
 
-    public long getComment() {
+    public int getComment() {
         return comment;
     }
 
-    public void setComment(long comment) {
+    public void setComment(int comment) {
         this.comment = comment;
     }
 }

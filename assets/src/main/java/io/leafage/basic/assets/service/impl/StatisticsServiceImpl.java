@@ -1,16 +1,18 @@
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-
+import reactor.core.publisher.Mono;
 import java.time.LocalDate;
-import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * 统计信息 service 接口实现
+ *
+ * @author liwenqiang 2021/5/19 10:54
+ **/
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
 
@@ -24,18 +26,20 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public void viewedStatistics() {
-        Posts posts = new Posts();
-        posts.setEnabled(true);
-        AtomicLong viewed = new AtomicLong();
-        AtomicLong likes = new AtomicLong();
-        AtomicLong comment = new AtomicLong();
-        postsRepository.findAll(Example.of(posts)).toStream().forEach((p -> {
-            viewed.getAndAdd(p.getViewed());
-            likes.getAndAdd(p.getLikes());
-            comment.getAndAdd(p.getComment());
-        }));
-        Statistics statistics = new Statistics(LocalDate.now().toEpochDay(), viewed.get(), likes.get(), comment.get());
-        statisticsRepository.save(statistics);
+    public Mono<Statistics> viewed() {
+        return statisticsRepository.getByDate(LocalDate.now().minusDays(1));
+    }
+
+    @Override
+    public Mono<Statistics> viewedSave() {
+        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0, 0);
+        return postsRepository.findByEnabledTrue().collectList().map(postsList -> {
+            postsList.forEach(p -> {
+                statistics.setViewed(statistics.getViewed() + p.getViewed());
+                statistics.setLikes(statistics.getLikes() + p.getLikes());
+                statistics.setComment(statistics.getComment() + p.getComment());
+            });
+            return statistics;
+        }).flatMap(statisticsRepository::insert);
     }
 }

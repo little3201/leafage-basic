@@ -24,7 +24,7 @@ public class StatisticsTasks {
     public void viewed() {
         try {
             statisticsService.viewedSave().subscribe(statistics ->
-                    logger.info("定时记录浏览量，任务执行完成: {}", statistics.getTimestamp()));
+                    logger.info("定时记录浏览量，任务执行完成: {}", statistics.getDate()));
         } catch (Exception e) {
             logger.error("定时记录浏览量，任务执行异常: ", e);
         }

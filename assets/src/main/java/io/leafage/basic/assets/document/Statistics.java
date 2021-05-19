@@ -6,7 +6,7 @@ import java.time.LocalDate;
 @Document(collection = "statistics")
 public class Statistics extends BaseDocument {
 
-    private LocalDate timestamp;
+    private LocalDate date;
 
     private int viewed;
 
@@ -14,19 +14,19 @@ public class Statistics extends BaseDocument {
 
     private int comment;
 
-    public Statistics(LocalDate timestamp, int viewed, int likes, int comment) {
-        this.timestamp = timestamp;
+    public Statistics(LocalDate date, int viewed, int likes, int comment) {
+        this.date = date;
         this.viewed = viewed;
         this.likes = likes;
         this.comment = comment;
     }
 
-    public LocalDate getTimestamp() {
-        return timestamp;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setTimestamp(LocalDate timestamp) {
-        this.timestamp = timestamp;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public int getViewed() {

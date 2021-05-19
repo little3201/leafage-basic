@@ -19,10 +19,8 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -76,10 +74,12 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         authority.setType('M');
         authority.setEnabled(true);
         Flux<Authority> authorities = authorityRepository.findAll(Example.of(authority));
-        return authorities.filter(a -> a.getSuperior() == null).map(a -> {
+        return authorities.filter(a -> a.getSuperior() == null).flatMap(a -> {
             TreeNode treeNode = this.constructNode(a.getCode(), a);
-            this.addChildren(authority, authorities);
-            return treeNode;
+            return this.addChildren(a, authorities).collectList().map(treeNodes -> {
+                treeNode.setChildren(treeNodes);
+                return treeNode;
+            });
         });
     }
 
@@ -180,19 +180,14 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
      * @param authorities to be build source data
      * @return tree node
      */
-    private List<TreeNode> addChildren(Authority superior, Flux<Authority> authorities) {
-        authorities.filter(authority -> superior.getId().equals(authority.getSuperior())).doOnEach(authoritySignal ->
-                authoritySignal.get());
-
-
-//        return authorities.filter(authority -> superior.getId().equals(authority.getSuperior())).map(authority -> {
-//            TreeNode treeNode = this.constructNode(superior.getCode(), authority);
-//            return this.addChildren(authority, authorities).map(treeNodes -> {
-//                treeNode.setChildren(treeNodes);
-//                return treeNode;
-//            });
-//        });
-        return null;
+    private Flux<TreeNode> addChildren(Authority superior, Flux<Authority> authorities) {
+        return authorities.filter(authority -> superior.getId().equals(authority.getSuperior())).flatMap(authority -> {
+            TreeNode treeNode = this.constructNode(superior.getCode(), authority);
+            return this.addChildren(authority, authorities).collectList().map(treeNodes -> {
+                treeNode.setChildren(treeNodes);
+                return treeNode;
+            });
+        });
     }
 
 }

@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -24,6 +25,10 @@ public class Role extends BaseDocument {
      */
     private String name;
     /**
+     * 上级
+     */
+    private ObjectId superior;
+    /**
      * 描述
      */
     private String description;
@@ -43,6 +48,14 @@ public class Role extends BaseDocument {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ObjectId getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(ObjectId superior) {
+        this.superior = superior;
     }
 
     public String getDescription() {

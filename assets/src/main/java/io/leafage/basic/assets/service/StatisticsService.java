@@ -1,6 +1,6 @@
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.document.Statistics;
+import io.leafage.basic.assets.vo.StatisticsVO;
 import reactor.core.publisher.Mono;
 
 /**
@@ -15,12 +15,12 @@ public interface StatisticsService {
      *
      * @return 统计结果
      */
-    Mono<Statistics> viewed();
+    Mono<StatisticsVO> viewed();
 
     /**
      * 浏览量记录
      *
      * @return 记录结果
      */
-    Mono<Statistics> viewedSave();
+    Mono<StatisticsVO> viewedSave();
 }

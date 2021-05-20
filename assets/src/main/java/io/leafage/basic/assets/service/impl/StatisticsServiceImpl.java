@@ -4,6 +4,8 @@ import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
+import io.leafage.basic.assets.vo.StatisticsVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import java.time.LocalDate;
@@ -26,12 +28,12 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<Statistics> viewed() {
-        return statisticsRepository.getByDate(LocalDate.now().minusDays(1));
+    public Mono<StatisticsVO> viewed() {
+        return statisticsRepository.getByDate(LocalDate.now().minusDays(1)).map(this::convertOuter);
     }
 
     @Override
-    public Mono<Statistics> viewedSave() {
+    public Mono<StatisticsVO> viewedSave() {
         Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0, 0, 0);
         return postsRepository.findByEnabledTrue().collectList().flatMap(postsList -> {
             postsList.forEach(p -> {
@@ -44,6 +46,18 @@ public class StatisticsServiceImpl implements StatisticsService {
                 statistics.setOverViewed((statistics.getViewed() - over.getViewed()) / over.getViewed() * 100);
                 return statistics;
             });
-        }).flatMap(statisticsRepository::insert);
+        }).flatMap(statisticsRepository::insert).map(this::convertOuter);
+    }
+
+    /**
+     * 对象转换为输出结果对象
+     *
+     * @param info 信息
+     * @return 输出转换后的vo对象
+     */
+    private StatisticsVO convertOuter(Statistics info) {
+        StatisticsVO outer = new StatisticsVO();
+        BeanUtils.copyProperties(info, outer);
+        return outer;
     }
 }

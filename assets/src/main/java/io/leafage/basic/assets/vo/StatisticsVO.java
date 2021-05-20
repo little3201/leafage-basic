@@ -1,9 +1,16 @@
 package io.leafage.basic.assets.vo;
 
-public class StatisticsVO extends BaseVO {
+import java.io.Serializable;
+import java.time.LocalDate;
+
+public class StatisticsVO implements Serializable {
 
     private static final long serialVersionUID = 4288475041155960116L;
 
+    /**
+     * 统计日期
+     */
+    private LocalDate date;
     /**
      * 浏览量
      */
@@ -20,6 +27,14 @@ public class StatisticsVO extends BaseVO {
      * 评论量
      */
     private int comment;
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public int getViewed() {
         return viewed;

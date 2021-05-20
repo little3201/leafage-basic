@@ -1,7 +1,7 @@
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.service.StatisticsService;
+import io.leafage.basic.assets.vo.StatisticsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +33,8 @@ public class StatisticsController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/viewed")
-    public ResponseEntity<Mono<Statistics>> viewed() {
-        Mono<Statistics> statisticsMono;
+    public ResponseEntity<Mono<StatisticsVO>> viewed() {
+        Mono<StatisticsVO> statisticsMono;
         try {
             statisticsMono = statisticsService.viewed();
         } catch (Exception e) {

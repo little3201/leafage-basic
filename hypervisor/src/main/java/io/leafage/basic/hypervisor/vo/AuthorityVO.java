@@ -23,7 +23,7 @@ public class AuthorityVO extends BaseVO {
     /**
      * 类型
      */
-    private String type;
+    private Character type;
     /**
      * 图标
      */
@@ -58,11 +58,11 @@ public class AuthorityVO extends BaseVO {
         this.name = name;
     }
 
-    public String getType() {
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
     }
 

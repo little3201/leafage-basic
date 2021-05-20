@@ -32,14 +32,18 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Mono<Statistics> viewedSave() {
-        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0, 0);
-        return postsRepository.findByEnabledTrue().collectList().map(postsList -> {
+        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0, 0, 0);
+        return postsRepository.findByEnabledTrue().collectList().flatMap(postsList -> {
             postsList.forEach(p -> {
                 statistics.setViewed(statistics.getViewed() + p.getViewed());
                 statistics.setLikes(statistics.getLikes() + p.getLikes());
                 statistics.setComment(statistics.getComment() + p.getComment());
             });
-            return statistics;
+            return this.viewed().map(over -> {
+                // 设置环比数据
+                statistics.setOverViewed((statistics.getViewed() - over.getViewed()) / over.getViewed() * 100);
+                return statistics;
+            });
         }).flatMap(statisticsRepository::insert);
     }
 }

@@ -19,7 +19,7 @@ public class Statistics extends BaseDocument {
      * 浏览量环比
      */
     @Field("over_viewed")
-    private int overViewed;
+    private double overViewed;
     /**
      * 点赞量
      */
@@ -29,7 +29,7 @@ public class Statistics extends BaseDocument {
      */
     private int comment;
 
-    public Statistics(LocalDate date, int viewed, int overViewed, int likes, int comment) {
+    public Statistics(LocalDate date, int viewed, double overViewed, int likes, int comment) {
         this.date = date;
         this.viewed = viewed;
         this.overViewed = overViewed;
@@ -53,11 +53,11 @@ public class Statistics extends BaseDocument {
         this.viewed = viewed;
     }
 
-    public int getOverViewed() {
+    public double getOverViewed() {
         return overViewed;
     }
 
-    public void setOverViewed(int overViewed) {
+    public void setOverViewed(double overViewed) {
         this.overViewed = overViewed;
     }
 

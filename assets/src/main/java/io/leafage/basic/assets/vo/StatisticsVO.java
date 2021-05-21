@@ -18,7 +18,7 @@ public class StatisticsVO implements Serializable {
     /**
      * 浏览量环比
      */
-    private int overViewed;
+    private double overViewed;
     /**
      * 点赞量
      */
@@ -44,11 +44,11 @@ public class StatisticsVO implements Serializable {
         this.viewed = viewed;
     }
 
-    public int getOverViewed() {
+    public double getOverViewed() {
         return overViewed;
     }
 
-    public void setOverViewed(int overViewed) {
+    public void setOverViewed(double overViewed) {
         this.overViewed = overViewed;
     }
 

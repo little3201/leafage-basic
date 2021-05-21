@@ -34,7 +34,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Mono<StatisticsVO> viewedSave() {
-        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0, 0, 0);
+        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0, 0, 0);
         return postsRepository.findByEnabledTrue().collectList().flatMap(postsList -> {
             postsList.forEach(p -> {
                 statistics.setViewed(statistics.getViewed() + p.getViewed());
@@ -43,7 +43,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             });
             return this.viewed().map(over -> {
                 // 设置环比数据
-                statistics.setOverViewed((statistics.getViewed() - over.getViewed()) / over.getViewed() * 100);
+                statistics.setOverViewed((statistics.getViewed() - over.getViewed() + 0.0) / over.getViewed() * 100);
                 return statistics;
             });
         }).flatMap(statisticsRepository::insert).map(this::convertOuter);

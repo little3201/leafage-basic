@@ -8,6 +8,7 @@ import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
 import java.time.LocalDate;
 
 /**
@@ -33,7 +34,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<StatisticsVO> viewedSave() {
+    public Mono<Statistics> create() {
         Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0, 0, 0);
         return postsRepository.findByEnabledTrue().collectList().flatMap(postsList -> {
             postsList.forEach(p -> {
@@ -41,12 +42,15 @@ public class StatisticsServiceImpl implements StatisticsService {
                 statistics.setLikes(statistics.getLikes() + p.getLikes());
                 statistics.setComment(statistics.getComment() + p.getComment());
             });
-            return this.viewed().map(over -> {
+            return this.statisticsRepository.getByDate(LocalDate.now().minusDays(1)).map(over -> {
                 // 设置环比数据
-                statistics.setOverViewed((statistics.getViewed() - over.getViewed() + 0.0) / over.getViewed() * 100);
+                if (over.getViewed() == 0) {
+                    return statistics;
+                }
+                statistics.setOverViewed((statistics.getViewed() - over.getViewed() * 1.0) / over.getViewed() * 100);
                 return statistics;
             });
-        }).flatMap(statisticsRepository::insert).map(this::convertOuter);
+        }).flatMap(statisticsRepository::insert);
     }
 
     /**

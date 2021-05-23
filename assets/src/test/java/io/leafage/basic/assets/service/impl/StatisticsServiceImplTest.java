@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -36,10 +37,17 @@ class StatisticsServiceImplTest {
     private StatisticsServiceImpl statisticsService;
 
     @Test
-    void viewed() {
+    void retrieve() {
+        given(this.statisticsRepository.findByEnabledTrue(Mockito.any(PageRequest.class)))
+                .willReturn(Flux.just(Mockito.mock(Statistics.class)));
+        StepVerifier.create(statisticsService.retrieve(0, 7)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void fetch() {
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
-        StepVerifier.create(statisticsService.viewed()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(statisticsService.fetch()).expectNextCount(1).verifyComplete();
     }
 
     @Test

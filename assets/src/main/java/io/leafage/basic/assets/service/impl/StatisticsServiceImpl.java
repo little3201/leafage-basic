@@ -6,7 +6,11 @@ import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
@@ -29,7 +33,13 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<StatisticsVO> viewed() {
+    public Flux<StatisticsVO> retrieve(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifyTime"));
+        return statisticsRepository.findByEnabledTrue(pageable).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<StatisticsVO> fetch() {
         return statisticsRepository.getByDate(LocalDate.now().minusDays(1)).map(this::convertOuter);
     }
 

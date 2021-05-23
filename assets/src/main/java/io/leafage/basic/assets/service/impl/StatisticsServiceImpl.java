@@ -49,7 +49,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 }
                 statistics.setOverViewed((statistics.getViewed() - over.getViewed() * 1.0) / over.getViewed() * 100);
                 return statistics;
-            });
+            }).switchIfEmpty(Mono.just(statistics));
         }).flatMap(statisticsRepository::insert);
     }
 

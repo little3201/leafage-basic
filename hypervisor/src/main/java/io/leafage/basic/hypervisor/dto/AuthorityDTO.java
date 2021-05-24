@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -28,8 +29,8 @@ public class AuthorityDTO implements Serializable {
     /**
      * 类型
      */
-    @NotBlank
-    private String type;
+    @NotNull
+    private Character type;
     /**
      * 图标
      */
@@ -59,11 +60,11 @@ public class AuthorityDTO implements Serializable {
         this.name = name;
     }
 
-    public String getType() {
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
     }
 

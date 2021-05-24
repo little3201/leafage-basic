@@ -4,8 +4,15 @@ import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
+import io.leafage.basic.assets.vo.StatisticsVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.time.LocalDate;
 
 /**
@@ -26,20 +33,45 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<Statistics> viewed() {
-        return statisticsRepository.getByDate(LocalDate.now().minusDays(1));
+    public Flux<StatisticsVO> retrieve(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifyTime"));
+        return statisticsRepository.findByEnabledTrue(pageable).map(this::convertOuter);
     }
 
     @Override
-    public Mono<Statistics> viewedSave() {
-        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0, 0);
-        return postsRepository.findByEnabledTrue().collectList().map(postsList -> {
+    public Mono<StatisticsVO> fetch() {
+        return statisticsRepository.getByDate(LocalDate.now().minusDays(1)).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<Statistics> create() {
+        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0, 0, 0);
+        return postsRepository.findByEnabledTrue().collectList().flatMap(postsList -> {
             postsList.forEach(p -> {
                 statistics.setViewed(statistics.getViewed() + p.getViewed());
                 statistics.setLikes(statistics.getLikes() + p.getLikes());
                 statistics.setComment(statistics.getComment() + p.getComment());
             });
-            return statistics;
+            return this.statisticsRepository.getByDate(LocalDate.now().minusDays(1)).map(over -> {
+                // 设置环比数据
+                if (over.getViewed() == 0) {
+                    return statistics;
+                }
+                statistics.setOverViewed((statistics.getViewed() - over.getViewed() * 1.0) / over.getViewed() * 100);
+                return statistics;
+            }).switchIfEmpty(Mono.just(statistics));
         }).flatMap(statisticsRepository::insert);
+    }
+
+    /**
+     * 对象转换为输出结果对象
+     *
+     * @param info 信息
+     * @return 输出转换后的vo对象
+     */
+    private StatisticsVO convertOuter(Statistics info) {
+        StatisticsVO outer = new StatisticsVO();
+        BeanUtils.copyProperties(info, outer);
+        return outer;
     }
 }

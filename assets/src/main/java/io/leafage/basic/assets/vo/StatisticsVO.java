@@ -1,36 +1,70 @@
 package io.leafage.basic.assets.vo;
 
-public class StatisticsVO extends BaseVO {
+import java.io.Serializable;
+import java.time.LocalDate;
+
+public class StatisticsVO implements Serializable {
 
     private static final long serialVersionUID = 4288475041155960116L;
 
-    private long viewed;
+    /**
+     * 统计日期
+     */
+    private LocalDate date;
+    /**
+     * 浏览量
+     */
+    private int viewed;
+    /**
+     * 浏览量环比
+     */
+    private double overViewed;
+    /**
+     * 点赞量
+     */
+    private int likes;
+    /**
+     * 评论量
+     */
+    private int comment;
 
-    private long likes;
+    public LocalDate getDate() {
+        return date;
+    }
 
-    private long comment;
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
-    public long getViewed() {
+    public int getViewed() {
         return viewed;
     }
 
-    public void setViewed(long viewed) {
+    public void setViewed(int viewed) {
         this.viewed = viewed;
     }
 
-    public long getLikes() {
+    public double getOverViewed() {
+        return overViewed;
+    }
+
+    public void setOverViewed(double overViewed) {
+        this.overViewed = overViewed;
+    }
+
+    public int getLikes() {
         return likes;
     }
 
-    public void setLikes(long likes) {
+    public void setLikes(int likes) {
         this.likes = likes;
     }
 
-    public long getComment() {
+    public int getComment() {
         return comment;
     }
 
-    public void setComment(long comment) {
+    public void setComment(int comment) {
         this.comment = comment;
     }
 }

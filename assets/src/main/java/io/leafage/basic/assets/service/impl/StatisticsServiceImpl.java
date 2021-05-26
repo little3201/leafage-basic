@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.time.LocalDate;
 
 /**
@@ -52,16 +51,18 @@ public class StatisticsServiceImpl implements StatisticsService {
                 statistics.setLikes(statistics.getLikes() + p.getLikes());
                 statistics.setComment(statistics.getComment() + p.getComment());
             });
-            return this.statisticsRepository.getByDate(LocalDate.now().minusDays(1)).map(over -> {
+            // 统计昨天数据，然后和前天的数据做差值，计算环比数据
+            return this.statisticsRepository.getByDate(LocalDate.now().minusDays(2)).map(over -> {
                 // 设置环比数据
                 if (over.getViewed() == 0) {
                     return statistics;
                 }
-                statistics.setOverViewed((statistics.getViewed() - over.getViewed() * 1.0) / over.getViewed() * 100);
+                statistics.setOverViewed((statistics.getViewed() - over.getViewed()) * 1.0 / over.getViewed() * 100);
                 return statistics;
             }).switchIfEmpty(Mono.just(statistics));
         }).flatMap(statisticsRepository::insert);
     }
+
 
     /**
      * 对象转换为输出结果对象

@@ -15,10 +15,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import javax.naming.NotContextException;
 
 /**
@@ -105,37 +105,39 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
-        Group info = new Group();
-        BeanUtils.copyProperties(groupDTO, info);
-        info.setCode(this.generateCode());
-        Mono<Group> groupMono;
-        // 如果设置上级，进行处理
-        if (StringUtils.hasText(groupDTO.getSuperior())) {
-            groupMono = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
-                    .switchIfEmpty(Mono.error(NotContextException::new))
-                    .doOnNext(superior -> info.setSuperior(superior.getId()));
-        } else {
-            groupMono = Mono.just(info);
-        }
-        return groupMono.flatMap(group -> userRepository.getByUsername(groupDTO.getPrincipal()).map(principal -> {
-            group.setSuperior(principal.getId());
-            return group;
-        })).flatMap(groupRepository::insert).map(this::convertOuter);
+        Group group = new Group();
+        BeanUtils.copyProperties(groupDTO, group);
+        group.setCode(this.generateCode());
+        return groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
+                .map(superior -> {
+                    group.setSuperior(superior.getId());
+                    return group;
+                })
+                .switchIfEmpty(Mono.just(group)).flatMap(g -> userRepository.getByUsername(groupDTO.getPrincipal())
+                        .map(principal -> {
+                            g.setSuperior(principal.getId());
+                            return g;
+                        }).switchIfEmpty(Mono.just(g)))
+                .flatMap(groupRepository::insert).map(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
         Assert.hasText(code, "code is blank");
-        return groupRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
-            BeanUtils.copyProperties(groupDTO, info);
-            // 判断是否设置上级
-            if (StringUtils.hasText(groupDTO.getSuperior())) {
-                groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
-                        .switchIfEmpty(Mono.error(NotContextException::new))
-                        .doOnNext(superior -> info.setSuperior(superior.getId())).then();
-            }
-            return groupRepository.save(info);
-        }).map(this::convertOuter);
+        return groupRepository.getByCodeAndEnabledTrue(code).map(group -> {
+            BeanUtils.copyProperties(groupDTO, group);
+            return group;
+        }).switchIfEmpty(Mono.error(NotContextException::new))
+                .flatMap(group -> groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior())
+                        .map(superior -> {
+                            group.setSuperior(superior.getId());
+                            return group;
+                        }).switchIfEmpty(Mono.just(group)).flatMap(g ->
+                                userRepository.getByUsername(groupDTO.getPrincipal()).map(user -> {
+                                    g.setPrincipal(user.getId());
+                                    return g;
+                                }).switchIfEmpty(Mono.just(g)))
+                        .flatMap(groupRepository::save)).map(this::convertOuter);
     }
 
     @Override

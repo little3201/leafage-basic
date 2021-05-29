@@ -22,6 +22,7 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import javax.naming.NotContextException;
 import java.util.Collection;
 import java.util.List;
@@ -103,11 +104,14 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Role role = new Role();
         BeanUtils.copyProperties(roleDTO, role);
         role.setCode(this.generateCode());
-        Mono<Role> roleMono = roleRepository.insert(role)
+        return roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior()).map(superior -> {
+            role.setSuperior(superior.getId());
+            return role;
+        }).switchIfEmpty(Mono.just(role)).flatMap(roleRepository::insert)
                 .switchIfEmpty(Mono.error(RuntimeException::new))
                 .doOnSuccess(r -> this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
-                        .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
-        return roleMono.map(this::convertOuter);
+                        .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()))
+                .map(this::convertOuter);
     }
 
     @Override
@@ -115,6 +119,10 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Assert.hasText(code, "code is blank");
         Mono<Role> roleMono = roleRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
+                .flatMap(role -> roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior()).map(superior -> {
+                    role.setSuperior(superior.getId());
+                    return role;
+                }))
                 .flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
                     return roleRepository.save(role)

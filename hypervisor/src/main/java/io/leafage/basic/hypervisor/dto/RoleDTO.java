@@ -24,6 +24,10 @@ public class RoleDTO implements Serializable {
     @Size(max = 16)
     private String name;
     /**
+     * 上级
+     */
+    private String superior;
+    /**
      * 描述
      */
     @Size(max = 32)
@@ -43,6 +47,14 @@ public class RoleDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
     }
 
     public String getDescription() {

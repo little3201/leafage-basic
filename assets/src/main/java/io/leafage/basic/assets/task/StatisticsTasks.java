@@ -18,10 +18,10 @@ public class StatisticsTasks {
     }
 
     /**
-     * 统计昨日浏览量
+     * 执行统计任务
      */
     @Scheduled(cron = "0 0 0 * * ?")
-    public void viewed() {
+    public void execute() {
         try {
             statisticsService.create().subscribe(statistics ->
                     logger.info("定时记录浏览量，任务执行完成: {}", statistics.getDate()));

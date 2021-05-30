@@ -29,6 +29,11 @@ public class TreeNode implements Serializable {
      */
     private List<TreeNode> children;
 
+    public TreeNode(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
     public String getCode() {
         return code;
     }

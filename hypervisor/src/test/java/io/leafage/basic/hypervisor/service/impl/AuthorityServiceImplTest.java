@@ -77,10 +77,13 @@ class AuthorityServiceImplTest {
     @Test
     void tree() {
         Authority authority = new Authority();
-        authority.setId(new ObjectId());
-        authority.setSuperior(new ObjectId());
-        given(this.authorityRepository.findByTypeAndEnabledTrue('M')).willReturn(Flux.just(authority));
-        StepVerifier.create(authorityService.tree()).verifyComplete();
+        ObjectId id = new ObjectId();
+        authority.setId(id);
+        Authority child = new Authority();
+        child.setId(new ObjectId());
+        child.setSuperior(id);
+        given(this.authorityRepository.findByTypeAndEnabledTrue('M')).willReturn(Flux.just(authority, child));
+        StepVerifier.create(authorityService.tree()).expectNextCount(1).verifyComplete();
     }
 
     @Test

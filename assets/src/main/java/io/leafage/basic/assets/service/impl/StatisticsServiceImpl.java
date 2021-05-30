@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -61,7 +62,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 }
                 //  两位小数，四舍五入
                 double overViewed = (statistics.getViewed() - over.getViewed()) * 1.0 / over.getViewed() * 100;
-                overViewed = new BigDecimal(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
+                overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
                 statistics.setOverViewed(overViewed);
                 return statistics;
             }).switchIfEmpty(Mono.just(statistics));

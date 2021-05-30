@@ -7,13 +7,11 @@ import io.leafage.basic.hypervisor.document.Authority;
 import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.document.UserRole;
-import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,30 +51,10 @@ class UserServiceImplTest {
 
     @Test
     void retrieve() {
-        given(userRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(Mockito.mock(User.class)));
-        Flux<UserVO> voFlux = userService.retrieve(0, 2);
-        StepVerifier.create(voFlux).expectSubscription().expectNextCount(1).verifyComplete();
+        given(this.userRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(Mockito.mock(User.class)));
+        StepVerifier.create(userService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
-    /**
-     * 测试新增用户信息
-     */
-    @Test
-    void create() {
-        given(userRepository.insert(Mockito.any(User.class))).willReturn(Mono.just(Mockito.mock(User.class)));
-        Mono<UserVO> userVOMono = userService.create(Mockito.mock(UserDTO.class));
-        StepVerifier.create(userVOMono).verifyError();
-    }
-
-    /**
-     * 测试新增用户信息
-     */
-    @Test
-    void create_error() {
-        given(this.userRepository.insert(Mockito.any(User.class))).willReturn(Mono.empty());
-        Mono<UserVO> userVOMono = userService.create(Mockito.mock(UserDTO.class));
-        StepVerifier.create(userVOMono).verifyError();
-    }
 
     /**
      * 测试查询用户信息, 正常返回数据
@@ -111,7 +89,44 @@ class UserServiceImplTest {
         String username = "little3201";
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .willReturn(Mono.empty());
-        Mono<UserDetails> detailsMono = userService.fetchDetails(username);
-        StepVerifier.create(detailsMono).verifyError();
+        StepVerifier.create(userService.fetchDetails(username)).verifyError();
+    }
+
+    @Test
+    void fetch() {
+        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
+        StepVerifier.create(userService.fetch("little3201")).expectNextCount(1).verifyComplete();
+    }
+
+    /**
+     * 测试新增用户信息
+     */
+    @Test
+    void create() {
+        given(this.userRepository.insert(Mockito.any(User.class))).willReturn(Mono.just(Mockito.mock(User.class)));
+        StepVerifier.create(userService.create(Mockito.mock(UserDTO.class))).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void count() {
+        given(this.userRepository.count()).willReturn(Mono.just(2L));
+        StepVerifier.create(userService.count()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void modify() {
+        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
+        given(this.userRepository.save(Mockito.any(User.class))).willReturn(Mono.just(Mockito.mock(User.class)));
+        UserDTO userDTO = new UserDTO();
+        StepVerifier.create(userService.modify("little3201", userDTO)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void remove() {
+        User user = new User();
+        user.setId(new ObjectId());
+        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
+        given(this.userRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());
+        StepVerifier.create(userService.remove("little3201")).verifyComplete();
     }
 }

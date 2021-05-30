@@ -52,11 +52,4 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId
      */
     Mono<Group> getByCodeAndEnabledTrue(String code);
 
-    /**
-     * 根据id查询
-     *
-     * @param id 主键
-     * @return 组织信息
-     */
-    Mono<Group> getById(ObjectId id);
 }

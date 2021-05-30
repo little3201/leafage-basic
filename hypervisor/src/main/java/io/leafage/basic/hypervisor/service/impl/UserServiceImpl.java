@@ -38,33 +38,21 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
     private final GroupRepository groupRepository;
-    private final GroupUserRepository groupUserRepository;
 
     public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
                            RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository,
-                           AuthorityRepository authorityRepository, GroupRepository groupRepository,
-                           GroupUserRepository groupUserRepository) {
+                           AuthorityRepository authorityRepository, GroupRepository groupRepository) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;
         this.authorityRepository = authorityRepository;
         this.groupRepository = groupRepository;
-        this.groupUserRepository = groupUserRepository;
     }
 
     @Override
     public Flux<UserVO> retrieve(int page, int size) {
         return userRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
-    }
-
-    @Override
-    public Flux<UserVO> relation(String code) {
-        return groupRepository.getByCodeAndEnabledTrue(code).flatMapMany(group ->
-                groupUserRepository.findByGroupId(group.getId()).flatMap(groupUser ->
-                        userRepository.findById(groupUser.getUserId()).map(this::convertOuter)
-                )
-        );
     }
 
     @Override
@@ -76,34 +64,18 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
-        Mono<User> userMono = userRepository.insert(user)
-                .switchIfEmpty(Mono.error(RuntimeException::new))
-                // 处理roles
-                .doOnSuccess(u -> this.initUserRole(u.getId(), userDTO.getRoles()).doOnNext(userRoles ->
-                        userRoleRepository.saveAll(userRoles).subscribe()))
-                // 处理groups
-                .doOnSuccess(info -> this.initGroupUser(info.getId(), userDTO.getGroups()).subscribe(groupUsers ->
-                        groupUserRepository.saveAll(groupUsers).subscribe()));
-        return userMono.map(this::convertOuter);
+        return userRepository.insert(user).map(this::convertOuter);
     }
 
     @Override
     public Mono<UserVO> modify(String username, UserDTO userDTO) {
         Assert.hasText(username, "username is blank");
-        Mono<User> userMono = userRepository.getByUsername(username)
+        return userRepository.getByUsername(username)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(user -> {
                     BeanUtils.copyProperties(userDTO, user);
-                    return userRepository.save(user)
-                            .switchIfEmpty(Mono.error(RuntimeException::new))
-                            // 处理roles
-                            .doOnSuccess(u -> this.initUserRole(u.getId(), userDTO.getRoles()).subscribe(userRoles ->
-                                    userRoleRepository.saveAll(userRoles).subscribe()))
-                            // 处理groups
-                            .doOnSuccess(info -> this.initGroupUser(info.getId(), userDTO.getGroups()).subscribe(groupUsers ->
-                                    groupUserRepository.saveAll(groupUsers).subscribe()));
+                    return userRepository.save(user).map(this::convertOuter);
                 });
-        return userMono.map(this::convertOuter);
     }
 
     @Override

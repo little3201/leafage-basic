@@ -16,5 +16,10 @@ import top.leafage.common.reactive.ReactiveBasicService;
  **/
 public interface RoleService extends ReactiveBasicService<RoleDTO, RoleVO> {
 
+    /**
+     * 查询构造树结构的数据
+     *
+     * @return 数据集
+     */
     Flux<TreeNode> tree();
 }

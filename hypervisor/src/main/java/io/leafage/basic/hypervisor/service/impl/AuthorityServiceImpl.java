@@ -11,7 +11,6 @@ import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -19,6 +18,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import javax.naming.NotContextException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,10 +41,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public Flux<AuthorityVO> retrieve(Character type) {
-        Authority authority = new Authority();
-        authority.setType(type);
-        authority.setEnabled(true);
-        return authorityRepository.findAll(Example.of(authority)).map(this::convertOuter);
+        return authorityRepository.findByTypeAndEnabledTrue(type).map(this::convertOuter);
     }
 
     @Override
@@ -56,7 +53,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
                             BeanUtils.copyProperties(authority, authorityVO);
                             authorityVO.setCount(count);
                             if (authority.getSuperior() != null) {
-                                return authorityRepository.getById(authority.getSuperior())
+                                return authorityRepository.findById(authority.getSuperior())
                                         .map(superior -> {
                                                     authorityVO.setSuperior(superior.getName());
                                                     return authorityVO;
@@ -70,10 +67,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public Flux<TreeNode> tree() {
-        Authority authority = new Authority();
-        authority.setType('M');
-        authority.setEnabled(true);
-        Flux<Authority> authorities = authorityRepository.findAll(Example.of(authority));
+        Flux<Authority> authorities = authorityRepository.findByTypeAndEnabledTrue('M');
         return authorities.filter(a -> a.getSuperior() == null).flatMap(a -> {
             TreeNode treeNode = this.constructNode(a.getCode(), a);
             return this.addChildren(a, authorities).collectList().map(treeNodes -> {
@@ -92,16 +86,11 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
                             AuthorityVO authorityVO = new AuthorityVO();
                             BeanUtils.copyProperties(authority, authorityVO);
                             authorityVO.setCount(count);
-                            if (authority.getSuperior() != null) {
-                                return authorityRepository.getById(authority.getSuperior())
-                                        .map(superior -> {
-                                                    authorityVO.setSuperior(superior.getCode());
-                                                    return authorityVO;
-                                                }
-                                        );
-                            }
                             return Mono.just(authorityVO);
-                        })
+                        }).flatMap(authorityVO -> authorityRepository.findById(authority.getSuperior()).map(superior -> {
+                            authorityVO.setSuperior(superior.getCode());
+                            return authorityVO;
+                        }).switchIfEmpty(Mono.just(authorityVO)))
                 );
     }
 

@@ -90,24 +90,6 @@ public class UserController {
     }
 
     /**
-     * 根据组code查询关联用户信息
-     *
-     * @param code 组code
-     * @return 查询到的数据集，异常时返回204状态码
-     */
-    @GetMapping("/{code}/relation")
-    public ResponseEntity<Flux<UserVO>> relation(@PathVariable String code) {
-        Flux<UserVO> voFlux;
-        try {
-            voFlux = userService.relation(code);
-        } catch (Exception e) {
-            logger.error("Retrieve group users occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voFlux);
-    }
-
-    /**
      * 统计记录数
      *
      * @return 查询到的数据，异常时返回204状态码

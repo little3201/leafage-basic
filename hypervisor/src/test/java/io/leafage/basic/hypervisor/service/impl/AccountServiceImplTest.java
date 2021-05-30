@@ -33,7 +33,7 @@ class AccountServiceImplTest {
 
     @Test
     void create() {
-        given(accountRepository.insert(Mockito.any(Account.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
-        StepVerifier.create(this.accountService.create(Mockito.mock(AccountDTO.class))).expectNextCount(1).verifyComplete();
+        given(this.accountRepository.insert(Mockito.any(Account.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
+        StepVerifier.create(accountService.create(Mockito.mock(AccountDTO.class))).expectNextCount(1).verifyComplete();
     }
 }

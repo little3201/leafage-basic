@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.document.Role;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -18,15 +19,22 @@ import java.util.Collection;
  * @author liwenqiang 2018/9/26 11:06
  **/
 @Repository
-public interface RoleRepository extends ReactiveMongoRepository<Role, String> {
+public interface RoleRepository extends ReactiveMongoRepository<Role, ObjectId> {
 
     /**
-     * 分页查询角色
+     * 分页查询有效角色
      *
      * @param pageable 分页参数
-     * @return 有效角色
+     * @return 数据集
      */
     Flux<Role> findByEnabledTrue(Pageable pageable);
+
+    /**
+     * 查询有效角色
+     *
+     * @return 数据集
+     */
+    Flux<Role> findByEnabledTrue();
 
     /**
      * 根据code查询enabled信息

@@ -6,7 +6,6 @@ package io.leafage.basic.hypervisor.service;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.vo.UserVO;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
@@ -25,11 +24,4 @@ public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
      */
     Mono<UserDetails> fetchDetails(String username);
 
-    /**
-     * 根据关联查用户
-     *
-     * @param code 组
-     * @return 用户信息
-     */
-    Flux<UserVO> relation(String code);
 }

@@ -53,14 +53,15 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
                             GroupVO groupVO = new GroupVO();
                             BeanUtils.copyProperties(group, groupVO);
                             groupVO.setCount(count);
-                            if (group.getSuperior() != null) {
-                                return groupRepository.getById(group.getSuperior()).map(superior -> {
-                                    groupVO.setSuperior(superior.getName());
-                                    return groupVO;
-                                });
-                            }
                             return Mono.just(groupVO);
-                        })
+                        }).flatMap(groupVO -> groupRepository.findById(group.getSuperior()).map(superior -> {
+                            groupVO.setSuperior(superior.getName());
+                            return groupVO;
+                        }).switchIfEmpty(Mono.just(groupVO))).flatMap(groupVO ->
+                                userRepository.findById(group.getPrincipal()).map(user -> {
+                                    groupVO.setPrincipal(user.getNickname());
+                                    return groupVO;
+                                }).switchIfEmpty(Mono.just(groupVO)))
                 );
     }
 
@@ -87,14 +88,11 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
                             GroupVO groupVO = new GroupVO();
                             BeanUtils.copyProperties(group, groupVO);
                             groupVO.setCount(count);
-                            if (group.getSuperior() != null) {
-                                return groupRepository.getById(group.getSuperior()).map(superior -> {
-                                    groupVO.setSuperior(superior.getCode());
-                                    return groupVO;
-                                });
-                            }
                             return Mono.just(groupVO);
-                        })
+                        }).flatMap(groupVO -> groupRepository.findById(group.getSuperior()).map(superior -> {
+                            groupVO.setSuperior(superior.getCode());
+                            return groupVO;
+                        }).switchIfEmpty(Mono.just(groupVO)))
                 );
     }
 
@@ -112,8 +110,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
                 .map(superior -> {
                     group.setSuperior(superior.getId());
                     return group;
-                })
-                .switchIfEmpty(Mono.just(group)).flatMap(g -> userRepository.getByUsername(groupDTO.getPrincipal())
+                }).switchIfEmpty(Mono.just(group)).flatMap(g -> userRepository.getByUsername(groupDTO.getPrincipal())
                         .map(principal -> {
                             g.setSuperior(principal.getId());
                             return g;

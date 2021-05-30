@@ -19,7 +19,7 @@ import java.util.Collection;
  * @author liwenqiang 2018/12/17 19:37
  **/
 @Repository
-public interface AuthorityRepository extends ReactiveMongoRepository<Authority, String> {
+public interface AuthorityRepository extends ReactiveMongoRepository<Authority, ObjectId> {
 
     /**
      * 分页查询权限
@@ -28,6 +28,14 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      * @return 有效权限
      */
     Flux<Authority> findByEnabledTrue(Pageable pageable);
+
+    /**
+     * 根据类型查询权限
+     *
+     * @param type 类型
+     * @return 有效权限
+     */
+    Flux<Authority> findByTypeAndEnabledTrue(Character type);
 
     /**
      * 根据code查询enabled信息
@@ -53,20 +61,4 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
      */
     Flux<Authority> findByCodeInAndEnabledTrue(Collection<String> codes);
 
-    /**
-     * 根据id查询name
-     *
-     * @param id 主键
-     * @return 权限信息
-     */
-    Mono<Authority> getById(ObjectId id);
-
-    /**
-     * 根据superior和type查询
-     *
-     * @param superior 上级ID
-     * @param type     类型
-     * @return 权限信息
-     */
-    Flux<Authority> findBySuperiorAndTypeAndEnabledTrue(ObjectId superior, String type);
 }

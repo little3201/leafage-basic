@@ -8,14 +8,12 @@ import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
-import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -37,14 +35,12 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
-    private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
 
     public RoleServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository,
-                           RoleAuthorityRepository roleAuthorityRepository, AuthorityRepository authorityRepository) {
+                           AuthorityRepository authorityRepository) {
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
-        this.roleAuthorityRepository = roleAuthorityRepository;
         this.authorityRepository = authorityRepository;
     }
 
@@ -61,15 +57,16 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
                             BeanUtils.copyProperties(role, roleVO);
                             roleVO.setCount(count);
                             return roleVO;
-                        })
+                        }).flatMap(roleVO -> roleRepository.findById(role.getSuperior()).map(superior -> {
+                            roleVO.setSuperior(superior.getName());
+                            return roleVO;
+                        }).switchIfEmpty(Mono.just(roleVO)))
                 );
     }
 
     @Override
     public Flux<TreeNode> tree() {
-        Role role = new Role();
-        role.setEnabled(true);
-        Flux<Role> roleFlux = roleRepository.findAll(Example.of(role));
+        Flux<Role> roleFlux = roleRepository.findByEnabledTrue();
         return roleFlux.filter(r -> r.getSuperior() == null).flatMap(r -> {
             TreeNode treeNode = new TreeNode();
             treeNode.setCode(r.getCode());
@@ -84,14 +81,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Mono<RoleVO> fetch(String code) {
         Assert.hasText(code, "code is blank");
-        return roleRepository.getByCodeAndEnabledTrue(code)
-                .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
-                            RoleVO roleVO = new RoleVO();
-                            BeanUtils.copyProperties(role, roleVO);
-                            roleVO.setCount(count);
-                            return roleVO;
-                        })
-                );
+        return roleRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
@@ -107,30 +97,31 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         return roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior()).map(superior -> {
             role.setSuperior(superior.getId());
             return role;
-        }).switchIfEmpty(Mono.just(role)).flatMap(roleRepository::insert)
-                .switchIfEmpty(Mono.error(RuntimeException::new))
-                .doOnSuccess(r -> this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
-                        .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()))
-                .map(this::convertOuter);
+        }).switchIfEmpty(Mono.just(role)).flatMap(roleRepository::insert).switchIfEmpty(Mono.error(RuntimeException::new))
+                .map(this::convertOuter).flatMap(roleVO ->
+                        roleRepository.findById(role.getSuperior()).map(superior -> {
+                            roleVO.setSuperior(superior.getName());
+                            return roleVO;
+                        }).switchIfEmpty(Mono.just(roleVO)));
     }
 
     @Override
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
         Assert.hasText(code, "code is blank");
-        Mono<Role> roleMono = roleRepository.getByCodeAndEnabledTrue(code)
+        return roleRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(role -> roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior()).map(superior -> {
                     role.setSuperior(superior.getId());
                     return role;
-                }))
-                .flatMap(role -> {
+                }).switchIfEmpty(Mono.just(role))).flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
-                    return roleRepository.save(role)
-                            .switchIfEmpty(Mono.error(RuntimeException::new))
-                            .doOnSuccess(r -> this.initRoleAuthority(r.getId(), r.getModifier(), roleDTO.getAuthorities())
-                                    .subscribe(roleAuthorities -> roleAuthorityRepository.saveAll(roleAuthorities).subscribe()));
+                    return roleRepository.save(role).switchIfEmpty(Mono.error(RuntimeException::new))
+                            .map(this::convertOuter).flatMap(roleVO ->
+                                    roleRepository.findById(role.getSuperior()).map(superior -> {
+                                        roleVO.setSuperior(superior.getName());
+                                        return roleVO;
+                                    }));
                 });
-        return roleMono.map(this::convertOuter);
     }
 
     /**

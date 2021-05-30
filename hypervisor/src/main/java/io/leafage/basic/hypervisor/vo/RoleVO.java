@@ -17,6 +17,10 @@ public class RoleVO extends BaseVO {
      */
     private String name;
     /**
+     * 上级
+     */
+    private String superior;
+    /**
      * 描述
      */
     private String description;
@@ -32,6 +36,14 @@ public class RoleVO extends BaseVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
     }
 
     public String getDescription() {

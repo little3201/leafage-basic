@@ -7,7 +7,7 @@ import io.leafage.basic.hypervisor.document.Group;
 import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.GroupUserRepository;
+import io.leafage.basic.hypervisor.repository.UserGroupRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
@@ -32,13 +32,13 @@ import java.util.Objects;
 public class GroupServiceImpl extends AbstractBasicService implements GroupService {
 
     private final GroupRepository groupRepository;
-    private final GroupUserRepository groupUserRepository;
+    private final UserGroupRepository userGroupRepository;
     private final UserRepository userRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupUserRepository groupUserRepository,
+    public GroupServiceImpl(GroupRepository groupRepository, UserGroupRepository userGroupRepository,
                             UserRepository userRepository) {
         this.groupRepository = groupRepository;
-        this.groupUserRepository = groupUserRepository;
+        this.userGroupRepository = userGroupRepository;
         this.userRepository = userRepository;
     }
 
@@ -50,7 +50,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     @Override
     public Flux<GroupVO> retrieve(int page, int size) {
         return groupRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())
+                .flatMap(group -> userGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
                         .flatMap(count -> {
                             GroupVO groupVO = this.convertOuter(group);
                             groupVO.setCount(count);
@@ -87,7 +87,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     public Mono<GroupVO> fetch(String code) {
         Assert.hasText(code, "code is blank");
         return groupRepository.getByCodeAndEnabledTrue(code)
-                .flatMap(group -> groupUserRepository.countByGroupIdAndEnabledTrue(group.getId())
+                .flatMap(group -> userGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
                         .flatMap(count -> {
                             GroupVO groupVO = new GroupVO();
                             BeanUtils.copyProperties(group, groupVO);

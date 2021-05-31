@@ -1,6 +1,6 @@
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.service.GroupUserService;
+import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
@@ -16,10 +16,10 @@ public class GroupUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(GroupUserController.class);
 
-    private final GroupUserService groupUserService;
+    private final UserGroupService userGroupService;
 
-    public GroupUserController(GroupUserService groupUserService) {
-        this.groupUserService = groupUserService;
+    public GroupUserController(UserGroupService userGroupService) {
+        this.userGroupService = userGroupService;
     }
 
     /**
@@ -32,7 +32,7 @@ public class GroupUserController {
     public ResponseEntity<Flux<UserVO>> groupRelation(@PathVariable String code) {
         Flux<UserVO> voFlux;
         try {
-            voFlux = groupUserService.groupRelation(code);
+            voFlux = userGroupService.groupRelation(code);
         } catch (Exception e) {
             logger.error("Retrieve group users occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -50,7 +50,7 @@ public class GroupUserController {
     public ResponseEntity<Flux<GroupVO>> userRelation(@PathVariable String username) {
         Flux<GroupVO> voFlux;
         try {
-            voFlux = groupUserService.userRelation(username);
+            voFlux = userGroupService.userRelation(username);
         } catch (Exception e) {
             logger.error("Retrieve user groups occurred an error: ", e);
             return ResponseEntity.noContent().build();

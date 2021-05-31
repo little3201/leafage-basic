@@ -68,7 +68,6 @@ class RoleServiceImplTest {
         role.setId(new ObjectId());
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(role));
         given(this.roleRepository.insert(Mockito.any(Role.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
-        given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setSuperior("21612OL34");
         StepVerifier.create(roleService.create(roleDTO)).expectNextCount(1).verifyComplete();
@@ -78,23 +77,24 @@ class RoleServiceImplTest {
     void modify() {
         Role role = new Role();
         role.setId(new ObjectId());
+        role.setName("test");
         role.setSuperior(new ObjectId());
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(role));
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
-        role.setName("test");
-        given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(role));
         RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setSuperior("21612OL34");
         StepVerifier.create(roleService.modify("21612OL34", roleDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void tree() {
         Role role = new Role();
-        role.setId(new ObjectId());
-        role.setSuperior(new ObjectId());
-        given(this.roleRepository.findByEnabledTrue()).willReturn(Flux.just(role));
-        StepVerifier.create(roleService.tree()).verifyComplete();
+        ObjectId id = new ObjectId();
+        role.setId(id);
+        Role child = new Role();
+        child.setId(new ObjectId());
+        child.setSuperior(id);
+        given(this.roleRepository.findByEnabledTrue()).willReturn(Flux.just(role, child));
+        StepVerifier.create(roleService.tree()).expectNextCount(1).verifyComplete();
     }
 
     @Test

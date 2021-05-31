@@ -60,7 +60,6 @@ class GroupServiceImplTest {
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(group));
         User user = new User();
         user.setNickname("test");
-        given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(user));
         StepVerifier.create(groupService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
@@ -90,10 +89,13 @@ class GroupServiceImplTest {
     @Test
     void tree() {
         Group group = new Group();
-        group.setId(new ObjectId());
-        group.setSuperior(new ObjectId());
-        given(this.groupRepository.findByEnabledTrue()).willReturn(Flux.just(group));
-        StepVerifier.create(groupService.tree()).verifyComplete();
+        ObjectId id = new ObjectId();
+        group.setId(id);
+        Group child = new Group();
+        child.setId(new ObjectId());
+        child.setSuperior(id);
+        given(this.groupRepository.findByEnabledTrue()).willReturn(Flux.just(group, child));
+        StepVerifier.create(groupService.tree()).expectNextCount(1).verifyComplete();
     }
 
     @Test

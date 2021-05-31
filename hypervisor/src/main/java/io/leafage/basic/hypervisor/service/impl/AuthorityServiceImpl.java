@@ -22,6 +22,7 @@ import top.leafage.common.basic.AbstractBasicService;
 import javax.naming.NotContextException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 权限信息Service 接口实现
@@ -53,12 +54,11 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
                             BeanUtils.copyProperties(authority, authorityVO);
                             authorityVO.setCount(count);
                             if (authority.getSuperior() != null) {
-                                return authorityRepository.findById(authority.getSuperior())
-                                        .map(superior -> {
-                                                    authorityVO.setSuperior(superior.getName());
-                                                    return authorityVO;
-                                                }
-                                        );
+                                return authorityRepository.findById(authority.getSuperior()).map(superior -> {
+                                            authorityVO.setSuperior(superior.getName());
+                                            return authorityVO;
+                                        }
+                                );
                             }
                             return Mono.just(authorityVO);
                         })
@@ -68,9 +68,9 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     @Override
     public Flux<TreeNode> tree() {
         Flux<Authority> authorities = authorityRepository.findByTypeAndEnabledTrue('M');
-        return authorities.filter(a -> a.getSuperior() == null).flatMap(a -> {
-            TreeNode treeNode = this.constructNode(a.getCode(), a);
-            return this.addChildren(a, authorities).collectList().map(treeNodes -> {
+        return authorities.filter(a -> Objects.isNull(a.getSuperior())).flatMap(authority -> {
+            TreeNode treeNode = this.constructNode(authority.getCode(), authority);
+            return this.addChildren(authority, authorities).collectList().map(treeNodes -> {
                 treeNode.setChildren(treeNodes);
                 return treeNode;
             });
@@ -101,17 +101,17 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public Mono<AuthorityVO> create(AuthorityDTO authorityDTO) {
-        Authority info = new Authority();
-        BeanUtils.copyProperties(authorityDTO, info);
-        info.setCode(this.generateCode());
+        Authority authority = new Authority();
+        BeanUtils.copyProperties(authorityDTO, authority);
+        authority.setCode(this.generateCode());
         Mono<Authority> authorityMono;
         // 如果设置上级，进行处理
         if (StringUtils.hasText(authorityDTO.getSuperior())) {
             authorityMono = authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
                     .switchIfEmpty(Mono.error(NotContextException::new))
-                    .doOnNext(superior -> info.setSuperior(superior.getId()));
+                    .doOnNext(superior -> authority.setSuperior(superior.getId()));
         } else {
-            authorityMono = Mono.just(info);
+            authorityMono = Mono.just(authority);
         }
         return authorityMono.flatMap(authorityRepository::insert).map(this::convertOuter);
     }
@@ -119,16 +119,19 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     @Override
     public Mono<AuthorityVO> modify(String code, AuthorityDTO authorityDTO) {
         Assert.hasText(code, "code is blank");
-        return authorityRepository.getByCodeAndEnabledTrue(code).flatMap(info -> {
-            BeanUtils.copyProperties(authorityDTO, info);
-            // 判断是否设置上级
-            if (StringUtils.hasText(authorityDTO.getSuperior())) {
-                authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
-                        .switchIfEmpty(Mono.error(NotContextException::new))
-                        .doOnNext(superior -> info.setSuperior(superior.getId())).then();
-            }
-            return authorityRepository.save(info);
-        }).map(this::convertOuter);
+        return authorityRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
+                .flatMap(authority -> {
+                    BeanUtils.copyProperties(authorityDTO, authority);
+                    // 判断是否设置上级
+                    if (StringUtils.hasText(authorityDTO.getSuperior())) {
+                        authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
+                                .switchIfEmpty(Mono.error(NotContextException::new)).map(superior -> {
+                            authority.setSuperior(superior.getId());
+                            return authority;
+                        });
+                    }
+                    return authorityRepository.save(authority);
+                }).map(this::convertOuter);
     }
 
     /**
@@ -151,9 +154,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
      * @return tree node
      */
     private TreeNode constructNode(String superior, Authority authority) {
-        TreeNode treeNode = new TreeNode();
-        treeNode.setCode(authority.getCode());
-        treeNode.setName(authority.getName());
+        TreeNode treeNode = new TreeNode(authority.getCode(), authority.getName());
         treeNode.setSuperior(superior);
         Map<String, String> expand = new HashMap<>();
         expand.put("icon", authority.getIcon());
@@ -170,13 +171,14 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
      * @return tree node
      */
     private Flux<TreeNode> addChildren(Authority superior, Flux<Authority> authorities) {
-        return authorities.filter(authority -> superior.getId().equals(authority.getSuperior())).flatMap(authority -> {
-            TreeNode treeNode = this.constructNode(superior.getCode(), authority);
-            return this.addChildren(authority, authorities).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
-            });
-        });
+        return authorities.filter(authority -> superior.getId().equals(authority.getSuperior()))
+                .flatMap(authority -> {
+                    TreeNode treeNode = this.constructNode(superior.getCode(), authority);
+                    return this.addChildren(authority, authorities).collectList().map(treeNodes -> {
+                        treeNode.setChildren(treeNodes);
+                        return treeNode;
+                    });
+                });
     }
 
 }

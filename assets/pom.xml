@@ -25,17 +25,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <!-- actuator -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-            <optional>true</optional>
-        </dependency>
         <dependency>
             <groupId>top.leafage</groupId>
             <artifactId>leafage-common</artifactId>
             <version>0.1.0</version>
-            <optional>true</optional>
         </dependency>
         <!-- Spring cloud consul -->
         <dependency>
@@ -46,7 +39,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

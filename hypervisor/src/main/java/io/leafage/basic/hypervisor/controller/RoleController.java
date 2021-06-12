@@ -181,7 +181,7 @@ public class RoleController {
      * @param code 角色代码
      * @return 操作结果
      */
-    @PostMapping("/{code}/authority")
+    @GetMapping("/{code}/authority")
     public ResponseEntity<Flux<AuthorityVO>> authorities(@PathVariable String code) {
         Flux<AuthorityVO> voFlux;
         try {

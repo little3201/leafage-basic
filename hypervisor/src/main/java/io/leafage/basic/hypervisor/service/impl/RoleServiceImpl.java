@@ -89,7 +89,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
             BeanUtils.copyProperties(role, roleVO);
             if (role.getSuperior() != null) {
                 return roleRepository.findById(role.getSuperior()).map(superior -> {
-                    roleVO.setSuperior(superior.getName());
+                    roleVO.setSuperior(superior.getCode());
                     return roleVO;
                 });
             }

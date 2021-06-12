@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 分组用户repository
  *
@@ -24,7 +26,7 @@ public interface UserGroupRepository extends ReactiveCrudRepository<UserGroup, O
      * @param groupId 组ID
      * @return 用户数
      */
-    Mono<Long> countByGroupIdAndEnabledTrue(ObjectId groupId);
+    Mono<Long> countByGroupIdAndEnabledTrue(@NotNull ObjectId groupId);
 
     /**
      * 根据分组查用户
@@ -32,7 +34,7 @@ public interface UserGroupRepository extends ReactiveCrudRepository<UserGroup, O
      * @param groupId 分组主键
      * @return 关联数据集
      */
-    Flux<UserGroup> findByGroupId(ObjectId groupId);
+    Flux<UserGroup> findByGroupId(@NotNull ObjectId groupId);
 
     /**
      * 根据用户查分组
@@ -40,5 +42,5 @@ public interface UserGroupRepository extends ReactiveCrudRepository<UserGroup, O
      * @param userId 用户主键
      * @return 关联数据集
      */
-    Flux<UserGroup> findByUserId(ObjectId userId);
+    Flux<UserGroup> findByUserId(@NotNull ObjectId userId);
 }

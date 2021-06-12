@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 用户角色repository
  *
@@ -24,7 +26,7 @@ public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, Obj
      * @param userId 用户ID
      * @return 关联的角色
      */
-    Flux<UserRole> findByUserIdAndEnabledTrue(ObjectId userId);
+    Flux<UserRole> findByUserIdAndEnabledTrue(@NotNull ObjectId userId);
 
     /**
      * 统计关联用户
@@ -32,5 +34,21 @@ public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, Obj
      * @param roleId 角色ID
      * @return 用户数
      */
-    Mono<Long> countByRoleIdAndEnabledTrue(ObjectId roleId);
+    Mono<Long> countByRoleIdAndEnabledTrue(@NotNull ObjectId roleId);
+
+    /**
+     * 根据角色查用户
+     *
+     * @param roleId 角色主键
+     * @return 关联数据集
+     */
+    Flux<UserRole> findByRoleId(@NotNull ObjectId roleId);
+
+    /**
+     * 根据用户查角色
+     *
+     * @param userId 用户主键
+     * @return 关联数据集
+     */
+    Flux<UserRole> findByUserId(@NotNull ObjectId userId);
 }

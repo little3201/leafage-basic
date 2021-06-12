@@ -1,7 +1,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.UserGroup;
-import io.leafage.basic.hypervisor.dto.UserGroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.repository.UserGroupRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
@@ -14,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.naming.NotContextException;
+import java.util.Set;
 
 @Service
 public class UserGroupServiceImpl implements UserGroupService {
@@ -30,10 +30,10 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public Flux<UserVO> groupRelation(String code) {
+    public Flux<UserVO> users(String code) {
         return groupRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMapMany(group -> userGroupRepository.findByGroupId(group.getId()).flatMap(groupUser ->
-                        userRepository.findById(groupUser.getUserId()).map(user -> {
+                .flatMapMany(group -> userGroupRepository.findByGroupId(group.getId()).flatMap(userGroup ->
+                        userRepository.findById(userGroup.getUserId()).map(user -> {
                             UserVO userVO = new UserVO();
                             BeanUtils.copyProperties(user, userVO);
                             return userVO;
@@ -42,10 +42,10 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public Flux<GroupVO> userRelation(String username) {
+    public Flux<GroupVO> groups(String username) {
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMapMany(user -> userGroupRepository.findByUserId(user.getId()).flatMap(groupUser ->
-                        groupRepository.findById(groupUser.getGroupId()).map(group -> {
+                .flatMapMany(user -> userGroupRepository.findByUserId(user.getId()).flatMap(userGroup ->
+                        groupRepository.findById(userGroup.getGroupId()).map(group -> {
                             GroupVO groupVO = new GroupVO();
                             BeanUtils.copyProperties(group, groupVO);
                             return groupVO;
@@ -54,12 +54,12 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public Flux<UserGroup> create(UserGroupDTO userGroupDTO) {
-        return userRepository.getByUsername(userGroupDTO.getUsername()).switchIfEmpty(Mono.error(NotContextException::new))
+    public Flux<UserGroup> relation(String username, Set<String> groups) {
+        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMapMany(user -> {
                     UserGroup userGroup = new UserGroup();
                     userGroup.setUserId(user.getId());
-                    return groupRepository.findByCodeInAndEnabledTrue(userGroupDTO.getGroups()).map(group -> {
+                    return groupRepository.findByCodeInAndEnabledTrue(groups).map(group -> {
                         userGroup.setGroupId(group.getId());
                         return userGroup;
                     });

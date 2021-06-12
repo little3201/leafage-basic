@@ -84,7 +84,17 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Mono<RoleVO> fetch(String code) {
         Assert.hasText(code, "code is blank");
-        return roleRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
+        return roleRepository.getByCodeAndEnabledTrue(code).flatMap(role -> {
+            RoleVO roleVO = new RoleVO();
+            BeanUtils.copyProperties(role, roleVO);
+            if (role.getSuperior() != null) {
+                return roleRepository.findById(role.getSuperior()).map(superior -> {
+                    roleVO.setSuperior(superior.getName());
+                    return roleVO;
+                });
+            }
+            return Mono.just(roleVO);
+        });
     }
 
     @Override

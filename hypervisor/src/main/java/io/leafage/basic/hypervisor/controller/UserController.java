@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.document.UserGroup;
+import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.service.UserGroupService;
@@ -191,7 +192,8 @@ public class UserController {
     /**
      * 保存用户-分组关联
      *
-     * @param groups 分组
+     * @param username 账户
+     * @param groups   分组
      * @return 操作结果
      */
     @PostMapping("/{username}/group")
@@ -225,16 +227,17 @@ public class UserController {
     }
 
     /**
-     * 保存用户-分组关联
+     * 保存用户-角色关联
      *
-     * @param groups 分组
+     * @param username 账户
+     * @param roles    分组
      * @return 操作结果
      */
-    @PostMapping("/{username}/group")
-    public ResponseEntity<Flux<UserGroup>> relationRole(@PathVariable String username, @RequestBody Set<String> groups) {
-        Flux<UserGroup> voFlux;
+    @PostMapping("/{username}/role")
+    public ResponseEntity<Flux<UserRole>> relationRole(@PathVariable String username, @RequestBody Set<String> roles) {
+        Flux<UserRole> voFlux;
         try {
-            voFlux = userGroupService.relation(username, groups);
+            voFlux = userRoleService.relation(username, roles);
         } catch (Exception e) {
             logger.error("create user groups occurred an error: ", e);
             return ResponseEntity.noContent().build();

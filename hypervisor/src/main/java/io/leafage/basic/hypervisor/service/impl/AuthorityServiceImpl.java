@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,11 +85,14 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
                             AuthorityVO authorityVO = new AuthorityVO();
                             BeanUtils.copyProperties(authority, authorityVO);
                             authorityVO.setCount(count);
+                            if (authority.getSuperior() != null) {
+                                return authorityRepository.findById(authority.getSuperior()).map(superior -> {
+                                    authorityVO.setSuperior(superior.getCode());
+                                    return authorityVO;
+                                });
+                            }
                             return Mono.just(authorityVO);
-                        }).flatMap(authorityVO -> authorityRepository.findById(authority.getSuperior()).map(superior -> {
-                            authorityVO.setSuperior(superior.getCode());
-                            return authorityVO;
-                        }).switchIfEmpty(Mono.just(authorityVO)))
+                        })
                 );
     }
 

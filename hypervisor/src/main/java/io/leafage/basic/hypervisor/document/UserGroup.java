@@ -13,8 +13,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  * @author liwenqiang 2019/9/16 10:09
  **/
-@Document(collection = "group_user")
-public class GroupUser extends BaseDocument {
+@Document(collection = "user_group")
+public class UserGroup extends BaseDocument {
 
     /**
      * 用户主键
@@ -23,7 +23,7 @@ public class GroupUser extends BaseDocument {
     @Field(value = "user_id")
     private ObjectId userId;
     /**
-     * 组主键
+     * 分组主键
      */
     @Indexed
     @Field(value = "group_id")

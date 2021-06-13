@@ -3,8 +3,8 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.document.GroupUser;
 import io.leafage.basic.hypervisor.document.User;
+import io.leafage.basic.hypervisor.document.UserGroup;
 import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
@@ -151,13 +151,13 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      * @param codes  group
      * @return 用户-角色对象
      */
-    private Mono<List<GroupUser>> initGroupUser(ObjectId userId, Collection<String> codes) {
+    private Mono<List<UserGroup>> initGroupUser(ObjectId userId, Collection<String> codes) {
         return groupRepository.findByCodeInAndEnabledTrue(codes).map(group -> {
-            GroupUser groupUser = new GroupUser();
-            groupUser.setUserId(userId);
-            groupUser.setGroupId(group.getId());
-            groupUser.setModifier(userId);
-            return groupUser;
+            UserGroup userGroup = new UserGroup();
+            userGroup.setUserId(userId);
+            userGroup.setGroupId(group.getId());
+            userGroup.setModifier(userId);
+            return userGroup;
         }).collectList();
     }
 }

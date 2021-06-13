@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 
 /**
@@ -34,7 +36,7 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId
      * @param codes 代码集合
      * @return 角色信息
      */
-    Flux<Group> findByCodeInAndEnabledTrue(Collection<String> codes);
+    Flux<Group> findByCodeInAndEnabledTrue(@NotEmpty Collection<String> codes);
 
     /**
      * 分页查询组
@@ -50,6 +52,6 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId
      * @param code 代码
      * @return 组织信息
      */
-    Mono<Group> getByCodeAndEnabledTrue(String code);
+    Mono<Group> getByCodeAndEnabledTrue(@NotBlank String code);
 
 }

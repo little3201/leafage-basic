@@ -6,7 +6,7 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.document.Group;
 import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.GroupUserRepository;
+import io.leafage.basic.hypervisor.repository.UserGroupRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class GroupServiceImplTest {
     private GroupRepository groupRepository;
 
     @Mock
-    private GroupUserRepository groupUserRepository;
+    private UserGroupRepository userGroupRepository;
 
     @Mock
     private UserRepository userRepository;
@@ -56,7 +56,7 @@ class GroupServiceImplTest {
         group.setName("test");
         group.setPrincipal(new ObjectId());
         given(this.groupRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(group));
-        given(this.groupUserRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(group));
         User user = new User();
         user.setNickname("test");
@@ -69,7 +69,7 @@ class GroupServiceImplTest {
         group.setId(new ObjectId());
         group.setSuperior(new ObjectId());
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(group));
-        given(this.groupUserRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
         StepVerifier.create(groupService.fetch("21612OL34")).expectNextCount(1).verifyComplete();
     }

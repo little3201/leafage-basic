@@ -6,7 +6,9 @@ package io.leafage.basic.hypervisor.controller;
 import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
+import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
+import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,9 +30,11 @@ public class AuthorityController {
 
     private final Logger logger = LoggerFactory.getLogger(AuthorityController.class);
 
+    private final RoleAuthorityService roleAuthorityService;
     private final AuthorityService authorityService;
 
-    public AuthorityController(AuthorityService authorityService) {
+    public AuthorityController(RoleAuthorityService roleAuthorityService, AuthorityService authorityService) {
+        this.roleAuthorityService = roleAuthorityService;
         this.authorityService = authorityService;
     }
 
@@ -145,6 +149,24 @@ public class AuthorityController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.accepted().body(voMono);
+    }
+
+    /**
+     * 根据code查询关联角色信息
+     *
+     * @param code 代码
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{code}/role")
+    public ResponseEntity<Flux<RoleVO>> groupRelation(@PathVariable String code) {
+        Flux<RoleVO> voFlux;
+        try {
+            voFlux = roleAuthorityService.roles(code);
+        } catch (Exception e) {
+            logger.error("Retrieve group users occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
     }
 
 }

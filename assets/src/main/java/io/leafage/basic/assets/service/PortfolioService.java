@@ -18,12 +18,11 @@ public interface PortfolioService extends ReactiveBasicService<PortfolioDTO, Por
     /**
      * 按照分页和分类进行查询并排序
      *
-     * @param page     分页
-     * @param size     大小
-     * @param order    排序
-     * @param category 分类
+     * @param page  分页
+     * @param size  大小
+     * @param order 排序
      * @return 结果集
      */
-    Flux<PortfolioVO> retrieve(int page, int size, String category, String order);
+    Flux<PortfolioVO> retrieve(int page, int size, String order);
 
 }

@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -37,22 +36,17 @@ public class PortfolioController {
     /**
      * 分页查询
      *
-     * @param page     页码
-     * @param size     大小
-     * @param category 分类
-     * @param order    排序字段
+     * @param page  页码
+     * @param size  大小
+     * @param order 排序字段
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
     public ResponseEntity<Flux<PortfolioVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                      String category, String order) {
+                                                      String order) {
         Flux<PortfolioVO> voFlux;
         try {
-            if (StringUtils.hasText(category)) {
-                voFlux = portfolioService.retrieve(page, size, category, order);
-            } else {
-                voFlux = portfolioService.retrieve(page, size);
-            }
+            voFlux = portfolioService.retrieve(page, size, order);
         } catch (Exception e) {
             logger.error("Retrieve portfolio occurred an error: ", e);
             return ResponseEntity.noContent().build();

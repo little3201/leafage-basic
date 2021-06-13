@@ -33,10 +33,9 @@ public class PortfolioDTO implements Serializable {
      */
     private String type;
     /**
-     * 分类
+     * 描述
      */
-    @NotBlank
-    private String category;
+    private String description;
 
     public String getTitle() {
         return title;
@@ -62,11 +61,11 @@ public class PortfolioDTO implements Serializable {
         this.type = type;
     }
 
-    public String getCategory() {
-        return category;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

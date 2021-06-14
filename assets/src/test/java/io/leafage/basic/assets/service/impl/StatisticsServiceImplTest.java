@@ -51,7 +51,7 @@ class StatisticsServiceImplTest {
     }
 
     @Test
-    void create() {
+    void create_null() {
         Posts posts = new Posts();
         posts.setViewed(12);
         posts.setLikes(23);
@@ -59,7 +59,23 @@ class StatisticsServiceImplTest {
         given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
-        given(this.statisticsRepository.insert(Mockito.any(Statistics.class))).willReturn(Mono.just(Mockito.mock(Statistics.class)));
+        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
+        StepVerifier.create(statisticsService.create()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void create() {
+        Posts posts = new Posts();
+        posts.setViewed(12);
+        posts.setLikes(23);
+        posts.setComment(2);
+        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
+        Statistics statistics = new Statistics(LocalDate.now(), 2, 0.98, 0, 0);
+        given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
+                .willReturn(Mono.just(statistics));
+        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
         StepVerifier.create(statisticsService.create()).expectNextCount(1).verifyComplete();
     }
 }

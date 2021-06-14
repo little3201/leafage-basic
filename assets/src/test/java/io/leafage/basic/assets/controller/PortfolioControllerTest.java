@@ -74,7 +74,6 @@ class PortfolioControllerTest {
         PortfolioDTO portfolioDTO = new PortfolioDTO();
         portfolioDTO.setTitle("test");
         portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
-        portfolioDTO.setCategory("21213G0J2");
         // 构造返回对象
         PortfolioVO portfolioVO = new PortfolioVO();
         portfolioVO.setTitle("test");
@@ -91,7 +90,6 @@ class PortfolioControllerTest {
         PortfolioDTO portfolioDTO = new PortfolioDTO();
         portfolioDTO.setTitle("test");
         portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
-        portfolioDTO.setCategory("21213G0J2");
         // 构造返回对象
         PortfolioVO portfolioVO = new PortfolioVO();
         portfolioVO.setTitle("test");

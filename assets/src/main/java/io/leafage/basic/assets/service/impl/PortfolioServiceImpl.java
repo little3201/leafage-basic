@@ -5,14 +5,15 @@ package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Portfolio;
 import io.leafage.basic.assets.dto.PortfolioDTO;
-import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PortfolioRepository;
 import io.leafage.basic.assets.service.PortfolioService;
 import io.leafage.basic.assets.vo.PortfolioVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
@@ -28,24 +29,15 @@ import javax.naming.NotContextException;
 public class PortfolioServiceImpl extends AbstractBasicService implements PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
-    private final CategoryRepository categoryRepository;
 
-    public PortfolioServiceImpl(PortfolioRepository portfolioRepository, CategoryRepository categoryRepository) {
+    public PortfolioServiceImpl(PortfolioRepository portfolioRepository) {
         this.portfolioRepository = portfolioRepository;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public Flux<PortfolioVO> retrieve(int page, int size) {
-        return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .map(this::convertOuter);
-    }
-
-    @Override
-    public Flux<PortfolioVO> retrieve(int page, int size, String category, String order) {
-        return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
-                portfolioRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size))
-                        .map(this::convertOuter));
+    public Flux<PortfolioVO> retrieve(int page, int size, String order) {
+        return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
+                StringUtils.hasText(order) ? order : "modifyTime"))).map(this::convertOuter);
     }
 
     @Override
@@ -55,13 +47,10 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
 
     @Override
     public Mono<PortfolioVO> create(PortfolioDTO portfolioDTO) {
-        return categoryRepository.getByCodeAndEnabledTrue(portfolioDTO.getCategory()).map(category -> {
-            Portfolio info = new Portfolio();
-            BeanUtils.copyProperties(portfolioDTO, info);
-            info.setCode(this.generateCode());
-            info.setCategoryId(category.getId());
-            return info;
-        }).flatMap(portfolio -> portfolioRepository.insert(portfolio).map(this::convertOuter));
+        Portfolio portfolio = new Portfolio();
+        BeanUtils.copyProperties(portfolioDTO, portfolio);
+        portfolio.setCode(this.generateCode());
+        return portfolioRepository.insert(portfolio).map(this::convertOuter);
     }
 
     @Override
@@ -69,13 +58,10 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
         Assert.hasText(code, "code is blank");
         return portfolioRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(portfolio -> {
+                .map(portfolio -> {
                     BeanUtils.copyProperties(portfolioDTO, portfolio);
-                    return categoryRepository.getByCodeAndEnabledTrue(portfolioDTO.getCategory()).map(category -> {
-                        portfolio.setCategoryId(category.getId());
-                        return portfolio;
-                    }).flatMap(portfolioRepository::save).map(this::convertOuter);
-                });
+                    return portfolio;
+                }).flatMap(portfolioRepository::save).map(this::convertOuter);
     }
 
     @Override

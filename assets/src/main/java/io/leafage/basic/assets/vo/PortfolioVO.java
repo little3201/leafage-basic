@@ -38,7 +38,10 @@ public class PortfolioVO extends BaseVO {
      * 类型
      */
     private String type;
-
+    /**
+     * 描述
+     */
+    private String description;
 
     public int getLikes() {
         return likes;
@@ -88,4 +91,11 @@ public class PortfolioVO extends BaseVO {
         this.type = type;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

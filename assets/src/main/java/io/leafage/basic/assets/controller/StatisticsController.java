@@ -32,6 +32,8 @@ public class StatisticsController {
     /**
      * 分页查询浏览量统计
      *
+     * @param page 页码
+     * @param size 大小
      * @return 查询到数据，异常时返回204
      */
     @GetMapping

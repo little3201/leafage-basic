@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import org.springframework.util.StringUtils;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -81,7 +83,10 @@ public class UserVO implements Serializable {
     }
 
     public String getPhone() {
-        return phone.replaceAll("(^\\d{3})\\d.*(\\d{4})", "$1****$2");
+        if (StringUtils.hasText(phone)) {
+            return phone.replaceAll("(^\\d{3})\\d.*(\\d{4})", "$1****$2");
+        }
+        return phone;
     }
 
     public void setPhone(String phone) {
@@ -89,7 +94,10 @@ public class UserVO implements Serializable {
     }
 
     public String getEmail() {
-        return email.replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2");
+        if (StringUtils.hasText(email)) {
+            return email.replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2");
+        }
+        return email;
     }
 
     public void setEmail(String email) {

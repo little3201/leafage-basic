@@ -9,6 +9,7 @@ import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -31,8 +32,9 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public Flux<UserVO> users(String code) {
+        Assert.hasText(code, "code is blank");
         return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMapMany(group -> userRoleRepository.findByRoleId(group.getId()).flatMap(userRole ->
+                .flatMapMany(role -> userRoleRepository.findByRoleId(role.getId()).flatMap(userRole ->
                         userRepository.findById(userRole.getUserId()).map(user -> {
                             UserVO userVO = new UserVO();
                             BeanUtils.copyProperties(user, userVO);
@@ -43,6 +45,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public Flux<RoleVO> roles(String username) {
+        Assert.hasText(username, "username is blank");
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMapMany(user -> userRoleRepository.findByUserId(user.getId()).flatMap(userRole ->
                         roleRepository.findById(userRole.getRoleId()).map(role -> {
@@ -55,14 +58,16 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public Flux<UserRole> relation(String username, Set<String> roles) {
-        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMapMany(user -> {
-                    UserRole userRole = new UserRole();
-                    userRole.setUserId(user.getId());
-                    return roleRepository.findByCodeInAndEnabledTrue(roles).map(role -> {
+        Assert.hasText(username, "username is blank");
+        Assert.notNull(roles, "roles is null");
+        return userRepository.getByUsername(username).flatMapMany(user -> {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(user.getId());
+            return roleRepository.findByCodeInAndEnabledTrue(roles).switchIfEmpty(Mono.error(NotContextException::new))
+                    .map(role -> {
                         userRole.setRoleId(role.getId());
                         return userRole;
-                    });
-                }).collectList().flatMapMany(userRoleRepository::saveAll);
+                    }).collectList().flatMapMany(userRoleRepository::saveAll);
+        }).switchIfEmpty(Mono.error(NotContextException::new));
     }
 }

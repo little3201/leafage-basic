@@ -40,6 +40,7 @@ class StatisticsServiceImplTest {
     void retrieve() {
         given(this.statisticsRepository.findByEnabledTrue(Mockito.any(PageRequest.class)))
                 .willReturn(Flux.just(Mockito.mock(Statistics.class)));
+
         StepVerifier.create(statisticsService.retrieve(0, 7)).expectNextCount(1).verifyComplete();
     }
 
@@ -47,7 +48,25 @@ class StatisticsServiceImplTest {
     void fetch() {
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
+
         StepVerifier.create(statisticsService.fetch()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void create_null() {
+        Posts posts = new Posts();
+        posts.setViewed(12);
+        posts.setLikes(23);
+        posts.setComment(2);
+        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
+
+        given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
+
+        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
+
+        StepVerifier.create(statisticsService.create()).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -57,9 +76,14 @@ class StatisticsServiceImplTest {
         posts.setLikes(23);
         posts.setComment(2);
         given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
+
+        Statistics statistics = new Statistics(LocalDate.now(), 2, 0.98, 0, 0);
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
+                .willReturn(Mono.just(statistics));
+
+        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
-        given(this.statisticsRepository.insert(Mockito.any(Statistics.class))).willReturn(Mono.just(Mockito.mock(Statistics.class)));
+
         StepVerifier.create(statisticsService.create()).expectNextCount(1).verifyComplete();
     }
 }

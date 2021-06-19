@@ -158,7 +158,7 @@ public class AuthorityController {
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{code}/role")
-    public ResponseEntity<Flux<RoleVO>> groupRelation(@PathVariable String code) {
+    public ResponseEntity<Flux<RoleVO>> roles(@PathVariable String code) {
         Flux<RoleVO> voFlux;
         try {
             voFlux = roleAuthorityService.roles(code);

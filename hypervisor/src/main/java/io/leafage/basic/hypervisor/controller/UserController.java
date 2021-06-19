@@ -196,7 +196,7 @@ public class UserController {
      * @param groups   分组
      * @return 操作结果
      */
-    @PostMapping("/{username}/group")
+    @PatchMapping("/{username}/group")
     public ResponseEntity<Flux<UserGroup>> relationGroup(@PathVariable String username, @RequestBody Set<String> groups) {
         Flux<UserGroup> voFlux;
         try {
@@ -205,7 +205,7 @@ public class UserController {
             logger.error("create user groups occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.accepted().body(voFlux);
     }
 
     /**
@@ -233,7 +233,7 @@ public class UserController {
      * @param roles    分组
      * @return 操作结果
      */
-    @PostMapping("/{username}/role")
+    @PatchMapping("/{username}/role")
     public ResponseEntity<Flux<UserRole>> relationRole(@PathVariable String username, @RequestBody Set<String> roles) {
         Flux<UserRole> voFlux;
         try {
@@ -242,6 +242,6 @@ public class UserController {
             logger.error("create user groups occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.accepted().body(voFlux);
     }
 }

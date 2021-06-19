@@ -54,15 +54,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     @Override
     public Mono<CategoryVO> fetch(String code) {
         Assert.hasText(code, "code is blank");
-        return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(category ->
-                postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
-                        .map(count -> {
-                            CategoryVO categoryVO = new CategoryVO();
-                            BeanUtils.copyProperties(category, categoryVO);
-                            categoryVO.setCount(count);
-                            return categoryVO;
-                        })
-        );
+        return categoryRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override

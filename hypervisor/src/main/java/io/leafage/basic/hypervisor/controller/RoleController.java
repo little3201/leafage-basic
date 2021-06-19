@@ -200,7 +200,7 @@ public class RoleController {
      * @param authorities 权限信息
      * @return 操作结果
      */
-    @PostMapping("/{code}/authority")
+    @PatchMapping("/{code}/authority")
     public ResponseEntity<Flux<RoleAuthority>> relation(@PathVariable String code, @RequestBody Set<String> authorities) {
         Flux<RoleAuthority> voFlux;
         try {
@@ -209,7 +209,7 @@ public class RoleController {
             logger.error("Relation role ah occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.accepted().body(voFlux);
     }
 
 }

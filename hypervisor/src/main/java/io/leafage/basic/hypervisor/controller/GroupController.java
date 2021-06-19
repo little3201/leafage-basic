@@ -174,7 +174,7 @@ public class GroupController {
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{code}/user")
-    public ResponseEntity<Flux<UserVO>> groupRelation(@PathVariable String code) {
+    public ResponseEntity<Flux<UserVO>> users(@PathVariable String code) {
         Flux<UserVO> voFlux;
         try {
             voFlux = userGroupService.users(code);

@@ -22,6 +22,11 @@ import java.util.Collections;
 
 import static org.mockito.BDDMockito.given;
 
+/**
+ * portfolio接口测试类
+ *
+ * @author liwenqiang 2020/3/1 22:07
+ */
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(PortfolioController.class)
 class PortfolioControllerTest {
@@ -37,6 +42,7 @@ class PortfolioControllerTest {
         PortfolioVO portfolioVO = new PortfolioVO();
         portfolioVO.setTitle("test");
         given(this.portfolioService.fetch(Mockito.anyString())).willReturn(Mono.just(portfolioVO));
+
         webClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(PortfolioVO.class);
@@ -47,6 +53,7 @@ class PortfolioControllerTest {
         PortfolioVO portfolioVO = new PortfolioVO();
         portfolioVO.setTitle("test");
         given(this.portfolioService.fetch(Mockito.anyString())).willReturn(Mono.just(portfolioVO));
+
         webClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio").queryParam("page", 0)
                 .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
                 .expectStatus().isOk().expectBodyList(PortfolioVO.class);
@@ -57,6 +64,7 @@ class PortfolioControllerTest {
         PortfolioVO portfolioVO = new PortfolioVO();
         portfolioVO.setTitle("test");
         given(this.portfolioService.fetch(Mockito.anyString())).willReturn(Mono.just(portfolioVO));
+
         webClient.get().uri("/portfolio/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
@@ -70,14 +78,15 @@ class PortfolioControllerTest {
 
     @Test
     void create() {
-        // 构造请求对象
-        PortfolioDTO portfolioDTO = new PortfolioDTO();
-        portfolioDTO.setTitle("test");
-        portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
         // 构造返回对象
         PortfolioVO portfolioVO = new PortfolioVO();
         portfolioVO.setTitle("test");
         given(this.portfolioService.create(Mockito.any(PortfolioDTO.class))).willReturn(Mono.just(portfolioVO));
+
+        // 构造请求对象
+        PortfolioDTO portfolioDTO = new PortfolioDTO();
+        portfolioDTO.setTitle("test");
+        portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
         webClient.post().uri("/portfolio").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(portfolioDTO).exchange()
                 .expectStatus().isEqualTo(HttpStatus.CREATED)
@@ -86,14 +95,15 @@ class PortfolioControllerTest {
 
     @Test
     void modify() {
-        // 构造请求对象
-        PortfolioDTO portfolioDTO = new PortfolioDTO();
-        portfolioDTO.setTitle("test");
-        portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
         // 构造返回对象
         PortfolioVO portfolioVO = new PortfolioVO();
         portfolioVO.setTitle("test");
         given(this.portfolioService.modify(Mockito.anyString(), Mockito.any(PortfolioDTO.class))).willReturn(Mono.just(portfolioVO));
+
+        // 构造请求对象
+        PortfolioDTO portfolioDTO = new PortfolioDTO();
+        portfolioDTO.setTitle("test");
+        portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
         webClient.put().uri("/portfolio/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(portfolioDTO).exchange()
                 .expectStatus().isEqualTo(HttpStatus.ACCEPTED)

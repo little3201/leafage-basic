@@ -55,6 +55,7 @@ class PortfolioServiceImplTest {
         PortfolioDTO portfolioDTO = new PortfolioDTO();
         portfolioDTO.setTitle("test");
         given(this.portfolioRepository.insert(Mockito.any(Portfolio.class))).willReturn(Mono.just(Mockito.mock(Portfolio.class)));
+
         StepVerifier.create(portfolioService.create(portfolioDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -63,7 +64,9 @@ class PortfolioServiceImplTest {
         Portfolio portfolio = new Portfolio();
         portfolio.setId(new ObjectId());
         given(this.portfolioRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(portfolio));
+
         given(this.portfolioRepository.save(Mockito.any(Portfolio.class))).willReturn(Mono.just(Mockito.mock(Portfolio.class)));
+
         PortfolioDTO portfolioDTO = new PortfolioDTO();
         portfolioDTO.setTitle("test");
         StepVerifier.create(portfolioService.modify("21318H9FH", portfolioDTO)).expectNextCount(1).verifyComplete();
@@ -74,7 +77,9 @@ class PortfolioServiceImplTest {
         Portfolio portfolio = new Portfolio();
         portfolio.setId(new ObjectId());
         given(this.portfolioRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(portfolio));
+
         given(this.portfolioRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());
+
         StepVerifier.create(portfolioService.remove("21318H9FH")).verifyComplete();
     }
 }

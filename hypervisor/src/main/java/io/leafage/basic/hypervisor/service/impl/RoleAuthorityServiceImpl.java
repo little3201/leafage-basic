@@ -9,6 +9,7 @@ import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -55,6 +56,8 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public Flux<RoleAuthority> relation(String code, Set<String> authorities) {
+        Assert.hasText(code, "code is blank");
+        Assert.notNull(authorities, "authorities is null");
         return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMapMany(role -> {
                     RoleAuthority roleAuthority = new RoleAuthority();
@@ -62,7 +65,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
                     return authorityRepository.findByCodeInAndEnabledTrue(authorities).map(authority -> {
                         roleAuthority.setAuthorityId(authority.getId());
                         return roleAuthority;
-                    });
-                }).collectList().flatMapMany(roleAuthorityRepository::saveAll);
+                    }).collectList().flatMapMany(roleAuthorityRepository::saveAll);
+                });
     }
 }

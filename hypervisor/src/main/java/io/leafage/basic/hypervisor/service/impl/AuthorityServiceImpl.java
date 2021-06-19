@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import javax.naming.NotContextException;
 import java.util.HashMap;
 import java.util.Map;
@@ -106,16 +107,13 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Authority authority = new Authority();
         BeanUtils.copyProperties(authorityDTO, authority);
         authority.setCode(this.generateCode());
-        Mono<Authority> authorityMono;
-        // 如果设置上级，进行处理
-        if (StringUtils.hasText(authorityDTO.getSuperior())) {
-            authorityMono = authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
-                    .switchIfEmpty(Mono.error(NotContextException::new))
-                    .doOnNext(superior -> authority.setSuperior(superior.getId()));
-        } else {
-            authorityMono = Mono.just(authority);
-        }
-        return authorityMono.flatMap(authorityRepository::insert).map(this::convertOuter);
+        return Mono.just(authority).doOnNext(a -> {
+            if (StringUtils.hasText(authorityDTO.getSuperior())) {
+                authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
+                        .switchIfEmpty(Mono.error(NotContextException::new))
+                        .doOnNext(superior -> authority.setSuperior(superior.getId()));
+            }
+        }).flatMap(authorityRepository::insert).map(this::convertOuter);
     }
 
     @Override

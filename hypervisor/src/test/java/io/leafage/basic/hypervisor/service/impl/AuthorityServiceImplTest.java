@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Authority;
+import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import org.bson.types.ObjectId;
@@ -19,9 +20,10 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 /**
- * 权限service测试
+ * authority接口测试
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
@@ -49,9 +51,12 @@ class AuthorityServiceImplTest {
         authority.setId(new ObjectId());
         authority.setSuperior(new ObjectId());
         given(this.authorityRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(authority));
+
         given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
         authority.setName("test");
         given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
+
         StepVerifier.create(authorityService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
@@ -60,18 +65,45 @@ class AuthorityServiceImplTest {
         Authority authority = new Authority();
         authority.setId(new ObjectId());
         given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(authority));
+
         authority.setSuperior(new ObjectId());
         given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
         given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Authority.class)));
+
         StepVerifier.create(authorityService.fetch("21612OL34")).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
+        Authority authority = new Authority();
+        authority.setId(new ObjectId());
+        authority.setSuperior(new ObjectId());
+        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(authority));
+
+        given(this.authorityRepository.insert(Mockito.any(Authority.class))).willReturn(Mono.just(mock(Authority.class)));
+
+        AuthorityDTO authorityDTO = new AuthorityDTO();
+        authorityDTO.setName("test");
+        authorityDTO.setType('M');
+        authorityDTO.setSuperior("21612OL35");
+        StepVerifier.create(authorityService.create(authorityDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void modify() {
+        Authority authority = new Authority();
+        authority.setId(new ObjectId());
+        authority.setSuperior(new ObjectId());
+        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(authority));
+
+        given(this.authorityRepository.save(Mockito.any(Authority.class))).willReturn(Mono.just(mock(Authority.class)));
+
+        AuthorityDTO authorityDTO = new AuthorityDTO();
+        authorityDTO.setName("test");
+        authorityDTO.setType('M');
+        authorityDTO.setSuperior("21612OL35");
+        StepVerifier.create(authorityService.modify("21612OL34", authorityDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -79,6 +111,7 @@ class AuthorityServiceImplTest {
         Authority authority = new Authority();
         ObjectId id = new ObjectId();
         authority.setId(id);
+
         Authority child = new Authority();
         child.setId(new ObjectId());
         child.setSuperior(id);

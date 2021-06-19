@@ -35,7 +35,9 @@ class PostsContentServiceImplTest {
     public void create() {
         given(this.postsContentRepository.insert(Mockito.any(PostsContent.class)))
                 .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
+
         this.postsContentService.create(Mockito.mock(PostsContent.class));
+
         StepVerifier.create(this.postsContentService.create(Mockito.mock(PostsContent.class)))
                 .expectNextCount(1).verifyComplete();
     }
@@ -47,8 +49,10 @@ class PostsContentServiceImplTest {
         postsContent.setContent("test");
         given(this.postsContentRepository.getByPostsIdAndEnabledTrue(Mockito.any(ObjectId.class)))
                 .willReturn(Mono.just(postsContent));
+
         given(this.postsContentRepository.save(Mockito.any(PostsContent.class)))
                 .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
+
         StepVerifier.create(this.postsContentService.modify(new ObjectId(), postsContent)).expectNextCount(1).verifyComplete();
     }
 }

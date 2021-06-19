@@ -9,6 +9,7 @@ import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -55,6 +56,8 @@ public class UserGroupServiceImpl implements UserGroupService {
 
     @Override
     public Flux<UserGroup> relation(String username, Set<String> groups) {
+        Assert.hasText(username, "username is blank");
+        Assert.notNull(groups, "groups is null");
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMapMany(user -> {
                     UserGroup userGroup = new UserGroup();
@@ -62,7 +65,7 @@ public class UserGroupServiceImpl implements UserGroupService {
                     return groupRepository.findByCodeInAndEnabledTrue(groups).map(group -> {
                         userGroup.setGroupId(group.getId());
                         return userGroup;
-                    });
-                }).collectList().flatMapMany(userGroupRepository::saveAll);
+                    }).collectList().flatMapMany(userGroupRepository::saveAll);
+                });
     }
 }

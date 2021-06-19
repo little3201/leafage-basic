@@ -35,6 +35,7 @@ class StatisticsControllerTest {
         StatisticsVO statisticsVO = new StatisticsVO();
         given(this.statisticsService.retrieve(Mockito.anyInt(), Mockito.anyInt()))
                 .willReturn(Flux.just(statisticsVO));
+
         webClient.get().uri(uriBuilder -> uriBuilder.path("/statistics").queryParam("page", 0)
                 .queryParam("size", 7).build()).exchange().expectStatus().isOk()
                 .expectBodyList(StatisticsVO.class);
@@ -44,6 +45,7 @@ class StatisticsControllerTest {
     void fetch() {
         StatisticsVO statisticsVO = new StatisticsVO();
         given(this.statisticsService.fetch()).willReturn(Mono.just(statisticsVO));
+
         webClient.get().uri("/statistics/viewed").exchange().expectStatus().isOk().expectBody(StatisticsVO.class);
     }
 }

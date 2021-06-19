@@ -4,15 +4,12 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Role;
-import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -23,8 +20,6 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -37,13 +32,10 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
-    private final AuthorityRepository authorityRepository;
 
-    public RoleServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository,
-                           AuthorityRepository authorityRepository) {
+    public RoleServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository) {
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
-        this.authorityRepository = authorityRepository;
     }
 
     @Override
@@ -108,17 +100,13 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         BeanUtils.copyProperties(roleDTO, role);
         role.setCode(this.generateCode());
         // 如果设置上级，进行处理
-        Mono<Role> roleMono;
-        if (StringUtils.hasText(roleDTO.getSuperior())) {
-            roleMono = roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior())
-                    .switchIfEmpty(Mono.error(NotContextException::new)).map(superior -> {
-                        role.setSuperior(superior.getId());
-                        return role;
-                    });
-        } else {
-            roleMono = Mono.just(role);
-        }
-        return roleMono.flatMap(roleRepository::insert).map(this::convertOuter);
+        return Mono.just(role).doOnNext(r -> {
+            if (StringUtils.hasText(roleDTO.getSuperior())) {
+                roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior())
+                        .switchIfEmpty(Mono.error(NotContextException::new)).doOnNext(superior ->
+                        role.setSuperior(superior.getId()));
+            }
+        }).flatMap(roleRepository::insert).map(this::convertOuter);
     }
 
     @Override
@@ -126,16 +114,15 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Assert.hasText(code, "code is blank");
         return roleRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(role -> {
+                .map(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
+                    return role;
+                }).doOnNext(role -> {
                     if (StringUtils.hasText(roleDTO.getSuperior())) {
-                        return roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior()).map(superior -> {
-                            role.setSuperior(superior.getId());
-                            return role;
-                        });
+                        roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior()).doOnNext(superior ->
+                                role.setSuperior(superior.getId()));
                     }
-                    return roleRepository.save(role);
-                }).map(this::convertOuter);
+                }).flatMap(roleRepository::save).map(this::convertOuter);
     }
 
     /**
@@ -148,25 +135,6 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         RoleVO outer = new RoleVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
-    }
-
-    /**
-     * 构造 roleAuthority
-     *
-     * @param roleId      角色ID
-     * @param modifier    修改人
-     * @param authorities 权限code
-     * @return 角色权限对象
-     */
-    private Mono<List<RoleAuthority>> initRoleAuthority(ObjectId roleId, ObjectId modifier,
-                                                        Collection<String> authorities) {
-        return authorityRepository.findByCodeInAndEnabledTrue(authorities).map(authority -> {
-            RoleAuthority roleAuthority = new RoleAuthority();
-            roleAuthority.setRoleId(roleId);
-            roleAuthority.setAuthorityId(authority.getId());
-            roleAuthority.setModifier(modifier);
-            return roleAuthority;
-        }).collectList();
     }
 
     /**

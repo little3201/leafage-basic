@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * 角色权限repository
@@ -28,7 +28,7 @@ public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuth
      * @param roleIdList 角色ID集合
      * @return Flux
      */
-    Flux<RoleAuthority> findByRoleIdIn(@NotEmpty List<ObjectId> roleIdList);
+    Flux<RoleAuthority> findByRoleIdInAndEnabledTrue(@NotEmpty Collection<ObjectId> roleIdList);
 
     /**
      * 统计关联角色

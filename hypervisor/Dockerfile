@@ -6,7 +6,7 @@ LABEL maintainer="little3201@gmail.com"
 
 # Add param to use in anywhere
 ARG JAR_NAME=hypervisor
-ARG VERSION=0.0.1-SNAPSHOT
+ARG VERSION=0.1.0
 ARG ACTIVE=dev
 
 # Add a volume pointing to /tmp

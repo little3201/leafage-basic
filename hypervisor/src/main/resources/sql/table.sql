@@ -1,9 +1,9 @@
-drop table if exists organization;
+drop table if exists `group`;
 
 /*==============================================================*/
 /* Table: organization                                          */
 /*==============================================================*/
-create table organization
+create table `group`
 (
     id          bigint(11)  not null auto_increment comment '主键',
     code        varchar(16) not null comment '代码',
@@ -18,27 +18,27 @@ create table organization
     unique key AK_code (code)
 );
 
-alter table organization
-    comment '组织';
+alter table `group`
+    comment '分组';
 
 
-drop table if exists organization_user;
+drop table if exists user_group;
 
 /*==============================================================*/
 /* Table: organization_user                                     */
 /*==============================================================*/
-create table organization_user
+create table user_group
 (
-    id              bigint(11) not null auto_increment comment '主键',
-    organization_id bigint(11) not null comment '组织主键',
-    user_id         bigint(11) not null comment '用户主键',
-    is_enabled      tinyint(1) default 1 comment '是否启用',
-    modifier        bigint(11) comment '修改人',
-    modify_time     datetime   default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    id          bigint(11) not null auto_increment comment '主键',
+    user_id     bigint(11) not null comment '用户主键',
+    group_id    bigint(11) not null comment '分组主键',
+    is_enabled  tinyint(1) default 1 comment '是否启用',
+    modifier    bigint(11) comment '修改人',
+    modify_time datetime   default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id)
 );
 
-alter table organization_user
+alter table user_group
     comment '组织用户';
 
 
@@ -105,6 +105,7 @@ create table role
     id          bigint(11) not null auto_increment comment '主键',
     code        varchar(8) comment '代码',
     name        varchar(64) comment '名称',
+    superior    bigint(11) comment '上级',
     description varchar(64) comment '描述',
     is_enabled  tinyint(1) default 1 comment '是否启用',
     modifier    bigint(11) not null comment '修改人',
@@ -117,7 +118,6 @@ alter table role
     comment '角色';
 
 
-
 drop table if exists role_authority;
 
 /*==============================================================*/
@@ -127,7 +127,7 @@ create table role_authority
 (
     id           bigint(11) not null auto_increment comment '主键',
     role_id      bigint(11) not null comment '角色主键',
-    authority_id bigint(11) not null comment '资源主键',
+    authority_id bigint(11) not null comment '权限主键',
     is_enabled   tinyint(1) default 1 comment '是否启用',
     modifier     bigint(11),
     modify_time  datetime   default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -148,9 +148,9 @@ create table authority
 (
     id          bigint(11) not null auto_increment comment '主键',
     code        varchar(8) comment '代码',
-    superior    bigint(11) comment '上级',
     name        varchar(64) comment '名称',
     type        tinyint(4) comment '类型',
+    superior    bigint(11) comment '上级',
     description varchar(64) comment '描述',
     path        varchar(128) comment '路径',
     is_enabled  tinyint(1) default 1 comment '是否启用',
@@ -183,7 +183,7 @@ create table oauth_client_details
     access_token_validity   varchar(128) comment '设定客户端的access_token的有效时间值(单位:秒),可选, 若不设定值则使用默认的有效时间值(60 * 60 * 12, 12小时)',
     refresh_token_validity  varchar(128) comment '设定客户端的refresh_token的有效时间值(单位:秒),可选, 若不设定值则使用默认的有效时间值(60 * 60 * 24 * 30, 30天). ',
     additional_information  varchar(128) comment '预留的字段,在Oauth的流程中没有实际的使用,可选,但若设置值,必须是JSON格式的数据,如:{“country”:“CN”,“country_code”:“086”}',
-    autoapprove             varchar(128) comment '设置用户是否自动Approval操作, 默认值为 ''false'', 可选值包括 ''true'',''false'', ''read'',''write''.
+    auto_approve varchar(128) comment '设置用户是否自动Approval操作, 默认值为 ''false'', 可选值包括 ''true'',''false'', ''read'',''write''.
             该字段只适用于grant_type="authorization_code"的情况,当用户登录成功后,若该值为''true''或支持的scope值,则会跳过用户Approve的页面, 直接授权. ',
     is_enabled              tinyint(1) default 1 comment '是否可用',
     modifier                bigint(11) not null comment '修改人',

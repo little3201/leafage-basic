@@ -40,6 +40,7 @@ class GroupServiceImplTest {
         List<Group> groups = new ArrayList<>(2);
         Page<Group> page = new PageImpl<>(groups);
         given(this.groupRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
+
         Page<GroupVO> voPage = groupService.retrieve(0, 2, "id");
         Assertions.assertNotNull(voPage);
     }
@@ -47,9 +48,11 @@ class GroupServiceImplTest {
     @Test
     void create() {
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
+
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         GroupVO groupVO = groupService.create(groupDTO);
+
         verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));
         Assertions.assertNotNull(groupVO);
     }
@@ -57,7 +60,9 @@ class GroupServiceImplTest {
     @Test
     void remove() {
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Group.class));
+
         groupService.remove("2119JD09");
+
         verify(this.groupRepository, times(1)).deleteById(Mockito.anyLong());
     }
 }

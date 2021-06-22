@@ -36,12 +36,16 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private UserRoleRepository userRoleRepository;
+
     @Mock
     private RoleRepository roleRepository;
+
     @Mock
     private RoleAuthorityRepository roleAuthorityRepository;
+
     @Mock
     private AuthorityRepository authorityRepository;
 
@@ -54,14 +58,18 @@ class UserServiceImplTest {
         List<User> users = new ArrayList<>(2);
         Page<User> postsPage = new PageImpl<>(users);
         given(this.userRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
+
         Page<UserVO> voPage = userService.retrieve(0, 2, "id");
+
         Assertions.assertNotNull(voPage);
     }
 
     @Test
     void fetch() {
         given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
+
         UserVO userVO = userService.fetch("test");
+
         Assertions.assertNotNull(userVO);
     }
 
@@ -98,7 +106,9 @@ class UserServiceImplTest {
         String username = "test";
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .willReturn(null);
+
         UserDetails userDetails = userService.fetchDetails("test");
+
         Assertions.assertNull(userDetails);
     }
 
@@ -107,15 +117,19 @@ class UserServiceImplTest {
         User user = new User();
         user.setId(1L);
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(user);
+
         List<Role> roles = new ArrayList<>(2);
         roles.add(new Role());
         roles.add(new Role());
         given(this.roleRepository.findByCodeInAndEnabledTrue(Mockito.anyCollection())).willReturn(roles);
+
         given(this.userRoleRepository.saveAll(Mockito.anyCollection())).willReturn(Mockito.anyList());
+
         UserDTO userDTO = new UserDTO();
         userDTO.setNickname("管理员");
         userDTO.setRoles(Collections.singleton("admin"));
         userService.create(userDTO);
+
         verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
     }
 
@@ -126,8 +140,10 @@ class UserServiceImplTest {
         given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
         User user = new User();
         user.setId(1L);
+
         // 保存更新信息
         given(this.userRepository.saveAndFlush(Mockito.any(User.class))).willReturn(user);
+
         // 查询角色信息
         List<Role> roles = new ArrayList<>(1);
         Role role = new Role();
@@ -135,6 +151,7 @@ class UserServiceImplTest {
         role.setCode("2119JJ09");
         roles.add(role);
         given(this.roleRepository.findByCodeInAndEnabledTrue(Mockito.anyCollection())).willReturn(roles);
+
         // 查询用户角色关联信息
         List<UserRole> userRoleList = new ArrayList<>(1);
         UserRole userRole = new UserRole();
@@ -142,12 +159,15 @@ class UserServiceImplTest {
         userRole.setRoleId(1L);
         userRoleList.add(userRole);
         given(this.userRoleRepository.findByUserId(Mockito.anyLong())).willReturn(userRoleList);
+
         // 保存用户角色信息
         given(this.userRoleRepository.saveAll(Mockito.anyCollection())).willReturn(Mockito.anyList());
+
         UserDTO userDTO = new UserDTO();
         userDTO.setNickname("管理员");
         userDTO.setRoles(Collections.singleton("admin"));
         userService.modify("test", userDTO);
+
         verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any(User.class));
         // 一次逻辑删除，一次新增
         verify(userRoleRepository, Mockito.times(2)).saveAll(Mockito.anyList());
@@ -156,7 +176,9 @@ class UserServiceImplTest {
     @Test
     void remove() {
         given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
+
         userService.remove("test");
+
         verify(this.userRepository, times(1)).saveAndFlush(Mockito.any(User.class));
     }
 

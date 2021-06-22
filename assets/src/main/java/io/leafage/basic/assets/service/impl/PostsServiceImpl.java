@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

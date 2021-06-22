@@ -10,7 +10,10 @@ import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -39,10 +42,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public List<TreeNode> tree() {
-        Authority authority = new Authority();
-        authority.setType('M');
-        authority.setEnabled(true);
-        List<Authority> authorities = authorityRepository.findAll(Example.of(authority));
+        List<Authority> authorities = authorityRepository.findByTypeAndEnabledTrue('M');
         if (CollectionUtils.isEmpty(authorities)) {
             return Collections.emptyList();
         }
@@ -112,9 +112,11 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         treeNode.setCode(authority.getCode());
         treeNode.setName(authority.getName());
         treeNode.setSuperior(superior);
+
         Map<String, String> expand = new HashMap<>();
         expand.put("icon", authority.getIcon());
         expand.put("path", authority.getPath());
+
         treeNode.setExpand(expand);
         return treeNode;
     }

@@ -17,7 +17,8 @@ create table posts
     unique key AK_code (code)
 );
 
-alter table posts comment '帖子';
+alter table posts
+    comment '帖子';
 
 
 drop table if exists posts_content;
@@ -32,12 +33,13 @@ create table posts_content
     content     char comment '内容',
     is_enabled  tinyint(1) not null default 1 comment '是否可用',
     modifier    bigint(11) not null comment '修改人',
-    modify_time datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    modify_time datetime   not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id),
     unique key AK_posts_id (posts_id)
 );
 
-alter table posts_content comment '帖子内容';
+alter table posts_content
+    comment '帖子内容';
 
 drop table if exists category;
 
@@ -56,5 +58,6 @@ create table category
     unique key AK_code (code)
 );
 
-alter table category comment '分类';
+alter table category
+    comment '分类';
 

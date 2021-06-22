@@ -40,23 +40,29 @@ class RoleServiceImplTest {
         List<Role> roles = new ArrayList<>(2);
         Page<Role> page = new PageImpl<>(roles);
         given(this.roleRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
+
         Page<RoleVO> voPage = roleService.retrieve(0, 2, "id");
+
         Assertions.assertNotNull(voPage);
     }
 
     @Test
     void fetch() {
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Role.class));
+
         RoleVO roleVO = roleService.fetch("2109JJL8");
+
         Assertions.assertNotNull(roleVO);
     }
 
     @Test
     void create() {
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
+
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
         RoleVO roleVO = roleService.create(roleDTO);
+
         verify(this.roleRepository, times(1)).save(Mockito.any(Role.class));
         Assertions.assertNotNull(roleVO);
     }
@@ -65,6 +71,7 @@ class RoleServiceImplTest {
     void remove() {
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Role.class));
         roleService.remove("2119JD09");
+
         verify(this.roleRepository, times(1)).deleteById(Mockito.anyLong());
     }
 }

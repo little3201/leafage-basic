@@ -19,11 +19,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -58,6 +56,7 @@ class PostsControllerTest {
         voList.add(postsVO);
         Page<PostsVO> postsPage = new PageImpl<>(voList);
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(postsPage);
+
         mvc.perform(get("/posts").queryParam("page", "0")
                 .queryParam("size", "2").queryParam("order", "id")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
@@ -66,6 +65,7 @@ class PostsControllerTest {
     @Test
     void retrieve_error() throws Exception {
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
+
         mvc.perform(get("/posts").queryParam("page", "0")
                 .queryParam("size", "2").queryParam("order", "id")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
@@ -76,6 +76,7 @@ class PostsControllerTest {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
         given(this.postsService.fetch(Mockito.anyString())).willReturn(postsVO);
+
         mvc.perform(get("/posts/{code}", "21389KO6")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
@@ -92,6 +93,7 @@ class PostsControllerTest {
         PostsContentVO contentVO = new PostsContentVO();
         contentVO.setTitle("test");
         given(this.postsService.fetchDetails(Mockito.anyString())).willReturn(contentVO);
+
         mvc.perform(get("/posts/{code}/details", "21389KO6")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
@@ -99,12 +101,18 @@ class PostsControllerTest {
     @Test
     void fetchDetails_error() throws Exception {
         given(this.postsService.fetchDetails(Mockito.anyString())).willThrow(new RuntimeException());
+
         mvc.perform(get("/posts/{code}/details", "21389KO6")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void create() throws Exception {
+        // 构造返回对象
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.create(Mockito.any(PostsDTO.class))).willReturn(postsVO);
+
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
@@ -112,10 +120,6 @@ class PostsControllerTest {
         postsDTO.setCategoryId(1L);
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setContent("java");
-        // 构造返回对象
-        PostsVO postsVO = new PostsVO();
-        postsVO.setTitle("test");
-        given(this.postsService.create(Mockito.any(PostsDTO.class))).willReturn(postsVO);
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(postsDTO))).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("test"))
@@ -124,6 +128,8 @@ class PostsControllerTest {
 
     @Test
     void create_error() throws Exception {
+        given(this.postsService.create(Mockito.any(PostsDTO.class))).willThrow(new RuntimeException());
+
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
@@ -131,7 +137,6 @@ class PostsControllerTest {
         postsDTO.setCategoryId(1L);
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setContent("java");
-        given(this.postsService.create(Mockito.any(PostsDTO.class))).willThrow(new RuntimeException());
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(postsDTO))).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
@@ -139,6 +144,11 @@ class PostsControllerTest {
 
     @Test
     void modify() throws Exception {
+        // 构造返回对象
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willReturn(postsVO);
+
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
@@ -147,10 +157,6 @@ class PostsControllerTest {
         postsDTO.setCategoryId(1L);
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setContent("java");
-        // 构造返回对象
-        PostsVO postsVO = new PostsVO();
-        postsVO.setTitle("test");
-        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willReturn(postsVO);
         mvc.perform(put("/posts/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(postsDTO)))
                 .andExpect(status().isAccepted())
@@ -159,6 +165,8 @@ class PostsControllerTest {
 
     @Test
     void modify_error() throws Exception {
+        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willThrow(new RuntimeException());
+
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
@@ -167,7 +175,6 @@ class PostsControllerTest {
         postsDTO.setCategoryId(1L);
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setContent("java");
-        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostsDTO.class))).willThrow(new RuntimeException());
         mvc.perform(put("/posts/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(postsDTO)))
                 .andExpect(status().isNotModified())

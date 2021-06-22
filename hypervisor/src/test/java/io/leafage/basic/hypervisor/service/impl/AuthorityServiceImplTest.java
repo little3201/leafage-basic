@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.entity.Authority;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
@@ -40,6 +41,7 @@ class AuthorityServiceImplTest {
         List<Authority> authorities = new ArrayList<>(2);
         Page<Authority> page = new PageImpl<>(authorities);
         given(this.authorityRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
+
         Page<AuthorityVO> voPage = authorityService.retrieve(0, 2, "id");
         Assertions.assertNotNull(voPage);
     }
@@ -47,11 +49,13 @@ class AuthorityServiceImplTest {
     @Test
     void create() {
         given(this.authorityRepository.save(Mockito.any(Authority.class))).willReturn(Mockito.mock(Authority.class));
+
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         AuthorityVO authorityVO = authorityService.create(authorityDTO);
+
         verify(this.authorityRepository, times(1)).save(Mockito.any(Authority.class));
         Assertions.assertNotNull(authorityVO);
     }
@@ -61,5 +65,19 @@ class AuthorityServiceImplTest {
         given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Authority.class));
         authorityService.remove("2119JD09");
         verify(this.authorityRepository, times(1)).deleteById(Mockito.anyLong());
+    }
+
+    @Test
+    void tree() {
+        Authority authority = new Authority();
+        authority.setId(1L);
+
+        Authority child = new Authority();
+        child.setSuperior(1L);
+        child.setId(2L);
+        given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(List.of(authority, child));
+
+        List<TreeNode> nodes = authorityService.tree();
+        Assertions.assertNotNull(nodes);
     }
 }

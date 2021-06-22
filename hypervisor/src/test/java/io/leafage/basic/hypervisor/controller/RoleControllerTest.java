@@ -19,10 +19,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -54,6 +52,7 @@ class RoleControllerTest {
         voList.add(new RoleVO());
         Page<RoleVO> voPage = new PageImpl<>(voList);
         given(this.roleService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
+
         mvc.perform(get("/role").queryParam("page", "0").queryParam("size", "2")
                 .queryParam("order", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
@@ -62,6 +61,7 @@ class RoleControllerTest {
     @Test
     void retrieve_error() throws Exception {
         given(this.roleService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
+
         mvc.perform(get("/role").queryParam("page", "0").queryParam("size", "2")
                 .queryParam("order", "")).andExpect(status().is(204)).andDo(print()).andReturn();
     }
@@ -71,6 +71,7 @@ class RoleControllerTest {
         RoleVO roleVO = new RoleVO();
         roleVO.setName("test");
         given(this.roleService.fetch(Mockito.anyString())).willReturn(roleVO);
+
         mvc.perform(get("/role/{code}", "test")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
@@ -78,19 +79,21 @@ class RoleControllerTest {
     @Test
     void fetch_error() throws Exception {
         given(this.roleService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+
         mvc.perform(get("/role/{code}", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void create() throws Exception {
-        // 构造请求对象
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setName("test");
         // 构造返回对象
         RoleVO roleVO = new RoleVO();
         roleVO.setName("test");
         given(this.roleService.create(Mockito.any(RoleDTO.class))).willReturn(roleVO);
+
+        // 构造请求对象
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setName("test");
         mvc.perform(post("/role").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(roleDTO))).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test"))
@@ -99,10 +102,11 @@ class RoleControllerTest {
 
     @Test
     void create_error() throws Exception {
+        given(this.roleService.create(Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
+
         // 构造请求对象
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
-        given(this.roleService.create(Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
         mvc.perform(post("/role").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(roleDTO))).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
@@ -110,13 +114,14 @@ class RoleControllerTest {
 
     @Test
     void modify() throws Exception {
-        // 构造请求对象
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setName("test");
         // 构造返回对象
         RoleVO roleVO = new RoleVO();
         roleVO.setName("test");
         given(this.roleService.modify(Mockito.anyString(), Mockito.any(RoleDTO.class))).willReturn(roleVO);
+
+        // 构造请求对象
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setName("test");
         mvc.perform(put("/role/{code}", "test").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(roleDTO)))
                 .andExpect(status().isAccepted())
@@ -125,10 +130,11 @@ class RoleControllerTest {
 
     @Test
     void modify_error() throws Exception {
+        given(this.roleService.modify(Mockito.anyString(), Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
+
         // 构造请求对象
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
-        given(this.roleService.modify(Mockito.anyString(), Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
         mvc.perform(put("/role/{code}", "test").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(roleDTO)))
                 .andExpect(status().isNotModified())
@@ -138,6 +144,7 @@ class RoleControllerTest {
     @Test
     void remove() throws Exception {
         this.roleService.remove(Mockito.anyString());
+
         mvc.perform(delete("/role/{code}", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
@@ -145,6 +152,7 @@ class RoleControllerTest {
     @Test
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.roleService).remove(Mockito.anyString());
+
         mvc.perform(delete("/role/{code}", "test")).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }

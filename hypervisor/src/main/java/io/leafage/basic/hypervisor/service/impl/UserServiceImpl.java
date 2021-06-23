@@ -5,8 +5,12 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
-import io.leafage.basic.hypervisor.entity.*;
-import io.leafage.basic.hypervisor.repository.*;
+import io.leafage.basic.hypervisor.entity.Role;
+import io.leafage.basic.hypervisor.entity.User;
+import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.repository.RoleRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +24,7 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,17 +39,12 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
-    private final RoleAuthorityRepository roleAuthorityRepository;
-    private final AuthorityRepository authorityRepository;
 
     public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
-                           RoleRepository roleRepository, RoleAuthorityRepository roleAuthorityRepository,
-                           AuthorityRepository authorityRepository) {
+                           RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
-        this.roleAuthorityRepository = roleAuthorityRepository;
-        this.authorityRepository = authorityRepository;
     }
 
     @Override
@@ -110,16 +110,14 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         }
         List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
         // 检查角色是否配置
-        List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
-        List<RoleAuthority> roleAuthorities = roleAuthorityRepository.findByRoleIdIn(roleIds);
-        // 权限
-        List<Long> sourceIds = roleAuthorities.stream().map(RoleAuthority::getAuthorityId).collect(Collectors.toList());
-        List<Authority> authorities = authorityRepository.findByIdIn(sourceIds);
-        Set<String> codes = authorities.stream().map(Authority::getCode).collect(Collectors.toSet());
+        List<Role> roles = userRoles.stream().map(userRole ->
+                roleRepository.findById(userRole.getRoleId()).orElse(null))
+                .filter(Objects::nonNull).collect(Collectors.toList());
+        Set<String> authorities = roles.stream().map(Role::getCode).collect(Collectors.toSet());
         // 转换对象
         UserDetails userDetails = new UserDetails();
         BeanUtils.copyProperties(user, userDetails);
-        userDetails.setAuthorities(codes);
+        userDetails.setAuthorities(authorities);
         return userDetails;
     }
 

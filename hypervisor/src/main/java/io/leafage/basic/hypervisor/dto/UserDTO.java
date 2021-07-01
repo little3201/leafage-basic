@@ -8,7 +8,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * DTO class for User
@@ -52,10 +51,6 @@ public class UserDTO implements Serializable {
      * 地址
      */
     private String address;
-    /**
-     * 角色列表
-     */
-    private Set<String> roles;
     /**
      * 修改人
      */
@@ -115,14 +110,6 @@ public class UserDTO implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
     }
 
     public String getModifier() {

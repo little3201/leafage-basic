@@ -19,11 +19,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,12 +56,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
         user = userRepository.save(user);
-        if (!CollectionUtils.isEmpty(userDTO.getRoles())) {
-            List<Role> roles = roleRepository.findByCodeInAndEnabledTrue(userDTO.getRoles());
-            if (!CollectionUtils.isEmpty(roles)) {
-                this.saveBatch(roles, user.getId());
-            }
-        }
         return this.convertOuter(user);
     }
 
@@ -72,20 +64,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(userDTO, user);
         user = userRepository.saveAndFlush(user);
-        if (CollectionUtils.isEmpty(userDTO.getRoles())) {
-            userRoleRepository.deleteByUserId(user.getId());
-        } else {
-            List<Role> roles = roleRepository.findByCodeInAndEnabledTrue(userDTO.getRoles());
-            // 查已存在的
-            List<UserRole> userRoleList = userRoleRepository.findByUserId(user.getId());
-            // 删除去掉的
-            List<UserRole> userRoles = this.notExisted(userRoleList, roles);
-            userRoles.forEach(userRole -> userRole.setEnabled(false));
-            userRoleRepository.saveAll(userRoles);
-            // 保存新增的
-            List<Role> newRoles = this.addNew(userRoleList, roles);
-            this.saveBatch(newRoles, user.getId());
-        }
         return this.convertOuter(user);
     }
 
@@ -132,52 +110,4 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         return userVO;
     }
 
-    /**
-     * 批量执行
-     *
-     * @param roles  角色
-     * @param userId 用户ID
-     */
-    private void saveBatch(List<Role> roles, long userId) {
-        List<UserRole> userRoles = roles
-                .stream().map(role -> {
-                    UserRole userRole = new UserRole();
-                    userRole.setRoleId(role.getId());
-                    userRole.setUserId(userId);
-                    userRole.setModifier(role.getModifier());
-                    return userRole;
-                }).collect(Collectors.toList());
-        userRoleRepository.saveAll(userRoles);
-    }
-
-    /**
-     * 新增信息
-     *
-     * @param userRoles 已存在
-     * @param roles     新提交
-     * @return 新增信息
-     */
-    private List<Role> addNew(List<UserRole> userRoles, List<Role> roles) {
-        Map<Long, Long> map = userRoles.stream().collect(Collectors.toMap(UserRole::getRoleId, UserRole::getId));
-        // 保存新增的
-        List<Role> existed = roles.stream().filter(role -> map.containsKey(role.getId())).collect(Collectors.toList());
-        roles.removeAll(existed);
-        return roles;
-    }
-
-    /**
-     * 移除信息
-     *
-     * @param userRoles 已存在
-     * @param roles     新提交
-     * @return 移除信息
-     */
-    private List<UserRole> notExisted(List<UserRole> userRoles, List<Role> roles) {
-        Map<Long, String> map = roles.stream().collect(Collectors.toMap(Role::getId, Role::getCode));
-        // 仍旧存在的
-        List<UserRole> existed = userRoles.stream().filter(userRole -> map.containsKey(userRole.getRoleId())).collect(Collectors.toList());
-        userRoles.removeAll(existed);
-        // 不在存在的
-        return userRoles;
-    }
 }

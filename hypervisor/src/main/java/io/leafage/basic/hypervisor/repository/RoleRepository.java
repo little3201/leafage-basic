@@ -32,4 +32,11 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
      * @return 信息
      */
     List<Role> findByCodeInAndEnabledTrue(Collection<String> codes);
+
+    /**
+     * 查询
+     *
+     * @return 信息
+     */
+    List<Role> findByEnabledTrue();
 }

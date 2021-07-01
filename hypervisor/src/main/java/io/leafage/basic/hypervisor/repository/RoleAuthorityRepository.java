@@ -18,10 +18,18 @@ import java.util.List;
 public interface RoleAuthorityRepository extends JpaRepository<RoleAuthority, Long> {
 
     /**
-     * 查询所有资源——根据角色ID集合
+     * 根据权限查角色
      *
-     * @param roleIdList 角色ID集合
-     * @return Flux
+     * @param authorityId 权限主键
+     * @return 关联数据集
      */
-    List<RoleAuthority> findByRoleIdIn(@NotNull List<Long> roleIdList);
+    List<RoleAuthority> findByRoleId(@NotNull Long authorityId);
+
+    /**
+     * 根据角色查权限
+     *
+     * @param roleId 角色主键
+     * @return 关联数据集
+     */
+    List<RoleAuthority> findByAuthorityId(@NotNull Long roleId);
 }

@@ -3,10 +3,12 @@
  */
 package io.leafage.basic.hypervisor.service;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.BasicService;
+import java.util.List;
 
 /**
  * 分组信息Service
@@ -24,4 +26,6 @@ public interface GroupService extends BasicService<GroupDTO, GroupVO> {
      * @return 查询结果
      */
     Page<GroupVO> retrieve(int page, int size, String order);
+
+    List<TreeNode> tree();
 }

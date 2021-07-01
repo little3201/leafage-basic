@@ -3,9 +3,15 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
+import io.leafage.basic.hypervisor.entity.RoleAuthority;
+import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.service.RoleService;
+import io.leafage.basic.hypervisor.service.UserRoleService;
+import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
+import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -13,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 角色信息接口
@@ -25,10 +33,14 @@ public class RoleController {
 
     private final Logger logger = LoggerFactory.getLogger(RoleController.class);
 
+    private final UserRoleService userRoleService;
     private final RoleService roleService;
+    private final RoleAuthorityService roleAuthorityService;
 
-    public RoleController(RoleService roleService) {
+    public RoleController(UserRoleService userRoleService, RoleService roleService, RoleAuthorityService roleAuthorityService) {
+        this.userRoleService = userRoleService;
         this.roleService = roleService;
+        this.roleAuthorityService = roleAuthorityService;
     }
 
     /**
@@ -49,6 +61,23 @@ public class RoleController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(roles);
+    }
+
+    /**
+     * 查询树形数据
+     *
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("/tree")
+    public ResponseEntity<List<TreeNode>> tree() {
+        List<TreeNode> authorities;
+        try {
+            authorities = roleService.tree();
+        } catch (Exception e) {
+            logger.info("Retrieve role tree occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(authorities);
     }
 
     /**
@@ -121,6 +150,61 @@ public class RoleController {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 根据code查询关联用户信息
+     *
+     * @param code 角色code
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{code}/user")
+    public ResponseEntity<List<UserVO>> users(@PathVariable String code) {
+        List<UserVO> voList;
+        try {
+            voList = userRoleService.users(code);
+        } catch (Exception e) {
+            logger.error("Retrieve role users occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voList);
+    }
+
+    /**
+     * 查询角色-权限关联
+     *
+     * @param code 角色代码
+     * @return 操作结果
+     */
+    @GetMapping("/{code}/authority")
+    public ResponseEntity<List<AuthorityVO>> authorities(@PathVariable String code) {
+        List<AuthorityVO> voList;
+        try {
+            voList = roleAuthorityService.authorities(code);
+        } catch (Exception e) {
+            logger.error("Relation role ah occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voList);
+    }
+
+    /**
+     * 保存角色-权限关联
+     *
+     * @param code        角色代码
+     * @param authorities 权限信息
+     * @return 操作结果
+     */
+    @PatchMapping("/{code}/authority")
+    public ResponseEntity<List<RoleAuthority>> relation(@PathVariable String code, @RequestBody Set<String> authorities) {
+        List<RoleAuthority> voList;
+        try {
+            voList = roleAuthorityService.relation(code, authorities);
+        } catch (Exception e) {
+            logger.error("Relation role ah occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.accepted().body(voList);
     }
 
 }

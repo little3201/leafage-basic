@@ -3,15 +3,19 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupService;
+import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
+import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 /**
  * 分组信息接口
@@ -24,9 +28,11 @@ public class GroupController {
 
     private final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
+    private final UserGroupService userGroupService;
     private final GroupService groupService;
 
-    public GroupController(GroupService groupService) {
+    public GroupController(UserGroupService userGroupService, GroupService groupService) {
+        this.userGroupService = userGroupService;
         this.groupService = groupService;
     }
 
@@ -48,6 +54,23 @@ public class GroupController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(groups);
+    }
+
+    /**
+     * 查询树形数据
+     *
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("/tree")
+    public ResponseEntity<List<TreeNode>> tree() {
+        List<TreeNode> authorities;
+        try {
+            authorities = groupService.tree();
+        } catch (Exception e) {
+            logger.info("Retrieve group tree occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(authorities);
     }
 
     /**
@@ -120,5 +143,23 @@ public class GroupController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 根据分组code查询关联用户信息
+     *
+     * @param code 组code
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{code}/user")
+    public ResponseEntity<List<UserVO>> users(@PathVariable String code) {
+        List<UserVO> voList;
+        try {
+            voList = userGroupService.users(code);
+        } catch (Exception e) {
+            logger.error("Retrieve group users occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voList);
     }
 }

@@ -5,8 +5,12 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
-import io.leafage.basic.hypervisor.entity.*;
-import io.leafage.basic.hypervisor.repository.*;
+import io.leafage.basic.hypervisor.entity.Role;
+import io.leafage.basic.hypervisor.entity.User;
+import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.repository.RoleRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -42,12 +47,6 @@ class UserServiceImplTest {
 
     @Mock
     private RoleRepository roleRepository;
-
-    @Mock
-    private RoleAuthorityRepository roleAuthorityRepository;
-
-    @Mock
-    private AuthorityRepository authorityRepository;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -86,16 +85,7 @@ class UserServiceImplTest {
         userRoleList.add(userRole);
         given(this.userRoleRepository.findByUserId(Mockito.anyLong())).willReturn(userRoleList);
 
-        List<RoleAuthority> roleAuthorities = new ArrayList<>(1);
-        RoleAuthority roleAuthority = new RoleAuthority();
-        roleAuthority.setAuthorityId(1L);
-        roleAuthorities.add(roleAuthority);
-        given(this.roleAuthorityRepository.findByRoleIdIn(Mockito.anyList())).willReturn(roleAuthorities);
-
-
-        List<Authority> authorities = new ArrayList<>(1);
-        authorities.add(new Authority());
-        given(this.authorityRepository.findByIdIn(Mockito.anyList())).willReturn(authorities);
+        given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Role.class)));
 
         UserDetails userDetails = userService.fetchDetails("test");
         Assertions.assertNotNull(userDetails);

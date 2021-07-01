@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.entity.Role;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 角色信息service 实现
@@ -38,6 +41,24 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
             return new PageImpl<>(Collections.emptyList());
         }
         return infoPage.map(this::convertOuter);
+    }
+
+
+    @Override
+    public List<TreeNode> tree() {
+        List<Role> roles = roleRepository.findByEnabledTrue();
+        if (CollectionUtils.isEmpty(roles)) {
+            return Collections.emptyList();
+        }
+        List<TreeNode> authorityVOList = new ArrayList<>(roles.size());
+        roles.stream().filter(role -> role.getSuperior() == null).forEach(r -> {
+            TreeNode treeNode = new TreeNode();
+            treeNode.setCode(r.getCode());
+            treeNode.setName(r.getName());
+            treeNode.setChildren(this.addChildren(r, roles));
+            authorityVOList.add(treeNode);
+        });
+        return authorityVOList;
     }
 
     @Override
@@ -73,4 +94,24 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         return roleVO;
     }
 
+    /**
+     * add child node
+     *
+     * @param superior superior node
+     * @param roles    to be build source data
+     * @return tree node
+     */
+    private List<TreeNode> addChildren(Role superior, List<Role> roles) {
+        List<TreeNode> voList = new ArrayList<>();
+        roles.stream().filter(role -> superior.getId().equals(role.getSuperior()))
+                .forEach(r -> {
+                    TreeNode treeNode = new TreeNode();
+                    treeNode.setCode(r.getCode());
+                    treeNode.setName(r.getName());
+                    treeNode.setSuperior(superior.getName());
+                    treeNode.setChildren(this.addChildren(r, roles));
+                    voList.add(treeNode);
+                });
+        return voList;
+    }
 }

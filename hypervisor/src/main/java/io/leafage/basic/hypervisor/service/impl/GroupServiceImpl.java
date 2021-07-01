@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.entity.Group;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 分组信息Service实现
@@ -38,6 +41,23 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
             return new PageImpl<>(Collections.emptyList());
         }
         return infoPage.map(this::convertOuter);
+    }
+
+    @Override
+    public List<TreeNode> tree() {
+        List<Group> groups = groupRepository.findByEnabledTrue();
+        if (CollectionUtils.isEmpty(groups)) {
+            return Collections.emptyList();
+        }
+        List<TreeNode> authorityVOList = new ArrayList<>(groups.size());
+        groups.stream().filter(g -> g.getSuperior() == null).forEach(g -> {
+            TreeNode treeNode = new TreeNode();
+            treeNode.setCode(g.getCode());
+            treeNode.setName(g.getName());
+            treeNode.setChildren(this.addChildren(g, groups));
+            authorityVOList.add(treeNode);
+        });
+        return authorityVOList;
     }
 
     @Override
@@ -65,5 +85,26 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         GroupVO groupVO = new GroupVO();
         BeanUtils.copyProperties(info, groupVO);
         return groupVO;
+    }
+
+    /**
+     * add child node
+     *
+     * @param superior superior node
+     * @param groups   to be build source data
+     * @return tree node
+     */
+    private List<TreeNode> addChildren(Group superior, List<Group> groups) {
+        List<TreeNode> voList = new ArrayList<>();
+        groups.stream().filter(group -> superior.getId().equals(group.getSuperior()))
+                .forEach(g -> {
+                    TreeNode treeNode = new TreeNode();
+                    treeNode.setCode(g.getCode());
+                    treeNode.setName(g.getName());
+                    treeNode.setSuperior(superior.getName());
+                    treeNode.setChildren(this.addChildren(g, groups));
+                    voList.add(treeNode);
+                });
+        return voList;
     }
 }

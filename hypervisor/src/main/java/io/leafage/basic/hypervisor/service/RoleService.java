@@ -3,10 +3,12 @@
  */
 package io.leafage.basic.hypervisor.service;
 
+import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.BasicService;
+import java.util.List;
 
 /**
  * 角色信息service 接口
@@ -24,4 +26,6 @@ public interface RoleService extends BasicService<RoleDTO, RoleVO> {
      * @return 查询结果
      */
     Page<RoleVO> retrieve(int page, int size, String order);
+
+    List<TreeNode> tree();
 }

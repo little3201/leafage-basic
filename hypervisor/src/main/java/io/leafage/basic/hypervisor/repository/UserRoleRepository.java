@@ -26,6 +26,14 @@ public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
     List<UserRole> findByUserId(@NotNull Long userId);
 
     /**
+     * 根据角色ID查询
+     *
+     * @param roleId 角色主键
+     * @return 关联数据集
+     */
+    List<UserRole> findByRoleId(@NotNull Long roleId);
+
+    /**
      * 根据用户ID删除
      *
      * @param userId 用户主键

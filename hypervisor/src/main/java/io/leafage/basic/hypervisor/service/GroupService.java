@@ -7,9 +7,9 @@ import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.entity.Group;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.data.domain.Page;
-import top.leafage.common.basic.TreeNode;
 import top.leafage.common.servlet.BasicService;
-import top.leafage.common.servlet.TreeNodeAware;
+import top.leafage.common.servlet.ServletTreeNode;
+import top.leafage.common.servlet.ServletTreeNodeAware;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018/12/17 19:24
  **/
-public interface GroupService extends BasicService<GroupDTO, GroupVO>, TreeNodeAware<Group> {
+public interface GroupService extends BasicService<GroupDTO, GroupVO>, ServletTreeNodeAware<Group> {
 
     /**
      * 分页查询
@@ -34,5 +34,5 @@ public interface GroupService extends BasicService<GroupDTO, GroupVO>, TreeNodeA
      *
      * @return 树结构数据集
      */
-    List<TreeNode> tree();
+    List<ServletTreeNode> tree();
 }

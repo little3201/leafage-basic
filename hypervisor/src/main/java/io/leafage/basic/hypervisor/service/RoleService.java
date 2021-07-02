@@ -7,9 +7,9 @@ import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.entity.Role;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.data.domain.Page;
-import top.leafage.common.basic.TreeNode;
 import top.leafage.common.servlet.BasicService;
-import top.leafage.common.servlet.TreeNodeAware;
+import top.leafage.common.servlet.ServletTreeNode;
+import top.leafage.common.servlet.ServletTreeNodeAware;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018/9/27 14:18
  **/
-public interface RoleService extends BasicService<RoleDTO, RoleVO>, TreeNodeAware<Role> {
+public interface RoleService extends BasicService<RoleDTO, RoleVO>, ServletTreeNodeAware<Role> {
 
     /**
      * 分页查询
@@ -34,5 +34,5 @@ public interface RoleService extends BasicService<RoleDTO, RoleVO>, TreeNodeAwar
      *
      * @return 树结构数据集
      */
-    List<TreeNode> tree();
+    List<ServletTreeNode> tree();
 }

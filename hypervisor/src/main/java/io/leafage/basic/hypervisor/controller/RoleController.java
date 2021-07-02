@@ -17,7 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.leafage.common.basic.TreeNode;
+import top.leafage.common.servlet.ServletTreeNode;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
@@ -69,8 +69,8 @@ public class RoleController {
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")
-    public ResponseEntity<List<TreeNode>> tree() {
-        List<TreeNode> authorities;
+    public ResponseEntity<List<ServletTreeNode>> tree() {
+        List<ServletTreeNode> authorities;
         try {
             authorities = roleService.tree();
         } catch (Exception e) {

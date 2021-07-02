@@ -15,7 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import top.leafage.common.basic.TreeNode;
+import top.leafage.common.servlet.ServletTreeNode;
 import java.util.ArrayList;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
@@ -77,7 +77,7 @@ class AuthorityServiceImplTest {
         child.setId(2L);
         given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(List.of(authority, child));
 
-        List<TreeNode> nodes = authorityService.tree();
+        List<ServletTreeNode> nodes = authorityService.tree();
         Assertions.assertNotNull(nodes);
     }
 }

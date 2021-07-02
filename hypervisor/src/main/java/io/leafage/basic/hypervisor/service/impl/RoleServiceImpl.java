@@ -4,15 +4,11 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Role;
-import io.leafage.basic.hypervisor.document.RoleAuthority;
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,10 +17,8 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
+import top.leafage.common.basic.TreeNode;
 import javax.naming.NotContextException;
-import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -37,13 +31,10 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
-    private final AuthorityRepository authorityRepository;
 
-    public RoleServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository,
-                           AuthorityRepository authorityRepository) {
+    public RoleServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository) {
         this.userRoleRepository = userRoleRepository;
         this.roleRepository = roleRepository;
-        this.authorityRepository = authorityRepository;
     }
 
     @Override
@@ -74,7 +65,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Flux<Role> roleFlux = roleRepository.findByEnabledTrue();
         return roleFlux.filter(r -> Objects.isNull(r.getSuperior())).flatMap(role -> {
             TreeNode treeNode = new TreeNode(role.getCode(), role.getName());
-            return this.addChildren(role, roleFlux).collectList().map(treeNodes -> {
+            return this.children(role, roleFlux).collectList().map(treeNodes -> {
                 treeNode.setChildren(treeNodes);
                 return treeNode;
             });
@@ -138,42 +129,5 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         RoleVO outer = new RoleVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
-    }
-
-    /**
-     * 构造 roleAuthority
-     *
-     * @param roleId      角色ID
-     * @param modifier    修改人
-     * @param authorities 权限code
-     * @return 角色权限对象
-     */
-    private Mono<List<RoleAuthority>> initRoleAuthority(ObjectId roleId, ObjectId modifier,
-                                                        Collection<String> authorities) {
-        return authorityRepository.findByCodeInAndEnabledTrue(authorities).map(authority -> {
-            RoleAuthority roleAuthority = new RoleAuthority();
-            roleAuthority.setRoleId(roleId);
-            roleAuthority.setAuthorityId(authority.getId());
-            roleAuthority.setModifier(modifier);
-            return roleAuthority;
-        }).collectList();
-    }
-
-    /**
-     * add child node
-     *
-     * @param superior superior node
-     * @param roleFlux to be build source data
-     * @return tree node
-     */
-    private Flux<TreeNode> addChildren(Role superior, Flux<Role> roleFlux) {
-        return roleFlux.filter(role -> superior.getId().equals(role.getSuperior())).flatMap(role -> {
-            TreeNode treeNode = new TreeNode(role.getCode(), role.getName());
-            treeNode.setSuperior(superior.getCode());
-            return this.addChildren(role, roleFlux).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
-            });
-        });
     }
 }

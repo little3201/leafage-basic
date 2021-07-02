@@ -114,36 +114,42 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         Group group = new Group();
         BeanUtils.copyProperties(groupDTO, group);
         group.setCode(this.generateCode());
-        return Mono.just(group).doOnNext(g -> {
-            if (StringUtils.hasText(groupDTO.getSuperior())) {
-                groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).doOnNext(superior ->
-                        group.setSuperior(superior.getId()));
-            }
-        }).doOnNext(g -> {
-            if (StringUtils.hasText(groupDTO.getPrincipal())) {
-                userRepository.getByUsername(groupDTO.getPrincipal()).doOnNext(principal ->
-                        group.setSuperior(principal.getId()));
-            }
-        }).flatMap(groupRepository::insert).map(this::convertOuter);
+        Mono<Group> groupMono = Mono.just(group);
+        if (StringUtils.hasText(groupDTO.getSuperior())) {
+            groupMono = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).map(superior -> {
+                group.setSuperior(superior.getId());
+                return group;
+            });
+        }
+        if (StringUtils.hasText(groupDTO.getPrincipal())) {
+            groupMono = userRepository.getByUsername(groupDTO.getPrincipal()).map(principal -> {
+                group.setSuperior(principal.getId());
+                return group;
+            });
+        }
+        return groupMono.flatMap(groupRepository::insert).map(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
         Assert.hasText(code, CODE_MESSAGE);
         return groupRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
-                .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
-                .doOnNext(group -> {
+                .flatMap(group -> {
+                    BeanUtils.copyProperties(groupDTO, group);
                     if (StringUtils.hasText(groupDTO.getSuperior())) {
-                        groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).doOnNext(superior ->
-                                group.setSuperior(superior.getId()));
+                        return groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).map(superior -> {
+                            group.setSuperior(superior.getId());
+                            return group;
+                        });
                     }
-                })
-                .doOnNext(group -> {
                     if (StringUtils.hasText(groupDTO.getPrincipal())) {
-                        userRepository.getByUsername(groupDTO.getPrincipal()).doOnNext(principal ->
-                                group.setSuperior(principal.getId()));
+                        return userRepository.getByUsername(groupDTO.getPrincipal()).map(principal -> {
+                            group.setSuperior(principal.getId());
+                            return group;
+                        });
                     }
-                }).flatMap(groupRepository::save).map(this::convertOuter);
+                    return groupRepository.save(group);
+                }).map(this::convertOuter);
     }
 
     @Override

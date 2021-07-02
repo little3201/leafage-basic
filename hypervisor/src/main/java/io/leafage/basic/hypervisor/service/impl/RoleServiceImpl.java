@@ -15,7 +15,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
-import top.leafage.common.servlet.TreeNodeAware;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl extends AbstractBasicService implements RoleService, TreeNodeAware<Role> {
+public class RoleServiceImpl extends AbstractBasicService implements RoleService {
 
     private final RoleRepository roleRepository;
 

@@ -18,7 +18,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
-import top.leafage.common.servlet.TreeNodeAware;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService, TreeNodeAware<Authority> {
+public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService {
 
     private final AuthorityRepository authorityRepository;
 

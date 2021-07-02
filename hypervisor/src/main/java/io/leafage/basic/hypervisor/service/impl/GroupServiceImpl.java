@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.servlet.ServletTreeNode;
+import top.leafage.common.basic.TreeNode;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,11 +44,11 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
-    public List<ServletTreeNode> tree() {
+    public List<TreeNode> tree() {
         List<Group> groups = groupRepository.findByEnabledTrue();
         if (!CollectionUtils.isEmpty(groups)) {
             return groups.stream().filter(g -> g.getSuperior() == null).map(g -> {
-                ServletTreeNode treeNode = new ServletTreeNode(g.getCode(), g.getName());
+                TreeNode treeNode = new TreeNode(g.getCode(), g.getName());
                 treeNode.setChildren(this.children(g, groups));
                 return treeNode;
             }).collect(Collectors.toList());

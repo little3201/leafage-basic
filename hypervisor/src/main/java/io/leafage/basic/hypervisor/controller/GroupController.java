@@ -14,7 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.leafage.common.servlet.ServletTreeNode;
+import top.leafage.common.basic.TreeNode;
 import java.util.List;
 
 /**
@@ -62,8 +62,8 @@ public class GroupController {
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")
-    public ResponseEntity<List<ServletTreeNode>> tree() {
-        List<ServletTreeNode> authorities;
+    public ResponseEntity<List<TreeNode>> tree() {
+        List<TreeNode> authorities;
         try {
             authorities = groupService.tree();
         } catch (Exception e) {

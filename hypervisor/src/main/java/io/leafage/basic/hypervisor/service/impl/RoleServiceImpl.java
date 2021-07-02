@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.servlet.ServletTreeNode;
+import top.leafage.common.basic.TreeNode;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,13 +45,13 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
 
     @Override
-    public List<ServletTreeNode> tree() {
+    public List<TreeNode> tree() {
         List<Role> roles = roleRepository.findByEnabledTrue();
         if (CollectionUtils.isEmpty(roles)) {
             return Collections.emptyList();
         }
         return roles.stream().filter(role -> role.getSuperior() == null).map(r -> {
-            ServletTreeNode treeNode = new ServletTreeNode(r.getCode(), r.getName());
+            TreeNode treeNode = new TreeNode(r.getCode(), r.getName());
             treeNode.setChildren(this.children(r, roles));
             return treeNode;
         }).collect(Collectors.toList());

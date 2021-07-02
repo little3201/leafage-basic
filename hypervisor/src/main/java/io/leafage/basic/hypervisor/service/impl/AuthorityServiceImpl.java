@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.servlet.ServletTreeNode;
+import top.leafage.common.basic.TreeNode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,13 +42,13 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public List<ServletTreeNode> tree() {
+    public List<TreeNode> tree() {
         List<Authority> authorities = authorityRepository.findByTypeAndEnabledTrue('M');
         if (CollectionUtils.isEmpty(authorities)) {
             return Collections.emptyList();
         }
         return authorities.stream().filter(a -> a.getSuperior() == null).map(a -> {
-            ServletTreeNode treeNode = this.constructNode(a.getCode(), a);
+            TreeNode treeNode = this.constructNode(a.getCode(), a);
             Set<String> expand = new HashSet<>();
             expand.add("icon");
             expand.add("path");
@@ -85,30 +85,14 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     /**
-     * add child node
-     *
-     * @param superior    superior node
-     * @param authorities to be build source data
-     * @return tree node
-     */
-    private List<ServletTreeNode> addChildren(Authority superior, List<Authority> authorities) {
-        return authorities.stream().filter(authority -> superior.getId().equals(authority.getSuperior()))
-                .map(authority -> {
-                    ServletTreeNode treeNode = this.constructNode(superior.getCode(), authority);
-                    treeNode.setChildren(this.addChildren(authority, authorities));
-                    return treeNode;
-                }).collect(Collectors.toList());
-    }
-
-    /**
      * construct tree node
      *
      * @param superior  superior code
      * @param authority data
      * @return tree node
      */
-    private ServletTreeNode constructNode(String superior, Authority authority) {
-        ServletTreeNode treeNode = new ServletTreeNode(authority.getCode(), authority.getName());
+    private TreeNode constructNode(String superior, Authority authority) {
+        TreeNode treeNode = new TreeNode(authority.getCode(), authority.getName());
         treeNode.setSuperior(superior);
 
         Map<String, String> expand = new HashMap<>();

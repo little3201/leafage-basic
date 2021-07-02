@@ -5,7 +5,7 @@
     <parent>
         <groupId>top.leafage</groupId>
         <artifactId>leafage-starter-parent</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>top.leafage</groupId>
             <artifactId>leafage-common</artifactId>
-            <version>0.1.0</version>
+            <version>0.1.1</version>
         </dependency>
         <!-- Spring cloud consul -->
         <dependency>

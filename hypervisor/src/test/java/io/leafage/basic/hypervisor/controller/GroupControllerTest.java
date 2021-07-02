@@ -1,7 +1,6 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.document.UserRole;
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
@@ -18,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.TreeNode;
 
 import static org.mockito.BDDMockito.given;
 

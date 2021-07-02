@@ -107,12 +107,6 @@ class GroupServiceImplTest {
         group.setSuperior(new ObjectId());
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(group));
 
-        User user = new User();
-        user.setId(new ObjectId());
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
-
-        given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
-
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         groupDTO.setPrincipal("little3201");

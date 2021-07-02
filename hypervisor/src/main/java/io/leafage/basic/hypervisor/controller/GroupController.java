@@ -5,7 +5,9 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupService;
+import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
+import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import javax.validation.Valid;
 
 /**
@@ -27,9 +30,11 @@ public class GroupController {
 
     private final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
+    private final UserGroupService userGroupService;
     private final GroupService groupService;
 
-    public GroupController(GroupService groupService) {
+    public GroupController(UserGroupService userGroupService, GroupService groupService) {
+        this.userGroupService = userGroupService;
         this.groupService = groupService;
     }
 
@@ -162,4 +167,21 @@ public class GroupController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 根据分组code查询关联用户信息
+     *
+     * @param code 组code
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{code}/user")
+    public ResponseEntity<Flux<UserVO>> users(@PathVariable String code) {
+        Flux<UserVO> voFlux;
+        try {
+            voFlux = userGroupService.users(code);
+        } catch (Exception e) {
+            logger.error("Retrieve group users occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
+    }
 }

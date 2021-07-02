@@ -4,7 +4,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Role;
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
@@ -18,7 +17,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
+import top.leafage.common.basic.TreeNode;
 import javax.naming.NotContextException;
 import java.util.Objects;
 
@@ -66,7 +65,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Flux<Role> roleFlux = roleRepository.findByEnabledTrue();
         return roleFlux.filter(r -> Objects.isNull(r.getSuperior())).flatMap(role -> {
             TreeNode treeNode = new TreeNode(role.getCode(), role.getName());
-            return this.addChildren(role, roleFlux).collectList().map(treeNodes -> {
+            return this.children(role, roleFlux).collectList().map(treeNodes -> {
                 treeNode.setChildren(treeNodes);
                 return treeNode;
             });
@@ -76,17 +75,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Mono<RoleVO> fetch(String code) {
         Assert.hasText(code, "code is blank");
-        return roleRepository.getByCodeAndEnabledTrue(code).flatMap(role -> {
-            RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(role, roleVO);
-            if (role.getSuperior() != null) {
-                return roleRepository.findById(role.getSuperior()).map(superior -> {
-                    roleVO.setSuperior(superior.getCode());
-                    return roleVO;
-                });
-            }
-            return Mono.just(roleVO);
-        });
+        return roleRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
@@ -100,13 +89,17 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         BeanUtils.copyProperties(roleDTO, role);
         role.setCode(this.generateCode());
         // 如果设置上级，进行处理
-        return Mono.just(role).doOnNext(r -> {
-            if (StringUtils.hasText(roleDTO.getSuperior())) {
-                roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior())
-                        .switchIfEmpty(Mono.error(NotContextException::new)).doOnNext(superior ->
-                        role.setSuperior(superior.getId()));
-            }
-        }).flatMap(roleRepository::insert).map(this::convertOuter);
+        Mono<Role> roleMono;
+        if (StringUtils.hasText(roleDTO.getSuperior())) {
+            roleMono = roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior())
+                    .switchIfEmpty(Mono.error(NotContextException::new)).map(superior -> {
+                        role.setSuperior(superior.getId());
+                        return role;
+                    });
+        } else {
+            roleMono = Mono.just(role);
+        }
+        return roleMono.flatMap(roleRepository::insert).map(this::convertOuter);
     }
 
     @Override
@@ -114,15 +107,16 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Assert.hasText(code, "code is blank");
         return roleRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .map(role -> {
+                .flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
-                    return role;
-                }).doOnNext(role -> {
                     if (StringUtils.hasText(roleDTO.getSuperior())) {
-                        roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior()).doOnNext(superior ->
-                                role.setSuperior(superior.getId()));
+                        return roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior()).map(superior -> {
+                            role.setSuperior(superior.getId());
+                            return role;
+                        });
                     }
-                }).flatMap(roleRepository::save).map(this::convertOuter);
+                    return roleRepository.save(role);
+                }).map(this::convertOuter);
     }
 
     /**
@@ -135,23 +129,5 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         RoleVO outer = new RoleVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
-    }
-
-    /**
-     * add child node
-     *
-     * @param superior superior node
-     * @param roleFlux to be build source data
-     * @return tree node
-     */
-    private Flux<TreeNode> addChildren(Role superior, Flux<Role> roleFlux) {
-        return roleFlux.filter(role -> superior.getId().equals(role.getSuperior())).flatMap(role -> {
-            TreeNode treeNode = new TreeNode(role.getCode(), role.getName());
-            treeNode.setSuperior(superior.getCode());
-            return this.addChildren(role, roleFlux).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
-            });
-        });
     }
 }

@@ -4,7 +4,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Group;
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.repository.UserGroupRepository;
@@ -19,7 +18,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
+import top.leafage.common.basic.TreeNode;
 import javax.naming.NotContextException;
 import java.util.Objects;
 
@@ -30,6 +29,8 @@ import java.util.Objects;
  **/
 @Service
 public class GroupServiceImpl extends AbstractBasicService implements GroupService {
+
+    private static final String CODE_MESSAGE = "code is blank";
 
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
@@ -76,7 +77,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         Flux<Group> groupFlux = groupRepository.findByEnabledTrue();
         return groupFlux.filter(g -> !Objects.nonNull(g.getSuperior())).flatMap(group -> {
             TreeNode treeNode = new TreeNode(group.getCode(), group.getName());
-            return this.addChildren(group, groupFlux).collectList().map(treeNodes -> {
+            return this.children(group, groupFlux).collectList().map(treeNodes -> {
                 treeNode.setChildren(treeNodes);
                 return treeNode;
             });
@@ -85,7 +86,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> fetch(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, CODE_MESSAGE);
         return groupRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(group -> userGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
                         .flatMap(count -> {
@@ -113,41 +114,47 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         Group group = new Group();
         BeanUtils.copyProperties(groupDTO, group);
         group.setCode(this.generateCode());
-        return Mono.just(group).doOnNext(g -> {
-            if (StringUtils.hasText(groupDTO.getSuperior())) {
-                groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).doOnNext(superior ->
-                        group.setSuperior(superior.getId()));
-            }
-        }).doOnNext(g -> {
-            if (StringUtils.hasText(groupDTO.getPrincipal())) {
-                userRepository.getByUsername(groupDTO.getPrincipal()).doOnNext(principal ->
-                        group.setSuperior(principal.getId()));
-            }
-        }).flatMap(groupRepository::insert).map(this::convertOuter);
+        Mono<Group> groupMono = Mono.just(group);
+        if (StringUtils.hasText(groupDTO.getSuperior())) {
+            groupMono = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).map(superior -> {
+                group.setSuperior(superior.getId());
+                return group;
+            });
+        }
+        if (StringUtils.hasText(groupDTO.getPrincipal())) {
+            groupMono = userRepository.getByUsername(groupDTO.getPrincipal()).map(principal -> {
+                group.setSuperior(principal.getId());
+                return group;
+            });
+        }
+        return groupMono.flatMap(groupRepository::insert).map(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, CODE_MESSAGE);
         return groupRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
-                .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
-                .doOnNext(group -> {
+                .flatMap(group -> {
+                    BeanUtils.copyProperties(groupDTO, group);
                     if (StringUtils.hasText(groupDTO.getSuperior())) {
-                        groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).doOnNext(superior ->
-                                group.setSuperior(superior.getId()));
+                        return groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).map(superior -> {
+                            group.setSuperior(superior.getId());
+                            return group;
+                        });
                     }
-                })
-                .doOnNext(group -> {
                     if (StringUtils.hasText(groupDTO.getPrincipal())) {
-                        userRepository.getByUsername(groupDTO.getPrincipal()).doOnNext(principal ->
-                                group.setSuperior(principal.getId()));
+                        return userRepository.getByUsername(groupDTO.getPrincipal()).map(principal -> {
+                            group.setSuperior(principal.getId());
+                            return group;
+                        });
                     }
-                }).flatMap(groupRepository::save).map(this::convertOuter);
+                    return groupRepository.save(group);
+                }).map(this::convertOuter);
     }
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, CODE_MESSAGE);
         return groupRepository.getByCodeAndEnabledTrue(code).flatMap(group ->
                 groupRepository.deleteById(group.getId()));
     }
@@ -164,21 +171,4 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         return outer;
     }
 
-    /**
-     * add child node
-     *
-     * @param superior  superior node
-     * @param groupFlux to be build source data
-     * @return tree node
-     */
-    private Flux<TreeNode> addChildren(Group superior, Flux<Group> groupFlux) {
-        return groupFlux.filter(group -> superior.getId().equals(group.getSuperior())).flatMap(group -> {
-            TreeNode treeNode = new TreeNode(group.getCode(), group.getName());
-            treeNode.setSuperior(superior.getCode());
-            return this.addChildren(group, groupFlux).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
-            });
-        });
-    }
 }

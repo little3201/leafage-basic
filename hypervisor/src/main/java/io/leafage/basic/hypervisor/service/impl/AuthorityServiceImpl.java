@@ -4,7 +4,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Authority;
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
@@ -18,11 +17,9 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
+import top.leafage.common.basic.TreeNode;
 import javax.naming.NotContextException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * 权限信息Service 接口实现
@@ -70,7 +67,12 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Flux<Authority> authorities = authorityRepository.findByTypeAndEnabledTrue('M');
         return authorities.filter(a -> Objects.isNull(a.getSuperior())).flatMap(authority -> {
             TreeNode treeNode = this.constructNode(authority.getCode(), authority);
-            return this.addChildren(authority, authorities).collectList().map(treeNodes -> {
+
+            Set<String> expand = new HashSet<>();
+            expand.add("icon");
+            expand.add("path");
+
+            return this.children(authority, authorities, expand).collectList().map(treeNodes -> {
                 treeNode.setChildren(treeNodes);
                 return treeNode;
             });
@@ -107,13 +109,16 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Authority authority = new Authority();
         BeanUtils.copyProperties(authorityDTO, authority);
         authority.setCode(this.generateCode());
-        return Mono.just(authority).doOnNext(a -> {
-            if (StringUtils.hasText(authorityDTO.getSuperior())) {
-                authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
-                        .switchIfEmpty(Mono.error(NotContextException::new))
-                        .doOnNext(superior -> authority.setSuperior(superior.getId()));
-            }
-        }).flatMap(authorityRepository::insert).map(this::convertOuter);
+        Mono<Authority> authorityMono;
+        // 如果设置上级，进行处理
+        if (StringUtils.hasText(authorityDTO.getSuperior())) {
+            authorityMono = authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior())
+                    .switchIfEmpty(Mono.error(NotContextException::new))
+                    .doOnNext(superior -> authority.setSuperior(superior.getId()));
+        } else {
+            authorityMono = Mono.just(authority);
+        }
+        return authorityMono.flatMap(authorityRepository::insert).map(this::convertOuter);
     }
 
     @Override
@@ -161,24 +166,6 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         expand.put("path", authority.getPath());
         treeNode.setExpand(expand);
         return treeNode;
-    }
-
-    /**
-     * add child node
-     *
-     * @param superior    superior node
-     * @param authorities to be build source data
-     * @return tree node
-     */
-    private Flux<TreeNode> addChildren(Authority superior, Flux<Authority> authorities) {
-        return authorities.filter(authority -> superior.getId().equals(authority.getSuperior()))
-                .flatMap(authority -> {
-                    TreeNode treeNode = this.constructNode(superior.getCode(), authority);
-                    return this.addChildren(authority, authorities).collectList().map(treeNodes -> {
-                        treeNode.setChildren(treeNodes);
-                        return treeNode;
-                    });
-                });
     }
 
 }

@@ -20,6 +20,11 @@ import reactor.core.publisher.Mono;
 
 import static org.mockito.BDDMockito.given;
 
+/**
+ * category接口测试类
+ *
+ * @author liwenqiang 2020/3/1 22:07
+ */
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(CategoryController.class)
 class CategoryControllerTest {
@@ -35,6 +40,7 @@ class CategoryControllerTest {
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setAlias("test");
         given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoryVO));
+
         webClient.get().uri("/category").exchange().expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
@@ -43,6 +49,7 @@ class CategoryControllerTest {
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setAlias("test");
         given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoryVO));
+
         webClient.get().uri(uriBuilder -> uriBuilder.path("/category").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
@@ -53,6 +60,7 @@ class CategoryControllerTest {
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setAlias("test");
         given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoryVO));
+
         webClient.get().uri("/category/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.alias").isEqualTo("test");
@@ -66,13 +74,14 @@ class CategoryControllerTest {
 
     @Test
     void create() {
-        // 构造请求对象
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setAlias("test");
         // 构造返回对象
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setAlias("test");
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
+
+        // 构造请求对象
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setAlias("test");
         webClient.post().uri("/category").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isEqualTo(HttpStatus.CREATED)
@@ -81,13 +90,14 @@ class CategoryControllerTest {
 
     @Test
     void modify() {
-        // 构造请求对象
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setAlias("test");
         // 构造返回对象
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setAlias("test");
         given(this.categoryService.modify(Mockito.anyString(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
+
+        // 构造请求对象
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setAlias("test");
         webClient.put().uri("/category/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isEqualTo(HttpStatus.ACCEPTED)

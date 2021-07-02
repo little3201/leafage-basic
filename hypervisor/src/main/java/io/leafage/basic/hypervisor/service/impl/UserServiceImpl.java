@@ -4,8 +4,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.User;
-import io.leafage.basic.hypervisor.document.UserGroup;
-import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.*;
@@ -21,7 +19,9 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -99,7 +99,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Roles")))
                 .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
         // 取角色关联的权限ID
-        Mono<ArrayList<ObjectId>> authorityIdListMono = roleIdListMono.flatMap(roleIdList -> roleAuthorityRepository.findByRoleIdIn(roleIdList)
+        Mono<ArrayList<ObjectId>> authorityIdListMono = roleIdListMono.flatMap(roleIdList -> roleAuthorityRepository.findByRoleIdInAndEnabledTrue(roleIdList)
                 .switchIfEmpty(Mono.error(() -> new NotContextException("No Authorities")))
                 .collect(ArrayList::new, (authorityIdList, roleAuthority) -> authorityIdList.add(roleAuthority.getAuthorityId())));
         // 查权限
@@ -127,37 +127,4 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         return outer;
     }
 
-    /**
-     * 初始设置UserRole参数
-     *
-     * @param userId 用户主键
-     * @param codes  role
-     * @return 用户-角色对象
-     */
-    private Mono<List<UserRole>> initUserRole(ObjectId userId, Collection<String> codes) {
-        return roleRepository.findByCodeInAndEnabledTrue(codes).map(role -> {
-            UserRole userRole = new UserRole();
-            userRole.setUserId(userId);
-            userRole.setRoleId(role.getId());
-            userRole.setModifier(userId);
-            return userRole;
-        }).collectList();
-    }
-
-    /**
-     * 初始设置GroupUser参数
-     *
-     * @param userId 用户主键
-     * @param codes  group
-     * @return 用户-角色对象
-     */
-    private Mono<List<UserGroup>> initGroupUser(ObjectId userId, Collection<String> codes) {
-        return groupRepository.findByCodeInAndEnabledTrue(codes).map(group -> {
-            UserGroup userGroup = new UserGroup();
-            userGroup.setUserId(userId);
-            userGroup.setGroupId(group.getId());
-            userGroup.setModifier(userId);
-            return userGroup;
-        }).collectList();
-    }
 }

@@ -27,7 +27,7 @@ import reactor.test.StepVerifier;
 import static org.mockito.BDDMockito.given;
 
 /**
- * 用户service测试
+ * user接口测试
  *
  * @author liwenqiang 2019/1/29 17:10
  **/
@@ -68,16 +68,19 @@ class UserServiceImplTest {
         user.setUsername(username);
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .willReturn(Mono.just(user));
+
         UserRole userRole = new UserRole();
         ObjectId roleId = new ObjectId();
         userRole.setUserId(userId);
         userRole.setRoleId(roleId);
-        given(this.userRoleRepository.findByUserIdAndEnabledTrue(userId))
-                .willReturn(Flux.just(userRole));
+        given(this.userRoleRepository.findByUserIdAndEnabledTrue(userId)).willReturn(Flux.just(userRole));
+
         RoleAuthority roleAuthority = new RoleAuthority();
         roleAuthority.setAuthorityId(new ObjectId());
-        given(this.roleAuthorityRepository.findByRoleIdIn(Mockito.anyList())).willReturn(Flux.just(roleAuthority));
+        given(this.roleAuthorityRepository.findByRoleIdInAndEnabledTrue(Mockito.anyList())).willReturn(Flux.just(roleAuthority));
+
         given(this.authorityRepository.findByIdInAndEnabledTrue(Mockito.anyList())).willReturn(Flux.just(Mockito.mock(Authority.class)));
+
         StepVerifier.create(userService.fetchDetails(username)).expectNextCount(1).verifyComplete();
     }
 
@@ -116,7 +119,9 @@ class UserServiceImplTest {
     @Test
     void modify() {
         given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
+
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(Mono.just(Mockito.mock(User.class)));
+
         UserDTO userDTO = new UserDTO();
         StepVerifier.create(userService.modify("little3201", userDTO)).expectNextCount(1).verifyComplete();
     }
@@ -126,7 +131,9 @@ class UserServiceImplTest {
         User user = new User();
         user.setId(new ObjectId());
         given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
+
         given(this.userRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());
+
         StepVerifier.create(userService.remove("little3201")).verifyComplete();
     }
 }

@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -11,14 +10,10 @@ import java.math.BigDecimal;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AccountVO implements Serializable {
+public class AccountVO extends BaseVO {
 
     private static final long serialVersionUID = 2227758644875658137L;
 
-    /**
-     * 用户姓名
-     */
-    private String name;
     /**
      * 余额
      */
@@ -28,14 +23,6 @@ public class AccountVO implements Serializable {
      */
     private String type;
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public BigDecimal getBalance() {
         return balance;

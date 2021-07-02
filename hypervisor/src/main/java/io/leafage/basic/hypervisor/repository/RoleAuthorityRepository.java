@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 /**
  * 角色权限repository
@@ -26,7 +28,7 @@ public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuth
      * @param roleIdList 角色ID集合
      * @return Flux
      */
-    Flux<RoleAuthority> findByRoleIdIn(List<ObjectId> roleIdList);
+    Flux<RoleAuthority> findByRoleIdInAndEnabledTrue(@NotEmpty Collection<ObjectId> roleIdList);
 
     /**
      * 统计关联角色
@@ -34,5 +36,21 @@ public interface RoleAuthorityRepository extends ReactiveCrudRepository<RoleAuth
      * @param authorityId 权限ID
      * @return 用户数
      */
-    Mono<Long> countByAuthorityIdAndEnabledTrue(ObjectId authorityId);
+    Mono<Long> countByAuthorityIdAndEnabledTrue(@NotNull ObjectId authorityId);
+
+    /**
+     * 根据权限查角色
+     *
+     * @param authorityId 权限主键
+     * @return 关联数据集
+     */
+    Flux<RoleAuthority> findByRoleId(@NotNull ObjectId authorityId);
+
+    /**
+     * 根据角色查权限
+     *
+     * @param roleId 角色主键
+     * @return 关联数据集
+     */
+    Flux<RoleAuthority> findByAuthorityId(@NotNull ObjectId roleId);
 }

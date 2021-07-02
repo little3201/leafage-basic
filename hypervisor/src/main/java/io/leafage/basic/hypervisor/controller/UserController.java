@@ -3,9 +3,15 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.document.UserGroup;
+import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
+import io.leafage.basic.hypervisor.service.UserGroupService;
+import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
+import io.leafage.basic.hypervisor.vo.GroupVO;
+import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +22,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 /**
  * 用户信息Controller
@@ -29,9 +36,13 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+    private final UserGroupService userGroupService;
+    private final UserRoleService userRoleService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserGroupService userGroupService, UserRoleService userRoleService) {
         this.userService = userService;
+        this.userGroupService = userGroupService;
+        this.userRoleService = userRoleService;
     }
 
     /**
@@ -158,5 +169,79 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 根据username查询关联分组信息
+     *
+     * @param username 账号
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{username}/group")
+    public ResponseEntity<Flux<GroupVO>> groups(@PathVariable String username) {
+        Flux<GroupVO> voFlux;
+        try {
+            voFlux = userGroupService.groups(username);
+        } catch (Exception e) {
+            logger.error("Retrieve user groups occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
+    }
+
+    /**
+     * 保存用户-分组关联
+     *
+     * @param username 账户
+     * @param groups   分组
+     * @return 操作结果
+     */
+    @PatchMapping("/{username}/group")
+    public ResponseEntity<Flux<UserGroup>> relationGroup(@PathVariable String username, @RequestBody Set<String> groups) {
+        Flux<UserGroup> voFlux;
+        try {
+            voFlux = userGroupService.relation(username, groups);
+        } catch (Exception e) {
+            logger.error("create user groups occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.accepted().body(voFlux);
+    }
+
+    /**
+     * 根据username查询关联角色信息
+     *
+     * @param username 用户username
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{username}/role")
+    public ResponseEntity<Flux<RoleVO>> roles(@PathVariable String username) {
+        Flux<RoleVO> voFlux;
+        try {
+            voFlux = userRoleService.roles(username);
+        } catch (Exception e) {
+            logger.error("Retrieve user roles occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
+    }
+
+    /**
+     * 保存用户-角色关联
+     *
+     * @param username 账户
+     * @param roles    分组
+     * @return 操作结果
+     */
+    @PatchMapping("/{username}/role")
+    public ResponseEntity<Flux<UserRole>> relationRole(@PathVariable String username, @RequestBody Set<String> roles) {
+        Flux<UserRole> voFlux;
+        try {
+            voFlux = userRoleService.relation(username, roles);
+        } catch (Exception e) {
+            logger.error("create user groups occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.accepted().body(voFlux);
     }
 }

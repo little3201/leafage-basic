@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.entity.Authority;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
@@ -18,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.TreeNode;
+import top.leafage.common.servlet.TreeNodeAware;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 权限信息Service实现
@@ -26,7 +28,7 @@ import java.util.*;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService {
+public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService, TreeNodeAware<Authority> {
 
     private final AuthorityRepository authorityRepository;
 
@@ -46,13 +48,14 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         if (CollectionUtils.isEmpty(authorities)) {
             return Collections.emptyList();
         }
-        List<TreeNode> authorityVOList = new ArrayList<>(authorities.size());
-        authorities.stream().filter(a -> a.getSuperior() == null).forEach(a -> {
+        return authorities.stream().filter(a -> a.getSuperior() == null).map(a -> {
             TreeNode treeNode = this.constructNode(a.getCode(), a);
-            treeNode.setChildren(this.addChildren(a, authorities));
-            authorityVOList.add(treeNode);
-        });
-        return authorityVOList;
+            Set<String> expand = new HashSet<>();
+            expand.add("icon");
+            expand.add("path");
+            treeNode.setChildren(this.children(a, authorities, expand));
+            return treeNode;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -90,14 +93,12 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
      * @return tree node
      */
     private List<TreeNode> addChildren(Authority superior, List<Authority> authorities) {
-        List<TreeNode> voList = new ArrayList<>();
-        authorities.stream().filter(authority -> superior.getId().equals(authority.getSuperior()))
-                .forEach(authority -> {
+        return authorities.stream().filter(authority -> superior.getId().equals(authority.getSuperior()))
+                .map(authority -> {
                     TreeNode treeNode = this.constructNode(superior.getCode(), authority);
                     treeNode.setChildren(this.addChildren(authority, authorities));
-                    voList.add(treeNode);
-                });
-        return voList;
+                    return treeNode;
+                }).collect(Collectors.toList());
     }
 
     /**
@@ -108,9 +109,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
      * @return tree node
      */
     private TreeNode constructNode(String superior, Authority authority) {
-        TreeNode treeNode = new TreeNode();
-        treeNode.setCode(authority.getCode());
-        treeNode.setName(authority.getName());
+        TreeNode treeNode = new TreeNode(authority.getCode(), authority.getName());
         treeNode.setSuperior(superior);
 
         Map<String, String> expand = new HashMap<>();

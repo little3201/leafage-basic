@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.entity.RoleAuthority;
 import io.leafage.basic.hypervisor.service.RoleAuthorityService;
@@ -18,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import top.leafage.common.basic.TreeNode;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;

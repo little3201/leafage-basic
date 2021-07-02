@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.entity.Role;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
@@ -15,9 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-import java.util.ArrayList;
+import top.leafage.common.basic.TreeNode;
+import top.leafage.common.servlet.TreeNodeAware;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 角色信息service 实现
@@ -25,7 +26,7 @@ import java.util.List;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl extends AbstractBasicService implements RoleService {
+public class RoleServiceImpl extends AbstractBasicService implements RoleService, TreeNodeAware<Role> {
 
     private final RoleRepository roleRepository;
 
@@ -50,15 +51,11 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         if (CollectionUtils.isEmpty(roles)) {
             return Collections.emptyList();
         }
-        List<TreeNode> authorityVOList = new ArrayList<>(roles.size());
-        roles.stream().filter(role -> role.getSuperior() == null).forEach(r -> {
-            TreeNode treeNode = new TreeNode();
-            treeNode.setCode(r.getCode());
-            treeNode.setName(r.getName());
-            treeNode.setChildren(this.addChildren(r, roles));
-            authorityVOList.add(treeNode);
-        });
-        return authorityVOList;
+        return roles.stream().filter(role -> role.getSuperior() == null).map(r -> {
+            TreeNode treeNode = new TreeNode(r.getCode(), r.getName());
+            treeNode.setChildren(this.children(r, roles));
+            return treeNode;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -94,24 +91,4 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         return roleVO;
     }
 
-    /**
-     * add child node
-     *
-     * @param superior superior node
-     * @param roles    to be build source data
-     * @return tree node
-     */
-    private List<TreeNode> addChildren(Role superior, List<Role> roles) {
-        List<TreeNode> voList = new ArrayList<>();
-        roles.stream().filter(role -> superior.getId().equals(role.getSuperior()))
-                .forEach(r -> {
-                    TreeNode treeNode = new TreeNode();
-                    treeNode.setCode(r.getCode());
-                    treeNode.setName(r.getName());
-                    treeNode.setSuperior(superior.getName());
-                    treeNode.setChildren(this.addChildren(r, roles));
-                    voList.add(treeNode);
-                });
-        return voList;
-    }
 }

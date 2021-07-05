@@ -24,7 +24,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.BDDMockito.given;
@@ -117,7 +116,6 @@ class UserServiceImplTest {
 
         UserDTO userDTO = new UserDTO();
         userDTO.setNickname("管理员");
-        userDTO.setRoles(Collections.singleton("admin"));
         userService.create(userDTO);
 
         verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
@@ -155,7 +153,6 @@ class UserServiceImplTest {
 
         UserDTO userDTO = new UserDTO();
         userDTO.setNickname("管理员");
-        userDTO.setRoles(Collections.singleton("admin"));
         userService.modify("test", userDTO);
 
         verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any(User.class));

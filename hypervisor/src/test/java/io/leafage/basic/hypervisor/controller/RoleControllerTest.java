@@ -2,7 +2,6 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.document.UserRole;
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.service.RoleService;
@@ -21,9 +20,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import top.leafage.common.basic.TreeNode;
 import java.util.Collections;
-
 import static org.mockito.BDDMockito.given;
 
 /**

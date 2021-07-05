@@ -6,7 +6,10 @@ package io.leafage.basic.hypervisor.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
+import io.leafage.basic.hypervisor.entity.RoleAuthority;
+import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.service.RoleService;
+import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +22,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import top.leafage.common.basic.TreeNode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -45,6 +50,12 @@ class RoleControllerTest {
 
     @MockBean
     private RoleService roleService;
+
+    @MockBean
+    private UserRoleService userRoleService;
+
+    @MockBean
+    private RoleAuthorityService roleAuthorityService;
 
     @Test
     void retrieve() throws Exception {
@@ -157,5 +168,76 @@ class RoleControllerTest {
                 .andDo(print()).andReturn();
     }
 
+    @Test
+    void users() throws Exception {
+        given(this.userRoleService.users(Mockito.anyString())).willReturn(Mockito.anyList());
+
+        mvc.perform(get("/role/{code}/user", "test")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void users_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.userRoleService).users(Mockito.anyString());
+
+        mvc.perform(get("/role/{code}/user", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void authorities() throws Exception {
+        given(this.roleAuthorityService.authorities(Mockito.anyString())).willReturn(Mockito.anyList());
+
+        mvc.perform(get("/role/{code}/authority", "test")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void authorities_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.roleAuthorityService).authorities(Mockito.anyString());
+
+        mvc.perform(get("/role/{code}/authority", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void relation() throws Exception {
+        RoleAuthority roleAuthority = new RoleAuthority();
+        roleAuthority.setRoleId(1L);
+        roleAuthority.setAuthorityId(1L);
+        given(this.roleAuthorityService.relation(Mockito.anyString(), Mockito.anySet()))
+                .willReturn(Collections.singletonList(roleAuthority));
+
+        mvc.perform(patch("/role/{code}/authority", "test").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isAccepted())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void relation_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.roleAuthorityService).relation(Mockito.anyString(), Mockito.anySet());
+
+        mvc.perform(patch("/role/{code}/authority", "test").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
+    }
+
+
+    @Test
+    void tree() throws Exception {
+        TreeNode treeNode = new TreeNode("test", "test");
+        given(this.roleService.tree()).willReturn(Collections.singletonList(treeNode));
+
+        mvc.perform(get("/role/tree")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void tree_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.roleService).tree();
+
+        mvc.perform(get("/role/tree")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
 
 }

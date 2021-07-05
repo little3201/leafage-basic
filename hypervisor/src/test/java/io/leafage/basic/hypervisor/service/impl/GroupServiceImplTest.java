@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import top.leafage.common.basic.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * 分组service测试
+ * group service测试
  *
  * @author liwenqiang 2021/5/11 10:10
  **/
@@ -64,5 +65,23 @@ class GroupServiceImplTest {
         groupService.remove("2119JD09");
 
         verify(this.groupRepository, times(1)).deleteById(Mockito.anyLong());
+    }
+
+    @Test
+    void tree() {
+        Group group = new Group();
+        group.setId(1L);
+        group.setCode("2119JD09");
+        group.setName("test");
+
+        Group child = new Group();
+        child.setId(2L);
+        child.setName("sub");
+        child.setCode("2119JD19");
+        child.setSuperior(1L);
+        given(this.groupRepository.findByEnabledTrue()).willReturn(List.of(group, child));
+
+        List<TreeNode> nodes = groupService.tree();
+        Assertions.assertNotNull(nodes);
     }
 }

@@ -202,7 +202,7 @@ public class RoleController {
             voList = roleAuthorityService.relation(code, authorities);
         } catch (Exception e) {
             logger.error("Relation role ah occurred an error: ", e);
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.accepted().body(voList);
     }

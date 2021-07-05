@@ -107,13 +107,6 @@ class UserServiceImplTest {
         user.setId(1L);
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(user);
 
-        List<Role> roles = new ArrayList<>(2);
-        roles.add(new Role());
-        roles.add(new Role());
-        given(this.roleRepository.findByCodeInAndEnabledTrue(Mockito.anyCollection())).willReturn(roles);
-
-        given(this.userRoleRepository.saveAll(Mockito.anyCollection())).willReturn(Mockito.anyList());
-
         UserDTO userDTO = new UserDTO();
         userDTO.setNickname("管理员");
         userService.create(userDTO);
@@ -132,32 +125,11 @@ class UserServiceImplTest {
         // 保存更新信息
         given(this.userRepository.saveAndFlush(Mockito.any(User.class))).willReturn(user);
 
-        // 查询角色信息
-        List<Role> roles = new ArrayList<>(1);
-        Role role = new Role();
-        role.setId(1L);
-        role.setCode("2119JJ09");
-        roles.add(role);
-        given(this.roleRepository.findByCodeInAndEnabledTrue(Mockito.anyCollection())).willReturn(roles);
-
-        // 查询用户角色关联信息
-        List<UserRole> userRoleList = new ArrayList<>(1);
-        UserRole userRole = new UserRole();
-        userRole.setRoleId(1L);
-        userRole.setRoleId(1L);
-        userRoleList.add(userRole);
-        given(this.userRoleRepository.findByUserId(Mockito.anyLong())).willReturn(userRoleList);
-
-        // 保存用户角色信息
-        given(this.userRoleRepository.saveAll(Mockito.anyCollection())).willReturn(Mockito.anyList());
-
         UserDTO userDTO = new UserDTO();
         userDTO.setNickname("管理员");
         userService.modify("test", userDTO);
 
         verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any(User.class));
-        // 一次逻辑删除，一次新增
-        verify(userRoleRepository, Mockito.times(2)).saveAll(Mockito.anyList());
     }
 
     @Test

@@ -188,7 +188,7 @@ public class UserController {
             voList = userGroupService.relation(username, groups);
         } catch (Exception e) {
             logger.error("create user groups occurred an error: ", e);
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.accepted().body(voList);
     }
@@ -225,7 +225,7 @@ public class UserController {
             voList = userRoleService.relation(username, roles);
         } catch (Exception e) {
             logger.error("create user groups occurred an error: ", e);
-            return ResponseEntity.noContent().build();
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.accepted().body(voList);
     }

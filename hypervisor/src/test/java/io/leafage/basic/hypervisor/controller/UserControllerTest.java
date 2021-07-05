@@ -6,6 +6,10 @@ package io.leafage.basic.hypervisor.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
+import io.leafage.basic.hypervisor.entity.UserGroup;
+import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.service.UserGroupService;
+import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Test;
@@ -20,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -37,14 +42,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserController.class)
 class UserControllerTest {
 
-    @MockBean
-    private UserService userService;
+    @Autowired
+    private MockMvc mvc;
 
     @Autowired
     private ObjectMapper mapper;
 
-    @Autowired
-    private MockMvc mvc;
+    @MockBean
+    private UserService userService;
+
+    @MockBean
+    private UserGroupService userGroupService;
+
+    @MockBean
+    private UserRoleService userRoleService;
 
     @Test
     void retrieve() throws Exception {
@@ -175,4 +186,79 @@ class UserControllerTest {
                 .andDo(print()).andReturn();
     }
 
+    @Test
+    void roles() throws Exception {
+        given(this.userRoleService.roles(Mockito.anyString())).willReturn(Mockito.anyList());
+
+        mvc.perform(get("/user/{username}/role", "test")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void roles_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.userRoleService).roles(Mockito.anyString());
+
+        mvc.perform(get("/user/{username}/role", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void relation_role() throws Exception {
+        UserRole userRole = new UserRole();
+        userRole.setUserId(1L);
+        userRole.setRoleId(1L);
+        given(this.userRoleService.relation(Mockito.anyString(), Mockito.anySet()))
+                .willReturn(Collections.singletonList(userRole));
+
+        mvc.perform(patch("/user/{username}/role", "test").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isAccepted())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void relation_role_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.userRoleService).relation(Mockito.anyString(), Mockito.anySet());
+
+        mvc.perform(patch("/user/{username}/role", "test").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void groups() throws Exception {
+        given(this.userGroupService.groups(Mockito.anyString())).willReturn(Mockito.anyList());
+
+        mvc.perform(get("/user/{username}/group", "test")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void groups_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.userGroupService).groups(Mockito.anyString());
+
+        mvc.perform(get("/user/{username}/group", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void relation_group() throws Exception {
+        UserGroup userGroup = new UserGroup();
+        userGroup.setUserId(1L);
+        userGroup.setGroupId(1L);
+        given(this.userGroupService.relation(Mockito.anyString(), Mockito.anySet()))
+                .willReturn(Collections.singletonList(userGroup));
+
+        mvc.perform(patch("/user/{username}/group", "test").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isAccepted())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void relation_group_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.userGroupService).relation(Mockito.anyString(), Mockito.anySet());
+
+        mvc.perform(patch("/user/{username}/group", "test").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
+    }
 }

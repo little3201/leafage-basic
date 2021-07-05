@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import top.leafage.common.basic.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
@@ -73,5 +74,23 @@ class RoleServiceImplTest {
         roleService.remove("2119JD09");
 
         verify(this.roleRepository, times(1)).deleteById(Mockito.anyLong());
+    }
+
+    @Test
+    void tree() {
+        Role role = new Role();
+        role.setId(1L);
+        role.setCode("2119JD09");
+        role.setName("test");
+
+        Role child = new Role();
+        child.setId(2L);
+        child.setName("sub");
+        child.setCode("2119JD19");
+        child.setSuperior(1L);
+        given(this.roleRepository.findByEnabledTrue()).willReturn(List.of(role, child));
+
+        List<TreeNode> nodes = roleService.tree();
+        Assertions.assertNotNull(nodes);
     }
 }

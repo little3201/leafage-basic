@@ -15,7 +15,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import top.leafage.common.basic.TreeNode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -158,6 +160,23 @@ class AuthorityControllerTest {
         doThrow(new RuntimeException()).when(this.authorityService).remove(Mockito.anyString());
 
         mvc.perform(delete("/authority/{code}", "test")).andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void tree() throws Exception {
+        TreeNode treeNode = new TreeNode("test", "test");
+        given(this.authorityService.tree()).willReturn(Collections.singletonList(treeNode));
+
+        mvc.perform(get("/authority/tree")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void tree_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.authorityService).tree();
+
+        mvc.perform(get("/authority/tree")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 }

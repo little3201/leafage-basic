@@ -71,10 +71,14 @@ class AuthorityServiceImplTest {
     void tree() {
         Authority authority = new Authority();
         authority.setId(1L);
+        authority.setCode("2119JD09");
+        authority.setName("test");
 
         Authority child = new Authority();
-        child.setSuperior(1L);
         child.setId(2L);
+        child.setName("sub");
+        child.setCode("2119JD19");
+        child.setSuperior(1L);
         given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(List.of(authority, child));
 
         List<TreeNode> nodes = authorityService.tree();

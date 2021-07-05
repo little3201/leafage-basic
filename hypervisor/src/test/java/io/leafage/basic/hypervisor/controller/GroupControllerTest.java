@@ -3,6 +3,7 @@ package io.leafage.basic.hypervisor.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupService;
+import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import top.leafage.common.basic.TreeNode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -41,6 +44,9 @@ class GroupControllerTest {
 
     @MockBean
     private GroupService groupService;
+
+    @MockBean
+    private UserGroupService userGroupService;
 
     @Test
     void retrieve() throws Exception {
@@ -153,5 +159,36 @@ class GroupControllerTest {
                 .andDo(print()).andReturn();
     }
 
+    @Test
+    void users() throws Exception {
+        given(this.userGroupService.users(Mockito.anyString())).willReturn(Mockito.anyList());
 
+        mvc.perform(get("/group/{code}/user", "test")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void users_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.userGroupService).users(Mockito.anyString());
+
+        mvc.perform(get("/group/{code}/user", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void tree() throws Exception {
+        TreeNode treeNode = new TreeNode("test", "test");
+        given(this.groupService.tree()).willReturn(Collections.singletonList(treeNode));
+
+        mvc.perform(get("/group/tree")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void tree_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.groupService).tree();
+
+        mvc.perform(get("/group/tree")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
 }

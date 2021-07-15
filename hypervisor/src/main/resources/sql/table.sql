@@ -6,7 +6,7 @@ drop table if exists `group`;
 create table `group`
 (
     id          bigint(11)  not null auto_increment comment '主键',
-    code        varchar(16) not null comment '代码',
+    code        varchar(10) not null comment '代码',
     name        varchar(64) comment '名称',
     principal   bigint(11) comment '负责人',
     superior    bigint(11) comment '上级',
@@ -50,7 +50,7 @@ drop table if exists user;
 create table user
 (
     id                         bigint(11)  not null auto_increment comment '主键',
-    username                   varchar(16) not null comment '账号',
+    username                   varchar(32) not null comment '账号',
     nickname                   varchar(64) comment '昵称',
     avatar                     varchar(128) comment '头像',
     password                   varchar(128) comment '密码',
@@ -103,7 +103,7 @@ drop table if exists role;
 create table role
 (
     id          bigint(11) not null auto_increment comment '主键',
-    code        varchar(8) comment '代码',
+    code        varchar(10) comment '代码',
     name        varchar(64) comment '名称',
     superior    bigint(11) comment '上级',
     description varchar(64) comment '描述',
@@ -147,7 +147,7 @@ drop table if exists authority;
 create table authority
 (
     id          bigint(11) not null auto_increment comment '主键',
-    code        varchar(8) comment '代码',
+    code        varchar(10) comment '代码',
     name        varchar(64) comment '名称',
     type        tinyint(4) comment '类型',
     superior    bigint(11) comment '上级',

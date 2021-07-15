@@ -5,14 +5,14 @@ drop table if exists posts;
 /*==============================================================*/
 create table posts
 (
-    id          bigint(11) not null auto_increment comment '主键',
-    code        varchar(8) not null comment '代码',
+    id          bigint(11)  not null auto_increment comment '主键',
+    code        varchar(10) not null comment '代码',
     title       varchar(32) comment '标题',
     subtitle    varchar(216) comment '概要',
     cover       varchar(128) comment '封面图',
-    is_enabled  tinyint(1) not null default 1 comment '是否可用',
-    modifier    bigint(11) not null comment '修改人',
-    modify_time datetime   not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    is_enabled  tinyint(1)  not null default 1 comment '是否可用',
+    modifier    bigint(11)  not null comment '修改人',
+    modify_time datetime    not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id),
     unique key AK_code (code)
 );
@@ -48,12 +48,12 @@ drop table if exists category;
 /*==============================================================*/
 create table category
 (
-    id          bigint(11) not null auto_increment comment '主键',
-    code        varchar(8) not null comment '代码',
+    id          bigint(11)  not null auto_increment comment '主键',
+    code        varchar(10) not null comment '代码',
     name        varchar(32) comment '名称',
-    is_enabled  tinyint(1) not null default 1 comment '是否可用',
-    modifier    bigint(11) not null comment '修改人',
-    modify_time datetime   not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    is_enabled  tinyint(1)  not null default 1 comment '是否可用',
+    modifier    bigint(11)  not null comment '修改人',
+    modify_time datetime    not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
     primary key (id),
     unique key AK_code (code)
 );

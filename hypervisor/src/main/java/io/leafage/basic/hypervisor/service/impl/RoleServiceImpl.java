@@ -4,7 +4,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Role;
-import io.leafage.basic.hypervisor.domain.TreeNode;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
@@ -18,8 +17,9 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.TreeNode;
 
-import javax.naming.NotContextException;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -40,33 +40,21 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Flux<RoleVO> retrieve() {
-        return roleRepository.findAll().map(this::convertOuter);
+        return roleRepository.findByEnabledTrue().flatMap(this::convertOuter);
     }
 
     @Override
     public Flux<RoleVO> retrieve(int page, int size) {
         return roleRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .flatMap(role -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId())
-                        .flatMap(count -> {
-                            RoleVO roleVO = this.convertOuter(role);
-                            roleVO.setCount(count);
-                            if (role.getSuperior() != null) {
-                                return roleRepository.findById(role.getSuperior()).map(superior -> {
-                                    roleVO.setSuperior(superior.getName());
-                                    return roleVO;
-                                });
-                            }
-                            return Mono.just(roleVO);
-                        })
-                );
+                .flatMap(this::convertOuter);
     }
 
     @Override
     public Flux<TreeNode> tree() {
-        Flux<Role> roleFlux = roleRepository.findByEnabledTrue();
+        Flux<Role> roleFlux = roleRepository.findByEnabledTrue().switchIfEmpty(Mono.error(NoSuchElementException::new));
         return roleFlux.filter(r -> Objects.isNull(r.getSuperior())).flatMap(role -> {
             TreeNode treeNode = new TreeNode(role.getCode(), role.getName());
-            return this.addChildren(role, roleFlux).collectList().map(treeNodes -> {
+            return this.children(role, roleFlux).collectList().map(treeNodes -> {
                 treeNode.setChildren(treeNodes);
                 return treeNode;
             });
@@ -76,17 +64,8 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     @Override
     public Mono<RoleVO> fetch(String code) {
         Assert.hasText(code, "code is blank");
-        return roleRepository.getByCodeAndEnabledTrue(code).flatMap(role -> {
-            RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(role, roleVO);
-            if (role.getSuperior() != null) {
-                return roleRepository.findById(role.getSuperior()).map(superior -> {
-                    roleVO.setSuperior(superior.getCode());
-                    return roleVO;
-                });
-            }
-            return Mono.just(roleVO);
-        });
+        return roleRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
     @Override
@@ -96,62 +75,99 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
-        Role role = new Role();
-        BeanUtils.copyProperties(roleDTO, role);
-        role.setCode(this.generateCode());
-        // 如果设置上级，进行处理
-        return Mono.just(role).doOnNext(r -> {
-            if (StringUtils.hasText(roleDTO.getSuperior())) {
-                roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior())
-                        .switchIfEmpty(Mono.error(NotContextException::new)).doOnNext(superior ->
-                        role.setSuperior(superior.getId()));
-            }
-        }).flatMap(roleRepository::insert).map(this::convertOuter);
+        Mono<Role> roleMono = Mono.just(roleDTO).map(dto -> {
+            Role role = new Role();
+            BeanUtils.copyProperties(roleDTO, role);
+            role.setCode(this.generateCode());
+            return role;
+        });
+        // 设置上级
+        roleMono = this.superior(roleDTO.getSuperior(), roleMono);
+        return roleMono.flatMap(roleRepository::insert).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
         Assert.hasText(code, "code is blank");
-        return roleRepository.getByCodeAndEnabledTrue(code)
-                .switchIfEmpty(Mono.error(NotContextException::new))
-                .map(role -> {
-                    BeanUtils.copyProperties(roleDTO, role);
-                    return role;
-                }).doOnNext(role -> {
-                    if (StringUtils.hasText(roleDTO.getSuperior())) {
-                        roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior()).doOnNext(superior ->
-                                role.setSuperior(superior.getId()));
-                    }
-                }).flatMap(roleRepository::save).map(this::convertOuter);
+        Mono<Role> roleMono = roleRepository.getByCodeAndEnabledTrue(code)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+        // 设置上级
+        roleMono = this.superior(roleDTO.getSuperior(), roleMono);
+        return roleMono.flatMap(roleRepository::save).flatMap(this::convertOuter);
+    }
+
+
+    /**
+     * 设置上级
+     *
+     * @param superior 上级code
+     * @param roleMono 当前对象
+     * @return 设置上级后的对象
+     */
+    private Mono<Role> superior(String superior, Mono<Role> roleMono) {
+        // 如果设置上级，进行处理
+        if (StringUtils.hasText(superior)) {
+            Mono<Role> superiorMono = roleRepository.getByCodeAndEnabledTrue(superior)
+                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
+
+            return roleMono.zipWith(superiorMono, (authority, sup) -> {
+                authority.setSuperior(sup.getId());
+                return authority;
+            });
+        }
+        return roleMono;
     }
 
     /**
      * 对象转换为输出结果对象
      *
-     * @param info 信息
+     * @param role 信息
      * @return 输出转换后的vo对象
      */
-    private RoleVO convertOuter(Role info) {
-        RoleVO outer = new RoleVO();
-        BeanUtils.copyProperties(info, outer);
-        return outer;
+    private Mono<RoleVO> fetchOuter(Role role) {
+        Mono<RoleVO> voMono = Mono.just(role).map(a -> {
+            RoleVO roleVO = new RoleVO();
+            BeanUtils.copyProperties(role, roleVO);
+            return roleVO;
+        });
+
+        if (role.getSuperior() != null) {
+            Mono<Role> superiorMono = roleRepository.findById(role.getSuperior());
+            voMono = voMono.zipWith(superiorMono, (a, superior) -> {
+                a.setSuperior(superior.getCode());
+                return a;
+            });
+        }
+        return voMono;
     }
 
     /**
-     * add child node
+     * 对象转换为输出结果对象
      *
-     * @param superior superior node
-     * @param roleFlux to be build source data
-     * @return tree node
+     * @param role 信息
+     * @return 输出转换后的vo对象
      */
-    private Flux<TreeNode> addChildren(Role superior, Flux<Role> roleFlux) {
-        return roleFlux.filter(role -> superior.getId().equals(role.getSuperior())).flatMap(role -> {
-            TreeNode treeNode = new TreeNode(role.getCode(), role.getName());
-            treeNode.setSuperior(superior.getCode());
-            return this.addChildren(role, roleFlux).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
-            });
+    private Mono<RoleVO> convertOuter(Role role) {
+        Mono<RoleVO> voMono = Mono.just(role).map(a -> {
+            RoleVO roleVO = new RoleVO();
+            BeanUtils.copyProperties(role, roleVO);
+            return roleVO;
         });
+
+        Mono<Long> longMono = userRoleRepository.countByRoleIdAndEnabledTrue(role.getId())
+                .switchIfEmpty(Mono.just(0L));
+        voMono = voMono.zipWith(longMono, (a, count) -> {
+            a.setCount(count);
+            return a;
+        });
+
+        if (role.getSuperior() != null) {
+            Mono<Role> superiorMono = roleRepository.findById(role.getSuperior());
+            voMono = voMono.zipWith(superiorMono, (a, superior) -> {
+                a.setSuperior(superior.getName());
+                return a;
+            });
+        }
+        return voMono;
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.naming.NotContextException;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Service
@@ -32,7 +32,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public Flux<AuthorityVO> authorities(String code) {
-        return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
+        return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(group -> roleAuthorityRepository.findByRoleId(group.getId()).flatMap(roleAuthority ->
                         authorityRepository.findById(roleAuthority.getAuthorityId()).map(user -> {
                             AuthorityVO authorityVO = new AuthorityVO();
@@ -44,13 +44,13 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public Flux<RoleVO> roles(String code) {
-        return authorityRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
+        return authorityRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(authority -> roleAuthorityRepository.findByAuthorityId(authority.getId()).flatMap(userRole ->
                         roleRepository.findById(userRole.getRoleId()).map(role -> {
                             RoleVO roleVO = new RoleVO();
                             BeanUtils.copyProperties(role, roleVO);
                             return roleVO;
-                        }))
+                        })).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 );
     }
 
@@ -58,14 +58,15 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
     public Flux<RoleAuthority> relation(String code, Set<String> authorities) {
         Assert.hasText(code, "code is blank");
         Assert.notNull(authorities, "authorities is null");
-        return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
+        return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(role -> {
                     RoleAuthority roleAuthority = new RoleAuthority();
                     roleAuthority.setRoleId(role.getId());
                     return authorityRepository.findByCodeInAndEnabledTrue(authorities).map(authority -> {
                         roleAuthority.setAuthorityId(authority.getId());
                         return roleAuthority;
-                    }).collectList().flatMapMany(roleAuthorityRepository::saveAll);
+                    }).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                            .collectList().flatMapMany(roleAuthorityRepository::saveAll);
                 });
     }
 }

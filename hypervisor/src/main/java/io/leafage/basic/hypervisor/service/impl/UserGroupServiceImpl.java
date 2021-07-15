@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.naming.NotContextException;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Service
@@ -32,25 +32,25 @@ public class UserGroupServiceImpl implements UserGroupService {
 
     @Override
     public Flux<UserVO> users(String code) {
-        return groupRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
+        return groupRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(group -> userGroupRepository.findByGroupId(group.getId()).flatMap(userGroup ->
                         userRepository.findById(userGroup.getUserId()).map(user -> {
                             UserVO userVO = new UserVO();
                             BeanUtils.copyProperties(user, userVO);
                             return userVO;
-                        }))
+                        })).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 );
     }
 
     @Override
     public Flux<GroupVO> groups(String username) {
-        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NotContextException::new))
+        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(user -> userGroupRepository.findByUserId(user.getId()).flatMap(userGroup ->
                         groupRepository.findById(userGroup.getGroupId()).map(group -> {
                             GroupVO groupVO = new GroupVO();
                             BeanUtils.copyProperties(group, groupVO);
                             return groupVO;
-                        }))
+                        })).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 );
     }
 
@@ -58,14 +58,15 @@ public class UserGroupServiceImpl implements UserGroupService {
     public Flux<UserGroup> relation(String username, Set<String> groups) {
         Assert.hasText(username, "username is blank");
         Assert.notNull(groups, "groups is null");
-        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NotContextException::new))
+        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(user -> {
                     UserGroup userGroup = new UserGroup();
                     userGroup.setUserId(user.getId());
                     return groupRepository.findByCodeInAndEnabledTrue(groups).map(group -> {
                         userGroup.setGroupId(group.getId());
                         return userGroup;
-                    }).collectList().flatMapMany(userGroupRepository::saveAll);
+                    }).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                            .collectList().flatMapMany(userGroupRepository::saveAll);
                 });
     }
 }

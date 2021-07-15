@@ -45,7 +45,18 @@ class GroupServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.groupRepository.findByEnabledTrue()).willReturn(Flux.just(Mockito.mock(Group.class)));
+        Group group = new Group();
+        group.setId(new ObjectId());
+        group.setSuperior(new ObjectId());
+        group.setPrincipal(new ObjectId());
+        given(this.groupRepository.findByEnabledTrue()).willReturn(Flux.just(group));
+
+        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
+
+        given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(User.class)));
+
         StepVerifier.create(groupService.retrieve()).expectNextCount(1).verifyComplete();
     }
 
@@ -60,7 +71,9 @@ class GroupServiceImplTest {
 
         given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
-        given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(group));
+        given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
+
+        given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(User.class)));
 
         User user = new User();
         user.setNickname("test");
@@ -72,26 +85,27 @@ class GroupServiceImplTest {
         Group group = new Group();
         group.setId(new ObjectId());
         group.setSuperior(new ObjectId());
+        group.setPrincipal(new ObjectId());
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(group));
 
-        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
-
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
+
+        given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(User.class)));
 
         StepVerifier.create(groupService.fetch("21612OL34")).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
+        given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Group.class)));
+
         Group group = new Group();
         group.setId(new ObjectId());
-        given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(group));
+        given(this.groupRepository.insert(Mockito.any(Group.class))).willReturn(Mono.just(group));
 
-        User user = new User();
-        user.setId(new ObjectId());
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
+        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
-        given(this.groupRepository.insert(Mockito.any(Group.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
+        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
@@ -102,16 +116,18 @@ class GroupServiceImplTest {
 
     @Test
     void modify() {
+        given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Group.class)));
+
         Group group = new Group();
         group.setId(new ObjectId());
         group.setSuperior(new ObjectId());
-        given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(group));
+        given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mono.just(group));
 
-        User user = new User();
-        user.setId(new ObjectId());
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
+        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
-        given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
+        given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
+
+        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
@@ -136,10 +152,14 @@ class GroupServiceImplTest {
         Group group = new Group();
         ObjectId id = new ObjectId();
         group.setId(id);
+        group.setCode("21612OL35");
+        group.setName("test");
 
         Group child = new Group();
         child.setId(new ObjectId());
         child.setSuperior(id);
+        child.setCode("21612OL34");
+        child.setName("test-sub");
         given(this.groupRepository.findByEnabledTrue()).willReturn(Flux.just(group, child));
 
         StepVerifier.create(groupService.tree()).expectNextCount(1).verifyComplete();

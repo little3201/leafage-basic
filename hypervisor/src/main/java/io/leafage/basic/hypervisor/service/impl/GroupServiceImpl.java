@@ -4,7 +4,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Group;
-import io.leafage.basic.hypervisor.domain.TreeNode;
+import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.repository.UserGroupRepository;
@@ -19,8 +19,9 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.TreeNode;
 
-import javax.naming.NotContextException;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -30,6 +31,8 @@ import java.util.Objects;
  **/
 @Service
 public class GroupServiceImpl extends AbstractBasicService implements GroupService {
+
+    private static final String CODE_MESSAGE = "code is blank";
 
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
@@ -44,39 +47,23 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Flux<GroupVO> retrieve() {
-        return groupRepository.findByEnabledTrue().map(this::convertOuter);
+        return groupRepository.findByEnabledTrue().flatMap(this::convertOuter)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
     @Override
     public Flux<GroupVO> retrieve(int page, int size) {
-        return groupRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .flatMap(group -> userGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
-                        .flatMap(count -> {
-                            GroupVO groupVO = this.convertOuter(group);
-                            groupVO.setCount(count);
-                            if (group.getSuperior() != null) {
-                                return groupRepository.findById(group.getSuperior()).map(superior -> {
-                                    groupVO.setSuperior(superior.getName());
-                                    return groupVO;
-                                });
-                            }
-                            if (group.getPrincipal() != null) {
-                                return userRepository.findById(group.getPrincipal()).map(principal -> {
-                                    groupVO.setPrincipal(principal.getNickname());
-                                    return groupVO;
-                                });
-                            }
-                            return Mono.just(groupVO);
-                        })
-                );
+        return groupRepository.findByEnabledTrue(PageRequest.of(page, size)).flatMap(this::convertOuter)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
     @Override
     public Flux<TreeNode> tree() {
-        Flux<Group> groupFlux = groupRepository.findByEnabledTrue();
+        Flux<Group> groupFlux = groupRepository.findByEnabledTrue()
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
         return groupFlux.filter(g -> !Objects.nonNull(g.getSuperior())).flatMap(group -> {
             TreeNode treeNode = new TreeNode(group.getCode(), group.getName());
-            return this.addChildren(group, groupFlux).collectList().map(treeNodes -> {
+            return this.children(group, groupFlux).collectList().map(treeNodes -> {
                 treeNode.setChildren(treeNodes);
                 return treeNode;
             });
@@ -85,22 +72,9 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> fetch(String code) {
-        Assert.hasText(code, "code is blank");
-        return groupRepository.getByCodeAndEnabledTrue(code)
-                .flatMap(group -> userGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
-                        .flatMap(count -> {
-                            GroupVO groupVO = new GroupVO();
-                            BeanUtils.copyProperties(group, groupVO);
-                            groupVO.setCount(count);
-                            if (group.getSuperior() != null) {
-                                return groupRepository.findById(group.getSuperior()).map(superior -> {
-                                    groupVO.setSuperior(superior.getCode());
-                                    return groupVO;
-                                });
-                            }
-                            return Mono.just(groupVO);
-                        })
-                );
+        Assert.hasText(code, CODE_MESSAGE);
+        return groupRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
     @Override
@@ -110,75 +84,146 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
 
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
-        Group group = new Group();
-        BeanUtils.copyProperties(groupDTO, group);
-        group.setCode(this.generateCode());
-        return Mono.just(group).doOnNext(g -> {
-            if (StringUtils.hasText(groupDTO.getSuperior())) {
-                groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).doOnNext(superior ->
-                        group.setSuperior(superior.getId()));
-            }
-        }).doOnNext(g -> {
-            if (StringUtils.hasText(groupDTO.getPrincipal())) {
-                userRepository.getByUsername(groupDTO.getPrincipal()).doOnNext(principal ->
-                        group.setSuperior(principal.getId()));
-            }
-        }).flatMap(groupRepository::insert).map(this::convertOuter);
+        Mono<Group> groupMono = Mono.just(groupDTO).map(dto -> {
+            Group group = new Group();
+            BeanUtils.copyProperties(groupDTO, group);
+            group.setCode(this.generateCode());
+            return group;
+        });
+        // 设置上级
+        groupMono = this.principal(groupDTO.getPrincipal(), groupMono);
+        // 设置责任人
+        groupMono = this.superior(groupDTO.getSuperior(), groupMono);
+        return groupMono.flatMap(groupRepository::insert).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
-        Assert.hasText(code, "code is blank");
-        return groupRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
-                .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
-                .doOnNext(group -> {
-                    if (StringUtils.hasText(groupDTO.getSuperior())) {
-                        groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior()).doOnNext(superior ->
-                                group.setSuperior(superior.getId()));
-                    }
-                })
-                .doOnNext(group -> {
-                    if (StringUtils.hasText(groupDTO.getPrincipal())) {
-                        userRepository.getByUsername(groupDTO.getPrincipal()).doOnNext(principal ->
-                                group.setSuperior(principal.getId()));
-                    }
-                }).flatMap(groupRepository::save).map(this::convertOuter);
+        Assert.hasText(code, CODE_MESSAGE);
+        Mono<Group> groupMono = groupRepository.getByCodeAndEnabledTrue(code)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group));
+        // 设置上级
+        groupMono = this.superior(groupDTO.getSuperior(), groupMono);
+        // 设置责任人
+        groupMono = this.principal(groupDTO.getPrincipal(), groupMono);
+        return groupMono.flatMap(groupRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, CODE_MESSAGE);
         return groupRepository.getByCodeAndEnabledTrue(code).flatMap(group ->
                 groupRepository.deleteById(group.getId()));
     }
 
     /**
-     * 对象转换为输出结果对象
+     * 设置责任人
      *
-     * @param info 信息
-     * @return 输出转换后的vo对象
+     * @param principal 责任人username
+     * @param groupMono 对象
+     * @return 设置责任人后的对象
      */
-    private GroupVO convertOuter(Group info) {
-        GroupVO outer = new GroupVO();
-        BeanUtils.copyProperties(info, outer);
-        return outer;
+    private Mono<Group> principal(String principal, Mono<Group> groupMono) {
+        if (StringUtils.hasText(principal)) {
+            Mono<User> principalMono = userRepository.getByUsername(principal)
+                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
+            return groupMono.zipWith(principalMono, (g, user) -> {
+                g.setPrincipal(user.getId());
+                return g;
+            });
+        }
+        return groupMono;
     }
 
     /**
-     * add child node
+     * 设置上级
      *
-     * @param superior  superior node
-     * @param groupFlux to be build source data
-     * @return tree node
+     * @param superior  上级code
+     * @param groupMono 当前对象
+     * @return 设置上级后的对象
      */
-    private Flux<TreeNode> addChildren(Group superior, Flux<Group> groupFlux) {
-        return groupFlux.filter(group -> superior.getId().equals(group.getSuperior())).flatMap(group -> {
-            TreeNode treeNode = new TreeNode(group.getCode(), group.getName());
-            treeNode.setSuperior(superior.getCode());
-            return this.addChildren(group, groupFlux).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
+    private Mono<Group> superior(String superior, Mono<Group> groupMono) {
+        if (StringUtils.hasText(superior)) {
+            Mono<Group> superiorMono = groupRepository.getByCodeAndEnabledTrue(superior)
+                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
+            return groupMono.zipWith(superiorMono, (g, sup) -> {
+                g.setPrincipal(sup.getId());
+                return g;
             });
-        });
+        }
+        return groupMono;
     }
+
+    /**
+     * 对象转换为输出结果对象
+     *
+     * @param group 信息
+     * @return 输出转换后的vo对象
+     */
+    private Mono<GroupVO> convertOuter(Group group) {
+        Mono<GroupVO> voMono = Mono.just(group).map(g -> {
+            GroupVO groupVO = new GroupVO();
+            BeanUtils.copyProperties(g, groupVO);
+            return groupVO;
+        });
+
+        Mono<Long> longMono = userGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
+                .switchIfEmpty(Mono.just(0L));
+        voMono = voMono.zipWith(longMono, (g, count) -> {
+            g.setCount(count);
+            return g;
+        });
+
+        if (group.getSuperior() != null) {
+            Mono<Group> superiorMono = groupRepository.findById(group.getSuperior())
+                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
+            voMono = voMono.zipWith(superiorMono, (g, superior) -> {
+                g.setSuperior(superior.getName());
+                return g;
+            });
+        }
+        if (group.getPrincipal() != null) {
+            Mono<User> userMono = userRepository.findById(group.getPrincipal())
+                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
+            voMono = voMono.zipWith(userMono, (g, principal) -> {
+                g.setPrincipal(principal.getNickname());
+                return g;
+            });
+        }
+        return voMono;
+    }
+
+    /**
+     * 对象转换为输出结果对象(单条查询)
+     *
+     * @param group 信息
+     * @return 输出转换后的vo对象
+     */
+    private Mono<GroupVO> fetchOuter(Group group) {
+        Mono<GroupVO> voMono = Mono.just(group).map(g -> {
+            GroupVO groupVO = new GroupVO();
+            BeanUtils.copyProperties(g, groupVO);
+            return groupVO;
+        });
+
+        if (group.getSuperior() != null) {
+            Mono<Group> superiorMono = groupRepository.findById(group.getSuperior())
+                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
+            voMono = voMono.zipWith(superiorMono, (g, superior) -> {
+                g.setSuperior(superior.getCode());
+                return g;
+            });
+        }
+        if (group.getPrincipal() != null) {
+            Mono<User> userMono = userRepository.findById(group.getPrincipal())
+                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
+            voMono = voMono.zipWith(userMono, (g, principal) -> {
+                g.setPrincipal(principal.getUsername());
+                return g;
+            });
+        }
+        return voMono;
+    }
+
 }

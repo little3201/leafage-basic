@@ -28,11 +28,11 @@ public class GroupVO extends BaseVO {
      * 描述
      */
     private String description;
+
     /**
      * 用户数
      */
     private long count;
-
 
     public String getPrincipal() {
         return principal;

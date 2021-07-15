@@ -14,6 +14,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.naming.NotContextException;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Service
@@ -33,26 +34,26 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public Flux<UserVO> users(String code) {
         Assert.hasText(code, "code is blank");
-        return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
+        return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(role -> userRoleRepository.findByRoleId(role.getId()).flatMap(userRole ->
                         userRepository.findById(userRole.getUserId()).map(user -> {
                             UserVO userVO = new UserVO();
                             BeanUtils.copyProperties(user, userVO);
                             return userVO;
-                        }))
+                        })).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 );
     }
 
     @Override
     public Flux<RoleVO> roles(String username) {
         Assert.hasText(username, "username is blank");
-        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NotContextException::new))
+        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(user -> userRoleRepository.findByUserId(user.getId()).flatMap(userRole ->
                         roleRepository.findById(userRole.getRoleId()).map(role -> {
                             RoleVO roleVO = new RoleVO();
                             BeanUtils.copyProperties(role, roleVO);
                             return roleVO;
-                        }))
+                        })).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 );
     }
 
@@ -60,14 +61,16 @@ public class UserRoleServiceImpl implements UserRoleService {
     public Flux<UserRole> relation(String username, Set<String> roles) {
         Assert.hasText(username, "username is blank");
         Assert.notNull(roles, "roles is null");
-        return userRepository.getByUsername(username).flatMapMany(user -> {
-            UserRole userRole = new UserRole();
-            userRole.setUserId(user.getId());
-            return roleRepository.findByCodeInAndEnabledTrue(roles).switchIfEmpty(Mono.error(NotContextException::new))
-                    .map(role -> {
-                        userRole.setRoleId(role.getId());
-                        return userRole;
-                    }).collectList().flatMapMany(userRoleRepository::saveAll);
-        }).switchIfEmpty(Mono.error(NotContextException::new));
+        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMapMany(user -> {
+                    UserRole userRole = new UserRole();
+                    userRole.setUserId(user.getId());
+                    return roleRepository.findByCodeInAndEnabledTrue(roles).switchIfEmpty(Mono.error(NotContextException::new))
+                            .map(role -> {
+                                userRole.setRoleId(role.getId());
+                                return userRole;
+                            }).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                            .collectList().flatMapMany(userRoleRepository::saveAll);
+                });
     }
 }

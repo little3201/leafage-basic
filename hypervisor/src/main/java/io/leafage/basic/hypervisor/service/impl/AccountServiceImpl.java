@@ -14,6 +14,8 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 
+import java.util.NoSuchElementException;
+
 /**
  * 账户信息Service 接口实现
  *
@@ -39,17 +41,18 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     @Override
     public Mono<AccountVO> modify(String code, AccountDTO accountDTO) {
         Assert.hasText(code, "code is blank");
-        return accountRepository.getByCodeAndEnabledTrue(code).flatMap(accountVO -> {
-            Account info = new Account();
-            BeanUtils.copyProperties(accountDTO, info);
-            return accountRepository.save(info).map(this::convertOuter);
-        });
+        return accountRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(accountVO -> {
+                    Account info = new Account();
+                    BeanUtils.copyProperties(accountDTO, info);
+                    return accountRepository.save(info).map(this::convertOuter);
+                });
     }
 
     @Override
     public Mono<Void> remove(String code) {
         Assert.hasText(code, "code is blank");
-        return accountRepository.getByCodeAndEnabledTrue(code)
+        return accountRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(account -> accountRepository.deleteById(account.getId()));
     }
 

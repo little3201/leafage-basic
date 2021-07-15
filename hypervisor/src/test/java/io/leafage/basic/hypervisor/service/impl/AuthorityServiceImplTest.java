@@ -41,7 +41,17 @@ class AuthorityServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(Flux.just(Mockito.mock(Authority.class)));
+        Authority authority = new Authority();
+        authority.setId(new ObjectId());
+        authority.setSuperior(new ObjectId());
+        given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(Flux.just(authority));
+
+        given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        authority.setName("test");
+        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
+
+
         StepVerifier.create(authorityService.retrieve('M')).expectNextCount(1).verifyComplete();
     }
 
@@ -67,7 +77,6 @@ class AuthorityServiceImplTest {
         given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(authority));
 
         authority.setSuperior(new ObjectId());
-        given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Authority.class)));
 
@@ -76,12 +85,16 @@ class AuthorityServiceImplTest {
 
     @Test
     void create() {
+        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(mock(Authority.class)));
+
         Authority authority = new Authority();
         authority.setId(new ObjectId());
         authority.setSuperior(new ObjectId());
-        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(authority));
+        given(this.authorityRepository.insert(Mockito.any(Authority.class))).willReturn(Mono.just(authority));
 
-        given(this.authorityRepository.insert(Mockito.any(Authority.class))).willReturn(Mono.just(mock(Authority.class)));
+        given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Authority.class)));
 
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
@@ -92,12 +105,16 @@ class AuthorityServiceImplTest {
 
     @Test
     void modify() {
+        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Authority.class)));
+
         Authority authority = new Authority();
         authority.setId(new ObjectId());
         authority.setSuperior(new ObjectId());
-        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(authority));
+        given(this.authorityRepository.save(Mockito.any(Authority.class))).willReturn(Mono.just(authority));
 
-        given(this.authorityRepository.save(Mockito.any(Authority.class))).willReturn(Mono.just(mock(Authority.class)));
+        given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Authority.class)));
 
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
@@ -111,10 +128,14 @@ class AuthorityServiceImplTest {
         Authority authority = new Authority();
         ObjectId id = new ObjectId();
         authority.setId(id);
+        authority.setCode("21612OL34");
+        authority.setName("test");
 
         Authority child = new Authority();
         child.setId(new ObjectId());
         child.setSuperior(id);
+        child.setCode("21612OL35");
+        child.setName("test-sub");
         given(this.authorityRepository.findByTypeAndEnabledTrue('M')).willReturn(Flux.just(authority, child));
         StepVerifier.create(authorityService.tree()).expectNextCount(1).verifyComplete();
     }

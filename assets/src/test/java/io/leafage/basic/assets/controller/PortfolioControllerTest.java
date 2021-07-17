@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -89,7 +88,7 @@ class PortfolioControllerTest {
         portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
         webClient.post().uri("/portfolio").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(portfolioDTO).exchange()
-                .expectStatus().isEqualTo(HttpStatus.CREATED)
+                .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isNotEmpty();
     }
 
@@ -106,7 +105,7 @@ class PortfolioControllerTest {
         portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
         webClient.put().uri("/portfolio/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(portfolioDTO).exchange()
-                .expectStatus().isEqualTo(HttpStatus.ACCEPTED)
+                .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.title").isNotEmpty();
     }
 }

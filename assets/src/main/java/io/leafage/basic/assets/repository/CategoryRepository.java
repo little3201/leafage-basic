@@ -41,12 +41,4 @@ public interface CategoryRepository extends ReactiveMongoRepository<Category, Ob
      * @return 类别信息
      */
     Mono<Category> getByCodeAndEnabledTrue(String code);
-
-    /**
-     * 根据ID查询alias
-     *
-     * @param id 主键
-     * @return alias
-     */
-    Mono<Category> getById(ObjectId id);
 }

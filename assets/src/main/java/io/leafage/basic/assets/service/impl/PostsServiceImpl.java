@@ -4,6 +4,7 @@
 package io.leafage.basic.assets.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
+import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.dto.PostsDTO;
@@ -28,6 +29,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import javax.naming.NotContextException;
 
 /**
@@ -52,33 +54,22 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> retrieve() {
-        return postsRepository.findByEnabledTrue().map(this::convertOuter);
+        return postsRepository.findByEnabledTrue().flatMap(this::convertOuter);
     }
 
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String order) {
         Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modifyTime");
         return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
-                .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
-                            PostsVO vo = new PostsVO();
-                            BeanUtils.copyProperties(posts, vo);
-                            vo.setCategory(category.getAlias());
-                            return vo;
-                        }
-                ));
+                .flatMap(this::convertOuter);
     }
 
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String category, String order) {
         Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modifyTime");
         return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
-                postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, sort)).map(posts -> {
-                            PostsVO vo = new PostsVO();
-                            BeanUtils.copyProperties(posts, vo);
-                            vo.setCategory(c.getAlias());
-                            return vo;
-                        }
-                ));
+                postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, sort))
+                        .flatMap(this::convertOuter));
     }
 
     @Override
@@ -91,7 +82,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     this.incrementViewed(posts.getId()).subscribe();
                     return posts;
                 })
-                .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
+                .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> {
                             PostsContentVO pcv = new PostsContentVO();
                             BeanUtils.copyProperties(posts, pcv);
                             pcv.setCategory(category.getAlias());
@@ -111,7 +102,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Mono<PostsVO> fetch(String code) {
         Assert.hasText(code, "code is blank");
         return postsRepository.getByCodeAndEnabledTrue(code)
-                .flatMap(posts -> categoryRepository.getById(posts.getCategoryId()).map(category -> {
+                .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> {
                             PostsVO pcv = new PostsVO();
                             BeanUtils.copyProperties(posts, pcv);
                             pcv.setViewed(posts.getViewed() + 1);
@@ -157,7 +148,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                             // 调用subscribe()方法，消费create订阅
                             postsContentService.create(postsContent).subscribe();
                         }));
-        return postsMono.map(this::convertOuter);
+        return postsMono.flatMap(this::convertOuter);
     }
 
     @Override
@@ -183,7 +174,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                                         })
                                 ))
                 );
-        return postsMono.map(this::convertOuter);
+        return postsMono.flatMap(this::convertOuter);
     }
 
     @Override
@@ -201,7 +192,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdGreaterThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.ASC, "id")).next()
-        ).map(this::convertOuter);
+        ).flatMap(this::convertOuter);
     }
 
     @Override
@@ -210,7 +201,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdLessThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.DESC, "id")).next()
-        ).map(this::convertOuter);
+        ).flatMap(this::convertOuter);
     }
 
     @Override
@@ -222,7 +213,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> search(String keyword) {
-        return postsRepository.findByTitleIgnoreCaseLikeAndEnabledTrue(keyword).map(this::convertOuter);
+        return postsRepository.findByTitleIgnoreCaseLikeAndEnabledTrue(keyword).flatMap(this::convertOuter);
     }
 
     /**
@@ -239,13 +230,20 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     /**
      * 对象转换为输出结果对象
      *
-     * @param info 信息
+     * @param posts 信息
      * @return 输出转换后的vo对象
      */
-    private PostsVO convertOuter(Posts info) {
-        PostsVO outer = new PostsVO();
-        BeanUtils.copyProperties(info, outer);
-        return outer;
+    private Mono<PostsVO> convertOuter(Posts posts) {
+        Mono<PostsVO> voMono = Mono.just(posts).map(p -> {
+            PostsVO postsVO = new PostsVO();
+            BeanUtils.copyProperties(p, postsVO);
+            return postsVO;
+        });
+        Mono<Category> categoryMono = categoryRepository.findById(posts.getCategoryId());
+        return voMono.zipWith(categoryMono, (vo, category) -> {
+            vo.setCategory(category.getAlias());
+            return vo;
+        });
     }
 
 }

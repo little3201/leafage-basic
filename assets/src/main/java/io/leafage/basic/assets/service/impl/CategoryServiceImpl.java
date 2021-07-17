@@ -17,6 +17,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 
+import javax.naming.NotContextException;
+
 /**
  * 类目信息service实现
  *
@@ -35,26 +37,18 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Flux<CategoryVO> retrieve() {
-        return categoryRepository.findByEnabledTrue().map(this::convertOuter);
+        return categoryRepository.findByEnabledTrue().flatMap(this::convertOuter);
     }
 
     @Override
     public Flux<CategoryVO> retrieve(int page, int size) {
-        return categoryRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .flatMap(category -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
-                        .map(count -> {
-                            CategoryVO categoryVO = new CategoryVO();
-                            BeanUtils.copyProperties(category, categoryVO);
-                            categoryVO.setCount(count);
-                            return categoryVO;
-                        })
-                );
+        return categoryRepository.findByEnabledTrue(PageRequest.of(page, size)).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<CategoryVO> fetch(String code) {
         Assert.hasText(code, "code is blank");
-        return categoryRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
+        return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter);
     }
 
     @Override
@@ -67,16 +61,15 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Category info = new Category();
         BeanUtils.copyProperties(categoryDTO, info);
         info.setCode(this.generateCode());
-        return categoryRepository.insert(info).map(this::convertOuter);
+        return categoryRepository.insert(info).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<CategoryVO> modify(String code, CategoryDTO categoryDTO) {
         Assert.hasText(code, "code is blank");
-        return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(category -> {
-            BeanUtils.copyProperties(categoryDTO, category);
-            return categoryRepository.save(category).map(this::convertOuter);
-        });
+        return categoryRepository.getByCodeAndEnabledTrue(code).doOnNext(category ->
+                BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
+                .flatMap(categoryRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
@@ -86,14 +79,37 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     /**
-     * 对象转换为输出结果对象
+     * 对象转换为输出结果对象(单条查询)
      *
-     * @param info 信息
+     * @param category 信息
      * @return 输出转换后的vo对象
      */
-    private CategoryVO convertOuter(Category info) {
-        CategoryVO outer = new CategoryVO();
-        BeanUtils.copyProperties(info, outer);
-        return outer;
+    private Mono<CategoryVO> fetchOuter(Category category) {
+        return Mono.just(category).map(c -> {
+            CategoryVO categoryVO = new CategoryVO();
+            BeanUtils.copyProperties(category, categoryVO);
+            return categoryVO;
+        });
+    }
+
+    /**
+     * 对象转换为输出结果对象
+     *
+     * @param category 信息
+     * @return 输出转换后的vo对象
+     */
+    private Mono<CategoryVO> convertOuter(Category category) {
+        Mono<CategoryVO> voMono = Mono.just(category).map(c -> {
+            CategoryVO categoryVO = new CategoryVO();
+            BeanUtils.copyProperties(c, categoryVO);
+            return categoryVO;
+        });
+
+        Mono<Long> longMono = postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
+                .switchIfEmpty(Mono.just(0L));
+        return voMono.zipWith(longMono, (vo, count) -> {
+            vo.setCount(count);
+            return vo;
+        });
     }
 }

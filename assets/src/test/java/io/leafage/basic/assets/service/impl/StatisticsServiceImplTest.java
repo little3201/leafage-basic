@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import static org.mockito.BDDMockito.given;
 
 /**
- * 统计service测试
+ * statistics service测试
  *
  * @author liwenqiang 2021/5/22 20:50
  */

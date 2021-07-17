@@ -18,7 +18,7 @@ import reactor.test.StepVerifier;
 import static org.mockito.BDDMockito.given;
 
 /**
- * 内容service测试
+ * posts content service测试
  *
  * @author liwenqiang 2020/3/1 22:07
  */

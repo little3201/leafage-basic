@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  * @author liwenqiang 2021-07-15 22:12
  */
-@Document(collation = "comment")
+@Document(collection = "comment")
 public class Comment extends BaseDocument {
 
     /**

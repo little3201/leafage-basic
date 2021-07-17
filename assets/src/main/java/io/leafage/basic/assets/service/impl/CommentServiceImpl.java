@@ -38,6 +38,12 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     }
 
     @Override
+    public Flux<CommentVO> findByPosts(String code) {
+        return postsRepository.getByCodeAndEnabledTrue(code).flatMapMany(posts ->
+                commentRepository.findByPostsIdAndEnabledTrue(posts.getId()).flatMap(this::convertOuter));
+    }
+
+    @Override
     public Mono<CommentVO> create(CommentDTO commentDTO) {
         return postsRepository.getByCodeAndEnabledTrue(commentDTO.getPosts()).map(posts -> {
             Comment comment = new Comment();
@@ -77,4 +83,5 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
             return vo;
         });
     }
+
 }

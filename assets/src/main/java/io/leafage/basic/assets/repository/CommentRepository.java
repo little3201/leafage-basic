@@ -21,6 +21,14 @@ public interface CommentRepository extends ReactiveMongoRepository<Comment, Obje
     Flux<Comment> findByEnabledTrue(Pageable pageable);
 
     /**
+     * 根据帖子ID查询
+     *
+     * @param postsId 帖子ID
+     * @return 关联的数据
+     */
+    Flux<Comment> findByPostsIdAndEnabledTrue(ObjectId postsId);
+
+    /**
      * 根据code查询信息
      *
      * @param code 代码

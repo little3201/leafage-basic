@@ -70,6 +70,24 @@ public class CommentController {
     }
 
     /**
+     * 根据posts查询
+     *
+     * @param code 帖子代码
+     * @return 关联的评论
+     */
+    @GetMapping("/{code}")
+    public ResponseEntity<Flux<CommentVO>> fetch(@PathVariable String code) {
+        Flux<CommentVO> voFlux;
+        try {
+            voFlux = commentService.findByPosts(code);
+        } catch (Exception e) {
+            logger.error("Fetch comment by posts occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
+    }
+
+    /**
      * 根据传入的数据添加信息
      *
      * @param commentDTO 要添加的数据

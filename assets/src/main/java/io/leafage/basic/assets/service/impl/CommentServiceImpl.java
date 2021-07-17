@@ -39,10 +39,13 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
 
     @Override
     public Mono<CommentVO> create(CommentDTO commentDTO) {
-        Comment comment = new Comment();
-        BeanUtils.copyProperties(commentDTO, comment);
-        comment.setCode(this.generateCode());
-        return commentRepository.insert(comment).flatMap(this::convertOuter);
+        return postsRepository.getByCodeAndEnabledTrue(commentDTO.getPosts()).map(posts -> {
+            Comment comment = new Comment();
+            BeanUtils.copyProperties(commentDTO, comment);
+            comment.setCode(this.generateCode());
+            comment.setPostsId(posts.getId());
+            return comment;
+        }).flatMap(commentRepository::save).flatMap(this::convertOuter);
     }
 
     @Override

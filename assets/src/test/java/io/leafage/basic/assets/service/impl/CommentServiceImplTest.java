@@ -1,8 +1,11 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Comment;
+import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
+import io.leafage.basic.assets.repository.PostsRepository;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,14 +31,21 @@ class CommentServiceImplTest {
     @Mock
     private CommentRepository commentRepository;
 
+    @Mock
+    private PostsRepository postsRepository;
+
     @InjectMocks
     private CommentServiceImpl commentService;
 
     @Test
     void retrieve() {
+        Comment comment = new Comment();
+        comment.setPostsId(new ObjectId());
         given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2,
                 Sort.by(Sort.Direction.DESC, "id"))))
-                .willReturn(Flux.just(Mockito.mock(Comment.class)));
+                .willReturn(Flux.just(comment));
+
+        given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
         StepVerifier.create(commentService.retrieve(0, 2, "id"))
                 .expectNextCount(1).verifyComplete();
@@ -43,8 +53,12 @@ class CommentServiceImplTest {
 
     @Test
     void create() {
+        Comment comment = new Comment();
+        comment.setPostsId(new ObjectId());
         given(this.commentRepository.insert(Mockito.any(Comment.class)))
-                .willReturn(Mono.just(Mockito.mock(Comment.class)));
+                .willReturn(Mono.just(comment));
+
+        given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
         StepVerifier.create(commentService.create(Mockito.mock(CommentDTO.class)))
                 .expectNextCount(1).verifyComplete();
@@ -55,8 +69,12 @@ class CommentServiceImplTest {
         given(this.commentRepository.getByCodeAndEnabledTrue(Mockito.anyString())).
                 willReturn(Mono.just(Mockito.mock(Comment.class)));
 
+        Comment comment = new Comment();
+        comment.setPostsId(new ObjectId());
         given(this.commentRepository.save(Mockito.any(Comment.class)))
-                .willReturn(Mono.just(Mockito.mock(Comment.class)));
+                .willReturn(Mono.just(comment));
+
+        given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setContent("测试");

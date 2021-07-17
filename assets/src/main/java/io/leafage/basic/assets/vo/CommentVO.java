@@ -10,6 +10,10 @@ public class CommentVO extends BaseVO {
     private static final long serialVersionUID = -3606281697452944193L;
 
     /**
+     * 帖子
+     */
+    private String posts;
+    /**
      * 昵称
      */
     private String nickname;
@@ -21,6 +25,14 @@ public class CommentVO extends BaseVO {
      * 内容
      */
     private String content;
+
+    public String getPosts() {
+        return posts;
+    }
+
+    public void setPosts(String posts) {
+        this.posts = posts;
+    }
 
     public String getNickname() {
         return nickname;

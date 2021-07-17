@@ -14,6 +14,10 @@ public class CommentDTO implements Serializable {
     private static final long serialVersionUID = -684841439303848020L;
 
     /**
+     * 帖子
+     */
+    private String posts;
+    /**
      * 昵称
      */
     @NotBlank
@@ -29,6 +33,14 @@ public class CommentDTO implements Serializable {
      */
     @NotBlank
     private String content;
+
+    public String getPosts() {
+        return posts;
+    }
+
+    public void setPosts(String posts) {
+        this.posts = posts;
+    }
 
     public String getNickname() {
         return nickname;

@@ -1,8 +1,8 @@
 # Leafage Basic
 
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2020.0.2-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.4.4-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2020.0.3-green.svg" alt="Coverage Status">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.4.6-green.svg" alt="Downloads">
  <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=alert_status" alt="Quality Gate Status">
 </p>
 
@@ -52,14 +52,14 @@ CMS服务相关接口，包括个人网站的资料维护，大体包含：
 
 #### 目标功能：
 
-- [x] 博客
-- [x] 作品集
+- [x] 帖子
+- [ ] 作品
 - [x] 类目
 - [x] 浏览量统计
-- [ ] 点赞
-- [ ] 权限
-- [ ] 留言
-- [ ] 评论
+- [x] 喜欢
+- [x] 评论
+- [x] 统计分析
+- [ ] 资源下载
 
 ### 「hypervisor」
 
@@ -76,7 +76,7 @@ CMS服务相关接口，包括个人网站的资料维护，大体包含：
 - [x] 用户
 - [x] 角色
 - [x] 权限
-- [x] 组
+- [x] 分组
 - [ ] 账户
 
 <a href="https://github.com/little3201/leafge-basic/master/LICENSE">

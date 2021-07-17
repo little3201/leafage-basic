@@ -56,12 +56,9 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     @Override
     public Mono<PortfolioVO> modify(String code, PortfolioDTO portfolioDTO) {
         Assert.hasText(code, "code is blank");
-        return portfolioRepository.getByCodeAndEnabledTrue(code)
-                .switchIfEmpty(Mono.error(NotContextException::new))
-                .map(portfolio -> {
-                    BeanUtils.copyProperties(portfolioDTO, portfolio);
-                    return portfolio;
-                }).flatMap(portfolioRepository::save).map(this::convertOuter);
+        return portfolioRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
+                .doOnNext(portfolio -> BeanUtils.copyProperties(portfolioDTO, portfolio))
+                .flatMap(portfolioRepository::save).map(this::convertOuter);
     }
 
     @Override

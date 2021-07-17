@@ -45,7 +45,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
             comment.setCode(this.generateCode());
             comment.setPostsId(posts.getId());
             return comment;
-        }).flatMap(commentRepository::save).flatMap(this::convertOuter);
+        }).flatMap(commentRepository::insert).flatMap(this::convertOuter);
     }
 
     @Override

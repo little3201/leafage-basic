@@ -53,15 +53,20 @@ class CommentServiceImplTest {
 
     @Test
     void create() {
+        Posts posts = new Posts();
+        posts.setId(new ObjectId());
+        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
+
         Comment comment = new Comment();
-        comment.setPostsId(new ObjectId());
-        given(this.commentRepository.insert(Mockito.any(Comment.class)))
-                .willReturn(Mono.just(comment));
+        comment.setContent("test");
+        comment.setPostsId(posts.getId());
+        given(this.commentRepository.insert(Mockito.any(Comment.class))).willReturn(Mono.just(comment));
 
         given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
-        StepVerifier.create(commentService.create(Mockito.mock(CommentDTO.class)))
-                .expectNextCount(1).verifyComplete();
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setPosts("21318H9FH");
+        StepVerifier.create(commentService.create(commentDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test

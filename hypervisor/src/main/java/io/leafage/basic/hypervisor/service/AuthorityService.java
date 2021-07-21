@@ -31,5 +31,5 @@ public interface AuthorityService extends ReactiveBasicService<AuthorityDTO, Aut
      *
      * @return 数据集
      */
-    Flux<TreeNode> tree();
+    Flux<TreeNode> tree(Character type);
 }

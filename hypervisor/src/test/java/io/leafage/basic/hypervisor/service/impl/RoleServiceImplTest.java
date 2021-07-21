@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import top.leafage.common.basic.TreeNode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -88,7 +89,7 @@ class RoleServiceImplTest {
         child.setName("sub");
         child.setCode("2119JD19");
         child.setSuperior(1L);
-        given(this.roleRepository.findByEnabledTrue()).willReturn(List.of(role, child));
+        given(this.roleRepository.findByEnabledTrue()).willReturn(Arrays.asList(role, child));
 
         List<TreeNode> nodes = roleService.tree();
         Assertions.assertNotNull(nodes);

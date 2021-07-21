@@ -34,5 +34,5 @@ public interface AuthorityService extends BasicService<AuthorityDTO, AuthorityVO
      *
      * @return 树结构数据集
      */
-    List<TreeNode> tree();
+    List<TreeNode> tree(Character type);
 }

@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import top.leafage.common.basic.TreeNode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -79,9 +80,9 @@ class AuthorityServiceImplTest {
         child.setName("sub");
         child.setCode("2119JD19");
         child.setSuperior(1L);
-        given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(List.of(authority, child));
+        given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(Arrays.asList(authority, child));
 
-        List<TreeNode> nodes = authorityService.tree();
+        List<TreeNode> nodes = authorityService.tree('M');
         Assertions.assertNotNull(nodes);
     }
 }

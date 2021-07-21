@@ -5,7 +5,9 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.entity.Group;
+import io.leafage.basic.hypervisor.entity.User;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +19,7 @@ import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -28,9 +31,11 @@ import java.util.stream.Collectors;
 public class GroupServiceImpl extends AbstractBasicService implements GroupService {
 
     private final GroupRepository groupRepository;
+    private final UserRepository userRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, UserRepository userRepository) {
         this.groupRepository = groupRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -61,6 +66,17 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         Group group = new Group();
         BeanUtils.copyProperties(groupDTO, group);
         group.setCode(this.generateCode());
+        if (StringUtils.hasText(groupDTO.getPrincipal())) {
+            User user = userRepository.getByUsernameAndEnabledTrue(groupDTO.getPrincipal());
+            group.setPrincipal(user.getId());
+        }
+        if (StringUtils.hasText(groupDTO.getSuperior())) {
+            Group superior = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior());
+            if (null == superior) {
+                throw new NoSuchElementException("Not Found");
+            }
+            group.setSuperior(superior.getId());
+        }
         group = groupRepository.save(group);
         return this.convertOuter(group);
     }

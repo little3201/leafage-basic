@@ -78,6 +78,7 @@ class UserGroupServiceImplTest {
 
         Group group = new Group();
         group.setId(2L);
+        group.setPrincipal(1L);
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
         given(this.userGroupRepository.saveAll(Mockito.anyCollection())).willReturn(Mockito.anyList());

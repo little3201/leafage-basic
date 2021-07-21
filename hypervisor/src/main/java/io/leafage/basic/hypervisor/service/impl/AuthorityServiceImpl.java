@@ -42,8 +42,13 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public List<TreeNode> tree() {
-        List<Authority> authorities = authorityRepository.findByTypeAndEnabledTrue('M');
+    public List<TreeNode> tree(Character type) {
+        List<Authority> authorities;
+        if (null == type) {
+            authorities = authorityRepository.findAll();
+        } else {
+            authorities = authorityRepository.findByTypeAndEnabledTrue(type);
+        }
         if (CollectionUtils.isEmpty(authorities)) {
             return Collections.emptyList();
         }

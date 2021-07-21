@@ -166,7 +166,7 @@ class AuthorityControllerTest {
     @Test
     void tree() throws Exception {
         TreeNode treeNode = new TreeNode("test", "test");
-        given(this.authorityService.tree()).willReturn(Collections.singletonList(treeNode));
+        given(this.authorityService.tree('M')).willReturn(Collections.singletonList(treeNode));
 
         mvc.perform(get("/authority/tree")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
@@ -174,7 +174,7 @@ class AuthorityControllerTest {
 
     @Test
     void tree_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.authorityService).tree();
+        doThrow(new RuntimeException()).when(this.authorityService).tree('M');
 
         mvc.perform(get("/authority/tree")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();

@@ -2,7 +2,9 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.entity.Group;
+import io.leafage.basic.hypervisor.entity.User;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import top.leafage.common.basic.TreeNode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -32,6 +35,9 @@ class GroupServiceImplTest {
 
     @Mock
     private GroupRepository groupRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private GroupServiceImpl groupService;
@@ -49,6 +55,14 @@ class GroupServiceImplTest {
     @Test
     void create() {
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
+
+        User user = new User();
+        user.setId(1L);
+        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
+
+        Group group = new Group();
+        group.setId(2L);
+        given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
@@ -79,7 +93,7 @@ class GroupServiceImplTest {
         child.setName("sub");
         child.setCode("2119JD19");
         child.setSuperior(1L);
-        given(this.groupRepository.findByEnabledTrue()).willReturn(List.of(group, child));
+        given(this.groupRepository.findByEnabledTrue()).willReturn(Arrays.asList(group, child));
 
         List<TreeNode> nodes = groupService.tree();
         Assertions.assertNotNull(nodes);

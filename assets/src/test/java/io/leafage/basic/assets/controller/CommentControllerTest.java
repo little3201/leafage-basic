@@ -15,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -57,6 +56,7 @@ class CommentControllerTest {
 
         // 构造请求对象
         CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
         commentDTO.setEmail("test@test.com");
         commentDTO.setNickname("布吉岛");
@@ -74,6 +74,7 @@ class CommentControllerTest {
 
         // 构造请求对象
         CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
         commentDTO.setEmail("test@test.com");
         commentDTO.setNickname("布吉岛");

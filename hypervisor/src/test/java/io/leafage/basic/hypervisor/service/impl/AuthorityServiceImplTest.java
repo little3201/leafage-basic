@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -137,7 +136,7 @@ class AuthorityServiceImplTest {
         child.setCode("21612OL35");
         child.setName("test-sub");
         given(this.authorityRepository.findByTypeAndEnabledTrue('M')).willReturn(Flux.just(authority, child));
-        StepVerifier.create(authorityService.tree()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(authorityService.tree('M')).expectNextCount(1).verifyComplete();
     }
 
     @Test

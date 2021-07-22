@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
-
 import javax.validation.Valid;
 
 /**
@@ -65,6 +64,7 @@ public class AuthorityController {
     /**
      * 查询树形数据
      *
+     * @param type 类型
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")

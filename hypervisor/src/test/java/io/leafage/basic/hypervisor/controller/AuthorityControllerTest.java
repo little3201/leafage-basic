@@ -50,7 +50,7 @@ class AuthorityControllerTest {
     @Test
     void tree() {
         TreeNode treeNode = new TreeNode("21612OL34", "test");
-        given(this.authorityService.tree()).willReturn(Flux.just(treeNode));
+        given(this.authorityService.tree('M')).willReturn(Flux.just(treeNode));
 
         webTestClient.get().uri("/authority/tree").exchange()
                 .expectStatus().isOk().expectBodyList(TreeNode.class);

@@ -35,7 +35,8 @@ jobs:
         with:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
-      - uses: codecov/codecov-action@v2
+      - name: Codecov
+        uses: codecov/codecov-action@v2
         with:
           directory: ./coverage/reports/
           env_vars: OS,JAVA

@@ -38,10 +38,12 @@ jobs:
       - name: Codecov
         uses: codecov/codecov-action@v2
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./coverage/reports/
           env_vars: OS,JAVA
           fail_ci_if_error: true
           flags: unittests
+          files: ./coverage1.xml,./coverage2.xml
           name: codecov-umbrella
           verbose: true
       - name: Build and analyze

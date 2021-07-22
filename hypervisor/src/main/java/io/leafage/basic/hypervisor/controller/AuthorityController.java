@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import javax.validation.Valid;
 
 /**
@@ -67,10 +68,10 @@ public class AuthorityController {
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")
-    public ResponseEntity<Flux<TreeNode>> tree() {
+    public ResponseEntity<Flux<TreeNode>> tree(Character type) {
         Flux<TreeNode> authorities;
         try {
-            authorities = authorityService.tree();
+            authorities = authorityService.tree(type);
         } catch (Exception e) {
             logger.info("Retrieve authority occurred an error: ", e);
             return ResponseEntity.noContent().build();

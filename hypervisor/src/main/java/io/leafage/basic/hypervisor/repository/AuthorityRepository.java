@@ -30,6 +30,13 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
     Flux<Authority> findByEnabledTrue(Pageable pageable);
 
     /**
+     * 查询权限
+     *
+     * @return 有效权限
+     */
+    Flux<Authority> findByEnabledTrue();
+
+    /**
      * 根据类型查询权限
      *
      * @param type 类型

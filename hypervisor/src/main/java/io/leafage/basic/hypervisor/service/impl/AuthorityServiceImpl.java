@@ -49,9 +49,14 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Flux<TreeNode> tree() {
-        Flux<Authority> authorities = authorityRepository.findByTypeAndEnabledTrue('M')
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+    public Flux<TreeNode> tree(Character type) {
+        Flux<Authority> authorities;
+        if (Character.isLetter(type)) {
+            authorities = authorityRepository.findByTypeAndEnabledTrue(type)
+                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
+        } else {
+            authorities = authorityRepository.findByEnabledTrue().switchIfEmpty(Mono.error(NoSuchElementException::new));
+        }
         return authorities.filter(a -> Objects.isNull(a.getSuperior())).flatMap(authority -> {
             TreeNode treeNode = this.constructNode(authority.getCode(), authority);
 

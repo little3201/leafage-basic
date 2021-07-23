@@ -29,6 +29,7 @@ public interface AuthorityService extends ReactiveBasicService<AuthorityDTO, Aut
     /**
      * 查询构造树结构的数据
      *
+     * @param type 类型
      * @return 数据集
      */
     Flux<TreeNode> tree(Character type);

@@ -18,7 +18,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
-
 import java.util.*;
 
 /**
@@ -51,7 +50,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     @Override
     public Flux<TreeNode> tree(Character type) {
         Flux<Authority> authorities;
-        if (Character.isLetter(type)) {
+        if (Objects.nonNull(type) && Character.isLetter(type)) {
             authorities = authorityRepository.findByTypeAndEnabledTrue(type)
                     .switchIfEmpty(Mono.error(NoSuchElementException::new));
         } else {

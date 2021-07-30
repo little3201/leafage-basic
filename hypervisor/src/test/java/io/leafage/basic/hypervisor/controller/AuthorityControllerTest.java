@@ -52,7 +52,7 @@ class AuthorityControllerTest {
         given(this.authorityService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/authority").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("order", "")).andExpect(status().isOk())
+                        .queryParam("order", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -95,7 +95,7 @@ class AuthorityControllerTest {
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         mvc.perform(post("/authority").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(authorityDTO))).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(authorityDTO))).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test"))
                 .andDo(print()).andReturn();
     }
@@ -110,7 +110,7 @@ class AuthorityControllerTest {
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         mvc.perform(post("/authority").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(authorityDTO))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(authorityDTO))).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -127,7 +127,7 @@ class AuthorityControllerTest {
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         mvc.perform(put("/authority/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(authorityDTO)))
+                        .content(mapper.writeValueAsString(authorityDTO)))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -142,7 +142,7 @@ class AuthorityControllerTest {
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         mvc.perform(put("/authority/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(authorityDTO)))
+                        .content(mapper.writeValueAsString(authorityDTO)))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
@@ -166,17 +166,17 @@ class AuthorityControllerTest {
     @Test
     void tree() throws Exception {
         TreeNode treeNode = new TreeNode("test", "test");
-        given(this.authorityService.tree('M')).willReturn(Collections.singletonList(treeNode));
+        given(this.authorityService.tree(Mockito.anyChar())).willReturn(Collections.singletonList(treeNode));
 
-        mvc.perform(get("/authority/tree")).andExpect(status().isOk())
+        mvc.perform(get("/authority/tree").param("type", "M")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void tree_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.authorityService).tree('M');
+        given(this.authorityService.tree(Mockito.anyChar())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/authority/tree")).andExpect(status().isNoContent())
+        mvc.perform(get("/authority/tree").param("type", "M")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 }

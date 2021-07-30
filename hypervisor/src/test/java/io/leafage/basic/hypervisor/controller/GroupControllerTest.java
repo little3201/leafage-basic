@@ -56,7 +56,7 @@ class GroupControllerTest {
         given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/group").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("order", "")).andExpect(status().isOk())
+                        .queryParam("order", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -97,7 +97,7 @@ class GroupControllerTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         mvc.perform(post("/group").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(groupDTO))).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(groupDTO))).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test"))
                 .andDo(print()).andReturn();
     }
@@ -110,7 +110,7 @@ class GroupControllerTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         mvc.perform(post("/group").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(groupDTO))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(groupDTO))).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -125,7 +125,7 @@ class GroupControllerTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         mvc.perform(put("/group/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(groupDTO)))
+                        .content(mapper.writeValueAsString(groupDTO)))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -138,7 +138,7 @@ class GroupControllerTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         mvc.perform(put("/group/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(groupDTO)))
+                        .content(mapper.writeValueAsString(groupDTO)))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
@@ -186,7 +186,7 @@ class GroupControllerTest {
 
     @Test
     void tree_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.groupService).tree();
+        given(this.groupService.tree()).willThrow(new RuntimeException());
 
         mvc.perform(get("/group/tree")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();

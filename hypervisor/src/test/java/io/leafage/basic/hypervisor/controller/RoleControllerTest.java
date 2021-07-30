@@ -65,7 +65,7 @@ class RoleControllerTest {
         given(this.roleService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/role").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("order", "")).andExpect(status().isOk())
+                        .queryParam("order", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -106,7 +106,7 @@ class RoleControllerTest {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
         mvc.perform(post("/role").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(roleDTO))).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(roleDTO))).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test"))
                 .andDo(print()).andReturn();
     }
@@ -119,7 +119,7 @@ class RoleControllerTest {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
         mvc.perform(post("/role").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(roleDTO))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(roleDTO))).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -134,7 +134,7 @@ class RoleControllerTest {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
         mvc.perform(put("/role/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(roleDTO)))
+                        .content(mapper.writeValueAsString(roleDTO)))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -147,7 +147,7 @@ class RoleControllerTest {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
         mvc.perform(put("/role/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(roleDTO)))
+                        .content(mapper.writeValueAsString(roleDTO)))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
@@ -209,7 +209,7 @@ class RoleControllerTest {
                 .willReturn(Collections.singletonList(roleAuthority));
 
         mvc.perform(patch("/role/{code}/authority", "test").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isAccepted())
+                        .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
 
@@ -218,7 +218,7 @@ class RoleControllerTest {
         doThrow(new RuntimeException()).when(this.roleAuthorityService).relation(Mockito.anyString(), Mockito.anySet());
 
         mvc.perform(patch("/role/{code}/authority", "test").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -234,7 +234,7 @@ class RoleControllerTest {
 
     @Test
     void tree_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.roleService).tree();
+        given(this.roleService.tree()).willThrow(new RuntimeException());
 
         mvc.perform(get("/role/tree")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();

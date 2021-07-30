@@ -66,6 +66,8 @@ class GroupServiceImplTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
+        groupDTO.setSuperior("2119JD09");
+        groupDTO.setPrincipal("little3201");
         GroupVO groupVO = groupService.create(groupDTO);
 
         verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));

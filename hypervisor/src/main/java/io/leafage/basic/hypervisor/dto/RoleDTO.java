@@ -16,7 +16,10 @@ import java.util.Set;
 public class RoleDTO implements Serializable {
 
     private static final long serialVersionUID = 3695400553311525056L;
-
+    /**
+     * 上级
+     */
+    private String superior;
     /**
      * 名称
      */
@@ -36,6 +39,14 @@ public class RoleDTO implements Serializable {
      * 修改人
      */
     private String modifier;
+
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
+    }
 
     public String getName() {
         return name;

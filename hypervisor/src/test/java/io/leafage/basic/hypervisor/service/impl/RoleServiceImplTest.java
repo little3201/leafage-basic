@@ -59,13 +59,39 @@ class RoleServiceImplTest {
 
     @Test
     void create() {
+        Role role = new Role();
+        role.setId(1L);
+        given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(role);
+
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
+        roleDTO.setSuperior("2109JJL8");
         RoleVO roleVO = roleService.create(roleDTO);
 
         verify(this.roleRepository, times(1)).save(Mockito.any(Role.class));
+        Assertions.assertNotNull(roleVO);
+    }
+
+    @Test
+    void modify() {
+        Role role = new Role();
+        role.setId(1L);
+        given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(role);
+
+        Role superior = new Role();
+        superior.setId(2L);
+        given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(superior);
+
+        given(this.roleRepository.saveAndFlush(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
+
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setName("test");
+        roleDTO.setSuperior("2109JJL8");
+        RoleVO roleVO = roleService.modify("2109JJL9", roleDTO);
+
+        verify(this.roleRepository, times(1)).saveAndFlush(Mockito.any(Role.class));
         Assertions.assertNotNull(roleVO);
     }
 

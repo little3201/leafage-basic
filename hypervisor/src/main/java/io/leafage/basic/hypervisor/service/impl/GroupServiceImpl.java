@@ -68,7 +68,9 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
         group.setCode(this.generateCode());
         if (StringUtils.hasText(groupDTO.getPrincipal())) {
             User user = userRepository.getByUsernameAndEnabledTrue(groupDTO.getPrincipal());
-            group.setPrincipal(user.getId());
+            if (user != null) {
+                group.setPrincipal(user.getId());
+            }
         }
         if (StringUtils.hasText(groupDTO.getSuperior())) {
             Group superior = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior());
@@ -78,6 +80,29 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
             group.setSuperior(superior.getId());
         }
         group = groupRepository.save(group);
+        return this.convertOuter(group);
+    }
+
+    @Override
+    public GroupVO modify(String code, GroupDTO groupDTO) {
+        Group group = groupRepository.getByCodeAndEnabledTrue(code);
+        if (group == null) {
+            throw new NoSuchElementException("当前操作数据不存在...");
+        }
+        BeanUtils.copyProperties(groupDTO, group);
+        if (StringUtils.hasText(groupDTO.getSuperior())) {
+            Group superior = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior());
+            if (superior != null) {
+                group.setSuperior(superior.getId());
+            }
+        }
+        if (StringUtils.hasText(groupDTO.getPrincipal())) {
+            User user = userRepository.getByUsernameAndEnabledTrue(groupDTO.getPrincipal());
+            if (user != null) {
+                group.setPrincipal(user.getId());
+            }
+        }
+        group = groupRepository.saveAndFlush(group);
         return this.convertOuter(group);
     }
 

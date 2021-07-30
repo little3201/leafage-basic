@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
@@ -67,7 +68,31 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         Authority authority = new Authority();
         BeanUtils.copyProperties(authorityDTO, authority);
         authority.setCode(this.generateCode());
+        if (StringUtils.hasText(authorityDTO.getSuperior())) {
+            Authority superior = authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior());
+            if (superior != null) {
+                authority.setSuperior(superior.getId());
+            }
+        }
         authority = authorityRepository.save(authority);
+        return this.convertOuter(authority);
+    }
+
+    @Override
+    public AuthorityVO modify(String code, AuthorityDTO authorityDTO) {
+        Assert.hasText(code, "code is blank");
+        Authority authority = authorityRepository.getByCodeAndEnabledTrue(code);
+        if (authority == null) {
+            throw new NoSuchElementException("当前操作数据不存在...");
+        }
+        BeanUtils.copyProperties(authorityDTO, authority);
+        if (StringUtils.hasText(authorityDTO.getSuperior())) {
+            Authority superior = authorityRepository.getByCodeAndEnabledTrue(authorityDTO.getSuperior());
+            if (superior != null) {
+                authority.setSuperior(superior.getId());
+            }
+        }
+        authority = authorityRepository.saveAndFlush(authority);
         return this.convertOuter(authority);
     }
 

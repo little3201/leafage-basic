@@ -19,7 +19,7 @@ public class AuthorityDTO implements Serializable {
     /**
      * 上级
      */
-    private Long superior;
+    private String superior;
     /**
      * 名称
      */
@@ -46,11 +46,11 @@ public class AuthorityDTO implements Serializable {
     private String description;
 
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
     }
 

@@ -17,6 +17,7 @@ import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -68,7 +69,30 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
         Role role = new Role();
         BeanUtils.copyProperties(roleDTO, role);
         role.setCode(this.generateCode());
+        if (StringUtils.hasText(roleDTO.getSuperior())) {
+            Role superior = roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior());
+            if (superior != null) {
+                role.setSuperior(superior.getId());
+            }
+        }
         role = roleRepository.save(role);
+        return this.convertOuter(role);
+    }
+
+    @Override
+    public RoleVO modify(String code, RoleDTO roleDTO) {
+        Role role = roleRepository.getByCodeAndEnabledTrue(code);
+        if (role == null) {
+            throw new NoSuchElementException("当前操作数据不存在...");
+        }
+        BeanUtils.copyProperties(roleDTO, role);
+        if (StringUtils.hasText(roleDTO.getSuperior())) {
+            Role superior = roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior());
+            if (superior != null) {
+                role.setSuperior(superior.getId());
+            }
+        }
+        role = roleRepository.saveAndFlush(role);
         return this.convertOuter(role);
     }
 

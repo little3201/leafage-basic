@@ -45,10 +45,10 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     @Override
     public List<TreeNode> tree(Character type) {
         List<Authority> authorities;
-        if (null == type) {
-            authorities = authorityRepository.findAll();
-        } else {
+        if (Objects.nonNull(type) && Character.isLetter(type)) {
             authorities = authorityRepository.findByTypeAndEnabledTrue(type);
+        } else {
+            authorities = authorityRepository.findAll();
         }
         if (CollectionUtils.isEmpty(authorities)) {
             return Collections.emptyList();

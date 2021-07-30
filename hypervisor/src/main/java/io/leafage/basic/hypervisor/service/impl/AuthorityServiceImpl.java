@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
@@ -49,9 +48,6 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
             authorities = authorityRepository.findByTypeAndEnabledTrue(type);
         } else {
             authorities = authorityRepository.findAll();
-        }
-        if (CollectionUtils.isEmpty(authorities)) {
-            return Collections.emptyList();
         }
         return authorities.stream().filter(a -> a.getSuperior() == null).map(a -> {
             TreeNode treeNode = this.constructNode(a.getCode(), a);

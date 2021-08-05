@@ -50,6 +50,10 @@ public class Posts extends BaseEntity {
      * 查看
      */
     private int viewed;
+    /**
+     * 评论
+     */
+    private int comments;
 
 
     public String getCode() {
@@ -114,5 +118,13 @@ public class Posts extends BaseEntity {
 
     public void setViewed(int viewed) {
         this.viewed = viewed;
+    }
+
+    public int getComments() {
+        return comments;
+    }
+
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 }

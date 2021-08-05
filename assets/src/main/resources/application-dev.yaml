@@ -25,16 +25,3 @@ spring:
     username: root
     # datasource password
     password: root
-
-  ##=====Jpa config=====##
-  jpa:
-    # datasource dialect
-    database-platform: org.hibernate.dialect.MySQL5Dialect
-    # datasource driver
-    database: mysql
-
-  # server jpa run thread config, hibernate will run with another thread
-  data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred

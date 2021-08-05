@@ -36,6 +36,8 @@ import java.util.stream.Collectors;
 @Service
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {
 
+    private static final String MESSAGE = "code is blank";
+
     private final PostsRepository postsRepository;
     private final PostsContentRepository postsContentRepository;
     private final CategoryRepository categoryRepository;
@@ -59,7 +61,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public PostsVO fetch(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         //查询基本信息
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
         if (posts == null) {
@@ -70,7 +72,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public PostsContentVO fetchDetails(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         // viewed自增一，异步执行
         this.flushViewed(code);
         //查询基本信息
@@ -99,6 +101,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Posts posts = new Posts();
         BeanUtils.copyProperties(postsDTO, posts);
         posts.setCode(this.generateCode());
+        if (StringUtils.hasText(postsDTO.getCategory())) {
+            Category category = categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory());
+            if (category != null) {
+                posts.setCategoryId(category.getId());
+            }
+        }
         posts = postsRepository.save(posts);
         if (posts.getId() == null) {
             return null;
@@ -117,13 +125,19 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public PostsVO modify(String code, PostsDTO postsDTO) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         //查询基本信息
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
         if (posts == null) {
             return null;
         }
         BeanUtils.copyProperties(postsDTO, posts);
+        if (StringUtils.hasText(postsDTO.getCategory())) {
+            Category category = categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory());
+            if (category != null) {
+                posts.setCategoryId(category.getId());
+            }
+        }
         postsRepository.saveAndFlush(posts);
         //保存文章内容
         PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
@@ -138,7 +152,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public void remove(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
         if (posts != null) {
             postsRepository.deleteById(posts.getId());
@@ -147,7 +161,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Async
     public void flushViewed(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         postsRepository.flushViewed(code);
     }
 

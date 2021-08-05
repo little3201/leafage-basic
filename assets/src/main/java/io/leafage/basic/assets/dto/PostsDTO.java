@@ -26,12 +26,13 @@ public class PostsDTO implements Serializable {
     /**
      * 副标题
      */
+    @NotBlank
     private String subtitle;
     /**
      * 分类
      */
     @NotNull
-    private Long categoryId;
+    private String category;
     /**
      * 标签
      */
@@ -65,12 +66,12 @@ public class PostsDTO implements Serializable {
         this.subtitle = subtitle;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getCover() {

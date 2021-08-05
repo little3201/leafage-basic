@@ -117,7 +117,7 @@ class PostsControllerTest {
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
         postsDTO.setCover("../test.jpg");
-        postsDTO.setCategoryId(1L);
+        postsDTO.setCategory("2138JJO6");
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setContent("java");
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
@@ -134,7 +134,7 @@ class PostsControllerTest {
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
         postsDTO.setCover("../test.jpg");
-        postsDTO.setCategoryId(1L);
+        postsDTO.setCategory("2138JJO6");
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setContent("java");
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
@@ -154,7 +154,7 @@ class PostsControllerTest {
         postsDTO.setTitle("test");
         postsDTO.setSubtitle("test line");
         postsDTO.setCover("../test.jpg");
-        postsDTO.setCategoryId(1L);
+        postsDTO.setCategory("2138JJO6");
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setContent("java");
         mvc.perform(put("/posts/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
@@ -172,7 +172,7 @@ class PostsControllerTest {
         postsDTO.setTitle("test");
         postsDTO.setSubtitle("test line");
         postsDTO.setCover("../test.jpg");
-        postsDTO.setCategoryId(1L);
+        postsDTO.setCategory("2138JJO6");
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setContent("java");
         mvc.perform(put("/posts/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)

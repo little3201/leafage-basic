@@ -24,17 +24,3 @@ spring:
     username: root
     # datasource password
     password: root
-
-
-  ##=====Jpa common=====##
-  jpa:
-    # datasource dialect
-    database-platform: org.hibernate.dialect.MySQLDialect
-    # datasource driver
-    database: mysql
-
-  # spring data config
-  data:
-    jpa:
-      repositories:
-        bootstrap-mode: deferred

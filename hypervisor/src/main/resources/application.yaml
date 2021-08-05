@@ -17,3 +17,6 @@ spring:
       discovery:
         heartbeat:
           enabled: true
+
+  jpa:
+    open-in-view: false

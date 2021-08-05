@@ -95,7 +95,7 @@ class PostsServiceImplTest {
 
     @Test
     void create() {
-        given(this.postsRepository.save(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
+        given(this.postsRepository.saveAndFlush(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
 
         given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostsContent.class));
 
@@ -111,7 +111,7 @@ class PostsServiceImplTest {
     void modify() {
         given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Posts.class));
 
-        given(this.postsRepository.saveAndFlush(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
+        given(this.postsRepository.save(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
 
         given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostsContent.class));
 

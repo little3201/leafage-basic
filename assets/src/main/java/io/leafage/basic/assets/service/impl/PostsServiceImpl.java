@@ -107,10 +107,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                 posts.setCategoryId(category.getId());
             }
         }
-        posts = postsRepository.save(posts);
-        if (posts.getId() == null) {
-            return null;
-        }
+        // 保存并立即刷盘
+        posts = postsRepository.saveAndFlush(posts);
         //保存帖子内容
         PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent == null) {
@@ -138,7 +136,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                 posts.setCategoryId(category.getId());
             }
         }
-        postsRepository.saveAndFlush(posts);
+        posts = postsRepository.save(posts);
         //保存文章内容
         PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent == null) {

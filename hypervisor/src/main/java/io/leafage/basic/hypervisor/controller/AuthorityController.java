@@ -56,6 +56,7 @@ public class AuthorityController {
     /**
      * 查询树形数据
      *
+     * @param type 类型
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")

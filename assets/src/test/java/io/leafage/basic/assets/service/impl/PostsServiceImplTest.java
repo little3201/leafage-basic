@@ -95,15 +95,20 @@ class PostsServiceImplTest {
 
     @Test
     void create() {
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
+
         given(this.postsRepository.saveAndFlush(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
 
         given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostsContent.class));
 
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Category.class)));
+        given(this.postsContentRepository.save(Mockito.any(PostsContent.class))).willReturn(Mockito.mock(PostsContent.class));
 
-        PostsVO postsVO = postsService.create(Mockito.mock(PostsDTO.class));
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setCategory("2112JOP2");
+        PostsVO postsVO = postsService.create(postsDTO);
 
-        verify(this.postsRepository, times(1)).save(Mockito.any(Posts.class));
+        verify(this.postsRepository, times(1)).saveAndFlush(Mockito.any(Posts.class));
+        verify(this.postsContentRepository, times(1)).save(Mockito.any(PostsContent.class));
         Assertions.assertNotNull(postsVO);
     }
 
@@ -117,9 +122,11 @@ class PostsServiceImplTest {
 
         given(this.postsContentRepository.saveAndFlush(Mockito.any(PostsContent.class))).willReturn(Mockito.mock(PostsContent.class));
 
-        PostsVO postsVO = postsService.modify("2112JK02", Mockito.mock(PostsDTO.class));
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setCategory("2112JOP2");
+        PostsVO postsVO = postsService.modify("2112JK02", postsDTO);
 
-        verify(this.postsRepository, times(1)).saveAndFlush(Mockito.any(Posts.class));
+        verify(this.postsRepository, times(1)).save(Mockito.any(Posts.class));
         verify(this.postsContentRepository, times(1)).saveAndFlush(Mockito.any(PostsContent.class));
         Assertions.assertNotNull(postsVO);
     }
@@ -128,7 +135,7 @@ class PostsServiceImplTest {
     void modify_emptyContent() {
         given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Posts.class));
 
-        given(this.postsRepository.saveAndFlush(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
+        given(this.postsRepository.save(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
 
         given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(null);
 
@@ -136,7 +143,7 @@ class PostsServiceImplTest {
 
         PostsVO postsVO = postsService.modify("2112JK02", Mockito.mock(PostsDTO.class));
 
-        verify(this.postsRepository, times(1)).saveAndFlush(Mockito.any(Posts.class));
+        verify(this.postsRepository, times(1)).save(Mockito.any(Posts.class));
         verify(this.postsContentRepository, times(1)).saveAndFlush(Mockito.any(PostsContent.class));
         Assertions.assertNotNull(postsVO);
     }

@@ -116,6 +116,7 @@ class PostsControllerTest {
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
+        postsDTO.setSubtitle("test test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("2138JJO6");
         postsDTO.setTags(Collections.singleton("java"));
@@ -133,6 +134,7 @@ class PostsControllerTest {
         // 构造请求对象
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
+        postsDTO.setSubtitle("test test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("2138JJO6");
         postsDTO.setTags(Collections.singleton("java"));

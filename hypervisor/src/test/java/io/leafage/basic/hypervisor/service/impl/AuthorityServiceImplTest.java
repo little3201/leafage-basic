@@ -2,7 +2,13 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.entity.Authority;
+import io.leafage.basic.hypervisor.entity.RoleAuthority;
+import io.leafage.basic.hypervisor.entity.User;
+import io.leafage.basic.hypervisor.entity.UserRole;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
+import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,9 +22,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import top.leafage.common.basic.TreeNode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,6 +34,15 @@ import static org.mockito.Mockito.verify;
  **/
 @ExtendWith(MockitoExtension.class)
 class AuthorityServiceImplTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private UserRoleRepository userRoleRepository;
+
+    @Mock
+    private RoleAuthorityRepository roleAuthorityRepository;
 
     @Mock
     private AuthorityRepository authorityRepository;
@@ -111,6 +124,33 @@ class AuthorityServiceImplTest {
         given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(Arrays.asList(authority, child));
 
         List<TreeNode> nodes = authorityService.tree('M');
+        Assertions.assertNotNull(nodes);
+    }
+
+    @Test
+    void authorities() {
+        User user = new User();
+        user.setId(1L);
+        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
+
+        UserRole userRole = new UserRole();
+        userRole.setUserId(user.getId());
+        userRole.setRoleId(2L);
+        given(this.userRoleRepository.findByUserId(Mockito.anyLong())).willReturn(Collections.singletonList(userRole));
+
+        RoleAuthority roleAuthority = new RoleAuthority();
+        roleAuthority.setRoleId(userRole.getRoleId());
+        roleAuthority.setAuthorityId(3L);
+        given(this.roleAuthorityRepository.findByRoleId(Mockito.anyLong())).willReturn(Collections.singletonList(roleAuthority));
+
+        Authority authority = new Authority();
+        authority.setId(4L);
+        authority.setCode("2119JD09");
+        authority.setName("test");
+        authority.setType('M');
+        given(this.authorityRepository.findById(Mockito.anyLong())).willReturn(Optional.of(authority));
+
+        List<TreeNode> nodes = authorityService.authorities("admin", 'M');
         Assertions.assertNotNull(nodes);
     }
 }

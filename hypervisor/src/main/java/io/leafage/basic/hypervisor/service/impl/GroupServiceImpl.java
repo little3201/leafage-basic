@@ -102,7 +102,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
                 group.setPrincipal(user.getId());
             }
         }
-        group = groupRepository.saveAndFlush(group);
+        group = groupRepository.save(group);
         return this.convertOuter(group);
     }
 

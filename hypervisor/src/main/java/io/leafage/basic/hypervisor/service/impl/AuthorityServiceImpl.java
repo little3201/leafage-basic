@@ -5,7 +5,13 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.entity.Authority;
+import io.leafage.basic.hypervisor.entity.RoleAuthority;
+import io.leafage.basic.hypervisor.entity.User;
+import io.leafage.basic.hypervisor.entity.UserRole;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
+import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.springframework.beans.BeanUtils;
@@ -15,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
@@ -29,9 +36,16 @@ import java.util.stream.Collectors;
 @Service
 public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService {
 
+    public final RoleAuthorityRepository roleAuthorityRepository;
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
     private final AuthorityRepository authorityRepository;
 
-    public AuthorityServiceImpl(AuthorityRepository authorityRepository) {
+    public AuthorityServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
+                                RoleAuthorityRepository roleAuthorityRepository, AuthorityRepository authorityRepository) {
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.roleAuthorityRepository = roleAuthorityRepository;
         this.authorityRepository = authorityRepository;
     }
 
@@ -47,16 +61,36 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         if (Objects.nonNull(type) && Character.isLetter(type)) {
             authorities = authorityRepository.findByTypeAndEnabledTrue(type);
         } else {
-            authorities = authorityRepository.findAll();
+            authorities = authorityRepository.findByEnabledTrue();
         }
-        return authorities.stream().filter(a -> a.getSuperior() == null).map(a -> {
-            TreeNode treeNode = this.constructNode(a.getCode(), a);
-            Set<String> expand = new HashSet<>();
-            expand.add("icon");
-            expand.add("path");
-            treeNode.setChildren(this.children(a, authorities, expand));
-            return treeNode;
-        }).collect(Collectors.toList());
+        return this.convertTree(authorities);
+    }
+
+    @Override
+    public List<TreeNode> authorities(String username, Character type) {
+        User user = userRepository.getByUsernameAndEnabledTrue(username);
+        if (user == null) {
+            throw new NoSuchElementException("Not Found User.");
+        }
+        List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
+        if (CollectionUtils.isEmpty(userRoles)) {
+            return Collections.emptyList();
+        }
+        List<RoleAuthority> roleAuthorities = new ArrayList<>();
+        userRoles.forEach(userRole -> {
+            List<RoleAuthority> roleAuthorityList = roleAuthorityRepository.findByRoleId(userRole.getRoleId());
+            if (!CollectionUtils.isEmpty(roleAuthorityList)) {
+                roleAuthorities.addAll(roleAuthorityList);
+            }
+        });
+        List<Authority> authorities = roleAuthorities.stream().distinct().map(roleAuthority ->
+                        authorityRepository.findById(roleAuthority.getAuthorityId()))
+                .map(Optional::orElseThrow).filter(Objects::nonNull).collect(Collectors.toList());
+        if (Objects.nonNull(type) && Character.isLetter(type)) {
+            authorities = authorities.stream().filter(authority -> 'M' == authority.getType())
+                    .collect(Collectors.toList());
+        }
+        return this.convertTree(authorities);
     }
 
     @Override
@@ -76,7 +110,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public AuthorityVO modify(String code, AuthorityDTO authorityDTO) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, "code is blank.");
         Authority authority = authorityRepository.getByCodeAndEnabledTrue(code);
         if (authority == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -108,6 +142,26 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
         AuthorityVO authorityVO = new AuthorityVO();
         BeanUtils.copyProperties(info, authorityVO);
         return authorityVO;
+    }
+
+    /**
+     * 转换为TreeNode
+     *
+     * @param authorities 集合数据
+     * @return 树集合
+     */
+    private List<TreeNode> convertTree(List<Authority> authorities) {
+        if (CollectionUtils.isEmpty(authorities)) {
+            return Collections.emptyList();
+        }
+        return authorities.stream().filter(a -> a.getSuperior() == null).map(a -> {
+            TreeNode treeNode = this.constructNode(a.getCode(), a);
+            Set<String> expand = new HashSet<>();
+            expand.add("icon");
+            expand.add("path");
+            treeNode.setChildren(this.children(a, authorities, expand));
+            return treeNode;
+        }).collect(Collectors.toList());
     }
 
     /**

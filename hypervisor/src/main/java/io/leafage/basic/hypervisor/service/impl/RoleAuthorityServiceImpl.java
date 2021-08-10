@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 @Service
 public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
+    private static final String MESSAGE = "code is blank.";
+
     private final RoleRepository roleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
@@ -35,7 +37,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public List<AuthorityVO> authorities(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         if (role == null) {
             return Collections.emptyList();
@@ -45,7 +47,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
             return Collections.emptyList();
         }
         return roleAuthorities.stream().map(roleAuthority -> authorityRepository.findById(roleAuthority.getAuthorityId()))
-                .filter(Optional::isPresent).map(authority -> {
+                .map(Optional::orElseThrow).map(authority -> {
                     AuthorityVO authorityVO = new AuthorityVO();
                     BeanUtils.copyProperties(authority, authorityVO);
                     return authorityVO;
@@ -54,7 +56,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public List<RoleVO> roles(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         Authority authority = authorityRepository.getByCodeAndEnabledTrue(code);
         if (authority == null) {
             return Collections.emptyList();
@@ -64,7 +66,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
             return Collections.emptyList();
         }
         return roleAuthorities.stream().map(roleAuthority -> roleRepository.findById(roleAuthority.getRoleId()))
-                .filter(Optional::isPresent).map(role -> {
+                .map(Optional::orElseThrow).map(role -> {
                     RoleVO roleVO = new RoleVO();
                     BeanUtils.copyProperties(role, roleVO);
                     return roleVO;
@@ -73,8 +75,8 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public List<RoleAuthority> relation(String code, Set<String> authorities) {
-        Assert.hasText(code, "code is blank");
-        Assert.notNull(authorities, "authorities is null");
+        Assert.hasText(code, MESSAGE);
+        Assert.notNull(authorities, "authorities is empty.");
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         if (role == null) {
             return Collections.emptyList();

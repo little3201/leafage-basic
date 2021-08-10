@@ -1,8 +1,8 @@
 # hypervisor
 
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2020.0.2-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.4.4-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2020.0.3-green.svg" alt="Coverage Status">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.4.6-green.svg" alt="Downloads">
 </p>
 
 一套权限管理服务相关接口，包括用户、角色、权限、组的信息维护，大体包含：

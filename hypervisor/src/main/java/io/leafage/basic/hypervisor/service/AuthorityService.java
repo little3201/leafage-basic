@@ -35,4 +35,13 @@ public interface AuthorityService extends BasicService<AuthorityDTO, AuthorityVO
      * @return 树结构数据集
      */
     List<TreeNode> tree(Character type);
+
+    /**
+     * 获取用户关联的权限
+     *
+     * @param username 用户账号
+     * @param type     类型
+     * @return 树结构数据集
+     */
+    List<TreeNode> authorities(String username, Character type);
 }

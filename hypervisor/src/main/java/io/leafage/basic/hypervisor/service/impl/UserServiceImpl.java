@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 import java.util.List;
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
+
+    private static final String MESSAGE = "username is blank.";
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
@@ -61,6 +64,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public UserVO modify(String username, UserDTO userDTO) {
+        Assert.hasText(username, MESSAGE);
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(userDTO, user);
         user = userRepository.saveAndFlush(user);
@@ -69,6 +73,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public void remove(String username) {
+        Assert.hasText(username, MESSAGE);
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         user.setEnabled(false);
         userRepository.saveAndFlush(user);
@@ -76,12 +81,14 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public UserVO fetch(String username) {
+        Assert.hasText(username, MESSAGE);
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         return this.convertOuter(user);
     }
 
     @Override
     public UserDetails fetchDetails(String username) {
+        Assert.hasText(username, MESSAGE);
         User user = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username);
         if (user == null) {
             return null;
@@ -89,7 +96,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
         // 检查角色是否配置
         List<Role> roles = userRoles.stream().map(userRole ->
-                roleRepository.findById(userRole.getRoleId()).orElse(null))
+                        roleRepository.findById(userRole.getRoleId()).orElse(null))
                 .filter(Objects::nonNull).collect(Collectors.toList());
         Set<String> authorities = roles.stream().map(Role::getCode).collect(Collectors.toSet());
         // 转换对象

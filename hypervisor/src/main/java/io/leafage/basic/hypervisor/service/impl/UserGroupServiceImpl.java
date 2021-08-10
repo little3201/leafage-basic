@@ -41,7 +41,7 @@ public class UserGroupServiceImpl implements UserGroupService {
         }
         List<UserGroup> userGroups = userGroupRepository.findByGroupId(group.getId());
         return userGroups.stream().map(userGroup -> userRepository.findById(userGroup.getUserId()))
-                .map(user -> {
+                .map(Optional::orElseThrow).map(user -> {
                     UserVO userVO = new UserVO();
                     BeanUtils.copyProperties(user, userVO);
                     return userVO;
@@ -60,7 +60,7 @@ public class UserGroupServiceImpl implements UserGroupService {
             return Collections.emptyList();
         }
         return userGroups.stream().map(userGroup -> groupRepository.findById(userGroup.getGroupId()))
-                .filter(Optional::isPresent).map(role -> {
+                .map(Optional::orElseThrow).map(role -> {
                     GroupVO groupVO = new GroupVO();
                     BeanUtils.copyProperties(role, groupVO);
                     return groupVO;

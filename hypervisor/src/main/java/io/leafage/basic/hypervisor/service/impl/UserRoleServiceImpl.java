@@ -35,13 +35,14 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<UserVO> users(String code) {
+        Assert.hasText(code, "code is blank.");
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         if (role == null) {
             return Collections.emptyList();
         }
         List<UserRole> userRoles = userRoleRepository.findByRoleId(role.getId());
         return userRoles.stream().map(userRole -> userRepository.findById(userRole.getUserId()))
-                .map(user -> {
+                .map(Optional::orElseThrow).map(user -> {
                     UserVO userVO = new UserVO();
                     BeanUtils.copyProperties(user, userVO);
                     return userVO;
@@ -50,27 +51,27 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<RoleVO> roles(String username) {
-        Assert.hasText(username, "username is blank");
+        Assert.hasText(username, "username is blank.");
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         if (user == null) {
             return Collections.emptyList();
         }
         List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
-        if (CollectionUtils.isEmpty(userRoles)) {
-            return Collections.emptyList();
+        if (!CollectionUtils.isEmpty(userRoles)) {
+            return userRoles.stream().map(userRole -> roleRepository.findById(userRole.getRoleId()))
+                    .map(Optional::orElseThrow).map(role -> {
+                        RoleVO roleVO = new RoleVO();
+                        BeanUtils.copyProperties(role, roleVO);
+                        return roleVO;
+                    }).collect(Collectors.toList());
         }
-        return userRoles.stream().map(userRole -> roleRepository.findById(userRole.getRoleId()))
-                .filter(Optional::isPresent).map(role -> {
-                    RoleVO roleVO = new RoleVO();
-                    BeanUtils.copyProperties(role, roleVO);
-                    return roleVO;
-                }).collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     @Override
     public List<UserRole> relation(String username, Set<String> roles) {
-        Assert.hasText(username, "username is blank");
-        Assert.notNull(roles, "roles is null");
+        Assert.hasText(username, "username is blank.");
+        Assert.notNull(roles, "roles is empty.");
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         if (user == null) {
             return Collections.emptyList();

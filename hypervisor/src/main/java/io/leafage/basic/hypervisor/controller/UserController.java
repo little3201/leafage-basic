@@ -7,6 +7,7 @@ import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.entity.UserGroup;
 import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import top.leafage.common.basic.TreeNode;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
@@ -37,11 +39,14 @@ public class UserController {
     private final UserService userService;
     private final UserGroupService userGroupService;
     private final UserRoleService userRoleService;
+    private final AuthorityService authorityService;
 
-    public UserController(UserService userService, UserGroupService userGroupService, UserRoleService userRoleService) {
+    public UserController(UserService userService, UserGroupService userGroupService, UserRoleService userRoleService,
+                          AuthorityService authorityService) {
         this.userService = userService;
         this.userGroupService = userGroupService;
         this.userRoleService = userRoleService;
+        this.authorityService = authorityService;
     }
 
     /**
@@ -228,5 +233,24 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.accepted().body(voList);
+    }
+
+
+    /**
+     * 查询关联权限
+     *
+     * @param username 用户账号
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("/{username}/authority")
+    public ResponseEntity<List<TreeNode>> authorities(@PathVariable String username, Character type) {
+        List<TreeNode> nodes;
+        try {
+            nodes = authorityService.authorities(username, type);
+        } catch (Exception e) {
+            logger.info("Retrieve user authorities tree occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(nodes);
     }
 }

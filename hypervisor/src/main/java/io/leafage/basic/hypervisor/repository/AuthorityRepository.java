@@ -25,14 +25,6 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
     Authority getByCodeAndEnabledTrue(String code);
 
     /**
-     * 根据type查询
-     *
-     * @param type 类型
-     * @return 信息
-     */
-    List<Authority> findByTypeAndEnabledTrue(Character type);
-
-    /**
      * 查询所有可用数据
      *
      * @return 信息

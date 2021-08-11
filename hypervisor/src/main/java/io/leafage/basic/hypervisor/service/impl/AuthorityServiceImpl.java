@@ -56,13 +56,8 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public List<TreeNode> tree(Character type) {
-        List<Authority> authorities;
-        if (Objects.nonNull(type) && Character.isLetter(type)) {
-            authorities = authorityRepository.findByTypeAndEnabledTrue(type);
-        } else {
-            authorities = authorityRepository.findByEnabledTrue();
-        }
+    public List<TreeNode> tree() {
+        List<Authority> authorities = authorityRepository.findByEnabledTrue();
         return this.convertTree(authorities);
     }
 
@@ -87,7 +82,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
                         authorityRepository.findById(roleAuthority.getAuthorityId()))
                 .map(Optional::orElseThrow).filter(Objects::nonNull).collect(Collectors.toList());
         if (Objects.nonNull(type) && Character.isLetter(type)) {
-            authorities = authorities.stream().filter(authority -> 'M' == authority.getType())
+            authorities = authorities.stream().filter(authority -> type.equals(authority.getType()))
                     .collect(Collectors.toList());
         }
         return this.convertTree(authorities);

@@ -166,17 +166,17 @@ class AuthorityControllerTest {
     @Test
     void tree() throws Exception {
         TreeNode treeNode = new TreeNode("test", "test");
-        given(this.authorityService.tree(Mockito.anyChar())).willReturn(Collections.singletonList(treeNode));
+        given(this.authorityService.tree()).willReturn(Collections.singletonList(treeNode));
 
-        mvc.perform(get("/authority/tree").param("type", "M")).andExpect(status().isOk())
+        mvc.perform(get("/authority/tree")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void tree_error() throws Exception {
-        given(this.authorityService.tree(Mockito.anyChar())).willThrow(new RuntimeException());
+        given(this.authorityService.tree()).willThrow(new RuntimeException());
 
-        mvc.perform(get("/authority/tree").param("type", "M")).andExpect(status().isNoContent())
+        mvc.perform(get("/authority/tree")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 }

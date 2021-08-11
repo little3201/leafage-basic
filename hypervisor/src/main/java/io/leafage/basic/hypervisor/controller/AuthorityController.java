@@ -56,14 +56,13 @@ public class AuthorityController {
     /**
      * 查询树形数据
      *
-     * @param type 类型
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")
-    public ResponseEntity<List<TreeNode>> tree(Character type) {
+    public ResponseEntity<List<TreeNode>> tree() {
         List<TreeNode> authorities;
         try {
-            authorities = authorityService.tree(type);
+            authorities = authorityService.tree();
         } catch (Exception e) {
             logger.info("Retrieve authority tree occurred an error: ", e);
             return ResponseEntity.noContent().build();

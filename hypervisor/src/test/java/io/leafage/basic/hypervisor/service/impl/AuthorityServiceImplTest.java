@@ -121,9 +121,9 @@ class AuthorityServiceImplTest {
         child.setName("sub");
         child.setCode("2119JD19");
         child.setSuperior(1L);
-        given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(Arrays.asList(authority, child));
+        given(this.authorityRepository.findByEnabledTrue()).willReturn(Arrays.asList(authority, child));
 
-        List<TreeNode> nodes = authorityService.tree('M');
+        List<TreeNode> nodes = authorityService.tree();
         Assertions.assertNotNull(nodes);
     }
 

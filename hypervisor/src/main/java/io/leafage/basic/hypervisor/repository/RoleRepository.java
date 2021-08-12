@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
@@ -53,4 +52,12 @@ public interface RoleRepository extends ReactiveMongoRepository<Role, ObjectId> 
      * @return 角色信息
      */
     Flux<Role> findByCodeInAndEnabledTrue(@NotEmpty Collection<String> codes);
+
+    /**
+     * 是否已存在
+     *
+     * @param name 名称
+     * @return true-是，false-否
+     */
+    Mono<Boolean> existsByName(String name);
 }

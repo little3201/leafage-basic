@@ -16,9 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.util.Collections;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -51,7 +49,7 @@ class UserGroupServiceImplTest {
         UserGroup userGroup = new UserGroup();
         userGroup.setGroupId(id);
         userGroup.setUserId(new ObjectId());
-        given(this.userGroupRepository.findByGroupId(Mockito.any(ObjectId.class))).willReturn(Flux.just(userGroup));
+        given(this.userGroupRepository.findByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(userGroup));
 
         given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(User.class)));
         StepVerifier.create(userGroupService.users("21612OL34")).expectNextCount(1).verifyComplete();
@@ -67,7 +65,7 @@ class UserGroupServiceImplTest {
         UserGroup userGroup = new UserGroup();
         userGroup.setGroupId(new ObjectId());
         userGroup.setUserId(id);
-        given(this.userGroupRepository.findByUserId(Mockito.any(ObjectId.class))).willReturn(Flux.just(userGroup));
+        given(this.userGroupRepository.findByUserIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(userGroup));
 
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
         StepVerifier.create(userGroupService.groups("21612OL34")).expectNextCount(1).verifyComplete();

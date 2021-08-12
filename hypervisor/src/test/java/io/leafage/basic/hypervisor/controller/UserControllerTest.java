@@ -4,6 +4,7 @@ import io.leafage.basic.hypervisor.document.UserGroup;
 import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
+import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
@@ -21,9 +22,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import top.leafage.common.basic.TreeNode;
 import java.util.Collections;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -44,6 +44,9 @@ class UserControllerTest {
     @MockBean
     private UserRoleService userRoleService;
 
+    @MockBean
+    private AuthorityService authorityService;
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -54,7 +57,7 @@ class UserControllerTest {
         given(this.userService.retrieve(0, 2)).willReturn(Flux.just(userVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/user").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange()
+                        .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(UserVO.class);
     }
 
@@ -75,7 +78,7 @@ class UserControllerTest {
     void fetchDetails() {
         UserDetails userDetails = new UserDetails();
         userDetails.setUsername("little3201");
-        given(this.userService.fetchDetails(Mockito.anyString())).willReturn(Mono.just(userDetails));
+        given(this.userService.details(Mockito.anyString())).willReturn(Mono.just(userDetails));
 
         webTestClient.get().uri("/user/{username}/details", "little3201").exchange()
                 .expectStatus().isOk()
@@ -87,6 +90,13 @@ class UserControllerTest {
         given(this.userService.count()).willReturn(Mono.just(2L));
 
         webTestClient.get().uri("/user/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void exists() {
+        given(this.userService.exists(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        webTestClient.get().uri("/user/{username}/exist", "little3201").exchange().expectStatus().isOk();
     }
 
     @Test
@@ -168,5 +178,15 @@ class UserControllerTest {
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().isAccepted()
                 .expectBodyList(UserRole.class);
+    }
+
+    @Test
+    void authority() {
+        TreeNode treeNode = new TreeNode("21612OL31", "Dashboard");
+        given(this.authorityService.authorities(Mockito.anyString())).willReturn(Flux.just(treeNode));
+
+        webTestClient.get().uri("/user/{username}/authority", "little3201").exchange()
+                .expectStatus().isOk()
+                .expectBodyList(RoleVO.class);
     }
 }

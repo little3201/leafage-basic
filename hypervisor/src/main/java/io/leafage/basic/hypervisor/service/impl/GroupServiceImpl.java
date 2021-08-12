@@ -20,7 +20,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
-
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -68,6 +67,11 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
                 return treeNode;
             });
         });
+    }
+
+    @Override
+    public Mono<Boolean> exists(String name) {
+        return groupRepository.existsByName(name);
     }
 
     @Override

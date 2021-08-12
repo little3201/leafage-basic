@@ -20,7 +20,6 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -75,8 +74,6 @@ class GroupServiceImplTest {
 
         given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(User.class)));
 
-        User user = new User();
-        user.setNickname("test");
         StepVerifier.create(groupService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
@@ -169,5 +166,13 @@ class GroupServiceImplTest {
     void count() {
         given(this.groupRepository.count()).willReturn(Mono.just(2L));
         StepVerifier.create(groupService.count()).expectNextCount(1).verifyComplete();
+    }
+
+
+    @Test
+    void exists() {
+        given(this.groupRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        StepVerifier.create(groupService.exists("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

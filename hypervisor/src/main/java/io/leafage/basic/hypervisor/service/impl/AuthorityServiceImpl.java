@@ -4,9 +4,12 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Authority;
+import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +21,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
-
 import java.util.*;
 
 /**
@@ -29,17 +31,19 @@ import java.util.*;
 @Service
 public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService {
 
+    private static final String MESSAGE = "code is blank.";
+
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
 
-    public AuthorityServiceImpl(RoleAuthorityRepository roleAuthorityRepository, AuthorityRepository authorityRepository) {
+    public AuthorityServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
+                                RoleAuthorityRepository roleAuthorityRepository, AuthorityRepository authorityRepository) {
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;
         this.authorityRepository = authorityRepository;
-    }
-
-    @Override
-    public Flux<AuthorityVO> retrieve(Character type) {
-        return authorityRepository.findByTypeAndEnabledTrue(type).flatMap(this::convertOuter);
     }
 
     @Override
@@ -49,31 +53,32 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Flux<TreeNode> tree(Character type) {
-        Flux<Authority> authorities;
-        if (Character.isLetter(type)) {
-            authorities = authorityRepository.findByTypeAndEnabledTrue(type)
-                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
-        } else {
-            authorities = authorityRepository.findByEnabledTrue().switchIfEmpty(Mono.error(NoSuchElementException::new));
-        }
-        return authorities.filter(a -> Objects.isNull(a.getSuperior())).flatMap(authority -> {
-            TreeNode treeNode = this.constructNode(authority.getCode(), authority);
+    public Flux<TreeNode> tree() {
+        Flux<Authority> authorities = authorityRepository.findByEnabledTrue()
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+        return this.convertTree(authorities);
+    }
 
-            Set<String> expand = new HashSet<>();
-            expand.add("icon");
-            expand.add("path");
+    @Override
+    public Flux<TreeNode> authorities(String username) {
+        Assert.hasText(username, "username is blank.");
+        Mono<User> userMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
 
-            return this.children(authority, authorities, expand).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
-            });
-        });
+        return userMono.map(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId()).flatMap(userRole ->
+                roleAuthorityRepository.findByRoleIdAndEnabledTrue(userRole.getRoleId()).flatMap(roleAuthority ->
+                        authorityRepository.findById(roleAuthority.getAuthorityId())))).flatMapMany(this::convertTree);
+    }
+
+    @Override
+    public Mono<Boolean> exists(String name) {
+        Assert.hasText(name, "name is blank.");
+        return authorityRepository.existsByName(name);
     }
 
     @Override
     public Mono<AuthorityVO> fetch(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return authorityRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
@@ -98,7 +103,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
 
     @Override
     public Mono<AuthorityVO> modify(String code, AuthorityDTO authorityDTO) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         Mono<Authority> authorityMono = authorityRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
         // 设置上级
@@ -178,6 +183,27 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
             });
         }
         return voMono;
+    }
+
+    /**
+     * convert Authority to TreeNode
+     *
+     * @param authorities flux of authority
+     * @return TreeNode of Flux
+     */
+    private Flux<TreeNode> convertTree(Flux<Authority> authorities) {
+        return authorities.filter(a -> Objects.isNull(a.getSuperior())).flatMap(authority -> {
+            TreeNode treeNode = this.constructNode(authority.getCode(), authority);
+
+            Set<String> expand = new HashSet<>();
+            expand.add("icon");
+            expand.add("path");
+
+            return this.children(authority, authorities, expand).collectList().map(treeNodes -> {
+                treeNode.setChildren(treeNodes);
+                return treeNode;
+            });
+        });
     }
 
     /**

@@ -19,9 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.Collections;
-
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 
@@ -41,7 +39,7 @@ class PostsControllerTest {
     private WebTestClient webClient;
 
     @Test
-    public void retrieve() {
+    void retrieve() {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
@@ -51,31 +49,31 @@ class PostsControllerTest {
     }
 
     @Test
-    public void retrieve_page() {
+    void retrieve_page() {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
                 .willReturn(Flux.just(postsVO));
 
         webClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange()
+                        .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(PostsVO.class);
     }
 
     @Test
-    public void retrieve_page_category() {
+    void retrieve_page_category() {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
                 .willReturn(Flux.just(postsVO));
 
         webClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
+                        .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
                 .expectStatus().isOk().expectBodyList(PostsVO.class);
     }
 
     @Test
-    public void fetch() {
+    void fetch() {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
         given(this.postsService.fetch(Mockito.anyString())).willReturn(Mono.just(postsVO));
@@ -85,10 +83,10 @@ class PostsControllerTest {
     }
 
     @Test
-    public void fetchDetails() {
+    void details() {
         PostsContentVO postsContentVO = new PostsContentVO();
         postsContentVO.setContent("test");
-        given(this.postsService.fetchDetails(Mockito.anyString())).willReturn(Mono.just(postsContentVO));
+        given(this.postsService.details(Mockito.anyString())).willReturn(Mono.just(postsContentVO));
 
         webClient.get().uri("/posts/{code}/details", "21213G0J2").exchange()
                 .expectStatus().isOk()
@@ -96,10 +94,10 @@ class PostsControllerTest {
     }
 
     @Test
-    public void fetchContent() {
+    void content() {
         ContentVO contentVO = new ContentVO();
         contentVO.setContent("test");
-        given(this.postsService.fetchContent(Mockito.anyString())).willReturn(Mono.just(contentVO));
+        given(this.postsService.content(Mockito.anyString())).willReturn(Mono.just(contentVO));
 
         webClient.get().uri("/posts/{code}/content", "21213G0J2").exchange()
                 .expectStatus().isOk()
@@ -107,19 +105,19 @@ class PostsControllerTest {
     }
 
     @Test
-    public void incrementLikes() {
-        given(this.postsService.incrementLikes(Mockito.anyString())).willReturn(Mono.just(2));
+    void like() {
+        given(this.postsService.like(Mockito.anyString())).willReturn(Mono.just(2));
 
         webClient.patch().uri("/posts/{code}/like", "21213G0J2").exchange()
                 .expectStatus().isOk();
-        Mockito.verify(postsService, times(1)).incrementLikes(Mockito.anyString());
+        Mockito.verify(postsService, times(1)).like(Mockito.anyString());
     }
 
     @Test
-    public void previousPosts() {
+    void previous() {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
-        given(this.postsService.previousPosts(Mockito.anyString())).willReturn(Mono.just(postsVO));
+        given(this.postsService.previous(Mockito.anyString())).willReturn(Mono.just(postsVO));
 
         webClient.get().uri("/posts/{code}/previous", "21213G0J2").exchange()
                 .expectStatus().isOk()
@@ -127,10 +125,10 @@ class PostsControllerTest {
     }
 
     @Test
-    public void nextPosts() {
+    void next() {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
-        given(this.postsService.nextPosts(Mockito.anyString())).willReturn(Mono.just(postsVO));
+        given(this.postsService.next(Mockito.anyString())).willReturn(Mono.just(postsVO));
 
         webClient.get().uri("/posts/{code}/next", "21213G0J2").exchange()
                 .expectStatus().isOk()
@@ -138,24 +136,24 @@ class PostsControllerTest {
     }
 
     @Test
-    public void search() {
+    void search() {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
         given(this.postsService.search(Mockito.anyString())).willReturn(Flux.just(postsVO));
 
         webClient.get().uri(uriBuilder ->
-                uriBuilder.path("/posts/search").queryParam("keyword", "test").build()).exchange()
+                        uriBuilder.path("/posts/search").queryParam("keyword", "test").build()).exchange()
                 .expectStatus().isOk();
     }
 
     @Test
-    public void count() {
+    void count() {
         given(this.postsService.count()).willReturn(Mono.just(2L));
         webClient.get().uri("/posts/count").exchange().expectStatus().isOk();
     }
 
     @Test
-    public void create() {
+    void create() {
         // 构造返回对象
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
@@ -176,7 +174,7 @@ class PostsControllerTest {
     }
 
     @Test
-    public void modify() {
+    void modify() {
         // 构造返回对象
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");

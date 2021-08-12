@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import java.util.NoSuchElementException;
 
 /**
@@ -40,7 +39,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
 
     @Override
     public Mono<AccountVO> modify(String code, AccountDTO accountDTO) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, "code is blank.");
         return accountRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(accountVO -> {
                     Account info = new Account();
@@ -51,7 +50,7 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, "code is blank.");
         return accountRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(account -> accountRepository.deleteById(account.getId()));
     }

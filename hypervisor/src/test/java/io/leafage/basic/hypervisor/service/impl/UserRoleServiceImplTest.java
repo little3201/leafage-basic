@@ -16,9 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.util.Collections;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -51,7 +49,7 @@ class UserRoleServiceImplTest {
         UserRole userRole = new UserRole();
         userRole.setRoleId(id);
         userRole.setUserId(new ObjectId());
-        given(this.userRoleRepository.findByRoleId(Mockito.any(ObjectId.class))).willReturn(Flux.just(userRole));
+        given(this.userRoleRepository.findByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(userRole));
 
         given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(User.class)));
         StepVerifier.create(userRoleService.users("21612OL34")).expectNextCount(1).verifyComplete();
@@ -67,7 +65,7 @@ class UserRoleServiceImplTest {
         UserRole userRole = new UserRole();
         userRole.setUserId(id);
         userRole.setRoleId(new ObjectId());
-        given(this.userRoleRepository.findByUserId(Mockito.any(ObjectId.class))).willReturn(Flux.just(userRole));
+        given(this.userRoleRepository.findByUserIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(userRole));
 
         given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
 

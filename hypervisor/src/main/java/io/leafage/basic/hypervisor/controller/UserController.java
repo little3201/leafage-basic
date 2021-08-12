@@ -7,6 +7,7 @@ import io.leafage.basic.hypervisor.document.UserGroup;
 import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
+import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
@@ -20,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import top.leafage.common.basic.TreeNode;
 import javax.validation.Valid;
 import java.util.Set;
 
@@ -38,11 +39,14 @@ public class UserController {
     private final UserService userService;
     private final UserGroupService userGroupService;
     private final UserRoleService userRoleService;
+    private final AuthorityService authorityService;
 
-    public UserController(UserService userService, UserGroupService userGroupService, UserRoleService userRoleService) {
+    public UserController(UserService userService, UserGroupService userGroupService, UserRoleService userRoleService,
+                          AuthorityService authorityService) {
         this.userService = userService;
         this.userGroupService = userGroupService;
         this.userRoleService = userRoleService;
+        this.authorityService = authorityService;
     }
 
     /**
@@ -89,10 +93,10 @@ public class UserController {
      * @return 查询到的数据，异常时返回204状态码
      */
     @GetMapping("/{username}/details")
-    public ResponseEntity<Mono<UserDetails>> fetchDetails(@PathVariable String username) {
+    public ResponseEntity<Mono<UserDetails>> details(@PathVariable String username) {
         Mono<UserDetails> voMono;
         try {
-            voMono = userService.fetchDetails(username);
+            voMono = userService.details(username);
         } catch (Exception e) {
             logger.error("Fetch user details occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -115,6 +119,24 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
+    }
+
+    /**
+     * 是否已存在
+     *
+     * @param username 用户名
+     * @return true-是，false-否
+     */
+    @GetMapping("/{username}/exist")
+    public ResponseEntity<Mono<Boolean>> exists(@PathVariable String username) {
+        Mono<Boolean> existsMono;
+        try {
+            existsMono = userService.exists(username);
+        } catch (Exception e) {
+            logger.error("Check user is exist an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok().body(existsMono);
     }
 
     /**
@@ -197,7 +219,7 @@ public class UserController {
      * @return 操作结果
      */
     @PatchMapping("/{username}/group")
-    public ResponseEntity<Flux<UserGroup>> relationGroup(@PathVariable String username, @RequestBody Set<String> groups) {
+    public ResponseEntity<Flux<UserGroup>> group(@PathVariable String username, @RequestBody Set<String> groups) {
         Flux<UserGroup> voFlux;
         try {
             voFlux = userGroupService.relation(username, groups);
@@ -234,7 +256,7 @@ public class UserController {
      * @return 操作结果
      */
     @PatchMapping("/{username}/role")
-    public ResponseEntity<Flux<UserRole>> relationRole(@PathVariable String username, @RequestBody Set<String> roles) {
+    public ResponseEntity<Flux<UserRole>> role(@PathVariable String username, @RequestBody Set<String> roles) {
         Flux<UserRole> voFlux;
         try {
             voFlux = userRoleService.relation(username, roles);
@@ -243,5 +265,23 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.accepted().body(voFlux);
+    }
+
+    /**
+     * 根据username查询关联权限
+     *
+     * @param username 用户username
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{username}/authority")
+    public ResponseEntity<Flux<TreeNode>> authority(@PathVariable String username) {
+        Flux<TreeNode> authorities;
+        try {
+            authorities = authorityService.authorities(username);
+        } catch (Exception e) {
+            logger.error("Retrieve user authorities tree occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(authorities);
     }
 }

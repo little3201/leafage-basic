@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 
 /**
@@ -27,6 +26,8 @@ import javax.naming.NotContextException;
  **/
 @Service
 public class PortfolioServiceImpl extends AbstractBasicService implements PortfolioService {
+
+    private static final String MESSAGE = "code is blank.";
 
     private final PortfolioRepository portfolioRepository;
 
@@ -38,6 +39,12 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     public Flux<PortfolioVO> retrieve(int page, int size, String order) {
         return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
                 StringUtils.hasText(order) ? order : "modifyTime"))).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<Boolean> exists(String title) {
+        Assert.hasText(title, "title is blank.");
+        return portfolioRepository.existsByTitle(title);
     }
 
     @Override
@@ -55,7 +62,7 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
 
     @Override
     public Mono<PortfolioVO> modify(String code, PortfolioDTO portfolioDTO) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return portfolioRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
                 .doOnNext(portfolio -> BeanUtils.copyProperties(portfolioDTO, portfolio))
                 .flatMap(portfolioRepository::save).map(this::convertOuter);
@@ -63,13 +70,13 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return portfolioRepository.getByCodeAndEnabledTrue(code).flatMap(article -> portfolioRepository.deleteById(article.getId()));
     }
 
     @Override
     public Mono<PortfolioVO> fetch(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return portfolioRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 

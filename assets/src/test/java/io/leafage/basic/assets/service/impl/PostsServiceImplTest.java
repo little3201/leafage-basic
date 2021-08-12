@@ -28,7 +28,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -115,13 +114,13 @@ class PostsServiceImplTest {
 
         given(this.postsContentService.fetchByPostsId(id)).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
 
-        StepVerifier.create(this.postsService.fetchDetails("21213G0J2")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsService.details("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void fetchDetails_empty() {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.empty());
-        StepVerifier.create(this.postsService.fetchDetails("21213G0J2")).verifyError();
+        StepVerifier.create(this.postsService.details("21213G0J2")).verifyError();
     }
 
     @Test
@@ -145,7 +144,7 @@ class PostsServiceImplTest {
 
         given(this.postsContentService.fetchByPostsId(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
 
-        StepVerifier.create(postsService.fetchContent("21213G0J2")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(postsService.content("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -247,7 +246,7 @@ class PostsServiceImplTest {
 
         given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        StepVerifier.create(postsService.nextPosts("21213G0J2")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(postsService.next("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -263,7 +262,7 @@ class PostsServiceImplTest {
 
         given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        StepVerifier.create(postsService.previousPosts("21213G0J2")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(postsService.previous("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -273,7 +272,7 @@ class PostsServiceImplTest {
 
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
-        StepVerifier.create(postsService.incrementLikes("21213G0J2")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(postsService.like("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 
     @Test

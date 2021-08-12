@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
-
 import javax.validation.Valid;
 import java.util.Set;
 
@@ -118,6 +117,24 @@ public class RoleController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
+    }
+
+    /**
+     * 是否已存在
+     *
+     * @param name 用户名
+     * @return true-是，false-否
+     */
+    @GetMapping("/exist")
+    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String name) {
+        Mono<Boolean> existsMono;
+        try {
+            existsMono = roleService.exists(name);
+        } catch (Exception e) {
+            logger.error("Check role is exist an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok().body(existsMono);
     }
 
     /**

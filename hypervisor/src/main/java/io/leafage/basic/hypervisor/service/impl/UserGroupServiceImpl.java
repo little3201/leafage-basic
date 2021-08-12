@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Override
     public Flux<UserVO> users(String code) {
         return groupRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(group -> userGroupRepository.findByGroupId(group.getId()).flatMap(userGroup ->
+                .flatMapMany(group -> userGroupRepository.findByGroupIdAndEnabledTrue(group.getId()).flatMap(userGroup ->
                         userRepository.findById(userGroup.getUserId()).map(user -> {
                             UserVO userVO = new UserVO();
                             BeanUtils.copyProperties(user, userVO);
@@ -45,7 +44,7 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Override
     public Flux<GroupVO> groups(String username) {
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(user -> userGroupRepository.findByUserId(user.getId()).flatMap(userGroup ->
+                .flatMapMany(user -> userGroupRepository.findByUserIdAndEnabledTrue(user.getId()).flatMap(userGroup ->
                         groupRepository.findById(userGroup.getGroupId()).map(group -> {
                             GroupVO groupVO = new GroupVO();
                             BeanUtils.copyProperties(group, groupVO);

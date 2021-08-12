@@ -3,9 +3,8 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
  * DTO class for Account
@@ -15,22 +14,23 @@ import java.math.BigDecimal;
 public class AccountDTO implements Serializable {
 
     private static final long serialVersionUID = 5424195124842285237L;
+
     /**
-     * 余额
+     * 代码（卡号）
      */
-    @NotNull
-    private BigDecimal balance;
+    @NotBlank
+    private String code;
     /**
      * 类型
      */
     private int type;
 
-    public BigDecimal getBalance() {
-        return balance;
+    public String getCode() {
+        return code;
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public int getType() {

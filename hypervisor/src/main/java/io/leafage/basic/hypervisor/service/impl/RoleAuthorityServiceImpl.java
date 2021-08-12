@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
     @Override
     public Flux<AuthorityVO> authorities(String code) {
         return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(group -> roleAuthorityRepository.findByRoleId(group.getId()).flatMap(roleAuthority ->
+                .flatMapMany(group -> roleAuthorityRepository.findByRoleIdAndEnabledTrue(group.getId()).flatMap(roleAuthority ->
                         authorityRepository.findById(roleAuthority.getAuthorityId()).map(user -> {
                             AuthorityVO authorityVO = new AuthorityVO();
                             BeanUtils.copyProperties(user, authorityVO);
@@ -45,7 +44,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
     @Override
     public Flux<RoleVO> roles(String code) {
         return authorityRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(authority -> roleAuthorityRepository.findByAuthorityId(authority.getId()).flatMap(userRole ->
+                .flatMapMany(authority -> roleAuthorityRepository.findByAuthorityIdAndEnabledTrue(authority.getId()).flatMap(userRole ->
                         roleRepository.findById(userRole.getRoleId()).map(role -> {
                             RoleVO roleVO = new RoleVO();
                             BeanUtils.copyProperties(role, roleVO);

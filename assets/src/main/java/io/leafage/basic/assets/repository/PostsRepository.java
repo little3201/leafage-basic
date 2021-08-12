@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import javax.validation.constraints.NotNull;
 
 /**
  * 帖子信息repository
@@ -58,7 +57,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * @param categoryId 分类ID
      * @return 帖子数
      */
-    Mono<Long> countByCategoryIdAndEnabledTrue(@NotNull ObjectId categoryId);
+    Mono<Long> countByCategoryIdAndEnabledTrue(ObjectId categoryId);
 
     /**
      * 查询下一相邻的记录

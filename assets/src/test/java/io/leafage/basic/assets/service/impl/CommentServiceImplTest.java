@@ -17,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -49,6 +48,21 @@ class CommentServiceImplTest {
 
         StepVerifier.create(commentService.retrieve(0, 2, "id"))
                 .expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void posts() {
+        Posts posts = new Posts();
+        posts.setId(new ObjectId());
+        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
+
+        Comment comment = new Comment();
+        comment.setPostsId(posts.getId());
+        given(this.commentRepository.findByPostsIdAndEnabledTrue(posts.getId())).willReturn(Flux.just(comment));
+
+        given(this.postsRepository.findById(posts.getId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
+
+        StepVerifier.create(commentService.posts("21318H9FH")).expectNextCount(1).verifyComplete();
     }
 
     @Test

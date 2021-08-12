@@ -83,8 +83,8 @@ class RoleControllerTest {
     }
 
     @Test
-    void exists() {
-        given(this.roleService.exists(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void exist() {
+        given(this.roleService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/role/exist")
                 .queryParam("name", "test").build()).exchange().expectStatus().isOk();

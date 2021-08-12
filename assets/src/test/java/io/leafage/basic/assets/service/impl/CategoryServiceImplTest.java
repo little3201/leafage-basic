@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -62,7 +61,7 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    public void fetch() {
+    void fetch() {
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(Mockito.mock(Category.class)));
 
@@ -73,6 +72,13 @@ class CategoryServiceImplTest {
     void count() {
         given(this.categoryRepository.count()).willReturn(Mono.just(2L));
         StepVerifier.create(categoryService.count()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void exist() {
+        given(this.categoryRepository.existsByAlias(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        StepVerifier.create(categoryService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test

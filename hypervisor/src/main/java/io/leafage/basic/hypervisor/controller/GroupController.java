@@ -119,10 +119,10 @@ public class GroupController {
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String name) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = groupService.exists(name);
+            existsMono = groupService.exist(name);
         } catch (Exception e) {
             logger.error("Check group is exist an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

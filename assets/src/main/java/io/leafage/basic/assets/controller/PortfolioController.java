@@ -95,10 +95,10 @@ public class PortfolioController {
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String title) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String title) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = portfolioService.exists(title);
+            existsMono = portfolioService.exist(title);
         } catch (Exception e) {
             logger.error("Check portfolio is exist an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

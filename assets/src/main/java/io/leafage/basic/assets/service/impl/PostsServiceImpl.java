@@ -215,7 +215,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<Boolean> exists(String title) {
+    public Mono<Boolean> exist(String title) {
         Assert.hasText(title, "title is blank.");
         return postsRepository.existsByTitle(title);
     }

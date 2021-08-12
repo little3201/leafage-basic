@@ -76,12 +76,4 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
      * @return 匹配结果
      */
     Flux<PostsVO> search(String keyword);
-
-    /**
-     * 是否已存在
-     *
-     * @param title 名称
-     * @return true-是，false-否
-     */
-    Mono<Boolean> exists(String title);
 }

@@ -36,7 +36,7 @@ class PostsControllerTest {
     private PostsService postsService;
 
     @Autowired
-    private WebTestClient webClient;
+    private WebTestClient webTestClient;
 
     @Test
     void retrieve() {
@@ -45,7 +45,7 @@ class PostsControllerTest {
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
                 .willReturn(Flux.just(postsVO));
 
-        webClient.get().uri("/posts").exchange().expectStatus().isOk().expectBodyList(PostsVO.class);
+        webTestClient.get().uri("/posts").exchange().expectStatus().isOk().expectBodyList(PostsVO.class);
     }
 
     @Test
@@ -55,7 +55,7 @@ class PostsControllerTest {
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
                 .willReturn(Flux.just(postsVO));
 
-        webClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(PostsVO.class);
     }
@@ -67,7 +67,7 @@ class PostsControllerTest {
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
                 .willReturn(Flux.just(postsVO));
 
-        webClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
                         .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
                 .expectStatus().isOk().expectBodyList(PostsVO.class);
     }
@@ -78,7 +78,7 @@ class PostsControllerTest {
         postsVO.setTitle("test");
         given(this.postsService.fetch(Mockito.anyString())).willReturn(Mono.just(postsVO));
 
-        webClient.get().uri("/posts/{code}", "21213G0J2").exchange().expectStatus().isOk()
+        webTestClient.get().uri("/posts/{code}", "21213G0J2").exchange().expectStatus().isOk()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
     }
 
@@ -88,7 +88,7 @@ class PostsControllerTest {
         postsContentVO.setContent("test");
         given(this.postsService.details(Mockito.anyString())).willReturn(Mono.just(postsContentVO));
 
-        webClient.get().uri("/posts/{code}/details", "21213G0J2").exchange()
+        webTestClient.get().uri("/posts/{code}/details", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.content").isEqualTo("test");
     }
@@ -99,7 +99,7 @@ class PostsControllerTest {
         contentVO.setContent("test");
         given(this.postsService.content(Mockito.anyString())).willReturn(Mono.just(contentVO));
 
-        webClient.get().uri("/posts/{code}/content", "21213G0J2").exchange()
+        webTestClient.get().uri("/posts/{code}/content", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.content").isEqualTo("test");
     }
@@ -108,7 +108,7 @@ class PostsControllerTest {
     void like() {
         given(this.postsService.like(Mockito.anyString())).willReturn(Mono.just(2));
 
-        webClient.patch().uri("/posts/{code}/like", "21213G0J2").exchange()
+        webTestClient.patch().uri("/posts/{code}/like", "21213G0J2").exchange()
                 .expectStatus().isOk();
         Mockito.verify(postsService, times(1)).like(Mockito.anyString());
     }
@@ -119,7 +119,7 @@ class PostsControllerTest {
         postsVO.setTitle("test");
         given(this.postsService.previous(Mockito.anyString())).willReturn(Mono.just(postsVO));
 
-        webClient.get().uri("/posts/{code}/previous", "21213G0J2").exchange()
+        webTestClient.get().uri("/posts/{code}/previous", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
     }
@@ -130,7 +130,7 @@ class PostsControllerTest {
         postsVO.setTitle("test");
         given(this.postsService.next(Mockito.anyString())).willReturn(Mono.just(postsVO));
 
-        webClient.get().uri("/posts/{code}/next", "21213G0J2").exchange()
+        webTestClient.get().uri("/posts/{code}/next", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
     }
@@ -141,7 +141,7 @@ class PostsControllerTest {
         postsVO.setTitle("test");
         given(this.postsService.search(Mockito.anyString())).willReturn(Flux.just(postsVO));
 
-        webClient.get().uri(uriBuilder ->
+        webTestClient.get().uri(uriBuilder ->
                         uriBuilder.path("/posts/search").queryParam("keyword", "test").build()).exchange()
                 .expectStatus().isOk();
     }
@@ -149,7 +149,15 @@ class PostsControllerTest {
     @Test
     void count() {
         given(this.postsService.count()).willReturn(Mono.just(2L));
-        webClient.get().uri("/posts/count").exchange().expectStatus().isOk();
+        webTestClient.get().uri("/posts/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void exist() {
+        given(this.postsService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/exist")
+                .queryParam("title", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test
@@ -167,7 +175,7 @@ class PostsControllerTest {
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("21213G0J2");
         postsDTO.setContent("content");
-        webClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postsDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isNotEmpty();
@@ -188,7 +196,7 @@ class PostsControllerTest {
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("21213G0J2");
         postsDTO.setContent("content");
-        webClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postsDTO).exchange().expectStatus().isAccepted();
     }
 }

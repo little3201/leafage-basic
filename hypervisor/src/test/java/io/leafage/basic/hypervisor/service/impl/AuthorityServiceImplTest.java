@@ -167,9 +167,9 @@ class AuthorityServiceImplTest {
     }
 
     @Test
-    void exists() {
+    void exist() {
         given(this.authorityRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(authorityService.exists("little3201")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(authorityService.exist("little3201")).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

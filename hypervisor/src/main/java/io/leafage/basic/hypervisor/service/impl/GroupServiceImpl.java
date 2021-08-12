@@ -18,8 +18,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -29,7 +29,7 @@ import java.util.Objects;
  * @author liwenqiang 2018/12/17 19:25
  **/
 @Service
-public class GroupServiceImpl extends AbstractBasicService implements GroupService {
+public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> implements GroupService {
 
     private static final String CODE_MESSAGE = "code is blank";
 
@@ -70,7 +70,7 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
-    public Mono<Boolean> exists(String name) {
+    public Mono<Boolean> exist(String name) {
         return groupRepository.existsByName(name);
     }
 

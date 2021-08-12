@@ -42,7 +42,7 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     }
 
     @Override
-    public Mono<Boolean> exists(String title) {
+    public Mono<Boolean> exist(String title) {
         Assert.hasText(title, "title is blank.");
         return portfolioRepository.existsByTitle(title);
     }

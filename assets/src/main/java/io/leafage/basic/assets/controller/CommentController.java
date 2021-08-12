@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.Valid;
 
 /**
@@ -76,10 +75,10 @@ public class CommentController {
      * @return 关联的评论
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Flux<CommentVO>> fetch(@PathVariable String code) {
+    public ResponseEntity<Flux<CommentVO>> posts(@PathVariable String code) {
         Flux<CommentVO> voFlux;
         try {
-            voFlux = commentService.findByPosts(code);
+            voFlux = commentService.posts(code);
         } catch (Exception e) {
             logger.error("Fetch comment by posts occurred an error: ", e);
             return ResponseEntity.noContent().build();

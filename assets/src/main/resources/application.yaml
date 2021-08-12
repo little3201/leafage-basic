@@ -6,6 +6,9 @@ server:
 spring:
   application:
     name: assets
+  web:
+    resources:
+      add-mappings: false
 
   ##=====active=====##
   profiles:

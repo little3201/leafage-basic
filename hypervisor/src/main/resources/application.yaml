@@ -6,6 +6,9 @@ server:
 spring:
   application:
     name: hypervisor
+  web:
+    resources:
+      add-mappings: false
 
   ##=====active assets=====##
   profiles:

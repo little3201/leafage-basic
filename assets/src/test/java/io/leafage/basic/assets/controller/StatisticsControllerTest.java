@@ -12,7 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -28,7 +27,7 @@ class StatisticsControllerTest {
     private StatisticsService statisticsService;
 
     @Autowired
-    private WebTestClient webClient;
+    private WebTestClient webTestClient;
 
     @Test
     void retrieve() {
@@ -36,8 +35,8 @@ class StatisticsControllerTest {
         given(this.statisticsService.retrieve(Mockito.anyInt(), Mockito.anyInt()))
                 .willReturn(Flux.just(statisticsVO));
 
-        webClient.get().uri(uriBuilder -> uriBuilder.path("/statistics").queryParam("page", 0)
-                .queryParam("size", 7).build()).exchange().expectStatus().isOk()
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/statistics").queryParam("page", 0)
+                        .queryParam("size", 7).build()).exchange().expectStatus().isOk()
                 .expectBodyList(StatisticsVO.class);
     }
 
@@ -46,6 +45,6 @@ class StatisticsControllerTest {
         StatisticsVO statisticsVO = new StatisticsVO();
         given(this.statisticsService.fetch()).willReturn(Mono.just(statisticsVO));
 
-        webClient.get().uri("/statistics/viewed").exchange().expectStatus().isOk().expectBody(StatisticsVO.class);
+        webTestClient.get().uri("/statistics/viewed").exchange().expectStatus().isOk().expectBody(StatisticsVO.class);
     }
 }

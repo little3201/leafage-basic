@@ -76,8 +76,8 @@ class GroupControllerTest {
     }
 
     @Test
-    void exists() {
-        given(this.groupService.exists(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void exist() {
+        given(this.groupService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/group/exist")
                 .queryParam("name", "test").build()).exchange().expectStatus().isOk();

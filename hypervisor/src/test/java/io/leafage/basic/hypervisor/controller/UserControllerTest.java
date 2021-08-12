@@ -93,8 +93,8 @@ class UserControllerTest {
     }
 
     @Test
-    void exists() {
-        given(this.userService.exists(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void exist() {
+        given(this.userService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri("/user/{username}/exist", "little3201").exchange().expectStatus().isOk();
     }

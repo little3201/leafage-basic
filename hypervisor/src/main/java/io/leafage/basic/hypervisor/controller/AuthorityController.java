@@ -115,10 +115,10 @@ public class AuthorityController {
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String name) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = authorityService.exists(name);
+            existsMono = authorityService.exist(name);
         } catch (Exception e) {
             logger.error("Check authority is exist an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

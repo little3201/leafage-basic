@@ -170,9 +170,9 @@ class GroupServiceImplTest {
 
 
     @Test
-    void exists() {
+    void exist() {
         given(this.groupRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(groupService.exists("vip")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(groupService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

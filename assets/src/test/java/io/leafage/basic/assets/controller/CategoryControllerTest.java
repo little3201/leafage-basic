@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -32,7 +31,7 @@ class CategoryControllerTest {
     private CategoryService categoryService;
 
     @Autowired
-    private WebTestClient webClient;
+    private WebTestClient webTestClient;
 
     @Test
     void retrieve() {
@@ -40,7 +39,7 @@ class CategoryControllerTest {
         categoryVO.setAlias("test");
         given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoryVO));
 
-        webClient.get().uri("/category").exchange().expectStatus().isOk().expectBodyList(CategoryVO.class);
+        webTestClient.get().uri("/category").exchange().expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test
@@ -49,8 +48,8 @@ class CategoryControllerTest {
         categoryVO.setAlias("test");
         given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoryVO));
 
-        webClient.get().uri(uriBuilder -> uriBuilder.path("/category").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange()
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/category").queryParam("page", 0)
+                        .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
@@ -60,7 +59,7 @@ class CategoryControllerTest {
         categoryVO.setAlias("test");
         given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoryVO));
 
-        webClient.get().uri("/category/{code}", "21213G0J2").exchange()
+        webTestClient.get().uri("/category/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.alias").isEqualTo("test");
     }
@@ -68,7 +67,15 @@ class CategoryControllerTest {
     @Test
     void count() {
         given(this.categoryService.count()).willReturn(Mono.just(2L));
-        webClient.get().uri("/category/count").exchange().expectStatus().isOk();
+        webTestClient.get().uri("/category/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void exist() {
+        given(this.categoryService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/category/exist")
+                .queryParam("alias", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test
@@ -81,7 +88,7 @@ class CategoryControllerTest {
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setAlias("test");
-        webClient.post().uri("/category").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/category").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.alias").isNotEmpty();
@@ -97,7 +104,7 @@ class CategoryControllerTest {
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setAlias("test");
-        webClient.put().uri("/category/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/category/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.alias").isNotEmpty();
@@ -106,7 +113,7 @@ class CategoryControllerTest {
     @Test
     void remove() {
         given(this.categoryService.remove(Mockito.anyString())).willReturn(Mono.empty());
-        webClient.delete().uri("/category/{code}", "21213G0J2").exchange()
+        webTestClient.delete().uri("/category/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk();
     }
 }

@@ -154,6 +154,13 @@ class PostsServiceImplTest {
     }
 
     @Test
+    void exist() {
+        given(this.postsRepository.existsByTitle(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        StepVerifier.create(postsService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
+    }
+
+    @Test
     void create() {
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(Mockito.mock(Category.class)));

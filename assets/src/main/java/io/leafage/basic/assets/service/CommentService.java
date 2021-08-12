@@ -13,5 +13,5 @@ public interface CommentService extends ReactiveBasicService<CommentDTO, Comment
      * @param code 帖子代码
      * @return 关联的评论
      */
-    Flux<CommentVO> findByPosts(String code);
+    Flux<CommentVO> posts(String code);
 }

@@ -16,7 +16,6 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 import java.util.NoSuchElementException;
 
@@ -38,7 +37,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     }
 
     @Override
-    public Flux<CommentVO> findByPosts(String code) {
+    public Flux<CommentVO> posts(String code) {
         return postsRepository.getByCodeAndEnabledTrue(code).flatMapMany(posts ->
                 commentRepository.findByPostsIdAndEnabledTrue(posts.getId()).flatMap(this::convertOuter));
     }

@@ -139,9 +139,9 @@ class RoleServiceImplTest {
 
 
     @Test
-    void exists() {
+    void exist() {
         given(this.roleRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(roleService.exists("vip")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(roleService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

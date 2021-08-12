@@ -16,9 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-
 import java.util.Collections;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -34,7 +32,7 @@ class PortfolioControllerTest {
     private PortfolioService portfolioService;
 
     @Autowired
-    private WebTestClient webClient;
+    private WebTestClient webTestClient;
 
     @Test
     void retrieve() {
@@ -42,8 +40,8 @@ class PortfolioControllerTest {
         portfolioVO.setTitle("test");
         given(this.portfolioService.fetch(Mockito.anyString())).willReturn(Mono.just(portfolioVO));
 
-        webClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange()
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio").queryParam("page", 0)
+                        .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(PortfolioVO.class);
     }
 
@@ -53,8 +51,8 @@ class PortfolioControllerTest {
         portfolioVO.setTitle("test");
         given(this.portfolioService.fetch(Mockito.anyString())).willReturn(Mono.just(portfolioVO));
 
-        webClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio").queryParam("page", 0)
-                .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio").queryParam("page", 0)
+                        .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
                 .expectStatus().isOk().expectBodyList(PortfolioVO.class);
     }
 
@@ -64,7 +62,7 @@ class PortfolioControllerTest {
         portfolioVO.setTitle("test");
         given(this.portfolioService.fetch(Mockito.anyString())).willReturn(Mono.just(portfolioVO));
 
-        webClient.get().uri("/portfolio/{code}", "21213G0J2").exchange()
+        webTestClient.get().uri("/portfolio/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
     }
@@ -72,7 +70,15 @@ class PortfolioControllerTest {
     @Test
     void count() {
         given(this.portfolioService.count()).willReturn(Mono.just(2L));
-        webClient.get().uri("/portfolio/count").exchange().expectStatus().isOk();
+        webTestClient.get().uri("/portfolio/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void exist() {
+        given(this.portfolioService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio/exist")
+                .queryParam("title", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test
@@ -86,7 +92,7 @@ class PortfolioControllerTest {
         PortfolioDTO portfolioDTO = new PortfolioDTO();
         portfolioDTO.setTitle("test");
         portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
-        webClient.post().uri("/portfolio").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/portfolio").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(portfolioDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isNotEmpty();
@@ -103,7 +109,7 @@ class PortfolioControllerTest {
         PortfolioDTO portfolioDTO = new PortfolioDTO();
         portfolioDTO.setTitle("test");
         portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
-        webClient.put().uri("/portfolio/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/portfolio/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(portfolioDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.title").isNotEmpty();

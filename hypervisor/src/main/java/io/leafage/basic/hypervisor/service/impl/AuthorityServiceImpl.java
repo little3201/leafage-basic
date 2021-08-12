@@ -19,8 +19,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.*;
 
 /**
@@ -29,7 +29,7 @@ import java.util.*;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService {
+public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Authority> implements AuthorityService {
 
     private static final String MESSAGE = "code is blank.";
 
@@ -71,7 +71,7 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Mono<Boolean> exists(String name) {
+    public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "name is blank.");
         return authorityRepository.existsByName(name);
     }

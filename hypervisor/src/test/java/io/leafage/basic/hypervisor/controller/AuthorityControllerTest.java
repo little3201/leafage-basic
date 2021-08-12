@@ -74,8 +74,8 @@ class AuthorityControllerTest {
     }
 
     @Test
-    void exists() {
-        given(this.authorityService.exists(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void exist() {
+        given(this.authorityService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority/exist")
                 .queryParam("name", "test").build()).exchange().expectStatus().isOk();

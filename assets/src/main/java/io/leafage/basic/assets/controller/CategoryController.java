@@ -97,10 +97,10 @@ public class CategoryController {
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String alias) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String alias) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = categoryService.exists(alias);
+            existsMono = categoryService.exist(alias);
         } catch (Exception e) {
             logger.error("Check category is exist an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

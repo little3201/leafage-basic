@@ -30,22 +30,32 @@ class CommentControllerTest {
     private CommentService commentService;
 
     @Autowired
-    private WebTestClient webClient;
+    private WebTestClient webTestClient;
 
     @Test
     void retrieve() {
         given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString()))
                 .willReturn(Flux.just(Mockito.mock(CommentVO.class)));
 
-        webClient.get().uri(uriBuilder -> uriBuilder.path("/comment").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange()
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comment").queryParam("page", 0)
+                        .queryParam("size", 2).build()).exchange()
+                .expectStatus().isOk().expectBodyList(CategoryVO.class);
+    }
+
+    @Test
+    void posts() {
+        CommentVO commentVO = new CommentVO();
+        commentVO.setContent("test content");
+        given(this.commentService.posts(Mockito.anyString())).willReturn(Flux.just(commentVO));
+
+        webTestClient.get().uri("/comment/{code}", "21319JO01").exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test
     void count() {
         given(this.commentService.count()).willReturn(Mono.just(2L));
-        webClient.get().uri("/comment/count").exchange().expectStatus().isOk();
+        webTestClient.get().uri("/comment/count").exchange().expectStatus().isOk();
     }
 
     @Test
@@ -60,7 +70,7 @@ class CommentControllerTest {
         commentDTO.setContent("test");
         commentDTO.setEmail("test@test.com");
         commentDTO.setNickname("布吉岛");
-        webClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.content").isNotEmpty();
@@ -78,7 +88,7 @@ class CommentControllerTest {
         commentDTO.setContent("test");
         commentDTO.setEmail("test@test.com");
         commentDTO.setNickname("布吉岛");
-        webClient.put().uri("/comment/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/comment/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.content").isNotEmpty();
@@ -87,7 +97,7 @@ class CommentControllerTest {
     @Test
     void remove() {
         given(this.commentService.remove(Mockito.anyString())).willReturn(Mono.empty());
-        webClient.delete().uri("/comment/{code}", "21213G0J2").exchange()
+        webTestClient.delete().uri("/comment/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk();
     }
 }

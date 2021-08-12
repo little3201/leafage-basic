@@ -16,8 +16,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -27,7 +27,7 @@ import java.util.Objects;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl extends AbstractBasicService implements RoleService {
+public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> implements RoleService {
 
     private static final String MESSAGE = "code is blank.";
 
@@ -63,7 +63,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Mono<Boolean> exists(String name) {
+    public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "name is blank.");
         return roleRepository.existsByName(name);
     }

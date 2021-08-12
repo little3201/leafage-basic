@@ -128,10 +128,10 @@ public class UserController {
      * @return true-是，false-否
      */
     @GetMapping("/{username}/exist")
-    public ResponseEntity<Mono<Boolean>> exists(@PathVariable String username) {
+    public ResponseEntity<Mono<Boolean>> exist(@PathVariable String username) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = userService.exists(username);
+            existsMono = userService.exist(username);
         } catch (Exception e) {
             logger.error("Check user is exist an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

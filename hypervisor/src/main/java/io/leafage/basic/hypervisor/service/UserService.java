@@ -17,14 +17,6 @@ import top.leafage.common.reactive.ReactiveBasicService;
 public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
 
     /**
-     * 是否已存在
-     *
-     * @param username 账号
-     * @return true-是，false-否
-     */
-    Mono<Boolean> exists(String username);
-
-    /**
      * 查用户details
      *
      * @param username 账户

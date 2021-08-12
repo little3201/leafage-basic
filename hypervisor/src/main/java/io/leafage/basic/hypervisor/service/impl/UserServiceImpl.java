@@ -56,7 +56,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Mono<Boolean> exists(String username) {
+    public Mono<Boolean> exist(String username) {
         return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
     }
 

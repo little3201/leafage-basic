@@ -18,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -43,7 +42,7 @@ class PortfolioServiceImplTest {
     }
 
     @Test
-    public void fetch() {
+    void fetch() {
         Mockito.when(this.portfolioRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .thenReturn(Mono.just(Mockito.mock(Portfolio.class)));
         StepVerifier.create(portfolioService.fetch("21318H9FH")).expectNextCount(1).verifyComplete();
@@ -53,6 +52,13 @@ class PortfolioServiceImplTest {
     void count() {
         given(this.portfolioRepository.count()).willReturn(Mono.just(2L));
         StepVerifier.create(portfolioService.count()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void exist() {
+        given(this.portfolioRepository.existsByTitle(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        StepVerifier.create(portfolioService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test

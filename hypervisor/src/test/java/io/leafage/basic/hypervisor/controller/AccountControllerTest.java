@@ -12,9 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-
 import java.math.BigDecimal;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -49,7 +47,7 @@ class AccountControllerTest {
         given(this.accountService.create(Mockito.any(AccountDTO.class))).willReturn(Mono.just(accountVO));
 
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setBalance(new BigDecimal("1000.09"));
+        accountDTO.setCode("6431659823235265");
         webTestClient.post().uri("/account").bodyValue(accountDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.balance").isEqualTo("1000.09");
@@ -62,7 +60,7 @@ class AccountControllerTest {
         given(this.accountService.modify(Mockito.anyString(), Mockito.any(AccountDTO.class))).willReturn(Mono.just(accountVO));
 
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setBalance(new BigDecimal("1000.09"));
+        accountDTO.setCode("6431659823235265");
         webTestClient.put().uri("/account/{code}", "21612OL34").bodyValue(accountDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.balance").isEqualTo("1000.09");

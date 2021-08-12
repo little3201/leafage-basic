@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -60,39 +59,38 @@ class UserServiceImplTest {
      * 测试查询用户信息, 正常返回数据
      */
     @Test
-    void fetchDetails() {
-        String username = "little3201";
-        ObjectId userId = new ObjectId();
+    void details() {
         User user = new User();
-        user.setId(userId);
-        user.setUsername(username);
-        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
-                .willReturn(Mono.just(user));
+        user.setId(new ObjectId());
+        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString())).willReturn(Mono.just(user));
 
         UserRole userRole = new UserRole();
-        ObjectId roleId = new ObjectId();
-        userRole.setUserId(userId);
-        userRole.setRoleId(roleId);
-        given(this.userRoleRepository.findByUserIdAndEnabledTrue(userId)).willReturn(Flux.just(userRole));
+        userRole.setUserId(user.getId());
+        userRole.setRoleId(new ObjectId());
+        given(this.userRoleRepository.findByUserIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(userRole));
 
         RoleAuthority roleAuthority = new RoleAuthority();
+        roleAuthority.setRoleId(userRole.getRoleId());
         roleAuthority.setAuthorityId(new ObjectId());
-        given(this.roleAuthorityRepository.findByRoleIdInAndEnabledTrue(Mockito.anyList())).willReturn(Flux.just(roleAuthority));
+        given(this.roleAuthorityRepository.findByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(roleAuthority));
 
-        given(this.authorityRepository.findByIdInAndEnabledTrue(Mockito.anyList())).willReturn(Flux.just(Mockito.mock(Authority.class)));
+        Authority authority = new Authority();
+        authority.setCode("test");
+        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
 
-        StepVerifier.create(userService.fetchDetails(username)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(userService.details("little3201")).expectNextCount(1).verifyComplete();
     }
 
     /**
      * 测试查询用户信息, user not found
      */
     @Test
-    void fetchDetails_userNotFound() {
+    void details_error() {
         String username = "little3201";
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .willReturn(Mono.empty());
-        StepVerifier.create(userService.fetchDetails(username)).verifyError();
+        StepVerifier.create(userService.details(username)).verifyError();
     }
 
     @Test
@@ -114,6 +112,14 @@ class UserServiceImplTest {
     void count() {
         given(this.userRepository.count()).willReturn(Mono.just(2L));
         StepVerifier.create(userService.count()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void exists() {
+        given(this.userRepository.existsByUsernameOrPhoneOrEmail(Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        StepVerifier.create(userService.exists("little3201")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test

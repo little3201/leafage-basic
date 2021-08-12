@@ -9,7 +9,6 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.constraints.NotNull;
 
 /**
@@ -42,13 +41,5 @@ public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, Obj
      * @param roleId 角色主键
      * @return 关联数据集
      */
-    Flux<UserRole> findByRoleId(@NotNull ObjectId roleId);
-
-    /**
-     * 根据用户查角色
-     *
-     * @param userId 用户主键
-     * @return 关联数据集
-     */
-    Flux<UserRole> findByUserId(@NotNull ObjectId userId);
+    Flux<UserRole> findByRoleIdAndEnabledTrue(@NotNull ObjectId roleId);
 }

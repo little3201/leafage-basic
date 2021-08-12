@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.naming.NotContextException;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -35,7 +34,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public Flux<UserVO> users(String code) {
         Assert.hasText(code, "code is blank");
         return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(role -> userRoleRepository.findByRoleId(role.getId()).flatMap(userRole ->
+                .flatMapMany(role -> userRoleRepository.findByRoleIdAndEnabledTrue(role.getId()).flatMap(userRole ->
                         userRepository.findById(userRole.getUserId()).map(user -> {
                             UserVO userVO = new UserVO();
                             BeanUtils.copyProperties(user, userVO);
@@ -48,7 +47,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public Flux<RoleVO> roles(String username) {
         Assert.hasText(username, "username is blank");
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(user -> userRoleRepository.findByUserId(user.getId()).flatMap(userRole ->
+                .flatMapMany(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId()).flatMap(userRole ->
                         roleRepository.findById(userRole.getRoleId()).map(role -> {
                             RoleVO roleVO = new RoleVO();
                             BeanUtils.copyProperties(role, roleVO);

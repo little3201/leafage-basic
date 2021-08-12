@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.constraints.NotNull;
 
 /**
@@ -86,4 +85,12 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * @return 匹配结果
      */
     Flux<Posts> findByTitleIgnoreCaseLikeAndEnabledTrue(String title);
+
+    /**
+     * 是否已存在
+     *
+     * @param title 名称
+     * @return true-是，false-否
+     */
+    Mono<Boolean> existsByTitle(String title);
 }

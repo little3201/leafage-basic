@@ -29,7 +29,6 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 
 /**
@@ -39,6 +38,8 @@ import javax.naming.NotContextException;
  **/
 @Service
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {
+
+    private static final String MESSAGE = "code is blank.";
 
     private final PostsRepository postsRepository;
     private final PostsContentService postsContentService;
@@ -73,8 +74,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<PostsContentVO> fetchDetails(String code) {
-        Assert.hasText(code, "code is blank");
+    public Mono<PostsContentVO> details(String code) {
+        Assert.hasText(code, MESSAGE);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(posts -> {
@@ -87,20 +88,17 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                             BeanUtils.copyProperties(posts, pcv);
                             pcv.setCategory(category.getAlias());
                             return pcv;
-                        }).flatMap(pcv -> {
-                            // 根据业务id获取相关内容
-                            return postsContentService.fetchByPostsId(posts.getId()).map(contentInfo -> {
-                                pcv.setContent(contentInfo.getContent());
-                                pcv.setCatalog(contentInfo.getCatalog());
-                                return pcv;
-                            }).defaultIfEmpty(pcv);
-                        })
+                        }).flatMap(pcv -> postsContentService.fetchByPostsId(posts.getId()).map(contentInfo -> {
+                            pcv.setContent(contentInfo.getContent());
+                            pcv.setCatalog(contentInfo.getCatalog());
+                            return pcv;
+                        }).defaultIfEmpty(pcv))
                 );
     }
 
     @Override
     public Mono<PostsVO> fetch(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> {
                             PostsVO pcv = new PostsVO();
@@ -113,8 +111,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<ContentVO> fetchContent(String code) {
-        Assert.hasText(code, "code is blank");
+    public Mono<ContentVO> content(String code) {
+        Assert.hasText(code, MESSAGE);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsContentService.fetchByPostsId(posts.getId()).map(postsContent -> {
                     ContentVO contentVO = new ContentVO();
@@ -153,7 +151,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsVO> modify(String code, PostsDTO postsDTO) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         Mono<Posts> postsMono = postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
@@ -179,7 +177,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(posts.getId())),
                         Update.update("enabled", false), Posts.class).then()
@@ -187,8 +185,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<PostsVO> nextPosts(String code) {
-        Assert.hasText(code, "code is blank");
+    public Mono<PostsVO> next(String code) {
+        Assert.hasText(code, MESSAGE);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdGreaterThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.ASC, "id")).next()
@@ -196,8 +194,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<PostsVO> previousPosts(String code) {
-        Assert.hasText(code, "code is blank");
+    public Mono<PostsVO> previous(String code) {
+        Assert.hasText(code, MESSAGE);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdLessThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.DESC, "id")).next()
@@ -205,7 +203,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<Integer> incrementLikes(String code) {
+    public Mono<Integer> like(String code) {
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
                 new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
                 postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes));
@@ -214,6 +212,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Flux<PostsVO> search(String keyword) {
         return postsRepository.findByTitleIgnoreCaseLikeAndEnabledTrue(keyword).flatMap(this::convertOuter);
+    }
+
+    @Override
+    public Mono<Boolean> exists(String title) {
+        Assert.hasText(title, "title is blank.");
+        return postsRepository.existsByTitle(title);
     }
 
     /**

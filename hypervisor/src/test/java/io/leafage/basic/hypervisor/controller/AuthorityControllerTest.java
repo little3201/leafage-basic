@@ -43,14 +43,14 @@ class AuthorityControllerTest {
         given(this.authorityService.retrieve(0, 2)).willReturn(Flux.just(authorityVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange()
+                        .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(RoleVO.class);
     }
 
     @Test
     void tree() {
         TreeNode treeNode = new TreeNode("21612OL34", "test");
-        given(this.authorityService.tree('M')).willReturn(Flux.just(treeNode));
+        given(this.authorityService.tree()).willReturn(Flux.just(treeNode));
 
         webTestClient.get().uri("/authority/tree").exchange()
                 .expectStatus().isOk().expectBodyList(TreeNode.class);
@@ -71,6 +71,14 @@ class AuthorityControllerTest {
         given(this.authorityService.count()).willReturn(Mono.just(2L));
 
         webTestClient.get().uri("/authority/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void exists() {
+        given(this.authorityService.exists(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority/exist")
+                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test

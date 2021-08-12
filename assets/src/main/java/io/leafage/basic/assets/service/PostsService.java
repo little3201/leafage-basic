@@ -35,7 +35,7 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
      * @param code 代码
      * @return 详细信息
      */
-    Mono<PostsContentVO> fetchDetails(String code);
+    Mono<PostsContentVO> details(String code);
 
     /**
      * 根据代码查询内容
@@ -43,7 +43,7 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
      * @param code 代码
      * @return 详细信息
      */
-    Mono<ContentVO> fetchContent(String code);
+    Mono<ContentVO> content(String code);
 
     /**
      * 下一条记录
@@ -51,7 +51,7 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
      * @param code 代码
      * @return 帖子信息
      */
-    Mono<PostsVO> nextPosts(String code);
+    Mono<PostsVO> next(String code);
 
     /**
      * 上一条记录
@@ -59,7 +59,7 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
      * @param code 代码
      * @return 帖子信息
      */
-    Mono<PostsVO> previousPosts(String code);
+    Mono<PostsVO> previous(String code);
 
     /**
      * 自增likes
@@ -67,7 +67,7 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
      * @param code 代码
      * @return 最新 likes
      */
-    Mono<Integer> incrementLikes(String code);
+    Mono<Integer> like(String code);
 
     /**
      * 全文搜索
@@ -76,4 +76,12 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
      * @return 匹配结果
      */
     Flux<PostsVO> search(String keyword);
+
+    /**
+     * 是否已存在
+     *
+     * @param title 名称
+     * @return true-是，false-否
+     */
+    Mono<Boolean> exists(String title);
 }

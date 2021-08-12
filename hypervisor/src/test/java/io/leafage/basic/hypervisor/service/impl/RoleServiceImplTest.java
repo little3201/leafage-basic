@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -136,5 +135,13 @@ class RoleServiceImplTest {
     void count() {
         given(this.roleRepository.count()).willReturn(Mono.just(2L));
         StepVerifier.create(roleService.count()).expectNextCount(1).verifyComplete();
+    }
+
+
+    @Test
+    void exists() {
+        given(this.roleRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        StepVerifier.create(roleService.exists("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

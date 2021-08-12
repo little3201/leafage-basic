@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.document.Authority;
 import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
@@ -12,7 +13,6 @@ import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
-import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,6 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -34,6 +32,8 @@ import java.util.Set;
  **/
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
+
+    private static final String MESSAGE = "username is blank.";
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
@@ -56,6 +56,11 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
+    public Mono<Boolean> exists(String username) {
+        return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
+    }
+
+    @Override
     public Mono<Long> count() {
         return userRepository.count();
     }
@@ -69,7 +74,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<UserVO> modify(String username, UserDTO userDTO) {
-        Assert.hasText(username, "username is blank");
+        Assert.hasText(username, MESSAGE);
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(user -> {
                     BeanUtils.copyProperties(userDTO, user);
@@ -79,36 +84,32 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<Void> remove(String username) {
-        Assert.hasText(username, "username is blank");
+        Assert.hasText(username, MESSAGE);
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(user -> userRepository.deleteById(user.getId()));
     }
 
     @Override
     public Mono<UserVO> fetch(String username) {
-        Assert.hasText(username, "username is blank");
+        Assert.hasText(username, MESSAGE);
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(this::convertOuter);
     }
 
     @Override
-    public Mono<UserDetails> fetchDetails(String username) {
-        Assert.hasText(username, "username is blank");
-        Mono<User> infoMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
+    public Mono<UserDetails> details(String username) {
+        Assert.hasText(username, MESSAGE);
+        Mono<User> userMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(() -> new NoSuchElementException("User Not Found")));
-        Mono<ArrayList<ObjectId>> roleIdListMono = infoMono.flatMap(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId())
-                .switchIfEmpty(Mono.error(() -> new NoSuchElementException("No Roles")))
-                .collect(ArrayList::new, (roleIdList, userRole) -> roleIdList.add(userRole.getRoleId())));
-        // 取角色关联的权限ID
-        Mono<ArrayList<ObjectId>> authorityIdListMono = roleIdListMono.flatMap(roleIdList -> roleAuthorityRepository.findByRoleIdInAndEnabledTrue(roleIdList)
-                .switchIfEmpty(Mono.error(() -> new NoSuchElementException("No Authorities")))
-                .collect(ArrayList::new, (authorityIdList, roleAuthority) -> authorityIdList.add(roleAuthority.getAuthorityId())));
-        // 查权限
-        Mono<Set<String>> authorityCodeList = authorityIdListMono.flatMap(authorityIdList ->
-                authorityRepository.findByIdInAndEnabledTrue(authorityIdList).collect(HashSet::new, (authorityList, authority) ->
-                        authorityList.add(authority.getCode())));
+
+        Mono<Set<String>> setMono = userMono.map(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId())
+                        .flatMap(userRole ->
+                                roleAuthorityRepository.findByRoleIdAndEnabledTrue(userRole.getRoleId()).flatMap(roleAuthority ->
+                                        authorityRepository.findById(roleAuthority.getAuthorityId()))))
+                .flatMap(authorityFlux -> authorityFlux.map(Authority::getCode).collect(HashSet::new, HashSet::add));
+
         // 构造用户信息
-        return authorityCodeList.zipWith(infoMono, (authorities, user) -> {
+        return userMono.zipWith(setMono, (user, authorities) -> {
             UserDetails userDetails = new UserDetails();
             BeanUtils.copyProperties(user, userDetails);
             userDetails.setAuthorities(authorities);

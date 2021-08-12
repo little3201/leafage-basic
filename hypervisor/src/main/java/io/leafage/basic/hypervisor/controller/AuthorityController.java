@@ -42,18 +42,13 @@ public class AuthorityController {
      *
      * @param page 页码
      * @param size 大小
-     * @param type 类型
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Flux<AuthorityVO>> retrieve(Integer page, Integer size, Character type) {
+    public ResponseEntity<Flux<AuthorityVO>> retrieve(@RequestParam int page, @RequestParam int size) {
         Flux<AuthorityVO> voFlux;
         try {
-            if (page != null && size != null) {
-                voFlux = authorityService.retrieve(page, size);
-            } else {
-                voFlux = authorityService.retrieve(type);
-            }
+            voFlux = authorityService.retrieve(page, size);
         } catch (Exception e) {
             logger.error("Retrieve authority occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -64,14 +59,13 @@ public class AuthorityController {
     /**
      * 查询树形数据
      *
-     * @param type 类型
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")
-    public ResponseEntity<Flux<TreeNode>> tree(Character type) {
+    public ResponseEntity<Flux<TreeNode>> tree() {
         Flux<TreeNode> authorities;
         try {
-            authorities = authorityService.tree(type);
+            authorities = authorityService.tree();
         } catch (Exception e) {
             logger.info("Retrieve authority occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -112,6 +106,24 @@ public class AuthorityController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
+    }
+
+    /**
+     * 是否已存在
+     *
+     * @param name 用户名
+     * @return true-是，false-否
+     */
+    @GetMapping("/exist")
+    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String name) {
+        Mono<Boolean> existsMono;
+        try {
+            existsMono = authorityService.exists(name);
+        } catch (Exception e) {
+            logger.error("Check authority is exist an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok().body(existsMono);
     }
 
     /**

@@ -16,7 +16,6 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 
 /**
@@ -26,6 +25,8 @@ import javax.naming.NotContextException;
  **/
 @Service
 public class CategoryServiceImpl extends AbstractBasicService implements CategoryService {
+
+    private static final String MESSAGE = "code is blank.";
 
     private final CategoryRepository categoryRepository;
     private final PostsRepository postsRepository;
@@ -47,7 +48,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Mono<CategoryVO> fetch(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter);
     }
 
@@ -66,15 +67,15 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Mono<CategoryVO> modify(String code, CategoryDTO categoryDTO) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return categoryRepository.getByCodeAndEnabledTrue(code).doOnNext(category ->
-                BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
+                        BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(categoryRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(topic -> categoryRepository.deleteById(topic.getId()));
     }
 
@@ -111,5 +112,11 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
             vo.setCount(count);
             return vo;
         });
+    }
+
+    @Override
+    public Mono<Boolean> exists(String alias) {
+        Assert.hasText(alias, "alias is blank.");
+        return categoryRepository.existsByAlias(alias);
     }
 }

@@ -87,10 +87,10 @@ public class PostsController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/{code}/details")
-    public ResponseEntity<Mono<PostsContentVO>> fetchDetails(@PathVariable String code) {
+    public ResponseEntity<Mono<PostsContentVO>> details(@PathVariable String code) {
         Mono<PostsContentVO> voMono;
         try {
-            voMono = postsService.fetchDetails(code);
+            voMono = postsService.details(code);
         } catch (Exception e) {
             logger.error("Fetch posts details occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -123,10 +123,10 @@ public class PostsController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/{code}/content")
-    public ResponseEntity<Mono<ContentVO>> fetchContent(@PathVariable String code) {
+    public ResponseEntity<Mono<ContentVO>> content(@PathVariable String code) {
         Mono<ContentVO> voMono;
         try {
-            voMono = postsService.fetchContent(code);
+            voMono = postsService.content(code);
         } catch (Exception e) {
             logger.error("Fetch posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -152,16 +152,34 @@ public class PostsController {
     }
 
     /**
+     * 是否已存在
+     *
+     * @param title 标题
+     * @return true-是，false-否
+     */
+    @GetMapping("/exist")
+    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String title) {
+        Mono<Boolean> existsMono;
+        try {
+            existsMono = postsService.exists(title);
+        } catch (Exception e) {
+            logger.error("Check posts is exist an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok().body(existsMono);
+    }
+
+    /**
      * 根据传入的代码查询下一条记录
      *
      * @param code 代码
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/{code}/next")
-    public ResponseEntity<Mono<PostsVO>> fetchNext(@PathVariable String code) {
+    public ResponseEntity<Mono<PostsVO>> next(@PathVariable String code) {
         Mono<PostsVO> voMono;
         try {
-            voMono = postsService.nextPosts(code);
+            voMono = postsService.next(code);
         } catch (Exception e) {
             logger.error("Fetch next posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -176,10 +194,10 @@ public class PostsController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/{code}/previous")
-    public ResponseEntity<Mono<PostsVO>> fetchPrevious(@PathVariable String code) {
+    public ResponseEntity<Mono<PostsVO>> previous(@PathVariable String code) {
         Mono<PostsVO> voMono;
         try {
-            voMono = postsService.previousPosts(code);
+            voMono = postsService.previous(code);
         } catch (Exception e) {
             logger.error("Fetch previous posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -194,10 +212,10 @@ public class PostsController {
      * @return 操作后的信息，否则返回417状态码
      */
     @PatchMapping("/{code}/like")
-    public ResponseEntity<Mono<Integer>> incrementLikes(@PathVariable String code) {
+    public ResponseEntity<Mono<Integer>> like(@PathVariable String code) {
         Mono<Integer> voMono;
         try {
-            voMono = postsService.incrementLikes(code);
+            voMono = postsService.like(code);
         } catch (Exception e) {
             logger.error("Increment posts like occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

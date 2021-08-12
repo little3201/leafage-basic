@@ -4,9 +4,14 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Authority;
+import io.leafage.basic.hypervisor.document.RoleAuthority;
+import io.leafage.basic.hypervisor.document.User;
+import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +35,12 @@ import static org.mockito.Mockito.mock;
 class AuthorityServiceImplTest {
 
     @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private UserRoleRepository userRoleRepository;
+
+    @Mock
     private AuthorityRepository authorityRepository;
 
     @Mock
@@ -40,22 +51,6 @@ class AuthorityServiceImplTest {
 
     @Test
     void retrieve() {
-        Authority authority = new Authority();
-        authority.setId(new ObjectId());
-        authority.setSuperior(new ObjectId());
-        given(this.authorityRepository.findByTypeAndEnabledTrue(Mockito.anyChar())).willReturn(Flux.just(authority));
-
-        given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
-
-        authority.setName("test");
-        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
-
-
-        StepVerifier.create(authorityService.retrieve('M')).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void retrieve_page() {
         Authority authority = new Authority();
         authority.setId(new ObjectId());
         authority.setSuperior(new ObjectId());
@@ -135,13 +130,46 @@ class AuthorityServiceImplTest {
         child.setSuperior(id);
         child.setCode("21612OL35");
         child.setName("test-sub");
-        given(this.authorityRepository.findByTypeAndEnabledTrue('M')).willReturn(Flux.just(authority, child));
-        StepVerifier.create(authorityService.tree('M')).expectNextCount(1).verifyComplete();
+        given(this.authorityRepository.findByEnabledTrue()).willReturn(Flux.just(authority, child));
+        StepVerifier.create(authorityService.tree()).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void count() {
         given(this.authorityRepository.count()).willReturn(Mono.just(2L));
         StepVerifier.create(authorityService.count()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void authorities() {
+        User user = new User();
+        user.setId(new ObjectId());
+        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString())).willReturn(Mono.just(user));
+
+        UserRole userRole = new UserRole();
+        userRole.setUserId(user.getId());
+        userRole.setRoleId(new ObjectId());
+        given(this.userRoleRepository.findByUserIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(userRole));
+
+        RoleAuthority roleAuthority = new RoleAuthority();
+        roleAuthority.setRoleId(userRole.getRoleId());
+        roleAuthority.setAuthorityId(new ObjectId());
+        given(this.roleAuthorityRepository.findByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(roleAuthority));
+
+        Authority authority = new Authority();
+        authority.setId(roleAuthority.getAuthorityId());
+        authority.setCode("21318JO90");
+        authority.setName("test");
+        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
+
+        StepVerifier.create(authorityService.authorities("little3201")).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void exists() {
+        given(this.authorityRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        StepVerifier.create(authorityService.exists("little3201")).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

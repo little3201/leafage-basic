@@ -5,7 +5,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.PortfolioDTO;
 import io.leafage.basic.assets.vo.PortfolioVO;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -16,13 +16,10 @@ import top.leafage.common.reactive.ReactiveBasicService;
 public interface PortfolioService extends ReactiveBasicService<PortfolioDTO, PortfolioVO> {
 
     /**
-     * 按照分页和分类进行查询并排序
+     * 是否已存在
      *
-     * @param page  分页
-     * @param size  大小
-     * @param order 排序
-     * @return 结果集
+     * @param title 名称
+     * @return true-是，false-否
      */
-    Flux<PortfolioVO> retrieve(int page, int size, String order);
-
+    Mono<Boolean> exists(String title);
 }

@@ -18,7 +18,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
-
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -29,6 +28,8 @@ import java.util.Objects;
  **/
 @Service
 public class RoleServiceImpl extends AbstractBasicService implements RoleService {
+
+    private static final String MESSAGE = "code is blank.";
 
     private final UserRoleRepository userRoleRepository;
     private final RoleRepository roleRepository;
@@ -62,8 +63,14 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
+    public Mono<Boolean> exists(String name) {
+        Assert.hasText(name, "name is blank.");
+        return roleRepository.existsByName(name);
+    }
+
+    @Override
     public Mono<RoleVO> fetch(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         return roleRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
@@ -88,7 +95,7 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
 
     @Override
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         Mono<Role> roleMono = roleRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
         // 设置上级

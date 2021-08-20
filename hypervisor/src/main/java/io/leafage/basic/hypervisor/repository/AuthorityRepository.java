@@ -36,6 +36,14 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
     Flux<Authority> findByEnabledTrue();
 
     /**
+     * 查询菜单
+     *
+     * @param type 类型
+     * @return 有效菜单
+     */
+    Flux<Authority> findByTypeAndEnabledTrue(Character type);
+
+    /**
      * 根据code查询enabled信息
      *
      * @param code 代码

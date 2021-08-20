@@ -45,10 +45,14 @@ public class AuthorityController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Flux<AuthorityVO>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Flux<AuthorityVO>> retrieve(Integer page, Integer size) {
         Flux<AuthorityVO> voFlux;
         try {
-            voFlux = authorityService.retrieve(page, size);
+            if (page == null || size == null) {
+                voFlux = authorityService.retrieve();
+            } else {
+                voFlux = authorityService.retrieve(page, size);
+            }
         } catch (Exception e) {
             logger.error("Retrieve authority occurred an error: ", e);
             return ResponseEntity.noContent().build();

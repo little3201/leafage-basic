@@ -24,6 +24,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
@@ -43,14 +44,16 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     private final PostsRepository postsRepository;
     private final PostsContentService postsContentService;
-    private final ReactiveMongoTemplate reactiveMongoTemplate;
     private final CategoryRepository categoryRepository;
 
-    public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService, ReactiveMongoTemplate reactiveMongoTemplate, CategoryRepository categoryRepository) {
+    private final ReactiveMongoTemplate reactiveMongoTemplate;
+
+    public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService,
+                            CategoryRepository categoryRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
         this.postsRepository = postsRepository;
         this.postsContentService = postsContentService;
-        this.reactiveMongoTemplate = reactiveMongoTemplate;
         this.categoryRepository = categoryRepository;
+        this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
     @Override
@@ -123,10 +126,15 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<Long> count() {
+    public Mono<Long> count(String category) {
+        if (StringUtils.hasText(category)) {
+            return categoryRepository.getByCodeAndEnabledTrue(category).flatMap(ca ->
+                    postsRepository.countByCategoryIdAndEnabledTrue(ca.getId()));
+        }
         return postsRepository.count();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostsVO> create(PostsDTO postsDTO) {
         Mono<Posts> postsMono = categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
@@ -149,6 +157,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return postsMono.flatMap(this::convertOuter);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostsVO> modify(String code, PostsDTO postsDTO) {
         Assert.hasText(code, MESSAGE);

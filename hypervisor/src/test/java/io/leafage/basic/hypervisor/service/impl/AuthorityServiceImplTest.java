@@ -50,7 +50,7 @@ class AuthorityServiceImplTest {
     private AuthorityServiceImpl authorityService;
 
     @Test
-    void retrieve() {
+    void retrieve_page() {
         Authority authority = new Authority();
         authority.setId(new ObjectId());
         authority.setSuperior(new ObjectId());
@@ -62,6 +62,21 @@ class AuthorityServiceImplTest {
         given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
 
         StepVerifier.create(authorityService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void retrieve() {
+        Authority authority = new Authority();
+        authority.setId(new ObjectId());
+        authority.setSuperior(new ObjectId());
+        given(this.authorityRepository.findByTypeAndEnabledTrue('M')).willReturn(Flux.just(authority));
+
+        given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        authority.setName("test");
+        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
+
+        StepVerifier.create(authorityService.retrieve()).expectNextCount(1).verifyComplete();
     }
 
     @Test

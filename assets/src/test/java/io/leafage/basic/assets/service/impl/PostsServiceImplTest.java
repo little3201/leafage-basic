@@ -149,8 +149,20 @@ class PostsServiceImplTest {
 
     @Test
     void count() {
+        Category category = new Category();
+        category.setId(new ObjectId());
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
+
+        given(this.postsRepository.countByCategoryIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        StepVerifier.create(postsService.count("21213G0J2")).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void count_all() {
         given(this.postsRepository.count()).willReturn(Mono.just(2L));
-        StepVerifier.create(postsService.count()).expectNextCount(1).verifyComplete();
+
+        StepVerifier.create(postsService.count("")).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -180,7 +192,7 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void create_error() {
+    void create_error_null() {
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setCategory("21213G0J2");
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.empty());
@@ -189,7 +201,7 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void create_error2() {
+    void create_error() {
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setCategory("21213G0J2");
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))

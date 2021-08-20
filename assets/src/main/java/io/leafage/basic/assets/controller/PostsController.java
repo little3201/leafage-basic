@@ -137,13 +137,14 @@ public class PostsController {
     /**
      * 统计记录数
      *
+     * @param category 类目code
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
+    public ResponseEntity<Mono<Long>> count(String category) {
         Mono<Long> count;
         try {
-            count = postsService.count();
+            count = postsService.count(category);
         } catch (Exception e) {
             logger.error("Count posts occurred an error: ", e);
             return ResponseEntity.noContent().build();

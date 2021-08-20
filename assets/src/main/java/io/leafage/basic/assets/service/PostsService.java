@@ -46,6 +46,14 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
     Mono<ContentVO> content(String code);
 
     /**
+     * 统计
+     *
+     * @param category 类目
+     * @return 统计数
+     */
+    Mono<Long> count(String category);
+
+    /**
      * 下一条记录
      *
      * @param code 代码

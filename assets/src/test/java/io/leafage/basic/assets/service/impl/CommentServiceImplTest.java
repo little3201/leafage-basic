@@ -1,5 +1,6 @@
 package io.leafage.basic.assets.service.impl;
 
+import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.document.Comment;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.dto.CommentDTO;
@@ -14,6 +15,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -32,6 +37,9 @@ class CommentServiceImplTest {
 
     @Mock
     private PostsRepository postsRepository;
+
+    @Mock
+    private ReactiveMongoTemplate reactiveMongoTemplate;
 
     @InjectMocks
     private CommentServiceImpl commentService;
@@ -75,6 +83,10 @@ class CommentServiceImplTest {
         comment.setContent("test");
         comment.setPostsId(posts.getId());
         given(this.commentRepository.insert(Mockito.any(Comment.class))).willReturn(Mono.just(comment));
+
+        given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(comment.getPostsId())),
+                new Update().inc("comment", 1), Posts.class))
+                .willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
 
         given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 

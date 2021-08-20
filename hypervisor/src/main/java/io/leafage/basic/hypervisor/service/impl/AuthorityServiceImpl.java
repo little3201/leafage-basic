@@ -60,6 +60,11 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
     }
 
     @Override
+    public Flux<AuthorityVO> retrieve() {
+        return authorityRepository.findByTypeAndEnabledTrue('M').flatMap(this::convertOuter);
+    }
+
+    @Override
     public Flux<TreeNode> authorities(String username) {
         Assert.hasText(username, "username is blank.");
         Mono<User> userMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)

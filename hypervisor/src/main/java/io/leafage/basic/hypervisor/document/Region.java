@@ -18,29 +18,13 @@ public class Region extends BaseDocument {
      */
     private Long code;
     /**
-     * 国家
+     * 上级
      */
-    private Integer country;
+    private Long superior;
     /**
      * 名称
      */
     private String name;
-    /**
-     * 省/直辖市
-     */
-    private Integer province;
-    /**
-     * 市
-     */
-    private Integer city;
-    /**
-     * 区/街道
-     */
-    private String area;
-    /**
-     * 乡/镇
-     */
-    private Integer town;
 
     public Long getCode() {
         return code;
@@ -50,12 +34,12 @@ public class Region extends BaseDocument {
         this.code = code;
     }
 
-    public Integer getCountry() {
-        return country;
+    public Long getSuperior() {
+        return superior;
     }
 
-    public void setCountry(Integer country) {
-        this.country = country;
+    public void setSuperior(Long superior) {
+        this.superior = superior;
     }
 
     public String getName() {
@@ -64,37 +48,5 @@ public class Region extends BaseDocument {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getProvince() {
-        return province;
-    }
-
-    public void setProvince(Integer province) {
-        this.province = province;
-    }
-
-    public Integer getCity() {
-        return city;
-    }
-
-    public void setCity(Integer city) {
-        this.city = city;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public Integer getTown() {
-        return town;
-    }
-
-    public void setTown(Integer town) {
-        this.town = town;
     }
 }

@@ -36,9 +36,9 @@ public class PortfolioServiceImpl extends AbstractBasicService implements Portfo
     }
 
     @Override
-    public Flux<PortfolioVO> retrieve(int page, int size, String order) {
+    public Flux<PortfolioVO> retrieve(int page, int size, String sort) {
         return portfolioRepository.findByEnabledTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
-                StringUtils.hasText(order) ? order : "modifyTime"))).map(this::convertOuter);
+                StringUtils.hasText(sort) ? sort : "modifyTime"))).map(this::convertOuter);
     }
 
     @Override

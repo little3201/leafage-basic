@@ -41,19 +41,19 @@ public class PostsController {
      * @param page     页码
      * @param size     大小
      * @param category 分类
-     * @param order    排序字段
+     * @param sort     排序字段
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<PostsVO>> retrieve(Integer page, Integer size, String category, String order) {
+    public ResponseEntity<Flux<PostsVO>> retrieve(Integer page, Integer size, String category, String sort) {
         Flux<PostsVO> voFlux;
         try {
             if (page == null || size == null) {
                 voFlux = postsService.retrieve();
             } else if (StringUtils.hasText(category)) {
-                voFlux = postsService.retrieve(page, size, category, order);
+                voFlux = postsService.retrieve(page, size, category, sort);
             } else {
-                voFlux = postsService.retrieve(page, size, order);
+                voFlux = postsService.retrieve(page, size, sort);
             }
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);

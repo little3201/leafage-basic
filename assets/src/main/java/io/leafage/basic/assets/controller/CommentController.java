@@ -37,13 +37,14 @@ public class CommentController {
      *
      * @param page 分页位置
      * @param size 分页大小
+     * @param sort 排序字段
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+    public ResponseEntity<Flux<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
         Flux<CommentVO> voFlux;
         try {
-            voFlux = commentService.retrieve(page, size, order);
+            voFlux = commentService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.error("Retrieve comment occurred an error: ", e);
             return ResponseEntity.noContent().build();

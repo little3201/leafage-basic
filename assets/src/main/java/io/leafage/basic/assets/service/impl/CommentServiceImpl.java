@@ -42,9 +42,9 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     }
 
     @Override
-    public Flux<CommentVO> retrieve(int page, int size, String order) {
+    public Flux<CommentVO> retrieve(int page, int size, String sort) {
         return commentRepository.findByEnabledTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
-                StringUtils.hasText(order) ? order : "modifyTime"))).flatMap(this::convertOuter);
+                StringUtils.hasText(sort) ? sort : "modifyTime"))).flatMap(this::convertOuter);
     }
 
     @Override

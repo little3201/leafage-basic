@@ -35,17 +35,17 @@ public class PortfolioController {
     /**
      * 分页查询
      *
-     * @param page  页码
-     * @param size  大小
-     * @param order 排序字段
+     * @param page 页码
+     * @param size 大小
+     * @param sort 排序字段
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
     public ResponseEntity<Flux<PortfolioVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                      String order) {
+                                                      String sort) {
         Flux<PortfolioVO> voFlux;
         try {
-            voFlux = portfolioService.retrieve(page, size, order);
+            voFlux = portfolioService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.error("Retrieve portfolio occurred an error: ", e);
             return ResponseEntity.noContent().build();

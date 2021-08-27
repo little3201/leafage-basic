@@ -62,17 +62,17 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Flux<PostsVO> retrieve(int page, int size, String order) {
-        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modifyTime");
-        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, sort))
+    public Flux<PostsVO> retrieve(int page, int size, String sort) {
+        Sort s = Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
+        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, s))
                 .flatMap(this::convertOuter);
     }
 
     @Override
-    public Flux<PostsVO> retrieve(int page, int size, String category, String order) {
-        Sort sort = Sort.by(Sort.Direction.DESC, StringUtils.hasText(order) ? order : "modifyTime");
+    public Flux<PostsVO> retrieve(int page, int size, String category, String sort) {
+        Sort s = Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
         return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
-                postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, sort))
+                postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, s))
                         .flatMap(this::convertOuter));
     }
 

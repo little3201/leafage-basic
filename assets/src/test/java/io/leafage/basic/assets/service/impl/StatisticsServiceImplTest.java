@@ -4,6 +4,7 @@ import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,9 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.time.LocalDate;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -78,6 +77,7 @@ class StatisticsServiceImplTest {
         given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
 
         Statistics statistics = new Statistics(LocalDate.now(), 2, 0.98, 0, 0);
+        statistics.setId(new ObjectId());
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
                 .willReturn(Mono.just(statistics));
 

@@ -41,6 +41,14 @@ class AccountControllerTest {
     }
 
     @Test
+    void fetch_error() {
+        given(this.accountService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/account/{code}", "21612OL34").exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
     void create() {
         AccountVO accountVO = new AccountVO();
         accountVO.setBalance(new BigDecimal("1000.09"));
@@ -51,6 +59,16 @@ class AccountControllerTest {
         webTestClient.post().uri("/account").bodyValue(accountDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.balance").isEqualTo("1000.09");
+    }
+
+    @Test
+    void create_error() {
+        given(this.accountService.create(Mockito.any(AccountDTO.class))).willThrow(new RuntimeException());
+
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setCode("6431659823235265");
+        webTestClient.post().uri("/account").bodyValue(accountDTO).exchange()
+                .expectStatus().is4xxClientError();
     }
 
     @Test
@@ -67,10 +85,28 @@ class AccountControllerTest {
     }
 
     @Test
+    void modify_error() {
+        given(this.accountService.modify(Mockito.anyString(), Mockito.any(AccountDTO.class))).willThrow(new RuntimeException());
+
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setCode("6431659823235265");
+        webTestClient.put().uri("/account/{code}", "21612OL34").bodyValue(accountDTO).exchange()
+                .expectStatus().isNotModified();
+    }
+
+    @Test
     void remove() {
         given(this.accountService.remove(Mockito.anyString())).willReturn(Mono.empty());
 
         webTestClient.delete().uri("/account/{code}", "21612OL34").exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void remove_error() {
+        given(this.accountService.remove(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.delete().uri("/account/{code}", "21612OL34").exchange()
+                .expectStatus().is4xxClientError();
     }
 }

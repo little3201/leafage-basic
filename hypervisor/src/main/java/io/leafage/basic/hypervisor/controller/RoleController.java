@@ -132,7 +132,7 @@ public class RoleController {
             existsMono = roleService.exist(name);
         } catch (Exception e) {
             logger.error("Check role is exist an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
     }
@@ -224,7 +224,7 @@ public class RoleController {
             voFlux = roleAuthorityService.relation(code, authorities);
         } catch (Exception e) {
             logger.error("Relation role ah occurred an error: ", e);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.accepted().body(voFlux);
     }

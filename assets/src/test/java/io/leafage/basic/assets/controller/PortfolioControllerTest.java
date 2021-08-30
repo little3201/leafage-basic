@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.Collections;
 import static org.mockito.BDDMockito.given;
@@ -38,7 +39,7 @@ class PortfolioControllerTest {
     void retrieve() {
         PortfolioVO portfolioVO = new PortfolioVO();
         portfolioVO.setTitle("test");
-        given(this.portfolioService.fetch(Mockito.anyString())).willReturn(Mono.just(portfolioVO));
+        given(this.portfolioService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(Flux.just(portfolioVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -46,14 +47,12 @@ class PortfolioControllerTest {
     }
 
     @Test
-    void retrieve_category() {
-        PortfolioVO portfolioVO = new PortfolioVO();
-        portfolioVO.setTitle("test");
-        given(this.portfolioService.fetch(Mockito.anyString())).willReturn(Mono.just(portfolioVO));
+    void retrieve_error() {
+        given(this.portfolioService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
-                .expectStatus().isOk().expectBodyList(PortfolioVO.class);
+                        .queryParam("size", 2).queryParam("sort", "").build()).exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
@@ -68,9 +67,23 @@ class PortfolioControllerTest {
     }
 
     @Test
+    void fetch_error() {
+        given(this.portfolioService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/portfolio/{code}", "21213G0J2").exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
     void count() {
         given(this.portfolioService.count()).willReturn(Mono.just(2L));
         webTestClient.get().uri("/portfolio/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void count_error() {
+        given(this.portfolioService.count()).willThrow(new RuntimeException());
+        webTestClient.get().uri("/portfolio/count").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -79,6 +92,14 @@ class PortfolioControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio/exist")
                 .queryParam("title", "test").build()).exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void exist_error() {
+        given(this.portfolioService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/portfolio/exist")
+                .queryParam("title", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -99,6 +120,19 @@ class PortfolioControllerTest {
     }
 
     @Test
+    void create_error() {
+        given(this.portfolioService.create(Mockito.any(PortfolioDTO.class))).willThrow(new RuntimeException());
+
+        // 构造请求对象
+        PortfolioDTO portfolioDTO = new PortfolioDTO();
+        portfolioDTO.setTitle("test");
+        portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
+        webTestClient.post().uri("/portfolio").contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(portfolioDTO).exchange()
+                .expectStatus().is4xxClientError();
+    }
+
+    @Test
     void modify() {
         // 构造返回对象
         PortfolioVO portfolioVO = new PortfolioVO();
@@ -113,5 +147,18 @@ class PortfolioControllerTest {
                 .bodyValue(portfolioDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.title").isNotEmpty();
+    }
+
+    @Test
+    void modify_error() {
+        given(this.portfolioService.modify(Mockito.anyString(), Mockito.any(PortfolioDTO.class))).willThrow(new RuntimeException());
+
+        // 构造请求对象
+        PortfolioDTO portfolioDTO = new PortfolioDTO();
+        portfolioDTO.setTitle("test");
+        portfolioDTO.setUrl(Collections.singleton("../test.jpg"));
+        webTestClient.put().uri("/portfolio/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(portfolioDTO).exchange()
+                .expectStatus().isNotModified();
     }
 }

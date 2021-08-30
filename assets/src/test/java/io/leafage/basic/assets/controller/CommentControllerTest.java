@@ -43,6 +43,16 @@ class CommentControllerTest {
     }
 
     @Test
+    void retrieve_error() {
+        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString()))
+                .willThrow(new RuntimeException());
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comment").queryParam("page", 0)
+                        .queryParam("size", 2).queryParam("sort", "").build()).exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
     void posts() {
         CommentVO commentVO = new CommentVO();
         commentVO.setContent("test content");
@@ -53,9 +63,23 @@ class CommentControllerTest {
     }
 
     @Test
+    void posts_error() {
+        given(this.commentService.posts(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/comment/{code}", "21319JO01").exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
     void count() {
         given(this.commentService.count()).willReturn(Mono.just(2L));
         webTestClient.get().uri("/comment/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void count_error() {
+        given(this.commentService.count()).willThrow(new RuntimeException());
+        webTestClient.get().uri("/comment/count").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -77,6 +101,21 @@ class CommentControllerTest {
     }
 
     @Test
+    void create_error() {
+        given(this.commentService.create(Mockito.any(CommentDTO.class))).willThrow(new RuntimeException());
+
+        // 构造请求对象
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setPosts("21213G0J2");
+        commentDTO.setContent("test");
+        commentDTO.setEmail("test@test.com");
+        commentDTO.setNickname("布吉岛");
+        webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(commentDTO).exchange()
+                .expectStatus().is4xxClientError();
+    }
+
+    @Test
     void modify() {
         CommentVO commentVO = new CommentVO();
         commentVO.setContent("test");
@@ -95,9 +134,31 @@ class CommentControllerTest {
     }
 
     @Test
+    void modify_error() {
+        given(this.commentService.modify(Mockito.anyString(), Mockito.any(CommentDTO.class))).willThrow(new RuntimeException());
+
+        // 构造请求对象
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setPosts("21213G0J2");
+        commentDTO.setContent("test");
+        commentDTO.setEmail("test@test.com");
+        commentDTO.setNickname("布吉岛");
+        webTestClient.put().uri("/comment/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(commentDTO).exchange()
+                .expectStatus().isNotModified();
+    }
+
+    @Test
     void remove() {
         given(this.commentService.remove(Mockito.anyString())).willReturn(Mono.empty());
         webTestClient.delete().uri("/comment/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void remove_error() {
+        given(this.commentService.remove(Mockito.anyString())).willThrow(new RuntimeException());
+        webTestClient.delete().uri("/comment/{code}", "21213G0J2").exchange()
+                .expectStatus().is4xxClientError();
     }
 }

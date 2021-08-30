@@ -28,10 +28,6 @@ public class RoleAuthority extends BaseDocument {
     @Indexed
     @Field(value = "authority_id")
     private ObjectId authorityId;
-    /**
-     * 请求方式, 如：GET、POST、PUT、DELETE等
-     */
-    private String mode;
 
 
     public ObjectId getRoleId() {
@@ -48,13 +44,5 @@ public class RoleAuthority extends BaseDocument {
 
     public void setAuthorityId(ObjectId authorityId) {
         this.authorityId = authorityId;
-    }
-
-    public String getMode() {
-        return mode;
-    }
-
-    public void setMode(String mode) {
-        this.mode = mode;
     }
 }

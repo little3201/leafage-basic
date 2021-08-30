@@ -62,6 +62,14 @@ class UserControllerTest {
     }
 
     @Test
+    void retrieve_error() {
+        given(this.userService.retrieve(0, 2)).willThrow(new RuntimeException());
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/user").queryParam("page", 0)
+                .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
+    }
+
+    @Test
     void fetch() {
         UserVO userVO = new UserVO();
         userVO.setNickname("布吉岛");
@@ -75,7 +83,15 @@ class UserControllerTest {
     }
 
     @Test
-    void fetchDetails() {
+    void fetch_error() {
+        given(this.userService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/user/{username}", "little3201").exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
+    void details() {
         UserDetails userDetails = new UserDetails();
         userDetails.setUsername("little3201");
         given(this.userService.details(Mockito.anyString())).willReturn(Mono.just(userDetails));
@@ -86,6 +102,14 @@ class UserControllerTest {
     }
 
     @Test
+    void details_error() {
+        given(this.userService.details(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/user/{username}/details", "little3201").exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
     void count() {
         given(this.userService.count()).willReturn(Mono.just(2L));
 
@@ -93,10 +117,24 @@ class UserControllerTest {
     }
 
     @Test
+    void count_error() {
+        given(this.userService.count()).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/user/count").exchange().expectStatus().isNoContent();
+    }
+
+    @Test
     void exist() {
         given(this.userService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri("/user/{username}/exist", "little3201").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void exist_error() {
+        given(this.userService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/user/{username}/exist", "little3201").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -109,6 +147,15 @@ class UserControllerTest {
         userDTO.setEmail("test@test.com");
         webTestClient.post().uri("/user").bodyValue(userDTO).exchange().expectStatus().isCreated()
                 .expectBody().jsonPath("$.username").isEqualTo("little3201");
+    }
+
+    @Test
+    void create_error() {
+        given(this.userService.create(Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail("test@test.com");
+        webTestClient.post().uri("/user").bodyValue(userDTO).exchange().expectStatus().is4xxClientError();
     }
 
     @Test
@@ -125,11 +172,29 @@ class UserControllerTest {
     }
 
     @Test
+    void modify_error() {
+        given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail("test@test.com");
+        webTestClient.put().uri("/user/{username}", "test").bodyValue(userDTO).exchange()
+                .expectStatus().isNotModified();
+    }
+
+    @Test
     void remove() {
         given(this.userService.remove(Mockito.anyString())).willReturn(Mono.empty());
 
         webTestClient.delete().uri("/user/{username}", "little3201").exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void remove_error() {
+        given(this.userService.remove(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.delete().uri("/user/{username}", "little3201").exchange()
+                .expectStatus().is4xxClientError();
     }
 
     @Test
@@ -144,16 +209,32 @@ class UserControllerTest {
     }
 
     @Test
-    void relationGroup() {
+    void groups_error() {
+        given(this.userGroupService.groups(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/user/{username}/group", "little3201").exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
+    void group() {
         UserGroup userGroup = new UserGroup();
         userGroup.setGroupId(new ObjectId());
-        given(this.userGroupService.relation(Mockito.anyString(), Mockito.anySet()))
-                .willReturn(Flux.just(userGroup));
+        given(this.userGroupService.relation(Mockito.anyString(), Mockito.anySet())).willReturn(Flux.just(userGroup));
 
         webTestClient.patch().uri("/user/{username}/group", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().isAccepted()
                 .expectBodyList(UserGroup.class);
+    }
+
+    @Test
+    void group_error() {
+        given(this.userGroupService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
+
+        webTestClient.patch().uri("/user/{username}/group", "little3201")
+                .bodyValue(Collections.singleton("21612OL34"))
+                .exchange().expectStatus().is4xxClientError();
     }
 
     @Test
@@ -168,16 +249,32 @@ class UserControllerTest {
     }
 
     @Test
-    void relationRole() {
+    void roles_error() {
+        given(this.userRoleService.roles(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/user/{username}/role", "little3201").exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
+    void role() {
         UserRole userRole = new UserRole();
         userRole.setRoleId(new ObjectId());
-        given(this.userRoleService.relation(Mockito.anyString(), Mockito.anySet()))
-                .willReturn(Flux.just(userRole));
+        given(this.userRoleService.relation(Mockito.anyString(), Mockito.anySet())).willReturn(Flux.just(userRole));
 
         webTestClient.patch().uri("/user/{username}/role", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().isAccepted()
                 .expectBodyList(UserRole.class);
+    }
+
+    @Test
+    void role_error() {
+        given(this.userRoleService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
+
+        webTestClient.patch().uri("/user/{username}/role", "little3201")
+                .bodyValue(Collections.singleton("21612OL34"))
+                .exchange().expectStatus().is4xxClientError();
     }
 
     @Test
@@ -188,5 +285,13 @@ class UserControllerTest {
         webTestClient.get().uri("/user/{username}/authority", "little3201").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(RoleVO.class);
+    }
+
+    @Test
+    void authority_error() {
+        given(this.authorityService.authorities(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/user/{username}/authority", "little3201").exchange()
+                .expectStatus().isNoContent();
     }
 }

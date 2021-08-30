@@ -103,7 +103,7 @@ public class CategoryController {
             existsMono = categoryService.exist(alias);
         } catch (Exception e) {
             logger.error("Check category is exist an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
     }

@@ -99,6 +99,10 @@ class AuthorityServiceImplTest {
         Authority authority = new Authority();
         authority.setId(new ObjectId());
         authority.setSuperior(new ObjectId());
+        authority.setName("test");
+        authority.setType('M');
+        authority.setPath("/authority");
+        authority.setDescription("description");
         given(this.authorityRepository.insert(Mockito.any(Authority.class))).willReturn(Mono.just(authority));
 
         given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));

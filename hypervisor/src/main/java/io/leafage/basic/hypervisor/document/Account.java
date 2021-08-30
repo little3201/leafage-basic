@@ -3,10 +3,10 @@
  */
 package io.leafage.basic.hypervisor.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
 import java.math.BigDecimal;
 
 /**
@@ -22,7 +22,7 @@ public class Account extends BaseDocument {
      */
     @Field(value = "user_id")
     @Indexed
-    private String userId;
+    private ObjectId userId;
     /**
      * 代码
      */
@@ -38,11 +38,11 @@ public class Account extends BaseDocument {
     private char type;
 
 
-    public String getUserId() {
+    public ObjectId getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(ObjectId userId) {
         this.userId = userId;
     }
 

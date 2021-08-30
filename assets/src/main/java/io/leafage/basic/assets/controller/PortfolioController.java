@@ -101,7 +101,7 @@ public class PortfolioController {
             existsMono = portfolioService.exist(title);
         } catch (Exception e) {
             logger.error("Check portfolio is exist an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
     }

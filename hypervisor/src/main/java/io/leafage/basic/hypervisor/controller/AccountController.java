@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 import javax.validation.Valid;
 
 /**
@@ -63,7 +62,7 @@ public class AccountController {
             voMono = accountService.create(accountDTO);
         } catch (Exception e) {
             logger.error("Create account occurred an error: ", e);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
     }

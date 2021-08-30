@@ -125,7 +125,7 @@ public class GroupController {
             existsMono = groupService.exist(name);
         } catch (Exception e) {
             logger.error("Check group is exist an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
     }

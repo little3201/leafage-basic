@@ -52,8 +52,16 @@ class RoleControllerTest {
         given(this.roleService.retrieve(0, 2)).willReturn(Flux.just(roleVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/role").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange()
+                        .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(RoleVO.class);
+    }
+
+    @Test
+    void retrieve_error() {
+        given(this.roleService.retrieve(0, 2)).willThrow(new RuntimeException());
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/role").queryParam("page", 0)
+                .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -63,6 +71,13 @@ class RoleControllerTest {
 
         webTestClient.get().uri("/role/tree").exchange()
                 .expectStatus().isOk().expectBodyList(TreeNode.class);
+    }
+
+    @Test
+    void tree_error() {
+        given(this.roleService.tree()).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/role/tree").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -76,10 +91,24 @@ class RoleControllerTest {
     }
 
     @Test
+    void fetch_error() {
+        given(this.roleService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/role/{code}", "21612OL34").exchange().expectStatus().isNoContent();
+    }
+
+    @Test
     void count() {
         given(this.roleService.count()).willReturn(Mono.just(2L));
 
         webTestClient.get().uri("/role/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void count_error() {
+        given(this.roleService.count()).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/role/count").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -88,6 +117,14 @@ class RoleControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/role/exist")
                 .queryParam("name", "test").build()).exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void exist_error() {
+        given(this.roleService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/role/exist")
+                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -100,6 +137,15 @@ class RoleControllerTest {
         roleDTO.setName("test");
         webTestClient.post().uri("/role").bodyValue(roleDTO).exchange().expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
+    }
+
+    @Test
+    void create_error() {
+        given(this.roleService.create(Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
+
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setName("test");
+        webTestClient.post().uri("/role").bodyValue(roleDTO).exchange().expectStatus().is4xxClientError();
     }
 
     @Test
@@ -116,6 +162,16 @@ class RoleControllerTest {
     }
 
     @Test
+    void modify_error() {
+        given(this.roleService.modify(Mockito.anyString(), Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
+
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setName("test");
+        webTestClient.put().uri("/role/{code}", "21612OL34").bodyValue(roleDTO).exchange()
+                .expectStatus().isNotModified();
+    }
+
+    @Test
     void users() {
         UserVO userVO = new UserVO();
         userVO.setUsername("little3201");
@@ -124,6 +180,13 @@ class RoleControllerTest {
         webTestClient.get().uri("/role/{code}/user", "21612OL34").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UserRole.class);
+    }
+
+    @Test
+    void users_error() {
+        given(this.userRoleService.users(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/role/{code}/user", "21612OL34").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -138,6 +201,13 @@ class RoleControllerTest {
     }
 
     @Test
+    void authorities_error() {
+        given(this.roleAuthorityService.authorities(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/role/{code}/authority", "21612OL34").exchange().expectStatus().isNoContent();
+    }
+
+    @Test
     void relation() {
         RoleAuthority roleAuthority = new RoleAuthority();
         roleAuthority.setAuthorityId(new ObjectId());
@@ -148,5 +218,14 @@ class RoleControllerTest {
                 .bodyValue(Collections.singleton("21612OP34"))
                 .exchange().expectStatus().isAccepted()
                 .expectBodyList(UserRole.class);
+    }
+
+    @Test
+    void relation_error() {
+        given(this.roleAuthorityService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
+
+        webTestClient.patch().uri("/role/{code}/authority", "21612OL34")
+                .bodyValue(Collections.singleton("21612OP34"))
+                .exchange().expectStatus().is4xxClientError();
     }
 }

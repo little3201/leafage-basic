@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import java.time.LocalDate;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -62,6 +63,13 @@ class UserServiceImplTest {
     void details() {
         User user = new User();
         user.setId(new ObjectId());
+        user.setUsername("little3201");
+        user.setNickname("test");
+        user.setAvatar("/images/avatar.jgp");
+        user.setBirthday(LocalDate.now());
+        user.setGender('M');
+        user.setEmail("test@leafage.top");
+        user.setPhone("18712341234");
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(Mockito.anyString(), Mockito.anyString(),
                 Mockito.anyString())).willReturn(Mono.just(user));
 

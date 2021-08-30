@@ -134,7 +134,7 @@ public class UserController {
             existsMono = userService.exist(username);
         } catch (Exception e) {
             logger.error("Check user is exist an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
     }
@@ -225,7 +225,7 @@ public class UserController {
             voFlux = userGroupService.relation(username, groups);
         } catch (Exception e) {
             logger.error("create user groups occurred an error: ", e);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.accepted().body(voFlux);
     }
@@ -262,7 +262,7 @@ public class UserController {
             voFlux = userRoleService.relation(username, roles);
         } catch (Exception e) {
             logger.error("create user groups occurred an error: ", e);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.accepted().body(voFlux);
     }

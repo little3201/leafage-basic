@@ -1,6 +1,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Region;
+import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.service.RegionService;
 import io.leafage.basic.hypervisor.vo.RegionVO;
@@ -27,6 +28,13 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public Mono<RegionVO> fetch(Integer code) {
         return regionRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
+    }
+
+    @Override
+    public Mono<RegionVO> create(RegionDTO regionDTO) {
+        Region region = new Region();
+        BeanUtils.copyProperties(regionDTO, region);
+        return regionRepository.insert(region).map(this::convertOuter);
     }
 
     @Override

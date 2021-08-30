@@ -41,10 +41,26 @@ class StatisticsControllerTest {
     }
 
     @Test
+    void retrieve_error() {
+        given(this.statisticsService.retrieve(Mockito.anyInt(), Mockito.anyInt()))
+                .willThrow(new RuntimeException());
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/statistics").queryParam("page", 0)
+                .queryParam("size", 7).build()).exchange().expectStatus().isNoContent();
+    }
+
+    @Test
     void fetch() {
         StatisticsVO statisticsVO = new StatisticsVO();
         given(this.statisticsService.fetch()).willReturn(Mono.just(statisticsVO));
 
         webTestClient.get().uri("/statistics/viewed").exchange().expectStatus().isOk().expectBody(StatisticsVO.class);
+    }
+
+    @Test
+    void fetch_error() {
+        given(this.statisticsService.fetch()).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/statistics/viewed").exchange().expectStatus().isNoContent();
     }
 }

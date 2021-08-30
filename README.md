@@ -4,7 +4,7 @@
  <img src="https://img.shields.io/badge/Spring%20Cloud-2020.0.3-green.svg" alt="Coverage Status">
  <img src="https://img.shields.io/badge/Spring%20Boot-2.4.6-green.svg" alt="Downloads">
  <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=alert_status" alt="Quality Gate Status">
- <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=coverage" />
+ <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=coverage"/>
 </p>
 
 ### 本模块依赖
@@ -79,3 +79,7 @@ CMS服务相关接口，包括个人网站的资料维护，大体包含：
 - [x] 权限
 - [x] 分组
 - [ ] 账户
+
+<a href="https://github.com/little3201/leafge-basic/master/LICENSE">
+  <h2>Apache 2.0</h2>
+</a>

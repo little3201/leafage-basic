@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import top.leafage.common.basic.TreeNode;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,6 +62,10 @@ class RoleServiceImplTest {
     void create() {
         Role role = new Role();
         role.setId(1L);
+        role.setEnabled(true);
+        role.setModifier(1L);
+        role.setModifyTime(LocalDateTime.now());
+        role.setDescription("test");
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(role);
 
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));

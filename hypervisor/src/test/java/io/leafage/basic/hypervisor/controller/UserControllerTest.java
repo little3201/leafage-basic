@@ -65,12 +65,14 @@ class UserControllerTest {
     @Test
     void retrieve() throws Exception {
         List<UserVO> voList = new ArrayList<>(2);
-        voList.add(new UserVO());
+        UserVO userVO = new UserVO();
+        userVO.setMobile("18710231023");
+        voList.add(userVO);
         Page<UserVO> voPage = new PageImpl<>(voList);
         given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/user").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("order", "")).andExpect(status().isOk())
+                        .queryParam("sort", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -79,7 +81,7 @@ class UserControllerTest {
         given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/user").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("order", "")).andExpect(status().is(204)).andDo(print()).andReturn();
+                .queryParam("sort", "")).andExpect(status().is(204)).andDo(print()).andReturn();
     }
 
     @Test
@@ -104,7 +106,7 @@ class UserControllerTest {
     void fetchDetails() throws Exception {
         UserDetails userDetails = new UserDetails();
         userDetails.setUsername("test");
-        given(this.userService.fetchDetails(Mockito.anyString())).willReturn(userDetails);
+        given(this.userService.details(Mockito.anyString())).willReturn(userDetails);
 
         mvc.perform(get("/user/{username}/details", "test")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("test")).andDo(print()).andReturn();
@@ -112,7 +114,7 @@ class UserControllerTest {
 
     @Test
     void fetchDetails_error() throws Exception {
-        given(this.userService.fetchDetails(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.userService.details(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/user/{username}/details", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();

@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import top.leafage.common.basic.TreeNode;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
@@ -44,9 +43,13 @@ class GroupServiceImplTest {
 
     @Test
     void retrieve() {
-        List<Group> groups = new ArrayList<>(2);
-        Page<Group> page = new PageImpl<>(groups);
-        given(this.groupRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
+        Group group = new Group();
+        group.setId(2L);
+
+        Group child = new Group();
+        child.setSuperior(2L);
+        given(this.groupRepository.findAll(PageRequest.of(0, 2, Sort.by("id"))))
+                .willReturn(new PageImpl<>(Arrays.asList(group, child)));
 
         Page<GroupVO> voPage = groupService.retrieve(0, 2, "id");
         Assertions.assertNotNull(voPage);
@@ -60,6 +63,7 @@ class GroupServiceImplTest {
 
         Group group = new Group();
         group.setId(2L);
+        group.setPrincipal(1L);
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));

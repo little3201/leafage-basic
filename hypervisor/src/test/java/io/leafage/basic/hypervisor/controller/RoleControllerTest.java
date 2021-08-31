@@ -60,12 +60,14 @@ class RoleControllerTest {
     @Test
     void retrieve() throws Exception {
         List<RoleVO> voList = new ArrayList<>(2);
-        voList.add(new RoleVO());
+        RoleVO roleVO = new RoleVO();
+        roleVO.setSuperior("superior");
+        voList.add(roleVO);
         Page<RoleVO> voPage = new PageImpl<>(voList);
         given(this.roleService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/role").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("order", "")).andExpect(status().isOk())
+                        .queryParam("sort", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -74,7 +76,7 @@ class RoleControllerTest {
         given(this.roleService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/role").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("order", "")).andExpect(status().is(204)).andDo(print()).andReturn();
+                .queryParam("sort", "")).andExpect(status().is(204)).andDo(print()).andReturn();
     }
 
     @Test

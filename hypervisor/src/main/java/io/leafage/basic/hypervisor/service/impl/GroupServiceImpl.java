@@ -15,8 +15,8 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @author liwenqiang 2018/12/17 19:25
  **/
 @Service
-public class GroupServiceImpl extends AbstractBasicService implements GroupService {
+public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> implements GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
@@ -39,8 +39,8 @@ public class GroupServiceImpl extends AbstractBasicService implements GroupServi
     }
 
     @Override
-    public Page<GroupVO> retrieve(int page, int size, String order) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modifyTime"));
+    public Page<GroupVO> retrieve(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
         Page<Group> infoPage = groupRepository.findAll(pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());

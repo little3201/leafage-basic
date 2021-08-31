@@ -47,12 +47,14 @@ class AuthorityControllerTest {
     @Test
     void retrieve() throws Exception {
         List<AuthorityVO> voList = new ArrayList<>(2);
-        voList.add(new AuthorityVO());
+        AuthorityVO authorityVO = new AuthorityVO();
+        authorityVO.setSuperior("superior");
+        voList.add(authorityVO);
         Page<AuthorityVO> voPage = new PageImpl<>(voList);
         given(this.authorityService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/authority").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("order", "")).andExpect(status().isOk())
+                        .queryParam("sort", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -61,7 +63,7 @@ class AuthorityControllerTest {
         given(this.authorityService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/authority").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("order", "")).andExpect(status().is(204)).andDo(print()).andReturn();
+                .queryParam("sort", "")).andExpect(status().is(204)).andDo(print()).andReturn();
     }
 
     @Test

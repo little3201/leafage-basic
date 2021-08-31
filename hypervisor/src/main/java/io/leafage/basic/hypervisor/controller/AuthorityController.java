@@ -36,16 +36,16 @@ public class AuthorityController {
     /**
      * 分页查询
      *
-     * @param page  页码
-     * @param size  大小
-     * @param order 排序字段
+     * @param page 页码
+     * @param size 大小
+     * @param sort 排序字段
      * @return 查询到的数据，否则返回空
      */
     @GetMapping
-    public ResponseEntity<Page<AuthorityVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+    public ResponseEntity<Page<AuthorityVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
         Page<AuthorityVO> authorities;
         try {
-            authorities = authorityService.retrieve(page, size, order);
+            authorities = authorityService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.info("Retrieve authority occurred an error: ", e);
             return ResponseEntity.noContent().build();

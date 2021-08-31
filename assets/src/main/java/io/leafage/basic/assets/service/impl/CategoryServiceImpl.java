@@ -27,6 +27,8 @@ import top.leafage.common.basic.AbstractBasicService;
 @Service
 public class CategoryServiceImpl extends AbstractBasicService implements CategoryService {
 
+    private static final String MESSAGE = "code is blank.";
+
     private final CategoryRepository categoryRepository;
     private final PostsRepository postsRepository;
 
@@ -36,8 +38,8 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Page<CategoryVO> retrieve(int page, int size, String order) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modifyTime"));
+    public Page<CategoryVO> retrieve(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
         return categoryRepository.findAll(pageable).map(category -> {
             CategoryVO categoryVO = this.convertOuter(category);
             long count = postsRepository.countByCategoryId(category.getId());
@@ -48,7 +50,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public CategoryVO fetch(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         Category category = categoryRepository.findByCodeAndEnabledTrue(code);
         return this.convertOuter(category);
     }
@@ -64,6 +66,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public CategoryVO modify(String code, CategoryDTO categoryDTO) {
+        Assert.hasText(code, MESSAGE);
         Category category = categoryRepository.findByCodeAndEnabledTrue(code);
         BeanUtils.copyProperties(categoryDTO, category);
         categoryRepository.saveAndFlush(category);
@@ -72,7 +75,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public void remove(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, MESSAGE);
         Category category = categoryRepository.findByCodeAndEnabledTrue(code);
         if (category != null) {
             categoryRepository.deleteById(category.getId());

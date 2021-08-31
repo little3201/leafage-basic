@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Service
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {
 
-    private static final String MESSAGE = "code is blank";
+    private static final String MESSAGE = "code is blank.";
 
     private final PostsRepository postsRepository;
     private final PostsContentRepository postsContentRepository;
@@ -54,8 +54,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Page<PostsVO> retrieve(int page, int size, String order) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modifyTime"));
+    public Page<PostsVO> retrieve(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
         return postsRepository.findAll(pageable).map(this::convertOuter);
     }
 

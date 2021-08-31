@@ -19,12 +19,12 @@ public interface UserService extends BasicService<UserDTO, UserVO> {
     /**
      * 分页查询
      *
-     * @param page  页码
-     * @param size  大小
-     * @param order 排序字段
+     * @param page 页码
+     * @param size 大小
+     * @param sort 排序字段
      * @return 查询结果
      */
-    Page<UserVO> retrieve(int page, int size, String order);
+    Page<UserVO> retrieve(int page, int size, String sort);
 
     /**
      * 查询details信息, for security
@@ -32,5 +32,5 @@ public interface UserService extends BasicService<UserDTO, UserVO> {
      * @param username 账户
      * @return 查询结果
      */
-    UserDetails fetchDetails(String username);
+    UserDetails details(String username);
 }

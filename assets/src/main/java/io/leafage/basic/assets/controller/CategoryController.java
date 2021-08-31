@@ -34,16 +34,16 @@ public class CategoryController {
     /**
      * 分页查询类目
      *
-     * @param page  页码
-     * @param size  大小
-     * @param order 排序字段
+     * @param page 页码
+     * @param size 大小
+     * @param sort 排序字段
      * @return 分页结果集
      */
     @GetMapping
-    public ResponseEntity<Page<CategoryVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+    public ResponseEntity<Page<CategoryVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
         Page<CategoryVO> voPage;
         try {
-            voPage = categoryService.retrieve(page, size, order);
+            voPage = categoryService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
             return ResponseEntity.noContent().build();

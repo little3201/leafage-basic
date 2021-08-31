@@ -52,16 +52,16 @@ public class UserController {
     /**
      * 分页查询
      *
-     * @param page  页码
-     * @param size  大小
-     * @param order 排序字段
+     * @param page 页码
+     * @param size 大小
+     * @param sort 排序字段
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回204
      */
     @GetMapping
-    public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size, String order) {
+    public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
         Page<UserVO> users;
         try {
-            users = userService.retrieve(page, size, order);
+            users = userService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.info("Retrieve user occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -94,10 +94,10 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{username}/details")
-    public ResponseEntity<UserDetails> fetchDetails(@PathVariable String username) {
+    public ResponseEntity<UserDetails> details(@PathVariable String username) {
         UserDetails userDetails;
         try {
-            userDetails = userService.fetchDetails(username);
+            userDetails = userService.details(username);
         } catch (Exception e) {
             logger.info("Fetch user details occurred an error: ", e);
             return ResponseEntity.noContent().build();

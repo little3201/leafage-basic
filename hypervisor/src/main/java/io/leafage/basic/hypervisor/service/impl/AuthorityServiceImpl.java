@@ -23,8 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class AuthorityServiceImpl extends AbstractBasicService implements AuthorityService {
+public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authority> implements AuthorityService {
 
     public final RoleAuthorityRepository roleAuthorityRepository;
     private final UserRepository userRepository;
@@ -50,8 +50,8 @@ public class AuthorityServiceImpl extends AbstractBasicService implements Author
     }
 
     @Override
-    public Page<AuthorityVO> retrieve(int page, int size, String order) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modifyTime"));
+    public Page<AuthorityVO> retrieve(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
         return authorityRepository.findAll(pageable).map(this::convertOuter);
     }
 

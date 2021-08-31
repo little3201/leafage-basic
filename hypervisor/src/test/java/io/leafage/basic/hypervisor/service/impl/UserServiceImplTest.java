@@ -50,7 +50,6 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-
     @Test
     void retrieve() {
         List<User> users = new ArrayList<>(2);
@@ -72,7 +71,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void fetchDetails() {
+    void details() {
         String username = "test";
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .willReturn(Mockito.mock(User.class));
@@ -86,17 +85,17 @@ class UserServiceImplTest {
 
         given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Role.class)));
 
-        UserDetails userDetails = userService.fetchDetails("test");
+        UserDetails userDetails = userService.details("test");
         Assertions.assertNotNull(userDetails);
     }
 
     @Test
-    void fetchDetails_null() {
+    void details_null() {
         String username = "test";
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .willReturn(null);
 
-        UserDetails userDetails = userService.fetchDetails("test");
+        UserDetails userDetails = userService.details("test");
 
         Assertions.assertNull(userDetails);
     }
@@ -105,6 +104,10 @@ class UserServiceImplTest {
     void create() {
         User user = new User();
         user.setId(1L);
+        user.setPassword("123456");
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(user);
 
         UserDTO userDTO = new UserDTO();

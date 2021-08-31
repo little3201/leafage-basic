@@ -19,12 +19,12 @@ public interface PostsService extends BasicService<PostsDTO, PostsVO> {
     /**
      * 分页查询
      *
-     * @param page  页码
-     * @param size  大小
-     * @param order 排序字段
+     * @param page 页码
+     * @param size 大小
+     * @param sort 排序字段
      * @return 查询结果
      */
-    Page<PostsVO> retrieve(int page, int size, String order);
+    Page<PostsVO> retrieve(int page, int size, String sort);
 
     /**
      * 根据code查询文章详情

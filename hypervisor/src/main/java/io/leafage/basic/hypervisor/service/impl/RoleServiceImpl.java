@@ -13,8 +13,8 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl extends AbstractBasicService implements RoleService {
+public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implements RoleService {
 
     private final RoleRepository roleRepository;
 
@@ -35,8 +35,8 @@ public class RoleServiceImpl extends AbstractBasicService implements RoleService
     }
 
     @Override
-    public Page<RoleVO> retrieve(int page, int size, String order) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(order) ? order : "modifyTime"));
+    public Page<RoleVO> retrieve(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
         Page<Role> infoPage = roleRepository.findAll(pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());

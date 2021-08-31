@@ -7,7 +7,7 @@
  <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=coverage"/>
 </p>
 
-### 本模块依赖
+### 依赖
 
 > 现在leafage-starter-parent 和 leafage-common 已经可以在maven repository 中存在了（groupId 替换成了top.leafage），可以直接通过maven repository使用
 
@@ -15,67 +15,18 @@
 
 #### [leafage-common](https://github.com/little3201/leafage-common) —— 包含非业务代码，提供通用工具类；
 
-### leafage-basic
-
-<a target="_blank" href="https://console.abeille.top"> 在线体验</a>， 目前仅开放assets模块的查询
-
 ### 介绍：
 
-**本模块分为webmvc和webflux两个版本，分别关联响应的分支，具体请查看对应分支代码；**
+<a target="_blank" href="https://console.abeille.top"> 在线体验</a>， 未登录状态仅可访问部分接口
 
-两个版本的主要区别：
+#### 1. 代码质量：
 
-webmvc 版本：
+- 完全采用 restful 风格，不做过多的封装，统一返回 ResponseEntity 对象类型，尽可能相关的 HttpStatus；
+- 代码覆盖率，总体超过90%，其中controller和service接近line 100%；
+- 代码全部通过 sonarlint 扫描，代码警告除了IDEA 提示的未被使用的setter, getter之外，没有任何异常提醒；
 
-|               依赖               |            说明            |
-|:-------------------------------:|:-------------------------:|
-|         Spring Boot Web         |           web框架          |
-|         Spring Data Jpa         |          数据访问层         |
-|               mysql             |           数据存储          |
+#### 2. 概况：
 
-webflux 版本：
+- 本模块分为webmvc和webflux两个版本，分别关联响应的分支，具体请查看对应分支代码；
 
-|               依赖               |            说明            |
-|:-------------------------------:|:-------------------------:|
-|       Spring Boot Webflux       |           web框架          |
-|  Spring Data Mongodb Reactive   |          数据访问层         |
-|              mongodb            |           数据存储          |
-
-**leafage-basic下分两个模块「assets」和 「hypervisor」**
-
-### 「assets」
-
-CMS服务相关接口，包括个人网站的资料维护，大体包含：
-
-- 帖子 posts
-- 类目 category
-- 作品 portfolio
-
-#### 目标功能：
-
-- [x] 博客
-- [x] 作品集
-- [x] 类目
-- [x] 浏览量统计
-- [ ] 点赞
-- [ ] 权限
-- [ ] 留言
-- [ ] 评论
-
-### 「hypervisor」
-
-一套权限管理服务相关接口，包括用户、角色、权限、组的信息维护，大体包含：
-
-- 用户 user
-- 角色 role
-- 权限 authority
-- 分组 group
-- 账户 account
-
-#### 目标功能：
-
-- [x] 用户
-- [x] 角色
-- [x] 权限
-- [x] 组
-- [ ] 账户
+- leafage-basic下分两个模块「assets」和 「hypervisor」，具体每个模块的功能详细信息请查看对应子模块的介绍；

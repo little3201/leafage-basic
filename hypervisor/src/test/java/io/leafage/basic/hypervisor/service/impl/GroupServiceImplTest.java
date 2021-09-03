@@ -48,7 +48,7 @@ class GroupServiceImplTest {
 
         Group child = new Group();
         child.setSuperior(2L);
-        given(this.groupRepository.findAll(PageRequest.of(0, 2, Sort.by("id"))))
+        given(this.groupRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id"))))
                 .willReturn(new PageImpl<>(Arrays.asList(group, child)));
 
         Page<GroupVO> voPage = groupService.retrieve(0, 2, "id");

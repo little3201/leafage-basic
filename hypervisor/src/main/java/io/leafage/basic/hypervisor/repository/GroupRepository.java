@@ -4,6 +4,8 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.entity.Group;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -15,6 +17,14 @@ import java.util.List;
  **/
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
+
+    /**
+     * 分页查询
+     *
+     * @param pageable 分页对象
+     * @return 查询结果
+     */
+    Page<Group> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据code查询信息

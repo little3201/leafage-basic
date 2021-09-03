@@ -41,7 +41,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     @Override
     public Page<GroupVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        Page<Group> infoPage = groupRepository.findAll(pageable);
+        Page<Group> infoPage = groupRepository.findByEnabledTrue(pageable);
         if (CollectionUtils.isEmpty(infoPage.getContent())) {
             return new PageImpl<>(Collections.emptyList());
         }

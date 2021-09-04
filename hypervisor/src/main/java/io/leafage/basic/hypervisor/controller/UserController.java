@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.entity.UserGroup;
 import io.leafage.basic.hypervisor.entity.UserRole;
@@ -85,24 +84,6 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(userVO);
-    }
-
-    /**
-     * 查询信息
-     *
-     * @param username 账户
-     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
-     */
-    @GetMapping("/{username}/details")
-    public ResponseEntity<UserDetails> details(@PathVariable String username) {
-        UserDetails userDetails;
-        try {
-            userDetails = userService.details(username);
-        } catch (Exception e) {
-            logger.info("Fetch user details occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(userDetails);
     }
 
     /**

@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.config;
 
+import io.leafage.basic.hypervisor.handler.StatusAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -8,7 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -28,8 +28,9 @@ public class SecurityConfiguration {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests.anyRequest().authenticated()
-                )
-                .formLogin(withDefaults()).exceptionHandling(e ->
+                ).csrf().disable()
+                .formLogin(h -> h.successHandler(new StatusAuthenticationSuccessHandler()))
+                .exceptionHandling(e ->
                         e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
         return http.build();
     }

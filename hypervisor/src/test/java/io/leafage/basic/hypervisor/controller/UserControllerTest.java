@@ -4,7 +4,6 @@
 package io.leafage.basic.hypervisor.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.entity.UserGroup;
 import io.leafage.basic.hypervisor.entity.UserRole;
@@ -99,24 +98,6 @@ class UserControllerTest {
         given(this.userService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/user/{username}", "test")).andExpect(status().isNoContent())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void fetchDetails() throws Exception {
-        UserDetails userDetails = new UserDetails();
-        userDetails.setUsername("test");
-        given(this.userService.details(Mockito.anyString())).willReturn(userDetails);
-
-        mvc.perform(get("/user/{username}/details", "test")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("test")).andDo(print()).andReturn();
-    }
-
-    @Test
-    void fetchDetails_error() throws Exception {
-        given(this.userService.details(Mockito.anyString())).willThrow(new RuntimeException());
-
-        mvc.perform(get("/user/{username}/details", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

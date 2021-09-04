@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.entity.Role;
 import io.leafage.basic.hypervisor.entity.User;
@@ -18,6 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -87,8 +89,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public UserDetails details(String username) {
-        Assert.hasText(username, MESSAGE);
+    public UserDetails loadUserByUsername(String username) {
         User user = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username);
         if (user == null) {
             return null;
@@ -98,12 +99,11 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         List<Role> roles = userRoles.stream().map(userRole ->
                         roleRepository.findById(userRole.getRoleId()).orElse(null))
                 .filter(Objects::nonNull).collect(Collectors.toList());
-        Set<String> authorities = roles.stream().map(Role::getCode).collect(Collectors.toSet());
+        Set<GrantedAuthority> authorities = roles.stream().map(role ->
+                new SimpleGrantedAuthority(role.getCode())).collect(Collectors.toSet());
         // 转换对象
-        UserDetails userDetails = new UserDetails();
-        BeanUtils.copyProperties(user, userDetails);
-        userDetails.setAuthorities(authorities);
-        return userDetails;
+        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), user.isEnabled(),
+                user.isAccountNonExpired(), user.isCredentialsNonExpired(), user.isAccountNonLocked(), authorities);
     }
 
     /**

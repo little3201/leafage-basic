@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.entity.Role;
 import io.leafage.basic.hypervisor.entity.User;
@@ -23,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -85,7 +85,7 @@ class UserServiceImplTest {
 
         given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Role.class)));
 
-        UserDetails userDetails = userService.details("test");
+        UserDetails userDetails = userService.loadUserByUsername("test");
         Assertions.assertNotNull(userDetails);
     }
 
@@ -95,7 +95,7 @@ class UserServiceImplTest {
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
                 .willReturn(null);
 
-        UserDetails userDetails = userService.details("test");
+        UserDetails userDetails = userService.loadUserByUsername("test");
 
         Assertions.assertNull(userDetails);
     }

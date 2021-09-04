@@ -3,10 +3,10 @@
  */
 package io.leafage.basic.hypervisor.service;
 
-import io.leafage.basic.hypervisor.domain.UserDetails;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import top.leafage.common.servlet.BasicService;
 
 /**
@@ -14,7 +14,7 @@ import top.leafage.common.servlet.BasicService;
  *
  * @author liwenqiang 2018/7/28 0:29
  **/
-public interface UserService extends BasicService<UserDTO, UserVO> {
+public interface UserService extends BasicService<UserDTO, UserVO>, UserDetailsService {
 
     /**
      * 分页查询
@@ -26,11 +26,4 @@ public interface UserService extends BasicService<UserDTO, UserVO> {
      */
     Page<UserVO> retrieve(int page, int size, String sort);
 
-    /**
-     * 查询details信息, for security
-     *
-     * @param username 账户
-     * @return 查询结果
-     */
-    UserDetails details(String username);
 }

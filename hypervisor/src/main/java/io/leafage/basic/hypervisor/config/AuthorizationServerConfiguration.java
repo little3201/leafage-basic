@@ -1,5 +1,10 @@
 package io.leafage.basic.hypervisor.config;
 
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
+import io.leafage.basic.hypervisor.jose.Jwks;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,8 +20,15 @@ import org.springframework.security.oauth2.server.authorization.config.ProviderS
 public class AuthorizationServerConfiguration {
 
     @Bean
+    public JWKSource<SecurityContext> jwkSource() {
+        RSAKey rsaKey = Jwks.generateRsa();
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+    }
+
+    @Bean
     public ProviderSettings providerSettings() {
-        return ProviderSettings.builder().issuer("http://127.0.0.1:9000").build();
+        return ProviderSettings.builder().issuer("http://127.0.0.1:8763").build();
     }
 
     @Bean

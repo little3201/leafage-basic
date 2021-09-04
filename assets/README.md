@@ -9,7 +9,7 @@ CMS服务相关接口，包括个人网站的资料维护，大体包含：
 
 - 帖子 posts
 - 类目 category
-- 作品 portfolio
+- 作品 resource
 
 #### 目标功能：
 

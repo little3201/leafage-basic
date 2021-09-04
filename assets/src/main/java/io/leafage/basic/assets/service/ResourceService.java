@@ -3,8 +3,8 @@
  */
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.dto.PortfolioDTO;
-import io.leafage.basic.assets.vo.PortfolioVO;
+import io.leafage.basic.assets.dto.ResourceDTO;
+import io.leafage.basic.assets.vo.ResourceVO;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -12,5 +12,5 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2020/2/24 11:59
  **/
-public interface PortfolioService extends ReactiveBasicService<PortfolioDTO, PortfolioVO> {
+public interface ResourceService extends ReactiveBasicService<ResourceDTO, ResourceVO> {
 }

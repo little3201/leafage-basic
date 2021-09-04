@@ -5,7 +5,6 @@ package io.leafage.basic.assets.document;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.Set;
 
 /**
@@ -14,7 +13,7 @@ import java.util.Set;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "portfolio")
-public class Portfolio extends BaseDocument {
+public class Resource extends BaseDocument {
 
     /**
      * 代码

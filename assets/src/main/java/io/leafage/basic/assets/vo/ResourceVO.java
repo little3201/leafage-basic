@@ -10,7 +10,7 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PortfolioVO extends BaseVO {
+public class ResourceVO extends BaseVO {
 
     private static final long serialVersionUID = -2168494818144125736L;
 

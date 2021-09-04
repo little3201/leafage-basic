@@ -102,8 +102,10 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
             return authority;
         });
         // 设置上级
-        authorityMono = this.superior(authorityDTO.getSuperior(), authorityMono);
-        return authorityMono.flatMap(authorityRepository::insert).flatMap(this::convertOuter);
+        return this.superior(authorityDTO.getSuperior(), authorityMono).flatMap(authority -> {
+            BeanUtils.copyProperties(authorityDTO, authority);
+            return authorityRepository.insert(authority);
+        }).flatMap(this::convertOuter);
     }
 
     @Override
@@ -111,9 +113,11 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
         Assert.hasText(code, MESSAGE);
         Mono<Authority> authorityMono = authorityRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
-        // 设置上级
-        authorityMono = this.superior(authorityDTO.getSuperior(), authorityMono);
-        return authorityMono.flatMap(authorityRepository::save).flatMap(this::convertOuter);
+
+        return this.superior(authorityDTO.getSuperior(), authorityMono).flatMap(authority -> {
+            BeanUtils.copyProperties(authorityDTO, authority);
+            return authorityRepository.save(authority);
+        }).flatMap(this::convertOuter);
     }
 
     /**

@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PortfolioDTO implements Serializable {
+public class ResourceDTO implements Serializable {
 
     private static final long serialVersionUID = 6514393945624239153L;
     /**

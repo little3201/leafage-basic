@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 /**
- * 类目信息controller
+ * category controller
  *
  * @author liwenqiang 2020/2/16 14:26
  **/

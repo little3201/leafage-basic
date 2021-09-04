@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.document.Portfolio;
+import io.leafage.basic.assets.document.Resource;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, ObjectId> {
+public interface ResourceRepository extends ReactiveMongoRepository<Resource, ObjectId> {
 
     /**
      * 分页查询作品集
@@ -25,7 +25,7 @@ public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, 
      * @param pageable 分页参数
      * @return 有效作品集
      */
-    Flux<Portfolio> findByEnabledTrue(Pageable pageable);
+    Flux<Resource> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据code查询enabled信息
@@ -33,7 +33,7 @@ public interface PortfolioRepository extends ReactiveMongoRepository<Portfolio, 
      * @param code 代码
      * @return 作品信息
      */
-    Mono<Portfolio> getByCodeAndEnabledTrue(String code);
+    Mono<Resource> getByCodeAndEnabledTrue(String code);
 
     /**
      * 是否已存在

@@ -3,9 +3,9 @@
  */
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.dto.PortfolioDTO;
-import io.leafage.basic.assets.service.PortfolioService;
-import io.leafage.basic.assets.vo.PortfolioVO;
+import io.leafage.basic.assets.dto.ResourceDTO;
+import io.leafage.basic.assets.service.ResourceService;
+import io.leafage.basic.assets.vo.ResourceVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,20 +16,20 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 /**
- * 作品集信息controller
+ * resource controller
  *
  * @author liwenqiang 2020/2/20 9:54
  **/
 @RestController
-@RequestMapping("/portfolio")
-public class PortfolioController {
+@RequestMapping("/resource")
+public class ResourceController {
 
-    private final Logger logger = LoggerFactory.getLogger(PortfolioController.class);
+    private final Logger logger = LoggerFactory.getLogger(ResourceController.class);
 
-    private final PortfolioService portfolioService;
+    private final ResourceService resourceService;
 
-    public PortfolioController(PortfolioService portfolioService) {
-        this.portfolioService = portfolioService;
+    public ResourceController(ResourceService resourceService) {
+        this.resourceService = resourceService;
     }
 
     /**
@@ -41,11 +41,11 @@ public class PortfolioController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<PortfolioVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                      String sort) {
-        Flux<PortfolioVO> voFlux;
+    public ResponseEntity<Flux<ResourceVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                     String sort) {
+        Flux<ResourceVO> voFlux;
         try {
-            voFlux = portfolioService.retrieve(page, size, sort);
+            voFlux = resourceService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.error("Retrieve portfolio occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -60,10 +60,10 @@ public class PortfolioController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Mono<PortfolioVO>> fetch(@PathVariable String code) {
-        Mono<PortfolioVO> voMono;
+    public ResponseEntity<Mono<ResourceVO>> fetch(@PathVariable String code) {
+        Mono<ResourceVO> voMono;
         try {
-            voMono = portfolioService.fetch(code);
+            voMono = resourceService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch portfolio occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -80,7 +80,7 @@ public class PortfolioController {
     public ResponseEntity<Mono<Long>> count() {
         Mono<Long> count;
         try {
-            count = portfolioService.count();
+            count = resourceService.count();
         } catch (Exception e) {
             logger.error("Count portfolio occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -98,7 +98,7 @@ public class PortfolioController {
     public ResponseEntity<Mono<Boolean>> exist(@RequestParam String title) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = portfolioService.exist(title);
+            existsMono = resourceService.exist(title);
         } catch (Exception e) {
             logger.error("Check portfolio is exist an error: ", e);
             return ResponseEntity.noContent().build();
@@ -109,14 +109,14 @@ public class PortfolioController {
     /**
      * 根据传入的数据添加信息
      *
-     * @param portfolioDTO 要添加的数据
+     * @param resourceDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<PortfolioVO>> create(@RequestBody @Valid PortfolioDTO portfolioDTO) {
-        Mono<PortfolioVO> voMono;
+    public ResponseEntity<Mono<ResourceVO>> create(@RequestBody @Valid ResourceDTO resourceDTO) {
+        Mono<ResourceVO> voMono;
         try {
-            voMono = portfolioService.create(portfolioDTO);
+            voMono = resourceService.create(resourceDTO);
         } catch (Exception e) {
             logger.error("Create portfolio occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
@@ -127,15 +127,15 @@ public class PortfolioController {
     /**
      * 根据传入的代码和要修改的数据，修改信息
      *
-     * @param code         代码
-     * @param portfolioDTO 要修改的数据
+     * @param code        代码
+     * @param resourceDTO 要修改的数据
      * @return 修改后的信息，异常时返回304状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Mono<PortfolioVO>> modify(@PathVariable String code, @RequestBody @Valid PortfolioDTO portfolioDTO) {
-        Mono<PortfolioVO> voMono;
+    public ResponseEntity<Mono<ResourceVO>> modify(@PathVariable String code, @RequestBody @Valid ResourceDTO resourceDTO) {
+        Mono<ResourceVO> voMono;
         try {
-            voMono = portfolioService.modify(code, portfolioDTO);
+            voMono = resourceService.modify(code, resourceDTO);
         } catch (Exception e) {
             logger.error("Modify portfolio occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

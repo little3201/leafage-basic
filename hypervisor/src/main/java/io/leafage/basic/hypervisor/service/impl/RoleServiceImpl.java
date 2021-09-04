@@ -88,9 +88,11 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
             role.setCode(this.generateCode());
             return role;
         });
-        // 设置上级
-        roleMono = this.superior(roleDTO.getSuperior(), roleMono);
-        return roleMono.flatMap(roleRepository::insert).flatMap(this::convertOuter);
+
+        return this.superior(roleDTO.getSuperior(), roleMono).flatMap(role -> {
+            BeanUtils.copyProperties(roleDTO, role);
+            return roleRepository.insert(role);
+        }).flatMap(this::convertOuter);
     }
 
     @Override
@@ -98,9 +100,11 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
         Assert.hasText(code, MESSAGE);
         Mono<Role> roleMono = roleRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
-        // 设置上级
-        roleMono = this.superior(roleDTO.getSuperior(), roleMono);
-        return roleMono.flatMap(roleRepository::save).flatMap(this::convertOuter);
+
+        return this.superior(roleDTO.getSuperior(), roleMono).flatMap(role -> {
+            BeanUtils.copyProperties(roleDTO, role);
+            return roleRepository.save(role);
+        }).flatMap(this::convertOuter);
     }
 
 

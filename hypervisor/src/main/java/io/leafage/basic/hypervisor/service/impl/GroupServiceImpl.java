@@ -98,7 +98,10 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
         groupMono = this.principal(groupDTO.getPrincipal(), groupMono);
         // 设置责任人
         groupMono = this.superior(groupDTO.getSuperior(), groupMono);
-        return groupMono.flatMap(groupRepository::insert).flatMap(this::convertOuter);
+        return groupMono.flatMap(group -> {
+            BeanUtils.copyProperties(groupDTO, group);
+            return groupRepository.insert(group);
+        }).flatMap(this::convertOuter);
     }
 
     @Override
@@ -111,7 +114,10 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
         groupMono = this.superior(groupDTO.getSuperior(), groupMono);
         // 设置责任人
         groupMono = this.principal(groupDTO.getPrincipal(), groupMono);
-        return groupMono.flatMap(groupRepository::save).flatMap(this::convertOuter);
+        return groupMono.flatMap(group -> {
+            BeanUtils.copyProperties(groupDTO, group);
+            return groupRepository.save(group);
+        }).flatMap(this::convertOuter);
     }
 
     @Override

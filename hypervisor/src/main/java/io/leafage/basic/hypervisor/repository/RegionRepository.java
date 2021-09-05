@@ -30,5 +30,5 @@ public interface RegionRepository extends ReactiveMongoRepository<Region, Object
      * @param code 代码
      * @return 查询结果信息
      */
-    Mono<Region> getByCodeAndEnabledTrue(Integer code);
+    Mono<Region> getByCodeAndEnabledTrue(Long code);
 }

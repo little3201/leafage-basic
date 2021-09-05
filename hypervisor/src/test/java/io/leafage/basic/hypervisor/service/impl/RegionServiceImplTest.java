@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -34,6 +35,8 @@ class RegionServiceImplTest {
     void retrieve() {
         given(this.regionRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(Mockito.mock(Region.class)));
 
+        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
+
         StepVerifier.create(regionService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
@@ -44,14 +47,16 @@ class RegionServiceImplTest {
         region.setCode(2L);
         region.setSuperior(1L);
         region.setName("test");
-        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyInt())).willReturn(Mono.just(region));
+        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
 
-        StepVerifier.create(regionService.fetch(1100)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.fetch(1100L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
         given(this.regionRepository.insert(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
+
+        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
 
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setCode(11001L);

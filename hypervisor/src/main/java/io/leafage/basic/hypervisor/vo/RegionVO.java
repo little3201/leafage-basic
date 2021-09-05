@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import java.time.LocalDateTime;
+
 /**
  * DTO class for Region
  *
@@ -17,11 +19,15 @@ public class RegionVO {
     /**
      * 上级
      */
-    private Long superior;
+    private String superior;
     /**
      * 名称
      */
     private String name;
+    /**
+     * 修改时间
+     */
+    private LocalDateTime modifyTime;
 
     public Long getCode() {
         return code;
@@ -31,11 +37,11 @@ public class RegionVO {
         this.code = code;
     }
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
     }
 
@@ -45,5 +51,13 @@ public class RegionVO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

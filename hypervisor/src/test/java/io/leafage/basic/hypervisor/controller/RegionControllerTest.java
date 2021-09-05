@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -53,7 +54,7 @@ class RegionControllerTest {
     void fetch() {
         RegionVO regionVO = new RegionVO();
         regionVO.setName("test");
-        given(this.regionService.fetch(Mockito.anyInt())).willReturn(Mono.just(regionVO));
+        given(this.regionService.fetch(Mockito.anyLong())).willReturn(Mono.just(regionVO));
 
         webTestClient.get().uri("/region/{code}", "1100").exchange()
                 .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
@@ -61,7 +62,7 @@ class RegionControllerTest {
 
     @Test
     void fetch_error() {
-        given(this.regionService.fetch(Mockito.anyInt())).willThrow(new RuntimeException());
+        given(this.regionService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/region/{code}", "1100").exchange().expectStatus().isNoContent();
     }

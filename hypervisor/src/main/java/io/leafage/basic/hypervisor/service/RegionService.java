@@ -14,5 +14,12 @@ import top.leafage.common.reactive.ReactiveBasicService;
  * @author liwenqiang 2021-08-20 16:59
  **/
 public interface RegionService extends ReactiveBasicService<RegionDTO, RegionVO> {
-    Mono<RegionVO> fetch(Integer code);
+
+    /**
+     * 根据code查询
+     *
+     * @param code 代码
+     * @return 查询结果
+     */
+    Mono<RegionVO> fetch(long code);
 }

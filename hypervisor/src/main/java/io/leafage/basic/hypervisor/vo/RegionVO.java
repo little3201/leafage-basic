@@ -19,7 +19,7 @@ public class RegionVO {
     /**
      * 上级
      */
-    private Long superior;
+    private String superior;
     /**
      * 名称
      */
@@ -37,11 +37,11 @@ public class RegionVO {
         this.code = code;
     }
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
     }
 

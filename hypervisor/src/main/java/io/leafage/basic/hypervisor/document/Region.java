@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.document;
 
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -16,10 +17,12 @@ public class Region extends BaseDocument {
     /**
      * 代码
      */
+    @Indexed(unique = true)
     private Long code;
     /**
      * 上级
      */
+    @Indexed
     private Long superior;
     /**
      * 名称

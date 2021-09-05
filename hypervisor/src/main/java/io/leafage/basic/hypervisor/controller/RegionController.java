@@ -52,7 +52,7 @@ public class RegionController {
      * @return 查询的数据，异常时返回204状态码
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Mono<RegionVO>> fetch(@PathVariable Integer code) {
+    public ResponseEntity<Mono<RegionVO>> fetch(@PathVariable long code) {
         Mono<RegionVO> voMono;
         try {
             voMono = regionService.fetch(code);

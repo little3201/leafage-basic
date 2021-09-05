@@ -22,19 +22,19 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Flux<RegionVO> retrieve(int page, int size) {
-        return regionRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+        return regionRepository.findByEnabledTrue(PageRequest.of(page, size)).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<RegionVO> fetch(Integer code) {
-        return regionRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
+    public Mono<RegionVO> fetch(long code) {
+        return regionRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<RegionVO> create(RegionDTO regionDTO) {
         Region region = new Region();
         BeanUtils.copyProperties(regionDTO, region);
-        return regionRepository.insert(region).map(this::convertOuter);
+        return regionRepository.insert(region).flatMap(this::convertOuter);
     }
 
     @Override
@@ -48,9 +48,20 @@ public class RegionServiceImpl implements RegionService {
      * @param info 信息
      * @return RegionVO 输出对象
      */
-    private RegionVO convertOuter(Region info) {
-        RegionVO outer = new RegionVO();
-        BeanUtils.copyProperties(info, outer);
-        return outer;
+    private Mono<RegionVO> convertOuter(Region info) {
+        Mono<RegionVO> voMono = Mono.just(info).map(region -> {
+            RegionVO outer = new RegionVO();
+            BeanUtils.copyProperties(region, outer);
+            return outer;
+        });
+
+        if (info.getSuperior() != null) {
+            Mono<Region> superiorMono = regionRepository.getByCodeAndEnabledTrue(info.getSuperior());
+            return voMono.zipWith(superiorMono, (vo, superior) -> {
+                vo.setSuperior(superior.getName());
+                return vo;
+            });
+        }
+        return voMono;
     }
 }

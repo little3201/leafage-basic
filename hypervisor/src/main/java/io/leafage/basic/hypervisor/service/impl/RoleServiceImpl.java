@@ -159,9 +159,9 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
      * @return 输出转换后的vo对象
      */
     private Mono<RoleVO> convertOuter(Role role) {
-        Mono<RoleVO> voMono = Mono.just(role).map(a -> {
+        Mono<RoleVO> voMono = Mono.just(role).map(r -> {
             RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(role, roleVO);
+            BeanUtils.copyProperties(r, roleVO);
             return roleVO;
         });
 

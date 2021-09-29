@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * 内容信息dao
+ * posts content repository
  *
  * @author liwenqiang  2020-12-03 22:59
  **/

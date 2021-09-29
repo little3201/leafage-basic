@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * 分类dao
+ * category repository
  *
  * @author liwenqiang  2020-12-03 22:59
  **/
@@ -30,4 +30,12 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
      * @return 查询结果
      */
     Category getByCodeAndEnabledTrue(String code);
+
+    /**
+     * 是否已存在
+     *
+     * @param alias 名称
+     * @return true-是，false-否
+     */
+    boolean existsByAlias(String alias);
 }

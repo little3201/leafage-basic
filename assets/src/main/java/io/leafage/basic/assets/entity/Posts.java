@@ -53,7 +53,7 @@ public class Posts extends BaseEntity {
     /**
      * 评论
      */
-    private int comments;
+    private int comment;
 
 
     public String getCode() {
@@ -120,11 +120,11 @@ public class Posts extends BaseEntity {
         this.viewed = viewed;
     }
 
-    public int getComments() {
-        return comments;
+    public int getComment() {
+        return comment;
     }
 
-    public void setComments(int comments) {
-        this.comments = comments;
+    public void setComment(int comment) {
+        this.comment = comment;
     }
 }

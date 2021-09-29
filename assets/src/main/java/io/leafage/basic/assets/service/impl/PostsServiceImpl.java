@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 帖子信息service实现
+ * posts service 实现
  *
  * @author liwenqiang  2018-12-20 9:54
  **/
@@ -50,13 +50,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public List<PostsVO> retrieve() {
-        return postsRepository.findAll().stream().map(this::convertOuter).collect(Collectors.toList());
+        return postsRepository.findByEnableTrue().stream().map(this::convertOuter).collect(Collectors.toList());
     }
 
     @Override
     public Page<PostsVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return postsRepository.findAll(pageable).map(this::convertOuter);
+        return postsRepository.findByEnableTrue(pageable).map(this::convertOuter);
     }
 
     @Override

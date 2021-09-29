@@ -12,6 +12,7 @@ public class ResourceServerConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests().mvcMatchers(HttpMethod.GET).permitAll()
+                .anyRequest().authenticated()
                 .and().oauth2ResourceServer().jwt();
         return http.build();
     }

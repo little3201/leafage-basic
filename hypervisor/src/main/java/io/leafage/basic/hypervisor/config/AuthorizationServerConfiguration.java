@@ -28,7 +28,7 @@ public class AuthorizationServerConfiguration {
 
     @Bean
     public ProviderSettings providerSettings() {
-        return ProviderSettings.builder().issuer("http://127.0.0.1:8763").build();
+        return ProviderSettings.builder().issuer("http://192.168.100.131:8763").build();
     }
 
     @Bean

@@ -76,7 +76,8 @@ class StatisticsServiceImplTest {
         posts.setComment(2);
         given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
 
-        Statistics statistics = new Statistics(LocalDate.now(), 2, 0.98, 0, 0);
+        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0,
+                0, 0.0, 0, 0.0);
         statistics.setId(new ObjectId());
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
                 .willReturn(Mono.just(statistics));

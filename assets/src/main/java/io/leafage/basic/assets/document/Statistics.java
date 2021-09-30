@@ -25,16 +25,26 @@ public class Statistics extends BaseDocument {
      */
     private int likes;
     /**
+     * 点赞量环比
+     */
+    private double overLikes;
+    /**
      * 评论量
      */
     private int comment;
+    /**
+     * 评论量环比
+     */
+    private double overComment;
 
-    public Statistics(LocalDate date, int viewed, double overViewed, int likes, int comment) {
+    public Statistics(LocalDate date, int viewed, double overViewed, int likes, double overLikes, int comment, double overComment) {
         this.date = date;
         this.viewed = viewed;
         this.overViewed = overViewed;
         this.likes = likes;
+        this.overLikes = overLikes;
         this.comment = comment;
+        this.overComment = overComment;
     }
 
     public LocalDate getDate() {
@@ -69,11 +79,27 @@ public class Statistics extends BaseDocument {
         this.likes = likes;
     }
 
+    public double getOverLikes() {
+        return overLikes;
+    }
+
+    public void setOverLikes(double overLikes) {
+        this.overLikes = overLikes;
+    }
+
     public int getComment() {
         return comment;
     }
 
     public void setComment(int comment) {
         this.comment = comment;
+    }
+
+    public double getOverComment() {
+        return overComment;
+    }
+
+    public void setOverComment(double overComment) {
+        this.overComment = overComment;
     }
 }

@@ -12,6 +12,8 @@ import java.io.Serializable;
  */
 public class ContentVO implements Serializable {
 
+    private static final long serialVersionUID = 7515405583284070197L;
+
     /**
      * 内容
      */

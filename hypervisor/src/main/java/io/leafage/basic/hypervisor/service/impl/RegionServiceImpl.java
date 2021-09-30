@@ -45,18 +45,18 @@ public class RegionServiceImpl implements RegionService {
     /**
      * 数据转换
      *
-     * @param info 信息
+     * @param region 信息
      * @return RegionVO 输出对象
      */
-    private Mono<RegionVO> convertOuter(Region info) {
-        Mono<RegionVO> voMono = Mono.just(info).map(region -> {
-            RegionVO outer = new RegionVO();
-            BeanUtils.copyProperties(region, outer);
-            return outer;
+    private Mono<RegionVO> convertOuter(Region region) {
+        Mono<RegionVO> voMono = Mono.just(region).map(r -> {
+            RegionVO vo = new RegionVO();
+            BeanUtils.copyProperties(r, vo);
+            return vo;
         });
 
-        if (info.getSuperior() != null) {
-            Mono<Region> superiorMono = regionRepository.getByCodeAndEnabledTrue(info.getSuperior());
+        if (region.getSuperior() != null) {
+            Mono<Region> superiorMono = regionRepository.getByCodeAndEnabledTrue(region.getSuperior());
             return voMono.zipWith(superiorMono, (vo, superior) -> {
                 vo.setSuperior(superior.getName());
                 return vo;

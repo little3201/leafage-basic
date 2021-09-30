@@ -24,9 +24,17 @@ public class StatisticsVO implements Serializable {
      */
     private int likes;
     /**
+     * 点赞量环比
+     */
+    private double overLikes;
+    /**
      * 评论量
      */
     private int comment;
+    /**
+     * 评论量环比
+     */
+    private double overComment;
 
     public LocalDate getDate() {
         return date;
@@ -60,11 +68,27 @@ public class StatisticsVO implements Serializable {
         this.likes = likes;
     }
 
+    public double getOverLikes() {
+        return overLikes;
+    }
+
+    public void setOverLikes(double overLikes) {
+        this.overLikes = overLikes;
+    }
+
     public int getComment() {
         return comment;
     }
 
     public void setComment(int comment) {
         this.comment = comment;
+    }
+
+    public double getOverComment() {
+        return overComment;
+    }
+
+    public void setOverComment(double overComment) {
+        this.overComment = overComment;
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -57,9 +58,6 @@ public class StatisticsServiceImpl implements StatisticsService {
             // 统计昨天数据，然后和前天的数据做差值，计算环比数据
             return this.statisticsRepository.getByDate(LocalDate.now().minusDays(2)).map(over -> {
                 // 设置环比数据,两位小数，四舍五入
-                if (over.getViewed() == 0) {
-                    return statistics;
-                }
                 // 浏览量
                 statistics.setOverViewed(this.overViewed(statistics.getViewed(), over.getViewed()));
                 // 喜欢数
@@ -92,6 +90,9 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @return 计算结果
      */
     private double overViewed(int v, int ov) {
+        if (ov == 0) {
+            return 0;
+        }
         double overViewed = (v - ov) * 1.0 / ov * 100;
         overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
         return overViewed;
@@ -105,6 +106,9 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @return 计算结果
      */
     private double overLikes(int l, int ol) {
+        if (ol == 0) {
+            return 0;
+        }
         double overLikes = (l - ol) * 1.0 / ol * 100;
         overLikes = BigDecimal.valueOf(overLikes).setScale(2, RoundingMode.HALF_UP).doubleValue();
         return overLikes;
@@ -118,6 +122,9 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @return 计算结果
      */
     private double overComment(int c, int oc) {
+        if (oc == 0) {
+            return 0;
+        }
         double overComment = (c - oc) * 1.0 / oc * 100;
         overComment = BigDecimal.valueOf(overComment).setScale(2, RoundingMode.HALF_UP).doubleValue();
         return overComment;

@@ -90,12 +90,12 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @return 计算结果
      */
     private double overViewed(int v, int ov) {
-        if (ov == 0) {
-            return 0;
+        if (ov > 0) {
+            double overViewed = (v - ov) * 1.0 / ov * 100;
+            overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return overViewed;
         }
-        double overViewed = (v - ov) * 1.0 / ov * 100;
-        overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        return overViewed;
+        return 0.0;
     }
 
     /**
@@ -106,12 +106,12 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @return 计算结果
      */
     private double overLikes(int l, int ol) {
-        if (ol == 0) {
-            return 0;
+        if (ol > 0) {
+            double overLikes = (l - ol) * 1.0 / ol * 100;
+            overLikes = BigDecimal.valueOf(overLikes).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return overLikes;
         }
-        double overLikes = (l - ol) * 1.0 / ol * 100;
-        overLikes = BigDecimal.valueOf(overLikes).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        return overLikes;
+        return 0.0;
     }
 
     /**
@@ -122,11 +122,11 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @return 计算结果
      */
     private double overComment(int c, int oc) {
-        if (oc == 0) {
-            return 0;
+        if (oc > 0) {
+            double overComment = (c - oc) * 1.0 / oc * 100;
+            overComment = BigDecimal.valueOf(overComment).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return overComment;
         }
-        double overComment = (c - oc) * 1.0 / oc * 100;
-        overComment = BigDecimal.valueOf(overComment).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        return overComment;
+        return 0.0;
     }
 }

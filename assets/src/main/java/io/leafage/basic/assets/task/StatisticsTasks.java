@@ -24,9 +24,9 @@ public class StatisticsTasks {
     public void execute() {
         try {
             statisticsService.create().subscribe(statistics ->
-                    logger.info("定时记录浏览量，任务执行完成: {}", statistics.getDate()));
+                    logger.info("定时统计任务执行完成: {}", statistics.getDate()));
         } catch (Exception e) {
-            logger.error("定时记录浏览量，任务执行异常: ", e);
+            logger.error("定时统计任务执行异常: ", e);
         }
     }
 

@@ -48,7 +48,7 @@ class StatisticsServiceImplTest {
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 
-        StepVerifier.create(statisticsService.fetch()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(statisticsService.over()).expectNextCount(1).verifyComplete();
     }
 
     @Test

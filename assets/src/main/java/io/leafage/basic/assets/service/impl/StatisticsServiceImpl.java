@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -41,8 +40,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<StatisticsVO> fetch() {
-        return statisticsRepository.getByDate(LocalDate.now().minusDays(1)).map(this::convertOuter);
+    public Mono<StatisticsVO> over() {
+        return statisticsRepository.getByDate(LocalDate.now().minusDays(2)).map(this::convertOuter);
     }
 
     @Override

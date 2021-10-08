@@ -40,8 +40,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<StatisticsVO> fetch() {
-        return statisticsRepository.getByDate(LocalDate.now().minusDays(1)).map(this::convertOuter);
+    public Mono<StatisticsVO> over() {
+        return statisticsRepository.getByDate(LocalDate.now().minusDays(2)).map(this::convertOuter);
     }
 
     @Override
@@ -56,10 +56,6 @@ public class StatisticsServiceImpl implements StatisticsService {
             });
             // 统计昨天数据，然后和前天的数据做差值，计算环比数据
             return this.statisticsRepository.getByDate(LocalDate.now().minusDays(2)).map(over -> {
-                // 设置环比数据,两位小数，四舍五入
-                if (over.getViewed() == 0) {
-                    return statistics;
-                }
                 // 浏览量
                 statistics.setOverViewed(this.overViewed(statistics.getViewed(), over.getViewed()));
                 // 喜欢数
@@ -87,39 +83,48 @@ public class StatisticsServiceImpl implements StatisticsService {
     /**
      * 浏览量
      *
-     * @param v  历史数据
+     * @param sv 历史数据
      * @param ov 最新数据
      * @return 计算结果
      */
-    private double overViewed(int v, int ov) {
-        double overViewed = (v - ov) * 1.0 / ov * 100;
-        overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        return overViewed;
+    private double overViewed(int sv, int ov) {
+        if (ov > 0) {
+            double overViewed = (sv - ov) * 1.0 / ov * 100;
+            overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return overViewed;
+        }
+        return 0.0;
     }
 
     /**
      * 喜欢数
      *
-     * @param l  历史数据
+     * @param sl 历史数据
      * @param ol 最新数据
      * @return 计算结果
      */
-    private double overLikes(int l, int ol) {
-        double overLikes = (l - ol) * 1.0 / ol * 100;
-        overLikes = BigDecimal.valueOf(overLikes).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        return overLikes;
+    private double overLikes(int sl, int ol) {
+        if (ol > 0) {
+            double overLikes = (sl - ol) * 1.0 / ol * 100;
+            overLikes = BigDecimal.valueOf(overLikes).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return overLikes;
+        }
+        return 0.0;
     }
 
     /**
      * 评论量
      *
-     * @param c  历史数据
+     * @param sc 历史数据
      * @param oc 最新数据
      * @return 计算结果
      */
-    private double overComment(int c, int oc) {
-        double overComment = (c - oc) * 1.0 / oc * 100;
-        overComment = BigDecimal.valueOf(overComment).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        return overComment;
+    private double overComment(int sc, int oc) {
+        if (oc > 0) {
+            double overComment = (sc - oc) * 1.0 / oc * 100;
+            overComment = BigDecimal.valueOf(overComment).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return overComment;
+        }
+        return 0.0;
     }
 }

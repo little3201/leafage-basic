@@ -26,7 +26,7 @@ public interface StatisticsService {
      *
      * @return 统计结果
      */
-    Mono<StatisticsVO> fetch();
+    Mono<StatisticsVO> over();
 
     /**
      * 浏览量记录

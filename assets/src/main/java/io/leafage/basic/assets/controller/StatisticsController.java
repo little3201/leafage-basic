@@ -53,11 +53,11 @@ public class StatisticsController {
      *
      * @return 查询到数据，异常时返回204
      */
-    @GetMapping("/viewed")
-    public ResponseEntity<Mono<StatisticsVO>> fetch() {
+    @GetMapping("/over")
+    public ResponseEntity<Mono<StatisticsVO>> over() {
         Mono<StatisticsVO> statisticsMono;
         try {
-            statisticsMono = statisticsService.fetch();
+            statisticsMono = statisticsService.over();
         } catch (Exception e) {
             logger.error("Statistics viewed occurred an error: ", e);
             return ResponseEntity.noContent().build();

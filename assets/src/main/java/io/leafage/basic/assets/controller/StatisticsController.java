@@ -54,7 +54,7 @@ public class StatisticsController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/over")
-    public ResponseEntity<Mono<StatisticsVO>> fetch() {
+    public ResponseEntity<Mono<StatisticsVO>> over() {
         Mono<StatisticsVO> statisticsMono;
         try {
             statisticsMono = statisticsService.over();

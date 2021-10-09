@@ -61,7 +61,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 // 喜欢数
                 statistics.setOverLikes(this.overLikes(statistics.getLikes(), over.getLikes()));
                 // 评论数
-                statistics.setOverLikes(this.overComment(statistics.getComment(), over.getComment()));
+                statistics.setOverComment(this.overComment(statistics.getComment(), over.getComment()));
                 return statistics;
             }).switchIfEmpty(Mono.just(statistics));
         }).flatMap(statisticsRepository::insert);

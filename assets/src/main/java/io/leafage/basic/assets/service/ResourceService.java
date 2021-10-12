@@ -3,9 +3,9 @@ package io.leafage.basic.assets.service;
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.vo.ResourceVO;
 import org.springframework.data.domain.Page;
-import top.leafage.common.servlet.BasicService;
+import top.leafage.common.servlet.ServletBasicService;
 
-public interface ResourceService extends BasicService<ResourceDTO, ResourceVO> {
+public interface ResourceService extends ServletBasicService<ResourceDTO, ResourceVO, String> {
 
     /**
      * 分页查询

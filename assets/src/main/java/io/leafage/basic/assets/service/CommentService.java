@@ -3,7 +3,7 @@ package io.leafage.basic.assets.service;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.springframework.data.domain.Page;
-import top.leafage.common.servlet.BasicService;
+import top.leafage.common.servlet.ServletBasicService;
 import java.util.List;
 
 /**
@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author liwenqiang 2021/09/29 14:34
  **/
-public interface CommentService extends BasicService<CommentDTO, CommentVO> {
+public interface CommentService extends ServletBasicService<CommentDTO, CommentVO, String> {
 
     /**
      * 分页查询

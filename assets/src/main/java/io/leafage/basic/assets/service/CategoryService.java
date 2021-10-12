@@ -6,14 +6,14 @@ package io.leafage.basic.assets.service;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.springframework.data.domain.Page;
-import top.leafage.common.servlet.BasicService;
+import top.leafage.common.servlet.ServletBasicService;
 
 /**
  * category service
  *
  * @author liwenqiang  2020-12-03 22:59
  **/
-public interface CategoryService extends BasicService<CategoryDTO, CategoryVO> {
+public interface CategoryService extends ServletBasicService<CategoryDTO, CategoryVO, String> {
 
     /**
      * 分页查询

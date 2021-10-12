@@ -7,14 +7,14 @@ import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.springframework.data.domain.Page;
-import top.leafage.common.servlet.BasicService;
+import top.leafage.common.servlet.ServletBasicService;
 
 /**
  * posts service
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface PostsService extends BasicService<PostsDTO, PostsVO> {
+public interface PostsService extends ServletBasicService<PostsDTO, PostsVO, String> {
 
     /**
      * 分页查询

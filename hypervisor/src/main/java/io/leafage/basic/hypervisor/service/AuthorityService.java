@@ -7,7 +7,7 @@ import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.basic.TreeNode;
-import top.leafage.common.servlet.BasicService;
+import top.leafage.common.servlet.ServletBasicService;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018/12/17 19:36
  **/
-public interface AuthorityService extends BasicService<AuthorityDTO, AuthorityVO> {
+public interface AuthorityService extends ServletBasicService<AuthorityDTO, AuthorityVO, String> {
 
     /**
      * 分页查询

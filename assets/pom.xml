@@ -28,7 +28,7 @@
         <dependency>
             <groupId>top.leafage</groupId>
             <artifactId>leafage-common</artifactId>
-            <version>0.1.4</version>
+            <version>0.1.5</version>
         </dependency>
         <!-- Spring cloud consul -->
         <dependency>

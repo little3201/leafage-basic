@@ -36,7 +36,7 @@ public class PostsController {
     }
 
     /**
-     * 分页查询信息
+     * 分页查询
      *
      * @param page     页码
      * @param size     大小
@@ -63,7 +63,7 @@ public class PostsController {
     }
 
     /**
-     * 查询信息
+     * title 关键字查询
      *
      * @param keyword 关键字
      * @return 查询到数据集，异常时返回204
@@ -81,7 +81,7 @@ public class PostsController {
     }
 
     /**
-     * 根据传入的代码查询信息
+     * 根据 code 查询，包含内容
      *
      * @param code 代码
      * @return 查询到数据，异常时返回204
@@ -99,7 +99,7 @@ public class PostsController {
     }
 
     /**
-     * 根据传入的代码查询信息
+     * 根据 code 查询
      *
      * @param code 代码
      * @return 查询到数据，异常时返回204
@@ -117,7 +117,7 @@ public class PostsController {
     }
 
     /**
-     * 根据传入的代码查询信息
+     * 根据 code 查询内容
      *
      * @param code 代码
      * @return 查询到数据，异常时返回204
@@ -171,7 +171,7 @@ public class PostsController {
     }
 
     /**
-     * 根据传入的代码查询下一条记录
+     * 查询下一条记录
      *
      * @param code 代码
      * @return 查询到数据，异常时返回204
@@ -189,7 +189,7 @@ public class PostsController {
     }
 
     /**
-     * 根据传入的代码查询上一条记录
+     * 查询上一条记录
      *
      * @param code 代码
      * @return 查询到数据，异常时返回204
@@ -207,7 +207,7 @@ public class PostsController {
     }
 
     /**
-     * 自增likes
+     * 自增 likes
      *
      * @param code 代码
      * @return 操作后的信息，否则返回417状态码
@@ -225,7 +225,7 @@ public class PostsController {
     }
 
     /**
-     * 根据传入的数据添加信息
+     * 添加信息
      *
      * @param postsDTO 要添加的数据
      * @return 添加后的信息，否则返回417状态码
@@ -243,7 +243,7 @@ public class PostsController {
     }
 
     /**
-     * 根据传入的数据修改信息
+     * 修改信息
      *
      * @param code     代码
      * @param postsDTO 要修改的数据

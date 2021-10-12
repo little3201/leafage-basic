@@ -30,7 +30,7 @@ public class StatisticsController {
     }
 
     /**
-     * 分页查询浏览量统计
+     * 分页查询
      *
      * @param page 页码
      * @param size 大小
@@ -49,7 +49,7 @@ public class StatisticsController {
     }
 
     /**
-     * 浏览量统计
+     * 环比查询
      *
      * @return 查询到数据，异常时返回204
      */

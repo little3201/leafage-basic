@@ -54,7 +54,7 @@ public class ResourceController {
     }
 
     /**
-     * 查询信息
+     * 根据 code 查询信息
      *
      * @param code 代码
      * @return 查询到数据，异常时返回204
@@ -107,7 +107,7 @@ public class ResourceController {
     }
 
     /**
-     * 根据传入的数据添加信息
+     * 添加信息
      *
      * @param resourceDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
@@ -125,7 +125,7 @@ public class ResourceController {
     }
 
     /**
-     * 根据传入的代码和要修改的数据，修改信息
+     * 修改信息
      *
      * @param code        代码
      * @param resourceDTO 要修改的数据

@@ -50,7 +50,7 @@ public class UserController {
     }
 
     /**
-     * 查询用户信息
+     * 分页查询
      *
      * @param page 页码
      * @param size 大小
@@ -69,7 +69,7 @@ public class UserController {
     }
 
     /**
-     * 根据传入的 username 查询信息
+     * 根据 username 查询
      *
      * @param username 用户账号
      * @return 查询的数据，异常时返回204状态码
@@ -87,7 +87,7 @@ public class UserController {
     }
 
     /**
-     * 根据传入的 username 查询信息
+     * 根据 username 查询账号
      *
      * @param username 账号
      * @return 查询到的数据，异常时返回204状态码
@@ -140,7 +140,7 @@ public class UserController {
     }
 
     /**
-     * 根据传入的数据添加信息
+     * 添加信息
      *
      * @param userDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
@@ -158,7 +158,7 @@ public class UserController {
     }
 
     /**
-     * 根据传入的username和要修改的数据，修改信息
+     * 修改信息
      *
      * @param username 账号
      * @param userDTO  要修改的数据
@@ -177,7 +177,7 @@ public class UserController {
     }
 
     /**
-     * 根据传入的username删除信息
+     * 删除信息
      *
      * @param username 账号
      * @return 200状态码，异常时返回417状态码
@@ -194,7 +194,7 @@ public class UserController {
     }
 
     /**
-     * 根据username查询关联分组信息
+     * 查询关联分组
      *
      * @param username 账号
      * @return 查询到的数据集，异常时返回204状态码
@@ -212,7 +212,7 @@ public class UserController {
     }
 
     /**
-     * 保存用户-分组关联
+     * 关联分组
      *
      * @param username 账户
      * @param groups   分组
@@ -231,7 +231,7 @@ public class UserController {
     }
 
     /**
-     * 根据username查询关联角色信息
+     * 查询关联角色
      *
      * @param username 用户username
      * @return 查询到的数据集，异常时返回204状态码
@@ -249,7 +249,7 @@ public class UserController {
     }
 
     /**
-     * 保存用户-角色关联
+     * 关联角色
      *
      * @param username 账户
      * @param roles    分组
@@ -268,7 +268,7 @@ public class UserController {
     }
 
     /**
-     * 根据username查询关联权限
+     * 查询关联权限
      *
      * @param username 用户username
      * @return 查询到的数据集，异常时返回204状态码

@@ -14,7 +14,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2018/12/17 19:36
  **/
-public interface AuthorityService extends ReactiveBasicService<AuthorityDTO, AuthorityVO> {
+public interface AuthorityService extends ReactiveBasicService<AuthorityDTO, AuthorityVO, String> {
 
     /**
      * 查询构造树结构的数据

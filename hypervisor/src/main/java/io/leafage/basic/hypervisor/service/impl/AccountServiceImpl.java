@@ -12,7 +12,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.AbstractBasicService;
 
 import java.util.NoSuchElementException;
 
@@ -22,7 +21,7 @@ import java.util.NoSuchElementException;
  * @author liwenqiang 2018/12/17 19:27
  **/
 @Service
-public class AccountServiceImpl extends AbstractBasicService implements AccountService {
+public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
 
@@ -39,7 +38,6 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
     public Mono<AccountVO> create(AccountDTO accountDTO) {
         Account info = new Account();
         BeanUtils.copyProperties(accountDTO, info);
-        info.setCode(this.generateCode());
         return accountRepository.insert(info).map(this::convertOuter);
     }
 

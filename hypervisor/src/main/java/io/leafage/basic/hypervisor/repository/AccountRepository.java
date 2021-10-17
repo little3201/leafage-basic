@@ -24,4 +24,12 @@ public interface AccountRepository extends ReactiveMongoRepository<Account, Obje
      * @return 账户信息
      */
     Mono<Account> getByCodeAndEnabledTrue(String code);
+
+    /**
+     * 根据username查询
+     *
+     * @param username 账号
+     * @return 账户信息
+     */
+    Mono<Account> getByModifier(String username);
 }

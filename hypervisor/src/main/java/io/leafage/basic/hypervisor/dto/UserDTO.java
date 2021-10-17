@@ -52,10 +52,6 @@ public class UserDTO implements Serializable {
      */
     private Character gender;
     /**
-     * 地址
-     */
-    private String address;
-    /**
      * 修改人
      */
     private String modifier;
@@ -115,14 +111,6 @@ public class UserDTO implements Serializable {
 
     public void setGender(Character gender) {
         this.gender = gender;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getModifier() {

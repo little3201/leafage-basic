@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
 import javax.validation.Valid;
 
 /**
@@ -32,16 +33,16 @@ public class AccountController {
     }
 
     /**
-     * 根据 code 查询
+     * 根据 username 查询
      *
-     * @param code 代码
+     * @param username 账号
      * @return 查询到的信息，异常时返回204状态码
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<Mono<AccountVO>> fetch(@PathVariable String code) {
+    @GetMapping("/{username}")
+    public ResponseEntity<Mono<AccountVO>> fetch(@PathVariable String username) {
         Mono<AccountVO> voMono;
         try {
-            voMono = accountService.fetch(code);
+            voMono = accountService.fetch(username);
         } catch (Exception e) {
             logger.error("Fetch account occurred an error: ", e);
             return ResponseEntity.noContent().build();

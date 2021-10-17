@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import java.util.NoSuchElementException;
 
 /**
@@ -27,6 +28,11 @@ public class AccountServiceImpl extends AbstractBasicService implements AccountS
 
     public AccountServiceImpl(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
+    }
+
+    @Override
+    public Mono<AccountVO> fetch(String username) {
+        return accountRepository.getByModifier(username).map(this::convertOuter);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class AccountVO extends BaseVO {
     /**
      * 类型
      */
-    private String type;
+    private char type;
 
 
     public BigDecimal getBalance() {
@@ -32,11 +32,11 @@ public class AccountVO extends BaseVO {
         this.balance = balance;
     }
 
-    public String getType() {
+    public char getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(char type) {
         this.type = type;
     }
 

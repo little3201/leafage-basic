@@ -23,7 +23,7 @@ public class AccountDTO implements Serializable {
     /**
      * 类型
      */
-    private int type;
+    private char type;
 
     public String getCode() {
         return code;
@@ -33,11 +33,11 @@ public class AccountDTO implements Serializable {
         this.code = code;
     }
 
-    public int getType() {
+    public char getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(char type) {
         this.type = type;
     }
 }

@@ -15,7 +15,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import java.math.BigDecimal;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -33,11 +35,17 @@ class AccountServiceImplTest {
     private AccountServiceImpl accountService;
 
     @Test
+    void fetch() {
+        given(this.accountRepository.getByModifier(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Account.class)));
+
+        StepVerifier.create(accountService.fetch(Mockito.anyString())).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
     void create() {
         Account account = new Account();
         account.setId(new ObjectId());
         account.setCode("21612OL34");
-        account.setUserId(new ObjectId());
         account.setBalance(new BigDecimal("11.23"));
         account.setType('B');
         given(this.accountRepository.insert(Mockito.any(Account.class))).willReturn(Mono.just(account));
@@ -49,7 +57,6 @@ class AccountServiceImplTest {
         Account account = new Account();
         account.setId(new ObjectId());
         account.setCode("21612OL34");
-        account.setUserId(new ObjectId());
         account.setBalance(new BigDecimal("11.23"));
         account.setType('B');
         given(this.accountRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(account));

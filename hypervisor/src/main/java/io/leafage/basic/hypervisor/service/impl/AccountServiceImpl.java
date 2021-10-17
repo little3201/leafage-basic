@@ -31,7 +31,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Mono<AccountVO> fetch(String username) {
-        return accountRepository.getByModifier(username).map(this::convertOuter);
+        return accountRepository.getByModifier(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .map(this::convertOuter);
     }
 
     @Override

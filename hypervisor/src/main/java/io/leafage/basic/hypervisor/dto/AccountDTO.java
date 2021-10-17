@@ -24,6 +24,10 @@ public class AccountDTO implements Serializable {
      * 类型
      */
     private char type;
+    /**
+     * 账号
+     */
+    private String modifier;
 
     public String getCode() {
         return code;
@@ -39,5 +43,13 @@ public class AccountDTO implements Serializable {
 
     public void setType(char type) {
         this.type = type;
+    }
+
+    public String getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
     }
 }

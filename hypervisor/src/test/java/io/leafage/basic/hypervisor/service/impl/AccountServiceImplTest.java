@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Account;
+import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
 import org.bson.types.ObjectId;
@@ -36,13 +37,16 @@ class AccountServiceImplTest {
 
     @Test
     void fetch() {
-        given(this.accountRepository.getByModifier(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Account.class)));
+        given(this.accountRepository.getByModifier(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
 
         StepVerifier.create(accountService.fetch(Mockito.anyString())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
+        User user = new User();
+        user.setId(new ObjectId());
+
         Account account = new Account();
         account.setId(new ObjectId());
         account.setCode("21612OL34");

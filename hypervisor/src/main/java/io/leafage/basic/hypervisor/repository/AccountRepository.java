@@ -28,8 +28,8 @@ public interface AccountRepository extends ReactiveMongoRepository<Account, Obje
     /**
      * 根据username查询
      *
-     * @param username 账号
+     * @param userId 账号
      * @return 账户信息
      */
-    Mono<Account> getByModifier(String username);
+    Mono<Account> getByModifier(ObjectId userId);
 }

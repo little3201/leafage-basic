@@ -6,6 +6,7 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.AccountService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.springframework.beans.BeanUtils;
@@ -24,22 +25,31 @@ import java.util.NoSuchElementException;
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Mono<AccountVO> fetch(String username) {
-        return accountRepository.getByModifier(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .map(this::convertOuter);
+        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(user -> accountRepository.getByModifier(user.getId())
+                        .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                        .map(this::convertOuter));
     }
 
     @Override
     public Mono<AccountVO> create(AccountDTO accountDTO) {
-        Account info = new Account();
-        BeanUtils.copyProperties(accountDTO, info);
-        return accountRepository.insert(info).map(this::convertOuter);
+        Account account = new Account();
+        BeanUtils.copyProperties(accountDTO, account);
+        return userRepository.getByUsername(accountDTO.getModifier())
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(user -> {
+                    account.setModifier(user.getId());
+                    return accountRepository.insert(account);
+                }).map(this::convertOuter);
     }
 
     @Override
@@ -47,9 +57,14 @@ public class AccountServiceImpl implements AccountService {
         Assert.hasText(code, "code is blank.");
         return accountRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(accountVO -> {
-                    Account info = new Account();
-                    BeanUtils.copyProperties(accountDTO, info);
-                    return accountRepository.save(info).map(this::convertOuter);
+                    Account account = new Account();
+                    BeanUtils.copyProperties(accountDTO, account);
+                    return userRepository.getByUsername(accountDTO.getModifier())
+                            .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                            .flatMap(user -> {
+                                account.setModifier(user.getId());
+                                return accountRepository.save(account);
+                            }).map(this::convertOuter);
                 });
     }
 

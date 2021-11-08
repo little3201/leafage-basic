@@ -68,9 +68,8 @@ class ResourceServiceImplTest {
         resource.setType("jpg");
         resource.setCode("21318H9FH");
         resource.setTitle("test");
-        resource.setComment(1);
-        resource.setLikes(23);
         resource.setViewed(232);
+        resource.setDownloads(1);
         given(this.resourceRepository.insert(Mockito.any(Resource.class))).willReturn(Mono.just(resource));
 
         ResourceDTO resourceDTO = new ResourceDTO();
@@ -85,9 +84,8 @@ class ResourceServiceImplTest {
         resource.setType("jpg");
         resource.setCode("21318H9FH");
         resource.setTitle("test");
-        resource.setComment(1);
-        resource.setLikes(23);
         resource.setViewed(232);
+        resource.setDownloads(23);
         given(this.resourceRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(resource));
 
         given(this.resourceRepository.save(Mockito.any(Resource.class))).willReturn(Mono.just(Mockito.mock(Resource.class)));

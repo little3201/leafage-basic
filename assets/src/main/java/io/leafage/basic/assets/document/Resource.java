@@ -33,21 +33,13 @@ public class Resource extends BaseDocument {
      */
     private String type;
     /**
-     * 点赞
-     */
-    private int likes;
-    /**
-     * 评论
-     */
-    private int comment;
-    /**
      * 查看
      */
     private int viewed;
     /**
-     * 描述
+     * 下载数
      */
-    private String description;
+    private int downloads;
 
 
     public String getCode() {
@@ -82,22 +74,6 @@ public class Resource extends BaseDocument {
         this.type = type;
     }
 
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getComment() {
-        return comment;
-    }
-
-    public void setComment(int comment) {
-        this.comment = comment;
-    }
-
     public int getViewed() {
         return viewed;
     }
@@ -106,11 +82,11 @@ public class Resource extends BaseDocument {
         this.viewed = viewed;
     }
 
-    public String getDescription() {
-        return description;
+    public int getDownloads() {
+        return downloads;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDownloads(int downloads) {
+        this.downloads = downloads;
     }
 }

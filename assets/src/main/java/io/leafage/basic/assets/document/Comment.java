@@ -23,6 +23,7 @@ public class Comment extends BaseDocument {
     /**
      * 帖子ID
      */
+    @Indexed
     @Field(name = "posts_id")
     private ObjectId postsId;
     /**

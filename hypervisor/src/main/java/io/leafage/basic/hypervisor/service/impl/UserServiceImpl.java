@@ -5,7 +5,7 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Authority;
 import io.leafage.basic.hypervisor.document.User;
-import io.leafage.basic.hypervisor.domain.UserDetails;
+import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
@@ -97,7 +97,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Mono<UserDetails> details(String username) {
+    public Mono<UserDetailVO> details(String username) {
         Assert.hasText(username, MESSAGE);
         Mono<User> userMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(() -> new NoSuchElementException("User Not Found")));
@@ -110,10 +110,10 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
         // 构造用户信息
         return userMono.zipWith(setMono, (user, authorities) -> {
-            UserDetails userDetails = new UserDetails();
-            BeanUtils.copyProperties(user, userDetails);
-            userDetails.setAuthorities(authorities);
-            return userDetails;
+            UserDetailVO userDetailVO = new UserDetailVO();
+            BeanUtils.copyProperties(user, userDetailVO);
+            userDetailVO.setAuthorities(authorities);
+            return userDetailVO;
         });
     }
 

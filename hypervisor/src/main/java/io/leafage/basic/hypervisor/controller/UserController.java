@@ -5,7 +5,7 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.document.UserGroup;
 import io.leafage.basic.hypervisor.document.UserRole;
-import io.leafage.basic.hypervisor.domain.UserDetails;
+import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
@@ -93,8 +93,8 @@ public class UserController {
      * @return 查询到的数据，异常时返回204状态码
      */
     @GetMapping("/{username}/details")
-    public ResponseEntity<Mono<UserDetails>> details(@PathVariable String username) {
-        Mono<UserDetails> voMono;
+    public ResponseEntity<Mono<UserDetailVO>> details(@PathVariable String username) {
+        Mono<UserDetailVO> voMono;
         try {
             voMono = userService.details(username);
         } catch (Exception e) {

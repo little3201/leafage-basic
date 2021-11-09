@@ -17,11 +17,23 @@ public class AccountDTO implements Serializable {
     /**
      * 类型
      */
+    private String code;
+    /**
+     * 类型
+     */
     private char type;
     /**
      * 修改人
      */
     private String modifier;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public char getType() {
         return type;

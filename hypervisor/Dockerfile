@@ -4,20 +4,17 @@ FROM openjdk:11.0.13-jre-slim
 # Add Maintainer Info
 LABEL maintainer="little3201@gmail.com"
 
-# Add param to use in anywhere
-ARG JAR_NAME=hypervisor
-
 # Add env
-ENV VERSION=0.1.0 ACTIVE=dev
+ENV VERSION=0.1.0
 
-# Add a volume pointing to /tmp
-WORKDIR /usr/app
-
-# Make port 8764 available to the world outside this container
-EXPOSE 8764
+# Make port 8763 available to the world outside this container
+EXPOSE 8763
 
 # Add the application's jar to the container
-ADD target/${JAR_NAME}-${VERSION} ${JAR_NAME}.jar
+ARG JAR_FILE=target/hypervisor-${VERSION}.jar
+
+# Copy file
+COPY ${JAR_FILE} app.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/${JAR_FILE}.jar --spring.profiles.active=${ACTIVE}"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]

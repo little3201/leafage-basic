@@ -34,8 +34,10 @@ class CommentControllerTest {
 
     @Test
     void retrieve() {
-        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString()))
-                .willReturn(Flux.just(Mockito.mock(CommentVO.class)));
+        CommentVO commentVO = new CommentVO();
+        commentVO.setContent("test content");
+        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt()))
+                .willReturn(Flux.just(commentVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comment").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -44,11 +46,11 @@ class CommentControllerTest {
 
     @Test
     void retrieve_error() {
-        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString()))
+        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt()))
                 .willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comment").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("sort", "").build()).exchange()
+                        .queryParam("size", 2).build()).exchange()
                 .expectStatus().isNoContent();
     }
 

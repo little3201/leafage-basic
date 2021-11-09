@@ -54,13 +54,13 @@ class StatisticsControllerTest {
         StatisticsVO statisticsVO = new StatisticsVO();
         given(this.statisticsService.over()).willReturn(Mono.just(statisticsVO));
 
-        webTestClient.get().uri("/statistics/viewed").exchange().expectStatus().isOk().expectBody(StatisticsVO.class);
+        webTestClient.get().uri("/statistics/over").exchange().expectStatus().isOk().expectBody(StatisticsVO.class);
     }
 
     @Test
     void fetch_error() {
         given(this.statisticsService.over()).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/statistics/viewed").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/statistics/over").exchange().expectStatus().isNoContent();
     }
 }

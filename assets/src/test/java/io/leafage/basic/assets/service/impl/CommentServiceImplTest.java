@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -48,14 +47,11 @@ class CommentServiceImplTest {
     void retrieve() {
         Comment comment = new Comment();
         comment.setPostsId(new ObjectId());
-        given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2,
-                Sort.by(Sort.Direction.DESC, "id"))))
-                .willReturn(Flux.just(comment));
+        given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(comment));
 
         given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
-        StepVerifier.create(commentService.retrieve(0, 2, "id"))
-                .expectNextCount(1).verifyComplete();
+        StepVerifier.create(commentService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
     @Test

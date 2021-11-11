@@ -44,11 +44,26 @@ class StatisticsServiceImplTest {
     }
 
     @Test
-    void fetch() {
+    void create() {
+        Posts posts = new Posts();
+        posts.setViewed(12);
+        posts.setLikes(23);
+        posts.setComment(2);
+        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
+
+        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0,
+                0, 0.0, 0, 0.0);
+        statistics.setId(new ObjectId());
+        statistics.setLikes(123);
+        statistics.setComment(12);
+        statistics.setViewed(3234);
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
+                .willReturn(Mono.just(statistics));
+
+        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 
-        StepVerifier.create(statisticsService.over()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(statisticsService.create()).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -61,26 +76,6 @@ class StatisticsServiceImplTest {
 
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
-
-        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
-                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
-
-        StepVerifier.create(statisticsService.create()).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void create() {
-        Posts posts = new Posts();
-        posts.setViewed(12);
-        posts.setLikes(23);
-        posts.setComment(2);
-        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
-
-        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0,
-                0, 0.0, 0, 0.0);
-        statistics.setId(new ObjectId());
-        given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
-                .willReturn(Mono.just(statistics));
 
         given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));

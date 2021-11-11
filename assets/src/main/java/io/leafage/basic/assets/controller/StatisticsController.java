@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 /**
  * statistics controller
@@ -48,20 +47,4 @@ public class StatisticsController {
         return ResponseEntity.ok(voFlux);
     }
 
-    /**
-     * 环比查询
-     *
-     * @return 查询到数据，异常时返回204
-     */
-    @GetMapping("/over")
-    public ResponseEntity<Mono<StatisticsVO>> over() {
-        Mono<StatisticsVO> statisticsMono;
-        try {
-            statisticsMono = statisticsService.over();
-        } catch (Exception e) {
-            logger.error("Statistics viewed occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(statisticsMono);
-    }
 }

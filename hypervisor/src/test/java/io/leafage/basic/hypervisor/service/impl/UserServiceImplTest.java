@@ -70,6 +70,9 @@ class UserServiceImplTest {
         user.setGender('M');
         user.setEmail("test@leafage.top");
         user.setPhone("18712341234");
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(Mockito.anyString(), Mockito.anyString(),
                 Mockito.anyString())).willReturn(Mono.just(user));
 

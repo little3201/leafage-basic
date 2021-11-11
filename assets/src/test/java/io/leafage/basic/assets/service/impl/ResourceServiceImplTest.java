@@ -3,8 +3,10 @@
  */
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Resource;
 import io.leafage.basic.assets.dto.ResourceDTO;
+import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -31,68 +33,96 @@ class ResourceServiceImplTest {
     @Mock
     private ResourceRepository resourceRepository;
 
+    @Mock
+    private CategoryRepository categoryRepository;
+
     @InjectMocks
-    private ResourceServiceImpl portfolioService;
+    private ResourceServiceImpl resourceService;
 
     @Test
     void retrieve() {
+        Resource resource = new Resource();
+        resource.setCategoryId(new ObjectId());
         given(this.resourceRepository.findByEnabledTrue(PageRequest.of(0, 2,
-                Sort.by(Sort.Direction.DESC, "id")))).willReturn(Flux.just(Mockito.mock(Resource.class)));
-        StepVerifier.create(this.portfolioService.retrieve(0, 2, "id")).expectNextCount(1).verifyComplete();
+                Sort.by(Sort.Direction.DESC, "id")))).willReturn(Flux.just(resource));
+
+        given(this.categoryRepository.findById(resource.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
+
+        StepVerifier.create(this.resourceService.retrieve(0, 2, "id")).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void fetch() {
+        Resource resource = new Resource();
+        resource.setCategoryId(new ObjectId());
         Mockito.when(this.resourceRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
-                .thenReturn(Mono.just(Mockito.mock(Resource.class)));
-        StepVerifier.create(portfolioService.fetch("21318H9FH")).expectNextCount(1).verifyComplete();
+                .thenReturn(Mono.just(resource));
+
+        given(this.categoryRepository.findById(resource.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
+
+        StepVerifier.create(resourceService.fetch("21318H9FH")).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void count() {
         given(this.resourceRepository.count()).willReturn(Mono.just(2L));
-        StepVerifier.create(portfolioService.count()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(resourceService.count()).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void exist() {
         given(this.resourceRepository.existsByTitle(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(portfolioService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(resourceService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test
     void create() {
+        Category category = new Category();
+        category.setId(new ObjectId());
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
+
         Resource resource = new Resource();
         resource.setId(new ObjectId());
-        resource.setType("jpg");
+        resource.setCategoryId(category.getId());
+        resource.setType('E');
         resource.setCode("21318H9FH");
-        resource.setTitle("test");
         resource.setViewed(232);
         resource.setDownloads(1);
         given(this.resourceRepository.insert(Mockito.any(Resource.class))).willReturn(Mono.just(resource));
 
+        given(this.categoryRepository.findById(resource.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
+
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
-        StepVerifier.create(portfolioService.create(resourceDTO)).expectNextCount(1).verifyComplete();
+        resourceDTO.setCover("./avatar.jpg");
+        resourceDTO.setCategory("21318000");
+        StepVerifier.create(resourceService.create(resourceDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void modify() {
         Resource resource = new Resource();
         resource.setId(new ObjectId());
-        resource.setType("jpg");
+        resource.setType('P');
         resource.setCode("21318H9FH");
-        resource.setTitle("test");
         resource.setViewed(232);
         resource.setDownloads(23);
         given(this.resourceRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(resource));
 
+        Category category = new Category();
+        category.setId(new ObjectId());
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
+
         given(this.resourceRepository.save(Mockito.any(Resource.class))).willReturn(Mono.just(Mockito.mock(Resource.class)));
+
+        given(this.categoryRepository.findById(resource.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
-        StepVerifier.create(portfolioService.modify("21318H9FH", resourceDTO)).expectNextCount(1).verifyComplete();
+        resourceDTO.setCover("./avatar.jpg");
+        resourceDTO.setCategory("21318000");
+        StepVerifier.create(resourceService.modify("21318H9FH", resourceDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -103,6 +133,6 @@ class ResourceServiceImplTest {
 
         given(this.resourceRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());
 
-        StepVerifier.create(portfolioService.remove("21318H9FH")).verifyComplete();
+        StepVerifier.create(resourceService.remove("21318H9FH")).verifyComplete();
     }
 }

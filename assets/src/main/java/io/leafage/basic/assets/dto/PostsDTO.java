@@ -22,11 +22,6 @@ public class PostsDTO implements Serializable {
     @NotBlank
     private String title;
     /**
-     * 描述
-     */
-    @NotBlank
-    private String subtitle;
-    /**
      * 内容
      */
     @NotBlank
@@ -57,14 +52,6 @@ public class PostsDTO implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
     }
 
     public String getContent() {

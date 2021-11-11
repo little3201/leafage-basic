@@ -3,16 +3,17 @@
  */
 package io.leafage.basic.assets.document;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.Set;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Model class for Portfolio
+ * Model class for Resource
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "portfolio")
+@Document(collection = "resource")
 public class Resource extends BaseDocument {
 
     /**
@@ -25,13 +26,18 @@ public class Resource extends BaseDocument {
      */
     private String title;
     /**
-     * url
+     * cover
      */
-    private Set<String> url;
+    private String cover;
+    /**
+     * 分类ID
+     */
+    @Field(name = "category_id")
+    private ObjectId categoryId;
     /**
      * 类型
      */
-    private String type;
+    private Character type;
     /**
      * 查看
      */
@@ -40,6 +46,10 @@ public class Resource extends BaseDocument {
      * 下载数
      */
     private int downloads;
+    /**
+     * 描述
+     */
+    private String description;
 
 
     public String getCode() {
@@ -58,19 +68,27 @@ public class Resource extends BaseDocument {
         this.title = title;
     }
 
-    public Set<String> getUrl() {
-        return url;
+    public String getCover() {
+        return cover;
     }
 
-    public void setUrl(Set<String> url) {
-        this.url = url;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
-    public String getType() {
+    public ObjectId getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(ObjectId categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
     }
 
@@ -88,5 +106,13 @@ public class Resource extends BaseDocument {
 
     public void setDownloads(int downloads) {
         this.downloads = downloads;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -29,7 +29,6 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
 
     private final CommentRepository commentRepository;
     private final PostsRepository postsRepository;
-
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
     public CommentServiceImpl(CommentRepository commentRepository, PostsRepository postsRepository,

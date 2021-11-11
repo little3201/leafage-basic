@@ -3,10 +3,8 @@
  */
 package io.leafage.basic.assets.vo;
 
-import java.util.Set;
-
 /**
- * VO for Portfolio
+ * VO for Resource
  *
  * @author liwenqiang 2020-10-06 22:09
  */
@@ -15,49 +13,33 @@ public class ResourceVO extends BaseVO {
     private static final long serialVersionUID = -2168494818144125736L;
 
     /**
-     * 点赞
-     */
-    private int likes;
-    /**
-     * 评论
-     */
-    private int comment;
-    /**
-     * 查看
-     */
-    private int viewed;
-    /**
      * 标题
      */
     private String title;
     /**
-     * url
+     * cover
      */
-    private Set<String> url;
+    private String cover;
+    /**
+     * 分类
+     */
+    private String category;
     /**
      * 类型
      */
-    private String type;
+    private Character type;
     /**
      * 描述
      */
     private String description;
-
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getComment() {
-        return comment;
-    }
-
-    public void setComment(int comment) {
-        this.comment = comment;
-    }
+    /**
+     * 点赞
+     */
+    private int downloads;
+    /**
+     * 查看
+     */
+    private int viewed;
 
     public int getViewed() {
         return viewed;
@@ -75,19 +57,27 @@ public class ResourceVO extends BaseVO {
         this.title = title;
     }
 
-    public Set<String> getUrl() {
-        return url;
+    public String getCover() {
+        return cover;
     }
 
-    public void setUrl(Set<String> url) {
-        this.url = url;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
-    public String getType() {
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
     }
 
@@ -97,5 +87,13 @@ public class ResourceVO extends BaseVO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getDownloads() {
+        return downloads;
+    }
+
+    public void setDownloads(int downloads) {
+        this.downloads = downloads;
     }
 }

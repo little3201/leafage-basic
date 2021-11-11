@@ -22,13 +22,6 @@ public interface StatisticsService {
     Flux<StatisticsVO> retrieve(int page, int size);
 
     /**
-     * 查询昨日浏览量统计
-     *
-     * @return 统计结果
-     */
-    Mono<StatisticsVO> over();
-
-    /**
      * 浏览量记录
      *
      * @return 记录结果

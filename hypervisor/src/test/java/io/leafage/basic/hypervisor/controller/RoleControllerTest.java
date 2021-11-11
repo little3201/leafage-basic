@@ -49,6 +49,16 @@ class RoleControllerTest {
     void retrieve() {
         RoleVO roleVO = new RoleVO();
         roleVO.setName("test");
+        given(this.roleService.retrieve()).willReturn(Flux.just(roleVO));
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/role").build()).exchange()
+                .expectStatus().isOk().expectBodyList(RoleVO.class);
+    }
+
+    @Test
+    void retrieve_page() {
+        RoleVO roleVO = new RoleVO();
+        roleVO.setName("test");
         given(this.roleService.retrieve(0, 2)).willReturn(Flux.just(roleVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/role").queryParam("page", 0)

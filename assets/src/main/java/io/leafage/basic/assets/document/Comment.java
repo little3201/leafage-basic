@@ -23,6 +23,7 @@ public class Comment extends BaseDocument {
     /**
      * 帖子ID
      */
+    @Indexed
     @Field(name = "posts_id")
     private ObjectId postsId;
     /**
@@ -37,6 +38,10 @@ public class Comment extends BaseDocument {
      * 内容
      */
     private String content;
+    /**
+     * 回复人
+     */
+    private String replier;
 
     public String getCode() {
         return code;
@@ -76,5 +81,13 @@ public class Comment extends BaseDocument {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getReplier() {
+        return replier;
+    }
+
+    public void setReplier(String replier) {
+        this.replier = replier;
     }
 }

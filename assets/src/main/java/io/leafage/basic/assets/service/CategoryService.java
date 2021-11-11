@@ -12,5 +12,5 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2020/2/13 20:16
  **/
-public interface CategoryService extends ReactiveBasicService<CategoryDTO, CategoryVO> {
+public interface CategoryService extends ReactiveBasicService<CategoryDTO, CategoryVO, String> {
 }

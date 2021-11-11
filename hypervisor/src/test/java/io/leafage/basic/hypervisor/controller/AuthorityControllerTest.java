@@ -40,6 +40,16 @@ class AuthorityControllerTest {
     void retrieve() {
         AuthorityVO authorityVO = new AuthorityVO();
         authorityVO.setName("test");
+        given(this.authorityService.retrieve()).willReturn(Flux.just(authorityVO));
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority").build()).exchange()
+                .expectStatus().isOk().expectBodyList(RoleVO.class);
+    }
+
+    @Test
+    void retrieve_page() {
+        AuthorityVO authorityVO = new AuthorityVO();
+        authorityVO.setName("test");
         given(this.authorityService.retrieve(0, 2)).willReturn(Flux.just(authorityVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority").queryParam("page", 0)

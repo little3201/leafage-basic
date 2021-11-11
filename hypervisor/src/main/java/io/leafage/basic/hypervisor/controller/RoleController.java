@@ -45,7 +45,7 @@ public class RoleController {
     }
 
     /**
-     * 查询角色信息
+     * 分页查询
      *
      * @param page 页码
      * @param size 大小
@@ -68,7 +68,7 @@ public class RoleController {
     }
 
     /**
-     * 查询树形数据
+     * 树形查询
      *
      * @return 查询到的数据，否则返回空
      */
@@ -85,7 +85,7 @@ public class RoleController {
     }
 
     /**
-     * 根据传入的代码查询信息
+     * 根据 code 查询信息
      *
      * @param code 代码
      * @return 查询的数据集，异常时返回204状态码
@@ -138,7 +138,7 @@ public class RoleController {
     }
 
     /**
-     * 根据传入的数据添加信息
+     * 添加信息
      *
      * @param roleDTO 要添加的数据
      * @return 添加后的信息，否则返回417状态码
@@ -156,7 +156,7 @@ public class RoleController {
     }
 
     /**
-     * 根据传入的代码和要修改的数据，修改信息
+     * 修改信息
      *
      * @param code    代码
      * @param roleDTO 要修改的数据
@@ -175,7 +175,7 @@ public class RoleController {
     }
 
     /**
-     * 根据code查询关联用户信息
+     * 查询关联用户
      *
      * @param code 角色code
      * @return 查询到的数据集，异常时返回204状态码
@@ -193,7 +193,7 @@ public class RoleController {
     }
 
     /**
-     * 查询角色-权限关联
+     * 查询关联权限
      *
      * @param code 角色代码
      * @return 操作结果
@@ -211,7 +211,7 @@ public class RoleController {
     }
 
     /**
-     * 保存角色-权限关联
+     * 关联权限
      *
      * @param code        角色代码
      * @param authorities 权限信息

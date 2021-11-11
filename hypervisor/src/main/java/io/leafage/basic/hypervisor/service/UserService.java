@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service;
 
-import io.leafage.basic.hypervisor.domain.UserDetails;
+import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import reactor.core.publisher.Mono;
@@ -14,7 +14,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2018/7/28 0:29
  **/
-public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
+public interface UserService extends ReactiveBasicService<UserDTO, UserVO, String> {
 
     /**
      * 查用户details
@@ -22,6 +22,6 @@ public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
      * @param username 账户
      * @return 用户details
      */
-    Mono<UserDetails> details(String username);
+    Mono<UserDetailVO> details(String username);
 
 }

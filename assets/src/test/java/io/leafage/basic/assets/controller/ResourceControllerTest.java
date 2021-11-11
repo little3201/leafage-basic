@@ -17,7 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import java.util.Collections;
+import java.util.NoSuchElementException;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -112,7 +112,8 @@ class ResourceControllerTest {
         // 构造请求对象
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
-        resourceDTO.setUrl(Collections.singleton("../test.jpg"));
+        resourceDTO.setCover("../test.jpg");
+        resourceDTO.setCategory("21318000");
         webTestClient.post().uri("/resource").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().isCreated()
@@ -121,12 +122,13 @@ class ResourceControllerTest {
 
     @Test
     void create_error() {
-        given(this.resourceService.create(Mockito.any(ResourceDTO.class))).willThrow(new RuntimeException());
+        given(this.resourceService.create(Mockito.any(ResourceDTO.class))).willThrow(new NoSuchElementException());
 
         // 构造请求对象
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
-        resourceDTO.setUrl(Collections.singleton("../test.jpg"));
+        resourceDTO.setCover("../test.jpg");
+        resourceDTO.setCategory("21318000");
         webTestClient.post().uri("/resource").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().is4xxClientError();
@@ -142,7 +144,8 @@ class ResourceControllerTest {
         // 构造请求对象
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
-        resourceDTO.setUrl(Collections.singleton("../test.jpg"));
+        resourceDTO.setCover("../test.jpg");
+        resourceDTO.setCategory("21318000");
         webTestClient.put().uri("/resource/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().isAccepted()
@@ -151,12 +154,14 @@ class ResourceControllerTest {
 
     @Test
     void modify_error() {
-        given(this.resourceService.modify(Mockito.anyString(), Mockito.any(ResourceDTO.class))).willThrow(new RuntimeException());
+        given(this.resourceService.modify(Mockito.anyString(), Mockito.any(ResourceDTO.class))).willThrow(new NoSuchElementException());
 
         // 构造请求对象
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
-        resourceDTO.setUrl(Collections.singleton("../test.jpg"));
+        resourceDTO.setCover("../test.jpg");
+        resourceDTO.setType('E');
+        resourceDTO.setCategory("21318000");
         webTestClient.put().uri("/resource/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().isNotModified();

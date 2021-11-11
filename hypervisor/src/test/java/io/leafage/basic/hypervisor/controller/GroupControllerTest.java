@@ -42,6 +42,16 @@ class GroupControllerTest {
     void retrieve() {
         GroupVO groupVO = new GroupVO();
         groupVO.setName("test");
+        given(this.groupService.retrieve()).willReturn(Flux.just(groupVO));
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/group").build()).exchange()
+                .expectStatus().isOk().expectBodyList(RoleVO.class);
+    }
+
+    @Test
+    void retrieve_page() {
+        GroupVO groupVO = new GroupVO();
+        groupVO.setName("test");
         given(this.groupService.retrieve(0, 2)).willReturn(Flux.just(groupVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/group").queryParam("page", 0)

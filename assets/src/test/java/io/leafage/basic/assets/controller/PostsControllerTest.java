@@ -254,7 +254,6 @@ class PostsControllerTest {
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
         postsDTO.setTags(Collections.singleton("java"));
-        postsDTO.setSubtitle("create posts test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("21213G0J2");
         postsDTO.setContent("content");
@@ -272,7 +271,6 @@ class PostsControllerTest {
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
         postsDTO.setTags(Collections.singleton("java"));
-        postsDTO.setSubtitle("create posts test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("21213G0J2");
         postsDTO.setContent("content");
@@ -292,7 +290,6 @@ class PostsControllerTest {
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
         postsDTO.setTags(Collections.singleton("java"));
-        postsDTO.setSubtitle("create posts test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("21213G0J2");
         postsDTO.setContent("content");
@@ -308,7 +305,6 @@ class PostsControllerTest {
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setTitle("test");
         postsDTO.setTags(Collections.singleton("java"));
-        postsDTO.setSubtitle("create posts test");
         postsDTO.setCover("../test.jpg");
         postsDTO.setCategory("21213G0J2");
         postsDTO.setContent("content");

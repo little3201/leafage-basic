@@ -38,7 +38,7 @@ public class AuthorityController {
     }
 
     /**
-     * 查询资源信息
+     * 分页查询
      *
      * @param page 页码
      * @param size 大小
@@ -61,7 +61,7 @@ public class AuthorityController {
     }
 
     /**
-     * 查询树形数据
+     * 树形查询
      *
      * @return 查询到的数据，否则返回空
      */
@@ -78,7 +78,7 @@ public class AuthorityController {
     }
 
     /**
-     * 根据传入的代码查询信息
+     * 根据 code 查询信息
      *
      * @param code 代码
      * @return 查询的数据，异常时返回204状态码
@@ -131,7 +131,7 @@ public class AuthorityController {
     }
 
     /**
-     * 根据传入的数据添加信息
+     * 添加信息
      *
      * @param authorityDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
@@ -149,7 +149,7 @@ public class AuthorityController {
     }
 
     /**
-     * 根据传入的代码和要修改的数据，修改信息
+     * 修改信息
      *
      * @param code         代码
      * @param authorityDTO 要修改的数据
@@ -168,7 +168,7 @@ public class AuthorityController {
     }
 
     /**
-     * 根据code查询关联角色信息
+     * 查询关联角色
      *
      * @param code 代码
      * @return 查询到的数据集，异常时返回204状态码

@@ -22,7 +22,7 @@ public class Region extends BaseDocument {
     /**
      * 上级
      */
-    @Indexed
+    @Indexed(sparse = true)
     private Long superior;
     /**
      * 名称

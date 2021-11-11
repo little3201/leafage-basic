@@ -3,11 +3,9 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * DTO class for User
@@ -52,9 +50,10 @@ public class UserDTO implements Serializable {
      */
     private Character gender;
     /**
-     * 地址
+     * 生日
      */
-    private String address;
+    @Past
+    private LocalDate birthday;
     /**
      * 修改人
      */
@@ -115,14 +114,6 @@ public class UserDTO implements Serializable {
 
     public void setGender(Character gender) {
         this.gender = gender;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getModifier() {

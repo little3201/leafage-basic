@@ -23,6 +23,7 @@ public class Authority extends BaseDocument {
     /**
      * 上级
      */
+    @Indexed(sparse = true)
     private ObjectId superior;
     /**
      * 名称

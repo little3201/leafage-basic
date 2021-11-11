@@ -2,7 +2,7 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.document.UserGroup;
 import io.leafage.basic.hypervisor.document.UserRole;
-import io.leafage.basic.hypervisor.domain.UserDetails;
+import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
@@ -92,9 +92,9 @@ class UserControllerTest {
 
     @Test
     void details() {
-        UserDetails userDetails = new UserDetails();
-        userDetails.setUsername("little3201");
-        given(this.userService.details(Mockito.anyString())).willReturn(Mono.just(userDetails));
+        UserDetailVO userDetailVO = new UserDetailVO();
+        userDetailVO.setUsername("little3201");
+        given(this.userService.details(Mockito.anyString())).willReturn(Mono.just(userDetailVO));
 
         webTestClient.get().uri("/user/{username}/details", "little3201").exchange()
                 .expectStatus().isOk()

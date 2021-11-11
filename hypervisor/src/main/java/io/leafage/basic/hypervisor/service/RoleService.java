@@ -14,7 +14,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2018/9/27 14:18
  **/
-public interface RoleService extends ReactiveBasicService<RoleDTO, RoleVO> {
+public interface RoleService extends ReactiveBasicService<RoleDTO, RoleVO, String> {
 
     /**
      * 查询构造树结构的数据

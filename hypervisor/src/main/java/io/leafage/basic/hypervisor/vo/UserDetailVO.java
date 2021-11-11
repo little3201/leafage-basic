@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021. Leafage All Right Reserved.
  */
-package io.leafage.basic.hypervisor.domain;
+package io.leafage.basic.hypervisor.vo;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -11,7 +11,7 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class UserDetails implements Serializable {
+public class UserDetailVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
 

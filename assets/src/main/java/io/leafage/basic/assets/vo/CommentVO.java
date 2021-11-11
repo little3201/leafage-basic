@@ -18,13 +18,13 @@ public class CommentVO extends BaseVO {
      */
     private String nickname;
     /**
-     * 邮箱
-     */
-    private String email;
-    /**
      * 内容
      */
     private String content;
+    /**
+     * 回复人
+     */
+    private String replier;
 
     public String getPosts() {
         return posts;
@@ -42,19 +42,19 @@ public class CommentVO extends BaseVO {
         this.nickname = nickname;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getReplier() {
+        return replier;
+    }
+
+    public void setReplier(String replier) {
+        this.replier = replier;
     }
 }

@@ -33,10 +33,6 @@ public class Posts extends BaseDocument {
      */
     private String title;
     /**
-     * 副标题
-     */
-    private String subtitle;
-    /**
      * 封面
      */
     private String cover;
@@ -79,14 +75,6 @@ public class Posts extends BaseDocument {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
     }
 
     public String getCover() {

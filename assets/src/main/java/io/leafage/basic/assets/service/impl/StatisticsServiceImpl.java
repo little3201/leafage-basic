@@ -25,7 +25,6 @@ import java.time.LocalDate;
 public class StatisticsServiceImpl implements StatisticsService {
 
     private final PostsRepository postsRepository;
-
     private final StatisticsRepository statisticsRepository;
 
     public StatisticsServiceImpl(PostsRepository postsRepository, StatisticsRepository statisticsRepository) {
@@ -37,11 +36,6 @@ public class StatisticsServiceImpl implements StatisticsService {
     public Flux<StatisticsVO> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifyTime"));
         return statisticsRepository.findByEnabledTrue(pageable).map(this::convertOuter);
-    }
-
-    @Override
-    public Mono<StatisticsVO> over() {
-        return statisticsRepository.getByDate(LocalDate.now().minusDays(2)).map(this::convertOuter);
     }
 
     @Override

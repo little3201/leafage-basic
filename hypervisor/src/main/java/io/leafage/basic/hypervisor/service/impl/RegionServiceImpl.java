@@ -26,7 +26,7 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Mono<RegionVO> fetch(long code) {
+    public Mono<RegionVO> fetch(Long code) {
         return regionRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter);
     }
 

@@ -12,5 +12,5 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface AccountService extends ReactiveBasicService<AccountDTO, AccountVO> {
+public interface AccountService extends ReactiveBasicService<AccountDTO, AccountVO, String> {
 }

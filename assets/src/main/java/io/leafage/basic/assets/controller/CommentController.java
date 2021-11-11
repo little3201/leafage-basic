@@ -33,18 +33,17 @@ public class CommentController {
     }
 
     /**
-     * 列表查询
+     * 分页查询
      *
      * @param page 分页位置
      * @param size 分页大小
-     * @param sort 排序字段
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+    public ResponseEntity<Flux<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size) {
         Flux<CommentVO> voFlux;
         try {
-            voFlux = commentService.retrieve(page, size, sort);
+            voFlux = commentService.retrieve(page, size);
         } catch (Exception e) {
             logger.error("Retrieve comment occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -70,7 +69,7 @@ public class CommentController {
     }
 
     /**
-     * 根据posts查询
+     * 根据 code 查询信息
      *
      * @param code 帖子代码
      * @return 关联的评论
@@ -88,7 +87,7 @@ public class CommentController {
     }
 
     /**
-     * 根据传入的数据添加信息
+     * 添加信息
      *
      * @param commentDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
@@ -106,7 +105,7 @@ public class CommentController {
     }
 
     /**
-     * 根据传入的代码和要修改的数据，修改信息
+     * 修改信息
      *
      * @param code       代码
      * @param commentDTO 要修改的数据

@@ -11,7 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -49,18 +48,4 @@ class StatisticsControllerTest {
                 .queryParam("size", 7).build()).exchange().expectStatus().isNoContent();
     }
 
-    @Test
-    void fetch() {
-        StatisticsVO statisticsVO = new StatisticsVO();
-        given(this.statisticsService.over()).willReturn(Mono.just(statisticsVO));
-
-        webTestClient.get().uri("/statistics/viewed").exchange().expectStatus().isOk().expectBody(StatisticsVO.class);
-    }
-
-    @Test
-    void fetch_error() {
-        given(this.statisticsService.over()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/statistics/viewed").exchange().expectStatus().isNoContent();
-    }
 }

@@ -27,7 +27,7 @@ public class RegionController {
     }
 
     /**
-     * 查询组信息
+     * 分页查询
      *
      * @param page 页码
      * @param size 大小
@@ -46,13 +46,13 @@ public class RegionController {
     }
 
     /**
-     * 根据传入的业务id: code 查询信息
+     * 根据 code 查询
      *
      * @param code 业务id
      * @return 查询的数据，异常时返回204状态码
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Mono<RegionVO>> fetch(@PathVariable long code) {
+    public ResponseEntity<Mono<RegionVO>> fetch(@PathVariable Long code) {
         Mono<RegionVO> voMono;
         try {
             voMono = regionService.fetch(code);

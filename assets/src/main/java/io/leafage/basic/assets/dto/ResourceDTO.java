@@ -4,13 +4,10 @@
 package io.leafage.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.Set;
 
 /**
- * DTO class for Portfolio
+ * DTO class for Resource
  *
  * @author liwenqiang 2020-10-06 22:09
  */
@@ -21,17 +18,21 @@ public class ResourceDTO implements Serializable {
      * 标题
      */
     @NotBlank
-    @Size(max = 32)
     private String title;
     /**
-     * url
+     * cover
      */
-    @NotEmpty
-    private Set<String> url;
+    @NotBlank
+    private String cover;
+    /**
+     * 分类
+     */
+    @NotBlank
+    private String category;
     /**
      * 类型
      */
-    private String type;
+    private Character type;
     /**
      * 描述
      */
@@ -45,19 +46,27 @@ public class ResourceDTO implements Serializable {
         this.title = title;
     }
 
-    public Set<String> getUrl() {
-        return url;
+    public String getCover() {
+        return cover;
     }
 
-    public void setUrl(Set<String> url) {
-        this.url = url;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
-    public String getType() {
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
     }
 

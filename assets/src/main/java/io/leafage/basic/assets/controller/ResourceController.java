@@ -47,14 +47,14 @@ public class ResourceController {
         try {
             voFlux = resourceService.retrieve(page, size, sort);
         } catch (Exception e) {
-            logger.error("Retrieve portfolio occurred an error: ", e);
+            logger.error("Retrieve resource occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
     }
 
     /**
-     * 查询信息
+     * 根据 code 查询信息
      *
      * @param code 代码
      * @return 查询到数据，异常时返回204
@@ -65,7 +65,7 @@ public class ResourceController {
         try {
             voMono = resourceService.fetch(code);
         } catch (Exception e) {
-            logger.error("Fetch portfolio occurred an error: ", e);
+            logger.error("Fetch resource occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
@@ -82,7 +82,7 @@ public class ResourceController {
         try {
             count = resourceService.count();
         } catch (Exception e) {
-            logger.error("Count portfolio occurred an error: ", e);
+            logger.error("Count resource occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(count);
@@ -100,14 +100,14 @@ public class ResourceController {
         try {
             existsMono = resourceService.exist(title);
         } catch (Exception e) {
-            logger.error("Check portfolio is exist an error: ", e);
+            logger.error("Check resource is exist an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
     }
 
     /**
-     * 根据传入的数据添加信息
+     * 添加信息
      *
      * @param resourceDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
@@ -118,14 +118,14 @@ public class ResourceController {
         try {
             voMono = resourceService.create(resourceDTO);
         } catch (Exception e) {
-            logger.error("Create portfolio occurred an error: ", e);
+            logger.error("Create resource occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
     }
 
     /**
-     * 根据传入的代码和要修改的数据，修改信息
+     * 修改信息
      *
      * @param code        代码
      * @param resourceDTO 要修改的数据
@@ -137,7 +137,7 @@ public class ResourceController {
         try {
             voMono = resourceService.modify(code, resourceDTO);
         } catch (Exception e) {
-            logger.error("Modify portfolio occurred an error: ", e);
+            logger.error("Modify resource occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.accepted().body(voMono);

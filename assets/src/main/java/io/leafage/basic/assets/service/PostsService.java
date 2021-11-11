@@ -16,7 +16,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO> {
+public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO, String> {
 
     /**
      * 按照分页和分类进行查询并排序

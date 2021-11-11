@@ -14,7 +14,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2018/12/17 19:24
  **/
-public interface GroupService extends ReactiveBasicService<GroupDTO, GroupVO> {
+public interface GroupService extends ReactiveBasicService<GroupDTO, GroupVO, String> {
 
     /**
      * 查询构造树结构的数据

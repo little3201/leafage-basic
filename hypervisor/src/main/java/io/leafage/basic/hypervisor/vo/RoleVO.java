@@ -3,12 +3,14 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import top.leafage.common.basic.AbstractVO;
+
 /**
  * VO class for Role
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class RoleVO extends BaseVO {
+public class RoleVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = 1564574233487923178L;
 

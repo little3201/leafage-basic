@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021. Leafage All Right Reserved.
  */
-package io.leafage.basic.hypervisor.document;
+package io.leafage.basic.assets.document;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class BaseDocument {
+public abstract class AbstractDocument {
 
     /**
      * 主键
@@ -26,16 +26,18 @@ public class BaseDocument {
     /**
      * 是否有效
      */
-    @Field(value = "is_enabled")
+    @Field(name = "is_enabled")
     private boolean enabled = true;
+
     /**
-     * 修改人
+     * 修改人(存放 username)
      */
-    private ObjectId modifier;
+    private String modifier;
+
     /**
      * 修改时间
      */
-    @Field(value = "modify_time")
+    @Field(name = "modify_time")
     @LastModifiedDate
     private LocalDateTime modifyTime;
 
@@ -55,11 +57,11 @@ public class BaseDocument {
         this.enabled = enabled;
     }
 
-    public ObjectId getModifier() {
+    public String getModifier() {
         return modifier;
     }
 
-    public void setModifier(ObjectId modifier) {
+    public void setModifier(String modifier) {
         this.modifier = modifier;
     }
 

@@ -1,11 +1,13 @@
 package io.leafage.basic.assets.vo;
 
+import top.leafage.common.basic.AbstractVO;
+
 /**
  * VO class for Comment
  *
  * @author liwenqiang 2021-07-15 22:12
  */
-public class CommentVO extends BaseVO {
+public class CommentVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = -3606281697452944193L;
 

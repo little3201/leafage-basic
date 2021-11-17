@@ -40,8 +40,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Mono<Statistics> create() {
-        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0,
-                0, 0.0, 0, 0.0);
+        Statistics statistics = new Statistics();
+        statistics.setDate(LocalDate.now());
         return postsRepository.findByEnabledTrue().collectList().flatMap(postsList -> {
             postsList.forEach(p -> {
                 statistics.setViewed(statistics.getViewed() + p.getViewed());

@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "account")
-public class Account extends BaseDocument {
+public class Account extends AbstractDocument {
 
     /**
      * 代码

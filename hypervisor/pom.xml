@@ -40,7 +40,7 @@
         <dependency>
             <groupId>top.leafage</groupId>
             <artifactId>leafage-common</artifactId>
-            <version>0.1.5</version>
+            <version>0.1.6</version>
         </dependency>
         <!-- Spring Cloud Consul -->
         <dependency>

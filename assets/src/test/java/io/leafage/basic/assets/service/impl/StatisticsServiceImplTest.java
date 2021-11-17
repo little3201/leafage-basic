@@ -51,8 +51,8 @@ class StatisticsServiceImplTest {
         posts.setComment(2);
         given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
 
-        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0,
-                0, 0.0, 0, 0.0);
+        Statistics statistics = new Statistics();
+        statistics.setDate(LocalDate.now());
         statistics.setId(new ObjectId());
         statistics.setLikes(123);
         statistics.setComment(12);

@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import top.leafage.common.basic.AbstractVO;
 import java.math.BigDecimal;
 
 /**
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AccountVO extends BaseVO {
+public class AccountVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = 2227758644875658137L;
 

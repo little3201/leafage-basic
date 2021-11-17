@@ -15,7 +15,7 @@ import java.time.LocalDate;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "user")
-public class User extends BaseDocument {
+public class User extends AbstractDocument {
 
     /**
      * 账号

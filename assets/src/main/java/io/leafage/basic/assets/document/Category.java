@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "category")
-public class Category extends BaseDocument {
+public class Category extends AbstractDocument {
 
     /**
      * 代码

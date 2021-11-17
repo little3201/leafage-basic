@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "role_authority")
-public class RoleAuthority extends BaseEntity {
+public class RoleAuthority extends AbstractEntity {
 
     /**
      * 角色ID

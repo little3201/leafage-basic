@@ -3,18 +3,17 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import top.leafage.common.basic.AbstractVO;
+
 /**
  * VO class for Authority
  *
  * @author liwenqiang
  */
-public class AuthorityVO extends BaseVO {
+public class AuthorityVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = 7493821282349624572L;
-    /**
-     * 代码
-     */
-    private String code;
+
     /**
      * 上级
      */
@@ -39,14 +38,6 @@ public class AuthorityVO extends BaseVO {
      * 描述
      */
     private String description;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getSuperior() {
         return superior;

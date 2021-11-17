@@ -11,7 +11,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "resource")
-public class Resource extends BaseEntity {
+public class Resource extends AbstractEntity {
 
     /**
      * 代码

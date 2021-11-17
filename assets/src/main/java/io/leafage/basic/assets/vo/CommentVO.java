@@ -1,6 +1,8 @@
 package io.leafage.basic.assets.vo;
 
-public class CommentVO extends BaseVO {
+import top.leafage.common.basic.AbstractVO;
+
+public class CommentVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = -1272748016919063381L;
 

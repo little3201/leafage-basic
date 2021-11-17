@@ -3,18 +3,17 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import top.leafage.common.basic.AbstractVO;
+
 /**
  * VO class for Group
  *
  * @author liwenqiang
  */
-public class GroupVO extends BaseVO {
+public class GroupVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = 5740100575689452491L;
-    /**
-     * 代码
-     */
-    private String code;
+
     /**
      * 负责人
      */
@@ -31,14 +30,6 @@ public class GroupVO extends BaseVO {
      * 描述
      */
     private String description;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getPrincipal() {
         return principal;

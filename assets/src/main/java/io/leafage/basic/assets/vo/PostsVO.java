@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.assets.vo;
 
+import top.leafage.common.basic.AbstractVO;
 import java.util.Set;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Set;
  *
  * @author liwenqiang  2019-03-03 22:59
  **/
-public class PostsVO extends BaseVO {
+public class PostsVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = 5476089760882093211L;
 

@@ -12,7 +12,7 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "statistics")
-public class Statistics extends BaseEntity {
+public class Statistics extends AbstractEntity {
 
     /**
      * 记录日期

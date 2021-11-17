@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "user_role")
-public class UserRole extends BaseEntity {
+public class UserRole extends AbstractEntity {
 
     /**
      * 用户主键

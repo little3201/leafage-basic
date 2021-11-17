@@ -1,8 +1,9 @@
 package io.leafage.basic.assets.vo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class StatisticsVO extends BaseVO {
+public class StatisticsVO implements Serializable {
 
     private static final long serialVersionUID = 4036885125351575031L;
 

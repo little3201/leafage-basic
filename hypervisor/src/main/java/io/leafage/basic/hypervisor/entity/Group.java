@@ -13,7 +13,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "group_")
-public class Group extends BaseEntity {
+public class Group extends AbstractEntity {
 
     /**
      * 业务ID

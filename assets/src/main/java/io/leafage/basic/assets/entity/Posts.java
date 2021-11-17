@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "posts")
-public class Posts extends BaseEntity {
+public class Posts extends AbstractEntity {
 
     /**
      * 唯一标识

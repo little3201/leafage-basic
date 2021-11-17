@@ -1,8 +1,9 @@
 package io.leafage.basic.assets.vo;
 
+import top.leafage.common.basic.AbstractVO;
 import java.util.Set;
 
-public class ResourceVO extends BaseVO {
+public class ResourceVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = 5927331601304060786L;
 

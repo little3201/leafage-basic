@@ -13,7 +13,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "authority")
-public class Authority extends BaseEntity {
+public class Authority extends AbstractEntity {
 
     /**
      * 业务ID

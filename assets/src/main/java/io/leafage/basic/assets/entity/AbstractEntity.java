@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021. Leafage All Right Reserved.
  */
-package io.leafage.basic.hypervisor.entity;
+package io.leafage.basic.assets.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  */
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class BaseEntity {
+public abstract class AbstractEntity {
 
     /**
      * 主键

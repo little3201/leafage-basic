@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "posts_content")
-public class PostsContent extends BaseEntity {
+public class PostsContent extends AbstractEntity {
 
     /**
      * 帖子ID

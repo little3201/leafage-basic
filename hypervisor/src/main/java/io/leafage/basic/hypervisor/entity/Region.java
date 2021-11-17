@@ -10,7 +10,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "region")
-public class Region extends BaseEntity {
+public class Region extends AbstractEntity {
 
     /**
      * 代码

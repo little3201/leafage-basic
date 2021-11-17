@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "user")
-public class User extends BaseEntity {
+public class User extends AbstractEntity {
 
     /**
      * 账户

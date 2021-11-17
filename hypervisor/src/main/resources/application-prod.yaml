@@ -1,12 +1,8 @@
-##=====logger common=====##
 logging:
   level:
-    # control root logger's level for WARN
     root: INFO
-    # control org.springframework logger's level for DEBUG
     org:
       springframework: INFO
-      # control org.hibernate logger's level for ERROR
       hibernate: INFO
 
 spring:
@@ -15,13 +11,8 @@ spring:
       host: 127.0.0.1
       port: 8500
 
-  ##=====datasource common=====##
   datasource:
-    # datasource driver
     driver-class-name: com.mysql.cj.jdbc.Driver
-    # datasource connection path
     url: jdbc:mysql://127.0.0.1:3306/abeille_hypervisor?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
-    # datasource username
     username: root
-    # datasource password
     password: root

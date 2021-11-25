@@ -1,7 +1,6 @@
 package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.document.RoleAuthority;
-import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import reactor.core.publisher.Flux;
 
@@ -15,7 +14,7 @@ public interface RoleAuthorityService {
      * @param code 角色代码
      * @return 数据集
      */
-    Flux<AuthorityVO> authorities(String code);
+    Flux<String> authorities(String code);
 
     /**
      * 查询关联角色

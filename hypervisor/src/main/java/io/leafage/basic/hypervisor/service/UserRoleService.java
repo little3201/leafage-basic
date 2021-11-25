@@ -1,7 +1,6 @@
 package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.document.UserRole;
-import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import reactor.core.publisher.Flux;
 
@@ -23,7 +22,7 @@ public interface UserRoleService {
      * @param username 账号
      * @return 数据集
      */
-    Flux<RoleVO> roles(String username);
+    Flux<String> roles(String username);
 
     /**
      * 保存用户-角色关系

@@ -1,17 +1,18 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.UserRoleService;
-import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import javax.naming.NotContextException;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -44,15 +45,12 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public Flux<RoleVO> roles(String username) {
+    public Flux<String> roles(String username) {
         Assert.hasText(username, "username is blank");
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId()).flatMap(userRole ->
-                        roleRepository.findById(userRole.getRoleId()).map(role -> {
-                            RoleVO roleVO = new RoleVO();
-                            BeanUtils.copyProperties(role, roleVO);
-                            return roleVO;
-                        })).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                                roleRepository.findById(userRole.getRoleId()).map(Role::getCode))
+                        .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 );
     }
 

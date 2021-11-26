@@ -2,14 +2,13 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.document.UserGroup;
 import io.leafage.basic.hypervisor.document.UserRole;
-import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
-import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
+import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import java.util.Collections;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -199,13 +200,11 @@ class UserControllerTest {
 
     @Test
     void groups() {
-        GroupVO groupVO = new GroupVO();
-        groupVO.setName("test");
-        given(this.userGroupService.groups(Mockito.anyString())).willReturn(Flux.just(groupVO));
+        given(this.userGroupService.groups(Mockito.anyString())).willReturn(Flux.just("21612OL34"));
 
         webTestClient.get().uri("/user/{username}/group", "little3201").exchange()
                 .expectStatus().isOk()
-                .expectBodyList(GroupVO.class);
+                .expectBodyList(String.class);
     }
 
     @Test
@@ -239,13 +238,11 @@ class UserControllerTest {
 
     @Test
     void roles() {
-        RoleVO roleVO = new RoleVO();
-        roleVO.setName("test");
-        given(this.userRoleService.roles(Mockito.anyString())).willReturn(Flux.just(roleVO));
+        given(this.userRoleService.roles(Mockito.anyString())).willReturn(Flux.just("21612OL34"));
 
         webTestClient.get().uri("/user/{username}/role", "little3201").exchange()
                 .expectStatus().isOk()
-                .expectBodyList(RoleVO.class);
+                .expectBodyList(String.class);
     }
 
     @Test

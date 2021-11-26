@@ -1,7 +1,6 @@
 package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.document.UserGroup;
-import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import reactor.core.publisher.Flux;
 
@@ -23,7 +22,7 @@ public interface UserGroupService {
      * @param code 代码
      * @return 数据集
      */
-    Flux<GroupVO> groups(String code);
+    Flux<String> groups(String code);
 
     /**
      * 保存用户-分组关系

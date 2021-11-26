@@ -1,17 +1,18 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.document.Authority;
 import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleAuthorityService;
-import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -30,14 +31,10 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
     }
 
     @Override
-    public Flux<AuthorityVO> authorities(String code) {
+    public Flux<String> authorities(String code) {
         return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(group -> roleAuthorityRepository.findByRoleIdAndEnabledTrue(group.getId()).flatMap(roleAuthority ->
-                        authorityRepository.findById(roleAuthority.getAuthorityId()).map(user -> {
-                            AuthorityVO authorityVO = new AuthorityVO();
-                            BeanUtils.copyProperties(user, authorityVO);
-                            return authorityVO;
-                        }))
+                        authorityRepository.findById(roleAuthority.getAuthorityId()).map(Authority::getCode))
                 );
     }
 
@@ -62,9 +59,9 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
                     RoleAuthority roleAuthority = new RoleAuthority();
                     roleAuthority.setRoleId(role.getId());
                     return authorityRepository.findByCodeInAndEnabledTrue(authorities).map(authority -> {
-                        roleAuthority.setAuthorityId(authority.getId());
-                        return roleAuthority;
-                    }).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                                roleAuthority.setAuthorityId(authority.getId());
+                                return roleAuthority;
+                            }).switchIfEmpty(Mono.error(NoSuchElementException::new))
                             .collectList().flatMapMany(roleAuthorityRepository::saveAll);
                 });
     }

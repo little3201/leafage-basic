@@ -5,14 +5,12 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.document.UserGroup;
 import io.leafage.basic.hypervisor.document.UserRole;
-import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
-import io.leafage.basic.hypervisor.vo.GroupVO;
-import io.leafage.basic.hypervisor.vo.RoleVO;
+import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import javax.validation.Valid;
 import java.util.Set;
 
@@ -200,8 +199,8 @@ public class UserController {
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{username}/group")
-    public ResponseEntity<Flux<GroupVO>> groups(@PathVariable String username) {
-        Flux<GroupVO> voFlux;
+    public ResponseEntity<Flux<String>> groups(@PathVariable String username) {
+        Flux<String> voFlux;
         try {
             voFlux = userGroupService.groups(username);
         } catch (Exception e) {
@@ -237,8 +236,8 @@ public class UserController {
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{username}/role")
-    public ResponseEntity<Flux<RoleVO>> roles(@PathVariable String username) {
-        Flux<RoleVO> voFlux;
+    public ResponseEntity<Flux<String>> roles(@PathVariable String username) {
+        Flux<String> voFlux;
         try {
             voFlux = userRoleService.roles(username);
         } catch (Exception e) {

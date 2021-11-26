@@ -16,7 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import java.util.Collections;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -51,7 +53,9 @@ class RoleAuthorityServiceImplTest {
         roleAuthority.setRoleId(new ObjectId());
         given(this.roleAuthorityRepository.findByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(roleAuthority));
 
-        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Authority.class)));
+        Authority authority = new Authority();
+        authority.setCode("21612OL34");
+        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
 
         StepVerifier.create(roleAuthorityService.authorities("little3201")).expectNextCount(1).verifyComplete();
     }

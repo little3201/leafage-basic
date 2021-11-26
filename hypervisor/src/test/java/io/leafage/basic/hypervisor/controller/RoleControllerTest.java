@@ -6,7 +6,6 @@ import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
-import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.bson.types.ObjectId;
@@ -21,7 +20,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import java.util.Collections;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -201,13 +202,11 @@ class RoleControllerTest {
 
     @Test
     void authorities() {
-        AuthorityVO authorityVO = new AuthorityVO();
-        authorityVO.setName("test");
-        given(this.roleAuthorityService.authorities(Mockito.anyString())).willReturn(Flux.just(authorityVO));
+        given(this.roleAuthorityService.authorities(Mockito.anyString())).willReturn(Flux.just("21612OL34"));
 
         webTestClient.get().uri("/role/{code}/authority", "21612OL34").exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserRole.class);
+                .expectBodyList(String.class);
     }
 
     @Test

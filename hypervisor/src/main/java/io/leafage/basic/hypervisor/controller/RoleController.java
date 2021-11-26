@@ -8,7 +8,6 @@ import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
-import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import javax.validation.Valid;
 import java.util.Set;
 
@@ -199,8 +199,8 @@ public class RoleController {
      * @return 操作结果
      */
     @GetMapping("/{code}/authority")
-    public ResponseEntity<Flux<AuthorityVO>> authorities(@PathVariable String code) {
-        Flux<AuthorityVO> voFlux;
+    public ResponseEntity<Flux<String>> authorities(@PathVariable String code) {
+        Flux<String> voFlux;
         try {
             voFlux = roleAuthorityService.authorities(code);
         } catch (Exception e) {

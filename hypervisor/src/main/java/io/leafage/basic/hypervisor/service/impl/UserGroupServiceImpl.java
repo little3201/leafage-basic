@@ -1,17 +1,18 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.document.Group;
 import io.leafage.basic.hypervisor.document.UserGroup;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.repository.UserGroupRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserGroupService;
-import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -42,14 +43,11 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public Flux<GroupVO> groups(String username) {
+    public Flux<String> groups(String username) {
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(user -> userGroupRepository.findByUserIdAndEnabledTrue(user.getId()).flatMap(userGroup ->
-                        groupRepository.findById(userGroup.getGroupId()).map(group -> {
-                            GroupVO groupVO = new GroupVO();
-                            BeanUtils.copyProperties(group, groupVO);
-                            return groupVO;
-                        })).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                                groupRepository.findById(userGroup.getGroupId()).map(Group::getCode))
+                        .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 );
     }
 
@@ -62,9 +60,9 @@ public class UserGroupServiceImpl implements UserGroupService {
                     UserGroup userGroup = new UserGroup();
                     userGroup.setUserId(user.getId());
                     return groupRepository.findByCodeInAndEnabledTrue(groups).map(group -> {
-                        userGroup.setGroupId(group.getId());
-                        return userGroup;
-                    }).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                                userGroup.setGroupId(group.getId());
+                                return userGroup;
+                            }).switchIfEmpty(Mono.error(NoSuchElementException::new))
                             .collectList().flatMapMany(userGroupRepository::saveAll);
                 });
     }

@@ -6,7 +6,6 @@ package io.leafage.basic.hypervisor.document;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
 import java.time.LocalDate;
 
 /**
@@ -66,10 +65,6 @@ public class User extends AbstractDocument {
     @Field(name = "is_credentials_non_expired")
     private boolean credentialsNonExpired = true;
 
-    public Character getGender() {
-        return gender;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -116,6 +111,10 @@ public class User extends AbstractDocument {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Character getGender() {
+        return gender;
     }
 
     public void setGender(Character gender) {

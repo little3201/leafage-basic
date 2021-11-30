@@ -167,16 +167,16 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
 
         Mono<Long> longMono = userRoleRepository.countByRoleIdAndEnabledTrue(role.getId())
                 .switchIfEmpty(Mono.just(0L));
-        voMono = voMono.zipWith(longMono, (a, count) -> {
-            a.setCount(count);
-            return a;
+        voMono = voMono.zipWith(longMono, (vo, count) -> {
+            vo.setCount(count);
+            return vo;
         });
 
         if (role.getSuperior() != null) {
             Mono<Role> superiorMono = roleRepository.findById(role.getSuperior());
-            voMono = voMono.zipWith(superiorMono, (a, superior) -> {
-                a.setSuperior(superior.getName());
-                return a;
+            voMono = voMono.zipWith(superiorMono, (vo, superior) -> {
+                vo.setSuperior(superior.getName());
+                return vo;
             });
         }
         return voMono;

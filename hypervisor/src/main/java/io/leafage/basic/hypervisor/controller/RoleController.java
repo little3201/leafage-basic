@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
-
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -199,15 +199,15 @@ public class RoleController {
      * @return 操作结果
      */
     @GetMapping("/{code}/authority")
-    public ResponseEntity<Flux<String>> authorities(@PathVariable String code) {
-        Flux<String> voFlux;
+    public ResponseEntity<Mono<List<String>>> authorities(@PathVariable String code) {
+        Mono<List<String>> listMono;
         try {
-            voFlux = roleAuthorityService.authorities(code);
+            listMono = roleAuthorityService.authorities(code);
         } catch (Exception e) {
             logger.error("Relation role ah occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(listMono);
     }
 
     /**

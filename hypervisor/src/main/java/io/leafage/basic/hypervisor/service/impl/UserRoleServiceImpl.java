@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.naming.NotContextException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -45,13 +45,13 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public Flux<String> roles(String username) {
+    public Mono<List<String>> roles(String username) {
         Assert.hasText(username, "username is blank");
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId()).flatMap(userRole ->
                                 roleRepository.findById(userRole.getRoleId()).map(Role::getCode))
                         .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                );
+                ).collectList();
     }
 
     @Override

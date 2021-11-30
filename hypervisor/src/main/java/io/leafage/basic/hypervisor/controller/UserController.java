@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
-
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -199,15 +199,15 @@ public class UserController {
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{username}/group")
-    public ResponseEntity<Flux<String>> groups(@PathVariable String username) {
-        Flux<String> voFlux;
+    public ResponseEntity<Mono<List<String>>> groups(@PathVariable String username) {
+        Mono<List<String>> listMono;
         try {
-            voFlux = userGroupService.groups(username);
+            listMono = userGroupService.groups(username);
         } catch (Exception e) {
             logger.error("Retrieve user groups occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(listMono);
     }
 
     /**
@@ -236,15 +236,15 @@ public class UserController {
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{username}/role")
-    public ResponseEntity<Flux<String>> roles(@PathVariable String username) {
-        Flux<String> voFlux;
+    public ResponseEntity<Mono<List<String>>> roles(@PathVariable String username) {
+        Mono<List<String>> listMono;
         try {
-            voFlux = userRoleService.roles(username);
+            listMono = userRoleService.roles(username);
         } catch (Exception e) {
             logger.error("Retrieve user roles occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(listMono);
     }
 
     /**

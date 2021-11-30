@@ -225,7 +225,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
     private TreeNode constructNode(String superior, Authority authority) {
         TreeNode treeNode = new TreeNode(authority.getCode(), authority.getName());
         treeNode.setSuperior(superior);
-        Map<String, String> expand = new HashMap<>();
+        Map<String, Object> expand = new HashMap<>();
         expand.put("icon", authority.getIcon());
         expand.put("path", authority.getPath());
         treeNode.setExpand(expand);

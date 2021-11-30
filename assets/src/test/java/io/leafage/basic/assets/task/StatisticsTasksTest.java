@@ -24,8 +24,8 @@ class StatisticsTasksTest {
 
     @Test
     void execute() {
-        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0,
-                0, 0.0, 0, 0.0);
+        Statistics statistics = new Statistics();
+        statistics.setDate(LocalDate.now());
         given(this.statisticsService.create()).willReturn(Mono.just(statistics));
 
         statisticsTasks.execute();

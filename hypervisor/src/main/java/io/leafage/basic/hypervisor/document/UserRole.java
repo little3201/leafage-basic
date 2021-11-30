@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author liwenqiang 2019/9/16 10:09
  **/
 @Document(collection = "user_role")
-public class UserRole extends BaseDocument {
+public class UserRole extends AbstractDocument {
 
     /**
      * 用户主键

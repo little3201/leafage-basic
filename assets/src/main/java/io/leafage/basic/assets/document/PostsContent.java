@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "posts_content")
-public class PostsContent extends BaseDocument {
+public class PostsContent extends AbstractDocument {
 
     /**
      * 帖子ID

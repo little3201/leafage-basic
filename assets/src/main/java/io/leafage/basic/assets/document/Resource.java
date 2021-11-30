@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "resource")
-public class Resource extends BaseDocument {
+public class Resource extends AbstractDocument {
 
     /**
      * 代码

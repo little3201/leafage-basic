@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "role_authority")
-public class RoleAuthority extends BaseDocument {
+public class RoleAuthority extends AbstractDocument {
 
     /**
      * 角色ID

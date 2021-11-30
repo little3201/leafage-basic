@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "authority")
-public class Authority extends BaseDocument {
+public class Authority extends AbstractDocument {
 
     /**
      * 代码

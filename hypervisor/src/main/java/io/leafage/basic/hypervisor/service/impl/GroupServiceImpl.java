@@ -180,25 +180,25 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
 
         Mono<Long> longMono = userGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
                 .switchIfEmpty(Mono.just(0L));
-        voMono = voMono.zipWith(longMono, (g, count) -> {
-            g.setCount(count);
-            return g;
+        voMono = voMono.zipWith(longMono, (vo, count) -> {
+            vo.setCount(count);
+            return vo;
         });
 
         if (group.getSuperior() != null) {
             Mono<Group> superiorMono = groupRepository.findById(group.getSuperior())
                     .switchIfEmpty(Mono.error(NoSuchElementException::new));
-            voMono = voMono.zipWith(superiorMono, (g, superior) -> {
-                g.setSuperior(superior.getName());
-                return g;
+            voMono = voMono.zipWith(superiorMono, (vo, superior) -> {
+                vo.setSuperior(superior.getName());
+                return vo;
             });
         }
         if (group.getPrincipal() != null) {
             Mono<User> userMono = userRepository.findById(group.getPrincipal())
                     .switchIfEmpty(Mono.error(NoSuchElementException::new));
-            voMono = voMono.zipWith(userMono, (g, principal) -> {
-                g.setPrincipal(principal.getNickname());
-                return g;
+            voMono = voMono.zipWith(userMono, (vo, principal) -> {
+                vo.setPrincipal(principal.getNickname());
+                return vo;
             });
         }
         return voMono;

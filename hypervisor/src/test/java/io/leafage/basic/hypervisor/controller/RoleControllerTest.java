@@ -20,9 +20,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
-
 import java.util.Collections;
-
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -202,7 +201,7 @@ class RoleControllerTest {
 
     @Test
     void authorities() {
-        given(this.roleAuthorityService.authorities(Mockito.anyString())).willReturn(Flux.just("21612OL34"));
+        given(this.roleAuthorityService.authorities(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
 
         webTestClient.get().uri("/role/{code}/authority", "21612OL34").exchange()
                 .expectStatus().isOk()

@@ -16,7 +16,7 @@ import java.util.Set;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Document(collection = "posts")
-public class Posts extends BaseDocument {
+public class Posts extends AbstractDocument {
 
     /**
      * 代码

@@ -3,7 +3,8 @@ package io.leafage.basic.hypervisor.service;
 import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import reactor.core.publisher.Flux;
-
+import reactor.core.publisher.Mono;
+import java.util.List;
 import java.util.Set;
 
 public interface RoleAuthorityService {
@@ -14,7 +15,7 @@ public interface RoleAuthorityService {
      * @param code 角色代码
      * @return 数据集
      */
-    Flux<String> authorities(String code);
+    Mono<List<String>> authorities(String code);
 
     /**
      * 查询关联角色

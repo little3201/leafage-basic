@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -43,12 +43,12 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public Flux<String> groups(String username) {
+    public Mono<List<String>> groups(String username) {
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(user -> userGroupRepository.findByUserIdAndEnabledTrue(user.getId()).flatMap(userGroup ->
                                 groupRepository.findById(userGroup.getGroupId()).map(Group::getCode))
                         .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                );
+                ).collectList();
     }
 
     @Override

@@ -4,23 +4,19 @@
 package io.leafage.basic.hypervisor.vo;
 
 import org.springframework.util.StringUtils;
-
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * VO class for User
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class UserVO implements Serializable {
+public class UserVO extends UserDetailVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
 
-    /**
-     * 账号
-     */
-    private String username;
     /**
      * 昵称
      */
@@ -46,25 +42,9 @@ public class UserVO implements Serializable {
      */
     private LocalDate birthday;
     /**
-     * 是否有效
+     * 修改时间
      */
-    private boolean accountNonExpired;
-    /**
-     * 是否锁定
-     */
-    private boolean accountNonLocked;
-    /**
-     * 密码是否有效
-     */
-    private boolean credentialsNonExpired;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    private LocalDateTime modifyTime;
 
     public String getNickname() {
         return nickname;
@@ -82,6 +62,11 @@ public class UserVO implements Serializable {
         this.avatar = avatar;
     }
 
+    /**
+     * 手机号脱敏
+     *
+     * @return 脱敏后的手机号
+     */
     public String getPhone() {
         if (StringUtils.hasText(phone)) {
             return phone.replaceAll("(^\\d{3})\\d.*(\\d{4})", "$1****$2");
@@ -93,6 +78,11 @@ public class UserVO implements Serializable {
         this.phone = phone;
     }
 
+    /**
+     * 邮箱脱敏
+     *
+     * @return 脱敏后的邮箱
+     */
     public String getEmail() {
         if (StringUtils.hasText(email)) {
             return email.replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2");
@@ -120,28 +110,31 @@ public class UserVO implements Serializable {
         this.birthday = birthday;
     }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
+    /**
+     * 安全防护，置空 password 的数据
+     *
+     * @return null
+     */
+    @Override
+    public String getPassword() {
+        return null;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+    /**
+     * 安全防护，置空 password 的数据
+     *
+     * @param password 密码
+     */
+    @Override
+    public void setPassword(String password) {
+        super.setPassword(null);
     }
-
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
-    }
-
 }

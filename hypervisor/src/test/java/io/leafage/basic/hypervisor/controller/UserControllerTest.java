@@ -22,9 +22,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
-
 import java.util.Collections;
-
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -200,7 +199,7 @@ class UserControllerTest {
 
     @Test
     void groups() {
-        given(this.userGroupService.groups(Mockito.anyString())).willReturn(Flux.just("21612OL34"));
+        given(this.userGroupService.groups(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
 
         webTestClient.get().uri("/user/{username}/group", "little3201").exchange()
                 .expectStatus().isOk()
@@ -238,7 +237,7 @@ class UserControllerTest {
 
     @Test
     void roles() {
-        given(this.userRoleService.roles(Mockito.anyString())).willReturn(Flux.just("21612OL34"));
+        given(this.userRoleService.roles(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
 
         webTestClient.get().uri("/user/{username}/role", "little3201").exchange()
                 .expectStatus().isOk()

@@ -2,11 +2,10 @@ package io.leafage.basic.assets.document;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
 import java.time.LocalDate;
 
 @Document(collection = "statistics")
-public class Statistics extends BaseDocument {
+public class Statistics extends AbstractDocument {
 
     /**
      * 记录日期
@@ -39,16 +38,6 @@ public class Statistics extends BaseDocument {
      */
     @Field("over_comment")
     private double overComment;
-
-    public Statistics(LocalDate date, int viewed, double overViewed, int likes, double overLikes, int comment, double overComment) {
-        this.date = date;
-        this.viewed = viewed;
-        this.overViewed = overViewed;
-        this.likes = likes;
-        this.overLikes = overLikes;
-        this.comment = comment;
-        this.overComment = overComment;
-    }
 
     public LocalDate getDate() {
         return date;

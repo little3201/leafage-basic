@@ -3,12 +3,14 @@
  */
 package io.leafage.basic.assets.vo;
 
+import top.leafage.common.basic.AbstractVO;
+
 /**
  * VO for Resource
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceVO extends BaseVO {
+public class ResourceVO extends AbstractVO<Long> {
 
     private static final long serialVersionUID = -2168494818144125736L;
 

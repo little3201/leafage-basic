@@ -22,10 +22,6 @@
         <sonar.projectKey>little3201_leafage-basic</sonar.projectKey>
         <sonar.organization>little3201</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.cpd.exclusions>
-            io.leafage.basic.*.vo\**,
-            io.leafage.basic.*.dto\**
-        </sonar.cpd.exclusions>
     </properties>
 
     <modules>

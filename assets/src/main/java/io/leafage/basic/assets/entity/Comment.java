@@ -1,6 +1,5 @@
 package io.leafage.basic.assets.entity;
 
-import top.leafage.common.basic.AbstractVO;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,7 +11,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "comment")
-public class Comment extends AbstractVO<String> {
+public class Comment extends AbstractEntity {
 
     /**
      * 帖子ID
@@ -31,6 +30,10 @@ public class Comment extends AbstractVO<String> {
      * 内容
      */
     private String content;
+    /**
+     * 回复人
+     */
+    private String replier;
 
     public Long getPostsId() {
         return postsId;
@@ -62,5 +65,13 @@ public class Comment extends AbstractVO<String> {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getReplier() {
+        return replier;
+    }
+
+    public void setReplier(String replier) {
+        this.replier = replier;
     }
 }

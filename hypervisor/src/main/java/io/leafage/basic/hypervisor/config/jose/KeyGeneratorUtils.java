@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.leafage.basic.hypervisor.jose;
+package io.leafage.basic.hypervisor.config.jose;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;

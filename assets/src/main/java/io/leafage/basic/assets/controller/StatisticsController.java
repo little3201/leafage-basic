@@ -47,20 +47,4 @@ public class StatisticsController {
         return ResponseEntity.ok(voFlux);
     }
 
-    /**
-     * 浏览量统计
-     *
-     * @return 查询到数据，异常时返回204
-     */
-    @GetMapping("/viewed")
-    public ResponseEntity<StatisticsVO> fetch() {
-        StatisticsVO vo;
-        try {
-            vo = statisticsService.fetch();
-        } catch (Exception e) {
-            logger.error("Statistics viewed occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(vo);
-    }
 }

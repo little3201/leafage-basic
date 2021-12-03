@@ -46,16 +46,6 @@ public class Statistics extends AbstractEntity {
     @Column(name = "over_comment")
     private double overComment;
 
-    public Statistics(LocalDate date, int viewed, double overViewed, int likes, double overLikes, int comment, double overComment) {
-        this.date = date;
-        this.viewed = viewed;
-        this.overViewed = overViewed;
-        this.likes = likes;
-        this.overLikes = overLikes;
-        this.comment = comment;
-        this.overComment = overComment;
-    }
-
     public LocalDate getDate() {
         return date;
     }

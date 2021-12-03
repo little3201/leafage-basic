@@ -16,7 +16,6 @@ import javax.persistence.Table;
 @Table(name = "category")
 public class Category extends AbstractEntity {
 
-
     /**
      * 唯一标识
      */

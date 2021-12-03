@@ -50,13 +50,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public List<PostsVO> retrieve() {
-        return postsRepository.findByEnableTrue().stream().map(this::convertOuter).collect(Collectors.toList());
+        return postsRepository.findByEnabledTrue().stream().map(this::convertOuter).collect(Collectors.toList());
     }
 
     @Override
     public Page<PostsVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return postsRepository.findByEnableTrue(pageable).map(this::convertOuter);
+        return postsRepository.findByEnabledTrue(pageable).map(this::convertOuter);
     }
 
     @Override

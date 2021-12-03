@@ -34,14 +34,14 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
      * @param pageable 分页参数
      * @return 查询结果
      */
-    Page<Posts> findByEnableTrue(Pageable pageable);
+    Page<Posts> findByEnabledTrue(Pageable pageable);
 
     /**
      * 查询所有
      *
      * @return 查询结果
      */
-    List<Posts> findByEnableTrue();
+    List<Posts> findByEnabledTrue();
 
     /**
      * 更新viewed

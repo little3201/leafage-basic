@@ -21,13 +21,6 @@ public interface StatisticsService {
     Page<StatisticsVO> retrieve(int page, int size);
 
     /**
-     * 查询昨日浏览量
-     *
-     * @return 统计结果
-     */
-    StatisticsVO fetch();
-
-    /**
      * 浏览量记录
      *
      * @return 记录结果

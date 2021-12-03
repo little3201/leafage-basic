@@ -35,19 +35,10 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public StatisticsVO fetch() {
-        Statistics statistics = statisticsRepository.getByDate(LocalDate.now().minusDays(1L));
-        if (statistics == null) {
-            return null;
-        }
-        return this.convertOuter(statistics);
-    }
-
-    @Override
     public Statistics create() {
-        Statistics statistics = new Statistics(LocalDate.now().minusDays(1), 0, 0.0,
-                0, 0.0, 0, 0.0);
-        List<Posts> posts = postsRepository.findByEnableTrue();
+        Statistics statistics = new Statistics();
+        statistics.setDate(LocalDate.now());
+        List<Posts> posts = postsRepository.findByEnabledTrue();
         posts.forEach(p -> {
             statistics.setViewed(statistics.getViewed() + p.getViewed());
             statistics.setLikes(statistics.getLikes() + p.getLikes());

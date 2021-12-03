@@ -34,6 +34,10 @@ public class CommentDTO implements Serializable {
      */
     @NotBlank
     private String content;
+    /**
+     * 回复人
+     */
+    private String replier;
 
     public String getPosts() {
         return posts;
@@ -65,5 +69,13 @@ public class CommentDTO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getReplier() {
+        return replier;
+    }
+
+    public void setReplier(String replier) {
+        this.replier = replier;
     }
 }

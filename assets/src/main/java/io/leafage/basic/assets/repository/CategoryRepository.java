@@ -34,8 +34,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     /**
      * 是否已存在
      *
-     * @param alias 名称
+     * @param name 名称
      * @return true-是，false-否
      */
-    boolean existsByAlias(String alias);
+    boolean existsByName(String name);
 }

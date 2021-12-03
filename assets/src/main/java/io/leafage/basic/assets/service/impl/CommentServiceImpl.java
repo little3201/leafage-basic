@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import top.leafage.common.basic.AbstractBasicService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
  * @author liwenqiang 2021/09/29 15:10
  **/
 @Service
-public class CommentServiceImpl extends AbstractBasicService implements CommentService {
+public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final PostsRepository postsRepository;
@@ -54,7 +53,6 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     public CommentVO create(CommentDTO commentDTO) {
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDTO, comment);
-        comment.setCode(this.generateCode());
         comment = commentRepository.saveAndFlush(comment);
         this.incrementComment(comment.getPostsId());
         return this.convertOuter(comment);

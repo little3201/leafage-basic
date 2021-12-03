@@ -31,11 +31,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      */
     List<Comment> findByPostsIdAndEnabledTrue(long postsId);
 
-    /**
-     * 根据code查询信息
-     *
-     * @param code 代码
-     * @return 评论信息
-     */
-    Comment getByCodeAndEnabledTrue(String code);
 }

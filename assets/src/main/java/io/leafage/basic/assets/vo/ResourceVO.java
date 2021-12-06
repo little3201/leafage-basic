@@ -10,7 +10,7 @@ import top.leafage.common.basic.AbstractVO;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceVO extends AbstractVO<Long> {
+public class ResourceVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = -2168494818144125736L;
 

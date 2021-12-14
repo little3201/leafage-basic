@@ -4,6 +4,8 @@
 package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.entity.Category;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,14 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+
+    /**
+     * 分页查询
+     *
+     * @param pageable 分页参数
+     * @return 查询结果
+     */
+    Page<Category> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据code查询enabled信息

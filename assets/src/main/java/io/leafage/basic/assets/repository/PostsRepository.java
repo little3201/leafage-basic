@@ -23,7 +23,7 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
     /**
      * 根据code查询
      *
-     * @param code 唯一标识
+     * @param code 代码
      * @return 信息
      */
     Posts findByCodeAndEnabledTrue(String code);
@@ -36,30 +36,31 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
      */
     Page<Posts> findByEnabledTrue(Pageable pageable);
 
+
     /**
-     * 查询所有
+     * 查询所有可用
      *
      * @return 查询结果
      */
     List<Posts> findByEnabledTrue();
 
     /**
-     * 更新viewed
+     * 增加viewed
      *
-     * @param code 唯一码
+     * @param code 代码
      */
     @Modifying
     @Query("update #{#entityName} set viewed = viewed + 1 where code = ?1")
-    void flushViewed(String code);
+    void increaseViewed(String code);
 
     /**
-     * 更新comment
+     * 增加comment
      *
-     * @param code 唯一码
+     * @param code 代码
      */
     @Modifying
     @Query("update #{#entityName} set comment = comment + 1 where code = ?1")
-    void flushComment(String code);
+    void increaseComment(String code);
 
     /**
      * 统计

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import java.util.Optional;
 
 @Service
 public class RegionServiceImpl implements RegionService {
@@ -42,8 +43,8 @@ public class RegionServiceImpl implements RegionService {
         BeanUtils.copyProperties(region, vo);
 
         if (region.getSuperior() != null) {
-            Region superior = regionRepository.getByCodeAndEnabledTrue(region.getSuperior());
-            vo.setSuperior(superior.getName());
+            Optional<Region> optional = regionRepository.findById(region.getSuperior());
+            optional.ifPresent(superior -> vo.setSuperior(superior.getName()));
         }
         return vo;
     }

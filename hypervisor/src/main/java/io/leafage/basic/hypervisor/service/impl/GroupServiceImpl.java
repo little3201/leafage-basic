@@ -11,7 +11,10 @@ import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -41,11 +44,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     @Override
     public Page<GroupVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        Page<Group> infoPage = groupRepository.findByEnabledTrue(pageable);
-        if (CollectionUtils.isEmpty(infoPage.getContent())) {
-            return new PageImpl<>(Collections.emptyList());
-        }
-        return infoPage.map(this::convertOuter);
+        return groupRepository.findByEnabledTrue(pageable).map(this::convertOuter);
     }
 
     @Override

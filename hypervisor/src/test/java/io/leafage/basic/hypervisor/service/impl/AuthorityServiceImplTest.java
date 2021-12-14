@@ -22,7 +22,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import top.leafage.common.basic.TreeNode;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -52,12 +55,14 @@ class AuthorityServiceImplTest {
 
     @Test
     void retrieve() {
-        List<Authority> authorities = new ArrayList<>(2);
-        Page<Authority> page = new PageImpl<>(authorities);
+        Authority authority = new Authority();
+        authority.setName("test");
+        authority.setDescription("测试");
+        Page<Authority> page = new PageImpl<>(List.of(authority));
         given(this.authorityRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
 
         Page<AuthorityVO> voPage = authorityService.retrieve(0, 2, "id");
-        Assertions.assertNotNull(voPage);
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test

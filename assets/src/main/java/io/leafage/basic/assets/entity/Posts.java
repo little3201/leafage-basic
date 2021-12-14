@@ -26,10 +26,6 @@ public class Posts extends AbstractEntity {
      */
     private String title;
     /**
-     * 概览
-     */
-    private String subtitle;
-    /**
      * 分类
      */
     @Column(name = "category_id", nullable = false)
@@ -70,14 +66,6 @@ public class Posts extends AbstractEntity {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
     }
 
     public Long getCategoryId() {

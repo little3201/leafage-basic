@@ -23,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.BDDMockito.given;
@@ -51,24 +50,15 @@ class PostsServiceImplTest {
     private PostsServiceImpl postsService;
 
     @Test
-    void retrieve() {
-        List<Posts> postsList = new ArrayList<>(2);
-        given(this.postsRepository.findAll()).willReturn(postsList);
-
-        List<PostsVO> postsVOS = postsService.retrieve();
-
-        Assertions.assertNotNull(postsVOS);
-    }
-
-    @Test
     void retrieve_page() {
-        List<Posts> voList = new ArrayList<>(2);
-        Page<Posts> postsPage = new PageImpl<>(voList);
-        given(this.postsRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
+        Posts posts = new Posts();
+        posts.setTitle("test");
+        Page<Posts> postsPage = new PageImpl<>(List.of(posts));
+        given(this.postsRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
 
         Page<PostsVO> voPage = postsService.retrieve(0, 2, "id");
 
-        Assertions.assertNotNull(voPage);
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test
@@ -81,16 +71,25 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void fetchDetails() {
+    void details() {
         given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Posts.class));
 
         given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Category.class)));
 
         given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostsContent.class));
 
-        PostsVO postsVO = postsService.fetchDetails("2112JK02");
+        PostsVO postsVO = postsService.details("2112JK02");
 
         Assertions.assertNotNull(postsVO);
+    }
+
+    @Test
+    void exist() {
+        given(this.postsRepository.existsByTitle(Mockito.anyString())).willReturn(true);
+
+        boolean exist = postsService.exist("spring");
+
+        Assertions.assertTrue(exist);
     }
 
     @Test
@@ -132,7 +131,7 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void modify_emptyContent() {
+    void modify_error() {
         given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Posts.class));
 
         given(this.postsRepository.save(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
@@ -158,10 +157,10 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void flushViewed() {
-        postsService.flushViewed("2112JK02");
+    void increaseViewed() {
+        postsService.increaseViewed("2112JK02");
 
-        verify(this.postsRepository, times(1)).flushViewed(Mockito.anyString());
+        verify(this.postsRepository, times(1)).increaseViewed(Mockito.anyString());
     }
 
 }

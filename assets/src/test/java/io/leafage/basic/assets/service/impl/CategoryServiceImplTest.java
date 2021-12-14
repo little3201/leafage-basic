@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import java.util.ArrayList;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -43,13 +42,10 @@ class CategoryServiceImplTest {
 
     @Test
     void retrieve() {
-        List<Category> categories = new ArrayList<>(2);
         Category category = new Category();
         category.setId(1L);
-        categories.add(category);
-        categories.add(category);
-        Page<Category> categoryPage = new PageImpl<>(categories);
-        given(this.categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(categoryPage);
+        Page<Category> page = new PageImpl<>(List.of(category));
+        given(this.categoryRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(page);
 
         given(this.postsRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 

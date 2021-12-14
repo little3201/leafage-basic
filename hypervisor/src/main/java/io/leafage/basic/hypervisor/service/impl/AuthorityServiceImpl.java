@@ -170,7 +170,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
         TreeNode treeNode = new TreeNode(authority.getCode(), authority.getName());
         treeNode.setSuperior(superior);
 
-        Map<String, String> expand = new HashMap<>();
+        Map<String, Object> expand = new HashMap<>();
         expand.put("icon", authority.getIcon());
         expand.put("path", authority.getPath());
 

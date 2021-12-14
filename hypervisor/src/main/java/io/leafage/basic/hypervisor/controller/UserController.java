@@ -10,6 +10,7 @@ import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
@@ -57,8 +58,8 @@ public class UserController {
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回204
      */
     @GetMapping
-    public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
-        Page<UserVO> users;
+    public ResponseEntity<Page<AccountVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+        Page<AccountVO> users;
         try {
             users = userService.retrieve(page, size, sort);
         } catch (Exception e) {
@@ -168,7 +169,7 @@ public class UserController {
      * @return 操作结果
      */
     @PatchMapping("/{username}/group")
-    public ResponseEntity<List<UserGroup>> relationGroup(@PathVariable String username, @RequestBody Set<String> groups) {
+    public ResponseEntity<List<UserGroup>> groups(@PathVariable String username, @RequestBody Set<String> groups) {
         List<UserGroup> voList;
         try {
             voList = userGroupService.relation(username, groups);
@@ -205,7 +206,7 @@ public class UserController {
      * @return 操作结果
      */
     @PatchMapping("/{username}/role")
-    public ResponseEntity<List<UserRole>> relationRole(@PathVariable String username, @RequestBody Set<String> roles) {
+    public ResponseEntity<List<UserRole>> roles(@PathVariable String username, @RequestBody Set<String> roles) {
         List<UserRole> voList;
         try {
             voList = userRoleService.relation(username, roles);

@@ -1,83 +1,116 @@
 package io.leafage.basic.hypervisor.vo;
 
-import top.leafage.common.basic.AbstractVO;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * VO class for User
  *
  * @author liwenqiang 2019/8/31 15:50
  **/
-public class UserVO extends AbstractVO<String> {
+public class UserVO implements Serializable {
 
     private static final long serialVersionUID = -43247624019806041L;
 
     /**
-     * 昵称
+     * 姓
      */
-    private String nickname;
+    private String firstname;
     /**
-     * 头像
+     * 名
      */
-    private String avatar;
+    private String lastname;
     /**
-     * 用户名
+     * 出生日期
      */
-    private String username;
+    private LocalDate birthday;
     /**
-     * 电话
+     * 国籍
      */
-    private String mobile;
+    private Long country;
     /**
-     * 邮箱
+     * 民族
      */
-    private String email;
+    private Long ethnicity;
+    /**
+     * 省
+     */
+    private Long province;
+    /**
+     * 市
+     */
+    private Long city;
+    /**
+     * 区
+     */
+    private Long region;
     /**
      * 地址
      */
     private String address;
-    /**
-     * 性别: null-未知 0-女 1-男
-     */
-    private Character gender;
 
-    public String getNickname() {
-        return nickname;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
-    public String getUsername() {
-        return username;
+    public LocalDate getBirthday() {
+        return birthday;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
-    public String getMobile() {
-        return mobile;
+    public Long getCountry() {
+        return country;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setCountry(Long country) {
+        this.country = country;
     }
 
-    public String getEmail() {
-        return email;
+    public Long getEthnicity() {
+        return ethnicity;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEthnicity(Long ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public Long getProvince() {
+        return province;
+    }
+
+    public void setProvince(Long province) {
+        this.province = province;
+    }
+
+    public Long getCity() {
+        return city;
+    }
+
+    public void setCity(Long city) {
+        this.city = city;
+    }
+
+    public Long getRegion() {
+        return region;
+    }
+
+    public void setRegion(Long region) {
+        this.region = region;
     }
 
     public String getAddress() {
@@ -87,13 +120,4 @@ public class UserVO extends AbstractVO<String> {
     public void setAddress(String address) {
         this.address = address;
     }
-
-    public Character getGender() {
-        return gender;
-    }
-
-    public void setGender(Character gender) {
-        this.gender = gender;
-    }
-
 }

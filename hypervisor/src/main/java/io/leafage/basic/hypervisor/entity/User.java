@@ -6,6 +6,7 @@ package io.leafage.basic.hypervisor.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 /**
  * Model class for User
@@ -41,10 +42,6 @@ public class User extends AbstractEntity {
      */
     private String email;
     /**
-     * 地址
-     */
-    private String address;
-    /**
      * 性别: null-未知 0-女 1-男
      */
     private Character gender;
@@ -63,6 +60,43 @@ public class User extends AbstractEntity {
      */
     @Column(name = "is_credentials_non_expired")
     private boolean credentialsNonExpired = true;
+
+    /**
+     * 姓
+     */
+    private String firstname;
+    /**
+     * 名
+     */
+    private String lastname;
+    /**
+     * 出生日期
+     */
+    private LocalDate birthday;
+    /**
+     * 国籍
+     */
+    private Long country;
+    /**
+     * 民族
+     */
+    private Long ethnicity;
+    /**
+     * 省
+     */
+    private Long province;
+    /**
+     * 市
+     */
+    private Long city;
+    /**
+     * 区
+     */
+    private Long region;
+    /**
+     * 地址
+     */
+    private String address;
 
 
     public String getUsername() {
@@ -113,14 +147,6 @@ public class User extends AbstractEntity {
         this.email = email;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public Character getGender() {
         return gender;
     }
@@ -151,5 +177,77 @@ public class User extends AbstractEntity {
 
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public Long getCountry() {
+        return country;
+    }
+
+    public void setCountry(Long country) {
+        this.country = country;
+    }
+
+    public Long getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(Long ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public Long getProvince() {
+        return province;
+    }
+
+    public void setProvince(Long province) {
+        this.province = province;
+    }
+
+    public Long getCity() {
+        return city;
+    }
+
+    public void setCity(Long city) {
+        this.city = city;
+    }
+
+    public Long getRegion() {
+        return region;
+    }
+
+    public void setRegion(Long region) {
+        this.region = region;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

@@ -27,8 +27,8 @@ public class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests(authorizeRequests ->
-                        authorizeRequests.anyRequest().permitAll()
-                ).csrf().disable()
+                        authorizeRequests.anyRequest().authenticated()
+                )
                 .formLogin(h -> h.successHandler(new StatusAuthenticationSuccessHandler()))
                 .exceptionHandling(e ->
                         e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));

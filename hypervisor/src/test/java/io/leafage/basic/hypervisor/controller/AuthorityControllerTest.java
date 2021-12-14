@@ -3,6 +3,7 @@ package io.leafage.basic.hypervisor.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
+import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,14 +14,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import top.leafage.common.basic.TreeNode;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author liwenqiang 2019/9/14 21:52
  **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(AuthorityController.class)
 class AuthorityControllerTest {
@@ -44,13 +47,14 @@ class AuthorityControllerTest {
     @MockBean
     private AuthorityService authorityService;
 
+    @MockBean
+    private RoleAuthorityService roleAuthorityService;
+
     @Test
     void retrieve() throws Exception {
-        List<AuthorityVO> voList = new ArrayList<>(2);
         AuthorityVO authorityVO = new AuthorityVO();
         authorityVO.setSuperior("superior");
-        voList.add(authorityVO);
-        Page<AuthorityVO> voPage = new PageImpl<>(voList);
+        Page<AuthorityVO> voPage = new PageImpl<>(List.of(authorityVO));
         given(this.authorityService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/authority").queryParam("page", "0").queryParam("size", "2")
@@ -63,7 +67,7 @@ class AuthorityControllerTest {
         given(this.authorityService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/authority").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sort", "")).andExpect(status().is(204)).andDo(print()).andReturn();
+                .queryParam("sort", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
@@ -97,7 +101,7 @@ class AuthorityControllerTest {
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         mvc.perform(post("/authority").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(authorityDTO))).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(authorityDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test"))
                 .andDo(print()).andReturn();
     }
@@ -112,7 +116,7 @@ class AuthorityControllerTest {
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         mvc.perform(post("/authority").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(authorityDTO))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(authorityDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -129,7 +133,7 @@ class AuthorityControllerTest {
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         mvc.perform(put("/authority/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(authorityDTO)))
+                        .content(mapper.writeValueAsString(authorityDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -144,7 +148,7 @@ class AuthorityControllerTest {
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         mvc.perform(put("/authority/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(authorityDTO)))
+                        .content(mapper.writeValueAsString(authorityDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
@@ -153,7 +157,7 @@ class AuthorityControllerTest {
     void remove() throws Exception {
         this.authorityService.remove(Mockito.anyString());
 
-        mvc.perform(delete("/authority/{code}", "test")).andExpect(status().isOk())
+        mvc.perform(delete("/authority/{code}", "test").with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -161,7 +165,7 @@ class AuthorityControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.authorityService).remove(Mockito.anyString());
 
-        mvc.perform(delete("/authority/{code}", "test")).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/authority/{code}", "test").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

@@ -77,8 +77,8 @@ public class ResourceController {
         try {
             exists = resourceService.exist(title);
         } catch (Exception e) {
-            logger.error("Check portfolio is exist an error: ", e);
-            return ResponseEntity.noContent().build();
+            logger.error("Check portfolio exist occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().body(exists);
     }

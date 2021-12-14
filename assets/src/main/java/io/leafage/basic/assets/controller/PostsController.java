@@ -40,7 +40,7 @@ public class PostsController {
      * @return 分页结果集
      */
     @GetMapping
-    public ResponseEntity<Object> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+    public ResponseEntity<Page<PostsVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
         Page<PostsVO> voPage;
         try {
             voPage = postsService.retrieve(page, size, sort);
@@ -58,7 +58,7 @@ public class PostsController {
      * @return 帖子信息，不包括内容
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Object> fetch(@PathVariable String code) {
+    public ResponseEntity<PostsVO> fetch(@PathVariable String code) {
         PostsVO article;
         try {
             article = postsService.fetch(code);
@@ -76,15 +76,33 @@ public class PostsController {
      * @return 帖子所有信息，包括内容
      */
     @GetMapping("/{code}/details")
-    public ResponseEntity<Object> fetchDetails(@PathVariable String code) {
+    public ResponseEntity<PostsVO> details(@PathVariable String code) {
         PostsVO article;
         try {
-            article = postsService.fetchDetails(code);
+            article = postsService.details(code);
         } catch (Exception e) {
             logger.info("Fetch posts details occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(article);
+    }
+
+    /**
+     * 查询帖子是否存在
+     *
+     * @param title 标题
+     * @return 帖子是否已存在
+     */
+    @GetMapping("/exist")
+    public ResponseEntity<Boolean> exist(@RequestParam String title) {
+        boolean exist;
+        try {
+            exist = postsService.exist(title);
+        } catch (Exception e) {
+            logger.info("Fetch posts exist occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok(exist);
     }
 
     /**

@@ -24,9 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * posts service 实现
@@ -49,11 +47,6 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public List<PostsVO> retrieve() {
-        return postsRepository.findByEnabledTrue().stream().map(this::convertOuter).collect(Collectors.toList());
-    }
-
-    @Override
     public Page<PostsVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
         return postsRepository.findByEnabledTrue(pageable).map(this::convertOuter);
@@ -71,10 +64,10 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public PostsContentVO fetchDetails(String code) {
+    public PostsContentVO details(String code) {
         Assert.hasText(code, MESSAGE);
         // viewed自增一，异步执行
-        this.flushViewed(code);
+        this.increaseViewed(code);
         //查询基本信息
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
         if (posts == null) {
@@ -93,6 +86,11 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
             postsContentVO.setCategory(postsContent.getCatalog());
         }
         return postsContentVO;
+    }
+
+    @Override
+    public boolean exist(String title) {
+        return postsRepository.existsByTitle(title);
     }
 
     @Override
@@ -158,22 +156,22 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Async
-    public void flushViewed(String code) {
+    public void increaseViewed(String code) {
         Assert.hasText(code, MESSAGE);
-        postsRepository.flushViewed(code);
+        postsRepository.increaseViewed(code);
     }
 
     /**
      * 对象转换为输出结果对象
      *
-     * @param info 信息
+     * @param posts 信息
      * @return 输出转换后的vo对象
      */
-    private PostsVO convertOuter(Posts info) {
+    private PostsVO convertOuter(Posts posts) {
         PostsVO outer = new PostsVO();
-        BeanUtils.copyProperties(info, outer);
+        BeanUtils.copyProperties(posts, outer);
         // 转换分类
-        Optional<Category> optional = categoryRepository.findById(info.getCategoryId());
+        Optional<Category> optional = categoryRepository.findById(posts.getCategoryId());
         optional.ifPresent(category -> outer.setCategory(category.getName()));
         return outer;
     }

@@ -37,11 +37,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
     @Override
     public Page<RoleVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        Page<Role> infoPage = roleRepository.findAll(pageable);
-        if (CollectionUtils.isEmpty(infoPage.getContent())) {
-            return new PageImpl<>(Collections.emptyList());
-        }
-        return infoPage.map(this::convertOuter);
+        return roleRepository.findByEnabledTrue(pageable).map(this::convertOuter);
     }
 
 

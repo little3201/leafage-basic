@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.UserDTO;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,6 +25,6 @@ public interface UserService extends ServletBasicService<UserDTO, UserVO, String
      * @param sort 排序字段
      * @return 查询结果
      */
-    Page<UserVO> retrieve(int page, int size, String sort);
+    Page<AccountVO> retrieve(int page, int size, String sort);
 
 }

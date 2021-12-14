@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.List;
 
 /**
  * resource repository
@@ -22,13 +21,6 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
      * @return 查询结果
      */
     Page<Resource> findByEnabledTrue(Pageable pageable);
-
-    /**
-     * 查询
-     *
-     * @return 查询结果
-     */
-    List<Resource> findByEnabledTrue();
 
     /**
      * 根据code查询enabled信息

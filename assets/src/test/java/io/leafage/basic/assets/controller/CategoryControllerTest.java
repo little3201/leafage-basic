@@ -13,23 +13,28 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * category 接口测试
+ *
+ * @author liwenqiang 2019/9/14 21:46
+ **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(CategoryController.class)
 class CategoryControllerTest {
-
-    @MockBean
-    private CategoryService categoryService;
 
     @Autowired
     private MockMvc mvc;
@@ -37,28 +42,30 @@ class CategoryControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
+    @MockBean
+    private CategoryService categoryService;
+
     @Test
     void retrieve() throws Exception {
-        List<CategoryVO> voList = new ArrayList<>(2);
-        voList.add(new CategoryVO());
-        Page<CategoryVO> postsPage = new PageImpl<>(voList);
-        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(postsPage);
+        CategoryVO categoryVO = new CategoryVO();
+        categoryVO.setName("test");
+        categoryVO.setCount(21L);
+        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
+        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
         mvc.perform(get("/category").queryParam("page", "0")
-                .queryParam("size", "2").queryParam("order", "id"))
+                        .queryParam("size", "2").queryParam("sort", "id"))
                 .andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
-
     @Test
-    public void retrieve_error() throws Exception {
-        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
+    void retrieve_error() throws Exception {
+        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new NoSuchElementException());
 
         mvc.perform(get("/category").queryParam("page", "0")
-                .queryParam("size", "2").queryParam("order", "id")).andExpect(status().isNoContent())
+                        .queryParam("size", "2").queryParam("sort", "id")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
-
 
     @Test
     void fetch() throws Exception {
@@ -87,20 +94,18 @@ class CategoryControllerTest {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
         mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(categoryDTO))).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void create_error() throws Exception {
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
         mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(categoryDTO))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -115,7 +120,7 @@ class CategoryControllerTest {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
         mvc.perform(put("/category/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(categoryDTO)))
+                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -128,7 +133,7 @@ class CategoryControllerTest {
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
         mvc.perform(put("/category/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(categoryDTO)))
+                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
@@ -137,7 +142,7 @@ class CategoryControllerTest {
     void remove() throws Exception {
         this.categoryService.remove(Mockito.anyString());
 
-        mvc.perform(delete("/category/{code}", "21389KO6")).andExpect(status().isOk())
+        mvc.perform(delete("/category/{code}", "21389KO6").with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -145,7 +150,7 @@ class CategoryControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.categoryService).remove(Mockito.anyString());
 
-        mvc.perform(delete("/category/{code}", "21389KO6")).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/category/{code}", "21389KO6").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 }

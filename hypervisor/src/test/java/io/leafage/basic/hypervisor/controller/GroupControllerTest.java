@@ -14,14 +14,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import top.leafage.common.basic.TreeNode;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author liwenqiang 2019/9/14 21:52
  **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(GroupController.class)
 class GroupControllerTest {
@@ -50,12 +52,10 @@ class GroupControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        List<GroupVO> voList = new ArrayList<>(2);
         GroupVO groupVO = new GroupVO();
         groupVO.setPrincipal("admin");
         groupVO.setSuperior("superior");
-        voList.add(groupVO);
-        Page<GroupVO> voPage = new PageImpl<>(voList);
+        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO));
         given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/group").queryParam("page", "0").queryParam("size", "2")
@@ -68,7 +68,7 @@ class GroupControllerTest {
         given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/group").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sort", "")).andExpect(status().is(204)).andDo(print()).andReturn();
+                .queryParam("sort", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
@@ -99,8 +99,10 @@ class GroupControllerTest {
         // 构造请求对象
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
+        groupDTO.setDescription("描述");
         mvc.perform(post("/group").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(groupDTO))).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test"))
                 .andDo(print()).andReturn();
     }
@@ -113,7 +115,7 @@ class GroupControllerTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         mvc.perform(post("/group").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(groupDTO))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -128,7 +130,7 @@ class GroupControllerTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         mvc.perform(put("/group/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(groupDTO)))
+                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -141,7 +143,7 @@ class GroupControllerTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         mvc.perform(put("/group/{code}", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(groupDTO)))
+                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
@@ -150,7 +152,7 @@ class GroupControllerTest {
     void remove() throws Exception {
         this.groupService.remove(Mockito.anyString());
 
-        mvc.perform(delete("/group/{code}", "test")).andExpect(status().isOk())
+        mvc.perform(delete("/group/{code}", "test").with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -158,7 +160,7 @@ class GroupControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.groupService).remove(Mockito.anyString());
 
-        mvc.perform(delete("/group/{code}", "test")).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/group/{code}", "test").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

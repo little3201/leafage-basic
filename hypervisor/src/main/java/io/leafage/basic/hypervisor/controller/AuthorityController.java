@@ -5,7 +5,9 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.service.AuthorityService;
+import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
+import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -28,9 +30,11 @@ public class AuthorityController {
     private final Logger logger = LoggerFactory.getLogger(AuthorityController.class);
 
     private final AuthorityService authorityService;
+    private final RoleAuthorityService roleAuthorityService;
 
-    public AuthorityController(AuthorityService authorityService) {
+    public AuthorityController(AuthorityService authorityService, RoleAuthorityService roleAuthorityService) {
         this.authorityService = authorityService;
+        this.roleAuthorityService = roleAuthorityService;
     }
 
     /**
@@ -114,7 +118,7 @@ public class AuthorityController {
      * @return 编辑后的信息，否则返回417状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Object> modify(@PathVariable String code, @RequestBody @Valid AuthorityDTO authorityDTO) {
+    public ResponseEntity<AuthorityVO> modify(@PathVariable String code, @RequestBody @Valid AuthorityDTO authorityDTO) {
         AuthorityVO authorityVO;
         try {
             authorityVO = authorityService.modify(code, authorityDTO);
@@ -132,7 +136,7 @@ public class AuthorityController {
      * @return 200状态码，否则返回417状态码
      */
     @DeleteMapping("/{code}")
-    public ResponseEntity<Object> remove(@PathVariable String code) {
+    public ResponseEntity<Void> remove(@PathVariable String code) {
         try {
             authorityService.remove(code);
         } catch (Exception e) {
@@ -141,5 +145,24 @@ public class AuthorityController {
         }
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * 查询关联角色
+     *
+     * @param code 代码
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{code}/role")
+    public ResponseEntity<List<RoleVO>> roles(@PathVariable String code) {
+        List<RoleVO> voList;
+        try {
+            voList = roleAuthorityService.roles(code);
+        } catch (Exception e) {
+            logger.error("Retrieve authority roles occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voList);
+    }
+
 
 }

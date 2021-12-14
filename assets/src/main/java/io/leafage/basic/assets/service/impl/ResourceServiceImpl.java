@@ -11,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import top.leafage.common.basic.AbstractBasicService;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * resource service 实现
@@ -33,11 +31,6 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     @Override
     public Page<ResourceVO> retrieve(int page, int size) {
         return resourceRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
-    }
-
-    @Override
-    public List<ResourceVO> retrieve() {
-        return resourceRepository.findByEnabledTrue().stream().map(this::convertOuter).collect(Collectors.toList());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package io.leafage.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -20,14 +21,15 @@ public class ResourceDTO implements Serializable {
     @Size(max = 32)
     private String title;
     /**
-     * url
+     * cover
      */
     @NotBlank
-    private String url;
+    private String cover;
     /**
      * 类型
      */
-    private String type;
+    @NotNull
+    private Character type;
     /**
      * 描述
      */
@@ -41,19 +43,19 @@ public class ResourceDTO implements Serializable {
         this.title = title;
     }
 
-    public String getUrl() {
-        return url;
+    public String getCover() {
+        return cover;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
-    public String getType() {
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
     }
 

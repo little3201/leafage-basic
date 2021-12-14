@@ -40,7 +40,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     @Override
     public Page<CategoryVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return categoryRepository.findAll(pageable).map(category -> {
+        return categoryRepository.findByEnabledTrue(pageable).map(category -> {
             CategoryVO categoryVO = this.convertOuter(category);
             long count = postsRepository.countByCategoryId(category.getId());
             categoryVO.setCount(count);
@@ -57,11 +57,11 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public CategoryVO create(CategoryDTO categoryDTO) {
-        Category info = new Category();
-        BeanUtils.copyProperties(categoryDTO, info);
-        info.setCode(this.generateCode());
-        categoryRepository.save(info);
-        return this.convertOuter(info);
+        Category category = new Category();
+        BeanUtils.copyProperties(categoryDTO, category);
+        category.setCode(this.generateCode());
+        categoryRepository.save(category);
+        return this.convertOuter(category);
     }
 
     @Override

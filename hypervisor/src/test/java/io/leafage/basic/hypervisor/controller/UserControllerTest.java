@@ -11,6 +11,7 @@ import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import top.leafage.common.basic.TreeNode;
@@ -29,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @author liwenqiang 2019/1/29 17:09
  **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(UserController.class)
 class UserControllerTest {
@@ -63,11 +67,9 @@ class UserControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        List<UserVO> voList = new ArrayList<>(2);
-        UserVO userVO = new UserVO();
-        userVO.setMobile("18710231023");
-        voList.add(userVO);
-        Page<UserVO> voPage = new PageImpl<>(voList);
+        AccountVO accountVO = new AccountVO();
+        accountVO.setNickname("布吉岛");
+        Page<AccountVO> voPage = new PageImpl<>(List.of(accountVO));
         given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/user").queryParam("page", "0").queryParam("size", "2")
@@ -80,17 +82,17 @@ class UserControllerTest {
         given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/user").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sort", "")).andExpect(status().is(204)).andDo(print()).andReturn();
+                .queryParam("sort", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
     void fetch() throws Exception {
         UserVO userVO = new UserVO();
-        userVO.setUsername("test");
+        userVO.setFirstname("test");
         given(this.userService.fetch(Mockito.anyString())).willReturn(userVO);
 
         mvc.perform(get("/user/{username}", "test")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("test")).andDo(print()).andReturn();
+                .andExpect(jsonPath("$.firstname").value("test")).andDo(print()).andReturn();
     }
 
     @Test
@@ -105,15 +107,15 @@ class UserControllerTest {
     void create() throws Exception {
         // 构造返回对象
         UserVO userVO = new UserVO();
-        userVO.setUsername("test");
+        userVO.setFirstname("test");
         given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(userVO);
 
         // 构造请求对象
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("test");
         mvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO))).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.username").value("test"))
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstname").value("test"))
                 .andDo(print()).andReturn();
     }
 
@@ -125,7 +127,7 @@ class UserControllerTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("test");
         mvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -133,14 +135,14 @@ class UserControllerTest {
     void modify() throws Exception {
         // 构造返回对象
         UserVO postsVO = new UserVO();
-        postsVO.setUsername("test");
+        postsVO.setFirstname("test");
         given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willReturn(postsVO);
 
         // 构造请求对象
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("test");
         mvc.perform(put("/user/{username}", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)))
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -153,7 +155,7 @@ class UserControllerTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("test");
         mvc.perform(put("/user/{username}", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)))
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
@@ -162,7 +164,7 @@ class UserControllerTest {
     void remove() throws Exception {
         this.userService.remove(Mockito.anyString());
 
-        mvc.perform(delete("/user/{username}", "test")).andExpect(status().isOk())
+        mvc.perform(delete("/user/{username}", "test").with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -170,7 +172,7 @@ class UserControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.userService).remove(Mockito.anyString());
 
-        mvc.perform(delete("/user/{username}", "test")).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/user/{username}", "test").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -199,7 +201,7 @@ class UserControllerTest {
                 .willReturn(Collections.singletonList(userRole));
 
         mvc.perform(patch("/user/{username}/role", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isAccepted())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
 
@@ -208,7 +210,7 @@ class UserControllerTest {
         given(this.userRoleService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
         mvc.perform(patch("/user/{username}/role", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -237,7 +239,7 @@ class UserControllerTest {
                 .willReturn(Collections.singletonList(userGroup));
 
         mvc.perform(patch("/user/{username}/group", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isAccepted())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
 
@@ -246,7 +248,7 @@ class UserControllerTest {
         given(this.userGroupService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
         mvc.perform(patch("/user/{username}/group", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test")))).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

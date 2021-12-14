@@ -54,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDTO, comment);
         comment = commentRepository.saveAndFlush(comment);
-        this.incrementComment(comment.getPostsId());
+        this.increaseComment(comment.getPostsId());
         return this.convertOuter(comment);
     }
 
@@ -75,8 +75,8 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param id 主键
      */
-    private void incrementComment(long id) {
+    private void increaseComment(long id) {
         Optional<Posts> optional = postsRepository.findById(id);
-        optional.ifPresent(posts -> postsRepository.flushComment(posts.getCode()));
+        optional.ifPresent(posts -> postsRepository.increaseComment(posts.getCode()));
     }
 }

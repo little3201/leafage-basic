@@ -15,6 +15,10 @@ public class PostsContentVO extends PostsVO {
      */
     private Long postsId;
     /**
+     * 目录
+     */
+    private String catalog;
+    /**
      * 内容
      */
     private String content;
@@ -26,6 +30,14 @@ public class PostsContentVO extends PostsVO {
 
     public void setPostsId(Long postsId) {
         this.postsId = postsId;
+    }
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
     }
 
     public String getContent() {

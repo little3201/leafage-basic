@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import top.leafage.common.basic.TreeNode;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
@@ -40,13 +39,14 @@ class RoleServiceImplTest {
 
     @Test
     void retrieve() {
-        List<Role> roles = new ArrayList<>(2);
-        Page<Role> page = new PageImpl<>(roles);
-        given(this.roleRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
+        Role role = new Role();
+        role.setName("test");
+        Page<Role> page = new PageImpl<>(List.of(role));
+        given(this.roleRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
 
         Page<RoleVO> voPage = roleService.retrieve(0, 2, "id");
 
-        Assertions.assertNotNull(voPage);
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test

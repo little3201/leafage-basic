@@ -10,6 +10,7 @@ import io.leafage.basic.hypervisor.entity.UserRole;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.BDDMockito.given;
@@ -52,13 +54,15 @@ class UserServiceImplTest {
 
     @Test
     void retrieve() {
-        List<User> users = new ArrayList<>(2);
-        Page<User> postsPage = new PageImpl<>(users);
-        given(this.userRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
+        User user = new User();
+        user.setUsername("little3201");
+        Page<User> usersPage = new PageImpl<>(List.of(user));
+        given(this.userRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id"))))
+                .willReturn(usersPage);
 
-        Page<UserVO> voPage = userService.retrieve(0, 2, "id");
+        Page<AccountVO> voPage = userService.retrieve(0, 2, "id");
 
-        Assertions.assertNotNull(voPage);
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test
@@ -73,17 +77,28 @@ class UserServiceImplTest {
     @Test
     void details() {
         String username = "test";
+        User user = new User();
+        user.setId(1L);
+        user.setUsername(username);
+        user.setPassword("123456");
+        user.setEnabled(true);
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
-                .willReturn(Mockito.mock(User.class));
+                .willReturn(user);
 
         List<UserRole> userRoleList = new ArrayList<>(1);
         UserRole userRole = new UserRole();
         userRole.setRoleId(1L);
-        userRole.setRoleId(1L);
+        userRole.setUserId(user.getId());
         userRoleList.add(userRole);
         given(this.userRoleRepository.findByUserId(Mockito.anyLong())).willReturn(userRoleList);
 
-        given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Role.class)));
+        Role role = new Role();
+        role.setId(1L);
+        role.setCode("2109JJL8");
+        given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.of(role));
 
         UserDetails userDetails = userService.loadUserByUsername("test");
         Assertions.assertNotNull(userDetails);

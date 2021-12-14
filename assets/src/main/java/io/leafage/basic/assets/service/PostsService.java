@@ -32,5 +32,5 @@ public interface PostsService extends ServletBasicService<PostsDTO, PostsVO, Str
      * @param code 代码
      * @return 查询结果
      */
-    PostsContentVO fetchDetails(String code);
+    PostsContentVO details(String code);
 }

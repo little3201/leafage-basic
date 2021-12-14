@@ -4,9 +4,10 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.entity.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,12 +27,12 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     Role getByCodeAndEnabledTrue(String code);
 
     /**
-     * 根据codes查询
+     * 分页查询
      *
-     * @param codes 唯一标识
+     * @param pageable 分页参数
      * @return 信息
      */
-    List<Role> findByCodeInAndEnabledTrue(Collection<String> codes);
+    Page<Role> findByEnabledTrue(Pageable pageable);
 
     /**
      * 查询

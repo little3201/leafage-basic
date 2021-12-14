@@ -196,7 +196,7 @@ public class RoleController {
      * @return 操作结果
      */
     @PatchMapping("/{code}/authority")
-    public ResponseEntity<List<RoleAuthority>> relation(@PathVariable String code, @RequestBody Set<String> authorities) {
+    public ResponseEntity<List<RoleAuthority>> users(@PathVariable String code, @RequestBody Set<String> authorities) {
         List<RoleAuthority> voList;
         try {
             voList = roleAuthorityService.relation(code, authorities);

@@ -44,26 +44,25 @@ class GroupServiceImplTest {
     @Test
     void retrieve() {
         Group group = new Group();
-        group.setId(2L);
-
-        Group child = new Group();
-        child.setSuperior(2L);
+        group.setName("test");
+        Page<Group> page = new PageImpl<>(List.of(group));
         given(this.groupRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id"))))
-                .willReturn(new PageImpl<>(Arrays.asList(group, child)));
+                .willReturn(page);
 
         Page<GroupVO> voPage = groupService.retrieve(0, 2, "id");
-        Assertions.assertNotNull(voPage);
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test
     void create() {
         User user = new User();
         user.setId(1L);
+        user.setNickname("test");
         given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
 
         Group group = new Group();
         group.setId(2L);
-        group.setPrincipal(1L);
+        group.setPrincipal(user.getId());
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
@@ -71,7 +70,7 @@ class GroupServiceImplTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         groupDTO.setSuperior("2119JD09");
-        groupDTO.setPrincipal("little3201");
+        groupDTO.setPrincipal(user.getNickname());
         GroupVO groupVO = groupService.create(groupDTO);
 
         verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));
@@ -86,6 +85,7 @@ class GroupServiceImplTest {
 
         User user = new User();
         user.setId(1L);
+        user.setNickname("test");
         given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
 
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
@@ -93,7 +93,7 @@ class GroupServiceImplTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         groupDTO.setSuperior("2119JD09");
-        groupDTO.setPrincipal("little3201");
+        groupDTO.setPrincipal(user.getNickname());
         GroupVO groupVO = groupService.modify("", groupDTO);
 
         verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));

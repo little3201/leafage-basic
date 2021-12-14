@@ -11,6 +11,7 @@ import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.UserService;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -51,9 +52,9 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public Page<UserVO> retrieve(int page, int size, String sort) {
+    public Page<AccountVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return userRepository.findAll(pageable).map(this::convertOuter);
+        return userRepository.findByEnabledTrue(pageable).map(this::convert);
     }
 
     @Override
@@ -111,9 +112,20 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
      *
      * @return ExampleMatcher
      */
-    private UserVO convertOuter(User info) {
+    private AccountVO convert(User user) {
+        AccountVO accountVO = new AccountVO();
+        BeanUtils.copyProperties(user, accountVO);
+        return accountVO;
+    }
+
+    /**
+     * 转换为输出对象
+     *
+     * @return ExampleMatcher
+     */
+    private UserVO convertOuter(User user) {
         UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(info, userVO);
+        BeanUtils.copyProperties(user, userVO);
         return userVO;
     }
 

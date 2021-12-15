@@ -45,8 +45,8 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Override
     public Mono<List<String>> groups(String username) {
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(user -> userGroupRepository.findByUserIdAndEnabledTrue(user.getId()).flatMap(userGroup ->
-                                groupRepository.findById(userGroup.getGroupId()).map(Group::getCode))
+                .flatMapMany(user -> userGroupRepository.findByUserIdAndEnabledTrue(user.getId())
+                        .flatMap(userGroup -> groupRepository.findById(userGroup.getGroupId()).map(Group::getCode))
                         .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 ).collectList();
     }

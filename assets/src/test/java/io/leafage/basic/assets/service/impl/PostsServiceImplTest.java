@@ -28,6 +28,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import java.util.Set;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -183,12 +184,10 @@ class PostsServiceImplTest {
         given(this.postsRepository.insert(Mockito.any(Posts.class))).willReturn(Mono.just(posts));
 
         given(this.postsContentService.create(Mockito.any(PostsContent.class))).willReturn(Mono.empty());
-
-        given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
-
+        
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setCategory("21213G0J2");
-        StepVerifier.create(this.postsService.create(postsDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsService.create(postsDTO)).verifyComplete();
     }
 
     @Test
@@ -207,7 +206,7 @@ class PostsServiceImplTest {
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        given(this.postsRepository.insert(Mockito.any(Posts.class))).willReturn(Mono.empty());
+        given(this.postsRepository.insert(Mockito.any(Posts.class))).willThrow(new RuntimeException());
 
         StepVerifier.create(this.postsService.create(postsDTO)).verifyError();
     }
@@ -216,27 +215,31 @@ class PostsServiceImplTest {
     void modify() {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
-        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
-                .willReturn(Mono.just(Mockito.mock(Category.class)));
+        Category category = new Category();
+        category.setId(new ObjectId());
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
 
         Posts posts = new Posts();
         posts.setId(new ObjectId());
-        posts.setCategoryId(new ObjectId());
+        posts.setCategoryId(category.getId());
         given(this.postsRepository.save(Mockito.any(Posts.class))).willReturn(Mono.just(posts));
-
-        given(this.postsContentService.fetchByPostsId(Mockito.any(ObjectId.class)))
-                .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
 
         PostsContent postsContent = new PostsContent();
         postsContent.setPostsId(posts.getId());
+        given(this.postsContentService.fetchByPostsId(Mockito.any(ObjectId.class)))
+                .willReturn(Mono.just(postsContent));
+
+        postsContent.setContent("内容信息");
         given(this.postsContentService.modify(posts.getId(), postsContent))
                 .willReturn(Mono.empty());
 
-        given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
-
         PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setTitle("标题");
+        postsDTO.setTags(Set.of("test"));
+        postsDTO.setCover("./avatar.jpg");
         postsDTO.setCategory("21213G0J2");
-        StepVerifier.create(this.postsService.modify("21213G0J2", postsDTO)).expectNextCount(1).verifyComplete();
+        postsDTO.setContent("内容信息");
+        StepVerifier.create(this.postsService.modify("21213G0J2", postsDTO)).verifyComplete();
     }
 
     @Test
@@ -253,7 +256,7 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void nextPosts() {
+    void next() {
         Posts posts = new Posts();
         posts.setId(new ObjectId());
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
@@ -269,7 +272,7 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void previousPosts() {
+    void previous() {
         Posts posts = new Posts();
         posts.setId(new ObjectId());
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
@@ -285,7 +288,7 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void incrementLikes() {
+    void likes() {
         given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is("21213G0J2")),
                 new Update().inc("likes", 1), Posts.class)).willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
 

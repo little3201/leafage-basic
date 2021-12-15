@@ -78,19 +78,16 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
      * @return 输出转换后的vo对象
      */
     private Mono<CommentVO> convertOuter(Comment comment) {
-        Mono<CommentVO> voMono = Mono.just(comment).map(c -> {
+        return Mono.just(comment).map(c -> {
             CommentVO commentVO = new CommentVO();
             BeanUtils.copyProperties(c, commentVO);
             return commentVO;
-        });
-
-        Mono<Posts> postsMono = postsRepository.findById(comment.getPostsId())
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
-
-        return voMono.zipWith(postsMono, (vo, posts) -> {
-            vo.setPosts(posts.getCode());
-            return vo;
-        });
+        }).flatMap(commentVO -> postsRepository.findById(comment.getPostsId())
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .map(posts -> {
+                    commentVO.setPosts(posts.getCode());
+                    return commentVO;
+                }));
     }
 
     /**

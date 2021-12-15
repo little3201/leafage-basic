@@ -4,7 +4,6 @@
 package io.leafage.basic.assets.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
-import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.dto.PostsDTO;
@@ -64,8 +63,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Flux<PostsVO> retrieve(int page, int size, String sort) {
         Sort s = Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
-        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, s))
-                .flatMap(this::convertOuter);
+        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, s)).flatMap(this::convertOuter);
     }
 
     @Override
@@ -81,11 +79,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Assert.hasText(code, MESSAGE);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .map(posts -> {
-                    // 更新viewed
-                    this.incrementViewed(posts.getId()).subscribe();
+                .flatMap(posts -> this.increaseViewed(posts.getId()).map(updateResult -> {
+                    if (updateResult.wasAcknowledged()) {
+                        posts.setViewed(posts.getViewed() + 1);
+                    }
                     return posts;
-                })
+                }))
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> {
                             PostsContentVO pcv = new PostsContentVO();
                             BeanUtils.copyProperties(posts, pcv);
@@ -137,7 +136,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostsVO> create(PostsDTO postsDTO) {
-        Mono<Posts> postsMono = categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
+        return categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(category -> {
                     Posts info = new Posts();
@@ -145,23 +144,21 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     info.setCode(this.generateCode());
                     info.setCategoryId(category.getId());
                     return info;
-                }).flatMap(info -> postsRepository.insert(info).switchIfEmpty(Mono.error(RuntimeException::new))
-                        .doOnSuccess(posts -> {
-                            // 添加内容信息
+                }).flatMap(info -> postsRepository.insert(info).map(posts -> {
                             PostsContent postsContent = new PostsContent();
-                            BeanUtils.copyProperties(postsDTO, postsContent);
                             postsContent.setPostsId(posts.getId());
-                            // 调用subscribe()方法，消费create订阅
-                            postsContentService.create(postsContent).subscribe();
-                        }));
-        return postsMono.flatMap(this::convertOuter);
+                            postsContent.setCatalog(postsDTO.getCatalog());
+                            postsContent.setContent(postsDTO.getContent());
+                            return postsContent;
+                        }).flatMap(postsContentService::create).map(postsContent -> info)
+                ).flatMap(this::convertOuter);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostsVO> modify(String code, PostsDTO postsDTO) {
         Assert.hasText(code, MESSAGE);
-        Mono<Posts> postsMono = postsRepository.getByCodeAndEnabledTrue(code)
+        return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
                         .switchIfEmpty(Mono.error(NotContextException::new))
@@ -170,18 +167,15 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                             BeanUtils.copyProperties(postsDTO, info);
                             info.setCategoryId(category.getId());
                             return info;
-                        }).flatMap(postsInfo -> postsRepository.save(postsInfo)
-                                .switchIfEmpty(Mono.error(RuntimeException::new))
-                                .doOnSuccess(posts ->
-                                        // 更新成功后，将内容信息更新
-                                        postsContentService.fetchByPostsId(posts.getId()).subscribe(detailsInfo -> {
-                                            BeanUtils.copyProperties(postsDTO, detailsInfo);
-                                            // 调用subscribe()方法，消费modify订阅
-                                            postsContentService.modify(posts.getId(), detailsInfo).subscribe();
+                        }).flatMap(postsInfo -> postsRepository.save(postsInfo).flatMap(posts ->
+                                postsContentService.fetchByPostsId(posts.getId())
+                                        .doOnNext(postsContent -> {
+                                            postsContent.setCatalog(postsDTO.getCatalog());
+                                            postsContent.setContent(postsDTO.getContent());
                                         })
-                                ))
+                                        .flatMap(postsContent -> postsContentService.modify(posts.getId(), postsContent))
+                                        .map(postsContent -> postsInfo)).flatMap(this::convertOuter))
                 );
-        return postsMono.flatMap(this::convertOuter);
     }
 
     @Override
@@ -235,7 +229,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
      * @param id 主键
      * @return UpdateResult
      */
-    private Mono<UpdateResult> incrementViewed(ObjectId id) {
+    private Mono<UpdateResult> increaseViewed(ObjectId id) {
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
                 new Update().inc("viewed", 1), Posts.class);
     }
@@ -247,16 +241,15 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
      * @return 输出转换后的vo对象
      */
     private Mono<PostsVO> convertOuter(Posts posts) {
-        Mono<PostsVO> voMono = Mono.just(posts).map(p -> {
+        return Mono.just(posts).map(p -> {
             PostsVO postsVO = new PostsVO();
             BeanUtils.copyProperties(p, postsVO);
             return postsVO;
-        });
-        Mono<Category> categoryMono = categoryRepository.findById(posts.getCategoryId());
-        return voMono.zipWith(categoryMono, (vo, category) -> {
-            vo.setCategory(category.getAlias());
-            return vo;
-        });
+        }).flatMap(postsVO -> categoryRepository.findById(posts.getCategoryId())
+                .map(category -> {
+                    postsVO.setCategory(category.getAlias());
+                    return postsVO;
+                }).switchIfEmpty(Mono.just(postsVO)));
     }
 
 }

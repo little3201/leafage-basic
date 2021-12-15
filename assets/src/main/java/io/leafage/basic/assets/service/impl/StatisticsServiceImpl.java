@@ -49,7 +49,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 statistics.setComment(statistics.getComment() + p.getComment());
             });
             // 统计昨天数据，然后和前天的数据做差值，计算环比数据
-            return this.statisticsRepository.getByDate(LocalDate.now().minusDays(2)).map(over -> {
+            return statisticsRepository.getByDate(LocalDate.now().minusDays(2)).map(over -> {
                 // 浏览量
                 statistics.setOverViewed(this.overViewed(statistics.getViewed(), over.getViewed()));
                 // 喜欢数

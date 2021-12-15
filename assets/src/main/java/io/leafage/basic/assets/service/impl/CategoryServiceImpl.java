@@ -100,18 +100,16 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
      * @return 输出转换后的vo对象
      */
     private Mono<CategoryVO> convertOuter(Category category) {
-        Mono<CategoryVO> voMono = Mono.just(category).map(c -> {
+        return Mono.just(category).map(c -> {
             CategoryVO categoryVO = new CategoryVO();
             BeanUtils.copyProperties(c, categoryVO);
             return categoryVO;
-        });
-
-        Mono<Long> longMono = postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
-                .switchIfEmpty(Mono.just(0L));
-        return voMono.zipWith(longMono, (vo, count) -> {
-            vo.setCount(count);
-            return vo;
-        });
+        }).flatMap(categoryVO -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
+                .switchIfEmpty(Mono.just(0L))
+                .map(count -> {
+                    categoryVO.setCount(count);
+                    return categoryVO;
+                }));
     }
 
     @Override

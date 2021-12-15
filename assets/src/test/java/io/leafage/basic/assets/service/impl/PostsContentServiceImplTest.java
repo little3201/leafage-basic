@@ -14,7 +14,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -32,18 +31,16 @@ class PostsContentServiceImplTest {
     private PostsContentServiceImpl postsContentService;
 
     @Test
-    public void create() {
+    void create() {
         given(this.postsContentRepository.insert(Mockito.any(PostsContent.class)))
                 .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
-
-        this.postsContentService.create(Mockito.mock(PostsContent.class));
 
         StepVerifier.create(this.postsContentService.create(Mockito.mock(PostsContent.class)))
                 .expectNextCount(1).verifyComplete();
     }
 
     @Test
-    public void modify() {
+    void modify() {
         PostsContent postsContent = new PostsContent();
         postsContent.setId(new ObjectId());
         postsContent.setContent("test");

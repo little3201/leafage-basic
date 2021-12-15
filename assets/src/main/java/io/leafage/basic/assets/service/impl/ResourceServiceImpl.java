@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Resource;
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
@@ -43,6 +42,19 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     public Flux<ResourceVO> retrieve(int page, int size, String sort) {
         return resourceRepository.findByEnabledTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
                 StringUtils.hasText(sort) ? sort : "modifyTime"))).flatMap(this::convertOuter);
+    }
+
+    @Override
+    public Mono<ResourceVO> fetch(String code) {
+        Assert.hasText(code, MESSAGE);
+        return resourceRepository.getByCodeAndEnabledTrue(code)
+                .flatMap(resource -> categoryRepository.findById(resource.getCategoryId())
+                        .map(category -> {
+                            ResourceVO resourceVO = new ResourceVO();
+                            BeanUtils.copyProperties(resource, resourceVO);
+                            resourceVO.setCategory(category.getCode());
+                            return resourceVO;
+                        }));
     }
 
     @Override
@@ -89,12 +101,6 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
         return resourceRepository.getByCodeAndEnabledTrue(code).flatMap(article -> resourceRepository.deleteById(article.getId()));
     }
 
-    @Override
-    public Mono<ResourceVO> fetch(String code) {
-        Assert.hasText(code, MESSAGE);
-        return resourceRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter);
-    }
-
     /**
      * 对象转换为输出结果对象
      *
@@ -102,16 +108,13 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
      * @return 输出转换后的vo对象
      */
     private Mono<ResourceVO> convertOuter(Resource resource) {
-        Mono<ResourceVO> voMono = Mono.just(resource).map(r -> {
+        return Mono.just(resource).map(r -> {
             ResourceVO outer = new ResourceVO();
             BeanUtils.copyProperties(r, outer);
             return outer;
-        });
-
-        Mono<Category> categoryMono = categoryRepository.findById(resource.getCategoryId());
-        return voMono.zipWith(categoryMono, (vo, category) -> {
-            vo.setCategory(category.getAlias());
-            return vo;
-        });
+        }).flatMap(resourceVO -> categoryRepository.findById(resource.getCategoryId()).map(category -> {
+            resourceVO.setCategory(category.getAlias());
+            return resourceVO;
+        }).switchIfEmpty(Mono.just(resourceVO)));
     }
 }

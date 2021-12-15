@@ -95,50 +95,48 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
 
     @Override
     public Mono<AuthorityVO> create(AuthorityDTO authorityDTO) {
-        Mono<Authority> authorityMono = Mono.just(authorityDTO).map(dto -> {
-            Authority authority = new Authority();
-            BeanUtils.copyProperties(authorityDTO, authority);
-            authority.setCode(this.generateCode());
-            return authority;
-        });
-        // 设置上级
-        return this.superior(authorityDTO.getSuperior(), authorityMono).flatMap(authority -> {
-            BeanUtils.copyProperties(authorityDTO, authority);
-            return authorityRepository.insert(authority);
-        }).flatMap(this::convertOuter);
+        return Mono.just(authorityDTO).map(dto -> {
+                    Authority authority = new Authority();
+                    BeanUtils.copyProperties(authorityDTO, authority);
+                    authority.setCode(this.generateCode());
+                    return authority;
+                }).flatMap(authority -> this.superior(authorityDTO.getSuperior(), authority))
+                .switchIfEmpty(Mono.error(NoSuchElementException::new)).flatMap(authority -> {
+                    BeanUtils.copyProperties(authorityDTO, authority);
+                    return authorityRepository.insert(authority);
+                }).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<AuthorityVO> modify(String code, AuthorityDTO authorityDTO) {
         Assert.hasText(code, MESSAGE);
-        Mono<Authority> authorityMono = authorityRepository.getByCodeAndEnabledTrue(code)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
-
-        return this.superior(authorityDTO.getSuperior(), authorityMono).flatMap(authority -> {
-            BeanUtils.copyProperties(authorityDTO, authority);
-            return authorityRepository.save(authority);
-        }).flatMap(this::convertOuter);
+        return authorityRepository.getByCodeAndEnabledTrue(code)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(authority -> this.superior(authorityDTO.getSuperior(), authority))
+                .flatMap(authority -> {
+                    BeanUtils.copyProperties(authorityDTO, authority);
+                    return authorityRepository.save(authority);
+                }).flatMap(this::convertOuter);
     }
 
     /**
      * 设置上级
      *
-     * @param superior      上级code
-     * @param authorityMono 当前对象
+     * @param superior  上级code
+     * @param authority 当前对象
      * @return 设置上级后的对象
      */
-    private Mono<Authority> superior(String superior, Mono<Authority> authorityMono) {
-        // 如果设置上级，进行处理
-        if (StringUtils.hasText(superior)) {
-            Mono<Authority> superiorMono = authorityRepository.getByCodeAndEnabledTrue(superior)
-                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
-
-            return authorityMono.zipWith(superiorMono, (authority, sup) -> {
-                authority.setSuperior(sup.getId());
-                return authority;
-            });
-        }
-        return authorityMono;
+    private Mono<Authority> superior(String superior, Authority authority) {
+        return Mono.just(authority).flatMap(a -> {
+            if (StringUtils.hasText(superior)) {
+                return authorityRepository.getByCodeAndEnabledTrue(superior).map(s -> {
+                            authority.setSuperior(s.getId());
+                            return authority;
+                        })
+                        .switchIfEmpty(Mono.error(NoSuchElementException::new));
+            }
+            return Mono.just(a);
+        });
     }
 
     /**
@@ -148,20 +146,19 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @return 输出转换后的vo对象
      */
     private Mono<AuthorityVO> fetchOuter(Authority authority) {
-        Mono<AuthorityVO> voMono = Mono.just(authority).map(a -> {
+        return Mono.just(authority).map(a -> {
             AuthorityVO authorityVO = new AuthorityVO();
             BeanUtils.copyProperties(authority, authorityVO);
             return authorityVO;
+        }).flatMap(vo -> {
+            if (authority.getSuperior() != null) {
+                return authorityRepository.findById(authority.getSuperior()).map(s -> {
+                    vo.setSuperior(s.getCode());
+                    return vo;
+                }).switchIfEmpty(Mono.just(vo));
+            }
+            return Mono.just(vo);
         });
-
-        if (authority.getSuperior() != null) {
-            Mono<Authority> superiorMono = authorityRepository.findById(authority.getSuperior());
-            voMono = voMono.zipWith(superiorMono, (a, superior) -> {
-                a.setSuperior(superior.getCode());
-                return a;
-            });
-        }
-        return voMono;
     }
 
     /**
@@ -171,27 +168,24 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @return 输出转换后的vo对象
      */
     private Mono<AuthorityVO> convertOuter(Authority authority) {
-        Mono<AuthorityVO> voMono = Mono.just(authority).map(a -> {
+        return Mono.just(authority).map(a -> {
             AuthorityVO authorityVO = new AuthorityVO();
             BeanUtils.copyProperties(authority, authorityVO);
             return authorityVO;
+        }).flatMap(vo -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
+                .switchIfEmpty(Mono.just(0L))
+                .map(count -> {
+                    vo.setCount(count);
+                    return vo;
+                })).flatMap(v -> {
+            if (authority.getSuperior() != null) {
+                return authorityRepository.findById(authority.getSuperior()).map(s -> {
+                    v.setSuperior(s.getName());
+                    return v;
+                }).switchIfEmpty(Mono.just(v));
+            }
+            return Mono.just(v);
         });
-
-        Mono<Long> longMono = roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
-                .switchIfEmpty(Mono.just(0L));
-        voMono = voMono.zipWith(longMono, (a, count) -> {
-            a.setCount(count);
-            return a;
-        });
-
-        if (authority.getSuperior() != null) {
-            Mono<Authority> superiorMono = authorityRepository.findById(authority.getSuperior());
-            voMono = voMono.zipWith(superiorMono, (a, superior) -> {
-                a.setSuperior(superior.getName());
-                return a;
-            });
-        }
-        return voMono;
     }
 
     /**

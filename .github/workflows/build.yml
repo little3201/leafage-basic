@@ -2,9 +2,9 @@ name: Build
 on:
   push:
     branches:
-      - master
+      - webflux
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
 jobs:
   build:
     name: Build

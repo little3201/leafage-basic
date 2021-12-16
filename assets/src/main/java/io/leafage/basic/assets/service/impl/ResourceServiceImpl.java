@@ -45,6 +45,14 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     }
 
     @Override
+    public Flux<ResourceVO> retrieve(int page, int size, String category, String sort) {
+        Sort s = Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
+        return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
+                resourceRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, s))
+                        .flatMap(this::convertOuter));
+    }
+
+    @Override
     public Mono<ResourceVO> fetch(String code) {
         Assert.hasText(code, MESSAGE);
         return resourceRepository.getByCodeAndEnabledTrue(code)

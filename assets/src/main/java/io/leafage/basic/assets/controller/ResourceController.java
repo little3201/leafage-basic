@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -35,17 +36,22 @@ public class ResourceController {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
-     * @param sort 排序字段
+     * @param page     页码
+     * @param size     大小
+     * @param sort     排序字段
+     * @param category 分类
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
     public ResponseEntity<Flux<ResourceVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                     String sort) {
+                                                     String sort, String category) {
         Flux<ResourceVO> voFlux;
         try {
-            voFlux = resourceService.retrieve(page, size, sort);
+            if (StringUtils.hasText(category)) {
+                voFlux = resourceService.retrieve(page, size, sort, category);
+            } else {
+                voFlux = resourceService.retrieve(page, size, sort);
+            }
         } catch (Exception e) {
             logger.error("Retrieve resource occurred an error: ", e);
             return ResponseEntity.noContent().build();

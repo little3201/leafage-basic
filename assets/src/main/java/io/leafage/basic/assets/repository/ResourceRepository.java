@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
 public interface ResourceRepository extends ReactiveMongoRepository<Resource, ObjectId> {
 
     /**
-     * 分页查询作品集
+     * 分页查询
      *
      * @param pageable 分页参数
      * @return 有效作品集
@@ -28,7 +28,16 @@ public interface ResourceRepository extends ReactiveMongoRepository<Resource, Ob
     Flux<Resource> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据code查询enabled信息
+     * 根据分类分页查询
+     *
+     * @param categoryId 分类ID
+     * @param pageable   分页参数
+     * @return 有效帖子
+     */
+    Flux<Resource> findByCategoryIdAndEnabledTrue(ObjectId categoryId, Pageable pageable);
+
+    /**
+     * 根据code、enabled查询
      *
      * @param code 代码
      * @return 作品信息
@@ -44,7 +53,7 @@ public interface ResourceRepository extends ReactiveMongoRepository<Resource, Ob
     Mono<Boolean> existsByTitle(String title);
 
     /**
-     * 统计关联帖子
+     * 统计
      *
      * @param categoryId 分类ID
      * @return 帖子数

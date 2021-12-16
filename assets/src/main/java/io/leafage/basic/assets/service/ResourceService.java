@@ -5,6 +5,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.vo.ResourceVO;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
@@ -14,6 +15,17 @@ import top.leafage.common.reactive.ReactiveBasicService;
  * @author liwenqiang 2020/2/24 11:59
  **/
 public interface ResourceService extends ReactiveBasicService<ResourceDTO, ResourceVO, String> {
+
+    /**
+     * 按照分页和分类进行查询并排序
+     *
+     * @param page     分页
+     * @param size     大小
+     * @param sort    排序
+     * @param category 分类
+     * @return 结果集
+     */
+    Flux<ResourceVO> retrieve(int page, int size, String category, String sort);
 
     /**
      * 统计

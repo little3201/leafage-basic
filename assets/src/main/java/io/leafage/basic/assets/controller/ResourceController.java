@@ -77,10 +77,10 @@ public class ResourceController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
+    public ResponseEntity<Mono<Long>> count(String category) {
         Mono<Long> count;
         try {
-            count = resourceService.count();
+            count = resourceService.count(category);
         } catch (Exception e) {
             logger.error("Count resource occurred an error: ", e);
             return ResponseEntity.noContent().build();

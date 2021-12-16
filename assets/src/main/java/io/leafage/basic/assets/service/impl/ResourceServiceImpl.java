@@ -64,7 +64,11 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     }
 
     @Override
-    public Mono<Long> count() {
+    public Mono<Long> count(String category) {
+        if (StringUtils.hasText(category)) {
+            return categoryRepository.getByCodeAndEnabledTrue(category).flatMap(ca ->
+                    resourceRepository.countByCategoryIdAndEnabledTrue(ca.getId()));
+        }
         return resourceRepository.count();
     }
 
@@ -117,4 +121,5 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
             return resourceVO;
         }).switchIfEmpty(Mono.just(resourceVO)));
     }
+
 }

@@ -5,6 +5,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.vo.ResourceVO;
+import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -13,4 +14,12 @@ import top.leafage.common.reactive.ReactiveBasicService;
  * @author liwenqiang 2020/2/24 11:59
  **/
 public interface ResourceService extends ReactiveBasicService<ResourceDTO, ResourceVO, String> {
+
+    /**
+     * 统计
+     *
+     * @param category 类目
+     * @return 统计数
+     */
+    Mono<Long> count(String category);
 }

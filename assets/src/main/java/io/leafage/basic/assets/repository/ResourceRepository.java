@@ -42,4 +42,12 @@ public interface ResourceRepository extends ReactiveMongoRepository<Resource, Ob
      * @return true-是，false-否
      */
     Mono<Boolean> existsByTitle(String title);
+
+    /**
+     * 统计关联帖子
+     *
+     * @param categoryId 分类ID
+     * @return 帖子数
+     */
+    Mono<Long> countByCategoryIdAndEnabledTrue(ObjectId categoryId);
 }

@@ -4,12 +4,8 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.UserDTO;
-import io.leafage.basic.hypervisor.entity.Role;
 import io.leafage.basic.hypervisor.entity.User;
-import io.leafage.basic.hypervisor.entity.UserRole;
-import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
@@ -23,11 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -42,12 +34,6 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
-
-    @Mock
-    private UserRoleRepository userRoleRepository;
-
-    @Mock
-    private RoleRepository roleRepository;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -75,54 +61,9 @@ class UserServiceImplTest {
     }
 
     @Test
-    void details() {
-        String username = "test";
-        User user = new User();
-        user.setId(1L);
-        user.setUsername(username);
-        user.setPassword("123456");
-        user.setEnabled(true);
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
-        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
-                .willReturn(user);
-
-        List<UserRole> userRoleList = new ArrayList<>(1);
-        UserRole userRole = new UserRole();
-        userRole.setRoleId(1L);
-        userRole.setUserId(user.getId());
-        userRoleList.add(userRole);
-        given(this.userRoleRepository.findByUserId(Mockito.anyLong())).willReturn(userRoleList);
-
-        Role role = new Role();
-        role.setId(1L);
-        role.setCode("2109JJL8");
-        given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.of(role));
-
-        UserDetails userDetails = userService.loadUserByUsername("test");
-        Assertions.assertNotNull(userDetails);
-    }
-
-    @Test
-    void details_null() {
-        String username = "test";
-        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
-                .willReturn(null);
-
-        UserDetails userDetails = userService.loadUserByUsername("test");
-
-        Assertions.assertNull(userDetails);
-    }
-
-    @Test
     void create() {
         User user = new User();
         user.setId(1L);
-        user.setPassword("123456");
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(user);
 
         UserDTO userDTO = new UserDTO();

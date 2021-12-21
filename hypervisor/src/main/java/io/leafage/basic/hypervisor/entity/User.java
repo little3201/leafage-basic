@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
@@ -18,21 +17,9 @@ import java.time.LocalDate;
 public class User extends AbstractEntity {
 
     /**
-     * 账户
+     * 账号
      */
     private String username;
-    /**
-     * 昵称
-     */
-    private String nickname;
-    /**
-     * 头像
-     */
-    private String avatar;
-    /**
-     * 密码
-     */
-    private String password;
     /**
      * 电话
      */
@@ -42,25 +29,9 @@ public class User extends AbstractEntity {
      */
     private String email;
     /**
-     * 性别: null-未知 0-女 1-男
+     * 性别
      */
     private Character gender;
-    /**
-     * 是否无效
-     */
-    @Column(name = "is_account_non_expired")
-    private boolean accountNonExpired = true;
-    /**
-     * 是否没有锁定
-     */
-    @Column(name = "is_account_non_locked")
-    private boolean accountNonLocked = true;
-    /**
-     * 密码是否有效
-     */
-    @Column(name = "is_credentials_non_expired")
-    private boolean credentialsNonExpired = true;
-
     /**
      * 姓
      */
@@ -70,7 +41,7 @@ public class User extends AbstractEntity {
      */
     private String lastname;
     /**
-     * 出生日期
+     * 生日
      */
     private LocalDate birthday;
     /**
@@ -97,6 +68,10 @@ public class User extends AbstractEntity {
      * 地址
      */
     private String address;
+    /**
+     * 身份证号
+     */
+    private String idCard;
 
 
     public String getUsername() {
@@ -105,30 +80,6 @@ public class User extends AbstractEntity {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getPhone() {
@@ -153,30 +104,6 @@ public class User extends AbstractEntity {
 
     public void setGender(Character gender) {
         this.gender = gender;
-    }
-
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
     }
 
     public String getFirstname() {
@@ -249,5 +176,13 @@ public class User extends AbstractEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 }

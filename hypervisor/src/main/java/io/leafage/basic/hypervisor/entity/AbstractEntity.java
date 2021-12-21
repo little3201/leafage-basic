@@ -25,7 +25,7 @@ public abstract class AbstractEntity {
     private Long id;
 
     /**
-     * 是否有效
+     * 是否可用
      */
     @Column(name = "is_enabled")
     private boolean enabled = true;

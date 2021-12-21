@@ -55,14 +55,8 @@ class GroupServiceImplTest {
 
     @Test
     void create() {
-        User user = new User();
-        user.setId(1L);
-        user.setNickname("test");
-        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
-
         Group group = new Group();
         group.setId(2L);
-        group.setPrincipal(user.getId());
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
@@ -70,7 +64,6 @@ class GroupServiceImplTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         groupDTO.setSuperior("2119JD09");
-        groupDTO.setPrincipal(user.getNickname());
         GroupVO groupVO = groupService.create(groupDTO);
 
         verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));
@@ -83,17 +76,11 @@ class GroupServiceImplTest {
         group.setId(2L);
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
-        User user = new User();
-        user.setId(1L);
-        user.setNickname("test");
-        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
-
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         groupDTO.setSuperior("2119JD09");
-        groupDTO.setPrincipal(user.getNickname());
         GroupVO groupVO = groupService.modify("", groupDTO);
 
         verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));

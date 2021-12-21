@@ -6,7 +6,6 @@ package io.leafage.basic.hypervisor.repository;
 import io.leafage.basic.hypervisor.entity.RoleAuthority;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public interface RoleAuthorityRepository extends JpaRepository<RoleAuthority, Lo
      * @param authorityId 权限主键
      * @return 关联数据集
      */
-    List<RoleAuthority> findByRoleId(@NotNull Long authorityId);
+    List<RoleAuthority> findByRoleId(Long authorityId);
 
     /**
      * 根据角色查权限
@@ -31,5 +30,5 @@ public interface RoleAuthorityRepository extends JpaRepository<RoleAuthority, Lo
      * @param roleId 角色主键
      * @return 关联数据集
      */
-    List<RoleAuthority> findByAuthorityId(@NotNull Long roleId);
+    List<RoleAuthority> findByAuthorityId(Long roleId);
 }

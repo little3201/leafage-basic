@@ -31,7 +31,7 @@ drop table if exists posts_content;
 create table posts_content
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   posts_id             bigint(11) not null comment '帖子主键',
+   posts_id             bigint not null comment '帖子主键',
    original             text comment '原文',
    content              text comment '内容',
    catalog              text comment '目录',
@@ -73,7 +73,7 @@ drop table if exists comment;
 create table comment
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   posts_id             bigint(11) not null comment '帖子主键',
+   posts_id             bigint not null comment '帖子主键',
    nickname             text comment '昵称',
    email                text comment '邮箱',
    content              text comment '内容',

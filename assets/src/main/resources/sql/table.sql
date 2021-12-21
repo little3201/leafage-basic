@@ -5,20 +5,22 @@ drop table if exists posts;
 /*==============================================================*/
 create table posts
 (
-    id          bigint(11)  not null auto_increment comment '主键',
-    code        varchar(10) not null comment '代码',
-    title       varchar(32) comment '标题',
-    subtitle    varchar(216) comment '概要',
-    cover       varchar(128) comment '封面图',
-    is_enabled  tinyint(1)  not null default 1 comment '是否可用',
-    modifier    bigint(11)  not null comment '修改人',
-    modify_time datetime    not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-    primary key (id),
-    unique key AK_code (code)
+   id                   bigint unsigned not null auto_increment comment '主键',
+   code                 varchar(9) not null comment '代码',
+   title                varchar(32) comment '标题',
+   tags                 varchar(255) comment '标签',
+   cover                varchar(127) comment '封面图',
+   likes                int comment '点赞',
+   viewed               int comment '阅读量',
+   comment              int comment '评论数',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
+   modifier             varchar(16) not null comment '修改人',
+   modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+   primary key (id),
+   unique key AK_code (code)
 );
 
-alter table posts
-    comment '帖子';
+alter table posts comment '帖子';
 
 
 drop table if exists posts_content;
@@ -28,18 +30,20 @@ drop table if exists posts_content;
 /*==============================================================*/
 create table posts_content
 (
-    id          bigint(11) not null auto_increment comment '主键',
-    posts_id    bigint(11) not null comment '帖子主键',
-    content     char comment '内容',
-    is_enabled  tinyint(1) not null default 1 comment '是否可用',
-    modifier    bigint(11) not null comment '修改人',
-    modify_time datetime   not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-    primary key (id),
-    unique key AK_posts_id (posts_id)
+   id                   bigint unsigned not null auto_increment comment '主键',
+   posts_id             bigint(11) not null comment '帖子主键',
+   original             text comment '原文',
+   content              text comment '内容',
+   catalog              text comment '目录',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
+   modifier             varchar(16) not null comment '修改人',
+   modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+   primary key (id),
+   key AK_posts_id (posts_id)
 );
 
-alter table posts_content
-    comment '帖子内容';
+alter table posts_content comment '帖子内容';
+
 
 drop table if exists category;
 
@@ -48,16 +52,59 @@ drop table if exists category;
 /*==============================================================*/
 create table category
 (
-    id          bigint(11)  not null auto_increment comment '主键',
-    code        varchar(10) not null comment '代码',
-    name        varchar(32) comment '名称',
-    is_enabled  tinyint(1)  not null default 1 comment '是否可用',
-    modifier    bigint(11)  not null comment '修改人',
-    modify_time datetime    not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-    primary key (id),
-    unique key AK_code (code)
+   id                   bigint unsigned not null auto_increment comment '主键',
+   code                 varchar(8) not null comment '代码',
+   name                 varchar(32) comment '名称',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
+   modifier             varchar(16) not null comment '修改人',
+   modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+   primary key (id),
+   unique key AK_code (code)
 );
 
-alter table category
-    comment '分类';
+alter table category comment '分类';
 
+
+drop table if exists comment;
+
+/*==============================================================*/
+/* Table: comment                                               */
+/*==============================================================*/
+create table comment
+(
+   id                   bigint unsigned not null auto_increment comment '主键',
+   posts_id             bigint(11) not null comment '帖子主键',
+   nickname             text comment '昵称',
+   email                text comment '邮箱',
+   content              text comment '内容',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
+   modifier             varchar(16) not null comment '修改人',
+   modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+   primary key (id),
+   key AK_posts_id (posts_id)
+);
+
+alter table comment comment '评论';
+
+
+drop table if exists resource;
+
+/*==============================================================*/
+/* Table: resource                                              */
+/*==============================================================*/
+create table resource
+(
+   id                   bigint unsigned not null auto_increment comment '主键',
+   code                 varchar(9) not null comment '代码',
+   title                varchar(32) comment '标题',
+   cover                varchar(127) comment '封面图',
+   viewed               int comment '浏览量',
+   downloads            int comment '下载量',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
+   modifier             varchar(16) not null comment '修改人',
+   modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+   primary key (id),
+   unique key AK_code (code)
+);
+
+alter table resource comment '资源';

@@ -21,6 +21,12 @@ public class ResourceDTO implements Serializable {
     @Size(max = 32)
     private String title;
     /**
+     /**
+     * 分类
+     */
+    @NotNull
+    private String category;
+    /**
      * cover
      */
     @NotBlank
@@ -41,6 +47,14 @@ public class ResourceDTO implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getCover() {

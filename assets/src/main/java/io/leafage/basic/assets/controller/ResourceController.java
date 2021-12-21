@@ -36,10 +36,10 @@ public class ResourceController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Page<ResourceVO>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Page<ResourceVO>> retrieve(@RequestParam int page, @RequestParam int size, String category) {
         Page<ResourceVO> voFlux;
         try {
-            voFlux = resourceService.retrieve(page, size);
+            voFlux = resourceService.retrieve(page, size, category);
         } catch (Exception e) {
             logger.error("Retrieve portfolio occurred an error: ", e);
             return ResponseEntity.noContent().build();

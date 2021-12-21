@@ -23,6 +23,15 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
     Page<Resource> findByEnabledTrue(Pageable pageable);
 
     /**
+     * 根据分类，分页查询
+     *
+     * @param pageable   分页参数
+     * @param categoryId 分类ID
+     * @return 查询结果
+     */
+    Page<Resource> findByCategoryIdAndEnabledTrue(Pageable pageable, long categoryId);
+
+    /**
      * 根据code查询enabled信息
      *
      * @param code 代码

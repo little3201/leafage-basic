@@ -1,64 +1,40 @@
 package io.leafage.basic.assets.vo;
 
 import top.leafage.common.basic.AbstractVO;
-import java.util.Set;
 
 public class ResourceVO extends AbstractVO<String> {
 
     private static final long serialVersionUID = 5927331601304060786L;
 
     /**
-     * 点赞
-     */
-    private int likes;
-    /**
-     * 评论
-     */
-    private int comment;
-    /**
-     * 查看
-     */
-    private int viewed;
-    /**
      * 标题
      */
     private String title;
     /**
-     * url
+     * 分类
      */
-    private Set<String> url;
+    private String category;
+    /**
+     * cover
+     */
+    private String cover;
     /**
      * 类型
      */
-    private String type;
+    private Character type;
     /**
      * 描述
      */
     private String description;
+    /**
+     * 下载量
+     */
+    private int downloads;
+    /**
+     * 查看
+     */
+    private int viewed;
 
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getComment() {
-        return comment;
-    }
-
-    public void setComment(int comment) {
-        this.comment = comment;
-    }
-
-    public int getViewed() {
-        return viewed;
-    }
-
-    public void setViewed(int viewed) {
-        this.viewed = viewed;
-    }
 
     public String getTitle() {
         return title;
@@ -68,19 +44,27 @@ public class ResourceVO extends AbstractVO<String> {
         this.title = title;
     }
 
-    public Set<String> getUrl() {
-        return url;
+    public String getCategory() {
+        return category;
     }
 
-    public void setUrl(Set<String> url) {
-        this.url = url;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getType() {
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
     }
 
@@ -90,5 +74,21 @@ public class ResourceVO extends AbstractVO<String> {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getDownloads() {
+        return downloads;
+    }
+
+    public void setDownloads(int downloads) {
+        this.downloads = downloads;
+    }
+
+    public int getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
     }
 }

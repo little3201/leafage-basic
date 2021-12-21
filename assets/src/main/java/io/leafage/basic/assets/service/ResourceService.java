@@ -10,9 +10,10 @@ public interface ResourceService extends ServletBasicService<ResourceDTO, Resour
     /**
      * 分页查询
      *
-     * @param page 分页
-     * @param size 大小
+     * @param page     分页
+     * @param size     大小
+     * @param category 分类
      * @return 结果集
      */
-    Page<ResourceVO> retrieve(int page, int size);
+    Page<ResourceVO> retrieve(int page, int size, String category);
 }

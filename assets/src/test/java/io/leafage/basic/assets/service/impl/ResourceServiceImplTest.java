@@ -1,7 +1,9 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.dto.ResourceDTO;
+import io.leafage.basic.assets.entity.Category;
 import io.leafage.basic.assets.entity.Resource;
+import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.vo.ResourceVO;
 import org.junit.jupiter.api.Assertions;
@@ -28,6 +30,9 @@ class ResourceServiceImplTest {
     @Mock
     private ResourceRepository resourceRepository;
 
+    @Mock
+    private CategoryRepository categoryRepository;
+
     @InjectMocks
     private ResourceServiceImpl resourceService;
 
@@ -35,10 +40,30 @@ class ResourceServiceImplTest {
     void retrieve_page() {
         Resource resource = new Resource();
         resource.setTitle("java");
+        resource.setType('E');
+        resource.setViewed(234);
+        resource.setDownloads(234);
         Page<Resource> page = new PageImpl<>(List.of(resource));
         given(this.resourceRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(page);
 
-        Page<ResourceVO> voPage = resourceService.retrieve(0, 2);
+        Page<ResourceVO> voPage = resourceService.retrieve(0, 2, "");
+        Assertions.assertNotNull(voPage.getContent());
+    }
+
+
+    @Test
+    void retrieve_page_category() {
+        Category category = new Category();
+        category.setId(1L);
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(category);
+
+        Resource resource = new Resource();
+        resource.setTitle("java");
+        resource.setCategoryId(category.getId());
+        Page<Resource> page = new PageImpl<>(List.of(resource));
+        given(this.resourceRepository.findByCategoryIdAndEnabledTrue(PageRequest.of(0, 2), category.getId())).willReturn(page);
+
+        Page<ResourceVO> voPage = resourceService.retrieve(0, 2, "21389KO6");
         Assertions.assertNotNull(voPage.getContent());
     }
 

@@ -1,7 +1,9 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.dto.ResourceDTO;
+import io.leafage.basic.assets.entity.Category;
 import io.leafage.basic.assets.entity.Resource;
+import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.service.ResourceService;
 import io.leafage.basic.assets.vo.ResourceVO;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 
 /**
@@ -23,13 +26,19 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     private static final String MESSAGE = "code is blank.";
 
     private final ResourceRepository resourceRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ResourceServiceImpl(ResourceRepository resourceRepository) {
+    public ResourceServiceImpl(ResourceRepository resourceRepository, CategoryRepository categoryRepository) {
         this.resourceRepository = resourceRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public Page<ResourceVO> retrieve(int page, int size) {
+    public Page<ResourceVO> retrieve(int page, int size, String category) {
+        if (StringUtils.hasText(category)) {
+            Category cate = categoryRepository.getByCodeAndEnabledTrue(category);
+            return resourceRepository.findByCategoryIdAndEnabledTrue(PageRequest.of(page, size), cate.getId()).map(this::convertOuter);
+        }
         return resourceRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
     }
 

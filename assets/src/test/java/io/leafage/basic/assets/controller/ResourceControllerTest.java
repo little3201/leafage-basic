@@ -49,7 +49,7 @@ class ResourceControllerTest {
         ResourceVO resourceVO = new ResourceVO();
         resourceVO.setTitle("java");
         Page<ResourceVO> page = new PageImpl<>(List.of(resourceVO));
-        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(page);
+        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.isNull())).willReturn(page);
 
         mvc.perform(get("/resource").queryParam("page", "0").queryParam("size", "2"))
                 .andExpect(status().isOk())
@@ -58,9 +58,11 @@ class ResourceControllerTest {
 
     @Test
     void retrieve_page_error() throws Exception {
-        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new NoSuchElementException());
+        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString()))
+                .willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/resource").queryParam("page", "0").queryParam("size", "2"))
+        mvc.perform(get("/resource").queryParam("page", "0").queryParam("size", "2")
+                        .queryParam("category", "21389KO6"))
                 .andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
@@ -109,6 +111,7 @@ class ResourceControllerTest {
 
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("java");
+        resourceDTO.setCategory("21389KO6");
         resourceDTO.setCover("/avatar.jpg");
         resourceDTO.setType('E');
         resourceDTO.setDescription("描述");
@@ -124,6 +127,7 @@ class ResourceControllerTest {
 
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("java");
+        resourceDTO.setCategory("21389KO6");
         resourceDTO.setCover("/avatar.jpg");
         resourceDTO.setType('E');
         resourceDTO.setDescription("描述");
@@ -140,6 +144,7 @@ class ResourceControllerTest {
 
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("java");
+        resourceDTO.setCategory("21389KO6");
         resourceDTO.setCover("/avatar.jpg");
         resourceDTO.setType('E');
         resourceDTO.setDescription("描述");
@@ -155,6 +160,7 @@ class ResourceControllerTest {
 
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("java");
+        resourceDTO.setCategory("21389KO6");
         resourceDTO.setCover("/avatar.jpg");
         resourceDTO.setType('E');
         resourceDTO.setDescription("描述");

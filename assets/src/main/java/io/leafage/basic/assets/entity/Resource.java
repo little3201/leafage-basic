@@ -23,21 +23,22 @@ public class Resource extends AbstractEntity {
      */
     private String title;
     /**
-     * url
+     * 分类
      */
-    private String url;
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
+    /**
+     * cover
+     */
+    private String cover;
     /**
      * 类型
      */
-    private String type;
+    private Character type;
     /**
-     * 点赞
+     * 下载量
      */
-    private int likes;
-    /**
-     * 评论
-     */
-    private int comment;
+    private int downloads;
     /**
      * 查看
      */
@@ -63,36 +64,36 @@ public class Resource extends AbstractEntity {
         this.title = title;
     }
 
-    public String getUrl() {
-        return url;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getType() {
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public Character getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Character type) {
         this.type = type;
     }
 
-    public int getLikes() {
-        return likes;
+    public int getDownloads() {
+        return downloads;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getComment() {
-        return comment;
-    }
-
-    public void setComment(int comment) {
-        this.comment = comment;
+    public void setDownloads(int downloads) {
+        this.downloads = downloads;
     }
 
     public int getViewed() {

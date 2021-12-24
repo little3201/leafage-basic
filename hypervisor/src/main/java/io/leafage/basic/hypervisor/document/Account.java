@@ -3,10 +3,8 @@
  */
 package io.leafage.basic.hypervisor.document;
 
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.math.BigDecimal;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * Model class for Account
@@ -17,41 +15,78 @@ import java.math.BigDecimal;
 public class Account extends AbstractDocument {
 
     /**
-     * 代码
+     * 用户名
      */
-    @Indexed(unique = true)
-    private String code;
+    private String username;
     /**
-     * 余额
+     * 密码
      */
-    private BigDecimal balance;
+    private String password;
     /**
-     * 类型
+     * 头像
      */
-    private char type;
+    private String avatar;
+    /**
+     * 是否有效
+     */
+    @Field(name = "is_account_non_expired")
+    private boolean accountNonExpired = true;
+    /**
+     * 是否锁定
+     */
+    @Field(name = "is_account_non_locked")
+    private boolean accountNonLocked = true;
+    /**
+     * 是否过期
+     */
+    @Field(name = "is_credentials_non_expired")
+    private boolean credentialsNonExpired = true;
 
-    public String getCode() {
-        return code;
+    public String getUsername() {
+        return username;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
+    public String getPassword() {
+        return password;
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public char getType() {
-        return type;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setType(char type) {
-        this.type = type;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
 }

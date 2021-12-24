@@ -3,15 +3,9 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.document.Authority;
-import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.document.User;
-import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.dto.UserDTO;
-import io.leafage.basic.hypervisor.repository.AuthorityRepository;
-import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +17,9 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import java.time.LocalDate;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -37,15 +33,6 @@ class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private UserRoleRepository userRoleRepository;
-
-    @Mock
-    private RoleAuthorityRepository roleAuthorityRepository;
-
-    @Mock
-    private AuthorityRepository authorityRepository;
-
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -53,55 +40,6 @@ class UserServiceImplTest {
     void retrieve() {
         given(this.userRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(Mockito.mock(User.class)));
         StepVerifier.create(userService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
-    }
-
-
-    /**
-     * 测试查询用户信息, 正常返回数据
-     */
-    @Test
-    void details() {
-        User user = new User();
-        user.setId(new ObjectId());
-        user.setUsername("little3201");
-        user.setNickname("test");
-        user.setAvatar("/images/avatar.jgp");
-        user.setBirthday(LocalDate.now());
-        user.setGender('M');
-        user.setEmail("test@leafage.top");
-        user.setPhone("18712341234");
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
-        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyString())).willReturn(Mono.just(user));
-
-        UserRole userRole = new UserRole();
-        userRole.setUserId(user.getId());
-        userRole.setRoleId(new ObjectId());
-        given(this.userRoleRepository.findByUserIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(userRole));
-
-        RoleAuthority roleAuthority = new RoleAuthority();
-        roleAuthority.setRoleId(userRole.getRoleId());
-        roleAuthority.setAuthorityId(new ObjectId());
-        given(this.roleAuthorityRepository.findByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(roleAuthority));
-
-        Authority authority = new Authority();
-        authority.setCode("test");
-        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
-
-        StepVerifier.create(userService.details("little3201")).expectNextCount(1).verifyComplete();
-    }
-
-    /**
-     * 测试查询用户信息, user not found
-     */
-    @Test
-    void details_error() {
-        String username = "little3201";
-        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username))
-                .willReturn(Mono.empty());
-        StepVerifier.create(userService.details(username)).verifyError();
     }
 
     @Test
@@ -115,7 +53,20 @@ class UserServiceImplTest {
      */
     @Test
     void create() {
-        given(this.userRepository.insert(Mockito.any(User.class))).willReturn(Mono.just(Mockito.mock(User.class)));
+        User user = new User();
+        user.setUsername("leafage");
+        user.setFirstname("li");
+        user.setLastname("wq");
+        user.setPhone("18710023032");
+        user.setEmail("test@leafage.top");
+        user.setBirthday(LocalDate.now());
+        user.setCountry("China");
+        user.setProvince("shaanxi");
+        user.setCity("xi'an");
+        user.setRegion("yanta");
+        user.setAddress("科技路");
+        user.setEthnicity("han");
+        given(this.userRepository.insert(Mockito.any(User.class))).willReturn(Mono.just(user));
         StepVerifier.create(userService.create(Mockito.mock(UserDTO.class))).expectNextCount(1).verifyComplete();
     }
 

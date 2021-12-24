@@ -176,13 +176,14 @@ public class GroupController {
      */
     @DeleteMapping("/{code}")
     public ResponseEntity<Mono<Void>> remove(@PathVariable String code) {
+        Mono<Void> voidMono;
         try {
-            groupService.remove(code);
+            voidMono = groupService.remove(code);
         } catch (Exception e) {
             logger.error("Remove group occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(voidMono);
     }
 
     /**

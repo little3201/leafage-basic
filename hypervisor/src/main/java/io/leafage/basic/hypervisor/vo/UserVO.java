@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
-import org.springframework.util.StringUtils;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,20 +12,24 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class UserVO extends UserDetailVO implements Serializable {
+public class UserVO implements Serializable {
 
     private static final long serialVersionUID = 635350278320138075L;
 
     /**
-     * 昵称
+     * 用户名
      */
-    private String nickname;
+    private String username;
     /**
-     * 头像
+     * 姓
      */
-    private String avatar;
+    private String firstname;
     /**
-     * 电话
+     * 名
+     */
+    private String lastname;
+    /**
+     * 手机号
      */
     private String phone;
     /**
@@ -42,35 +45,60 @@ public class UserVO extends UserDetailVO implements Serializable {
      */
     private LocalDate birthday;
     /**
+     * 国籍
+     */
+    private String country;
+    /**
+     * 民族
+     */
+    private String ethnicity;
+    /**
+     * 省/直辖市/州
+     */
+    private String province;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区/县
+     */
+    private String region;
+    /**
+     * 地址
+     */
+    private String address;
+    /**
      * 修改时间
      */
     private LocalDateTime modifyTime;
 
-    public String getNickname() {
-        return nickname;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    /**
-     * 手机号脱敏
-     *
-     * @return 脱敏后的手机号
-     */
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
     public String getPhone() {
-        if (StringUtils.hasText(phone)) {
-            return phone.replaceAll("(^\\d{3})\\d.*(\\d{4})", "$1****$2");
-        }
         return phone;
     }
 
@@ -78,15 +106,7 @@ public class UserVO extends UserDetailVO implements Serializable {
         this.phone = phone;
     }
 
-    /**
-     * 邮箱脱敏
-     *
-     * @return 脱敏后的邮箱
-     */
     public String getEmail() {
-        if (StringUtils.hasText(email)) {
-            return email.replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2");
-        }
         return email;
     }
 
@@ -110,31 +130,59 @@ public class UserVO extends UserDetailVO implements Serializable {
         this.birthday = birthday;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
     public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
-    }
-
-    /**
-     * 安全防护，置空 password 的数据
-     *
-     * @return null
-     */
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    /**
-     * 安全防护，置空 password 的数据
-     *
-     * @param password 密码
-     */
-    @Override
-    public void setPassword(String password) {
-        super.setPassword(null);
     }
 }

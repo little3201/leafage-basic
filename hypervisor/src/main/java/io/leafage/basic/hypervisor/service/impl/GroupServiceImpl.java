@@ -20,6 +20,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
+
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -186,7 +187,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
         return Mono.just(vo).flatMap(v -> {
             if (principal != null) {
                 return userRepository.findById(principal).map(user -> {
-                    v.setPrincipal(user.getNickname());
+                    v.setPrincipal(user.getFirstname() + "-" + user.getLastname());
                     return v;
                 }).switchIfEmpty(Mono.just(v));
             }

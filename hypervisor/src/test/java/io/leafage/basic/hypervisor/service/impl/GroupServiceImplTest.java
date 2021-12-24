@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -93,21 +94,25 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void create() {
-        given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Group.class)));
+    void fetch_no_superior_principal() {
+        Group group = new Group();
+        group.setId(new ObjectId());
+        group.setName("test");
+        given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(group));
 
+        StepVerifier.create(groupService.fetch("21612OL34")).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void create() {
         Group group = new Group();
         group.setId(new ObjectId());
         given(this.groupRepository.insert(Mockito.any(Group.class))).willReturn(Mono.just(group));
 
         given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
-
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
-        groupDTO.setPrincipal("little3201");
-        groupDTO.setSuperior("21612OL34");
         StepVerifier.create(groupService.create(groupDTO)).expectNextCount(1).verifyComplete();
     }
 

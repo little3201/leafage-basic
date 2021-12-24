@@ -11,6 +11,7 @@ import io.leafage.basic.assets.vo.CommentVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -40,7 +41,8 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
 
     @Override
     public Flux<CommentVO> retrieve(int page, int size) {
-        return commentRepository.findByEnabledTrue(PageRequest.of(page, size)).flatMap(this::convertOuter);
+        return commentRepository.findByEnabledTrue(PageRequest.of(page, size,
+                Sort.by(Sort.Direction.DESC, "modifyTime"))).flatMap(this::convertOuter);
     }
 
     @Override
@@ -52,15 +54,16 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<CommentVO> create(CommentDTO commentDTO) {
-        return postsRepository.getByCodeAndEnabledTrue(commentDTO.getPosts()).switchIfEmpty(Mono.error(new NoSuchElementException()))
-                .map(posts -> {
+        return postsRepository.getByCodeAndEnabledTrue(commentDTO.getPosts()).map(posts -> {
                     Comment comment = new Comment();
                     BeanUtils.copyProperties(commentDTO, comment);
                     comment.setCode(this.generateCode());
                     comment.setPostsId(posts.getId());
                     return comment;
-                }).flatMap(comment -> commentRepository.insert(comment).doOnSuccess(comm ->
-                        this.incrementComment(comm.getPostsId()).subscribe())).flatMap(this::convertOuter);
+                }).switchIfEmpty(Mono.error(new NoSuchElementException()))
+                .flatMap(comment -> commentRepository.insert(comment)
+                        .flatMap(cm -> this.incrementComment(cm.getPostsId()).map(updateResult -> cm))
+                        .flatMap(this::convertOuter));
     }
 
     @Override

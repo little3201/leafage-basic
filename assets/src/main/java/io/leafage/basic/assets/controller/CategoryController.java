@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import javax.validation.Valid;
 
 /**
@@ -153,13 +154,14 @@ public class CategoryController {
      */
     @DeleteMapping("/{code}")
     public ResponseEntity<Mono<Void>> remove(@PathVariable String code) {
+        Mono<Void> voidMono;
         try {
-            categoryService.remove(code);
+            voidMono = categoryService.remove(code);
         } catch (Exception e) {
             logger.error("Remove category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(voidMono);
     }
 
 }

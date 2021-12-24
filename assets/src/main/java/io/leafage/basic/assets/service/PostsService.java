@@ -23,11 +23,11 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO, St
      *
      * @param page     分页
      * @param size     大小
-     * @param sort    排序
+     * @param sort     排序
      * @param category 分类
      * @return 结果集
      */
-    Flux<PostsVO> retrieve(int page, int size, String category, String sort);
+    Flux<PostsVO> retrieve(int page, int size, String sort, String category);
 
     /**
      * 根据代码查询详细信息

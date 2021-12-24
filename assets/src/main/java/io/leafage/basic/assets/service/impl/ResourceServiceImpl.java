@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import javax.naming.NotContextException;
 
 /**
@@ -45,7 +46,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     }
 
     @Override
-    public Flux<ResourceVO> retrieve(int page, int size, String category, String sort) {
+    public Flux<ResourceVO> retrieve(int page, int size, String sort, String category) {
         Sort s = Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
         return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
                 resourceRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, s))

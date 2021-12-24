@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import javax.naming.NotContextException;
 
 /**
@@ -67,7 +68,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Flux<PostsVO> retrieve(int page, int size, String category, String sort) {
+    public Flux<PostsVO> retrieve(int page, int size, String sort, String category) {
         Sort s = Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
         return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
                 postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, s))
@@ -251,5 +252,4 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     return postsVO;
                 }).switchIfEmpty(Mono.just(postsVO)));
     }
-
 }

@@ -21,14 +21,14 @@ public interface ResourceService extends ReactiveBasicService<ResourceDTO, Resou
      *
      * @param page     分页
      * @param size     大小
-     * @param sort    排序
+     * @param sort     排序
      * @param category 分类
      * @return 结果集
      */
-    Flux<ResourceVO> retrieve(int page, int size, String category, String sort);
+    Flux<ResourceVO> retrieve(int page, int size, String sort, String category);
 
     /**
-     * 统计
+     * 统计¬
      *
      * @param category 类目
      * @return 统计数

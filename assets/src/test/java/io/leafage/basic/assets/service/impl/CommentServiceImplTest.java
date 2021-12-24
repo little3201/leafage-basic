@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -21,6 +22,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -47,7 +49,9 @@ class CommentServiceImplTest {
     void retrieve() {
         Comment comment = new Comment();
         comment.setPostsId(new ObjectId());
-        given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(comment));
+        comment.setEmail("test@leafage.top");
+        given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2,
+                Sort.by(Sort.Direction.DESC, "modifyTime")))).willReturn(Flux.just(comment));
 
         given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 

@@ -22,6 +22,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -74,8 +75,8 @@ class UserControllerTest {
     void fetch() {
         UserVO userVO = new UserVO();
         userVO.setUsername("leafage");
-        userVO.setPhone("18710339898");
-        userVO.setEmail("test@test.com");
+        userVO.setBirthday(LocalDate.now());
+        userVO.setAddress("202 street");
         given(this.userService.fetch(Mockito.anyString())).willReturn(Mono.just(userVO));
 
         webTestClient.get().uri("/user/{username}", "leafage").exchange()
@@ -143,7 +144,8 @@ class UserControllerTest {
     @Test
     void modify() {
         UserVO userVO = new UserVO();
-        userVO.setEmail("test@test.com");
+        userVO.setBirthday(LocalDate.now());
+        userVO.setAddress("202 street");
         given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
 
         UserDTO userDTO = new UserDTO();

@@ -29,14 +29,6 @@ public class UserVO implements Serializable {
      */
     private String lastname;
     /**
-     * 手机号
-     */
-    private String phone;
-    /**
-     * 邮箱
-     */
-    private String email;
-    /**
      * 性别: null-未知 F-女 M-男
      */
     private Character gender;
@@ -96,22 +88,6 @@ public class UserVO implements Serializable {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Character getGender() {

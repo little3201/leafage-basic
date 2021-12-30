@@ -10,7 +10,6 @@ import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
-import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
@@ -80,24 +80,6 @@ public class UserController {
             voMono = userService.fetch(username);
         } catch (Exception e) {
             logger.error("Fetch user occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 根据 username 查询账号
-     *
-     * @param username 账号
-     * @return 查询到的数据，异常时返回204状态码
-     */
-    @GetMapping("/{username}/details")
-    public ResponseEntity<Mono<UserDetailVO>> details(@PathVariable String username) {
-        Mono<UserDetailVO> voMono;
-        try {
-            voMono = userService.details(username);
-        } catch (Exception e) {
-            logger.error("Fetch user details occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
@@ -183,13 +165,14 @@ public class UserController {
      */
     @DeleteMapping("/{username}")
     public ResponseEntity<Mono<Void>> remove(@PathVariable String username) {
+        Mono<Void> voidMono;
         try {
-            userService.remove(username);
+            voidMono = userService.remove(username);
         } catch (Exception e) {
             logger.error("Remove user occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(voidMono);
     }
 
     /**

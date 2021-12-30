@@ -95,13 +95,14 @@ public class AccountController {
      */
     @DeleteMapping("/{code}")
     public ResponseEntity<Mono<Void>> remove(@PathVariable String code) {
+        Mono<Void> voidMono;
         try {
-            accountService.remove(code);
+            voidMono = accountService.remove(code);
         } catch (Exception e) {
             logger.error("Remove account occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(voidMono);
     }
 
 }

@@ -5,7 +5,7 @@ package io.leafage.basic.hypervisor.document;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDate;
 
 /**
@@ -22,18 +22,6 @@ public class User extends AbstractDocument {
     @Indexed(unique = true)
     private String username;
     /**
-     * 昵称
-     */
-    private String nickname;
-    /**
-     * 头像
-     */
-    private String avatar;
-    /**
-     * 密码
-     */
-    private String password;
-    /**
      * 手机号
      */
     private String phone;
@@ -41,6 +29,14 @@ public class User extends AbstractDocument {
      * 邮箱
      */
     private String email;
+    /**
+     * 姓
+     */
+    private String firstname;
+    /**
+     * 名
+     */
+    private String lastname;
     /**
      * 性别: null-未知 F-女 M-男
      */
@@ -50,20 +46,29 @@ public class User extends AbstractDocument {
      */
     private LocalDate birthday;
     /**
-     * 账户是否有效
+     * 国籍
      */
-    @Field(name = "is_account_non_expired")
-    private boolean accountNonExpired = true;
+    private String country;
     /**
-     * 是否锁定
+     * 民族
      */
-    @Field(name = "is_account_non_locked")
-    private boolean accountNonLocked = true;
+    private String ethnicity;
     /**
-     * 认证是否有效
+     * 省/直辖市/州
      */
-    @Field(name = "is_credentials_non_expired")
-    private boolean credentialsNonExpired = true;
+    private String province;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区/县
+     */
+    private String region;
+    /**
+     * 地址
+     */
+    private String address;
 
     public String getUsername() {
         return username;
@@ -71,30 +76,6 @@ public class User extends AbstractDocument {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getPhone() {
@@ -113,6 +94,22 @@ public class User extends AbstractDocument {
         this.email = email;
     }
 
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
     public Character getGender() {
         return gender;
     }
@@ -129,28 +126,51 @@ public class User extends AbstractDocument {
         this.birthday = birthday;
     }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
+    public String getCountry() {
+        return country;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
+    public String getEthnicity() {
+        return ethnicity;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
     }
 
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+    public String getProvince() {
+        return province;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+    public void setProvince(String province) {
+        this.province = province;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

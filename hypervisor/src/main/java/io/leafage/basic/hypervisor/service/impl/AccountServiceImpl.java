@@ -44,12 +44,7 @@ public class AccountServiceImpl implements AccountService {
     public Mono<AccountVO> create(AccountDTO accountDTO) {
         Account account = new Account();
         BeanUtils.copyProperties(accountDTO, account);
-        return userRepository.getByUsername(accountDTO.getModifier())
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(user -> {
-                    account.setModifier(user.getId());
-                    return accountRepository.insert(account);
-                }).map(this::convertOuter);
+        return accountRepository.insert(account).map(this::convertOuter);
     }
 
     @Override
@@ -59,12 +54,7 @@ public class AccountServiceImpl implements AccountService {
                 .flatMap(accountVO -> {
                     Account account = new Account();
                     BeanUtils.copyProperties(accountDTO, account);
-                    return userRepository.getByUsername(accountDTO.getModifier())
-                            .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                            .flatMap(user -> {
-                                account.setModifier(user.getId());
-                                return accountRepository.save(account);
-                            }).map(this::convertOuter);
+                    return accountRepository.save(account).map(this::convertOuter);
                 });
     }
 

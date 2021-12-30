@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import java.math.BigDecimal;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -33,11 +33,12 @@ class AccountControllerTest {
     @Test
     void fetch() {
         AccountVO accountVO = new AccountVO();
-        accountVO.setBalance(new BigDecimal("1000.09"));
+        accountVO.setUsername("leafage");
+        accountVO.setAvatar("/avatar.jpg");
         given(this.accountService.fetch(Mockito.anyString())).willReturn(Mono.just(accountVO));
 
         webTestClient.get().uri("/account/{code}", "21612OL34").exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.balance").isEqualTo("1000.09");
+                .expectStatus().isOk().expectBody().jsonPath("$.username").isEqualTo("leafage");
     }
 
     @Test
@@ -51,14 +52,15 @@ class AccountControllerTest {
     @Test
     void create() {
         AccountVO accountVO = new AccountVO();
-        accountVO.setBalance(new BigDecimal("1000.09"));
+        accountVO.setUsername("leafage");
+        accountVO.setAvatar("/avatar.jpg");
         given(this.accountService.create(Mockito.any(AccountDTO.class))).willReturn(Mono.just(accountVO));
 
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setCode("6431659823235265");
+        accountDTO.setUsername("leafage");
         webTestClient.post().uri("/account").bodyValue(accountDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.balance").isEqualTo("1000.09");
+                .expectBody().jsonPath("$.username").isEqualTo("leafage");
     }
 
     @Test
@@ -66,7 +68,7 @@ class AccountControllerTest {
         given(this.accountService.create(Mockito.any(AccountDTO.class))).willThrow(new RuntimeException());
 
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setCode("6431659823235265");
+        accountDTO.setUsername("leafage");
         webTestClient.post().uri("/account").bodyValue(accountDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
@@ -74,14 +76,15 @@ class AccountControllerTest {
     @Test
     void modify() {
         AccountVO accountVO = new AccountVO();
-        accountVO.setBalance(new BigDecimal("1000.09"));
+        accountVO.setUsername("leafage");
+        accountVO.setAvatar("/avatar.jpg");
         given(this.accountService.modify(Mockito.anyString(), Mockito.any(AccountDTO.class))).willReturn(Mono.just(accountVO));
 
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setCode("6431659823235265");
+        accountDTO.setUsername("leafage");
         webTestClient.put().uri("/account/{code}", "21612OL34").bodyValue(accountDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.balance").isEqualTo("1000.09");
+                .expectBody().jsonPath("$.username").isEqualTo("leafage");
     }
 
     @Test
@@ -89,7 +92,7 @@ class AccountControllerTest {
         given(this.accountService.modify(Mockito.anyString(), Mockito.any(AccountDTO.class))).willThrow(new RuntimeException());
 
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setCode("6431659823235265");
+        accountDTO.setUsername("leafage");
         webTestClient.put().uri("/account/{code}", "21612OL34").bodyValue(accountDTO).exchange()
                 .expectStatus().isNotModified();
     }

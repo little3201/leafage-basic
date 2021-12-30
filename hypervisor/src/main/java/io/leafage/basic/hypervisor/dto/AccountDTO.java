@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -15,39 +16,28 @@ public class AccountDTO implements Serializable {
     private static final long serialVersionUID = 5424195124842285237L;
 
     /**
-     * 类型
+     * 用户名
      */
-    private String code;
+    @NotBlank
+    private String username;
     /**
-     * 类型
+     * 头像
      */
-    private char type;
-    /**
-     * 修改人
-     */
-    private String modifier;
+    private String avatar;
 
-    public String getCode() {
-        return code;
+    public String getUsername() {
+        return username;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public char getType() {
-        return type;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setType(char type) {
-        this.type = type;
-    }
-
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

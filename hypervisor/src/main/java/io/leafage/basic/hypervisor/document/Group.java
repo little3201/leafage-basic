@@ -21,6 +21,14 @@ public class Group extends AbstractDocument {
     @Indexed(unique = true)
     private String code;
     /**
+     * 名称
+     */
+    private String name;
+    /**
+     * 别名
+     */
+    private String alias;
+    /**
      * 负责人
      */
     private ObjectId principal;
@@ -29,10 +37,6 @@ public class Group extends AbstractDocument {
      */
     @Indexed(sparse = true)
     private ObjectId superior;
-    /**
-     * 名称
-     */
-    private String name;
     /**
      * 描述
      */
@@ -45,6 +49,22 @@ public class Group extends AbstractDocument {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public ObjectId getPrincipal() {
@@ -63,13 +83,6 @@ public class Group extends AbstractDocument {
         this.superior = superior;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getDescription() {
         return description;

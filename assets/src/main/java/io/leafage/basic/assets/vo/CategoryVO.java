@@ -5,12 +5,14 @@ package io.leafage.basic.assets.vo;
 
 import top.leafage.common.basic.AbstractVO;
 
+import java.io.Serializable;
+
 /**
  * VO class for Category
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class CategoryVO extends AbstractVO<String> {
+public class CategoryVO extends AbstractVO<String> implements Serializable {
 
     private static final long serialVersionUID = 6078275280120953852L;
     /**

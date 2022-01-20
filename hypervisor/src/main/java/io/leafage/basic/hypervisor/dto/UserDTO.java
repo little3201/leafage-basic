@@ -3,7 +3,9 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -17,24 +19,6 @@ public class UserDTO implements Serializable {
     private static final long serialVersionUID = -2259398095472923567L;
 
     /**
-     * 账号
-     */
-    @Size(min = 4, max = 16)
-    private String username;
-    /**
-     * 密码
-     */
-    private String password;
-    /**
-     * 昵称
-     */
-    @Size(max = 16)
-    private String nickname;
-    /**
-     * 头像
-     */
-    private String avatar;
-    /**
      * 电话
      */
     @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}")
@@ -46,51 +30,46 @@ public class UserDTO implements Serializable {
     @Email
     private String email;
     /**
+     * 姓
+     */
+    private String firstname;
+    /**
+     * 名
+     */
+    private String lastname;
+    /**
      * 性别: null-未知 F-女 M-男
      */
     private Character gender;
     /**
-     * 生日
+     * 出生日期
      */
-    @Past
     private LocalDate birthday;
     /**
-     * 修改人
+     * 国籍
      */
-    private String modifier;
+    private String country;
+    /**
+     * 民族
+     */
+    private String ethnicity;
+    /**
+     * 省/直辖市/州
+     */
+    private String province;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区/县
+     */
+    private String region;
+    /**
+     * 地址
+     */
+    private String address;
 
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 
     public String getPhone() {
         return phone;
@@ -108,6 +87,22 @@ public class UserDTO implements Serializable {
         this.email = email;
     }
 
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
     public Character getGender() {
         return gender;
     }
@@ -116,11 +111,59 @@ public class UserDTO implements Serializable {
         this.gender = gender;
     }
 
-    public String getModifier() {
-        return modifier;
+    public LocalDate getBirthday() {
+        return birthday;
     }
 
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

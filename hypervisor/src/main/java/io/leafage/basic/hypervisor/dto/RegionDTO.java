@@ -3,32 +3,45 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
+import java.io.Serializable;
+
 /**
  * DTO class for Region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/
-public class RegionDTO {
+public class RegionDTO implements Serializable {
+
+    private static final long serialVersionUID = -5578717024301173901L;
 
     /**
-     * 代码
+     * 名称
      */
-    private Long code;
+    private String name;
+    /**
+     * 别名
+     */
+    private String alias;
+    /**
+     * 邮编
+     */
+    private Integer zip;
     /**
      * 上级
      */
     private Long superior;
     /**
-     * 名称
+     * 描述
      */
-    private String name;
+    private String description;
 
-    public Long getCode() {
-        return code;
+
+    public String getName() {
+        return name;
     }
 
-    public void setCode(Long code) {
-        this.code = code;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getSuperior() {
@@ -39,11 +52,27 @@ public class RegionDTO {
         this.superior = superior;
     }
 
-    public String getName() {
-        return name;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public Integer getZip() {
+        return zip;
+    }
+
+    public void setZip(Integer zip) {
+        this.zip = zip;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

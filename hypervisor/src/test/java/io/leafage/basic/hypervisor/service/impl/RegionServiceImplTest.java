@@ -44,8 +44,11 @@ class RegionServiceImplTest {
     void fetch() {
         Region region = new Region();
         region.setId(new ObjectId());
+        region.setName("陕西省");
+        region.setAlias("陕");
+        region.setZip(123123);
         region.setCode(2L);
-        region.setName("test");
+        region.setDescription("中国陕西");
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
 
         StepVerifier.create(regionService.fetch(1100L)).expectNextCount(1).verifyComplete();
@@ -58,8 +61,9 @@ class RegionServiceImplTest {
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
 
         RegionDTO regionDTO = new RegionDTO();
-        regionDTO.setCode(11001L);
-        regionDTO.setName("测试村");
+        regionDTO.setAlias("京");
+        regionDTO.setName("北京市");
+        regionDTO.setDescription("中国北京");
         StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -70,7 +74,7 @@ class RegionServiceImplTest {
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
 
         RegionDTO regionDTO = new RegionDTO();
-        regionDTO.setCode(11001L);
+        regionDTO.setZip(1100123);
         regionDTO.setName("测试村");
         regionDTO.setSuperior(1100L);
         StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();

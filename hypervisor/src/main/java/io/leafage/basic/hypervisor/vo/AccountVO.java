@@ -3,12 +3,14 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import java.io.Serializable;
+
 /**
  * VO class for Account
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AccountVO {
+public class AccountVO implements Serializable {
 
     private static final long serialVersionUID = 2227758644875658137L;
 

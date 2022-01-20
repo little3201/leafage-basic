@@ -4,6 +4,8 @@
 package io.leafage.basic.assets.vo;
 
 import top.leafage.common.basic.AbstractVO;
+
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -11,7 +13,7 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PostsVO extends AbstractVO<String> {
+public class PostsVO extends AbstractVO<String> implements Serializable {
 
     private static final long serialVersionUID = -2692474466082844624L;
 

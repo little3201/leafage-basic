@@ -5,12 +5,14 @@ package io.leafage.basic.hypervisor.vo;
 
 import top.leafage.common.basic.AbstractVO;
 
+import java.io.Serializable;
+
 /**
  * VO class for Group
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class GroupVO extends AbstractVO<String> {
+public class GroupVO extends AbstractVO<String> implements Serializable {
 
     private static final long serialVersionUID = 5740100575689452491L;
 

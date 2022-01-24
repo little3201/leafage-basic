@@ -17,7 +17,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.NoSuchElementException;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -36,7 +38,7 @@ class ResourceControllerTest {
     private WebTestClient webTestClient;
 
     @Test
-    void retrieve() {
+    void retrieve_page() {
         ResourceVO resourceVO = new ResourceVO();
         resourceVO.setTitle("test");
         given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(Flux.just(resourceVO));
@@ -47,7 +49,18 @@ class ResourceControllerTest {
     }
 
     @Test
-    void retrieve_error() {
+    void retrieve_page_category() {
+        ResourceVO resourceVO = new ResourceVO();
+        resourceVO.setTitle("test");
+        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString())).willReturn(Flux.just(resourceVO));
+
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource").queryParam("page", 0)
+                        .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
+                .expectStatus().isOk().expectBodyList(ResourceVO.class);
+    }
+
+    @Test
+    void retrieve_page_error() {
         given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource").queryParam("page", 0)
@@ -76,14 +89,15 @@ class ResourceControllerTest {
 
     @Test
     void count() {
-        given(this.resourceService.count()).willReturn(Mono.just(2L));
+        given(this.resourceService.count(Mockito.anyString())).willReturn(Mono.just(2L));
         webTestClient.get().uri("/resource/count").exchange().expectStatus().isOk();
     }
 
     @Test
     void count_error() {
-        given(this.resourceService.count()).willThrow(new RuntimeException());
-        webTestClient.get().uri("/resource/count").exchange().expectStatus().isNoContent();
+        given(this.resourceService.count(Mockito.anyString())).willThrow(new RuntimeException());
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource/count")
+                .queryParam("category", "").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test

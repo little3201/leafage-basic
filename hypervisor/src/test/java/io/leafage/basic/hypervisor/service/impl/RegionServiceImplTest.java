@@ -45,7 +45,6 @@ class RegionServiceImplTest {
         Region region = new Region();
         region.setId(new ObjectId());
         region.setCode(2L);
-        region.setSuperior(1L);
         region.setName("test");
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
 
@@ -54,6 +53,18 @@ class RegionServiceImplTest {
 
     @Test
     void create() {
+        given(this.regionRepository.insert(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
+
+        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
+
+        RegionDTO regionDTO = new RegionDTO();
+        regionDTO.setCode(11001L);
+        regionDTO.setName("测试村");
+        StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void create_superior() {
         given(this.regionRepository.insert(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
 
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));

@@ -23,8 +23,8 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
 /**
  * authority接口测试
@@ -93,12 +93,18 @@ class AuthorityServiceImplTest {
     }
 
     @Test
-    void create() {
-        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(mock(Authority.class)));
-
+    void fetch_no_superior() {
         Authority authority = new Authority();
         authority.setId(new ObjectId());
-        authority.setSuperior(new ObjectId());
+        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(authority));
+
+        StepVerifier.create(authorityService.fetch("21612OL34")).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void create() {
+        Authority authority = new Authority();
+        authority.setId(new ObjectId());
         authority.setName("test");
         authority.setType('M');
         authority.setPath("/authority");
@@ -107,12 +113,9 @@ class AuthorityServiceImplTest {
 
         given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
-        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Authority.class)));
-
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
         authorityDTO.setType('M');
-        authorityDTO.setSuperior("21612OL35");
         StepVerifier.create(authorityService.create(authorityDTO)).expectNextCount(1).verifyComplete();
     }
 

@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -69,6 +70,7 @@ class RoleServiceImplTest {
     void fetch() {
         Role role = new Role();
         role.setId(new ObjectId());
+        role.setName("test");
         role.setSuperior(new ObjectId());
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(role));
 
@@ -78,20 +80,25 @@ class RoleServiceImplTest {
     }
 
     @Test
-    void create() {
-        given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Role.class)));
-
+    void fetch_no_superior() {
         Role role = new Role();
         role.setId(new ObjectId());
-        role.setSuperior(new ObjectId());
+        role.setName("test");
+        given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(role));
+
+        StepVerifier.create(roleService.fetch("21612OL34")).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void create() {
+        Role role = new Role();
+        role.setId(new ObjectId());
         given(this.roleRepository.insert(Mockito.any(Role.class))).willReturn(Mono.just(role));
 
         given(this.userRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
-        given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(role));
-
         RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setSuperior("21612OL34");
+        roleDTO.setName("test");
         StepVerifier.create(roleService.create(roleDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -110,6 +117,7 @@ class RoleServiceImplTest {
         given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(role));
 
         RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setSuperior("21612OL12");
         StepVerifier.create(roleService.modify("21612OL34", roleDTO)).expectNextCount(1).verifyComplete();
     }
 

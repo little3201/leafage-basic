@@ -28,7 +28,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import java.util.Set;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -93,12 +95,12 @@ class PostsServiceImplTest {
 
         given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        StepVerifier.create(this.postsService.retrieve(0, 2, "21213G0J2", "id"))
+        StepVerifier.create(this.postsService.retrieve(0, 2, "id", "21213G0J2"))
                 .expectNextCount(1).verifyComplete();
     }
 
     @Test
-    void fetchDetails() {
+    void details() {
         Posts posts = new Posts();
         ObjectId id = new ObjectId();
         posts.setId(id);
@@ -107,9 +109,10 @@ class PostsServiceImplTest {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(posts));
 
+        UpdateResult acknowledged = UpdateResult.acknowledged(1, 1L, null);
         given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
                 new Update().inc("viewed", 1), Posts.class))
-                .willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
+                .willReturn(Mono.just(acknowledged));
 
         given(this.categoryRepository.findById(categoryId)).willReturn(Mono.just(Mockito.mock(Category.class)));
 
@@ -119,7 +122,7 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void fetchDetails_empty() {
+    void details_empty() {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.empty());
         StepVerifier.create(this.postsService.details("21213G0J2")).verifyError();
     }

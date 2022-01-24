@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import javax.validation.Valid;
 
 /**
@@ -40,18 +41,18 @@ public class PostsController {
      *
      * @param page     页码
      * @param size     大小
-     * @param category 分类
      * @param sort     排序字段
+     * @param category 分类
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<PostsVO>> retrieve(Integer page, Integer size, String category, String sort) {
+    public ResponseEntity<Flux<PostsVO>> retrieve(Integer page, Integer size, String sort, String category) {
         Flux<PostsVO> voFlux;
         try {
             if (page == null || size == null) {
                 voFlux = postsService.retrieve();
             } else if (StringUtils.hasText(category)) {
-                voFlux = postsService.retrieve(page, size, category, sort);
+                voFlux = postsService.retrieve(page, size, sort, category);
             } else {
                 voFlux = postsService.retrieve(page, size, sort);
             }

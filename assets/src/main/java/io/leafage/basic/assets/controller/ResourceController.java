@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import javax.validation.Valid;
 
 /**
@@ -38,7 +39,7 @@ public class ResourceController {
      *
      * @param page     页码
      * @param size     大小
-     * @param sort     排序字段
+     * @param sort     排序
      * @param category 分类
      * @return 查询到数据集，异常时返回204
      */

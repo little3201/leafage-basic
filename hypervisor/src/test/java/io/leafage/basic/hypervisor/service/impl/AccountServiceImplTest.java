@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import java.math.BigDecimal;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -50,39 +50,35 @@ class AccountServiceImplTest {
 
     @Test
     void create() {
-        User user = new User();
-        user.setId(new ObjectId());
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
-
         Account account = new Account();
         account.setId(new ObjectId());
-        account.setCode("21612OL34");
-        account.setBalance(new BigDecimal("11.23"));
-        account.setType('B');
+        account.setUsername("leafage");
+        account.setPassword("1234567");
+        account.setAvatar("./avatar.jpg");
+        account.setEnabled(true);
+        account.setAccountNonExpired(true);
+        account.setAccountNonLocked(true);
+        account.setCredentialsNonExpired(true);
         given(this.accountRepository.insert(Mockito.any(Account.class))).willReturn(Mono.just(account));
 
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setModifier("test");
+        accountDTO.setUsername("test");
         StepVerifier.create(accountService.create(accountDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void modify() {
-        User user = new User();
-        user.setId(new ObjectId());
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
-
         Account account = new Account();
         account.setId(new ObjectId());
-        account.setCode("21612OL34");
-        account.setBalance(new BigDecimal("11.23"));
-        account.setType('B');
+        account.setUsername("leafage");
+        account.setPassword("1234567");
+        account.setAvatar("./avatar.jpg");
         given(this.accountRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(account));
 
         given(this.accountRepository.save(Mockito.any(Account.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
 
         AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setModifier("test");
+        accountDTO.setUsername("test");
         StepVerifier.create(accountService.modify("21612OL34", accountDTO)).expectNextCount(1).verifyComplete();
     }
 

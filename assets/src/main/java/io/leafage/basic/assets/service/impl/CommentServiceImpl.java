@@ -22,6 +22,7 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import javax.naming.NotContextException;
 import java.util.NoSuchElementException;
 
@@ -61,9 +62,9 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
                     comment.setPostsId(posts.getId());
                     return comment;
                 }).switchIfEmpty(Mono.error(new NoSuchElementException()))
-                .flatMap(comment -> commentRepository.insert(comment)
-                        .flatMap(cm -> this.incrementComment(cm.getPostsId()).map(updateResult -> cm))
-                        .flatMap(this::convertOuter));
+                .flatMap(comment -> commentRepository.insert(comment).flatMap(comm ->
+                        this.incrementComment(comm.getPostsId()).map(updateResult -> comm)))
+                .flatMap(this::convertOuter);
     }
 
     @Override

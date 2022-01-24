@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -40,7 +41,7 @@ class ResourceServiceImplTest {
     private ResourceServiceImpl resourceService;
 
     @Test
-    void retrieve() {
+    void retrieve_page() {
         Resource resource = new Resource();
         resource.setCategoryId(new ObjectId());
         given(this.resourceRepository.findByEnabledTrue(PageRequest.of(0, 2,
@@ -49,6 +50,22 @@ class ResourceServiceImplTest {
         given(this.categoryRepository.findById(resource.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
         StepVerifier.create(this.resourceService.retrieve(0, 2, "id")).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void retrieve_page_category() {
+        Category category = new Category();
+        category.setId(new ObjectId());
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
+
+        Resource resource = new Resource();
+        resource.setCategoryId(new ObjectId());
+        given(this.resourceRepository.findByCategoryIdAndEnabledTrue(category.getId(), PageRequest.of(0, 2,
+                Sort.by(Sort.Direction.DESC, "id")))).willReturn(Flux.just(resource));
+
+        given(this.categoryRepository.findById(resource.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
+
+        StepVerifier.create(this.resourceService.retrieve(0, 2, "id", "21318C001")).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -66,7 +83,18 @@ class ResourceServiceImplTest {
     @Test
     void count() {
         given(this.resourceRepository.count()).willReturn(Mono.just(2L));
-        StepVerifier.create(resourceService.count()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(resourceService.count("")).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void count_category() {
+        Category category = new Category();
+        category.setId(new ObjectId());
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
+
+        given(this.resourceRepository.countByCategoryIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        StepVerifier.create(resourceService.count("21318C001")).expectNextCount(1).verifyComplete();
     }
 
     @Test

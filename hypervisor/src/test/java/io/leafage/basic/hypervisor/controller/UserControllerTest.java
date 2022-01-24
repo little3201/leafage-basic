@@ -8,7 +8,6 @@ import io.leafage.basic.hypervisor.service.UserGroupService;
 import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import io.leafage.basic.hypervisor.vo.UserDetailVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -22,8 +21,11 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -72,14 +74,14 @@ class UserControllerTest {
     @Test
     void fetch() {
         UserVO userVO = new UserVO();
-        userVO.setNickname("布吉岛");
-        userVO.setPhone("18710339898");
-        userVO.setEmail("test@test.com");
+        userVO.setUsername("leafage");
+        userVO.setBirthday(LocalDate.now());
+        userVO.setAddress("202 street");
         given(this.userService.fetch(Mockito.anyString())).willReturn(Mono.just(userVO));
 
-        webTestClient.get().uri("/user/{username}", "little3201").exchange()
+        webTestClient.get().uri("/user/{username}", "leafage").exchange()
                 .expectStatus().isOk()
-                .expectBody().jsonPath("$.nickname").isEqualTo("布吉岛");
+                .expectBody().jsonPath("$.username").isEqualTo("leafage");
     }
 
     @Test
@@ -87,25 +89,6 @@ class UserControllerTest {
         given(this.userService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/user/{username}", "little3201").exchange()
-                .expectStatus().isNoContent();
-    }
-
-    @Test
-    void details() {
-        UserDetailVO userDetailVO = new UserDetailVO();
-        userDetailVO.setUsername("little3201");
-        given(this.userService.details(Mockito.anyString())).willReturn(Mono.just(userDetailVO));
-
-        webTestClient.get().uri("/user/{username}/details", "little3201").exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.username").isEqualTo("little3201");
-    }
-
-    @Test
-    void details_error() {
-        given(this.userService.details(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/user/{username}/details", "little3201").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -161,7 +144,8 @@ class UserControllerTest {
     @Test
     void modify() {
         UserVO userVO = new UserVO();
-        userVO.setEmail("test@test.com");
+        userVO.setBirthday(LocalDate.now());
+        userVO.setAddress("202 street");
         given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
 
         UserDTO userDTO = new UserDTO();

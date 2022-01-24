@@ -3,19 +3,25 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import java.io.Serializable;
+
 /**
  * VO class for Account
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AccountVO {
+public class AccountVO implements Serializable {
 
     private static final long serialVersionUID = 2227758644875658137L;
 
     /**
-     * 用户名
+     * 账号
      */
     private String username;
+    /**
+     * 昵称
+     */
+    private String nickname;
     /**
      * 头像
      */
@@ -39,6 +45,14 @@ public class AccountVO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getAvatar() {

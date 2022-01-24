@@ -152,7 +152,7 @@ class UserControllerTest {
         userDTO.setEmail("test@test.com");
         webTestClient.put().uri("/user/{username}", "test").bodyValue(userDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.email").isNotEmpty();
+                .expectBody().jsonPath("$.address").isNotEmpty();
     }
 
     @Test

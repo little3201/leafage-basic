@@ -3,13 +3,16 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
+import java.io.Serializable;
+
 /**
  * DTO class for Region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/
-public class RegionDTO {
+public class RegionDTO implements Serializable {
 
+    private static final long serialVersionUID = -2220657046421273787L;
     /**
      * 代码
      */

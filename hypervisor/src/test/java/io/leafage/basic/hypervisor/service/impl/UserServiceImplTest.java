@@ -60,12 +60,12 @@ class UserServiceImplTest {
         user.setPhone("18710023032");
         user.setEmail("test@leafage.top");
         user.setBirthday(LocalDate.now());
-        user.setCountry("China");
-        user.setProvince("shaanxi");
-        user.setCity("xi'an");
-        user.setRegion("yanta");
-        user.setAddress("科技路");
-        user.setEthnicity("han");
+        user.setCountry(86L);
+        user.setProvince(1101L);
+        user.setCity(110101L);
+        user.setRegion(11010101L);
+        user.setAddress("北大街");
+        user.setEthnicity("汉族");
         given(this.userRepository.insert(Mockito.any(User.class))).willReturn(Mono.just(user));
         StepVerifier.create(userService.create(Mockito.mock(UserDTO.class))).expectNextCount(1).verifyComplete();
     }

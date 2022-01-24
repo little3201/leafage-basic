@@ -4,14 +4,16 @@
 package io.leafage.basic.hypervisor.vo;
 
 import top.leafage.common.basic.AbstractVO;
+import java.io.Serializable;
 
 /**
  * DTO class for Region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/
-public class RegionVO extends AbstractVO<Long> {
+public class RegionVO extends AbstractVO<Long> implements Serializable {
 
+    private static final long serialVersionUID = 5064068749809388291L;
     /**
      * 上级
      */

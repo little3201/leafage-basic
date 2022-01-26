@@ -36,7 +36,6 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
      */
     Page<Posts> findByEnabledTrue(Pageable pageable);
 
-
     /**
      * 查询所有可用
      *

@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -44,6 +46,12 @@ public class StatisticsServiceImpl implements StatisticsService {
             statistics.setLikes(statistics.getLikes() + p.getLikes());
             statistics.setComment(statistics.getComment() + p.getComment());
         });
+        // 计算较前日增长率。计算日期数据还没生成，所以前一天减去2，大前天减去3
+        Statistics ys = statisticsRepository.getByDate(LocalDate.now().minusDays(2));
+        Statistics bys = statisticsRepository.getByDate(LocalDate.now().minusDays(3));
+        statistics.setOverViewed(this.overViewed(statistics.getViewed(), ys.getViewed(), bys.getViewed()));
+        statistics.setOverLikes(this.overLikes(statistics.getLikes(), ys.getLikes(), bys.getLikes()));
+        statistics.setOverComment(this.overComment(statistics.getComment(), ys.getComment(), bys.getComment()));
         return statisticsRepository.saveAndFlush(statistics);
     }
 
@@ -57,5 +65,56 @@ public class StatisticsServiceImpl implements StatisticsService {
         StatisticsVO vo = new StatisticsVO();
         BeanUtils.copyProperties(statistics, vo);
         return vo;
+    }
+
+    /**
+     * 浏览量
+     *
+     * @param sv  最新数据
+     * @param yv  前一天数据
+     * @param byv 大前天数据
+     * @return 计算结果
+     */
+    private double overViewed(int sv, int yv, int byv) {
+        if (yv > 0 && yv - byv != 0) {
+            double overViewed = (sv - yv) * 1.0 / (yv - byv) * 100;
+            overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return overViewed;
+        }
+        return 0.0;
+    }
+
+    /**
+     * 喜欢数
+     *
+     * @param sl  最新数据
+     * @param yl  前一天数据
+     * @param byl 大前天数据
+     * @return 计算结果
+     */
+    private double overLikes(int sl, int yl, int byl) {
+        if (yl > 0 && yl - byl != 0) {
+            double overLikes = (sl - yl) * 1.0 / (yl - byl) * 100;
+            overLikes = BigDecimal.valueOf(overLikes).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return overLikes;
+        }
+        return 0.0;
+    }
+
+    /**
+     * 评论量
+     *
+     * @param sc  最新数据
+     * @param yc  前一天数据
+     * @param byc 大前天数据
+     * @return 计算结果
+     */
+    private double overComment(int sc, int yc, int byc) {
+        if (yc > 0 && yc - byc != 0) {
+            double overComment = (sc - yc) * 1.0 / (yc - byc) * 100;
+            overComment = BigDecimal.valueOf(overComment).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return overComment;
+        }
+        return 0.0;
     }
 }

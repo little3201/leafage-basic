@@ -78,6 +78,14 @@ class ResourceServiceImplTest {
     }
 
     @Test
+    void fetch_null() {
+        given(this.resourceRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
+
+        ResourceVO resourceVO = resourceService.fetch("21389KO6");
+        Assertions.assertNull(resourceVO);
+    }
+
+    @Test
     void exist() {
         given(this.resourceRepository.existsByTitle(Mockito.anyString())).willReturn(true);
 
@@ -115,5 +123,18 @@ class ResourceServiceImplTest {
         resourceDTO.setDescription("描述");
         ResourceVO resourceVO = resourceService.modify("21389KO6", resourceDTO);
         Assertions.assertNotNull(resourceVO);
+    }
+
+    @Test
+    void modify_null() {
+        given(this.resourceRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
+
+        ResourceDTO resourceDTO = new ResourceDTO();
+        resourceDTO.setTitle("java");
+        resourceDTO.setCover("/avatar.jpg");
+        resourceDTO.setType('E');
+        resourceDTO.setDescription("描述");
+        ResourceVO resourceVO = resourceService.modify("21389KO6", resourceDTO);
+        Assertions.assertNull(resourceVO);
     }
 }

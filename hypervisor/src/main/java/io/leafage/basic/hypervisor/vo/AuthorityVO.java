@@ -4,13 +4,14 @@
 package io.leafage.basic.hypervisor.vo;
 
 import top.leafage.common.basic.AbstractVO;
+import java.io.Serializable;
 
 /**
  * VO class for Authority
  *
  * @author liwenqiang
  */
-public class AuthorityVO extends AbstractVO<String> {
+public class AuthorityVO extends AbstractVO<String> implements Serializable {
 
     private static final long serialVersionUID = 7493821282349624572L;
 

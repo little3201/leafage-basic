@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.BDDMockito.given;
@@ -53,6 +54,7 @@ class PostsServiceImplTest {
     void retrieve_page() {
         Posts posts = new Posts();
         posts.setTitle("test");
+        posts.setTags("java,spring");
         Page<Posts> postsPage = new PageImpl<>(List.of(posts));
         given(this.postsRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
 
@@ -72,11 +74,19 @@ class PostsServiceImplTest {
 
     @Test
     void details() {
-        given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Posts.class));
+        Posts posts = new Posts();
+        posts.setId(12L);
+        posts.setTags("测试,test");
+        posts.setCategoryId(2L);
+        given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(posts);
 
         given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Category.class)));
 
-        given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostsContent.class));
+        PostsContent postsContent = new PostsContent();
+        postsContent.setContent("测试内容");
+        postsContent.setPostsId(posts.getId());
+        postsContent.setCatalog("目录");
+        given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(postsContent);
 
         PostsVO postsVO = postsService.details("2112JK02");
 
@@ -96,11 +106,18 @@ class PostsServiceImplTest {
     void create() {
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
 
-        given(this.postsRepository.saveAndFlush(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
+        Posts posts = new Posts();
+        posts.setId(12L);
+        posts.setTags("测试,test");
+        given(this.postsRepository.saveAndFlush(Mockito.any(Posts.class))).willReturn(posts);
 
-        given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostsContent.class));
+        PostsContent postsContent = new PostsContent();
+        postsContent.setContent("测试内容");
+        postsContent.setPostsId(posts.getId());
+        postsContent.setCatalog("目录");
+        given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(postsContent);
 
-        given(this.postsContentRepository.save(Mockito.any(PostsContent.class))).willReturn(Mockito.mock(PostsContent.class));
+        given(this.postsContentRepository.save(Mockito.any(PostsContent.class))).willReturn(postsContent);
 
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setCategory("2112JOP2");

@@ -13,6 +13,10 @@ public class UserVO implements Serializable {
     private static final long serialVersionUID = -43247624019806041L;
 
     /**
+     * 账号
+     */
+    private String username;
+    /**
      * 姓
      */
     private String firstname;
@@ -20,6 +24,14 @@ public class UserVO implements Serializable {
      * 名
      */
     private String lastname;
+    /**
+     * 手机号
+     */
+    private String phone;
+    /**
+     * 邮箱
+     */
+    private String email;
     /**
      * 出生日期
      */
@@ -49,6 +61,15 @@ public class UserVO implements Serializable {
      */
     private String address;
 
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getFirstname() {
         return firstname;
     }
@@ -63,6 +84,22 @@ public class UserVO implements Serializable {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public LocalDate getBirthday() {

@@ -15,10 +15,6 @@ public class AccountVO implements Serializable {
      */
     private String nickname;
     /**
-     * 性别: null-未知 0-女 1-男
-     */
-    private Character gender;
-    /**
      * 头像
      */
     private String avatar;
@@ -49,14 +45,6 @@ public class AccountVO implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public Character getGender() {
-        return gender;
-    }
-
-    public void setGender(Character gender) {
-        this.gender = gender;
     }
 
     public String getAvatar() {

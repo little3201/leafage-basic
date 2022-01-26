@@ -64,6 +64,14 @@ class CommentServiceImplTest {
     }
 
     @Test
+    void posts_empty() {
+        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
+
+        List<CommentVO> voList = commentService.posts("2112JK02");
+        Assertions.assertTrue(voList.isEmpty());
+    }
+
+    @Test
     void create() {
         Comment comment = new Comment();
         comment.setPostsId(1L);

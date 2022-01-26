@@ -68,10 +68,6 @@ public class User extends AbstractEntity {
      * 地址
      */
     private String address;
-    /**
-     * 身份证号
-     */
-    private String idCard;
 
 
     public String getUsername() {
@@ -176,13 +172,5 @@ public class User extends AbstractEntity {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getIdCard() {
-        return idCard;
-    }
-
-    public void setIdCard(String idCard) {
-        this.idCard = idCard;
     }
 }

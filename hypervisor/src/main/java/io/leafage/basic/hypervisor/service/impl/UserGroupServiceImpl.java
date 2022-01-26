@@ -75,13 +75,13 @@ public class UserGroupServiceImpl implements UserGroupService {
         if (user == null) {
             return Collections.emptyList();
         }
-        List<UserGroup> userRoles = groups.stream().map(s -> {
+        List<UserGroup> userGroups = groups.stream().map(s -> {
             Group group = groupRepository.getByCodeAndEnabledTrue(s);
             UserGroup userRole = new UserGroup();
             userRole.setUserId(user.getId());
             userRole.setGroupId(group.getId());
             return userRole;
         }).collect(Collectors.toList());
-        return userGroupRepository.saveAll(userRoles);
+        return userGroupRepository.saveAll(userGroups);
     }
 }

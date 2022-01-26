@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * DTO class for Role
  *
- * @author liwenqiang
+ * @author liwenqiang 2019/8/31 15:50
  */
 public class RoleDTO implements Serializable {
 

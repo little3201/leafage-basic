@@ -34,9 +34,10 @@ class RegionServiceImplTest {
     @Test
     void retrieve() {
         Region region = new Region();
-        region.setName("test");
-        region.setSuperior(1L);
         region.setCode(1101L);
+        region.setName("广东省");
+        region.setAlias("粤");
+        region.setSuperior(1L);
         Page<Region> regions = new PageImpl<>(List.of(region));
         given(this.regionRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(regions);
 

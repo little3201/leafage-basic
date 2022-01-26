@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * DTO class for Group
  *
- * @author liwenqiang
+ * @author liwenqiang 2019/8/31 15:50
  */
 public class GroupDTO implements Serializable {
 

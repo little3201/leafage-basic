@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @EnableWebSecurity
-public class SecurityConfiguration {
+public class ServerSecurityConfiguration {
 
     /**
      * 密码配置，使用BCryptPasswordEncoder

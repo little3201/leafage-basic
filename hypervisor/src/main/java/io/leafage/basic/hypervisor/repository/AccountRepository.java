@@ -3,19 +3,19 @@
  */
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.entity.User;
+import io.leafage.basic.hypervisor.entity.Account;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * 用户信息repository
+ * account repository
  *
- * @author liwenqiang 2018/7/27 17:50
+ * @author liwenqiang 2022/1/26 15:20
  **/
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
     /**
      * 分页查询
@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param pageable 分页参数
      * @return 信息
      */
-    Page<User> findByEnabledTrue(Pageable pageable);
+    Page<Account> findByEnabledTrue(Pageable pageable);
 
     /**
      * 查询用户信息
@@ -31,15 +31,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username 用户名
      * @return 用户信息
      */
-    User getByUsernameAndEnabledTrue(String username);
+    Account getByUsernameAndEnabledTrue(String username);
 
     /**
-     * 是否存在
+     * 查询用户信息
      *
      * @param username 用户名
-     * @param phone    电话
-     * @param email    邮箱
      * @return 用户信息
      */
-    boolean existsByUsernameOrPhoneOrEmail(String username, String phone, String email);
+    boolean existsByUsername(String username);
 }

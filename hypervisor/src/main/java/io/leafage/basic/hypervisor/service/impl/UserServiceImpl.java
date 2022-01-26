@@ -7,16 +7,10 @@ import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.entity.User;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserService;
-import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 
 /**
@@ -33,12 +27,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Override
-    public Page<AccountVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return userRepository.findByEnabledTrue(pageable).map(this::convert);
     }
 
     @Override
@@ -73,15 +61,9 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         return this.convertOuter(user);
     }
 
-    /**
-     * 转换为输出对象
-     *
-     * @return ExampleMatcher
-     */
-    private AccountVO convert(User user) {
-        AccountVO accountVO = new AccountVO();
-        BeanUtils.copyProperties(user, accountVO);
-        return accountVO;
+    @Override
+    public boolean exist(String username) {
+        return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
     }
 
     /**

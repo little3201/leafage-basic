@@ -185,4 +185,20 @@ class AuthorityControllerTest {
         mvc.perform(get("/authority/tree")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
+
+    @Test
+    void roles() throws Exception {
+        given(this.roleAuthorityService.roles(Mockito.anyString())).willReturn(Mockito.anyList());
+
+        mvc.perform(get("/authority/{code}/role", "test")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void roles_error() throws Exception {
+        given(this.roleAuthorityService.roles(Mockito.anyString())).willThrow(new RuntimeException());
+
+        mvc.perform(get("/authority/{code}/role", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
 }

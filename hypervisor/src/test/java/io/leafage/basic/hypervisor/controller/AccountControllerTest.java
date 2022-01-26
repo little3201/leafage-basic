@@ -7,11 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.entity.UserGroup;
-import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.entity.AccountRole;
 import io.leafage.basic.hypervisor.service.AccountService;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
-import io.leafage.basic.hypervisor.service.UserRoleService;
+import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,7 +59,7 @@ class AccountControllerTest {
     private UserGroupService userGroupService;
 
     @MockBean
-    private UserRoleService userRoleService;
+    private AccountRoleService accountRoleService;
 
     @MockBean
     private AuthorityService authorityService;
@@ -149,7 +149,7 @@ class AccountControllerTest {
 
     @Test
     void roles() throws Exception {
-        given(this.userRoleService.roles(Mockito.anyString())).willReturn(Mockito.anyList());
+        given(this.accountRoleService.roles(Mockito.anyString())).willReturn(Mockito.anyList());
 
         mvc.perform(get("/account/{username}/role", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
@@ -157,7 +157,7 @@ class AccountControllerTest {
 
     @Test
     void roles_error() throws Exception {
-        given(this.userRoleService.roles(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.accountRoleService.roles(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/account/{username}/role", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
@@ -165,11 +165,11 @@ class AccountControllerTest {
 
     @Test
     void relation_role() throws Exception {
-        UserRole userRole = new UserRole();
-        userRole.setUserId(1L);
-        userRole.setRoleId(1L);
-        given(this.userRoleService.relation(Mockito.anyString(), Mockito.anySet()))
-                .willReturn(Collections.singletonList(userRole));
+        AccountRole accountRole = new AccountRole();
+        accountRole.setAccountId(1L);
+        accountRole.setRoleId(1L);
+        given(this.accountRoleService.relation(Mockito.anyString(), Mockito.anySet()))
+                .willReturn(Collections.singletonList(accountRole));
 
         mvc.perform(patch("/account/{username}/role", "test").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isAccepted())
@@ -178,7 +178,7 @@ class AccountControllerTest {
 
     @Test
     void relation_role_error() throws Exception {
-        given(this.userRoleService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
+        given(this.accountRoleService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
         mvc.perform(patch("/account/{username}/role", "test").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isExpectationFailed())

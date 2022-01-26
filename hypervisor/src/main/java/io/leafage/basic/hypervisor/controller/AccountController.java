@@ -5,11 +5,11 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.entity.UserGroup;
-import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.entity.AccountRole;
 import io.leafage.basic.hypervisor.service.AccountService;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.UserGroupService;
-import io.leafage.basic.hypervisor.service.UserRoleService;
+import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
@@ -37,14 +37,14 @@ public class AccountController {
 
     private final AccountService accountService;
     private final UserGroupService userGroupService;
-    private final UserRoleService userRoleService;
+    private final AccountRoleService accountRoleService;
     private final AuthorityService authorityService;
 
-    public AccountController(AccountService accountService, UserGroupService userGroupService, UserRoleService userRoleService,
+    public AccountController(AccountService accountService, UserGroupService userGroupService, AccountRoleService accountRoleService,
                              AuthorityService authorityService) {
         this.accountService = accountService;
         this.userGroupService = userGroupService;
-        this.userRoleService = userRoleService;
+        this.accountRoleService = accountRoleService;
         this.authorityService = authorityService;
     }
 
@@ -188,7 +188,7 @@ public class AccountController {
     public ResponseEntity<List<RoleVO>> roles(@PathVariable String username) {
         List<RoleVO> voList;
         try {
-            voList = userRoleService.roles(username);
+            voList = accountRoleService.roles(username);
         } catch (Exception e) {
             logger.error("Retrieve account roles occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -204,10 +204,10 @@ public class AccountController {
      * @return 操作结果
      */
     @PatchMapping("/{username}/role")
-    public ResponseEntity<List<UserRole>> roles(@PathVariable String username, @RequestBody Set<String> roles) {
-        List<UserRole> voList;
+    public ResponseEntity<List<AccountRole>> roles(@PathVariable String username, @RequestBody Set<String> roles) {
+        List<AccountRole> voList;
         try {
-            voList = userRoleService.relation(username, roles);
+            voList = accountRoleService.relation(username, roles);
         } catch (Exception e) {
             logger.error("create account role occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

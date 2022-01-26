@@ -9,7 +9,7 @@ import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.entity.RoleAuthority;
 import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.service.RoleService;
-import io.leafage.basic.hypervisor.service.UserRoleService;
+import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +55,7 @@ class RoleControllerTest {
     private RoleService roleService;
 
     @MockBean
-    private UserRoleService userRoleService;
+    private AccountRoleService accountRoleService;
 
     @MockBean
     private RoleAuthorityService roleAuthorityService;
@@ -175,7 +175,7 @@ class RoleControllerTest {
 
     @Test
     void users() throws Exception {
-        given(this.userRoleService.users(Mockito.anyString())).willReturn(Mockito.anyList());
+        given(this.accountRoleService.users(Mockito.anyString())).willReturn(Mockito.anyList());
 
         mvc.perform(get("/role/{code}/user", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
@@ -183,7 +183,7 @@ class RoleControllerTest {
 
     @Test
     void users_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.userRoleService).users(Mockito.anyString());
+        doThrow(new RuntimeException()).when(this.accountRoleService).users(Mockito.anyString());
 
         mvc.perform(get("/role/{code}/user", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();

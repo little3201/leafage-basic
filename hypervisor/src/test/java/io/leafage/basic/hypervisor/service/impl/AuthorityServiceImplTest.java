@@ -1,14 +1,14 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
+import io.leafage.basic.hypervisor.entity.Account;
+import io.leafage.basic.hypervisor.entity.AccountRole;
 import io.leafage.basic.hypervisor.entity.Authority;
 import io.leafage.basic.hypervisor.entity.RoleAuthority;
-import io.leafage.basic.hypervisor.entity.User;
-import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -39,10 +39,10 @@ import static org.mockito.Mockito.verify;
 class AuthorityServiceImplTest {
 
     @Mock
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     @Mock
-    private UserRoleRepository userRoleRepository;
+    private AccountRoleRepository accountRoleRepository;
 
     @Mock
     private RoleAuthorityRepository roleAuthorityRepository;
@@ -134,17 +134,17 @@ class AuthorityServiceImplTest {
 
     @Test
     void authorities() {
-        User user = new User();
-        user.setId(1L);
-        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
+        Account account = new Account();
+        account.setId(1L);
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(account);
 
-        UserRole userRole = new UserRole();
-        userRole.setUserId(user.getId());
-        userRole.setRoleId(2L);
-        given(this.userRoleRepository.findByUserId(Mockito.anyLong())).willReturn(Collections.singletonList(userRole));
+        AccountRole accountRole = new AccountRole();
+        accountRole.setAccountId(account.getId());
+        accountRole.setRoleId(2L);
+        given(this.accountRoleRepository.findByUserId(Mockito.anyLong())).willReturn(Collections.singletonList(accountRole));
 
         RoleAuthority roleAuthority = new RoleAuthority();
-        roleAuthority.setRoleId(userRole.getRoleId());
+        roleAuthority.setRoleId(accountRole.getRoleId());
         roleAuthority.setAuthorityId(3L);
         given(this.roleAuthorityRepository.findByRoleId(Mockito.anyLong())).willReturn(Collections.singletonList(roleAuthority));
 

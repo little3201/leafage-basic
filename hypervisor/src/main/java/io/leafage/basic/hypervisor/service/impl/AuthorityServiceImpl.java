@@ -4,14 +4,14 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
+import io.leafage.basic.hypervisor.entity.Account;
+import io.leafage.basic.hypervisor.entity.AccountRole;
 import io.leafage.basic.hypervisor.entity.Authority;
 import io.leafage.basic.hypervisor.entity.RoleAuthority;
-import io.leafage.basic.hypervisor.entity.User;
-import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.basic.hypervisor.repository.UserRoleRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.springframework.beans.BeanUtils;
@@ -37,14 +37,14 @@ import java.util.stream.Collectors;
 public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authority> implements AuthorityService {
 
     public final RoleAuthorityRepository roleAuthorityRepository;
-    private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+    private final AccountRepository accountRepository;
+    private final AccountRoleRepository accountRoleRepository;
     private final AuthorityRepository authorityRepository;
 
-    public AuthorityServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
+    public AuthorityServiceImpl(AccountRepository accountRepository, AccountRoleRepository accountRoleRepository,
                                 RoleAuthorityRepository roleAuthorityRepository, AuthorityRepository authorityRepository) {
-        this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
+        this.accountRepository = accountRepository;
+        this.accountRoleRepository = accountRoleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;
         this.authorityRepository = authorityRepository;
     }
@@ -63,16 +63,16 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
 
     @Override
     public List<TreeNode> authorities(String username, Character type) {
-        User user = userRepository.getByUsernameAndEnabledTrue(username);
-        if (user == null) {
+        Account account = accountRepository.getByUsernameAndEnabledTrue(username);
+        if (account == null) {
             throw new NoSuchElementException("Not Found User.");
         }
-        List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
-        if (CollectionUtils.isEmpty(userRoles)) {
+        List<AccountRole> accountRoles = accountRoleRepository.findByUserId(account.getId());
+        if (CollectionUtils.isEmpty(accountRoles)) {
             return Collections.emptyList();
         }
         List<RoleAuthority> roleAuthorities = new ArrayList<>();
-        userRoles.forEach(userRole -> {
+        accountRoles.forEach(userRole -> {
             List<RoleAuthority> roleAuthorityList = roleAuthorityRepository.findByRoleId(userRole.getRoleId());
             if (!CollectionUtils.isEmpty(roleAuthorityList)) {
                 roleAuthorities.addAll(roleAuthorityList);

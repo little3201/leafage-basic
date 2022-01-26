@@ -1,12 +1,12 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.entity.Account;
+import io.leafage.basic.hypervisor.entity.AccountRole;
 import io.leafage.basic.hypervisor.entity.Role;
-import io.leafage.basic.hypervisor.entity.User;
-import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.basic.hypervisor.repository.UserRoleRepository;
-import io.leafage.basic.hypervisor.service.UserRoleService;
+import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
@@ -20,16 +20,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class UserRoleServiceImpl implements UserRoleService {
+public class AccountRoleServiceImpl implements AccountRoleService {
 
-    private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+    private final AccountRepository accountRepository;
+    private final AccountRoleRepository accountRoleRepository;
     private final RoleRepository roleRepository;
 
-    public UserRoleServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
-                               RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
+    public AccountRoleServiceImpl(AccountRepository accountRepository, AccountRoleRepository accountRoleRepository,
+                                  RoleRepository roleRepository) {
+        this.accountRepository = accountRepository;
+        this.accountRoleRepository = accountRoleRepository;
         this.roleRepository = roleRepository;
     }
 
@@ -40,8 +40,8 @@ public class UserRoleServiceImpl implements UserRoleService {
         if (role == null) {
             return Collections.emptyList();
         }
-        List<UserRole> userRoles = userRoleRepository.findByRoleId(role.getId());
-        return userRoles.stream().map(userRole -> userRepository.findById(userRole.getUserId()))
+        List<AccountRole> accountRoles = accountRoleRepository.findByRoleId(role.getId());
+        return accountRoles.stream().map(userRole -> accountRepository.findById(userRole.getAccountId()))
                 .map(Optional::orElseThrow).map(user -> {
                     UserVO userVO = new UserVO();
                     BeanUtils.copyProperties(user, userVO);
@@ -52,13 +52,13 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public List<RoleVO> roles(String username) {
         Assert.hasText(username, "username is blank.");
-        User user = userRepository.getByUsernameAndEnabledTrue(username);
-        if (user == null) {
+        Account account = accountRepository.getByUsernameAndEnabledTrue(username);
+        if (account == null) {
             return Collections.emptyList();
         }
-        List<UserRole> userRoles = userRoleRepository.findByUserId(user.getId());
-        if (!CollectionUtils.isEmpty(userRoles)) {
-            return userRoles.stream().map(userRole -> roleRepository.findById(userRole.getRoleId()))
+        List<AccountRole> accountRoles = accountRoleRepository.findByUserId(account.getId());
+        if (!CollectionUtils.isEmpty(accountRoles)) {
+            return accountRoles.stream().map(userRole -> roleRepository.findById(userRole.getRoleId()))
                     .map(Optional::orElseThrow).map(role -> {
                         RoleVO roleVO = new RoleVO();
                         BeanUtils.copyProperties(role, roleVO);
@@ -69,20 +69,20 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public List<UserRole> relation(String username, Set<String> roles) {
+    public List<AccountRole> relation(String username, Set<String> roles) {
         Assert.hasText(username, "username is blank.");
         Assert.notNull(roles, "roles is empty.");
-        User user = userRepository.getByUsernameAndEnabledTrue(username);
-        if (user == null) {
+        Account account = accountRepository.getByUsernameAndEnabledTrue(username);
+        if (account == null) {
             return Collections.emptyList();
         }
-        List<UserRole> userRoles = roles.stream().map(s -> {
+        List<AccountRole> accountRoles = roles.stream().map(s -> {
             Role role = roleRepository.getByCodeAndEnabledTrue(s);
-            UserRole userRole = new UserRole();
-            userRole.setUserId(user.getId());
-            userRole.setRoleId(role.getId());
-            return userRole;
+            AccountRole accountRole = new AccountRole();
+            accountRole.setAccountId(account.getId());
+            accountRole.setRoleId(role.getId());
+            return accountRole;
         }).collect(Collectors.toList());
-        return userRoleRepository.saveAll(userRoles);
+        return accountRoleRepository.saveAll(accountRoles);
     }
 }

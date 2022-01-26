@@ -8,19 +8,19 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for User Role
+ * Model class for Account Role
  *
- * @author liwenqiang
+ * @author liwenqiang 2022/1/26 15:20
  */
 @Entity
-@Table(name = "user_role")
-public class UserRole extends AbstractEntity {
+@Table(name = "account_role")
+public class AccountRole extends AbstractEntity {
 
     /**
      * 用户主键
      */
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "account_id")
+    private Long accountId;
     /**
      * 组主键
      */
@@ -28,12 +28,12 @@ public class UserRole extends AbstractEntity {
     private Long roleId;
 
 
-    public Long getUserId() {
-        return userId;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
     public Long getRoleId() {

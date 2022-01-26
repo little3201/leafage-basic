@@ -77,15 +77,15 @@ create table user
 alter table user comment '用户';
 
 
-drop table if exists user_role;
+drop table if exists account_role;
 
 /*==============================================================*/
-/* Table: user_role                                             */
+/* Table: account_role                                             */
 /*==============================================================*/
-create table user_role
+create table account_role
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   user_id              bigint not null comment '用户主键',
+   account_id           bigint not null comment '帐号主键',
    role_id              bigint not null comment '角色主键',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) comment '修改人',
@@ -93,7 +93,7 @@ create table user_role
    primary key (id)
 );
 
-alter table user_role comment '用户-角色';
+alter table account_role comment '帐号-角色';
 
 
 drop table if exists role;

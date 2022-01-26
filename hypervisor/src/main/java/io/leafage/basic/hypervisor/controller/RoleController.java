@@ -7,7 +7,7 @@ import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.entity.RoleAuthority;
 import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.service.RoleService;
-import io.leafage.basic.hypervisor.service.UserRoleService;
+import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
@@ -33,12 +33,12 @@ public class RoleController {
 
     private final Logger logger = LoggerFactory.getLogger(RoleController.class);
 
-    private final UserRoleService userRoleService;
+    private final AccountRoleService accountRoleService;
     private final RoleService roleService;
     private final RoleAuthorityService roleAuthorityService;
 
-    public RoleController(UserRoleService userRoleService, RoleService roleService, RoleAuthorityService roleAuthorityService) {
-        this.userRoleService = userRoleService;
+    public RoleController(AccountRoleService accountRoleService, RoleService roleService, RoleAuthorityService roleAuthorityService) {
+        this.accountRoleService = accountRoleService;
         this.roleService = roleService;
         this.roleAuthorityService = roleAuthorityService;
     }
@@ -162,7 +162,7 @@ public class RoleController {
     public ResponseEntity<List<UserVO>> users(@PathVariable String code) {
         List<UserVO> voList;
         try {
-            voList = userRoleService.users(code);
+            voList = accountRoleService.users(code);
         } catch (Exception e) {
             logger.error("Retrieve role users occurred an error: ", e);
             return ResponseEntity.noContent().build();

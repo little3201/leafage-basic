@@ -1,12 +1,12 @@
 package io.leafage.basic.hypervisor.service;
 
-import io.leafage.basic.hypervisor.entity.UserRole;
+import io.leafage.basic.hypervisor.entity.AccountRole;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import java.util.List;
 import java.util.Set;
 
-public interface UserRoleService {
+public interface AccountRoleService {
 
     /**
      * 查询关联权限
@@ -31,5 +31,5 @@ public interface UserRoleService {
      * @param roles    角色信息
      * @return 结果集
      */
-    List<UserRole> relation(String username, Set<String> roles);
+    List<AccountRole> relation(String username, Set<String> roles);
 }

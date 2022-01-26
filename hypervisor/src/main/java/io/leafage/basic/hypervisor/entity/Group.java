@@ -9,7 +9,7 @@ import javax.persistence.Table;
 /**
  * Model class for Group
  *
- * @author liwenqiang   2020-12-20 9:54
+ * @author liwenqiang  2020-12-20 9:54
  */
 @Entity
 @Table(name = "group_")

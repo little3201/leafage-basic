@@ -19,6 +19,10 @@ public class Account extends AbstractDocument {
      */
     private String username;
     /**
+     * 昵称
+     */
+    private String nickname;
+    /**
      * 密码
      */
     private String password;
@@ -48,6 +52,14 @@ public class Account extends AbstractDocument {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPassword() {

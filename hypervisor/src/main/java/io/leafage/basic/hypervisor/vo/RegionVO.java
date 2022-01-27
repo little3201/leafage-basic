@@ -14,22 +14,28 @@ import java.io.Serializable;
 public class RegionVO extends AbstractVO<Long> implements Serializable {
 
     private static final long serialVersionUID = 5064068749809388291L;
+
+    /**
+     * 名称
+     */
+    private String name;
     /**
      * 上级
      */
     private String superior;
     /**
-     * 名称
+     * 简称
      */
-    private String name;
+    private String alias;
+    /**
+     * 邮编
+     */
+    private String zip;
+    /**
+     * 描述
+     */
+    private String description;
 
-    public String getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(String superior) {
-        this.superior = superior;
-    }
 
     public String getName() {
         return name;
@@ -39,4 +45,35 @@ public class RegionVO extends AbstractVO<Long> implements Serializable {
         this.name = name;
     }
 
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

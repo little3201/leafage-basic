@@ -22,42 +22,61 @@ public class UserDTO implements Serializable {
     @Size(min = 4, max = 16)
     private String username;
     /**
-     * 密码
+     * 姓
      */
-    private String password;
+    private String firstname;
     /**
-     * 昵称
+     * 名
      */
-    @Size(max = 16)
-    private String nickname;
-    /**
-     * 头像
-     */
-    private String avatar;
+    private String lastname;
     /**
      * 电话
      */
-    @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}")
     private String phone;
     /**
      * 邮箱
      */
-    @NotBlank
-    @Email
     private String email;
     /**
      * 性别: null-未知 F-女 M-男
      */
     private Character gender;
     /**
-     * 生日
+     * 出生日期
      */
-    @Past
     private LocalDate birthday;
     /**
-     * 修改人
+     * 学历
      */
-    private String modifier;
+    private String education;
+    /**
+     * 民族
+     */
+    private String ethnicity;
+    /**
+     * 国籍
+     */
+    private Long country;
+    /**
+     * 省/州/直辖市
+     */
+    private Long province;
+    /**
+     * 城市
+     */
+    private Long city;
+    /**
+     * 区/县
+     */
+    private Long region;
+    /**
+     * 街道
+     */
+    private Long street;
+    /**
+     * 地址
+     */
+    private String address;
 
 
     public String getUsername() {
@@ -68,28 +87,20 @@ public class UserDTO implements Serializable {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getPhone() {
@@ -116,11 +127,75 @@ public class UserDTO implements Serializable {
         this.gender = gender;
     }
 
-    public String getModifier() {
-        return modifier;
+    public LocalDate getBirthday() {
+        return birthday;
     }
 
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(String ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public Long getCountry() {
+        return country;
+    }
+
+    public void setCountry(Long country) {
+        this.country = country;
+    }
+
+    public Long getProvince() {
+        return province;
+    }
+
+    public void setProvince(Long province) {
+        this.province = province;
+    }
+
+    public Long getCity() {
+        return city;
+    }
+
+    public void setCity(Long city) {
+        this.city = city;
+    }
+
+    public Long getRegion() {
+        return region;
+    }
+
+    public void setRegion(Long region) {
+        this.region = region;
+    }
+
+    public Long getStreet() {
+        return street;
+    }
+
+    public void setStreet(Long street) {
+        this.street = street;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

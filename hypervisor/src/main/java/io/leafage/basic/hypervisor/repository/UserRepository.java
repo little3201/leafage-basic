@@ -5,10 +5,8 @@ package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.document.User;
 import org.bson.types.ObjectId;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -18,14 +16,6 @@ import reactor.core.publisher.Mono;
  **/
 @Repository
 public interface UserRepository extends ReactiveMongoRepository<User, ObjectId> {
-
-    /**
-     * 分页查询用户
-     *
-     * @param pageable 分页参数
-     * @return 有效用户
-     */
-    Flux<User> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据账号查

@@ -6,12 +6,12 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.document.Authority;
 import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.document.User;
-import io.leafage.basic.hypervisor.document.UserRole;
+import io.leafage.basic.hypervisor.document.AccountRole;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.basic.hypervisor.repository.UserRoleRepository;
+import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +38,7 @@ class AuthorityServiceImplTest {
     private UserRepository userRepository;
 
     @Mock
-    private UserRoleRepository userRoleRepository;
+    private AccountRoleRepository accountRoleRepository;
 
     @Mock
     private AuthorityRepository authorityRepository;
@@ -169,13 +169,13 @@ class AuthorityServiceImplTest {
         given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(Mockito.anyString(), Mockito.anyString(),
                 Mockito.anyString())).willReturn(Mono.just(user));
 
-        UserRole userRole = new UserRole();
-        userRole.setUserId(user.getId());
-        userRole.setRoleId(new ObjectId());
-        given(this.userRoleRepository.findByUserIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(userRole));
+        AccountRole accountRole = new AccountRole();
+        accountRole.setAccountId(user.getId());
+        accountRole.setRoleId(new ObjectId());
+        given(this.accountRoleRepository.findByAccountIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(accountRole));
 
         RoleAuthority roleAuthority = new RoleAuthority();
-        roleAuthority.setRoleId(userRole.getRoleId());
+        roleAuthority.setRoleId(accountRole.getRoleId());
         roleAuthority.setAuthorityId(new ObjectId());
         given(this.roleAuthorityRepository.findByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(roleAuthority));
 

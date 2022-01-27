@@ -1,6 +1,5 @@
 package io.leafage.basic.hypervisor.service;
 
-import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -30,7 +29,7 @@ public interface RoleAuthorityService {
      *
      * @param code        角色代码
      * @param authorities 权限信息
-     * @return 结果集
+     * @return 是否成功： true - 是， false - 否
      */
-    Flux<RoleAuthority> relation(String code, Set<String> authorities);
+    Mono<Boolean> relation(String code, Set<String> authorities);
 }

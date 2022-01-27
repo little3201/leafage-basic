@@ -3,13 +3,12 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.document.RoleAuthority;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
+import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.service.RoleService;
-import io.leafage.basic.hypervisor.service.UserRoleService;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,13 +32,13 @@ public class RoleController {
 
     private final Logger logger = LoggerFactory.getLogger(RoleController.class);
 
-    private final UserRoleService userRoleService;
+    private final AccountRoleService accountRoleService;
     private final RoleService roleService;
     private final RoleAuthorityService roleAuthorityService;
 
-    public RoleController(UserRoleService userRoleService, RoleService roleService,
+    public RoleController(AccountRoleService accountRoleService, RoleService roleService,
                           RoleAuthorityService roleAuthorityService) {
-        this.userRoleService = userRoleService;
+        this.accountRoleService = accountRoleService;
         this.roleService = roleService;
         this.roleAuthorityService = roleAuthorityService;
     }
@@ -180,13 +179,13 @@ public class RoleController {
      * @param code 角色code
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{code}/user")
-    public ResponseEntity<Flux<UserVO>> users(@PathVariable String code) {
-        Flux<UserVO> voFlux;
+    @GetMapping("/{code}/account")
+    public ResponseEntity<Flux<AccountVO>> accounts(@PathVariable String code) {
+        Flux<AccountVO> voFlux;
         try {
-            voFlux = userRoleService.users(code);
+            voFlux = accountRoleService.accounts(code);
         } catch (Exception e) {
-            logger.error("Retrieve role users occurred an error: ", e);
+            logger.error("Retrieve role accounts occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
@@ -218,15 +217,15 @@ public class RoleController {
      * @return 操作结果
      */
     @PatchMapping("/{code}/authority")
-    public ResponseEntity<Flux<RoleAuthority>> relation(@PathVariable String code, @RequestBody Set<String> authorities) {
-        Flux<RoleAuthority> voFlux;
+    public ResponseEntity<Mono<Boolean>> relation(@PathVariable String code, @RequestBody Set<String> authorities) {
+        Mono<Boolean> voMono;
         try {
-            voFlux = roleAuthorityService.relation(code, authorities);
+            voMono = roleAuthorityService.relation(code, authorities);
         } catch (Exception e) {
             logger.error("Relation role ah occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.accepted().body(voFlux);
+        return ResponseEntity.accepted().body(voMono);
     }
 
 }

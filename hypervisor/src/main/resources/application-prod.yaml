@@ -1,9 +1,9 @@
 ##=====log common=====##
 logging:
   level:
-    root: INFO
+    root: info
     org:
-      springframework: INFO
+      springframework: info
 
 spring:
   cloud:

@@ -51,14 +51,21 @@ class StatisticsServiceImplTest {
         posts.setComment(2);
         given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
 
-        Statistics statistics = new Statistics();
-        statistics.setDate(LocalDate.now());
-        statistics.setId(new ObjectId());
-        statistics.setLikes(123);
-        statistics.setComment(12);
-        statistics.setViewed(3234);
-        given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
-                .willReturn(Mono.just(statistics));
+        Statistics ys = new Statistics();
+        ys.setDate(LocalDate.now().minusDays(2));
+        ys.setLikes(198);
+        ys.setComment(27);
+        ys.setViewed(8390);
+        given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(2)))
+                .willReturn(Mono.just(ys));
+
+        Statistics bys = new Statistics();
+        bys.setDate(LocalDate.now().minusDays(3));
+        bys.setLikes(123);
+        bys.setComment(12);
+        bys.setViewed(3234);
+        given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(3)))
+                .willReturn(Mono.just(bys));
 
         given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));

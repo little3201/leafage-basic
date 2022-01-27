@@ -55,10 +55,10 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
     }
 
     @Override
-    public Flux<RoleAuthority> relation(String code, Set<String> authorities) {
+    public Mono<Boolean> relation(String code, Set<String> authorities) {
         Assert.hasText(code, MESSAGE);
         Assert.notNull(authorities, "authorities is null");
-        return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
+        Flux<RoleAuthority> flux = roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(role -> {
                     RoleAuthority roleAuthority = new RoleAuthority();
                     roleAuthority.setRoleId(role.getId());
@@ -68,5 +68,6 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
                             }).switchIfEmpty(Mono.error(NoSuchElementException::new))
                             .collectList().flatMapMany(roleAuthorityRepository::saveAll);
                 });
+        return flux.hasElements();
     }
 }

@@ -79,4 +79,22 @@ public class RegionController {
         }
         return ResponseEntity.ok(count);
     }
+
+    /**
+     * 查询下级数据
+     *
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("/{code}/lower")
+    public ResponseEntity<Flux<RegionVO>> lower(@PathVariable Long code) {
+        Flux<RegionVO> voFlux;
+        try {
+            voFlux = regionService.lower(code);
+        } catch (Exception e) {
+            logger.info("Retrieve region lower occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
+    }
+
 }

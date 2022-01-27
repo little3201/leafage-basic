@@ -9,7 +9,7 @@ import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.basic.hypervisor.repository.UserRoleRepository;
+import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.springframework.beans.BeanUtils;
@@ -34,14 +34,14 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
     private static final String MESSAGE = "code is blank.";
 
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+    private final AccountRoleRepository accountRoleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
 
-    public AuthorityServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository,
+    public AuthorityServiceImpl(UserRepository userRepository, AccountRoleRepository accountRoleRepository,
                                 RoleAuthorityRepository roleAuthorityRepository, AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
+        this.accountRoleRepository = accountRoleRepository;
         this.roleAuthorityRepository = roleAuthorityRepository;
         this.authorityRepository = authorityRepository;
     }
@@ -70,7 +70,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
         Mono<User> userMono = userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(username, username, username)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
 
-        return userMono.map(user -> userRoleRepository.findByUserIdAndEnabledTrue(user.getId()).flatMap(userRole ->
+        return userMono.map(user -> accountRoleRepository.findByAccountIdAndEnabledTrue(user.getId()).flatMap(userRole ->
                 roleAuthorityRepository.findByRoleIdAndEnabledTrue(userRole.getRoleId()).flatMap(roleAuthority ->
                         authorityRepository.findById(roleAuthority.getAuthorityId())))).flatMapMany(this::convertTree);
     }

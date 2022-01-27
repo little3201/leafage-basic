@@ -12,24 +12,24 @@ import java.io.Serializable;
  **/
 public class RegionDTO implements Serializable {
 
-    private static final long serialVersionUID = -5578717024301173901L;
+    private static final long serialVersionUID = -2220657046421273787L;
 
     /**
      * 名称
      */
     private String name;
     /**
-     * 别名
+     * 上级
+     */
+    private Long superior;
+    /**
+     * 简称
      */
     private String alias;
     /**
      * 邮编
      */
-    private Integer zip;
-    /**
-     * 上级
-     */
-    private Long superior;
+    private String zip;
     /**
      * 描述
      */
@@ -60,11 +60,11 @@ public class RegionDTO implements Serializable {
         this.alias = alias;
     }
 
-    public Integer getZip() {
+    public String getZip() {
         return zip;
     }
 
-    public void setZip(Integer zip) {
+    public void setZip(String zip) {
         this.zip = zip;
     }
 

@@ -15,9 +15,13 @@ public class AccountVO implements Serializable {
     private static final long serialVersionUID = 2227758644875658137L;
 
     /**
-     * 用户名
+     * 账号
      */
     private String username;
+    /**
+     * 昵称
+     */
+    private String nickname;
     /**
      * 头像
      */
@@ -41,6 +45,14 @@ public class AccountVO implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getAvatar() {

@@ -9,13 +9,10 @@ import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import java.util.NoSuchElementException;
 
 
@@ -33,13 +30,6 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Override
-    public Flux<UserVO> retrieve(int page, int size) {
-        return userRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .map(this::convertOuter);
     }
 
     @Override

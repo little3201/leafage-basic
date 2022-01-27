@@ -6,7 +6,7 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
-import io.leafage.basic.hypervisor.repository.UserRoleRepository;
+import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
@@ -31,11 +31,11 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
 
     private static final String MESSAGE = "code is blank.";
 
-    private final UserRoleRepository userRoleRepository;
+    private final AccountRoleRepository accountRoleRepository;
     private final RoleRepository roleRepository;
 
-    public RoleServiceImpl(UserRoleRepository userRoleRepository, RoleRepository roleRepository) {
-        this.userRoleRepository = userRoleRepository;
+    public RoleServiceImpl(AccountRoleRepository accountRoleRepository, RoleRepository roleRepository) {
+        this.accountRoleRepository = accountRoleRepository;
         this.roleRepository = roleRepository;
     }
 
@@ -160,7 +160,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
             RoleVO roleVO = new RoleVO();
             BeanUtils.copyProperties(r, roleVO);
             return roleVO;
-        }).flatMap(vo -> userRoleRepository.countByRoleIdAndEnabledTrue(role.getId())
+        }).flatMap(vo -> accountRoleRepository.countByRoleIdAndEnabledTrue(role.getId())
                 .map(count -> {
                     vo.setCount(count);
                     return vo;

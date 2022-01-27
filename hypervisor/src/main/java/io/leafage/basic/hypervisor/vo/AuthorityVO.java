@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 import top.leafage.common.basic.AbstractVO;
+import java.io.Serializable;
 
 import java.io.Serializable;
 

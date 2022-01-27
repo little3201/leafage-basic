@@ -7,7 +7,7 @@ import io.leafage.basic.hypervisor.document.Group;
 import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.UserGroupRepository;
+import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class GroupServiceImplTest {
     private GroupRepository groupRepository;
 
     @Mock
-    private UserGroupRepository userGroupRepository;
+    private AccountGroupRepository accountGroupRepository;
 
     @Mock
     private UserRepository userRepository;
@@ -52,7 +52,7 @@ class GroupServiceImplTest {
         group.setPrincipal(new ObjectId());
         given(this.groupRepository.findByEnabledTrue()).willReturn(Flux.just(group));
 
-        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
@@ -70,7 +70,7 @@ class GroupServiceImplTest {
         group.setPrincipal(new ObjectId());
         given(this.groupRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(group));
 
-        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
@@ -110,7 +110,7 @@ class GroupServiceImplTest {
         group.setId(new ObjectId());
         given(this.groupRepository.insert(Mockito.any(Group.class))).willReturn(Mono.just(group));
 
-        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
@@ -126,7 +126,7 @@ class GroupServiceImplTest {
         group.setSuperior(new ObjectId());
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mono.just(group));
 
-        given(this.userGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 

@@ -6,7 +6,7 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
-import io.leafage.basic.hypervisor.repository.UserRoleRepository;
+import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +33,7 @@ class RoleServiceImplTest {
     private RoleRepository roleRepository;
 
     @Mock
-    private UserRoleRepository userRoleRepository;
+    private AccountRoleRepository accountRoleRepository;
 
     @InjectMocks
     private RoleServiceImpl roleService;
@@ -45,7 +45,7 @@ class RoleServiceImplTest {
         role.setSuperior(new ObjectId());
         given(this.roleRepository.findByEnabledTrue()).willReturn(Flux.just(role));
 
-        given(this.userRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(role));
         StepVerifier.create(roleService.retrieve()).expectNextCount(1).verifyComplete();
@@ -58,7 +58,7 @@ class RoleServiceImplTest {
         role.setSuperior(new ObjectId());
         given(this.roleRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(role));
 
-        given(this.userRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         role.setName("test");
         given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(role));
@@ -95,7 +95,7 @@ class RoleServiceImplTest {
         role.setId(new ObjectId());
         given(this.roleRepository.insert(Mockito.any(Role.class))).willReturn(Mono.just(role));
 
-        given(this.userRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
@@ -112,7 +112,7 @@ class RoleServiceImplTest {
         role.setSuperior(new ObjectId());
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mono.just(role));
 
-        given(this.userRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(role));
 

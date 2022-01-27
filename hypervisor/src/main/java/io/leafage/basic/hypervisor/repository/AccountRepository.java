@@ -5,8 +5,10 @@ package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.document.Account;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -18,18 +20,18 @@ import reactor.core.publisher.Mono;
 public interface AccountRepository extends ReactiveMongoRepository<Account, ObjectId> {
 
     /**
-     * 根据code查询enabled信息
+     * 分页查询
      *
-     * @param code 代码
-     * @return 账户信息
+     * @param pageable 分页参数
+     * @return 有效用户
      */
-    Mono<Account> getByCodeAndEnabledTrue(String code);
+    Flux<Account> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据username查询
+     * 根据账号查询
      *
-     * @param userId 账号
+     * @param username 账号
      * @return 账户信息
      */
-    Mono<Account> getByModifier(ObjectId userId);
+    Mono<Account> getByUsernameAndEnabledTrue(String username);
 }

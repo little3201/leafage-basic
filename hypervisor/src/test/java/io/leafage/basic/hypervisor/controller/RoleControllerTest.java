@@ -1,14 +1,12 @@
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.document.RoleAuthority;
-import io.leafage.basic.hypervisor.document.UserRole;
+import io.leafage.basic.hypervisor.document.AccountRole;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
+import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.service.RoleAuthorityService;
 import io.leafage.basic.hypervisor.service.RoleService;
-import io.leafage.basic.hypervisor.service.UserRoleService;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -37,7 +35,7 @@ class RoleControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private UserRoleService userRoleService;
+    private AccountRoleService accountRoleService;
 
     @MockBean
     private RoleService roleService;
@@ -182,21 +180,21 @@ class RoleControllerTest {
     }
 
     @Test
-    void users() {
-        UserVO userVO = new UserVO();
-        userVO.setUsername("little3201");
-        given(this.userRoleService.users(Mockito.anyString())).willReturn(Flux.just(userVO));
+    void accounts() {
+        AccountVO accountVO = new AccountVO();
+        accountVO.setUsername("little3201");
+        given(this.accountRoleService.accounts(Mockito.anyString())).willReturn(Flux.just(accountVO));
 
-        webTestClient.get().uri("/role/{code}/user", "21612OL34").exchange()
+        webTestClient.get().uri("/role/{code}/account", "21612OL34").exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserRole.class);
+                .expectBodyList(AccountRole.class);
     }
 
     @Test
-    void users_error() {
-        given(this.userRoleService.users(Mockito.anyString())).willThrow(new RuntimeException());
+    void accounts_error() {
+        given(this.accountRoleService.accounts(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/role/{code}/user", "21612OL34").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/role/{code}/account", "21612OL34").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -217,15 +215,12 @@ class RoleControllerTest {
 
     @Test
     void relation() {
-        RoleAuthority roleAuthority = new RoleAuthority();
-        roleAuthority.setAuthorityId(new ObjectId());
         given(this.roleAuthorityService.relation(Mockito.anyString(), Mockito.anySet()))
-                .willReturn(Flux.just(roleAuthority));
+                .willReturn(Mono.just(true));
 
         webTestClient.patch().uri("/role/{code}/authority", "21612OL34")
                 .bodyValue(Collections.singleton("21612OP34"))
-                .exchange().expectStatus().isAccepted()
-                .expectBodyList(UserRole.class);
+                .exchange().expectStatus().isAccepted();
     }
 
     @Test

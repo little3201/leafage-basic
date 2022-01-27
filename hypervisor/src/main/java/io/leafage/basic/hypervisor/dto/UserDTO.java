@@ -3,9 +3,7 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -19,16 +17,10 @@ public class UserDTO implements Serializable {
     private static final long serialVersionUID = -2259398095472923567L;
 
     /**
-     * 电话
+     * 账号
      */
-    @Pattern(regexp = "0?(13|14|15|17|18|19)[0-9]{9}")
-    private String phone;
-    /**
-     * 邮箱
-     */
-    @NotBlank
-    @Email
-    private String email;
+    @Size(min = 4, max = 16)
+    private String username;
     /**
      * 姓
      */
@@ -38,6 +30,14 @@ public class UserDTO implements Serializable {
      */
     private String lastname;
     /**
+     * 电话
+     */
+    private String phone;
+    /**
+     * 邮箱
+     */
+    private String email;
+    /**
      * 性别: null-未知 F-女 M-男
      */
     private Character gender;
@@ -46,45 +46,45 @@ public class UserDTO implements Serializable {
      */
     private LocalDate birthday;
     /**
-     * 国籍
+     * 学历
      */
-    private String country;
+    private String education;
     /**
      * 民族
      */
     private String ethnicity;
     /**
-     * 省/直辖市/州
+     * 国籍
      */
-    private String province;
+    private Long country;
     /**
-     * 市
+     * 省/州/直辖市
      */
-    private String city;
+    private Long province;
+    /**
+     * 城市
+     */
+    private Long city;
     /**
      * 区/县
      */
-    private String region;
+    private Long region;
+    /**
+     * 街道
+     */
+    private Long street;
     /**
      * 地址
      */
     private String address;
 
 
-    public String getPhone() {
-        return phone;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFirstname() {
@@ -103,6 +103,22 @@ public class UserDTO implements Serializable {
         this.lastname = lastname;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Character getGender() {
         return gender;
     }
@@ -119,12 +135,12 @@ public class UserDTO implements Serializable {
         this.birthday = birthday;
     }
 
-    public String getCountry() {
-        return country;
+    public String getEducation() {
+        return education;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setEducation(String education) {
+        this.education = education;
     }
 
     public String getEthnicity() {
@@ -135,28 +151,44 @@ public class UserDTO implements Serializable {
         this.ethnicity = ethnicity;
     }
 
-    public String getProvince() {
+    public Long getCountry() {
+        return country;
+    }
+
+    public void setCountry(Long country) {
+        this.country = country;
+    }
+
+    public Long getProvince() {
         return province;
     }
 
-    public void setProvince(String province) {
+    public void setProvince(Long province) {
         this.province = province;
     }
 
-    public String getCity() {
+    public Long getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(Long city) {
         this.city = city;
     }
 
-    public String getRegion() {
+    public Long getRegion() {
         return region;
     }
 
-    public void setRegion(String region) {
+    public void setRegion(Long region) {
         this.region = region;
+    }
+
+    public Long getStreet() {
+        return street;
+    }
+
+    public void setStreet(Long street) {
+        this.street = street;
     }
 
     public String getAddress() {

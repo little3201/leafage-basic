@@ -4,7 +4,6 @@
 package io.leafage.basic.hypervisor.vo;
 
 import top.leafage.common.basic.AbstractVO;
-
 import java.io.Serializable;
 
 /**
@@ -14,24 +13,24 @@ import java.io.Serializable;
  **/
 public class RegionVO extends AbstractVO<Long> implements Serializable {
 
-    private static final long serialVersionUID = 4445793379366765718L;
+    private static final long serialVersionUID = 5064068749809388291L;
 
     /**
      * 名称
      */
     private String name;
     /**
-     * 别名
+     * 上级
+     */
+    private String superior;
+    /**
+     * 简称
      */
     private String alias;
     /**
      * 邮编
      */
-    private Integer zip;
-    /**
-     * 上级
-     */
-    private String superior;
+    private String zip;
     /**
      * 描述
      */
@@ -46,6 +45,14 @@ public class RegionVO extends AbstractVO<Long> implements Serializable {
         this.name = name;
     }
 
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
+    }
+
     public String getAlias() {
         return alias;
     }
@@ -54,20 +61,12 @@ public class RegionVO extends AbstractVO<Long> implements Serializable {
         this.alias = alias;
     }
 
-    public Integer getZip() {
+    public String getZip() {
         return zip;
     }
 
-    public void setZip(Integer zip) {
+    public void setZip(String zip) {
         this.zip = zip;
-    }
-
-    public String getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(String superior) {
-        this.superior = superior;
     }
 
     public String getDescription() {

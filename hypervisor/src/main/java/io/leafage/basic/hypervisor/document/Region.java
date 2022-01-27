@@ -24,18 +24,18 @@ public class Region extends AbstractDocument {
      */
     private String name;
     /**
-     * 别名
+     * 简称
      */
     private String alias;
-    /**
-     * 邮编
-     */
-    private Integer zip;
     /**
      * 上级
      */
     @Indexed(sparse = true)
     private Long superior;
+    /**
+     * 邮编
+     */
+    private String zip;
     /**
      * 描述
      */
@@ -57,14 +57,6 @@ public class Region extends AbstractDocument {
         this.name = name;
     }
 
-    public Long getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(Long superior) {
-        this.superior = superior;
-    }
-
     public String getAlias() {
         return alias;
     }
@@ -73,11 +65,19 @@ public class Region extends AbstractDocument {
         this.alias = alias;
     }
 
-    public Integer getZip() {
+    public Long getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(Long superior) {
+        this.superior = superior;
+    }
+
+    public String getZip() {
         return zip;
     }
 
-    public void setZip(Integer zip) {
+    public void setZip(String zip) {
         this.zip = zip;
     }
 

@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -44,14 +43,43 @@ class RegionServiceImplTest {
     void fetch() {
         Region region = new Region();
         region.setId(new ObjectId());
-        region.setName("陕西省");
-        region.setAlias("陕");
-        region.setZip(123123);
         region.setCode(2L);
-        region.setDescription("中国陕西");
+        region.setName("北京市");
+        region.setAlias("京");
+        region.setZip("23423080");
+        region.setDescription("描述");
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
 
         StepVerifier.create(regionService.fetch(1100L)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void lower() {
+        Region region = new Region();
+        region.setId(new ObjectId());
+        region.setCode(2L);
+        region.setName("北京市");
+        region.setAlias("京");
+        region.setZip("23423080");
+        region.setDescription("描述");
+        given(this.regionRepository.findByCodeBetweenAndEnabledTrue(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(Flux.just(region));
+
+        StepVerifier.create(regionService.lower(11L)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void count() {
+        given(this.regionRepository.count()).willReturn(Mono.just(2L));
+
+        StepVerifier.create(regionService.count()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void exist() {
+        given(this.regionRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        StepVerifier.create(regionService.exist("北京市")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test
@@ -61,9 +89,8 @@ class RegionServiceImplTest {
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
 
         RegionDTO regionDTO = new RegionDTO();
-        regionDTO.setAlias("京");
-        regionDTO.setName("北京市");
-        regionDTO.setDescription("中国北京");
+        regionDTO.setName("测试村");
+        regionDTO.setSuperior(11001L);
         StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -74,16 +101,35 @@ class RegionServiceImplTest {
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
 
         RegionDTO regionDTO = new RegionDTO();
-        regionDTO.setZip(1100123);
         regionDTO.setName("测试村");
         regionDTO.setSuperior(1100L);
         StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
-    void count() {
-        given(this.regionRepository.count()).willReturn(Mono.just(2L));
+    void modify() {
+        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.count()).expectNextCount(1).verifyComplete();
+        Region region = new Region();
+        region.setId(new ObjectId());
+        region.setSuperior(2L);
+        given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mono.just(region));
+
+        RegionDTO regionDTO = new RegionDTO();
+        regionDTO.setName("测试村");
+        regionDTO.setSuperior(1100L);
+        StepVerifier.create(regionService.modify(11L, regionDTO)).expectNextCount(1).verifyComplete();
     }
+
+    @Test
+    void remove() {
+        Region region = new Region();
+        region.setId(new ObjectId());
+        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
+
+        given(this.regionRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());
+
+        StepVerifier.create(regionService.remove(11L)).verifyComplete();
+    }
+
 }

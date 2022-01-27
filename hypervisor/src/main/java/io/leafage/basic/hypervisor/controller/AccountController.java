@@ -4,16 +4,22 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.AccountDTO;
+import io.leafage.basic.hypervisor.service.AccountGroupService;
+import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.service.AccountService;
+import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import top.leafage.common.basic.TreeNode;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 账户信息Controller
@@ -27,9 +33,35 @@ public class AccountController {
     private final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private final AccountService accountService;
+    private final AccountGroupService accountGroupService;
+    private final AccountRoleService accountRoleService;
+    private final AuthorityService authorityService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService, AccountGroupService accountGroupService,
+                             AccountRoleService accountRoleService, AuthorityService authorityService) {
         this.accountService = accountService;
+        this.accountGroupService = accountGroupService;
+        this.accountRoleService = accountRoleService;
+        this.authorityService = authorityService;
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param page 页码
+     * @param size 大小
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @GetMapping
+    public ResponseEntity<Flux<AccountVO>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Flux<AccountVO> voFlux;
+        try {
+            voFlux = accountService.retrieve(page, size);
+        } catch (Exception e) {
+            logger.error("Retrieve user occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
     }
 
     /**
@@ -105,4 +137,95 @@ public class AccountController {
         return ResponseEntity.ok(voidMono);
     }
 
+    /**
+     * 查询关联分组
+     *
+     * @param username 账号
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{username}/group")
+    public ResponseEntity<Mono<List<String>>> group(@PathVariable String username) {
+        Mono<List<String>> listMono;
+        try {
+            listMono = accountGroupService.groups(username);
+        } catch (Exception e) {
+            logger.error("Retrieve user groups occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(listMono);
+    }
+
+    /**
+     * 关联分组
+     *
+     * @param username 账户
+     * @param groups   分组
+     * @return 操作结果
+     */
+    @PatchMapping("/{username}/group")
+    public ResponseEntity<Mono<Boolean>> group(@PathVariable String username, @RequestBody Set<String> groups) {
+        Mono<Boolean> voMono;
+        try {
+            voMono = accountGroupService.relation(username, groups);
+        } catch (Exception e) {
+            logger.error("create user groups occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.accepted().body(voMono);
+    }
+
+    /**
+     * 查询关联角色
+     *
+     * @param username 用户username
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{username}/role")
+    public ResponseEntity<Mono<List<String>>> role(@PathVariable String username) {
+        Mono<List<String>> listMono;
+        try {
+            listMono = accountRoleService.roles(username);
+        } catch (Exception e) {
+            logger.error("Retrieve user roles occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(listMono);
+    }
+
+    /**
+     * 关联角色
+     *
+     * @param username 账户
+     * @param roles    分组
+     * @return 操作结果
+     */
+    @PatchMapping("/{username}/role")
+    public ResponseEntity<Mono<Boolean>> role(@PathVariable String username, @RequestBody Set<String> roles) {
+        Mono<Boolean> voMono;
+        try {
+            voMono = accountRoleService.relation(username, roles);
+        } catch (Exception e) {
+            logger.error("create user groups occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.accepted().body(voMono);
+    }
+
+    /**
+     * 查询关联权限
+     *
+     * @param username 用户username
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @GetMapping("/{username}/authority")
+    public ResponseEntity<Flux<TreeNode>> authority(@PathVariable String username) {
+        Flux<TreeNode> authorities;
+        try {
+            authorities = authorityService.authorities(username);
+        } catch (Exception e) {
+            logger.error("Retrieve user authorities tree occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(authorities);
+    }
 }

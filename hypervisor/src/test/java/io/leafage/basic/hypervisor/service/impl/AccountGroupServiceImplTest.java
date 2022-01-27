@@ -1,11 +1,12 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.entity.Account;
+import io.leafage.basic.hypervisor.entity.AccountGroup;
 import io.leafage.basic.hypervisor.entity.Group;
 import io.leafage.basic.hypervisor.entity.User;
-import io.leafage.basic.hypervisor.entity.UserGroup;
+import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.UserGroupRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
@@ -26,30 +27,30 @@ import static org.mockito.BDDMockito.given;
  * @author liwenqiang 2021/7/5 17:36
  **/
 @ExtendWith(MockitoExtension.class)
-class UserGroupServiceImplTest {
+class AccountGroupServiceImplTest {
 
     @Mock
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     @Mock
-    private UserGroupRepository userGroupRepository;
+    private AccountGroupRepository accountGroupRepository;
 
     @Mock
     private GroupRepository groupRepository;
 
     @InjectMocks
-    private UserGroupServiceImpl userGroupService;
+    private AccountGroupServiceImpl userGroupService;
 
     @Test
     void users() {
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Group.class));
 
-        UserGroup userGroup = new UserGroup();
-        userGroup.setUserId(1L);
-        userGroup.setGroupId(1L);
-        given(this.userGroupRepository.findByGroupId(Mockito.anyLong())).willReturn(Collections.singletonList(userGroup));
+        AccountGroup accountGroup = new AccountGroup();
+        accountGroup.setAccountId(1L);
+        accountGroup.setGroupId(1L);
+        given(this.accountGroupRepository.findByGroupId(Mockito.anyLong())).willReturn(Collections.singletonList(accountGroup));
 
-        given(this.userRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(User.class)));
+        given(this.accountRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Account.class)));
 
         List<UserVO> users = userGroupService.users("test");
         Assertions.assertNotNull(users);
@@ -57,12 +58,12 @@ class UserGroupServiceImplTest {
 
     @Test
     void groups() {
-        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Account.class));
 
-        UserGroup userGroup = new UserGroup();
-        userGroup.setUserId(1L);
-        userGroup.setGroupId(1L);
-        given(this.userGroupRepository.findByUserId(Mockito.anyLong())).willReturn(Collections.singletonList(userGroup));
+        AccountGroup accountGroup = new AccountGroup();
+        accountGroup.setAccountId(1L);
+        accountGroup.setGroupId(1L);
+        given(this.accountGroupRepository.findByUserId(Mockito.anyLong())).willReturn(Collections.singletonList(accountGroup));
 
         given(this.groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Group.class)));
 
@@ -72,18 +73,18 @@ class UserGroupServiceImplTest {
 
     @Test
     void relation() {
-        User user = new User();
-        user.setId(1L);
-        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
+        Account account = new Account();
+        account.setId(1L);
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(account);
 
         Group group = new Group();
         group.setId(2L);
         group.setPrincipal(1L);
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
-        given(this.userGroupRepository.saveAll(Mockito.anyCollection())).willReturn(Mockito.anyList());
+        given(this.accountGroupRepository.saveAll(Mockito.anyCollection())).willReturn(Mockito.anyList());
 
-        List<UserGroup> relation = userGroupService.relation("test", Collections.singleton("test"));
+        List<AccountGroup> relation = userGroupService.relation("test", Collections.singleton("test"));
         Assertions.assertNotNull(relation);
     }
 }

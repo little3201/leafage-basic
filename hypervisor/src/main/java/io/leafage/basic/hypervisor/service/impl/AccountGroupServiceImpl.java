@@ -1,12 +1,12 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.entity.Account;
+import io.leafage.basic.hypervisor.entity.AccountGroup;
 import io.leafage.basic.hypervisor.entity.Group;
-import io.leafage.basic.hypervisor.entity.User;
-import io.leafage.basic.hypervisor.entity.UserGroup;
+import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.UserGroupRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.basic.hypervisor.service.UserGroupService;
+import io.leafage.basic.hypervisor.service.AccountGroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
@@ -20,16 +20,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class UserGroupServiceImpl implements UserGroupService {
+public class AccountGroupServiceImpl implements AccountGroupService {
 
-    private final UserRepository userRepository;
-    private final UserGroupRepository userGroupRepository;
+    private final AccountRepository accountRepository;
+    private final AccountGroupRepository accountGroupRepository;
     private final GroupRepository groupRepository;
 
-    public UserGroupServiceImpl(UserRepository userRepository, UserGroupRepository userGroupRepository,
-                                GroupRepository groupRepository) {
-        this.userRepository = userRepository;
-        this.userGroupRepository = userGroupRepository;
+    public AccountGroupServiceImpl(AccountRepository accountRepository, AccountGroupRepository accountGroupRepository,
+                                   GroupRepository groupRepository) {
+        this.accountRepository = accountRepository;
+        this.accountGroupRepository = accountGroupRepository;
         this.groupRepository = groupRepository;
     }
 
@@ -39,8 +39,8 @@ public class UserGroupServiceImpl implements UserGroupService {
         if (group == null) {
             return Collections.emptyList();
         }
-        List<UserGroup> userGroups = userGroupRepository.findByGroupId(group.getId());
-        return userGroups.stream().map(userGroup -> userRepository.findById(userGroup.getUserId()))
+        List<AccountGroup> accountGroups = accountGroupRepository.findByGroupId(group.getId());
+        return accountGroups.stream().map(userGroup -> accountRepository.findById(userGroup.getAccountId()))
                 .map(Optional::orElseThrow).map(user -> {
                     UserVO userVO = new UserVO();
                     BeanUtils.copyProperties(user, userVO);
@@ -51,15 +51,15 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Override
     public List<GroupVO> groups(String username) {
         Assert.hasText(username, "username is blank");
-        User user = userRepository.getByUsernameAndEnabledTrue(username);
-        if (user == null) {
+        Account account = accountRepository.getByUsernameAndEnabledTrue(username);
+        if (account == null) {
             return Collections.emptyList();
         }
-        List<UserGroup> userGroups = userGroupRepository.findByUserId(user.getId());
-        if (CollectionUtils.isEmpty(userGroups)) {
+        List<AccountGroup> accountGroups = accountGroupRepository.findByUserId(account.getId());
+        if (CollectionUtils.isEmpty(accountGroups)) {
             return Collections.emptyList();
         }
-        return userGroups.stream().map(userGroup -> groupRepository.findById(userGroup.getGroupId()))
+        return accountGroups.stream().map(userGroup -> groupRepository.findById(userGroup.getGroupId()))
                 .map(Optional::orElseThrow).map(role -> {
                     GroupVO groupVO = new GroupVO();
                     BeanUtils.copyProperties(role, groupVO);
@@ -68,20 +68,20 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public List<UserGroup> relation(String username, Set<String> groups) {
+    public List<AccountGroup> relation(String username, Set<String> groups) {
         Assert.hasText(username, "username is blank");
         Assert.notNull(groups, "groups is null");
-        User user = userRepository.getByUsernameAndEnabledTrue(username);
-        if (user == null) {
+        Account account = accountRepository.getByUsernameAndEnabledTrue(username);
+        if (account == null) {
             return Collections.emptyList();
         }
-        List<UserGroup> userGroups = groups.stream().map(s -> {
+        List<AccountGroup> accountGroups = groups.stream().map(s -> {
             Group group = groupRepository.getByCodeAndEnabledTrue(s);
-            UserGroup userRole = new UserGroup();
-            userRole.setUserId(user.getId());
+            AccountGroup userRole = new AccountGroup();
+            userRole.setAccountId(account.getId());
             userRole.setGroupId(group.getId());
             return userRole;
         }).collect(Collectors.toList());
-        return userGroupRepository.saveAll(userGroups);
+        return accountGroupRepository.saveAll(accountGroups);
     }
 }

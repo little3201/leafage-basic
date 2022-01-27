@@ -124,7 +124,8 @@ class RoleControllerTest {
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
         mvc.perform(post("/role").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(roleDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(roleDTO)).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -169,13 +170,14 @@ class RoleControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.roleService).remove(Mockito.anyString());
 
-        mvc.perform(delete("/role/{code}", "test").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/role/{code}", "test").with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void users() throws Exception {
-        given(this.accountRoleService.users(Mockito.anyString())).willReturn(Mockito.anyList());
+        given(this.accountRoleService.accounts(Mockito.anyString())).willReturn(Mockito.anyList());
 
         mvc.perform(get("/role/{code}/user", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
@@ -183,7 +185,7 @@ class RoleControllerTest {
 
     @Test
     void users_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.accountRoleService).users(Mockito.anyString());
+        doThrow(new RuntimeException()).when(this.accountRoleService).accounts(Mockito.anyString());
 
         mvc.perform(get("/role/{code}/user", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
@@ -214,7 +216,8 @@ class RoleControllerTest {
                 .willReturn(Collections.singletonList(roleAuthority));
 
         mvc.perform(patch("/role/{code}/authority", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isAccepted())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader()))
+                .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
 
@@ -223,7 +226,8 @@ class RoleControllerTest {
         doThrow(new RuntimeException()).when(this.roleAuthorityService).relation(Mockito.anyString(), Mockito.anySet());
 
         mvc.perform(patch("/role/{code}/authority", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

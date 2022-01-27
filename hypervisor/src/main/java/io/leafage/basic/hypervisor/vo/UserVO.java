@@ -25,6 +25,10 @@ public class UserVO implements Serializable {
      */
     private String lastname;
     /**
+     * 性别
+     */
+    private Character gender;
+    /**
      * 手机号
      */
     private String phone;
@@ -84,6 +88,14 @@ public class UserVO implements Serializable {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public Character getGender() {
+        return gender;
+    }
+
+    public void setGender(Character gender) {
+        this.gender = gender;
     }
 
     public String getPhone() {

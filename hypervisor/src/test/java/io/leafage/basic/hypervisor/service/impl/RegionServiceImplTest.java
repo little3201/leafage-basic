@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.entity.Region;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.vo.RegionVO;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * region service test
@@ -58,5 +61,49 @@ class RegionServiceImplTest {
         RegionVO regionVO = regionService.fetch(11L);
 
         Assertions.assertNotNull(regionVO);
+    }
+
+    @Test
+    void create() {
+        given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mockito.mock(Region.class));
+
+        RegionDTO regionDTO = new RegionDTO();
+        regionDTO.setName("test");
+        regionDTO.setZip("23234");
+        regionDTO.setDescription("描述");
+        RegionVO regionVO = regionService.create(regionDTO);
+
+        verify(this.regionRepository, times(1)).save(Mockito.any(Region.class));
+        Assertions.assertNotNull(regionVO);
+    }
+
+    @Test
+    void modify() {
+        Region region = new Region();
+        region.setCode(1101L);
+        region.setName("广东省");
+        region.setAlias("粤");
+        region.setSuperior(1L);
+        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(region);
+
+        given(this.regionRepository.saveAndFlush(Mockito.any(Region.class))).willReturn(Mockito.mock(Region.class));
+
+        RegionDTO regionDTO = new RegionDTO();
+        regionDTO.setName("test");
+        regionDTO.setZip("23234");
+        regionDTO.setDescription("描述");
+        RegionVO regionVO = regionService.modify(11L, regionDTO);
+
+        verify(this.regionRepository, times(1)).saveAndFlush(Mockito.any(Region.class));
+        Assertions.assertNotNull(regionVO);
+    }
+
+    @Test
+    void remove() {
+        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(Region.class));
+
+        regionService.remove(11L);
+
+        verify(this.regionRepository, times(1)).deleteById(Mockito.anyLong());
     }
 }

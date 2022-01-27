@@ -21,23 +21,23 @@ create table group_
 alter table group_ comment '分组';
 
 
-drop table if exists user_group;
+drop table if exists account_group;
 
 /*==============================================================*/
-/* Table: user_group                                            */
+/* Table: account_group                                            */
 /*==============================================================*/
-create table user_group
+create table account_group
 (
    id                   bigint unsigned not null auto_increment comment '主键',
    group_id             bigint not null comment '分组主键',
-   user_id              bigint not null comment '用户主键',
+   account_id           bigint not null comment '账号主键',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) comment '修改人',
    modify_time          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id)
 );
 
-alter table user_group comment '用户-分组';
+alter table account_group comment '账号-分组';
 
 
 drop table if exists user;

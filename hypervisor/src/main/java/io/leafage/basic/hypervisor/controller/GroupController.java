@@ -5,7 +5,7 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupService;
-import io.leafage.basic.hypervisor.service.UserGroupService;
+import io.leafage.basic.hypervisor.service.AccountGroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
@@ -28,11 +28,11 @@ public class GroupController {
 
     private final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
-    private final UserGroupService userGroupService;
+    private final AccountGroupService accountGroupService;
     private final GroupService groupService;
 
-    public GroupController(UserGroupService userGroupService, GroupService groupService) {
-        this.userGroupService = userGroupService;
+    public GroupController(AccountGroupService accountGroupService, GroupService groupService) {
+        this.accountGroupService = accountGroupService;
         this.groupService = groupService;
     }
 
@@ -63,14 +63,14 @@ public class GroupController {
      */
     @GetMapping("/tree")
     public ResponseEntity<List<TreeNode>> tree() {
-        List<TreeNode> authorities;
+        List<TreeNode> treeNodes;
         try {
-            authorities = groupService.tree();
+            treeNodes = groupService.tree();
         } catch (Exception e) {
             logger.info("Retrieve group tree occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(authorities);
+        return ResponseEntity.ok(treeNodes);
     }
 
     /**
@@ -155,7 +155,7 @@ public class GroupController {
     public ResponseEntity<List<UserVO>> users(@PathVariable String code) {
         List<UserVO> voList;
         try {
-            voList = userGroupService.users(code);
+            voList = accountGroupService.users(code);
         } catch (Exception e) {
             logger.error("Retrieve group users occurred an error: ", e);
             return ResponseEntity.noContent().build();

@@ -6,11 +6,11 @@ package io.leafage.basic.hypervisor.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.dto.UserDTO;
-import io.leafage.basic.hypervisor.entity.UserGroup;
+import io.leafage.basic.hypervisor.entity.AccountGroup;
 import io.leafage.basic.hypervisor.entity.AccountRole;
 import io.leafage.basic.hypervisor.service.AccountService;
 import io.leafage.basic.hypervisor.service.AuthorityService;
-import io.leafage.basic.hypervisor.service.UserGroupService;
+import io.leafage.basic.hypervisor.service.AccountGroupService;
 import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.junit.jupiter.api.Test;
@@ -56,7 +56,7 @@ class AccountControllerTest {
     private AccountService accountService;
 
     @MockBean
-    private UserGroupService userGroupService;
+    private AccountGroupService accountGroupService;
 
     @MockBean
     private AccountRoleService accountRoleService;
@@ -135,7 +135,8 @@ class AccountControllerTest {
     void remove() throws Exception {
         this.accountService.remove(Mockito.anyString());
 
-        mvc.perform(delete("/account/{username}", "test").with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/account/{username}", "test").with(csrf().asHeader()))
+                .andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -143,7 +144,8 @@ class AccountControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.accountService).remove(Mockito.anyString());
 
-        mvc.perform(delete("/account/{username}", "test").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/account/{username}", "test").with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -172,7 +174,8 @@ class AccountControllerTest {
                 .willReturn(Collections.singletonList(accountRole));
 
         mvc.perform(patch("/account/{username}/role", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isAccepted())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader()))
+                .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
 
@@ -181,13 +184,14 @@ class AccountControllerTest {
         given(this.accountRoleService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
         mvc.perform(patch("/account/{username}/role", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void groups() throws Exception {
-        given(this.userGroupService.groups(Mockito.anyString())).willReturn(Mockito.anyList());
+        given(this.accountGroupService.groups(Mockito.anyString())).willReturn(Mockito.anyList());
 
         mvc.perform(get("/account/{username}/group", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
@@ -195,7 +199,7 @@ class AccountControllerTest {
 
     @Test
     void groups_error() throws Exception {
-        given(this.userGroupService.groups(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.accountGroupService.groups(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/account/{username}/group", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
@@ -203,23 +207,25 @@ class AccountControllerTest {
 
     @Test
     void relation_group() throws Exception {
-        UserGroup userGroup = new UserGroup();
-        userGroup.setUserId(1L);
-        userGroup.setGroupId(1L);
-        given(this.userGroupService.relation(Mockito.anyString(), Mockito.anySet()))
-                .willReturn(Collections.singletonList(userGroup));
+        AccountGroup accountGroup = new AccountGroup();
+        accountGroup.setAccountId(1L);
+        accountGroup.setGroupId(1L);
+        given(this.accountGroupService.relation(Mockito.anyString(), Mockito.anySet()))
+                .willReturn(Collections.singletonList(accountGroup));
 
         mvc.perform(patch("/account/{username}/group", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isAccepted())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader()))
+                .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void relation_group_error() throws Exception {
-        given(this.userGroupService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
+        given(this.accountGroupService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
         mvc.perform(patch("/account/{username}/group", "test").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

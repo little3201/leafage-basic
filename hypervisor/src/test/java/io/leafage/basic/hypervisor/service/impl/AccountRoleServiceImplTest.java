@@ -1,11 +1,11 @@
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.entity.Role;
-import io.leafage.basic.hypervisor.entity.User;
+import io.leafage.basic.hypervisor.entity.Account;
 import io.leafage.basic.hypervisor.entity.AccountRole;
-import io.leafage.basic.hypervisor.repository.RoleRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.entity.Role;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
+import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.given;
 class AccountRoleServiceImplTest {
 
     @Mock
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     @Mock
     private AccountRoleRepository accountRoleRepository;
@@ -41,7 +41,7 @@ class AccountRoleServiceImplTest {
     private AccountRoleServiceImpl userRoleService;
 
     @Test
-    void users() {
+    void accounts() {
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Role.class));
 
         AccountRole accountRole = new AccountRole();
@@ -49,20 +49,20 @@ class AccountRoleServiceImplTest {
         accountRole.setRoleId(1L);
         given(this.accountRoleRepository.findByRoleId(Mockito.anyLong())).willReturn(Collections.singletonList(accountRole));
 
-        given(this.userRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(User.class)));
+        given(this.accountRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Account.class)));
 
-        List<UserVO> users = userRoleService.users("test");
+        List<UserVO> users = userRoleService.accounts("test");
         Assertions.assertNotNull(users);
     }
 
     @Test
     void roles() {
-        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Account.class));
 
         AccountRole accountRole = new AccountRole();
         accountRole.setAccountId(1L);
         accountRole.setRoleId(1L);
-        given(this.accountRoleRepository.findByUserId(Mockito.anyLong())).willReturn(Collections.singletonList(accountRole));
+        given(this.accountRoleRepository.findByAccountId(Mockito.anyLong())).willReturn(Collections.singletonList(accountRole));
 
         given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Role.class)));
 
@@ -72,9 +72,9 @@ class AccountRoleServiceImplTest {
 
     @Test
     void relation() {
-        User user = new User();
-        user.setId(1L);
-        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
+        Account account = new Account();
+        account.setId(1L);
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(account);
 
         Role role = new Role();
         role.setId(2L);

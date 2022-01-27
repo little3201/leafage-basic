@@ -141,7 +141,7 @@ class AuthorityServiceImplTest {
         AccountRole accountRole = new AccountRole();
         accountRole.setAccountId(account.getId());
         accountRole.setRoleId(2L);
-        given(this.accountRoleRepository.findByUserId(Mockito.anyLong())).willReturn(Collections.singletonList(accountRole));
+        given(this.accountRoleRepository.findByAccountId(Mockito.anyLong())).willReturn(Collections.singletonList(accountRole));
 
         RoleAuthority roleAuthority = new RoleAuthority();
         roleAuthority.setRoleId(accountRole.getRoleId());

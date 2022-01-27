@@ -4,11 +4,11 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.AccountDTO;
-import io.leafage.basic.hypervisor.entity.UserGroup;
+import io.leafage.basic.hypervisor.entity.AccountGroup;
 import io.leafage.basic.hypervisor.entity.AccountRole;
 import io.leafage.basic.hypervisor.service.AccountService;
 import io.leafage.basic.hypervisor.service.AuthorityService;
-import io.leafage.basic.hypervisor.service.UserGroupService;
+import io.leafage.basic.hypervisor.service.AccountGroupService;
 import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
@@ -36,14 +36,14 @@ public class AccountController {
     private final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     private final AccountService accountService;
-    private final UserGroupService userGroupService;
+    private final AccountGroupService accountGroupService;
     private final AccountRoleService accountRoleService;
     private final AuthorityService authorityService;
 
-    public AccountController(AccountService accountService, UserGroupService userGroupService, AccountRoleService accountRoleService,
+    public AccountController(AccountService accountService, AccountGroupService accountGroupService, AccountRoleService accountRoleService,
                              AuthorityService authorityService) {
         this.accountService = accountService;
-        this.userGroupService = userGroupService;
+        this.accountGroupService = accountGroupService;
         this.accountRoleService = accountRoleService;
         this.authorityService = authorityService;
     }
@@ -151,7 +151,7 @@ public class AccountController {
     public ResponseEntity<List<GroupVO>> groups(@PathVariable String username) {
         List<GroupVO> voList;
         try {
-            voList = userGroupService.groups(username);
+            voList = accountGroupService.groups(username);
         } catch (Exception e) {
             logger.error("Retrieve account groups occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -167,10 +167,10 @@ public class AccountController {
      * @return 操作结果
      */
     @PatchMapping("/{username}/group")
-    public ResponseEntity<List<UserGroup>> groups(@PathVariable String username, @RequestBody Set<String> groups) {
-        List<UserGroup> voList;
+    public ResponseEntity<List<AccountGroup>> groups(@PathVariable String username, @RequestBody Set<String> groups) {
+        List<AccountGroup> voList;
         try {
-            voList = userGroupService.relation(username, groups);
+            voList = accountGroupService.relation(username, groups);
         } catch (Exception e) {
             logger.error("create account groups occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

@@ -14,7 +14,7 @@ public interface AccountRoleService {
      * @param code 角色代码
      * @return 数据集
      */
-    List<UserVO> users(String code);
+    List<UserVO> accounts(String code);
 
     /**
      * 查询关联角色

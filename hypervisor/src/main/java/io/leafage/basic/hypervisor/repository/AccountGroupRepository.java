@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.entity.UserGroup;
+import io.leafage.basic.hypervisor.entity.AccountGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author liwenqiang 2018/12/17 19:37
  **/
 @Repository
-public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
+public interface AccountGroupRepository extends JpaRepository<AccountGroup, Long> {
 
     /**
      * 根据分组查用户
@@ -22,7 +22,7 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
      * @param groupId 分组主键
      * @return 关联数据集
      */
-    List<UserGroup> findByGroupId(Long groupId);
+    List<AccountGroup> findByGroupId(Long groupId);
 
     /**
      * 根据用户查分组
@@ -30,5 +30,5 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
      * @param userId 用户主键
      * @return 关联数据集
      */
-    List<UserGroup> findByUserId(Long userId);
+    List<AccountGroup> findByUserId(Long userId);
 }

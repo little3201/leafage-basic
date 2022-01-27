@@ -4,6 +4,7 @@ import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
+import java.util.List;
 
 public interface RegionService extends ServletBasicService<RegionDTO, RegionVO, Long> {
 
@@ -15,4 +16,11 @@ public interface RegionService extends ServletBasicService<RegionDTO, RegionVO, 
      * @return 查询结果
      */
     Page<RegionVO> retrieve(int page, int size);
+
+    /**
+     * 获取子节点
+     *
+     * @return 数据集
+     */
+    List<RegionVO> child(long code);
 }

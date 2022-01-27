@@ -1,12 +1,12 @@
 package io.leafage.basic.hypervisor.service;
 
-import io.leafage.basic.hypervisor.entity.UserGroup;
+import io.leafage.basic.hypervisor.entity.AccountGroup;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import java.util.List;
 import java.util.Set;
 
-public interface UserGroupService {
+public interface AccountGroupService {
 
 
     /**
@@ -32,5 +32,5 @@ public interface UserGroupService {
      * @param groups   分组信息
      * @return 结果集
      */
-    List<UserGroup> relation(String username, Set<String> groups);
+    List<AccountGroup> relation(String username, Set<String> groups);
 }

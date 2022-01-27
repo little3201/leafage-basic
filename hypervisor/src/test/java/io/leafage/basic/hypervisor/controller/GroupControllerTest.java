@@ -3,7 +3,7 @@ package io.leafage.basic.hypervisor.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupService;
-import io.leafage.basic.hypervisor.service.UserGroupService;
+import io.leafage.basic.hypervisor.service.AccountGroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +48,7 @@ class GroupControllerTest {
     private GroupService groupService;
 
     @MockBean
-    private UserGroupService userGroupService;
+    private AccountGroupService accountGroupService;
 
     @Test
     void retrieve() throws Exception {
@@ -115,7 +115,8 @@ class GroupControllerTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         mvc.perform(post("/group").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -160,13 +161,14 @@ class GroupControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.groupService).remove(Mockito.anyString());
 
-        mvc.perform(delete("/group/{code}", "test").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/group/{code}", "test").with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void users() throws Exception {
-        given(this.userGroupService.users(Mockito.anyString())).willReturn(Mockito.anyList());
+        given(this.accountGroupService.users(Mockito.anyString())).willReturn(Mockito.anyList());
 
         mvc.perform(get("/group/{code}/user", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
@@ -174,7 +176,7 @@ class GroupControllerTest {
 
     @Test
     void users_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.userGroupService).users(Mockito.anyString());
+        doThrow(new RuntimeException()).when(this.accountGroupService).users(Mockito.anyString());
 
         mvc.perform(get("/group/{code}/user", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();

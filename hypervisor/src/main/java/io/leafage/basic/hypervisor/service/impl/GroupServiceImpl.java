@@ -101,7 +101,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
                 group.setPrincipal(user.getId());
             }
         }
-        group = groupRepository.save(group);
+        group = groupRepository.saveAndFlush(group);
         return this.convertOuter(group);
     }
 

@@ -34,7 +34,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
     }
 
     @Override
-    public List<UserVO> users(String code) {
+    public List<UserVO> accounts(String code) {
         Assert.hasText(code, "code is blank.");
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         if (role == null) {
@@ -56,7 +56,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
         if (account == null) {
             return Collections.emptyList();
         }
-        List<AccountRole> accountRoles = accountRoleRepository.findByUserId(account.getId());
+        List<AccountRole> accountRoles = accountRoleRepository.findByAccountId(account.getId());
         if (!CollectionUtils.isEmpty(accountRoles)) {
             return accountRoles.stream().map(userRole -> roleRepository.findById(userRole.getRoleId()))
                     .map(Optional::orElseThrow).map(role -> {

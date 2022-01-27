@@ -15,13 +15,21 @@ public class RegionDTO implements Serializable {
      */
     private Long code;
     /**
+     * 名称
+     */
+    private String name;
+    /**
      * 上级
      */
     private Long superior;
     /**
-     * 名称
+     * 邮编
      */
-    private String name;
+    private String zip;
+    /**
+     * 描述
+     */
+    private String description;
 
     public Long getCode() {
         return code;
@@ -29,6 +37,14 @@ public class RegionDTO implements Serializable {
 
     public void setCode(Long code) {
         this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getSuperior() {
@@ -39,11 +55,19 @@ public class RegionDTO implements Serializable {
         this.superior = superior;
     }
 
-    public String getName() {
-        return name;
+    public String getZip() {
+        return zip;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

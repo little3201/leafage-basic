@@ -21,7 +21,7 @@ import top.leafage.common.basic.AbstractBasicService;
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
 
-    private static final String MESSAGE = "username is blank.";
+    private static final String MESSAGE = "username must not blank.";
 
     private final UserRepository userRepository;
 

@@ -67,7 +67,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
         if (account == null) {
             throw new NoSuchElementException("Not Found User.");
         }
-        List<AccountRole> accountRoles = accountRoleRepository.findByUserId(account.getId());
+        List<AccountRole> accountRoles = accountRoleRepository.findByAccountId(account.getId());
         if (CollectionUtils.isEmpty(accountRoles)) {
             return Collections.emptyList();
         }

@@ -86,7 +86,8 @@ class UserControllerTest {
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername("test");
         mvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -131,7 +132,8 @@ class UserControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.userService).remove(Mockito.anyString());
 
-        mvc.perform(delete("/user/{username}", "test").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/user/{username}", "test").with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

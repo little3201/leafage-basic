@@ -34,10 +34,10 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Account getByUsernameAndEnabledTrue(String username);
 
     /**
-     * 查询用户信息
+     * 是否存在
      *
      * @param username 用户名
-     * @return 用户信息
+     * @return true-存在，false-否
      */
     boolean existsByUsername(String username);
 }

@@ -2,9 +2,7 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.entity.Group;
-import io.leafage.basic.hypervisor.entity.User;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -34,9 +32,6 @@ class GroupServiceImplTest {
 
     @Mock
     private GroupRepository groupRepository;
-
-    @Mock
-    private UserRepository userRepository;
 
     @InjectMocks
     private GroupServiceImpl groupService;
@@ -76,14 +71,14 @@ class GroupServiceImplTest {
         group.setId(2L);
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
-        given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
+        given(this.groupRepository.saveAndFlush(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         groupDTO.setSuperior("2119JD09");
         GroupVO groupVO = groupService.modify("", groupDTO);
 
-        verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));
+        verify(this.groupRepository, times(1)).saveAndFlush(Mockito.any(Group.class));
         Assertions.assertNotNull(groupVO);
     }
 

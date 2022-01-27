@@ -17,12 +17,12 @@ import java.util.List;
 public interface AccountRoleRepository extends JpaRepository<AccountRole, Long> {
 
     /**
-     * 根据用户ID查询
+     * 根据账号主键ID查询
      *
-     * @param userId 用户主键
+     * @param accountId 用户主键
      * @return 集合
      */
-    List<AccountRole> findByUserId(Long userId);
+    List<AccountRole> findByAccountId(Long accountId);
 
     /**
      * 根据角色ID查询

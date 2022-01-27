@@ -116,7 +116,8 @@ class AuthorityControllerTest {
         authorityDTO.setType('M');
         authorityDTO.setPath("/test");
         mvc.perform(post("/authority").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(authorityDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(authorityDTO)).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -165,7 +166,8 @@ class AuthorityControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.authorityService).remove(Mockito.anyString());
 
-        mvc.perform(delete("/authority/{code}", "test").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/authority/{code}", "test").with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

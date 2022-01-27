@@ -64,14 +64,14 @@ public class AuthorityController {
      */
     @GetMapping("/tree")
     public ResponseEntity<List<TreeNode>> tree() {
-        List<TreeNode> authorities;
+        List<TreeNode> treeNodes;
         try {
-            authorities = authorityService.tree();
+            treeNodes = authorityService.tree();
         } catch (Exception e) {
             logger.info("Retrieve authority tree occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(authorities);
+        return ResponseEntity.ok(treeNodes);
     }
 
     /**

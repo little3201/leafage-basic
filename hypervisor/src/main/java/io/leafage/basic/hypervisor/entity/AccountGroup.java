@@ -13,14 +13,14 @@ import javax.persistence.Table;
  * @author liwenqiang
  */
 @Entity
-@Table(name = "user_group")
-public class UserGroup extends AbstractEntity {
+@Table(name = "account_group")
+public class AccountGroup extends AbstractEntity {
 
     /**
-     * 用户主键
+     * 账号主键
      */
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "account_id")
+    private Long accountId;
     /**
      * 组主键
      */
@@ -28,12 +28,12 @@ public class UserGroup extends AbstractEntity {
     private Long groupId;
 
 
-    public Long getUserId() {
-        return userId;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
     public Long getGroupId() {

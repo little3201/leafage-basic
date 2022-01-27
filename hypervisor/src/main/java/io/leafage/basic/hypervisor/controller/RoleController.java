@@ -70,14 +70,14 @@ public class RoleController {
      */
     @GetMapping("/tree")
     public ResponseEntity<List<TreeNode>> tree() {
-        List<TreeNode> authorities;
+        List<TreeNode> treeNodes;
         try {
-            authorities = roleService.tree();
+            treeNodes = roleService.tree();
         } catch (Exception e) {
             logger.info("Retrieve role tree occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(authorities);
+        return ResponseEntity.ok(treeNodes);
     }
 
     /**
@@ -162,7 +162,7 @@ public class RoleController {
     public ResponseEntity<List<UserVO>> users(@PathVariable String code) {
         List<UserVO> voList;
         try {
-            voList = accountRoleService.users(code);
+            voList = accountRoleService.accounts(code);
         } catch (Exception e) {
             logger.error("Retrieve role users occurred an error: ", e);
             return ResponseEntity.noContent().build();

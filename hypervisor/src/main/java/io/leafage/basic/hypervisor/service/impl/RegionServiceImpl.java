@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.entity.Region;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.service.RegionService;
@@ -9,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RegionServiceImpl implements RegionService {
@@ -26,10 +29,44 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
+    public List<RegionVO> child(long code) {
+        List<Region> regions = regionRepository.findByCodeBetweenAndEnabledTrue(code * 100, code * 100 + 99);
+        return regions.stream().map(this::convertOuter).collect(Collectors.toList());
+    }
+
+    @Override
     public RegionVO fetch(Long code) {
-        Assert.notNull(code, "code is null.");
+        Assert.notNull(code, "code must not null.");
         Region region = regionRepository.getByCodeAndEnabledTrue(code);
         return this.convertOuter(region);
+    }
+
+    @Override
+    public boolean exist(String name) {
+        Assert.hasText(name, "name must not null.");
+        return regionRepository.existsByName(name);
+    }
+
+    @Override
+    public RegionVO create(RegionDTO regionDTO) {
+        Region region = new Region();
+        BeanUtils.copyProperties(regionDTO, region);
+        regionRepository.save(region);
+        return this.convertOuter(region);
+    }
+
+    @Override
+    public RegionVO modify(Long code, RegionDTO regionDTO) {
+        Region region = regionRepository.getByCodeAndEnabledTrue(code);
+        BeanUtils.copyProperties(regionDTO, region);
+        regionRepository.saveAndFlush(region);
+        return this.convertOuter(region);
+    }
+
+    @Override
+    public void remove(Long code) {
+        Region region = regionRepository.getByCodeAndEnabledTrue(code);
+        regionRepository.deleteById(region.getId());
     }
 
     /**

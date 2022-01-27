@@ -176,18 +176,18 @@ class RoleControllerTest {
     }
 
     @Test
-    void users() throws Exception {
+    void accounts() throws Exception {
         given(this.accountRoleService.accounts(Mockito.anyString())).willReturn(Mockito.anyList());
 
-        mvc.perform(get("/role/{code}/user", "test")).andExpect(status().isOk())
+        mvc.perform(get("/role/{code}/account", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
-    void users_error() throws Exception {
+    void accounts_error() throws Exception {
         doThrow(new RuntimeException()).when(this.accountRoleService).accounts(Mockito.anyString());
 
-        mvc.perform(get("/role/{code}/user", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/role/{code}/account", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

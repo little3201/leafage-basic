@@ -1,8 +1,8 @@
 package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.entity.AccountGroup;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import java.util.List;
 import java.util.Set;
 
@@ -15,7 +15,7 @@ public interface AccountGroupService {
      * @param code 代码
      * @return 数据集
      */
-    List<UserVO> users(String code);
+    List<AccountVO> accounts(String code);
 
     /**
      * 查询关联分组

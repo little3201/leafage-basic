@@ -1,8 +1,8 @@
 package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.entity.AccountRole;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import java.util.List;
 import java.util.Set;
 
@@ -14,7 +14,7 @@ public interface AccountRoleService {
      * @param code 角色代码
      * @return 数据集
      */
-    List<UserVO> accounts(String code);
+    List<AccountVO> accounts(String code);
 
     /**
      * 查询关联角色

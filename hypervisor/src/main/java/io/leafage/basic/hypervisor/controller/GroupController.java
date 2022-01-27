@@ -4,10 +4,10 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
-import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.service.AccountGroupService;
+import io.leafage.basic.hypervisor.service.GroupService;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -151,11 +151,11 @@ public class GroupController {
      * @param code 组code
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{code}/user")
-    public ResponseEntity<List<UserVO>> users(@PathVariable String code) {
-        List<UserVO> voList;
+    @GetMapping("/{code}/account")
+    public ResponseEntity<List<AccountVO>> accounts(@PathVariable String code) {
+        List<AccountVO> voList;
         try {
-            voList = accountGroupService.users(code);
+            voList = accountGroupService.accounts(code);
         } catch (Exception e) {
             logger.error("Retrieve group users occurred an error: ", e);
             return ResponseEntity.noContent().build();

@@ -39,19 +39,20 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public Statistics create() {
         Statistics statistics = new Statistics();
-        statistics.setDate(LocalDate.now());
         List<Posts> posts = postsRepository.findByEnabledTrue();
         posts.forEach(p -> {
             statistics.setViewed(statistics.getViewed() + p.getViewed());
             statistics.setLikes(statistics.getLikes() + p.getLikes());
             statistics.setComment(statistics.getComment() + p.getComment());
         });
+        LocalDate now = LocalDate.now();
+        statistics.setDate(now);
         // 计算较前日增长率。计算日期数据还没生成，所以前一天减去2，大前天减去3
-        Statistics ys = statisticsRepository.getByDate(LocalDate.now().minusDays(2));
-        Statistics bys = statisticsRepository.getByDate(LocalDate.now().minusDays(3));
-        statistics.setOverViewed(this.overViewed(statistics.getViewed(), ys.getViewed(), bys.getViewed()));
-        statistics.setOverLikes(this.overLikes(statistics.getLikes(), ys.getLikes(), bys.getLikes()));
-        statistics.setOverComment(this.overComment(statistics.getComment(), ys.getComment(), bys.getComment()));
+        Statistics ys = statisticsRepository.getByDate(now.minusDays(2));
+        Statistics bys = statisticsRepository.getByDate(now.minusDays(3));
+        statistics.setOverViewed(this.dayOverDay(statistics.getViewed(), ys.getViewed(), bys.getViewed()));
+        statistics.setOverLikes(this.dayOverDay(statistics.getLikes(), ys.getLikes(), bys.getLikes()));
+        statistics.setOverComment(this.dayOverDay(statistics.getComment(), ys.getComment(), bys.getComment()));
         return statisticsRepository.saveAndFlush(statistics);
     }
 
@@ -68,53 +69,20 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     /**
-     * 浏览量
+     * over data 计算
      *
-     * @param sv  最新数据
-     * @param yv  前一天数据
-     * @param byv 大前天数据
+     * @param s  最新数据
+     * @param y  前一天数据
+     * @param by 大前天数据
      * @return 计算结果
      */
-    private double overViewed(int sv, int yv, int byv) {
-        if (yv > 0 && yv - byv != 0) {
-            double overViewed = (sv - yv) * 1.0 / (yv - byv) * 100;
+    private double dayOverDay(int s, int y, int by) {
+        if (s - y != 0 && y - by != 0) {
+            double overViewed = ((s - y) - (y - by)) * 1.0 / (y - by) * 100;
             overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
             return overViewed;
         }
         return 0.0;
     }
 
-    /**
-     * 喜欢数
-     *
-     * @param sl  最新数据
-     * @param yl  前一天数据
-     * @param byl 大前天数据
-     * @return 计算结果
-     */
-    private double overLikes(int sl, int yl, int byl) {
-        if (yl > 0 && yl - byl != 0) {
-            double overLikes = (sl - yl) * 1.0 / (yl - byl) * 100;
-            overLikes = BigDecimal.valueOf(overLikes).setScale(2, RoundingMode.HALF_UP).doubleValue();
-            return overLikes;
-        }
-        return 0.0;
-    }
-
-    /**
-     * 评论量
-     *
-     * @param sc  最新数据
-     * @param yc  前一天数据
-     * @param byc 大前天数据
-     * @return 计算结果
-     */
-    private double overComment(int sc, int yc, int byc) {
-        if (yc > 0 && yc - byc != 0) {
-            double overComment = (sc - yc) * 1.0 / (yc - byc) * 100;
-            overComment = BigDecimal.valueOf(overComment).setScale(2, RoundingMode.HALF_UP).doubleValue();
-            return overComment;
-        }
-        return 0.0;
-    }
 }

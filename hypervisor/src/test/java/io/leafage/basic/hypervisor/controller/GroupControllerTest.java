@@ -167,18 +167,18 @@ class GroupControllerTest {
     }
 
     @Test
-    void users() throws Exception {
-        given(this.accountGroupService.users(Mockito.anyString())).willReturn(Mockito.anyList());
+    void accounts() throws Exception {
+        given(this.accountGroupService.accounts(Mockito.anyString())).willReturn(Mockito.anyList());
 
-        mvc.perform(get("/group/{code}/user", "test")).andExpect(status().isOk())
+        mvc.perform(get("/group/{code}/account", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
-    void users_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.accountGroupService).users(Mockito.anyString());
+    void accounts_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.accountGroupService).accounts(Mockito.anyString());
 
-        mvc.perform(get("/group/{code}/user", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/group/{code}/account", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

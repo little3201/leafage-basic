@@ -7,8 +7,8 @@ import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.service.AccountGroupService;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -34,17 +34,17 @@ public class AccountGroupServiceImpl implements AccountGroupService {
     }
 
     @Override
-    public List<UserVO> users(String code) {
+    public List<AccountVO> accounts(String code) {
         Group group = groupRepository.getByCodeAndEnabledTrue(code);
         if (group == null) {
             return Collections.emptyList();
         }
         List<AccountGroup> accountGroups = accountGroupRepository.findByGroupId(group.getId());
         return accountGroups.stream().map(userGroup -> accountRepository.findById(userGroup.getAccountId()))
-                .map(Optional::orElseThrow).map(user -> {
-                    UserVO userVO = new UserVO();
-                    BeanUtils.copyProperties(user, userVO);
-                    return userVO;
+                .map(Optional::orElseThrow).map(account -> {
+                    AccountVO accountVO = new AccountVO();
+                    BeanUtils.copyProperties(account, accountVO);
+                    return accountVO;
                 }).collect(Collectors.toList());
     }
 

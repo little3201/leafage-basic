@@ -7,8 +7,8 @@ import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.AccountRoleService;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -34,7 +34,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
     }
 
     @Override
-    public List<UserVO> accounts(String code) {
+    public List<AccountVO> accounts(String code) {
         Assert.hasText(code, "code is blank.");
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         if (role == null) {
@@ -42,10 +42,10 @@ public class AccountRoleServiceImpl implements AccountRoleService {
         }
         List<AccountRole> accountRoles = accountRoleRepository.findByRoleId(role.getId());
         return accountRoles.stream().map(userRole -> accountRepository.findById(userRole.getAccountId()))
-                .map(Optional::orElseThrow).map(user -> {
-                    UserVO userVO = new UserVO();
-                    BeanUtils.copyProperties(user, userVO);
-                    return userVO;
+                .map(Optional::orElseThrow).map(account -> {
+                    AccountVO accountVO = new AccountVO();
+                    BeanUtils.copyProperties(account, accountVO);
+                    return accountVO;
                 }).collect(Collectors.toList());
     }
 

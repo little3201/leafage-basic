@@ -6,8 +6,8 @@ import io.leafage.basic.hypervisor.entity.Role;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,8 +51,8 @@ class AccountRoleServiceImplTest {
 
         given(this.accountRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Account.class)));
 
-        List<UserVO> users = userRoleService.accounts("test");
-        Assertions.assertNotNull(users);
+        List<AccountVO> accounts = userRoleService.accounts("test");
+        Assertions.assertNotNull(accounts);
     }
 
     @Test

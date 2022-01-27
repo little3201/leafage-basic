@@ -3,10 +3,10 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.entity.Account;
 import io.leafage.basic.hypervisor.entity.AccountGroup;
 import io.leafage.basic.hypervisor.entity.Group;
-import io.leafage.basic.hypervisor.entity.User;
 import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
@@ -52,8 +52,8 @@ class AccountGroupServiceImplTest {
 
         given(this.accountRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Account.class)));
 
-        List<UserVO> users = userGroupService.users("test");
-        Assertions.assertNotNull(users);
+        List<AccountVO> accounts = userGroupService.accounts("test");
+        Assertions.assertNotNull(accounts);
     }
 
     @Test

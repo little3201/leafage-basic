@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
- * posts service
+ * posts service.
  *
  * @author liwenqiang 2018/12/17 19:26
  **/

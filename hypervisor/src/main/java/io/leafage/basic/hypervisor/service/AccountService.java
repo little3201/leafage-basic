@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
- * 账号信息service
+ * account service.
  *
  * @author liwenqiang 2022/1/26 15:20
  **/

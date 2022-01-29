@@ -27,7 +27,7 @@ import top.leafage.common.basic.AbstractBasicService;
 import java.util.Optional;
 
 /**
- * posts service 实现
+ * posts service impl.
  *
  * @author liwenqiang  2018-12-20 9:54
  **/

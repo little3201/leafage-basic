@@ -8,9 +8,9 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 
 /**
- * Model class for User
+ * Model class for user.
  *
- * @author liwenqiang
+ * @author liwenqiang 2020-12-20 9:54
  */
 @Entity
 @Table(name = "user")

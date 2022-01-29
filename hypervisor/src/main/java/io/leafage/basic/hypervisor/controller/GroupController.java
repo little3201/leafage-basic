@@ -18,7 +18,7 @@ import top.leafage.common.basic.TreeNode;
 import java.util.List;
 
 /**
- * 分组信息接口
+ * group controller.
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

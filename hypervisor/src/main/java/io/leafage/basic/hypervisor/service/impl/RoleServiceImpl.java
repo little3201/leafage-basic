@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
- * 角色信息service 实现
+ * role service impl.
  *
  * @author liwenqiang 2018/9/27 14:20
  **/

@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
- * category service
+ * category service.
  *
  * @author liwenqiang  2020-12-03 22:59
  **/

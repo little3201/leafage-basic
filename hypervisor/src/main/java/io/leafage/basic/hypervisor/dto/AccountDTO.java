@@ -4,7 +4,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * DTO class for Account
+ * DTO class for account.
  *
  * @author liwenqiang 2022/1/26 15:20
  */

@@ -6,10 +6,10 @@ package io.leafage.basic.hypervisor.controller;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.entity.AccountGroup;
 import io.leafage.basic.hypervisor.entity.AccountRole;
-import io.leafage.basic.hypervisor.service.AccountService;
-import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.AccountGroupService;
 import io.leafage.basic.hypervisor.service.AccountRoleService;
+import io.leafage.basic.hypervisor.service.AccountService;
+import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 账号信息接口.
+ * account controller.
  *
  * @author liwenqiang 2022/1/26 15:31
  */

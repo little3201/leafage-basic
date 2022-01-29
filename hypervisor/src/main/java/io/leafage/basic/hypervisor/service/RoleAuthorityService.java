@@ -6,6 +6,11 @@ import io.leafage.basic.hypervisor.vo.RoleVO;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * role authority service.
+ *
+ * @author liwenqiang 2021/9/27 14:18
+ **/
 public interface RoleAuthorityService {
 
     /**

@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for category
+ * Model class for category.
  *
  * @author liwenqiang  2020-12-03 22:59
  */

@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for comment
+ * Model class for comment.
  *
  * @author liwenqiang  2021-09-29 10:45
  */

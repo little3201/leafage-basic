@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 
 /**
- * resource service 实现
+ * resource service impl.
  *
  * @author liwenqiang 2021/09/29 15:10
  **/

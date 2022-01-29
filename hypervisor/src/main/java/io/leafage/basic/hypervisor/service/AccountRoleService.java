@@ -6,6 +6,11 @@ import io.leafage.basic.hypervisor.vo.RoleVO;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * account role service.
+ *
+ * @author liwenqiang 2022/1/26 15:20
+ **/
 public interface AccountRoleService {
 
     /**

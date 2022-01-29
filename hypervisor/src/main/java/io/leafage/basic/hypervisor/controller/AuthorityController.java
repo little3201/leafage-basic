@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * 权限资源接口
+ * authority controller.
  *
  * @author liwenqiang 2018/12/17 19:39
  **/

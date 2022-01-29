@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for Authority
+ * Model class for authority.
  *
  * @author liwenqiang 2019/8/31 15:50
  */
@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class Authority extends AbstractEntity {
 
     /**
-     * 业务ID
+     * 代码
      */
     private String code;
     /**

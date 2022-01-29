@@ -6,7 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
-
+/**
+ * region repository.
+ *
+ * @author liwenqiang 2021/11/27 14:18
+ **/
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Long> {
 

@@ -6,6 +6,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * resource server config.
+ *
+ * @author liwenqiang  2021-12-20 9:54
+ */
 @EnableWebSecurity
 public class ResourceServerConfiguration {
 

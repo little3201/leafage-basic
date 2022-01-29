@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * comment api .
+ * comment controller.
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

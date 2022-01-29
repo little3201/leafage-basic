@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * DTO class for Resource
+ * DTO class for resource.
  *
  * @author liwenqiang 2021-09-29 13:51
  */

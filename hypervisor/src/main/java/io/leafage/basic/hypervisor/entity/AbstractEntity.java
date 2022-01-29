@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * 基础对象实体类
+ * abstract entity for common fields.
  *
  * @author liwenqiang  2020-12-20 9:54
  */

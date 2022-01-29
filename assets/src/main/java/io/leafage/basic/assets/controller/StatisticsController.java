@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * resource api .
+ * resource controller.
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

@@ -6,7 +6,7 @@ package io.leafage.basic.assets.vo;
 import top.leafage.common.basic.AbstractVO;
 
 /**
- * VO class for Category
+ * VO class for category.
  *
  * @author liwenqiang  2020-12-03 22:59
  */

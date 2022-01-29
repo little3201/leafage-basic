@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * 用户信息入参
+ * DTO class for posts.
  *
  * @author liwenqiang  2019-03-03 22:59
  **/

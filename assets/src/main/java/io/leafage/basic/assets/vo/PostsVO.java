@@ -7,7 +7,7 @@ import top.leafage.common.basic.AbstractVO;
 import java.util.Set;
 
 /**
- * VO class for Posts
+ * VO class for posts.
  *
  * @author liwenqiang  2019-03-03 22:59
  **/

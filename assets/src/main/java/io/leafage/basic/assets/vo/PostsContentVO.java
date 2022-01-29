@@ -4,7 +4,7 @@
 package io.leafage.basic.assets.vo;
 
 /**
- * VO class for Posts
+ * VO class for posts content.
  *
  * @author liwenqiang  2019-03-03 22:59
  **/

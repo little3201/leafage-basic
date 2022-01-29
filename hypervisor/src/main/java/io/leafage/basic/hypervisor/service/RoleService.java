@@ -11,7 +11,7 @@ import top.leafage.common.servlet.ServletBasicService;
 import java.util.List;
 
 /**
- * 角色信息service 接口
+ * role service.
  *
  * @author liwenqiang 2018/9/27 14:18
  **/

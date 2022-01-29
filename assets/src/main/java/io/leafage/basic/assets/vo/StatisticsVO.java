@@ -3,6 +3,11 @@ package io.leafage.basic.assets.vo;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+/**
+ * VO class for statistics.
+ *
+ * @author liwenqiang  2021-09-03 22:59
+ **/
 public class StatisticsVO implements Serializable {
 
     private static final long serialVersionUID = 4036885125351575031L;

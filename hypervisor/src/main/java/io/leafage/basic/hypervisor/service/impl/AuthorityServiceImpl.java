@@ -29,7 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 权限信息Service实现
+ * authority service impl.
  *
  * @author liwenqiang 2018/12/17 19:36
  **/

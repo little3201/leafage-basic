@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 用户角色repository
+ * account role repository.
  *
  * @author liwenqiang 2018/12/17 19:37
  **/

@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * 异常处理类
+ * Exception handler.
  *
  * @author liwenqiang  2020-12-20 9:54
  */

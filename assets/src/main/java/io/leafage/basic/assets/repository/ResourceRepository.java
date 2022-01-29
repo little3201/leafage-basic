@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * resource repository
+ * resource repository.
  *
  * @author liwenqiang  2021-09-29 14:19
  **/

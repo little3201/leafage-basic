@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * category repository
+ * category repository.
  *
  * @author liwenqiang  2020-12-03 22:59
  **/

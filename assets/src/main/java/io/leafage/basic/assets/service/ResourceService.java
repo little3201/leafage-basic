@@ -5,6 +5,11 @@ import io.leafage.basic.assets.vo.ResourceVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
+/**
+ * resource service.
+ *
+ * @author liwenqiang 2021/09/29 14:32
+ **/
 public interface ResourceService extends ServletBasicService<ResourceDTO, ResourceVO, String> {
 
     /**

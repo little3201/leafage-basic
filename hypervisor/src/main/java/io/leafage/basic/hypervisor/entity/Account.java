@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for Account
+ * Model class for account.
  *
  * @author liwenqiang 2022/1/26 15:20
  **/

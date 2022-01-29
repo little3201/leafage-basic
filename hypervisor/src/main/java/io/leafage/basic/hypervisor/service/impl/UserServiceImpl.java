@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 import top.leafage.common.basic.AbstractBasicService;
 
 /**
- * 用户信息service实现.
+ * user service impl.
  *
  * @author liwenqiang 2018/7/28 0:30
  **/

@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
- * 分组信息Service实现
+ * group service impl.
  *
  * @author liwenqiang 2018/12/17 19:25
  **/

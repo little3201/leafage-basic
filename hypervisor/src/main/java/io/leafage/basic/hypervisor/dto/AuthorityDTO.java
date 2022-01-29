@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * DTO class for Authority
+ * DTO class for authority.
  *
  * @author liwenqiang 2019/8/31 15:50
  */

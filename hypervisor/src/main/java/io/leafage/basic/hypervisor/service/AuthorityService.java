@@ -11,7 +11,7 @@ import top.leafage.common.servlet.ServletBasicService;
 import java.util.List;
 
 /**
- * 权限信息Service
+ * authority service.
  *
  * @author liwenqiang 2018/12/17 19:36
  **/

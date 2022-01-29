@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * DTO class for Comment
+ * DTO class for comment.
  *
  * @author liwenqiang 2021-09-29 13:51
  */

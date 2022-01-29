@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * VO class for User
+ * VO class for user.
  *
  * @author liwenqiang 2019/8/31 15:50
  **/

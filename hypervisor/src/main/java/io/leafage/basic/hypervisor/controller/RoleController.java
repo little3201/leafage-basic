@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 角色信息接口
+ * role controller.
  *
  * @author liwenqiang 2018/12/17 19:38
  **/

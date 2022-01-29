@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 
 /**
- * statistics repository
+ * statistics repository.
  *
  * @author liwenqiang  2021-09-29 14:19
  **/

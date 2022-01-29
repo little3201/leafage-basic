@@ -8,7 +8,7 @@ import io.leafage.basic.hypervisor.vo.UserVO;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
- * 用户信息service
+ * user service.
  *
  * @author liwenqiang 2018/7/28 0:29
  **/

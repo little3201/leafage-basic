@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for Role Authority
+ * Model class for role authority.
  *
  * @author liwenqiang 2022/1/26 15:20
  */

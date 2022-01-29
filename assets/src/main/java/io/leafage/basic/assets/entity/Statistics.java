@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 
 /**
- * Model class for statistics
+ * Model class for statistics.
  *
  * @author liwenqiang  2021-09-29 10:45
  */

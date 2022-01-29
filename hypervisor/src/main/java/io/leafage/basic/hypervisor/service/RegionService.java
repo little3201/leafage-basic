@@ -6,6 +6,11 @@ import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 import java.util.List;
 
+/**
+ * region service.
+ *
+ * @author liwenqiang 2021/11/27 14:18
+ **/
 public interface RegionService extends ServletBasicService<RegionDTO, RegionVO, Long> {
 
     /**

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * Model class for Category
+ * DTO class for category.
  *
  * @author liwenqiang  2020-12-03 22:59
  */

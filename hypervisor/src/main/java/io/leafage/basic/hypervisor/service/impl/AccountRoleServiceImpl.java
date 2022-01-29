@@ -19,6 +19,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * account role service impl.
+ *
+ * @author liwenqiang 2021/11/27 14:18
+ **/
 @Service
 public class AccountRoleServiceImpl implements AccountRoleService {
 

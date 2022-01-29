@@ -7,9 +7,9 @@ import top.leafage.common.basic.AbstractVO;
 import java.io.Serializable;
 
 /**
- * VO class for Group
+ * VO class for group.
  *
- * @author liwenqiang
+ * @author liwenqiang 2019/8/31 15:50
  */
 public class GroupVO extends AbstractVO<String> implements Serializable {
 

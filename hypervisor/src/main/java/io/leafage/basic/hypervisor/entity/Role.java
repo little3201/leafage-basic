@@ -7,9 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for Role
+ * Model class for role.
  *
- * @author liwenqiang 2022/1/26 15:20
+ * @author liwenqiang 2020-12-20 9:54
  */
 @Entity
 @Table(name = "role")

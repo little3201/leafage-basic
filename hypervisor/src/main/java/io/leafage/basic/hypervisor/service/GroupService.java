@@ -11,7 +11,7 @@ import top.leafage.common.servlet.ServletBasicService;
 import java.util.List;
 
 /**
- * 分组信息Service
+ * group service.
  *
  * @author liwenqiang 2018/12/17 19:24
  **/

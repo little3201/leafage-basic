@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
 
 /**
- * category service 实现
+ * category service impl.
  *
  * @author liwenqiang  2020-12-03 22:59
  **/

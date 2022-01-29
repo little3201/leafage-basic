@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for resource
+ * Model class for resource.
  *
  * @author liwenqiang  2021-09-29 10:45
  */

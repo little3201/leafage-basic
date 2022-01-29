@@ -8,9 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for Group User
+ * Model class for account group.
  *
- * @author liwenqiang
+ * @author liwenqiang 2022/1/26 15:20
  */
 @Entity
 @Table(name = "account_group")

@@ -3,7 +3,7 @@ package io.leafage.basic.hypervisor.dto;
 import java.io.Serializable;
 
 /**
- * DTO class for Region
+ * DTO class for region.
  *
  * @author liwenqiang 2021-10-12 10:06
  */

@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * document for posts
+ * document for posts content.
  *
  * @author liwenqiang  2020-12-03 22:59
  */

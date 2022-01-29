@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * region controller
+ * region controller.
  *
  * @author liwenqiang 2021/08/20 17:08
  **/

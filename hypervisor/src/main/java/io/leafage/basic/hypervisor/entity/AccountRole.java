@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for Account Role
+ * Model class for account role.
  *
  * @author liwenqiang 2022/1/26 15:20
  */

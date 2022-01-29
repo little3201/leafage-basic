@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * 用户信息接口.
+ * user controller.
  *
  * @author liwenqiang 2018/8/2 21:02
  **/

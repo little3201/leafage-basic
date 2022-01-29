@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * posts repository
+ * posts repository.
  *
  * @author liwenqiang 2018/12/20 9:51
  **/

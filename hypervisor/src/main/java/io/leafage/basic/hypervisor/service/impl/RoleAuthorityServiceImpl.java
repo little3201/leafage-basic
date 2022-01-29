@@ -19,6 +19,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * role authority service impl.
+ *
+ * @author liwenqiang 2021/9/27 14:18
+ **/
 @Service
 public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 

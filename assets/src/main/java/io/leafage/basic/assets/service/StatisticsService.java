@@ -5,7 +5,7 @@ import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.data.domain.Page;
 
 /**
- * statistics service
+ * statistics service.
  *
  * @author liwenqiang 2021/09/29 14:32
  **/

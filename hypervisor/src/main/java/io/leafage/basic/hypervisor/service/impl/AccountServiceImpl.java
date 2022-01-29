@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 /**
- * 账号信息service实现
+ * account service impl.
  *
  * @author liwenqiang 2022/1/26 15:20
  **/

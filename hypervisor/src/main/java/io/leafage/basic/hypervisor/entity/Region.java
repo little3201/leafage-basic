@@ -4,9 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
- * Model class for Region
+ * Model class for region.
  *
- * @author liwenqiang  2021-10-12 10:06
+ * @author liwenqiang 2021-10-12 10:06
  */
 @Entity
 @Table(name = "region")

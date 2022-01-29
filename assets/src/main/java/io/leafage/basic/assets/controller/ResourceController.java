@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * resource api .
+ * resource controller.
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

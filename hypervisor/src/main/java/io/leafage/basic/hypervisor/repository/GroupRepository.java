@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 分组信息 repository
+ * group repository.
  *
  * @author liwenqiang 2018/12/20 9:52
  **/

@@ -7,9 +7,9 @@ import top.leafage.common.basic.AbstractVO;
 import java.io.Serializable;
 
 /**
- * VO class for Authority
+ * VO class for authority.
  *
- * @author liwenqiang
+ * @author liwenqiang 2019/8/31 15:50
  */
 public class AuthorityVO extends AbstractVO<String> implements Serializable {
 
@@ -39,6 +39,7 @@ public class AuthorityVO extends AbstractVO<String> implements Serializable {
      * 描述
      */
     private String description;
+
 
     public String getSuperior() {
         return superior;

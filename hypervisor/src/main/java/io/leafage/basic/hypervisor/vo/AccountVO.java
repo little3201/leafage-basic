@@ -1,7 +1,13 @@
 package io.leafage.basic.hypervisor.vo;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
+/**
+ * VO class for account.
+ *
+ * @author liwenqiang 2022/1/26 13:20
+ **/
 public class AccountVO implements Serializable {
 
     private static final long serialVersionUID = -3029725628415627143L;
@@ -30,6 +36,10 @@ public class AccountVO implements Serializable {
      * 密码是否有效
      */
     private boolean credentialsNonExpired;
+    /**
+     * 修改时间
+     */
+    private LocalDateTime modifyTime;
 
     public String getUsername() {
         return username;
@@ -77,5 +87,13 @@ public class AccountVO implements Serializable {
 
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

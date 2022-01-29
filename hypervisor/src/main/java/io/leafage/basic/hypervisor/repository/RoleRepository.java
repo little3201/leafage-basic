@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 角色信息repository
+ * role repository.
  *
  * @author liwenqiang 2018/9/26 11:06
  **/

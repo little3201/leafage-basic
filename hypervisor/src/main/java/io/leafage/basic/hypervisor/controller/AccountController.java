@@ -57,14 +57,14 @@ public class AccountController {
      */
     @GetMapping
     public ResponseEntity<Page<AccountVO>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Page<AccountVO> accounts;
+        Page<AccountVO> voPage;
         try {
-            accounts = accountService.retrieve(page, size);
+            voPage = accountService.retrieve(page, size);
         } catch (Exception e) {
-            logger.info("Retrieve user occurred an error: ", e);
+            logger.info("Retrieve account occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(accounts);
+        return ResponseEntity.ok(voPage);
     }
 
     /**

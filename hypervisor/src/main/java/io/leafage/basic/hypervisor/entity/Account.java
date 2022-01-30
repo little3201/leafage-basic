@@ -3,6 +3,7 @@ package io.leafage.basic.hypervisor.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 /**
  * Model class for account.
@@ -26,20 +27,20 @@ public class Account extends AbstractEntity {
      */
     private String avatar;
     /**
-     * 是否无效
+     * 账号有效期
      */
-    @Column(name = "is_account_non_expired")
-    private boolean accountNonExpired = true;
+    @Column(name = "account_expires_at")
+    private LocalDateTime accountExpiresAt;
     /**
-     * 是否没有锁定
+     * 是否锁定
      */
-    @Column(name = "is_account_non_locked")
-    private boolean accountNonLocked = true;
+    @Column(name = "is_account_locked")
+    private boolean accountLocked;
     /**
-     * 密码是否有效
+     * 密码有效期
      */
-    @Column(name = "is_credentials_non_expired")
-    private boolean credentialsNonExpired = true;
+    @Column(name = "credentials_expires_at")
+    private LocalDateTime credentialsExpiresAt;
 
 
     public String getUsername() {
@@ -66,27 +67,27 @@ public class Account extends AbstractEntity {
         this.avatar = avatar;
     }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
+    public LocalDateTime getAccountExpiresAt() {
+        return accountExpiresAt;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
+    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
+        this.accountExpiresAt = accountExpiresAt;
     }
 
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
+    public boolean isAccountLocked() {
+        return accountLocked;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+    public void setAccountLocked(boolean accountLocked) {
+        this.accountLocked = accountLocked;
     }
 
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+    public LocalDateTime getCredentialsExpiresAt() {
+        return credentialsExpiresAt;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
+        this.credentialsExpiresAt = credentialsExpiresAt;
     }
 }

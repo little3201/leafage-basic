@@ -35,11 +35,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public AccountVO unlock(String username) {
+        Assert.hasText(username, MESSAGE);
+        Account account = accountRepository.getByUsernameAndEnabledTrue(username);
+        account.setAccountLocked(false);
+        accountRepository.saveAndFlush(account);
+        return this.convertOuter(account);
+    }
+
+    @Override
     public AccountVO modify(String username, AccountDTO accountDTO) {
         Assert.hasText(username, MESSAGE);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(accountDTO, account);
-        account = accountRepository.saveAndFlush(account);
+        accountRepository.saveAndFlush(account);
         return this.convertOuter(account);
     }
 

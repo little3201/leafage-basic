@@ -60,7 +60,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
         if (account == null) {
             return Collections.emptyList();
         }
-        List<AccountGroup> accountGroups = accountGroupRepository.findByUserId(account.getId());
+        List<AccountGroup> accountGroups = accountGroupRepository.findByAccountId(account.getId());
         if (CollectionUtils.isEmpty(accountGroups)) {
             return Collections.emptyList();
         }

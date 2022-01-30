@@ -8,7 +8,6 @@ import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -63,7 +62,7 @@ class AccountGroupServiceImplTest {
         AccountGroup accountGroup = new AccountGroup();
         accountGroup.setAccountId(1L);
         accountGroup.setGroupId(1L);
-        given(this.accountGroupRepository.findByUserId(Mockito.anyLong())).willReturn(Collections.singletonList(accountGroup));
+        given(this.accountGroupRepository.findByAccountId(Mockito.anyLong())).willReturn(Collections.singletonList(accountGroup));
 
         given(this.groupRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Group.class)));
 

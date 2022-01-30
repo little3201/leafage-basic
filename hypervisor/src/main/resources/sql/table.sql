@@ -55,16 +55,7 @@ create table user
    lastname             varchar(64) comment '名',
    gender               tinyint(1) comment '性别',
    birthday             date comment '生日',
-   country              varchar(64) comment '国籍',
-   province             varchar(64) comment '省/直辖市/州',
-   city                 varchar(64) comment '市',
-   region               varchar(64) comment '区/县',
-   street               varchar(64) comment '乡/镇/街道',
-   address              varchar(64) comment '地址',
-   ethnicity            varchar(64) comment '民族',
-   blood_type           varchar(64) comment '血型',
-   education            varchar(64) comment '学历',
-   id_card              varchar(18) comment '身份证号',
+   description          varchar(255) comment '描述',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) comment '修改人',
    modify_time          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
@@ -75,6 +66,8 @@ create table user
 );
 
 alter table user comment '用户';
+
+
 
 
 drop table if exists account_role;

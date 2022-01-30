@@ -17,7 +17,7 @@ import java.util.List;
 public interface AccountGroupRepository extends JpaRepository<AccountGroup, Long> {
 
     /**
-     * 根据分组查用户
+     * 根据分组查账号
      *
      * @param groupId 分组主键
      * @return 关联数据集
@@ -25,10 +25,10 @@ public interface AccountGroupRepository extends JpaRepository<AccountGroup, Long
     List<AccountGroup> findByGroupId(Long groupId);
 
     /**
-     * 根据用户查分组
+     * 根据账号查分组
      *
-     * @param userId 用户主键
+     * @param accountId 账号主键
      * @return 关联数据集
      */
-    List<AccountGroup> findByUserId(Long userId);
+    List<AccountGroup> findByAccountId(Long accountId);
 }

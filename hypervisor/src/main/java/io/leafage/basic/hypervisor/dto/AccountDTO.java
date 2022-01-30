@@ -21,18 +21,6 @@ public class AccountDTO implements Serializable {
      * 头像
      */
     private String avatar;
-    /**
-     * 是否有效
-     */
-    private boolean accountNonExpired;
-    /**
-     * 是否锁定
-     */
-    private boolean accountNonLocked;
-    /**
-     * 密码是否有效
-     */
-    private boolean credentialsNonExpired;
 
 
     public String getNickname() {
@@ -49,29 +37,5 @@ public class AccountDTO implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
     }
 }

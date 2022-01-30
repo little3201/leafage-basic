@@ -25,17 +25,17 @@ public class AccountVO implements Serializable {
      */
     private String avatar;
     /**
-     * 是否有效
+     * 有效期
      */
-    private boolean accountNonExpired;
+    private LocalDateTime accountExpiresAt;
     /**
      * 是否锁定
      */
-    private boolean accountNonLocked;
+    private boolean accountLocked;
     /**
-     * 密码是否有效
+     * 密码有效期
      */
-    private boolean credentialsNonExpired;
+    private LocalDateTime credentialsExpiresAt;
     /**
      * 修改时间
      */
@@ -65,28 +65,28 @@ public class AccountVO implements Serializable {
         this.avatar = avatar;
     }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
+    public LocalDateTime getAccountExpiresAt() {
+        return accountExpiresAt;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
+    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
+        this.accountExpiresAt = accountExpiresAt;
     }
 
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
+    public boolean isAccountLocked() {
+        return accountLocked;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+    public void setAccountLocked(boolean accountLocked) {
+        this.accountLocked = accountLocked;
     }
 
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+    public LocalDateTime getCredentialsExpiresAt() {
+        return credentialsExpiresAt;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
+        this.credentialsExpiresAt = credentialsExpiresAt;
     }
 
     public LocalDateTime getModifyTime() {

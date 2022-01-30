@@ -140,6 +140,23 @@ public class AccountController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 解锁
+     *
+     * @param username 账户
+     * @return 如果删除成功，返回200状态码，否则返回417状态码
+     */
+    @PatchMapping("/{username}")
+    public ResponseEntity<AccountVO> unlock(@PathVariable String username) {
+        AccountVO accountVO;
+        try {
+            accountVO = accountService.unlock(username);
+        } catch (Exception e) {
+            logger.error("Remove account occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        }
+        return ResponseEntity.accepted().body(accountVO);
+    }
 
     /**
      * 根据username查询关联分组信息

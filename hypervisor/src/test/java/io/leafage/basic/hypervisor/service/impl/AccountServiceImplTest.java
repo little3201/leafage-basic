@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -38,9 +39,9 @@ class AccountServiceImplTest {
         Account account = new Account();
         account.setUsername("little3201");
         account.setAvatar("./avatar.jpg");
-        account.setAccountNonExpired(true);
-        account.setCredentialsNonExpired(true);
-        account.setAccountNonLocked(true);
+        account.setAccountExpiresAt(LocalDateTime.now().plusMonths(1));
+        account.setAccountLocked(false);
+        account.setCredentialsExpiresAt(LocalDateTime.now().plusHours(2));
         Page<Account> accountsPage = new PageImpl<>(List.of(account));
         given(this.accountRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(accountsPage);
 
@@ -72,9 +73,9 @@ class AccountServiceImplTest {
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setNickname("管理员");
         accountDTO.setAvatar("./avatar.jpg");
-        accountDTO.setAccountNonExpired(true);
-        accountDTO.setCredentialsNonExpired(true);
-        accountDTO.setAccountNonLocked(true);
+        account.setAccountExpiresAt(LocalDateTime.now().plusMonths(1));
+        account.setAccountLocked(false);
+        account.setCredentialsExpiresAt(LocalDateTime.now().plusHours(2));
         accountService.modify("test", accountDTO);
 
         verify(accountRepository, Mockito.times(1)).saveAndFlush(Mockito.any(Account.class));

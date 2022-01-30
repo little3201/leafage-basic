@@ -24,4 +24,12 @@ public interface AccountService extends ServletBasicService<AccountDTO, AccountV
      */
     Page<AccountVO> retrieve(int page, int size);
 
+    /**
+     * 账号解锁
+     *
+     * @param username 账号
+     * @return 账号信息
+     */
+    AccountVO unlock(String username);
+
 }

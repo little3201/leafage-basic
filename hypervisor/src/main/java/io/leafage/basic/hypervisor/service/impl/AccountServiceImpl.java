@@ -38,6 +38,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Mono<Long> count() {
+        return accountRepository.count();
+    }
+
+    @Override
     public Mono<AccountVO> fetch(String username) {
         return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(this::convertOuter);

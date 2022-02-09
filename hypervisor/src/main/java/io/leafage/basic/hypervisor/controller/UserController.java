@@ -51,23 +51,6 @@ public class UserController {
     }
 
     /**
-     * 统计记录数
-     *
-     * @return 查询到的数据，异常时返回204状态码
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
-        Mono<Long> count;
-        try {
-            count = userService.count();
-        } catch (Exception e) {
-            logger.error("Count user occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
-    }
-
-    /**
      * 是否已存在
      *
      * @param username 用户名

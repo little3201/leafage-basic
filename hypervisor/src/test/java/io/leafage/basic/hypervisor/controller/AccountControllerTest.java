@@ -67,6 +67,20 @@ class AccountControllerTest {
     }
 
     @Test
+    void count() {
+        given(this.accountService.count()).willReturn(Mono.just(2L));
+
+        webTestClient.get().uri("/account/count").exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void count_error() {
+        given(this.accountService.count()).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/account/count").exchange().expectStatus().isNoContent();
+    }
+
+    @Test
     void fetch() {
         AccountVO accountVO = new AccountVO();
         accountVO.setUsername("leafage");

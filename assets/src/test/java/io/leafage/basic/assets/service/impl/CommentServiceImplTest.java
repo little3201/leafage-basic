@@ -22,7 +22,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -50,6 +49,7 @@ class CommentServiceImplTest {
         Comment comment = new Comment();
         comment.setPostsId(new ObjectId());
         comment.setEmail("test@leafage.top");
+        comment.setNickname("一个路人");
         given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2,
                 Sort.by(Sort.Direction.DESC, "modifyTime")))).willReturn(Flux.just(comment));
 

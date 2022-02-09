@@ -3,15 +3,15 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.document.Account;
+import io.leafage.basic.hypervisor.document.AccountRole;
 import io.leafage.basic.hypervisor.document.Authority;
 import io.leafage.basic.hypervisor.document.RoleAuthority;
-import io.leafage.basic.hypervisor.document.User;
-import io.leafage.basic.hypervisor.document.AccountRole;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
-import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -35,7 +34,7 @@ import static org.mockito.BDDMockito.given;
 class AuthorityServiceImplTest {
 
     @Mock
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     @Mock
     private AccountRoleRepository accountRoleRepository;
@@ -164,13 +163,12 @@ class AuthorityServiceImplTest {
 
     @Test
     void authorities() {
-        User user = new User();
-        user.setId(new ObjectId());
-        given(this.userRepository.getByUsernameOrPhoneOrEmailAndEnabledTrue(Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyString())).willReturn(Mono.just(user));
+        Account account = new Account();
+        account.setId(new ObjectId());
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(account));
 
         AccountRole accountRole = new AccountRole();
-        accountRole.setAccountId(user.getId());
+        accountRole.setAccountId(account.getId());
         accountRole.setRoleId(new ObjectId());
         given(this.accountRoleRepository.findByAccountIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Flux.just(accountRole));
 

@@ -61,12 +61,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void count() {
-        given(this.userRepository.count()).willReturn(Mono.just(2L));
-        StepVerifier.create(userService.count()).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
     void exist() {
         given(this.userRepository.existsByUsernameOrPhoneOrEmail(Mockito.anyString(), Mockito.anyString(),
                 Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));

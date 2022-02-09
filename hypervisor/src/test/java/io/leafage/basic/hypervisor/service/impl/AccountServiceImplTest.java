@@ -41,6 +41,12 @@ class AccountServiceImplTest {
     }
 
     @Test
+    void count() {
+        given(this.accountRepository.count()).willReturn(Mono.just(2L));
+        StepVerifier.create(accountService.count()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
     void fetch() {
         given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Account.class)));
 

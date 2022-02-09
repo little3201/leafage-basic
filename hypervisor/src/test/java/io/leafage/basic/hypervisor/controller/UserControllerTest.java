@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import static org.mockito.BDDMockito.given;
@@ -51,20 +50,6 @@ class UserControllerTest {
 
         webTestClient.get().uri("/user/{username}", "little3201").exchange()
                 .expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.userService.count()).willReturn(Mono.just(2L));
-
-        webTestClient.get().uri("/user/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.userService.count()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/user/count").exchange().expectStatus().isNoContent();
     }
 
     @Test

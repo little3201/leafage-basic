@@ -82,7 +82,11 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @return 计算结果
      */
     private double dayOverDay(int s, int y, int by) {
-        if (s - y != 0 && y - by != 0) {
+        if (s - y != 0) {
+            if (y - by == 0) {
+                return (s - y) * 100.0;
+            }
+            // 计算增长率
             double overViewed = ((s - y) - (y - by)) * 1.0 / (y - by) * 100;
             overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
             return overViewed;

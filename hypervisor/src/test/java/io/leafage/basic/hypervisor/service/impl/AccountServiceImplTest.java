@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+import java.time.LocalDateTime;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -54,9 +55,9 @@ class AccountServiceImplTest {
         account.setPassword("1234567");
         account.setAvatar("./avatar.jpg");
         account.setEnabled(true);
-        account.setAccountNonExpired(true);
-        account.setAccountNonLocked(true);
-        account.setCredentialsNonExpired(true);
+        account.setAccountExpiresAt(LocalDateTime.now().plusDays(7L));
+        account.setAccountLocked(false);
+        account.setCredentialsExpiresAt(LocalDateTime.now().plusHours(2L));
         given(this.accountRepository.insert(Mockito.any(Account.class))).willReturn(Mono.just(account));
 
         AccountDTO accountDTO = new AccountDTO();

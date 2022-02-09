@@ -13,13 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.time.LocalDate;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -35,12 +31,6 @@ class UserServiceImplTest {
 
     @InjectMocks
     private UserServiceImpl userService;
-
-    @Test
-    void retrieve() {
-        given(this.userRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(Mockito.mock(User.class)));
-        StepVerifier.create(userService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
-    }
 
     @Test
     void fetch() {
@@ -60,12 +50,12 @@ class UserServiceImplTest {
         user.setPhone("18710023032");
         user.setEmail("test@leafage.top");
         user.setBirthday(LocalDate.now());
-        user.setCountry("China");
-        user.setProvince("shaanxi");
-        user.setCity("xi'an");
-        user.setRegion("yanta");
-        user.setAddress("科技路");
-        user.setEthnicity("han");
+        user.setCountry(86L);
+        user.setProvince(1101L);
+        user.setCity(110101L);
+        user.setRegion(11010101L);
+        user.setAddress("北大街");
+        user.setEthnicity("汉族");
         given(this.userRepository.insert(Mockito.any(User.class))).willReturn(Mono.just(user));
         StepVerifier.create(userService.create(Mockito.mock(UserDTO.class))).expectNextCount(1).verifyComplete();
     }
@@ -98,6 +88,8 @@ class UserServiceImplTest {
     void remove() {
         User user = new User();
         user.setId(new ObjectId());
+        user.setStreet(11011001010101L);
+        user.setEducation("大学");
         given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
 
         given(this.userRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());

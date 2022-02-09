@@ -3,12 +3,14 @@
  */
 package io.leafage.basic.assets.vo;
 
+import java.io.Serializable;
+
 /**
  * VO class for Posts Details
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PostsContentVO extends PostsVO {
+public class PostsContentVO extends PostsVO implements Serializable {
 
     private static final long serialVersionUID = -3631862762916498067L;
 

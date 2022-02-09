@@ -1,15 +1,8 @@
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.document.UserGroup;
-import io.leafage.basic.hypervisor.document.UserRole;
 import io.leafage.basic.hypervisor.dto.UserDTO;
-import io.leafage.basic.hypervisor.service.AuthorityService;
-import io.leafage.basic.hypervisor.service.UserGroupService;
-import io.leafage.basic.hypervisor.service.UserRoleService;
 import io.leafage.basic.hypervisor.service.UserService;
-import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -20,12 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
-
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -40,36 +28,9 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    @MockBean
-    private UserGroupService userGroupService;
-
-    @MockBean
-    private UserRoleService userRoleService;
-
-    @MockBean
-    private AuthorityService authorityService;
-
     @Autowired
     private WebTestClient webTestClient;
 
-    @Test
-    void retrieve() {
-        UserVO userVO = new UserVO();
-        userVO.setUsername("little3201");
-        given(this.userService.retrieve(0, 2)).willReturn(Flux.just(userVO));
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/user").queryParam("page", 0)
-                        .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(UserVO.class);
-    }
-
-    @Test
-    void retrieve_error() {
-        given(this.userService.retrieve(0, 2)).willThrow(new RuntimeException());
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/user").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
-    }
 
     @Test
     void fetch() {
@@ -152,7 +113,7 @@ class UserControllerTest {
         userDTO.setEmail("test@test.com");
         webTestClient.put().uri("/user/{username}", "test").bodyValue(userDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.email").isNotEmpty();
+                .expectBody().jsonPath("$.address").isNotEmpty();
     }
 
     @Test
@@ -181,97 +142,4 @@ class UserControllerTest {
                 .expectStatus().is4xxClientError();
     }
 
-    @Test
-    void groups() {
-        given(this.userGroupService.groups(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
-
-        webTestClient.get().uri("/user/{username}/group", "little3201").exchange()
-                .expectStatus().isOk()
-                .expectBodyList(String.class);
-    }
-
-    @Test
-    void groups_error() {
-        given(this.userGroupService.groups(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/user/{username}/group", "little3201").exchange()
-                .expectStatus().isNoContent();
-    }
-
-    @Test
-    void group() {
-        UserGroup userGroup = new UserGroup();
-        userGroup.setGroupId(new ObjectId());
-        given(this.userGroupService.relation(Mockito.anyString(), Mockito.anySet())).willReturn(Flux.just(userGroup));
-
-        webTestClient.patch().uri("/user/{username}/group", "little3201")
-                .bodyValue(Collections.singleton("21612OL34"))
-                .exchange().expectStatus().isAccepted()
-                .expectBodyList(UserGroup.class);
-    }
-
-    @Test
-    void group_error() {
-        given(this.userGroupService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
-
-        webTestClient.patch().uri("/user/{username}/group", "little3201")
-                .bodyValue(Collections.singleton("21612OL34"))
-                .exchange().expectStatus().is4xxClientError();
-    }
-
-    @Test
-    void roles() {
-        given(this.userRoleService.roles(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
-
-        webTestClient.get().uri("/user/{username}/role", "little3201").exchange()
-                .expectStatus().isOk()
-                .expectBodyList(String.class);
-    }
-
-    @Test
-    void roles_error() {
-        given(this.userRoleService.roles(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/user/{username}/role", "little3201").exchange()
-                .expectStatus().isNoContent();
-    }
-
-    @Test
-    void role() {
-        UserRole userRole = new UserRole();
-        userRole.setRoleId(new ObjectId());
-        given(this.userRoleService.relation(Mockito.anyString(), Mockito.anySet())).willReturn(Flux.just(userRole));
-
-        webTestClient.patch().uri("/user/{username}/role", "little3201")
-                .bodyValue(Collections.singleton("21612OL34"))
-                .exchange().expectStatus().isAccepted()
-                .expectBodyList(UserRole.class);
-    }
-
-    @Test
-    void role_error() {
-        given(this.userRoleService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
-
-        webTestClient.patch().uri("/user/{username}/role", "little3201")
-                .bodyValue(Collections.singleton("21612OL34"))
-                .exchange().expectStatus().is4xxClientError();
-    }
-
-    @Test
-    void authority() {
-        TreeNode treeNode = new TreeNode("21612OL31", "Dashboard");
-        given(this.authorityService.authorities(Mockito.anyString())).willReturn(Flux.just(treeNode));
-
-        webTestClient.get().uri("/user/{username}/authority", "little3201").exchange()
-                .expectStatus().isOk()
-                .expectBodyList(RoleVO.class);
-    }
-
-    @Test
-    void authority_error() {
-        given(this.authorityService.authorities(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/user/{username}/authority", "little3201").exchange()
-                .expectStatus().isNoContent();
-    }
 }

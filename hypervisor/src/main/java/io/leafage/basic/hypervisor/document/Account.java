@@ -5,6 +5,7 @@ package io.leafage.basic.hypervisor.document;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import java.time.LocalDateTime;
 
 /**
  * Model class for Account
@@ -19,6 +20,10 @@ public class Account extends AbstractDocument {
      */
     private String username;
     /**
+     * 昵称
+     */
+    private String nickname;
+    /**
      * 密码
      */
     private String password;
@@ -27,20 +32,20 @@ public class Account extends AbstractDocument {
      */
     private String avatar;
     /**
-     * 是否有效
+     * 账号有效期
      */
-    @Field(name = "is_account_non_expired")
-    private boolean accountNonExpired = true;
+    @Field(name = "account_expires_at")
+    private LocalDateTime accountExpiresAt;
     /**
      * 是否锁定
      */
-    @Field(name = "is_account_non_locked")
-    private boolean accountNonLocked = true;
+    @Field(name = "is_account_locked")
+    private boolean accountLocked;
     /**
-     * 是否过期
+     * 密码有效期
      */
-    @Field(name = "is_credentials_non_expired")
-    private boolean credentialsNonExpired = true;
+    @Field(name = "credentials_expires_at")
+    private LocalDateTime credentialsExpiresAt;
 
     public String getUsername() {
         return username;
@@ -48,6 +53,14 @@ public class Account extends AbstractDocument {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPassword() {
@@ -66,27 +79,27 @@ public class Account extends AbstractDocument {
         this.avatar = avatar;
     }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
+    public LocalDateTime getAccountExpiresAt() {
+        return accountExpiresAt;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
+    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
+        this.accountExpiresAt = accountExpiresAt;
     }
 
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
+    public boolean isAccountLocked() {
+        return accountLocked;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+    public void setAccountLocked(boolean accountLocked) {
+        this.accountLocked = accountLocked;
     }
 
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+    public LocalDateTime getCredentialsExpiresAt() {
+        return credentialsExpiresAt;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
+        this.credentialsExpiresAt = credentialsExpiresAt;
     }
 }

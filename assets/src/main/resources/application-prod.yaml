@@ -1,11 +1,9 @@
 ##=====log common=====##
 logging:
   level:
-    # control root logger's level for INFO
-    root: INFO
-    # control org.springframework logger's level for DEBUG
+    root: info
     org:
-      springframework: INFO
+      springframework: info
 
 spring:
   cloud:

@@ -68,6 +68,23 @@ class RegionControllerTest {
     }
 
     @Test
+    void lower() {
+        RegionVO regionVO = new RegionVO();
+        regionVO.setName("test");
+        given(this.regionService.lower(Mockito.anyLong())).willReturn(Flux.just(regionVO));
+
+        webTestClient.get().uri("/region/{code}/lower", "1100").exchange()
+                .expectStatus().isOk().expectBodyList(RegionVO.class);
+    }
+
+    @Test
+    void lower_error() {
+        given(this.regionService.lower(Mockito.anyLong())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/region/{code}/lower", "1100").exchange().expectStatus().isNoContent();
+    }
+
+    @Test
     void count() {
         given(this.regionService.count()).willReturn(Mono.just(2L));
 

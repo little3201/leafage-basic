@@ -4,10 +4,8 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Account;
-import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
+import java.time.LocalDateTime;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -31,19 +31,18 @@ class AccountServiceImplTest {
     @Mock
     private AccountRepository accountRepository;
 
-    @Mock
-    private UserRepository userRepository;
-
     @InjectMocks
     private AccountServiceImpl accountService;
 
     @Test
-    void fetch() {
-        User user = new User();
-        user.setId(new ObjectId());
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
+    void retrieve() {
+        given(this.accountRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(Mockito.mock(Account.class)));
+        StepVerifier.create(accountService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+    }
 
-        given(this.accountRepository.getByModifier(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
+    @Test
+    void fetch() {
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Account.class)));
 
         StepVerifier.create(accountService.fetch("test")).expectNextCount(1).verifyComplete();
     }
@@ -56,9 +55,9 @@ class AccountServiceImplTest {
         account.setPassword("1234567");
         account.setAvatar("./avatar.jpg");
         account.setEnabled(true);
-        account.setAccountNonExpired(true);
-        account.setAccountNonLocked(true);
-        account.setCredentialsNonExpired(true);
+        account.setAccountExpiresAt(LocalDateTime.now().plusDays(7L));
+        account.setAccountLocked(false);
+        account.setCredentialsExpiresAt(LocalDateTime.now().plusHours(2L));
         given(this.accountRepository.insert(Mockito.any(Account.class))).willReturn(Mono.just(account));
 
         AccountDTO accountDTO = new AccountDTO();
@@ -73,7 +72,7 @@ class AccountServiceImplTest {
         account.setUsername("leafage");
         account.setPassword("1234567");
         account.setAvatar("./avatar.jpg");
-        given(this.accountRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(account));
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(account));
 
         given(this.accountRepository.save(Mockito.any(Account.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
 
@@ -86,7 +85,7 @@ class AccountServiceImplTest {
     void remove() {
         Account account = new Account();
         account.setId(new ObjectId());
-        given(this.accountRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(account));
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(account));
 
         given(this.accountRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());
 

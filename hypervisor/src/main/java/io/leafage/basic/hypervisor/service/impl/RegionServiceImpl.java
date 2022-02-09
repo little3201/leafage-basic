@@ -8,11 +8,15 @@ import io.leafage.basic.hypervisor.vo.RegionVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import java.util.NoSuchElementException;
 
 @Service
 public class RegionServiceImpl implements RegionService {
+
+    private static final String CODE_MESSAGE = "code must not null";
 
     private final RegionRepository regionRepository;
 
@@ -27,19 +31,49 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Mono<RegionVO> fetch(Long code) {
+        Assert.notNull(code, CODE_MESSAGE);
         return regionRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<RegionVO> create(RegionDTO regionDTO) {
-        Region region = new Region();
-        BeanUtils.copyProperties(regionDTO, region);
-        return regionRepository.insert(region).flatMap(this::convertOuter);
+    public Mono<Boolean> exist(String name) {
+        return regionRepository.existsByName(name);
     }
 
     @Override
     public Mono<Long> count() {
         return regionRepository.count();
+    }
+
+    @Override
+    public Flux<RegionVO> lower(long code) {
+        return regionRepository.findByCodeBetweenAndEnabledTrue(code * 100, code * 100 + 99).flatMap(this::convertOuter);
+    }
+
+    @Override
+    public Mono<RegionVO> create(RegionDTO regionDTO) {
+        return Mono.just(regionDTO).map(dto -> {
+                    Region region = new Region();
+                    BeanUtils.copyProperties(regionDTO, region);
+                    return region;
+                })
+                .flatMap(regionRepository::insert).flatMap(this::convertOuter);
+    }
+
+    @Override
+    public Mono<RegionVO> modify(Long code, RegionDTO regionDTO) {
+        Assert.notNull(code, CODE_MESSAGE);
+        return regionRepository.getByCodeAndEnabledTrue(code)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(region -> BeanUtils.copyProperties(regionDTO, region))
+                .flatMap(regionRepository::save).flatMap(this::convertOuter);
+    }
+
+    @Override
+    public Mono<Void> remove(Long code) {
+        Assert.notNull(code, CODE_MESSAGE);
+        return regionRepository.getByCodeAndEnabledTrue(code).flatMap(group ->
+                regionRepository.deleteById(group.getId()));
     }
 
     /**

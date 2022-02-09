@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.document.UserRole;
+import io.leafage.basic.hypervisor.document.AccountRole;
 import org.bson.types.ObjectId;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
@@ -16,15 +16,15 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018-12-06 22:09
  **/
 @Repository
-public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, ObjectId> {
+public interface AccountRoleRepository extends ReactiveCrudRepository<AccountRole, ObjectId> {
 
     /**
-     * 根据用户id查询关联角色
+     * 根据账号查询关联角色
      *
-     * @param userId 用户ID
+     * @param accountId 账号主键
      * @return 关联的角色
      */
-    Flux<UserRole> findByUserIdAndEnabledTrue(ObjectId userId);
+    Flux<AccountRole> findByAccountIdAndEnabledTrue(ObjectId accountId);
 
     /**
      * 统计关联用户
@@ -40,5 +40,5 @@ public interface UserRoleRepository extends ReactiveCrudRepository<UserRole, Obj
      * @param roleId 角色主键
      * @return 关联数据集
      */
-    Flux<UserRole> findByRoleIdAndEnabledTrue(ObjectId roleId);
+    Flux<AccountRole> findByRoleIdAndEnabledTrue(ObjectId roleId);
 }

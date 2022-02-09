@@ -1,11 +1,11 @@
 # hypervisor
 
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2020.0.3-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.4.6-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2021.0.0-green.svg" alt="Coverage Status">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.6.1-green.svg" alt="Downloads">
 </p>
 
-一套权限管理服务相关接口，包括用户、角色、权限、组的信息维护，大体包含：
+服务相关接口，主要包含：
 
 - 用户 user
 - 角色 role
@@ -19,7 +19,7 @@
 - [x] 角色
 - [x] 权限
 - [x] 分组
-- [ ] 账户
+- [x] 账户
 
 <a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.leafage.top"> 在线体验</a>
 

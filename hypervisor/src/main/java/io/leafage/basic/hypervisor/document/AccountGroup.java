@@ -9,19 +9,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Model class for Group User
+ * Model class for Account Group
  *
  * @author liwenqiang 2019/9/16 10:09
  **/
-@Document(collection = "user_group")
-public class UserGroup extends AbstractDocument {
+@Document(collection = "account_group")
+public class AccountGroup extends AbstractDocument {
 
     /**
-     * 用户主键
+     * 账号主键
      */
     @Indexed
-    @Field(value = "user_id")
-    private ObjectId userId;
+    @Field(value = "account_id")
+    private ObjectId accountId;
     /**
      * 分组主键
      */
@@ -30,12 +30,12 @@ public class UserGroup extends AbstractDocument {
     private ObjectId groupId;
 
 
-    public ObjectId getUserId() {
-        return userId;
+    public ObjectId getAccountId() {
+        return accountId;
     }
 
-    public void setUserId(ObjectId userId) {
-        this.userId = userId;
+    public void setAccountId(ObjectId accountId) {
+        this.accountId = accountId;
     }
 
     public ObjectId getGroupId() {

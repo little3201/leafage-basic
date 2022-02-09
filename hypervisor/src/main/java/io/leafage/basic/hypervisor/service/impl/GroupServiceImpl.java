@@ -6,7 +6,7 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.document.Group;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.UserGroupRepository;
+import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
@@ -32,16 +32,16 @@ import java.util.Objects;
 @Service
 public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> implements GroupService {
 
-    private static final String CODE_MESSAGE = "code is blank";
+    private static final String CODE_MESSAGE = "code must not blank";
 
     private final GroupRepository groupRepository;
-    private final UserGroupRepository userGroupRepository;
+    private final AccountGroupRepository accountGroupRepository;
     private final UserRepository userRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, UserGroupRepository userGroupRepository,
+    public GroupServiceImpl(GroupRepository groupRepository, AccountGroupRepository accountGroupRepository,
                             UserRepository userRepository) {
         this.groupRepository = groupRepository;
-        this.userGroupRepository = userGroupRepository;
+        this.accountGroupRepository = accountGroupRepository;
         this.userRepository = userRepository;
     }
 
@@ -167,7 +167,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
                     GroupVO groupVO = new GroupVO();
                     BeanUtils.copyProperties(g, groupVO);
                     return groupVO;
-                }).flatMap(groupVO -> userGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
+                }).flatMap(groupVO -> accountGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
                         .switchIfEmpty(Mono.just(0L)).map(count -> {
                             groupVO.setCount(count);
                             return groupVO;

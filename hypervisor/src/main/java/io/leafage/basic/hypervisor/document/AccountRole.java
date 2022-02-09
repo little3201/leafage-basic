@@ -9,32 +9,32 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
- * Model class for User Role
+ * Model class for Account Role
  *
  * @author liwenqiang 2019/9/16 10:09
  **/
-@Document(collection = "user_role")
-public class UserRole extends AbstractDocument {
+@Document(collection = "account_role")
+public class AccountRole extends AbstractDocument {
 
     /**
-     * 用户主键
+     * 账号主键
      */
     @Indexed
-    @Field(value = "user_id")
-    private ObjectId userId;
+    @Field(value = "account_id")
+    private ObjectId accountId;
     /**
-     * 组主键
+     * 角色主键
      */
     @Indexed
     @Field(value = "role_id")
     private ObjectId roleId;
 
-    public ObjectId getUserId() {
-        return userId;
+    public ObjectId getAccountId() {
+        return accountId;
     }
 
-    public void setUserId(ObjectId userId) {
-        this.userId = userId;
+    public void setAccountId(ObjectId accountId) {
+        this.accountId = accountId;
     }
 
     public ObjectId getRoleId() {

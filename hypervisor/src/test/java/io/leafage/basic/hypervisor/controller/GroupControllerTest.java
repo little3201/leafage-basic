@@ -1,9 +1,10 @@
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.document.UserRole;
+import io.leafage.basic.hypervisor.document.AccountRole;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupService;
-import io.leafage.basic.hypervisor.service.UserGroupService;
+import io.leafage.basic.hypervisor.service.AccountGroupService;
+import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import io.leafage.basic.hypervisor.vo.UserVO;
@@ -34,7 +35,7 @@ class GroupControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private UserGroupService userGroupService;
+    private AccountGroupService accountGroupService;
 
     @MockBean
     private GroupService groupService;
@@ -193,21 +194,21 @@ class GroupControllerTest {
     }
 
     @Test
-    void users() {
-        UserVO userVO = new UserVO();
-        userVO.setUsername("little3201");
-        given(this.userGroupService.users(Mockito.anyString())).willReturn(Flux.just(userVO));
+    void accounts() {
+        AccountVO accountVO = new AccountVO();
+        accountVO.setUsername("little3201");
+        given(this.accountGroupService.accounts(Mockito.anyString())).willReturn(Flux.just(accountVO));
 
-        webTestClient.get().uri("/group/{code}/user", "21612OL34").exchange()
+        webTestClient.get().uri("/group/{code}/account", "21612OL34").exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserRole.class);
+                .expectBodyList(AccountRole.class);
     }
 
     @Test
-    void users_error() {
-        given(this.userGroupService.users(Mockito.anyString())).willThrow(new RuntimeException());
+    void accounts_error() {
+        given(this.accountGroupService.accounts(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/group/{code}/user", "21612OL34").exchange()
+        webTestClient.get().uri("/group/{code}/account", "21612OL34").exchange()
                 .expectStatus().isNoContent();
     }
 }

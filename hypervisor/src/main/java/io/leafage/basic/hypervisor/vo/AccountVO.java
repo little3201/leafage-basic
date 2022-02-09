@@ -3,35 +3,42 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 /**
  * VO class for Account
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AccountVO {
+public class AccountVO implements Serializable {
 
     private static final long serialVersionUID = 2227758644875658137L;
 
     /**
-     * 用户名
+     * 账号
      */
     private String username;
+    /**
+     * 昵称
+     */
+    private String nickname;
     /**
      * 头像
      */
     private String avatar;
     /**
-     * 是否有效
+     * 账号有效期
      */
-    private boolean accountNonExpired;
+    private LocalDateTime accountExpiresAt;
     /**
      * 是否锁定
      */
-    private boolean accountNonLocked;
+    private boolean accountLocked;
     /**
-     * 密码是否有效
+     * 密码有效期
      */
-    private boolean credentialsNonExpired;
+    private LocalDateTime credentialsExpiresAt;
 
     public String getUsername() {
         return username;
@@ -39,6 +46,14 @@ public class AccountVO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getAvatar() {
@@ -49,27 +64,27 @@ public class AccountVO {
         this.avatar = avatar;
     }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
+    public LocalDateTime getAccountExpiresAt() {
+        return accountExpiresAt;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
+    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
+        this.accountExpiresAt = accountExpiresAt;
     }
 
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
+    public boolean isAccountLocked() {
+        return accountLocked;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+    public void setAccountLocked(boolean accountLocked) {
+        this.accountLocked = accountLocked;
     }
 
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
+    public LocalDateTime getCredentialsExpiresAt() {
+        return credentialsExpiresAt;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
+    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
+        this.credentialsExpiresAt = credentialsExpiresAt;
     }
 }

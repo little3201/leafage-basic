@@ -21,6 +21,10 @@ public class Group extends AbstractDocument {
     @Indexed(unique = true)
     private String code;
     /**
+     * 名称
+     */
+    private String name;
+    /**
      * 负责人
      */
     private ObjectId principal;
@@ -29,10 +33,6 @@ public class Group extends AbstractDocument {
      */
     @Indexed(sparse = true)
     private ObjectId superior;
-    /**
-     * 名称
-     */
-    private String name;
     /**
      * 描述
      */

@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 
 
 /**
- * 用户信息service 接口实现
+ * user service impl
  *
  * @author liwenqiang 2018/7/28 0:30
  **/
@@ -69,7 +69,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     /**
-     * 数据脱敏
+     * 数据转换
      *
      * @param info 信息
      * @return UserVO 输出对象

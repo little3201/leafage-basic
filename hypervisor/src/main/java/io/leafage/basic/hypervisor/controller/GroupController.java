@@ -19,7 +19,7 @@ import top.leafage.common.basic.TreeNode;
 import javax.validation.Valid;
 
 /**
- * 分组信息controller
+ * group controller
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -98,7 +98,7 @@ public class GroupController {
     /**
      * 统计记录数
      *
-     * @return 查询的数据集，异常时返回204状态码
+     * @return 查询的记录数，异常时返回204状态码
      */
     @GetMapping("/count")
     public ResponseEntity<Mono<Long>> count() {

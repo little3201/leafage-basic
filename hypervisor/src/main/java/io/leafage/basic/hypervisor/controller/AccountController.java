@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 账户信息Controller
+ * account controller
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
@@ -68,7 +68,7 @@ public class AccountController {
     /**
      * 统计记录数
      *
-     * @return 查询到的数据，异常时返回204状态码
+     * @return 查询的记录数，异常时返回204状态码
      */
     @GetMapping("/count")
     public ResponseEntity<Mono<Long>> count() {

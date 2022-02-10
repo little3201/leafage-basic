@@ -1,6 +1,6 @@
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.document.Region;
+import io.leafage.basic.hypervisor.document.Notification;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
@@ -9,12 +9,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * region repository
+ * notification repository
  *
- * @author liwenqiang 2021-08-20 16:59
- **/
+ * @author liwenqiang 2022-02-10 13:49
+ */
 @Repository
-public interface RegionRepository extends ReactiveMongoRepository<Region, ObjectId> {
+public interface NotificationRepository extends ReactiveMongoRepository<Notification, ObjectId> {
 
     /**
      * 分页查询
@@ -22,7 +22,7 @@ public interface RegionRepository extends ReactiveMongoRepository<Region, Object
      * @param pageable 分页参数
      * @return 有效数据集
      */
-    Flux<Region> findByEnabledTrue(Pageable pageable);
+    Flux<Notification> findByReadAndEnabledTrue(Pageable pageable, boolean read);
 
     /**
      * 根据code查询enabled信息
@@ -30,20 +30,12 @@ public interface RegionRepository extends ReactiveMongoRepository<Region, Object
      * @param code 代码
      * @return 查询结果信息
      */
-    Mono<Region> getByCodeAndEnabledTrue(Long code);
+    Mono<Notification> getByCodeAndEnabledTrue(String code);
 
     /**
-     * 是否已存在
+     * 查询未读记录数
      *
-     * @param name 名称
-     * @return true-是，false-否
+     * @return 记录数
      */
-    Mono<Boolean> existsByName(String name);
-
-    /**
-     * 查询下级
-     *
-     * @return 结果信息
-     */
-    Flux<Region> findByCodeBetweenAndEnabledTrue(long start, long end);
+    Mono<Long> countByReadFalse();
 }

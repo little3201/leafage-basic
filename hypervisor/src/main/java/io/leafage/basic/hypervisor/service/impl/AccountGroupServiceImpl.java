@@ -16,6 +16,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+/**
+ * account group service impl
+ *
+ * @author liwenqiang 2018/12/17 19:26
+ **/
 @Service
 public class AccountGroupServiceImpl implements AccountGroupService {
 

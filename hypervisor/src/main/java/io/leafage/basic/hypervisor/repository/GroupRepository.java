@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 
 /**
- * 分组信息repository
+ * group repository
  *
  * @author liwenqiang 2018/12/20 9:52
  **/
@@ -21,7 +21,7 @@ import java.util.Collection;
 public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId> {
 
     /**
-     * 查询所有组
+     * 查询所有
      *
      * @return 有效组
      */
@@ -36,7 +36,7 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId
     Flux<Group> findByCodeInAndEnabledTrue(Collection<String> codes);
 
     /**
-     * 分页查询组
+     * 分页查询
      *
      * @param pageable 分页参数
      * @return 有效组

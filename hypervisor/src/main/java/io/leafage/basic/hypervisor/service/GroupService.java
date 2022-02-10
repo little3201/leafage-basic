@@ -10,7 +10,7 @@ import top.leafage.common.basic.TreeNode;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
- * 分组信息Service
+ * group service
  *
  * @author liwenqiang 2018/12/17 19:24
  **/

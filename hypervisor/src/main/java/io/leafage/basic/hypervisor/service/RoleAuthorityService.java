@@ -6,6 +6,11 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * role authority service
+ *
+ * @author liwenqiang 2018/7/28 0:29
+ **/
 public interface RoleAuthorityService {
 
     /**

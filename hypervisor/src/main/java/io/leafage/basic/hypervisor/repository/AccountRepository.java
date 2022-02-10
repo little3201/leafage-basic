@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * 账户信息repository
+ * account repository
  *
  * @author liwenqiang 2018/12/20 9:51
  **/

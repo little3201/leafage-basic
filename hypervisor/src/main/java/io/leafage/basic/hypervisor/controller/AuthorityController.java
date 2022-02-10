@@ -19,7 +19,7 @@ import top.leafage.common.basic.TreeNode;
 import javax.validation.Valid;
 
 /**
- * 权限 controller
+ * authority controller
  *
  * @author liwenqiang 2018/12/17 19:39
  **/
@@ -98,7 +98,7 @@ public class AuthorityController {
     /**
      * 统计记录数
      *
-     * @return 记录数
+     * @return 查询的记录数，异常时返回204状态码
      */
     @GetMapping("/count")
     public ResponseEntity<Mono<Long>> count() {

@@ -67,15 +67,19 @@ public class User extends AbstractDocument {
     /**
      * 区/县
      */
-    private Long region;
+    private Long district;
+    /**
+     * 乡/镇
+     */
+    private Long town;
+    /**
+     * 村
+     */
+    private Long village;
     /**
      * 街道
      */
-    private Long street;
-    /**
-     * 地址
-     */
-    private String address;
+    private String street;
 
     public String getUsername() {
         return username;
@@ -173,27 +177,35 @@ public class User extends AbstractDocument {
         this.city = city;
     }
 
-    public Long getRegion() {
-        return region;
+    public Long getDistrict() {
+        return district;
     }
 
-    public void setRegion(Long region) {
-        this.region = region;
+    public void setDistrict(Long district) {
+        this.district = district;
     }
 
-    public Long getStreet() {
+    public Long getTown() {
+        return town;
+    }
+
+    public void setTown(Long town) {
+        this.town = town;
+    }
+
+    public Long getVillage() {
+        return village;
+    }
+
+    public void setVillage(Long village) {
+        this.village = village;
+    }
+
+    public String getStreet() {
         return street;
     }
 
-    public void setStreet(Long street) {
+    public void setStreet(String street) {
         this.street = street;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }

@@ -46,7 +46,7 @@ class RegionServiceImplTest {
         region.setCode(2L);
         region.setName("北京市");
         region.setAlias("京");
-        region.setZip("23423080");
+        region.setPostalCode(23423080);
         region.setDescription("描述");
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
 
@@ -60,7 +60,7 @@ class RegionServiceImplTest {
         region.setCode(2L);
         region.setName("北京市");
         region.setAlias("京");
-        region.setZip("23423080");
+        region.setPostalCode(23423080);
         region.setDescription("描述");
         given(this.regionRepository.findByCodeBetweenAndEnabledTrue(Mockito.anyLong(), Mockito.anyLong()))
                 .willReturn(Flux.just(region));

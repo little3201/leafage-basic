@@ -67,7 +67,7 @@ public class UserVO implements Serializable {
     /**
      * 区/县
      */
-    private Long region;
+    private Long district;
     /**
      * 街道
      */
@@ -177,12 +177,12 @@ public class UserVO implements Serializable {
         this.city = city;
     }
 
-    public Long getRegion() {
-        return region;
+    public Long getDistrict() {
+        return district;
     }
 
-    public void setRegion(Long region) {
-        this.region = region;
+    public void setDistrict(Long district) {
+        this.district = district;
     }
 
     public Long getStreet() {

@@ -29,7 +29,7 @@ public class RegionDTO implements Serializable {
     /**
      * 邮编
      */
-    private String zip;
+    private Integer postalCode;
     /**
      * 描述
      */
@@ -60,12 +60,12 @@ public class RegionDTO implements Serializable {
         this.alias = alias;
     }
 
-    public String getZip() {
-        return zip;
+    public Integer getPostalCode() {
+        return postalCode;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setPostalCode(Integer postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getDescription() {

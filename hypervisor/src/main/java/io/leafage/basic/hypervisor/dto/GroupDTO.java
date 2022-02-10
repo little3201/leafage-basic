@@ -15,6 +15,13 @@ import java.io.Serializable;
 public class GroupDTO implements Serializable {
 
     private static final long serialVersionUID = 5146594305386328379L;
+
+    /**
+     * 名称
+     */
+    @NotBlank
+    @Size(max = 16)
+    private String name;
     /**
      * 负责人
      */
@@ -24,16 +31,19 @@ public class GroupDTO implements Serializable {
      */
     private String superior;
     /**
-     * 名称
-     */
-    @NotBlank
-    @Size(max = 16)
-    private String name;
-    /**
      * 描述
      */
     @Size(max = 64)
     private String description;
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getPrincipal() {
         return principal;
@@ -51,13 +61,6 @@ public class GroupDTO implements Serializable {
         this.superior = superior;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getDescription() {
         return description;

@@ -6,6 +6,8 @@ package io.leafage.basic.assets.vo;
 import top.leafage.common.basic.AbstractVO;
 import java.io.Serializable;
 
+import java.io.Serializable;
+
 /**
  * VO class for Category
  *

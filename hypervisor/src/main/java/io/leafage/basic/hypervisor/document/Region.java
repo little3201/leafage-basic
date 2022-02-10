@@ -5,6 +5,7 @@ package io.leafage.basic.hypervisor.document;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * Model class for Region
@@ -35,7 +36,8 @@ public class Region extends AbstractDocument {
     /**
      * 邮编
      */
-    private String zip;
+    @Field(value = "postal_code")
+    private Integer postalCode;
     /**
      * 描述
      */
@@ -73,12 +75,12 @@ public class Region extends AbstractDocument {
         this.superior = superior;
     }
 
-    public String getZip() {
-        return zip;
+    public Integer getPostalCode() {
+        return postalCode;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setPostalCode(Integer postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getDescription() {

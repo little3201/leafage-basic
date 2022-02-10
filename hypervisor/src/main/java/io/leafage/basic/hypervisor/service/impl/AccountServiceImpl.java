@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
@@ -10,10 +11,15 @@ import io.leafage.basic.hypervisor.service.AccountService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.NoSuchElementException;
 
 /**
@@ -24,9 +30,11 @@ import java.util.NoSuchElementException;
 @Service
 public class AccountServiceImpl implements AccountService {
 
+    private final ReactiveMongoTemplate reactiveMongoTemplate;
     private final AccountRepository accountRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
+    public AccountServiceImpl(ReactiveMongoTemplate reactiveMongoTemplate, AccountRepository accountRepository) {
+        this.reactiveMongoTemplate = reactiveMongoTemplate;
         this.accountRepository = accountRepository;
     }
 
@@ -56,9 +64,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Mono<AccountVO> modify(String code, AccountDTO accountDTO) {
-        Assert.hasText(code, "code is blank.");
-        return accountRepository.getByUsernameAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
+    public Mono<AccountVO> modify(String username, AccountDTO accountDTO) {
+        Assert.hasText(username, "username must not blank.");
+        return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(accountVO -> {
                     Account account = new Account();
                     BeanUtils.copyProperties(accountDTO, account);
@@ -67,9 +75,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Mono<Void> remove(String code) {
-        Assert.hasText(code, "code is blank.");
-        return accountRepository.getByUsernameAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
+    public Mono<Boolean> unlock(String username) {
+        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("username").is(username)),
+                new Update().set("is_account_locked", false), Account.class).map(UpdateResult::wasAcknowledged);
+    }
+
+    @Override
+    public Mono<Void> remove(String username) {
+        Assert.hasText(username, "username must no blank.");
+        return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(account -> accountRepository.deleteById(account.getId()));
     }
 
@@ -84,4 +98,5 @@ public class AccountServiceImpl implements AccountService {
         BeanUtils.copyProperties(account, outer);
         return outer;
     }
+
 }

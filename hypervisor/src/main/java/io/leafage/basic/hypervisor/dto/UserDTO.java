@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -68,7 +68,7 @@ public class UserDTO implements Serializable {
     /**
      * 区/县
      */
-    private Long region;
+    private Long district;
     /**
      * 街道
      */
@@ -175,12 +175,12 @@ public class UserDTO implements Serializable {
         this.city = city;
     }
 
-    public Long getRegion() {
-        return region;
+    public Long getDistrict() {
+        return district;
     }
 
-    public void setRegion(Long region) {
-        this.region = region;
+    public void setDistrict(Long district) {
+        this.district = district;
     }
 
     public Long getStreet() {

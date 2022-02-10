@@ -52,7 +52,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Flux<RegionVO> lower(long code) {
-        return regionRepository.findByCodeBetweenAndEnabledTrue(code * 100, code * 100 + 99).flatMap(this::fetchOuter);
+        return regionRepository.findBySuperiorAndEnabledTrue(code).flatMap(this::fetchOuter);
     }
 
     @Override

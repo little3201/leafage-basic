@@ -45,5 +45,5 @@ public interface RegionRepository extends ReactiveMongoRepository<Region, Object
      *
      * @return 结果信息
      */
-    Flux<Region> findByCodeBetweenAndEnabledTrue(long start, long end);
+    Flux<Region> findBySuperiorAndEnabledTrue(long superior);
 }

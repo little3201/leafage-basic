@@ -52,6 +52,23 @@ public class NotificationController {
     }
 
     /**
+     * 统计记录数
+     *
+     * @return 查询的记录数，异常时返回204状态码
+     */
+    @GetMapping("/count")
+    public ResponseEntity<Mono<Long>> count() {
+        Mono<Long> count;
+        try {
+            count = notificationService.count();
+        } catch (Exception e) {
+            logger.error("Count notification occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(count);
+    }
+
+    /**
      * 根据 code 查询
      *
      * @param code 代码

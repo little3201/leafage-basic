@@ -31,4 +31,11 @@ public interface NotificationRepository extends ReactiveMongoRepository<Notifica
      * @return 查询结果信息
      */
     Mono<Notification> getByCodeAndEnabledTrue(String code);
+
+    /**
+     * 查询未读记录数
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByReadFalse();
 }

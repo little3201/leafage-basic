@@ -48,7 +48,7 @@ public class NotificationServiceImpl extends ReactiveAbstractTreeNodeService<Gro
 
     @Override
     public Mono<Long> count() {
-        return notificationRepository.count();
+        return notificationRepository.countByReadFalse();
     }
 
     @Override

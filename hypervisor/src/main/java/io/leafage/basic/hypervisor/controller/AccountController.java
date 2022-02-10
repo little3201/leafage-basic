@@ -143,7 +143,7 @@ public class AccountController {
      * @param username 账号
      * @return 结果，否则返回304状态码
      */
-    @PutMapping("/{username}")
+    @PatchMapping("/{username}")
     public ResponseEntity<Mono<Boolean>> unlock(@PathVariable String username) {
         Mono<Boolean> mono;
         try {

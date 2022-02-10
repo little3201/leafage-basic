@@ -21,10 +21,6 @@ public class UserVO implements Serializable {
      */
     private String username;
     /**
-     * 邮箱
-     */
-    private String email;
-    /**
      * 姓
      */
     private String firstname;
@@ -91,14 +87,6 @@ public class UserVO implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFirstname() {

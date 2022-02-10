@@ -26,16 +26,6 @@ public interface UserRepository extends ReactiveMongoRepository<User, ObjectId> 
     Mono<User> getByUsername(String username);
 
     /**
-     * 根据username/mobile/email查询enabled信息
-     *
-     * @param username 账号
-     * @param phone    电话
-     * @param email    邮箱
-     * @return 用户信息
-     */
-    Mono<User> getByUsernameOrPhoneOrEmailAndEnabledTrue(String username, String phone, String email);
-
-    /**
      * 是否已存在
      *
      * @param username 账号

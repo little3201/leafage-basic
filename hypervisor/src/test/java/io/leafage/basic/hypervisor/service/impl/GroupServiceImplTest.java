@@ -47,6 +47,7 @@ class GroupServiceImplTest {
     void retrieve() {
         Group group = new Group();
         group.setId(new ObjectId());
+        group.setAlias("技术");
         group.setSuperior(new ObjectId());
         group.setPrincipal(new ObjectId());
         given(this.groupRepository.findByEnabledTrue()).willReturn(Flux.just(group));

@@ -6,6 +6,8 @@ package io.leafage.basic.hypervisor.vo;
 import top.leafage.common.basic.AbstractVO;
 import java.io.Serializable;
 
+import java.io.Serializable;
+
 /**
  * VO class for Role
  *
@@ -24,13 +26,13 @@ public class RoleVO extends AbstractVO<String> implements Serializable {
      */
     private String superior;
     /**
-     * 描述
-     */
-    private String description;
-    /**
      * 用户数
      */
     private long count;
+    /**
+     * 描述
+     */
+    private String description;
 
 
     public String getName() {

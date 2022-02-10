@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
@@ -120,20 +121,38 @@ public class AccountController {
     /**
      * 修改信息
      *
-     * @param code       代码
+     * @param username   账号
      * @param accountDTO 要修改的数据
      * @return 修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{code}")
-    public ResponseEntity<Mono<AccountVO>> modify(@PathVariable String code, @RequestBody @Valid AccountDTO accountDTO) {
+    @PutMapping("/{username}")
+    public ResponseEntity<Mono<AccountVO>> modify(@PathVariable String username, @RequestBody @Valid AccountDTO accountDTO) {
         Mono<AccountVO> voMono;
         try {
-            voMono = accountService.modify(code, accountDTO);
+            voMono = accountService.modify(username, accountDTO);
         } catch (Exception e) {
             logger.error("Modify account occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.accepted().body(voMono);
+    }
+
+    /**
+     * 解锁
+     *
+     * @param username 账号
+     * @return 结果，否则返回304状态码
+     */
+    @PutMapping("/{username}")
+    public ResponseEntity<Mono<Boolean>> unlock(@PathVariable String username) {
+        Mono<Boolean> mono;
+        try {
+            mono = accountService.unlock(username);
+        } catch (Exception e) {
+            logger.error("Modify account occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        }
+        return ResponseEntity.accepted().body(mono);
     }
 
     /**

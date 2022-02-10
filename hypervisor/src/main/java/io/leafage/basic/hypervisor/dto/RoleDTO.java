@@ -30,10 +30,6 @@ public class RoleDTO implements Serializable {
      */
     @Size(max = 32)
     private String description;
-    /**
-     * 修改人
-     */
-    private String modifier;
 
     public String getName() {
         return name;
@@ -59,11 +55,4 @@ public class RoleDTO implements Serializable {
         this.description = description;
     }
 
-    public String getModifier() {
-        return modifier;
-    }
-
-    public void setModifier(String modifier) {
-        this.modifier = modifier;
-    }
 }

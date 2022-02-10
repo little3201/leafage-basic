@@ -16,10 +16,7 @@ import java.io.Serializable;
 public class AuthorityDTO implements Serializable {
 
     private static final long serialVersionUID = 8659525799803097800L;
-    /**
-     * 上级
-     */
-    private String superior;
+
     /**
      * 名称
      */
@@ -31,6 +28,10 @@ public class AuthorityDTO implements Serializable {
      */
     @NotNull
     private Character type;
+    /**
+     * 上级
+     */
+    private String superior;
     /**
      * 图标
      */
@@ -44,13 +45,6 @@ public class AuthorityDTO implements Serializable {
      */
     private String description;
 
-    public String getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(String superior) {
-        this.superior = superior;
-    }
 
     public String getName() {
         return name;
@@ -66,6 +60,14 @@ public class AuthorityDTO implements Serializable {
 
     public void setType(Character type) {
         this.type = type;
+    }
+
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
     }
 
     public String getIcon() {

@@ -6,6 +6,8 @@ package io.leafage.basic.hypervisor.vo;
 import top.leafage.common.basic.AbstractVO;
 import java.io.Serializable;
 
+import java.io.Serializable;
+
 /**
  * VO class for Authority
  *
@@ -36,13 +38,13 @@ public class AuthorityVO extends AbstractVO<String> implements Serializable {
      */
     private String path;
     /**
-     * 描述
-     */
-    private String description;
-    /**
      * 角色数
      */
     private long count;
+    /**
+     * 描述
+     */
+    private String description;
 
 
     public String getSuperior() {

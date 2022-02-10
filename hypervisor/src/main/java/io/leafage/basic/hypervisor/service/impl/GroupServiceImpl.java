@@ -25,7 +25,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
- * 分组信息Service 接口实现
+ * group service impl
  *
  * @author liwenqiang 2018/12/17 19:25
  **/

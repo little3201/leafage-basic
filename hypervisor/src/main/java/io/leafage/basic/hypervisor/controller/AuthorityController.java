@@ -19,7 +19,7 @@ import top.leafage.common.basic.TreeNode;
 import javax.validation.Valid;
 
 /**
- * 权限 controller
+ * authority controller
  *
  * @author liwenqiang 2018/12/17 19:39
  **/

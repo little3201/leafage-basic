@@ -17,6 +17,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+/**
+ * account role service impl
+ *
+ * @author liwenqiang 2018/12/17 19:26
+ **/
 @Service
 public class AccountRoleServiceImpl implements AccountRoleService {
 

@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
- * 角色信息service 接口实现
+ * role service impl
  *
  * @author liwenqiang 2018/9/27 14:20
  **/

@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
 /**
- * 用户信息Controller
+ * user controller
  *
  * @author liwenqiang 2018/8/2 21:02
  **/

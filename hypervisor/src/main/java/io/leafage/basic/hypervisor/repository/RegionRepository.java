@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 public interface RegionRepository extends ReactiveMongoRepository<Region, ObjectId> {
 
     /**
-     * 分页查询region
+     * 分页查询
      *
      * @param pageable 分页参数
      * @return 有效数据集

@@ -11,7 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * 角色权限repository
+ * role authority repository
  *
  * @author liwenqiang 2018/9/26 11:29
  **/

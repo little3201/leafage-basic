@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 
 /**
- * 角色repository
+ * role epository
  *
  * @author liwenqiang 2018/9/26 11:06
  **/

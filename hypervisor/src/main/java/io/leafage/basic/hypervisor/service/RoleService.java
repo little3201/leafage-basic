@@ -10,7 +10,7 @@ import top.leafage.common.basic.TreeNode;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
- * 角色信息service
+ * role service
  *
  * @author liwenqiang 2018/9/27 14:18
  **/

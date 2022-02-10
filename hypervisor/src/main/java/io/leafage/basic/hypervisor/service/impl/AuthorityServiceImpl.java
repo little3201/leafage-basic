@@ -24,7 +24,7 @@ import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.*;
 
 /**
- * 权限信息Service 接口实现
+ * authority service impl
  *
  * @author liwenqiang 2018/12/17 19:36
  **/

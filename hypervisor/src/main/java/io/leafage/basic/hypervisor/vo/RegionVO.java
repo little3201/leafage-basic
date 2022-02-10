@@ -7,7 +7,7 @@ import top.leafage.common.basic.AbstractVO;
 import java.io.Serializable;
 
 /**
- * DTO class for Region
+ * VO class for Region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/

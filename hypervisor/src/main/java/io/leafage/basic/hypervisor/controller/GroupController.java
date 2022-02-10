@@ -19,7 +19,7 @@ import top.leafage.common.basic.TreeNode;
 import javax.validation.Valid;
 
 /**
- * 分组信息controller
+ * group controller
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

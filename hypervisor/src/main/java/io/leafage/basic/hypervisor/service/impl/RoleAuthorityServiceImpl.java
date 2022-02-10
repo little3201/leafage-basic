@@ -16,6 +16,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+/**
+ * role authority service impl
+ *
+ * @author liwenqiang 2018/7/28 0:29
+ **/
 @Service
 public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 

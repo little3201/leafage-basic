@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 
 /**
- * 权限资源repository
+ * authority repository
  *
  * @author liwenqiang 2018/12/17 19:37
  **/
@@ -21,7 +21,7 @@ import java.util.Collection;
 public interface AuthorityRepository extends ReactiveMongoRepository<Authority, ObjectId> {
 
     /**
-     * 分页查询权限
+     * 分页查询
      *
      * @param pageable 分页参数
      * @return 有效权限
@@ -29,14 +29,14 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
     Flux<Authority> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 查询权限
+     * 查询所有
      *
      * @return 有效权限
      */
     Flux<Authority> findByEnabledTrue();
 
     /**
-     * 查询菜单
+     * 根据类型查询
      *
      * @param type 类型
      * @return 有效菜单
@@ -52,7 +52,7 @@ public interface AuthorityRepository extends ReactiveMongoRepository<Authority, 
     Mono<Authority> getByCodeAndEnabledTrue(String code);
 
     /**
-     * 根据权限
+     * 根据code集合查询
      *
      * @param codes 代码集合
      * @return 权限信息

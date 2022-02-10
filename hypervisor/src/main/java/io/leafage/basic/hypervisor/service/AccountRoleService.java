@@ -6,6 +6,11 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * account role service
+ *
+ * @author liwenqiang 2018/12/17 19:26
+ **/
 public interface AccountRoleService {
 
     /**

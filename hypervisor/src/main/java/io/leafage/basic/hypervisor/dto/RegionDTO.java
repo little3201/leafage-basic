@@ -31,6 +31,10 @@ public class RegionDTO implements Serializable {
      */
     private Integer postalCode;
     /**
+     * 区号
+     */
+    private String areaCode;
+    /**
      * 描述
      */
     private String description;
@@ -66,6 +70,14 @@ public class RegionDTO implements Serializable {
 
     public void setPostalCode(Integer postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
 
     public String getDescription() {

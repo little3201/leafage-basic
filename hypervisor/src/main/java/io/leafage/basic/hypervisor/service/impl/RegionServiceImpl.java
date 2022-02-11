@@ -116,7 +116,7 @@ public class RegionServiceImpl implements RegionService {
             return vo;
         });
 
-        if (region.getSuperior() != null) {
+        if (region.getSuperior() != null && region.getSuperior() != 0) {
             Mono<Region> superiorMono = regionRepository.getByCodeAndEnabledTrue(region.getSuperior());
             return voMono.zipWith(superiorMono, (vo, superior) -> {
                 vo.setSuperior(superior.getName());

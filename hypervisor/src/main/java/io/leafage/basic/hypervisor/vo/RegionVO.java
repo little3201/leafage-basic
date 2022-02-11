@@ -32,6 +32,10 @@ public class RegionVO extends AbstractVO<Long> implements Serializable {
      */
     private Integer postalCode;
     /**
+     * 区号
+     */
+    private String areaCode;
+    /**
      * 描述
      */
     private String description;
@@ -67,6 +71,14 @@ public class RegionVO extends AbstractVO<Long> implements Serializable {
 
     public void setPostalCode(Integer postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
 
     public String getDescription() {

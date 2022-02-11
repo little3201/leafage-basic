@@ -62,7 +62,7 @@ class RegionServiceImplTest {
         region.setAlias("京");
         region.setPostalCode(23423080);
         region.setDescription("描述");
-        given(this.regionRepository.findByCodeBetweenAndEnabledTrue(Mockito.anyLong(), Mockito.anyLong()))
+        given(this.regionRepository.findBySuperiorAndEnabledTrue(Mockito.anyLong()))
                 .willReturn(Flux.just(region));
 
         StepVerifier.create(regionService.lower(11L)).expectNextCount(1).verifyComplete();

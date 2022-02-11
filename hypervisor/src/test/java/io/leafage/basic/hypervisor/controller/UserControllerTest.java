@@ -36,7 +36,7 @@ class UserControllerTest {
         UserVO userVO = new UserVO();
         userVO.setUsername("leafage");
         userVO.setBirthday(LocalDate.now());
-        userVO.setAddress("202 street");
+        userVO.setStreet("202 street");
         given(this.userService.fetch(Mockito.anyString())).willReturn(Mono.just(userVO));
 
         webTestClient.get().uri("/user/{username}", "leafage").exchange()
@@ -91,14 +91,14 @@ class UserControllerTest {
     void modify() {
         UserVO userVO = new UserVO();
         userVO.setBirthday(LocalDate.now());
-        userVO.setAddress("202 street");
+        userVO.setStreet("202 street");
         given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
 
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail("test@test.com");
         webTestClient.put().uri("/user/{username}", "test").bodyValue(userDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.address").isNotEmpty();
+                .expectBody().jsonPath("$.street").isNotEmpty();
     }
 
     @Test

@@ -3,8 +3,8 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.document.Group;
 import io.leafage.basic.hypervisor.document.Notification;
 import io.leafage.basic.hypervisor.dto.NotificationDTO;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.NotificationRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.NotificationService;
 import io.leafage.basic.hypervisor.vo.NotificationVO;
 import org.springframework.beans.BeanUtils;
@@ -27,11 +27,11 @@ public class NotificationServiceImpl extends ReactiveAbstractTreeNodeService<Gro
     private static final String CODE_MESSAGE = "code must not null";
 
     private final NotificationRepository notificationRepository;
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
-    public NotificationServiceImpl(NotificationRepository notificationRepository, UserRepository userRepository) {
+    public NotificationServiceImpl(NotificationRepository notificationRepository, AccountRepository accountRepository) {
         this.notificationRepository = notificationRepository;
-        this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class NotificationServiceImpl extends ReactiveAbstractTreeNodeService<Gro
 
     @Override
     public Mono<NotificationVO> create(NotificationDTO notificationDTO) {
-        return userRepository.getByUsername(notificationDTO.getReceiver()).flatMap(user ->
+        return accountRepository.getByUsernameAndEnabledTrue(notificationDTO.getReceiver()).flatMap(user ->
                         Mono.just(notificationDTO).map(dto -> {
                                     Notification notification = new Notification();
                                     BeanUtils.copyProperties(notificationDTO, notification);

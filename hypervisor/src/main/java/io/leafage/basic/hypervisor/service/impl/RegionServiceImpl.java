@@ -93,7 +93,7 @@ public class RegionServiceImpl implements RegionService {
             BeanUtils.copyProperties(r, vo);
             return vo;
         }).flatMap(vo -> {
-            if (region.getSuperior() != null) {
+            if (region.getSuperior() != null && region.getSuperior() != 0) {
                 return regionRepository.getByCodeAndEnabledTrue(region.getSuperior()).map(superior -> {
                     vo.setSuperior(String.valueOf(superior.getCode()));
                     return vo;

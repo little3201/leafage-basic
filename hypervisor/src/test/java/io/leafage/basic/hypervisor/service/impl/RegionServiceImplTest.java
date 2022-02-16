@@ -34,8 +34,6 @@ class RegionServiceImplTest {
     void retrieve() {
         given(this.regionRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(Mockito.mock(Region.class)));
 
-        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
-
         StepVerifier.create(regionService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
@@ -86,8 +84,6 @@ class RegionServiceImplTest {
     void create() {
         given(this.regionRepository.insert(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
 
-        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
-
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("测试村");
         regionDTO.setSuperior(11001L);
@@ -95,15 +91,13 @@ class RegionServiceImplTest {
     }
 
     @Test
-    void create_superior() {
-        given(this.regionRepository.insert(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
-
-        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
+    void create_error() {
+        given(this.regionRepository.insert(Mockito.any(Region.class))).willThrow(new RuntimeException());
 
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("测试村");
         regionDTO.setSuperior(1100L);
-        StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.create(regionDTO)).expectError(RuntimeException.class).verify();
     }
 
     @Test

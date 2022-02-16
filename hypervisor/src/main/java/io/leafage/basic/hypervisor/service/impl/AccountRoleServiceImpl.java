@@ -53,8 +53,8 @@ public class AccountRoleServiceImpl implements AccountRoleService {
     public Mono<List<String>> roles(String username) {
         Assert.hasText(username, "username must not blank");
         return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(user -> accountRoleRepository.findByAccountIdAndEnabledTrue(user.getId()).flatMap(userRole ->
-                                roleRepository.findById(userRole.getRoleId()).map(Role::getCode))
+                .flatMapMany(account -> accountRoleRepository.findByAccountIdAndEnabledTrue(account.getId())
+                        .flatMap(accountRole -> roleRepository.findById(accountRole.getRoleId()).map(Role::getCode))
                         .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 ).collectList();
     }

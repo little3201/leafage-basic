@@ -18,9 +18,9 @@ public class StatisticsTasks {
     }
 
     /**
-     * 执行统计任务，每天凌晨1点执行一次
+     * 执行统计任务，每天凌晨执行一次
      */
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "1 0 0 * * ?")
     public void execute() {
         try {
             statisticsService.create().subscribe(statistics ->

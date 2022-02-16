@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
@@ -14,6 +15,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -30,6 +35,9 @@ class AccountServiceImplTest {
 
     @Mock
     private AccountRepository accountRepository;
+
+    @Mock
+    private ReactiveMongoTemplate reactiveMongoTemplate;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -85,6 +93,14 @@ class AccountServiceImplTest {
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setUsername("test");
         StepVerifier.create(accountService.modify("21612OL34", accountDTO)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void unlock() {
+        given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("username").is("test")),
+                new Update().set("is_account_locked", false), Account.class)).willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
+
+        StepVerifier.create(accountService.unlock("test")).expectNextCount(1).verifyComplete();
     }
 
     @Test

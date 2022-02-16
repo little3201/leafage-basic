@@ -3,12 +3,12 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.document.Group;
-import io.leafage.basic.hypervisor.document.User;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
-import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.GroupRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
+import java.time.LocalDateTime;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -38,7 +38,7 @@ class GroupServiceImplTest {
     private AccountGroupRepository accountGroupRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
 
     @InjectMocks
     private GroupServiceImpl groupService;
@@ -56,7 +56,7 @@ class GroupServiceImplTest {
 
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
-        given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(User.class)));
+        given(this.accountRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
 
         StepVerifier.create(groupService.retrieve()).expectNextCount(1).verifyComplete();
     }
@@ -74,7 +74,7 @@ class GroupServiceImplTest {
 
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
-        given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(User.class)));
+        given(this.accountRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
 
         StepVerifier.create(groupService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
@@ -89,7 +89,7 @@ class GroupServiceImplTest {
 
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
-        given(this.userRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(User.class)));
+        given(this.accountRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
 
         StepVerifier.create(groupService.fetch("21612OL34")).expectNextCount(1).verifyComplete();
     }
@@ -130,7 +130,7 @@ class GroupServiceImplTest {
 
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Account.class)));
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
@@ -143,6 +143,9 @@ class GroupServiceImplTest {
     void remove() {
         Group group = new Group();
         group.setId(new ObjectId());
+        group.setEnabled(false);
+        group.setModifier(new ObjectId());
+        group.setModifyTime(LocalDateTime.now());
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(group));
 
         given(this.groupRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());

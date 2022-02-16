@@ -5,9 +5,9 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Group;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
-import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.bson.types.ObjectId;
@@ -20,7 +20,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
-
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -36,13 +35,13 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
 
     private final GroupRepository groupRepository;
     private final AccountGroupRepository accountGroupRepository;
-    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
 
     public GroupServiceImpl(GroupRepository groupRepository, AccountGroupRepository accountGroupRepository,
-                            UserRepository userRepository) {
+                            AccountRepository accountRepository) {
         this.groupRepository = groupRepository;
         this.accountGroupRepository = accountGroupRepository;
-        this.userRepository = userRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -128,7 +127,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
     private Mono<Group> principal(String principal, Group g) {
         return Mono.just(g).flatMap(group -> {
             if (StringUtils.hasText(principal)) {
-                return userRepository.getByUsername(principal).map(user -> {
+                return accountRepository.getByUsernameAndEnabledTrue(principal).map(user -> {
                     group.setPrincipal(user.getId());
                     return group;
                 }).switchIfEmpty(Mono.error(new NoSuchElementException()));
@@ -186,8 +185,8 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
     private Mono<GroupVO> convertPrincipal(ObjectId principal, GroupVO vo) {
         return Mono.just(vo).flatMap(v -> {
             if (principal != null) {
-                return userRepository.findById(principal).map(user -> {
-                    v.setPrincipal(user.getFirstname() + "-" + user.getLastname());
+                return accountRepository.findById(principal).map(account -> {
+                    v.setPrincipal(account.getNickname());
                     return v;
                 }).switchIfEmpty(Mono.just(v));
             }

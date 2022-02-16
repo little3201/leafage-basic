@@ -105,25 +105,6 @@ public class NotificationController {
     }
 
     /**
-     * 修改信息
-     *
-     * @param code            代码
-     * @param notificationDTO 要修改的数据
-     * @return 修改后的信息，异常时返回304状态码
-     */
-    @PutMapping("/{username}")
-    public ResponseEntity<Mono<NotificationVO>> modify(@PathVariable String code, @RequestBody @Valid NotificationDTO notificationDTO) {
-        Mono<NotificationVO> voMono;
-        try {
-            voMono = notificationService.modify(code, notificationDTO);
-        } catch (Exception e) {
-            logger.error("Modify notification occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-        }
-        return ResponseEntity.accepted().body(voMono);
-    }
-
-    /**
      * 删除信息
      *
      * @param code 代码

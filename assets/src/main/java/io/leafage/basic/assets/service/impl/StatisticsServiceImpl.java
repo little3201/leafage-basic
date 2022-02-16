@@ -42,24 +42,24 @@ public class StatisticsServiceImpl implements StatisticsService {
     public Mono<Statistics> create() {
         Statistics statistics = new Statistics();
         return postsRepository.findByEnabledTrue().collectList().flatMap(postsList -> {
-            LocalDate now = LocalDate.now();
-            statistics.setDate(now);
+            // 统计结果为昨天的数据
+            LocalDate yesterday = LocalDate.now().minusDays(1L);
+            statistics.setDate(yesterday);
             postsList.forEach(posts -> {
                 statistics.setViewed(statistics.getViewed() + posts.getViewed());
                 statistics.setLikes(statistics.getLikes() + posts.getLikes());
                 statistics.setComment(statistics.getComment() + posts.getComment());
             });
-            // 统计昨天数据，然后和前天的数据做差值，计算环比数据
-            return statisticsRepository.getByDate(now.minusDays(3)).flatMap(bys ->
-                    statisticsRepository.getByDate(now.minusDays(2)).map(ys -> {
-                        statistics.setOverViewed(this.dayOverDay(statistics.getViewed(), ys.getViewed(), bys.getViewed()));
-                        statistics.setOverLikes(this.dayOverDay(statistics.getLikes(), ys.getLikes(), bys.getLikes()));
-                        statistics.setOverComment(this.dayOverDay(statistics.getComment(), ys.getComment(), bys.getComment()));
+            // 统计前天数据，大前天的数据，做差值，计算环比数据
+            return statisticsRepository.getByDate(yesterday.minusDays(2L)).flatMap(tda ->
+                    statisticsRepository.getByDate(yesterday.minusDays(1L)).map(bys -> {
+                        statistics.setOverViewed(this.dayOverDay(statistics.getViewed(), bys.getViewed(), tda.getViewed()));
+                        statistics.setOverLikes(this.dayOverDay(statistics.getLikes(), bys.getLikes(), tda.getLikes()));
+                        statistics.setOverComment(this.dayOverDay(statistics.getComment(), bys.getComment(), tda.getComment()));
                         return statistics;
                     }));
         }).flatMap(statisticsRepository::insert);
     }
-
 
     /**
      * 对象转换为输出结果对象
@@ -76,20 +76,19 @@ public class StatisticsServiceImpl implements StatisticsService {
     /**
      * over data 计算
      *
-     * @param s  最新数据
-     * @param y  前一天数据
-     * @param by 大前天数据
+     * @param y   昨天数据
+     * @param by  前天数据
+     * @param tda 大前天数据
      * @return 计算结果
      */
-    private double dayOverDay(int s, int y, int by) {
-        if (s - y != 0) {
-            if (y - by == 0) {
-                return (s - y) * 100.0;
+    private double dayOverDay(int y, int by, int tda) {
+        if (y - by != 0) {
+            if (by - tda == 0) {
+                return (y - by) * 100.0;
             }
-            // 计算增长率
-            double overViewed = ((s - y) - (y - by)) * 1.0 / (y - by) * 100;
-            overViewed = BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
-            return overViewed;
+            // 计算增长率（百分比表示），四舍五入，保留2位小数
+            double overViewed = ((y - by) - (by - tda)) * 1.0 / (by - tda) * 100;
+            return BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
         }
         return 0.0;
     }

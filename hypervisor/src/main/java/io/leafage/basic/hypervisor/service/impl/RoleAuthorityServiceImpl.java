@@ -50,8 +50,8 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
     public Flux<RoleVO> roles(String code) {
         Assert.hasText(code, MESSAGE);
         return authorityRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(authority -> roleAuthorityRepository.findByAuthorityIdAndEnabledTrue(authority.getId()).flatMap(userRole ->
-                        roleRepository.findById(userRole.getRoleId()).map(role -> {
+                .flatMapMany(authority -> roleAuthorityRepository.findByAuthorityIdAndEnabledTrue(authority.getId()).flatMap(roleAuthority ->
+                        roleRepository.findById(roleAuthority.getRoleId()).map(role -> {
                             RoleVO roleVO = new RoleVO();
                             BeanUtils.copyProperties(role, roleVO);
                             return roleVO;

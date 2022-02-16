@@ -50,8 +50,8 @@ public class AccountGroupServiceImpl implements AccountGroupService {
     @Override
     public Mono<List<String>> groups(String username) {
         return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMapMany(user -> accountGroupRepository.findByAccountIdAndEnabledTrue(user.getId())
-                        .flatMap(userGroup -> groupRepository.findById(userGroup.getGroupId()).map(Group::getCode))
+                .flatMapMany(account -> accountGroupRepository.findByAccountIdAndEnabledTrue(account.getId())
+                        .flatMap(accountGroup -> groupRepository.findById(accountGroup.getGroupId()).map(Group::getCode))
                         .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 ).collectList();
     }

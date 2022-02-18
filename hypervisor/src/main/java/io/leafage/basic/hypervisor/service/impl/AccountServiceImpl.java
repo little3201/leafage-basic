@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.NoSuchElementException;
 
 /**
@@ -67,8 +66,7 @@ public class AccountServiceImpl implements AccountService {
     public Mono<AccountVO> modify(String username, AccountDTO accountDTO) {
         Assert.hasText(username, "username must not blank.");
         return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(accountVO -> {
-                    Account account = new Account();
+                .flatMap(account -> {
                     BeanUtils.copyProperties(accountDTO, account);
                     return accountRepository.save(account).map(this::convertOuter);
                 });

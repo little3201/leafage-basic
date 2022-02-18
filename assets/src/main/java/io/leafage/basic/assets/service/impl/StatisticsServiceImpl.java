@@ -87,8 +87,8 @@ public class StatisticsServiceImpl implements StatisticsService {
                 return (y - by) * 100.0;
             }
             // 计算增长率（百分比表示），四舍五入，保留2位小数
-            double overViewed = ((y - by) - (by - tda)) * 1.0 / (by - tda) * 100;
-            return BigDecimal.valueOf(overViewed).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            double over = ((y - by) - (by - tda)) * 1.0 / (by - tda) * 100;
+            return BigDecimal.valueOf(over).setScale(2, RoundingMode.HALF_UP).doubleValue();
         }
         return 0.0;
     }

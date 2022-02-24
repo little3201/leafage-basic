@@ -50,10 +50,6 @@ class UserServiceImplTest {
         user.setPhone("18710023032");
         user.setEmail("test@leafage.top");
         user.setBirthday(LocalDate.now());
-        user.setCountry(86L);
-        user.setProvince(1101L);
-        user.setCity(110101L);
-        user.setStreet("长鸣路22号");
         user.setEthnicity("汉族");
         given(this.userRepository.insert(Mockito.any(User.class))).willReturn(Mono.just(user));
         StepVerifier.create(userService.create(Mockito.mock(UserDTO.class))).expectNextCount(1).verifyComplete();
@@ -81,8 +77,7 @@ class UserServiceImplTest {
     void remove() {
         User user = new User();
         user.setId(new ObjectId());
-        user.setStreet("长鸣路22号");
-        user.setEducation("大学");
+        user.setHobbies("骑马、射箭");
         given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
 
         given(this.userRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());

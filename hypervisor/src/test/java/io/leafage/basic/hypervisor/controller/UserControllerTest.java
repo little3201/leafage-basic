@@ -36,7 +36,7 @@ class UserControllerTest {
         UserVO userVO = new UserVO();
         userVO.setUsername("leafage");
         userVO.setBirthday(LocalDate.now());
-        userVO.setStreet("202 street");
+        userVO.setPosition("engineer");
         given(this.userService.fetch(Mockito.anyString())).willReturn(Mono.just(userVO));
 
         webTestClient.get().uri("/user/{username}", "leafage").exchange()
@@ -67,38 +67,17 @@ class UserControllerTest {
     }
 
     @Test
-    void create() {
-        UserVO userVO = new UserVO();
-        userVO.setUsername("little3201");
-        given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail("test@test.com");
-        webTestClient.post().uri("/user").bodyValue(userDTO).exchange().expectStatus().isCreated()
-                .expectBody().jsonPath("$.username").isEqualTo("little3201");
-    }
-
-    @Test
-    void create_error() {
-        given(this.userService.create(Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setEmail("test@test.com");
-        webTestClient.post().uri("/user").bodyValue(userDTO).exchange().expectStatus().is4xxClientError();
-    }
-
-    @Test
     void modify() {
         UserVO userVO = new UserVO();
         userVO.setBirthday(LocalDate.now());
-        userVO.setStreet("202 street");
+        userVO.setDegree("postgraduate");
         given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
 
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail("test@test.com");
         webTestClient.put().uri("/user/{username}", "test").bodyValue(userDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.street").isNotEmpty();
+                .expectBody().jsonPath("$.degree").isNotEmpty();
     }
 
     @Test

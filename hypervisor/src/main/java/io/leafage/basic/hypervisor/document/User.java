@@ -47,39 +47,23 @@ public class User extends AbstractDocument {
     /**
      * 学历
      */
-    private String education;
+    private String degree;
+    /**
+     * 兴趣爱好
+     */
+    private String hobbies;
     /**
      * 民族
      */
     private String ethnicity;
     /**
-     * 国籍
+     * 公司
      */
-    private Long country;
+    private String company;
     /**
-     * 省/州/直辖市
+     * 职位
      */
-    private Long province;
-    /**
-     * 城市
-     */
-    private Long city;
-    /**
-     * 区/县
-     */
-    private Long district;
-    /**
-     * 乡/镇
-     */
-    private Long town;
-    /**
-     * 村
-     */
-    private Long village;
-    /**
-     * 街道
-     */
-    private String street;
+    private String position;
 
     public String getUsername() {
         return username;
@@ -137,12 +121,20 @@ public class User extends AbstractDocument {
         this.birthday = birthday;
     }
 
-    public String getEducation() {
-        return education;
+    public String getDegree() {
+        return degree;
     }
 
-    public void setEducation(String education) {
-        this.education = education;
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
+
+    public String getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(String hobbies) {
+        this.hobbies = hobbies;
     }
 
     public String getEthnicity() {
@@ -153,59 +145,19 @@ public class User extends AbstractDocument {
         this.ethnicity = ethnicity;
     }
 
-    public Long getCountry() {
-        return country;
+    public String getCompany() {
+        return company;
     }
 
-    public void setCountry(Long country) {
-        this.country = country;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
-    public Long getProvince() {
-        return province;
+    public String getPosition() {
+        return position;
     }
 
-    public void setProvince(Long province) {
-        this.province = province;
-    }
-
-    public Long getCity() {
-        return city;
-    }
-
-    public void setCity(Long city) {
-        this.city = city;
-    }
-
-    public Long getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(Long district) {
-        this.district = district;
-    }
-
-    public Long getTown() {
-        return town;
-    }
-
-    public void setTown(Long town) {
-        this.town = town;
-    }
-
-    public Long getVillage() {
-        return village;
-    }
-
-    public void setVillage(Long village) {
-        this.village = village;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

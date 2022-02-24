@@ -69,24 +69,6 @@ public class UserController {
     }
 
     /**
-     * 添加信息
-     *
-     * @param userDTO 要添加的数据
-     * @return 添加后的信息，异常时返回417状态码
-     */
-    @PostMapping
-    public ResponseEntity<Mono<UserVO>> create(@RequestBody @Valid UserDTO userDTO) {
-        Mono<UserVO> voMono;
-        try {
-            voMono = userService.create(userDTO);
-        } catch (Exception e) {
-            logger.error("Create user occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
-    }
-
-    /**
      * 修改信息
      *
      * @param username 账号

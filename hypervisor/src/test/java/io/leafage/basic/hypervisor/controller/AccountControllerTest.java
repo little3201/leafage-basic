@@ -8,10 +8,10 @@ import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.entity.AccountGroup;
 import io.leafage.basic.hypervisor.entity.AccountRole;
-import io.leafage.basic.hypervisor.service.AccountService;
-import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.service.AccountGroupService;
 import io.leafage.basic.hypervisor.service.AccountRoleService;
+import io.leafage.basic.hypervisor.service.AccountService;
+import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * 账号controller测试
+ * account controller test
  *
  * @author liwenqiang 2022/1/26 15:37
  **/
@@ -99,6 +100,42 @@ class AccountControllerTest {
         given(this.accountService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/account/{username}", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+
+    @Test
+    void exist() throws Exception {
+        given(this.accountService.exist(Mockito.anyString())).willReturn(true);
+
+        mvc.perform(get("/account/{username}/exist", "test")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void exist_error() throws Exception {
+        given(this.accountService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+
+        mvc.perform(get("/account/{username}/exist", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void unlock() throws Exception {
+        AccountVO accountVO = new AccountVO();
+        accountVO.setUsername("test");
+        accountVO.setAccountLocked(false);
+        given(this.accountService.unlock(Mockito.anyString())).willReturn(accountVO);
+
+        mvc.perform(patch("/account/{username}", "test").with(csrf().asHeader())).andExpect(status().isAccepted())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void unlock_error() throws Exception {
+        given(this.accountService.unlock(Mockito.anyString())).willThrow(new RuntimeException());
+
+        mvc.perform(patch("/account/{username}", "test").with(csrf().asHeader())).andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
 

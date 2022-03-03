@@ -12,10 +12,6 @@ public class NotificationDTO implements Serializable {
     private static final long serialVersionUID = 3855317962733834747L;
 
     /**
-     * 代码
-     */
-    private String code;
-    /**
      * 内容
      */
     private String content;
@@ -28,14 +24,6 @@ public class NotificationDTO implements Serializable {
      */
     private String receiver;
 
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getContent() {
         return content;

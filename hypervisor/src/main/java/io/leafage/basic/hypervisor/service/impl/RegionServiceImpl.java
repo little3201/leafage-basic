@@ -10,9 +10,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 /**
  * region service impl.
  *
@@ -33,7 +35,10 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public List<RegionVO> child(long code) {
+    public List<RegionVO> lower(long code) {
+        if (code > 110101001000L) {
+            return Collections.emptyList();
+        }
         List<Region> regions = regionRepository.findByCodeBetweenAndEnabledTrue(code * 100, code * 100 + 99);
         return regions.stream().map(this::convertOuter).collect(Collectors.toList());
     }

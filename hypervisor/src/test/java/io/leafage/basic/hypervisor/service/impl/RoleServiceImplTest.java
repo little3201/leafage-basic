@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * 角色service测试
+ * role service test
  *
  * @author liwenqiang 2021/5/11 10:10
  **/

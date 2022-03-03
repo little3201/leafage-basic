@@ -19,7 +19,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * 用户信息service测试
+ * user service test
  *
  * @author liwenqiang 2019/1/29 17:10
  **/

@@ -53,10 +53,10 @@ public class RegionController {
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/{code}/lower")
-    public ResponseEntity<List<RegionVO>> child(@PathVariable Long code) {
+    public ResponseEntity<List<RegionVO>> lower(@PathVariable Long code) {
         List<RegionVO> child;
         try {
-            child = regionService.child(code);
+            child = regionService.lower(code);
         } catch (Exception e) {
             logger.info("Retrieve region tree occurred an error: ", e);
             return ResponseEntity.noContent().build();

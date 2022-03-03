@@ -2,6 +2,7 @@ package io.leafage.basic.hypervisor.vo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * VO class for user.
@@ -41,29 +42,29 @@ public class UserVO implements Serializable {
      */
     private LocalDate birthday;
     /**
-     * 国籍
+     * 学历
      */
-    private Long country;
+    private String degree;
+    /**
+     * 兴趣爱好
+     */
+    private String hobbies;
     /**
      * 民族
      */
-    private Long ethnicity;
+    private String ethnicity;
     /**
-     * 省
+     * 公司
      */
-    private Long province;
+    private String company;
     /**
-     * 市
+     * 职位
      */
-    private Long city;
+    private String position;
     /**
-     * 区
+     * 修改时间
      */
-    private Long region;
-    /**
-     * 地址
-     */
-    private String address;
+    private LocalDateTime modifyTime;
 
 
     public String getUsername() {
@@ -122,51 +123,51 @@ public class UserVO implements Serializable {
         this.birthday = birthday;
     }
 
-    public Long getCountry() {
-        return country;
+    public String getDegree() {
+        return degree;
     }
 
-    public void setCountry(Long country) {
-        this.country = country;
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
 
-    public Long getEthnicity() {
+    public String getHobbies() {
+        return hobbies;
+    }
+
+    public void setHobbies(String hobbies) {
+        this.hobbies = hobbies;
+    }
+
+    public String getEthnicity() {
         return ethnicity;
     }
 
-    public void setEthnicity(Long ethnicity) {
+    public void setEthnicity(String ethnicity) {
         this.ethnicity = ethnicity;
     }
 
-    public Long getProvince() {
-        return province;
+    public String getCompany() {
+        return company;
     }
 
-    public void setProvince(Long province) {
-        this.province = province;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
-    public Long getCity() {
-        return city;
+    public String getPosition() {
+        return position;
     }
 
-    public void setCity(Long city) {
-        this.city = city;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
-    public Long getRegion() {
-        return region;
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
     }
 
-    public void setRegion(Long region) {
-        this.region = region;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

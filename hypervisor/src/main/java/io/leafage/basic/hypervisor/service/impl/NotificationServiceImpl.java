@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.dto.NotificationDTO;
 import io.leafage.basic.hypervisor.entity.Notification;
 import io.leafage.basic.hypervisor.repository.NotificationRepository;
 import io.leafage.basic.hypervisor.service.NotificationService;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
 /**
  * notification service impl.
@@ -17,7 +19,7 @@ import org.springframework.util.Assert;
  * @author liwenqiang 2022/1/26 15:20
  **/
 @Service
-public class NotificationServiceImpl implements NotificationService {
+public class NotificationServiceImpl extends ServletAbstractTreeNodeService<Notification> implements NotificationService {
 
     private final NotificationRepository notificationRepository;
 
@@ -35,6 +37,15 @@ public class NotificationServiceImpl implements NotificationService {
     public NotificationVO fetch(String code) {
         Assert.notNull(code, "code must not null.");
         Notification notification = notificationRepository.getByCodeAndEnabledTrue(code);
+        return this.convertOuter(notification);
+    }
+
+    @Override
+    public NotificationVO create(NotificationDTO notificationDTO) {
+        Notification notification = new Notification();
+        BeanUtils.copyProperties(notificationDTO, notification);
+        notification.setCode(this.generateCode());
+        notificationRepository.save(notification);
         return this.convertOuter(notification);
     }
 

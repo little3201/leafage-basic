@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * 权限接口测试类
+ * authority controller test
  *
  * @author liwenqiang 2019/9/14 21:52
  **/
@@ -76,7 +76,7 @@ class AuthorityControllerTest {
         authorityVO.setName("test");
         given(this.authorityService.fetch(Mockito.anyString())).willReturn(authorityVO);
 
-        mvc.perform(get("/authority/{code}", "test")).andExpect(status().isOk())
+        mvc.perform(get("/authority/{code}", "213ADJ09")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
@@ -84,7 +84,7 @@ class AuthorityControllerTest {
     void fetch_error() throws Exception {
         given(this.authorityService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/authority/{code}", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/authority/{code}", "213ADJ09")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

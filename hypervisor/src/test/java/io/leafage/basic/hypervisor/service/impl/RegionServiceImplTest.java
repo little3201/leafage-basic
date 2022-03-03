@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.BDDMockito.given;
@@ -61,6 +62,37 @@ class RegionServiceImplTest {
         RegionVO regionVO = regionService.fetch(11L);
 
         Assertions.assertNotNull(regionVO);
+    }
+
+    @Test
+    void lower() {
+        Region region = new Region();
+        region.setCode(1101L);
+        region.setName("广东省");
+        region.setAlias("粤");
+        region.setSuperior(1L);
+        given(this.regionRepository.findByCodeBetweenAndEnabledTrue(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(List.of(region));
+
+        List<RegionVO> regionVOS = regionService.lower(11L);
+
+        Assertions.assertNotNull(regionVOS);
+    }
+
+    @Test
+    void lower_empty() {
+        List<RegionVO> regionVOS = regionService.lower(110101001001L);
+
+        Assertions.assertEquals(Collections.emptyList(), regionVOS);
+    }
+
+    @Test
+    void exist() {
+        given(this.regionRepository.existsByName(Mockito.anyString())).willReturn(true);
+
+        boolean exist = regionService.exist("成都市");
+
+        Assertions.assertTrue(exist);
     }
 
     @Test

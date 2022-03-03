@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Region 接口测试
+ * region controller test
  *
  * @author liwenqiang 2021/12/7 15:38
  **/
@@ -82,6 +82,42 @@ class RegionControllerTest {
         given(this.regionService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
         mvc.perform(get("/region/{code}", "11")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void exist() throws Exception {
+        given(this.regionService.exist(Mockito.anyString())).willReturn(true);
+
+        mvc.perform(get("/region/{name}/exist", "test")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void exist_error() throws Exception {
+        given(this.regionService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+
+        mvc.perform(get("/region/{name}/exist", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+
+    @Test
+    void lower() throws Exception {
+        RegionVO regionVO = new RegionVO();
+        regionVO.setName("下一级");
+        regionVO.setCode(1101L);
+        given(this.regionService.lower(Mockito.anyLong())).willReturn(List.of(regionVO));
+
+        mvc.perform(get("/region/{code}/lower", "11")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void lower_error() throws Exception {
+        given(this.regionService.lower(Mockito.anyLong())).willThrow(new RuntimeException());
+
+        mvc.perform(get("/region/{code}/lower", "11")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

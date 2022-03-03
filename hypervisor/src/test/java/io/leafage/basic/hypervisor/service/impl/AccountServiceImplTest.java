@@ -21,7 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * 账号信息service测试
+ * account service test
  *
  * @author liwenqiang 2022/1/26 15:37
  **/
@@ -107,4 +107,20 @@ class AccountServiceImplTest {
 
         Assertions.assertFalse(exist);
     }
+
+    @Test
+    void unlock() {
+        Account account = new Account();
+        account.setId(1L);
+        account.setUsername("test");
+        account.setNickname("测试");
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(account);
+
+        given(this.accountRepository.saveAndFlush(Mockito.any(Account.class))).willReturn(Mockito.mock(Account.class));
+
+        AccountVO accountVO = accountService.unlock("test");
+
+        Assertions.assertNotNull(accountVO);
+    }
+
 }

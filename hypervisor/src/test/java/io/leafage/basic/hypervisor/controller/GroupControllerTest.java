@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * 分组接口测试类
+ * group controller test
  *
  * @author liwenqiang 2019/9/14 21:52
  **/

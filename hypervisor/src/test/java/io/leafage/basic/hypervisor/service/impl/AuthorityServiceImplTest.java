@@ -31,7 +31,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * 权限service测试
+ * authority service test
  *
  * @author liwenqiang 2021/5/11 10:10
  **/

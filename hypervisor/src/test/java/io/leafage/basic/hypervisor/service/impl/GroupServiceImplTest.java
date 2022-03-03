@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * group service测试
+ * group service test
  *
  * @author liwenqiang 2021/5/11 10:10
  **/
@@ -40,6 +40,7 @@ class GroupServiceImplTest {
     void retrieve() {
         Group group = new Group();
         group.setName("test");
+        group.setPrincipal(1L);
         Page<Group> page = new PageImpl<>(List.of(group));
         given(this.groupRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id"))))
                 .willReturn(page);

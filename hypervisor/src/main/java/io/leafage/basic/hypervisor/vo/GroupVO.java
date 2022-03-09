@@ -4,7 +4,6 @@
 package io.leafage.basic.hypervisor.vo;
 
 import top.leafage.common.basic.AbstractVO;
-import java.io.Serializable;
 
 import java.io.Serializable;
 
@@ -18,6 +17,14 @@ public class GroupVO extends AbstractVO<String> implements Serializable {
     private static final long serialVersionUID = 5740100575689452491L;
 
     /**
+     * 名称
+     */
+    private String name;
+    /**
+     * 别名
+     */
+    private String alias;
+    /**
      * 负责人
      */
     private String principal;
@@ -26,18 +33,30 @@ public class GroupVO extends AbstractVO<String> implements Serializable {
      */
     private String superior;
     /**
-     * 名称
-     */
-    private String name;
-    /**
      * 描述
      */
     private String description;
-
     /**
      * 用户数
      */
     private long count;
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 
     public String getPrincipal() {
         return principal;
@@ -55,13 +74,6 @@ public class GroupVO extends AbstractVO<String> implements Serializable {
         this.superior = superior;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getDescription() {
         return description;

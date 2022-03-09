@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -100,8 +101,12 @@ class RegionServiceImplTest {
         given(this.regionRepository.insert(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
 
         RegionDTO regionDTO = new RegionDTO();
-        regionDTO.setName("测试村");
+        regionDTO.setName("西安市");
+        regionDTO.setAlias("秦");
         regionDTO.setSuperior(11001L);
+        regionDTO.setAreaCode("029");
+        regionDTO.setPostalCode(710000);
+        regionDTO.setDescription("描述信息");
         StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
     }
 

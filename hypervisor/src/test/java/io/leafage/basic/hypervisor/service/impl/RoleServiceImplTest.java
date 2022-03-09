@@ -5,8 +5,8 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
+import io.leafage.basic.hypervisor.repository.RoleRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -99,6 +99,7 @@ class RoleServiceImplTest {
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
+        roleDTO.setDescription("描述信息");
         StepVerifier.create(roleService.create(roleDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -128,12 +129,15 @@ class RoleServiceImplTest {
         role.setId(id);
         role.setCode("21612OL35");
         role.setName("test");
+        role.setModifier(new ObjectId());
 
         Role child = new Role();
         child.setId(new ObjectId());
         child.setSuperior(id);
         child.setCode("21612OL34");
         child.setName("test-sub");
+        child.setModifier(role.getModifier());
+        child.setEnabled(role.isEnabled());
         given(this.roleRepository.findByEnabledTrue()).willReturn(Flux.just(role, child));
 
         StepVerifier.create(roleService.tree()).expectNextCount(1).verifyComplete();

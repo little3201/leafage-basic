@@ -1,7 +1,6 @@
 package io.leafage.basic.assets.vo;
 
 import top.leafage.common.basic.AbstractVO;
-import java.io.Serializable;
 
 import java.io.Serializable;
 
@@ -27,9 +26,9 @@ public class CommentVO extends AbstractVO<String> implements Serializable {
      */
     private String content;
     /**
-     * 回复人
+     * 回复数
      */
-    private String replier;
+    private long count;
 
     public String getPosts() {
         return posts;
@@ -55,11 +54,11 @@ public class CommentVO extends AbstractVO<String> implements Serializable {
         this.content = content;
     }
 
-    public String getReplier() {
-        return replier;
+    public long getCount() {
+        return count;
     }
 
-    public void setReplier(String replier) {
-        this.replier = replier;
+    public void setCount(long count) {
+        this.count = count;
     }
 }

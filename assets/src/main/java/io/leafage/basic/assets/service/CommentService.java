@@ -8,10 +8,18 @@ import top.leafage.common.reactive.ReactiveBasicService;
 public interface CommentService extends ReactiveBasicService<CommentDTO, CommentVO, String> {
 
     /**
-     * 根据posts查询
+     * 查询
      *
      * @param code 帖子代码
      * @return 关联的评论
      */
-    Flux<CommentVO> posts(String code);
+    Flux<CommentVO> relation(String code);
+
+    /**
+     * 查询回复
+     *
+     * @param replier 回复代码
+     * @return 回复的评论
+     */
+    Flux<CommentVO> repliers(String replier);
 }

@@ -76,12 +76,31 @@ public class CommentController {
      * @return 关联的评论
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Flux<CommentVO>> posts(@PathVariable String code) {
+    public ResponseEntity<Flux<CommentVO>> relation(@PathVariable String code) {
         Flux<CommentVO> voFlux;
         try {
-            voFlux = commentService.posts(code);
+            voFlux = commentService.relation(code);
         } catch (Exception e) {
             logger.error("Fetch comment by posts occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
+    }
+
+
+    /**
+     * 根据 code 查询回复信息
+     *
+     * @param code 评论代码
+     * @return 关联的评论
+     */
+    @GetMapping("/{code}/repliers")
+    public ResponseEntity<Flux<CommentVO>> repliers(@PathVariable String code) {
+        Flux<CommentVO> voFlux;
+        try {
+            voFlux = commentService.repliers(code);
+        } catch (Exception e) {
+            logger.error("Retrieve comment repliers occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);

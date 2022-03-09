@@ -29,6 +29,10 @@ public class UserVO implements Serializable {
      */
     private String lastname;
     /**
+     * 电话
+     */
+    private String phone;
+    /**
      * 邮箱
      */
     private String email;
@@ -87,6 +91,14 @@ public class UserVO implements Serializable {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getEmail() {

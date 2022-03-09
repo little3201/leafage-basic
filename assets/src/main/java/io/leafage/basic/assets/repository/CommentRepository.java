@@ -29,6 +29,22 @@ public interface CommentRepository extends ReactiveMongoRepository<Comment, Obje
     Flux<Comment> findByPostsIdAndEnabledTrue(ObjectId postsId);
 
     /**
+     * 统计回复
+     *
+     * @param replier 关联代码
+     * @return 关联的数据记录数
+     */
+    Mono<Long> countByReplierAndEnabledTrue(String replier);
+
+    /**
+     * 查询回复
+     *
+     * @param replier 关联代码
+     * @return 关联的数据
+     */
+    Flux<Comment> findByReplierAndEnabledTrue(String replier);
+
+    /**
      * 根据code查询信息
      *
      * @param code 代码

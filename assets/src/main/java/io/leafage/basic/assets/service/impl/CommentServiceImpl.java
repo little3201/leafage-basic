@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
@@ -47,9 +48,14 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     }
 
     @Override
-    public Flux<CommentVO> posts(String code) {
+    public Flux<CommentVO> relation(String code) {
         return postsRepository.getByCodeAndEnabledTrue(code).flatMapMany(posts ->
                 commentRepository.findByPostsIdAndEnabledTrue(posts.getId()).flatMap(this::convertOuter));
+    }
+
+    @Override
+    public Flux<CommentVO> repliers(String replier) {
+        return commentRepository.findByReplierAndEnabledTrue(replier).flatMap(this::convertOuter);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -91,7 +97,16 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
                 .map(posts -> {
                     commentVO.setPosts(posts.getCode());
                     return commentVO;
-                }));
+                })).flatMap(commentVO -> {
+            if (StringUtils.hasText(comment.getReplier())) {
+                return commentRepository.countByReplierAndEnabledTrue(comment.getReplier())
+                        .switchIfEmpty(Mono.just(0L)).map(count -> {
+                            commentVO.setCount(count);
+                            return commentVO;
+                        });
+            }
+            return Mono.just(commentVO);
+        });
     }
 
     /**

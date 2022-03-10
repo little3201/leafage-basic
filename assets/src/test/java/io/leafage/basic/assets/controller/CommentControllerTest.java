@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -55,20 +56,38 @@ class CommentControllerTest {
     }
 
     @Test
-    void posts() {
+    void relation() {
         CommentVO commentVO = new CommentVO();
         commentVO.setContent("test content");
-        given(this.commentService.posts(Mockito.anyString())).willReturn(Flux.just(commentVO));
+        given(this.commentService.relation(Mockito.anyString())).willReturn(Flux.just(commentVO));
 
         webTestClient.get().uri("/comment/{code}", "21319JO01").exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test
-    void posts_error() {
-        given(this.commentService.posts(Mockito.anyString())).willThrow(new RuntimeException());
+    void relation_error() {
+        given(this.commentService.relation(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/comment/{code}", "21319JO01").exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
+    void repliers() {
+        CommentVO commentVO = new CommentVO();
+        commentVO.setContent("test content");
+        given(this.commentService.repliers(Mockito.anyString())).willReturn(Flux.just(commentVO));
+
+        webTestClient.get().uri("/comment/{code}/repliers", "21319JO01").exchange()
+                .expectStatus().isOk().expectBodyList(CategoryVO.class);
+    }
+
+    @Test
+    void repliers_error() {
+        given(this.commentService.repliers(Mockito.anyString())).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/comment/{code}/repliers", "21319JO01").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -99,7 +118,7 @@ class CommentControllerTest {
         webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.content").isNotEmpty();
+                .expectBody().jsonPath("$.content").isEqualTo("test");
     }
 
     @Test
@@ -113,8 +132,7 @@ class CommentControllerTest {
         commentDTO.setEmail("test@test.com");
         commentDTO.setNickname("布吉岛");
         webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(commentDTO).exchange()
-                .expectStatus().is4xxClientError();
+                .bodyValue(commentDTO).exchange().expectStatus().is4xxClientError();
     }
 
     @Test

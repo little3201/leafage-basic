@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -72,7 +73,14 @@ class NotificationServiceImplTest {
         account.setUsername("test");
         given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(account));
 
-        given(this.notificationRepository.insert(Mockito.any(Notification.class))).willReturn(Mono.just(Mockito.mock(Notification.class)));
+        Notification notification = new Notification();
+        notification.setId(new ObjectId());
+        notification.setCode("32309FJK0");
+        notification.setTitle("标题");
+        notification.setContent("内容信息");
+        notification.setRead(false);
+        notification.setReceiver("test");
+        given(this.notificationRepository.insert(Mockito.any(Notification.class))).willReturn(Mono.just(notification));
 
         NotificationDTO notificationDTO = new NotificationDTO();
         notificationDTO.setTitle("标题");

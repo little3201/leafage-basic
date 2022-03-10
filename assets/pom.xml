@@ -16,13 +16,6 @@
     <name>assets</name>
     <description>assets of leafage basic</description>
 
-    <properties>
-        <sonar.cpd.exclusions>
-            io.leafage.basic.assets.vo\**,
-            io.leafage.basic.assets.dto\**
-        </sonar.cpd.exclusions>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

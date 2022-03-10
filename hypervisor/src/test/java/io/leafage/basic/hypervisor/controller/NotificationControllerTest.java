@@ -14,6 +14,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.LocalDateTime;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -36,6 +39,9 @@ class NotificationControllerTest {
     void retrieve() {
         NotificationVO notificationVO = new NotificationVO();
         notificationVO.setTitle("标题");
+        notificationVO.setContent("内容");
+        notificationVO.setReceiver("test");
+        notificationVO.setModifyTime(LocalDateTime.now());
         given(this.notificationService.retrieve(0, 2, false)).willReturn(Flux.just(notificationVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/notification").queryParam("page", 0)

@@ -22,6 +22,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -59,7 +60,7 @@ class CommentServiceImplTest {
     }
 
     @Test
-    void posts() {
+    void relation() {
         Posts posts = new Posts();
         posts.setId(new ObjectId());
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
@@ -70,7 +71,23 @@ class CommentServiceImplTest {
 
         given(this.postsRepository.findById(posts.getId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
-        StepVerifier.create(commentService.posts("21318H9FH")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(commentService.relation("21318H9FH")).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void repliers() {
+        Comment comment = new Comment();
+        comment.setPostsId(new ObjectId());
+        comment.setReplier("21318H9F0");
+        given(this.commentRepository.findByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Flux.just(comment));
+
+        Posts posts = new Posts();
+        posts.setId(comment.getPostsId());
+        given(this.postsRepository.findById(posts.getId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
+
+        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
+
+        StepVerifier.create(commentService.repliers("21318H9FH")).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -82,6 +99,7 @@ class CommentServiceImplTest {
         Comment comment = new Comment();
         comment.setContent("test");
         comment.setPostsId(posts.getId());
+        comment.setReplier("21318H9F0");
         given(this.commentRepository.insert(Mockito.any(Comment.class))).willReturn(Mono.just(comment));
 
         given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(comment.getPostsId())),
@@ -89,6 +107,8 @@ class CommentServiceImplTest {
                 .willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
 
         given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
+
+        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21318H9FH");
@@ -102,13 +122,17 @@ class CommentServiceImplTest {
 
         Comment comment = new Comment();
         comment.setPostsId(new ObjectId());
-        given(this.commentRepository.save(Mockito.any(Comment.class)))
-                .willReturn(Mono.just(comment));
+        comment.setReplier("21318H9F0");
+        comment.setEmail("test@test.com");
+        given(this.commentRepository.save(Mockito.any(Comment.class))).willReturn(Mono.just(comment));
 
         given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
+        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
+
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setContent("测试");
+        commentDTO.setEmail(comment.getEmail());
         StepVerifier.create(commentService.modify("21318H9FH", commentDTO))
                 .expectNextCount(1).verifyComplete();
     }

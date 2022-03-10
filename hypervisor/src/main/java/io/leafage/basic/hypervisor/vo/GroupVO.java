@@ -74,7 +74,6 @@ public class GroupVO extends AbstractVO<String> implements Serializable {
         this.superior = superior;
     }
 
-
     public String getDescription() {
         return description;
     }

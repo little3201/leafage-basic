@@ -18,8 +18,8 @@
 
     <properties>
         <sonar.cpd.exclusions>
-            io.leafage.basic.hypervisor.vo\**,
-            io.leafage.basic.hypervisor.dto\**
+            io/leafage/basic/hypervisor/vo/**,
+            io/leafage/basic/hypervisor/dto/**
         </sonar.cpd.exclusions>
     </properties>
 

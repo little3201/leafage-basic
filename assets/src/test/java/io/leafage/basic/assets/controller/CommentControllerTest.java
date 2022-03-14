@@ -113,8 +113,6 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        commentDTO.setEmail("test@test.com");
-        commentDTO.setNickname("布吉岛");
         webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isCreated()
@@ -129,8 +127,6 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        commentDTO.setEmail("test@test.com");
-        commentDTO.setNickname("布吉岛");
         webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange().expectStatus().is4xxClientError();
     }
@@ -145,8 +141,6 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        commentDTO.setEmail("test@test.com");
-        commentDTO.setNickname("布吉岛");
         webTestClient.put().uri("/comment/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isAccepted()
@@ -161,8 +155,6 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        commentDTO.setEmail("test@test.com");
-        commentDTO.setNickname("布吉岛");
         webTestClient.put().uri("/comment/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isNotModified();

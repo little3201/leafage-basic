@@ -74,20 +74,20 @@ class CommentControllerTest {
     }
 
     @Test
-    void repliers() {
+    void replies() {
         CommentVO commentVO = new CommentVO();
         commentVO.setContent("test content");
-        given(this.commentService.repliers(Mockito.anyString())).willReturn(Flux.just(commentVO));
+        given(this.commentService.replies(Mockito.anyString())).willReturn(Flux.just(commentVO));
 
-        webTestClient.get().uri("/comment/{code}/repliers", "21319JO01").exchange()
+        webTestClient.get().uri("/comment/{code}/replies", "21319JO01").exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test
     void repliers_error() {
-        given(this.commentService.repliers(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.commentService.replies(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/comment/{code}/repliers", "21319JO01").exchange()
+        webTestClient.get().uri("/comment/{code}/replies", "21319JO01").exchange()
                 .expectStatus().isNoContent();
     }
 

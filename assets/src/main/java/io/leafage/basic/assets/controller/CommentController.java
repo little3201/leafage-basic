@@ -94,11 +94,11 @@ public class CommentController {
      * @param code 评论代码
      * @return 关联的评论
      */
-    @GetMapping("/{code}/repliers")
-    public ResponseEntity<Flux<CommentVO>> repliers(@PathVariable String code) {
+    @GetMapping("/{code}/replies")
+    public ResponseEntity<Flux<CommentVO>> replies(@PathVariable String code) {
         Flux<CommentVO> voFlux;
         try {
-            voFlux = commentService.repliers(code);
+            voFlux = commentService.replies(code);
         } catch (Exception e) {
             logger.error("Retrieve comment repliers occurred an error: ", e);
             return ResponseEntity.noContent().build();

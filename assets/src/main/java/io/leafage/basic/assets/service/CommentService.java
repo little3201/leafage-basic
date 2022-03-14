@@ -21,5 +21,5 @@ public interface CommentService extends ReactiveBasicService<CommentDTO, Comment
      * @param replier 回复代码
      * @return 回复的评论
      */
-    Flux<CommentVO> repliers(String replier);
+    Flux<CommentVO> replies(String replier);
 }

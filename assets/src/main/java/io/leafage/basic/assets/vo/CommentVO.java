@@ -18,13 +18,17 @@ public class CommentVO extends AbstractVO<String> implements Serializable {
      */
     private String posts;
     /**
-     * 昵称
-     */
-    private String nickname;
-    /**
      * 内容
      */
     private String content;
+    /**
+     * 国家
+     */
+    private String country;
+    /**
+     * 位置
+     */
+    private String location;
     /**
      * 回复数
      */
@@ -38,20 +42,28 @@ public class CommentVO extends AbstractVO<String> implements Serializable {
         this.posts = posts;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public long getCount() {

@@ -54,7 +54,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     }
 
     @Override
-    public Flux<CommentVO> repliers(String replier) {
+    public Flux<CommentVO> replies(String replier) {
         return commentRepository.findByReplierAndEnabledTrue(replier).flatMap(this::convertOuter);
     }
 

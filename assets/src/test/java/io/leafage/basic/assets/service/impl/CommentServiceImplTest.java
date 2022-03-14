@@ -49,8 +49,9 @@ class CommentServiceImplTest {
     void retrieve() {
         Comment comment = new Comment();
         comment.setPostsId(new ObjectId());
-        comment.setEmail("test@leafage.top");
-        comment.setNickname("一个路人");
+        comment.setContent("这里写内容");
+        comment.setCountry("某国");
+        comment.setLocation("某地");
         given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2,
                 Sort.by(Sort.Direction.DESC, "modifyTime")))).willReturn(Flux.just(comment));
 
@@ -87,7 +88,7 @@ class CommentServiceImplTest {
 
         given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 
-        StepVerifier.create(commentService.repliers("21318H9FH")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(commentService.replies("21318H9FH")).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -123,7 +124,7 @@ class CommentServiceImplTest {
         Comment comment = new Comment();
         comment.setPostsId(new ObjectId());
         comment.setReplier("21318H9F0");
-        comment.setEmail("test@test.com");
+        comment.setContent("这里写内容");
         given(this.commentRepository.save(Mockito.any(Comment.class))).willReturn(Mono.just(comment));
 
         given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
@@ -132,7 +133,7 @@ class CommentServiceImplTest {
 
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setContent("测试");
-        commentDTO.setEmail(comment.getEmail());
+        commentDTO.setContent(comment.getContent());
         StepVerifier.create(commentService.modify("21318H9FH", commentDTO))
                 .expectNextCount(1).verifyComplete();
     }

@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * 帖子信息repository
+ * posts repository
  *
  * @author liwenqiang 2018/12/20 9:51
  **/
@@ -20,14 +20,14 @@ import reactor.core.publisher.Mono;
 public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId> {
 
     /**
-     * 查询帖子
+     * 查询
      *
      * @return 有效帖子
      */
     Flux<Posts> findByEnabledTrue();
 
     /**
-     * 分页查询帖子
+     * 分页查询
      *
      * @param pageable 分页参数
      * @return 有效帖子
@@ -35,7 +35,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
     Flux<Posts> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据分类分页查询帖子
+     * 根据分类分页查询
      *
      * @param categoryId 分类ID
      * @param pageable   分页参数
@@ -52,7 +52,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
     Mono<Posts> getByCodeAndEnabledTrue(String code);
 
     /**
-     * 统计关联帖子
+     * 关联统计
      *
      * @param categoryId 分类ID
      * @return 帖子数

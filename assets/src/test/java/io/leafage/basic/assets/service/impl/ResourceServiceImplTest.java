@@ -24,7 +24,7 @@ import reactor.test.StepVerifier;
 import static org.mockito.BDDMockito.given;
 
 /**
- * portfolio service测试
+ * resource service test
  *
  * @author liwenqiang 2020/3/1 22:07
  */

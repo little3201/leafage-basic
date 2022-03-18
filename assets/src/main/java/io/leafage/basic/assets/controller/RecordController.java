@@ -72,7 +72,7 @@ public class RecordController {
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<RecordVO>> create(@PathVariable RecordDTO recordDTO) {
+    public ResponseEntity<Mono<RecordVO>> create(@RequestBody RecordDTO recordDTO) {
         Mono<RecordVO> voMono;
         try {
             voMono = recordService.create(recordDTO);

@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
- * 作品集信息Service
+ * resource service
  *
  * @author liwenqiang 2020/2/24 11:59
  **/

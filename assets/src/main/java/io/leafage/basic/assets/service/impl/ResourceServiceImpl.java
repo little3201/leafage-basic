@@ -22,7 +22,7 @@ import top.leafage.common.basic.AbstractBasicService;
 import javax.naming.NotContextException;
 
 /**
- * resource service 实现
+ * resource service impl
  *
  * @author liwenqiang 2020/2/24 11:59
  **/

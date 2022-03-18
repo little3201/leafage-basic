@@ -9,7 +9,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
-
+/**
+ * statistics repository
+ *
+ * @author liwenqiang 2020/2/13 22:01
+ **/
 @Repository
 public interface StatisticsRepository extends ReactiveMongoRepository<Statistics, ObjectId> {
 

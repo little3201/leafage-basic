@@ -5,6 +5,11 @@ import io.leafage.basic.assets.vo.CommentVO;
 import reactor.core.publisher.Flux;
 import top.leafage.common.reactive.ReactiveBasicService;
 
+/**
+ * comment service
+ *
+ * @author liwenqiang 2018-12-06 22:09
+ **/
 public interface CommentService extends ReactiveBasicService<CommentDTO, CommentVO, String> {
 
     /**

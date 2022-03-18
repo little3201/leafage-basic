@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 /**
- * 内容service接口实现
+ * posts content service impl
  *
  * @author liwenqiang 2018-12-06 22:09
  **/

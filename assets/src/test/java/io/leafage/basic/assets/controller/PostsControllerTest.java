@@ -19,12 +19,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.Collections;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 
 /**
- * posts接口测试类
+ * posts controller test
  *
  * @author liwenqiang 2020/3/1 22:07
  */

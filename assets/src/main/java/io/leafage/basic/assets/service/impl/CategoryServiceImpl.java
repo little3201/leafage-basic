@@ -16,10 +16,11 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+
 import javax.naming.NotContextException;
 
 /**
- * 类目信息service实现
+ * category service impl
  *
  * @author liwenqiang 2020/2/13 20:24
  **/

@@ -26,7 +26,11 @@ import top.leafage.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
 import java.util.NoSuchElementException;
-
+/**
+ * comment service impl
+ *
+ * @author liwenqiang 2018-12-06 22:09
+ **/
 @Service
 public class CommentServiceImpl extends AbstractBasicService implements CommentService {
 

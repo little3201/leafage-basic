@@ -6,7 +6,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * 统计信息 service
+ * statistics service
  *
  * @author liwenqiang 2021/5/19 10:54
  **/

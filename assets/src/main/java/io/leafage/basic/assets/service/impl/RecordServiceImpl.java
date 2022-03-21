@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.AbstractBasicService;
 
 /**
  * record service impl
@@ -16,7 +17,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018/12/20 9:54
  **/
 @Service
-public class RecordServiceImpl implements RecordService {
+public class RecordServiceImpl extends AbstractBasicService implements RecordService {
 
     private final RecordRepository recordRepository;
 
@@ -36,14 +37,15 @@ public class RecordServiceImpl implements RecordService {
 
     @Override
     public Mono<RecordVO> create(RecordDTO recordDTO) {
-        Record record = new Record();
-        BeanUtils.copyProperties(recordDTO, record);
-        return recordRepository.insert(record).map(this::convert);
+        Record info = new Record();
+        BeanUtils.copyProperties(recordDTO, info);
+        info.setCode(this.generateCode());
+        return recordRepository.insert(info).map(this::convert);
     }
 
-    private RecordVO convert(Record record) {
+    private RecordVO convert(Record info) {
         RecordVO outer = new RecordVO();
-        BeanUtils.copyProperties(record, outer);
+        BeanUtils.copyProperties(info, outer);
         return outer;
     }
 }

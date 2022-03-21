@@ -8,7 +8,7 @@ import org.bson.types.ObjectId;
 import reactor.core.publisher.Mono;
 
 /**
- * 内容service接口
+ * posts service
  *
  * @author liwenqiang 2018-12-06 22:09
  **/

@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * portfolio repository
+ * resource repository
  *
  * @author liwenqiang 2018/12/20 9:51
  **/

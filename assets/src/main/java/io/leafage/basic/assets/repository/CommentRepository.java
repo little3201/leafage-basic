@@ -8,6 +8,11 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * comment repository
+ *
+ * @author liwenqiang 2020/2/13 22:01
+ **/
 @Repository
 public interface CommentRepository extends ReactiveMongoRepository<Comment, ObjectId> {
 

@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 import static org.mockito.BDDMockito.given;
 
 /**
- * portfolio接口测试类
+ * resource controller test
  *
  * @author liwenqiang 2020/3/1 22:07
  */

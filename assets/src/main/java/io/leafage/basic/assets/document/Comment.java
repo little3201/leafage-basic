@@ -27,17 +27,17 @@ public class Comment extends AbstractDocument {
     @Field(name = "posts_id")
     private ObjectId postsId;
     /**
-     * 昵称
-     */
-    private String nickname;
-    /**
-     * 邮箱
-     */
-    private String email;
-    /**
      * 内容
      */
     private String content;
+    /**
+     * 国家
+     */
+    private String country;
+    /**
+     * 位置
+     */
+    private String location;
     /**
      * 回复人
      */
@@ -59,28 +59,28 @@ public class Comment extends AbstractDocument {
         this.postsId = postsId;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getReplier() {

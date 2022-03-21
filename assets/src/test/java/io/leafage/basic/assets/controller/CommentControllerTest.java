@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 import static org.mockito.BDDMockito.given;
 
 /**
- * comment 接口测试类
+ * comment controller test
  *
  * @author liwenqiang 2021/7/17 21:04
  */
@@ -74,20 +74,20 @@ class CommentControllerTest {
     }
 
     @Test
-    void repliers() {
+    void replies() {
         CommentVO commentVO = new CommentVO();
         commentVO.setContent("test content");
-        given(this.commentService.repliers(Mockito.anyString())).willReturn(Flux.just(commentVO));
+        given(this.commentService.replies(Mockito.anyString())).willReturn(Flux.just(commentVO));
 
-        webTestClient.get().uri("/comment/{code}/repliers", "21319JO01").exchange()
+        webTestClient.get().uri("/comment/{code}/replies", "21319JO01").exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test
     void repliers_error() {
-        given(this.commentService.repliers(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.commentService.replies(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/comment/{code}/repliers", "21319JO01").exchange()
+        webTestClient.get().uri("/comment/{code}/replies", "21319JO01").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -113,8 +113,6 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        commentDTO.setEmail("test@test.com");
-        commentDTO.setNickname("布吉岛");
         webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isCreated()
@@ -129,8 +127,6 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        commentDTO.setEmail("test@test.com");
-        commentDTO.setNickname("布吉岛");
         webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange().expectStatus().is4xxClientError();
     }
@@ -145,8 +141,6 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        commentDTO.setEmail("test@test.com");
-        commentDTO.setNickname("布吉岛");
         webTestClient.put().uri("/comment/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isAccepted()
@@ -161,8 +155,6 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        commentDTO.setEmail("test@test.com");
-        commentDTO.setNickname("布吉岛");
         webTestClient.put().uri("/comment/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isNotModified();

@@ -26,7 +26,11 @@ import top.leafage.common.basic.AbstractBasicService;
 
 import javax.naming.NotContextException;
 import java.util.NoSuchElementException;
-
+/**
+ * comment service impl
+ *
+ * @author liwenqiang 2018-12-06 22:09
+ **/
 @Service
 public class CommentServiceImpl extends AbstractBasicService implements CommentService {
 
@@ -54,7 +58,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     }
 
     @Override
-    public Flux<CommentVO> repliers(String replier) {
+    public Flux<CommentVO> replies(String replier) {
         return commentRepository.findByReplierAndEnabledTrue(replier).flatMap(this::convertOuter);
     }
 

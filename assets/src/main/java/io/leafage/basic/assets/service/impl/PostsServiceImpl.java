@@ -33,7 +33,7 @@ import top.leafage.common.basic.AbstractBasicService;
 import javax.naming.NotContextException;
 
 /**
- * 帖子信息 service 接口实现
+ * posts service impl
  *
  * @author liwenqiang 2018/12/20 9:54
  **/

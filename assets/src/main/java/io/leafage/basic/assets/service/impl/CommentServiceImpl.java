@@ -19,13 +19,12 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
 import javax.naming.NotContextException;
 import java.util.NoSuchElementException;
+
 /**
  * comment service impl
  *
@@ -62,6 +61,11 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
         return commentRepository.findByReplierAndEnabledTrue(replier).flatMap(this::convertOuter);
     }
 
+    @Override
+    public Mono<Long> count() {
+        return commentRepository.count();
+    }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<CommentVO> create(CommentDTO commentDTO) {
@@ -96,21 +100,11 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
             CommentVO commentVO = new CommentVO();
             BeanUtils.copyProperties(c, commentVO);
             return commentVO;
-        }).flatMap(commentVO -> postsRepository.findById(comment.getPostsId())
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .map(posts -> {
-                    commentVO.setPosts(posts.getCode());
+        }).flatMap(commentVO -> commentRepository.countByReplierAndEnabledTrue(comment.getCode())
+                .switchIfEmpty(Mono.just(0L)).map(count -> {
+                    commentVO.setCount(count);
                     return commentVO;
-                })).flatMap(commentVO -> {
-            if (StringUtils.hasText(comment.getReplier())) {
-                return commentRepository.countByReplierAndEnabledTrue(comment.getReplier())
-                        .switchIfEmpty(Mono.just(0L)).map(count -> {
-                            commentVO.setCount(count);
-                            return commentVO;
-                        });
-            }
-            return Mono.just(commentVO);
-        });
+                }));
     }
 
     /**

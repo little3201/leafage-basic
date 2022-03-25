@@ -1,7 +1,6 @@
 package io.leafage.basic.assets.vo;
 
 import top.leafage.common.basic.AbstractVO;
-
 import java.io.Serializable;
 
 /**
@@ -13,10 +12,6 @@ public class CommentVO extends AbstractVO<String> implements Serializable {
 
     private static final long serialVersionUID = -3606281697452944193L;
 
-    /**
-     * 帖子
-     */
-    private String posts;
     /**
      * 内容
      */
@@ -34,13 +29,6 @@ public class CommentVO extends AbstractVO<String> implements Serializable {
      */
     private long count;
 
-    public String getPosts() {
-        return posts;
-    }
-
-    public void setPosts(String posts) {
-        this.posts = posts;
-    }
 
     public String getContent() {
         return content;

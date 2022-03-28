@@ -68,7 +68,7 @@ class CommentServiceImplTest {
 
         Comment comment = new Comment();
         comment.setPostsId(posts.getId());
-        given(this.commentRepository.findByPostsIdAndEnabledTrue(posts.getId())).willReturn(Flux.just(comment));
+        given(this.commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(posts.getId())).willReturn(Flux.just(comment));
 
         given(this.postsRepository.findById(posts.getId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 

@@ -54,7 +54,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     @Override
     public Flux<CommentVO> relation(String code) {
         return postsRepository.getByCodeAndEnabledTrue(code).flatMapMany(posts ->
-                commentRepository.findByPostsIdAndEnabledTrue(posts.getId()).flatMap(this::convertOuter));
+                commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(posts.getId()).flatMap(this::convertOuter));
     }
 
     @Override
@@ -103,11 +103,14 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
             CommentVO commentVO = new CommentVO();
             BeanUtils.copyProperties(c, commentVO);
             return commentVO;
-        }).flatMap(commentVO -> commentRepository.countByReplierAndEnabledTrue(comment.getCode())
-                .switchIfEmpty(Mono.just(0L)).map(count -> {
-                    commentVO.setCount(count);
-                    return commentVO;
-                }));
+        }).flatMap(commentVO -> postsRepository.findById(comment.getPostsId())
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(posts -> commentVO.setPosts(posts.getCode()))
+                .flatMap(vo -> commentRepository.countByReplierAndEnabledTrue(comment.getCode())
+                        .switchIfEmpty(Mono.just(0L)).map(count -> {
+                            commentVO.setCount(count);
+                            return commentVO;
+                        })));
     }
 
     /**

@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
@@ -54,7 +53,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     @Override
     public Flux<CommentVO> relation(String code) {
         return postsRepository.getByCodeAndEnabledTrue(code).flatMapMany(posts ->
-                commentRepository.findByPostsIdAndEnabledTrue(posts.getId()).flatMap(this::convertOuter));
+                commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(posts.getId()).flatMap(this::convertOuter));
     }
 
     @Override
@@ -74,9 +73,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
                     Comment comment = new Comment();
                     BeanUtils.copyProperties(commentDTO, comment);
                     comment.setCode(this.generateCode());
-                    if (!StringUtils.hasText(commentDTO.getReplier())) {
-                        comment.setPostsId(posts.getId());
-                    }
+                    comment.setPostsId(posts.getId());
                     return comment;
                 }).switchIfEmpty(Mono.error(new NoSuchElementException()))
                 .flatMap(comment -> commentRepository.insert(comment).flatMap(comm ->
@@ -103,11 +100,14 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
             CommentVO commentVO = new CommentVO();
             BeanUtils.copyProperties(c, commentVO);
             return commentVO;
-        }).flatMap(commentVO -> commentRepository.countByReplierAndEnabledTrue(comment.getCode())
-                .switchIfEmpty(Mono.just(0L)).map(count -> {
-                    commentVO.setCount(count);
-                    return commentVO;
-                }));
+        }).flatMap(commentVO -> postsRepository.findById(comment.getPostsId())
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(posts -> commentVO.setPosts(posts.getCode()))
+                .flatMap(vo -> commentRepository.countByReplierAndEnabledTrue(comment.getCode())
+                        .switchIfEmpty(Mono.just(0L)).map(count -> {
+                            commentVO.setCount(count);
+                            return commentVO;
+                        })));
     }
 
     /**

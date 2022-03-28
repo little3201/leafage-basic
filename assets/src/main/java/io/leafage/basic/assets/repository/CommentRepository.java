@@ -31,7 +31,7 @@ public interface CommentRepository extends ReactiveMongoRepository<Comment, Obje
      * @param postsId 帖子ID
      * @return 关联的数据
      */
-    Flux<Comment> findByPostsIdAndEnabledTrue(ObjectId postsId);
+    Flux<Comment> findByPostsIdAndReplierIsNullAndEnabledTrue(ObjectId postsId);
 
     /**
      * 统计回复

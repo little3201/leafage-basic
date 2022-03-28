@@ -22,7 +22,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -48,6 +47,7 @@ class CommentServiceImplTest {
     @Test
     void retrieve() {
         Comment comment = new Comment();
+        comment.setCode("21318H9F1");
         comment.setPostsId(new ObjectId());
         comment.setContent("这里写内容");
         comment.setCountry("某国");
@@ -56,6 +56,8 @@ class CommentServiceImplTest {
                 Sort.by(Sort.Direction.DESC, "modifyTime")))).willReturn(Flux.just(comment));
 
         given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
+
+        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 
         StepVerifier.create(commentService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
@@ -67,10 +69,13 @@ class CommentServiceImplTest {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
 
         Comment comment = new Comment();
+        comment.setCode("21318H9F1");
         comment.setPostsId(posts.getId());
-        given(this.commentRepository.findByPostsIdAndEnabledTrue(posts.getId())).willReturn(Flux.just(comment));
+        given(this.commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(posts.getId())).willReturn(Flux.just(comment));
 
-        given(this.postsRepository.findById(posts.getId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
+        given(this.postsRepository.findById(posts.getId())).willReturn(Mono.just(posts));
+
+        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 
         StepVerifier.create(commentService.relation("21318H9FH")).expectNextCount(1).verifyComplete();
     }
@@ -78,6 +83,7 @@ class CommentServiceImplTest {
     @Test
     void repliers() {
         Comment comment = new Comment();
+        comment.setCode("21318H9F1");
         comment.setPostsId(new ObjectId());
         comment.setReplier("21318H9F0");
         given(this.commentRepository.findByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Flux.just(comment));
@@ -98,6 +104,7 @@ class CommentServiceImplTest {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
 
         Comment comment = new Comment();
+        comment.setCode("21318H9F1");
         comment.setContent("test");
         comment.setPostsId(posts.getId());
         comment.setReplier("21318H9F0");
@@ -122,6 +129,7 @@ class CommentServiceImplTest {
                 willReturn(Mono.just(Mockito.mock(Comment.class)));
 
         Comment comment = new Comment();
+        comment.setCode("21318H9F1");
         comment.setPostsId(new ObjectId());
         comment.setReplier("21318H9F0");
         comment.setContent("这里写内容");

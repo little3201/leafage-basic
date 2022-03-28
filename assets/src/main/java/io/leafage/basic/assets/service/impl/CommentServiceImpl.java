@@ -19,7 +19,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
@@ -74,9 +73,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
                     Comment comment = new Comment();
                     BeanUtils.copyProperties(commentDTO, comment);
                     comment.setCode(this.generateCode());
-                    if (!StringUtils.hasText(commentDTO.getReplier())) {
-                        comment.setPostsId(posts.getId());
-                    }
+                    comment.setPostsId(posts.getId());
                     return comment;
                 }).switchIfEmpty(Mono.error(new NoSuchElementException()))
                 .flatMap(comment -> commentRepository.insert(comment).flatMap(comm ->

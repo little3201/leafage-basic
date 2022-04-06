@@ -49,25 +49,44 @@ public class CommentController {
     }
 
     /**
-     * 根据posts查询
+     * 根据 posts code 查询
      *
      * @param code 帖子代码
      * @return 关联的评论
      */
     @GetMapping("/{code}")
-    public ResponseEntity<List<CommentVO>> posts(@PathVariable String code) {
+    public ResponseEntity<List<CommentVO>> relation(@PathVariable String code) {
         List<CommentVO> voList;
         try {
-            voList = commentService.posts(code);
+            voList = commentService.relation(code);
         } catch (Exception e) {
-            logger.error("Fetch comment by posts occurred an error: ", e);
+            logger.error("Retrieve comment by posts occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voList);
+    }
+
+
+    /**
+     * 根据code查询回复
+     *
+     * @param code 帖子代码
+     * @return 关联的评论
+     */
+    @GetMapping("/{code}/replies")
+    public ResponseEntity<List<CommentVO>> replies(@PathVariable String code) {
+        List<CommentVO> voList;
+        try {
+            voList = commentService.replies(code);
+        } catch (Exception e) {
+            logger.error("Retrieve comment replies occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voList);
     }
 
     /**
-     * 根据传入的数据添加信息
+     * 添加信息
      *
      * @param commentDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码

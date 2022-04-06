@@ -1,6 +1,5 @@
 package io.leafage.basic.assets.dto;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
@@ -19,17 +18,6 @@ public class CommentDTO implements Serializable {
     @NotBlank
     private String posts;
     /**
-     * 昵称
-     */
-    @NotBlank
-    private String nickname;
-    /**
-     * 邮箱
-     */
-    @NotBlank
-    @Email
-    private String email;
-    /**
      * 内容
      */
     @NotBlank
@@ -45,22 +33,6 @@ public class CommentDTO implements Serializable {
 
     public void setPosts(String posts) {
         this.posts = posts;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getContent() {

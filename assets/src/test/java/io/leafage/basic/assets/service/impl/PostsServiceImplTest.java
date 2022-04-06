@@ -23,9 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.parameters.P;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -121,8 +121,10 @@ class PostsServiceImplTest {
 
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setCategory("2112JOP2");
+        postsDTO.setTags(Set.of(posts.getTags().split(",")));
         PostsVO postsVO = postsService.create(postsDTO);
 
+        posts.setId(postsContent.getPostsId());
         verify(this.postsRepository, times(1)).saveAndFlush(Mockito.any(Posts.class));
         verify(this.postsContentRepository, times(1)).save(Mockito.any(PostsContent.class));
         Assertions.assertNotNull(postsVO);
@@ -175,9 +177,9 @@ class PostsServiceImplTest {
 
     @Test
     void increaseViewed() {
-        postsService.increaseViewed("2112JK02");
+        postsService.increaseViewed(1L);
 
-        verify(this.postsRepository, times(1)).increaseViewed(Mockito.anyString());
+        verify(this.postsRepository, times(1)).increaseViewed(Mockito.anyLong());
     }
 
 }

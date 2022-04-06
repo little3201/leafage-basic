@@ -39,7 +39,7 @@ public class Statistics extends AbstractEntity {
     /**
      * 评论量
      */
-    private int comment;
+    private int comments;
     /**
      * 浏览量评论量
      */
@@ -86,12 +86,12 @@ public class Statistics extends AbstractEntity {
         this.overLikes = overLikes;
     }
 
-    public int getComment() {
-        return comment;
+    public int getComments() {
+        return comments;
     }
 
-    public void setComment(int comment) {
-        this.comment = comment;
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 
     public double getOverComment() {

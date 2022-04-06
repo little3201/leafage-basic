@@ -14,18 +14,23 @@ import javax.persistence.Table;
 public class Comment extends AbstractEntity {
 
     /**
+     * code
+     */
+    @Column(unique = true)
+    private String code;
+    /**
      * 帖子ID
      */
     @Column(name = "posts_id")
     private Long postsId;
     /**
-     * 昵称
+     * 国家
      */
-    private String nickname;
+    private String country;
     /**
-     * 邮箱
+     * 位置
      */
-    private String email;
+    private String location;
     /**
      * 内容
      */
@@ -35,6 +40,15 @@ public class Comment extends AbstractEntity {
      */
     private String replier;
 
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public Long getPostsId() {
         return postsId;
     }
@@ -43,20 +57,20 @@ public class Comment extends AbstractEntity {
         this.postsId = postsId;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getCountry() {
+        return country;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getEmail() {
-        return email;
+    public String getLocation() {
+        return location;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getContent() {

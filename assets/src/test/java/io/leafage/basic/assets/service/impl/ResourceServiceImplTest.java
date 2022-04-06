@@ -60,7 +60,11 @@ class ResourceServiceImplTest {
         Resource resource = new Resource();
         resource.setTitle("java");
         resource.setCategoryId(category.getId());
-        Page<Resource> page = new PageImpl<>(List.of(resource));
+
+        Resource rs = new Resource();
+        rs.setTitle("java");
+        rs.setCategoryId(resource.getCategoryId());
+        Page<Resource> page = new PageImpl<>(List.of(resource, rs));
         given(this.resourceRepository.findByCategoryIdAndEnabledTrue(PageRequest.of(0, 2), category.getId())).willReturn(page);
 
         Page<ResourceVO> voPage = resourceService.retrieve(0, 2, "21389KO6");

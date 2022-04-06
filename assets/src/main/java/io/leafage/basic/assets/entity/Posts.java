@@ -49,7 +49,7 @@ public class Posts extends AbstractEntity {
     /**
      * 评论
      */
-    private int comment;
+    private int comments;
 
 
     public String getCode() {
@@ -108,11 +108,11 @@ public class Posts extends AbstractEntity {
         this.viewed = viewed;
     }
 
-    public int getComment() {
-        return comment;
+    public int getComments() {
+        return comments;
     }
 
-    public void setComment(int comment) {
-        this.comment = comment;
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 }

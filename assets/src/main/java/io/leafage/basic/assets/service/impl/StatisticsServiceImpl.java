@@ -43,7 +43,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         posts.forEach(p -> {
             statistics.setViewed(statistics.getViewed() + p.getViewed());
             statistics.setLikes(statistics.getLikes() + p.getLikes());
-            statistics.setComment(statistics.getComment() + p.getComment());
+            statistics.setComments(statistics.getComments() + p.getComments());
         });
         LocalDate now = LocalDate.now();
         statistics.setDate(now);
@@ -52,7 +52,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         Statistics bys = statisticsRepository.getByDate(now.minusDays(3));
         statistics.setOverViewed(this.dayOverDay(statistics.getViewed(), ys.getViewed(), bys.getViewed()));
         statistics.setOverLikes(this.dayOverDay(statistics.getLikes(), ys.getLikes(), bys.getLikes()));
-        statistics.setOverComment(this.dayOverDay(statistics.getComment(), ys.getComment(), bys.getComment()));
+        statistics.setOverComment(this.dayOverDay(statistics.getComments(), ys.getComments(), bys.getComments()));
         return statisticsRepository.saveAndFlush(statistics);
     }
 

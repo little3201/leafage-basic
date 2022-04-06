@@ -16,21 +16,21 @@ public class CommentVO extends AbstractVO<String> {
      */
     private String posts;
     /**
-     * 昵称
-     */
-    private String nickname;
-    /**
-     * 邮箱
-     */
-    private String email;
-    /**
      * 内容
      */
     private String content;
     /**
-     * 回复人
+     * 国家
      */
-    private String replier;
+    private String country;
+    /**
+     * 位置
+     */
+    private String location;
+    /**
+     * 回复数
+     */
+    private Long count;
 
     public String getPosts() {
         return posts;
@@ -38,22 +38,6 @@ public class CommentVO extends AbstractVO<String> {
 
     public void setPosts(String posts) {
         this.posts = posts;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getContent() {
@@ -64,11 +48,27 @@ public class CommentVO extends AbstractVO<String> {
         this.content = content;
     }
 
-    public String getReplier() {
-        return replier;
+    public String getCountry() {
+        return country;
     }
 
-    public void setReplier(String replier) {
-        this.replier = replier;
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Long getCount() {
+        return count;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
     }
 }

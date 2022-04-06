@@ -39,7 +39,7 @@ class StatisticsServiceImplTest {
     @Test
     void retrieve() {
         Statistics statistics = new Statistics();
-        statistics.setComment(12);
+        statistics.setComments(12);
         statistics.setLikes(23);
         statistics.setViewed(121);
         Page<Statistics> page = new PageImpl<>(List.of(statistics));
@@ -52,19 +52,19 @@ class StatisticsServiceImplTest {
     @Test
     void create() {
         Posts posts = new Posts();
-        posts.setComment(19);
+        posts.setComments(19);
         posts.setLikes(90);
         posts.setViewed(567);
         given(this.postsRepository.findByEnabledTrue()).willReturn(List.of(posts));
 
         Statistics ys = new Statistics();
-        ys.setComment(12);
+        ys.setComments(12);
         ys.setLikes(23);
         ys.setViewed(121);
         given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(2))).willReturn(ys);
 
         Statistics bys = new Statistics();
-        bys.setComment(10);
+        bys.setComments(10);
         bys.setLikes(9);
         bys.setViewed(78);
         given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(3))).willReturn(bys);
@@ -82,13 +82,13 @@ class StatisticsServiceImplTest {
     @Test
     void create_zero() {
         Posts posts = new Posts();
-        posts.setComment(19);
+        posts.setComments(19);
         posts.setLikes(90);
         posts.setViewed(567);
         given(this.postsRepository.findByEnabledTrue()).willReturn(List.of(posts));
 
         Statistics statistics = new Statistics();
-        statistics.setComment(12);
+        statistics.setComments(12);
         statistics.setLikes(23);
         statistics.setViewed(121);
         given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(2))).willReturn(statistics);

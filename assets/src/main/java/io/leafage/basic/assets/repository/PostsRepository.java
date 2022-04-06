@@ -46,20 +46,20 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
     /**
      * 增加viewed
      *
-     * @param code 代码
+     * @param id 主键
      */
     @Modifying
-    @Query("update #{#entityName} set viewed = viewed + 1 where code = ?1")
-    void increaseViewed(String code);
+    @Query("update #{#entityName} set viewed = viewed + 1 where id = ?1")
+    void increaseViewed(Long id);
 
     /**
      * 增加comment
      *
-     * @param code 代码
+     * @param id 主键
      */
     @Modifying
-    @Query("update #{#entityName} set comment = comment + 1 where code = ?1")
-    void increaseComment(String code);
+    @Query("update #{#entityName} set comments = comments + 1 where id = ?1")
+    void increaseComment(Long id);
 
     /**
      * 统计

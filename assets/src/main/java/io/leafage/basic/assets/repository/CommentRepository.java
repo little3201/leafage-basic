@@ -24,11 +24,27 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据帖子ID查询
+     * 根据postsId查询
      *
      * @param postsId 帖子ID
      * @return 关联的数据
      */
-    List<Comment> findByPostsIdAndEnabledTrue(long postsId);
+    List<Comment> findByPostsIdAndReplierIsNullAndEnabledTrue(long postsId);
+
+    /**
+     * 根据replier查询
+     *
+     * @param replier 回复信息
+     * @return 关联的数据
+     */
+    List<Comment> findByReplierAndEnabledTrue(String replier);
+
+    /**
+     * 查询回复记录数
+     *
+     * @param replier 回复code
+     * @return 记录数
+     */
+    Long countByReplierAndEnabledTrue(String replier);
 
 }

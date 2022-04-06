@@ -11,10 +11,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import top.leafage.common.basic.AbstractBasicService;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
  * @author liwenqiang 2021/09/29 15:10
  **/
 @Service
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl extends AbstractBasicService implements CommentService {
 
     private final CommentRepository commentRepository;
     private final PostsRepository postsRepository;
@@ -39,21 +41,35 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentVO> posts(String code) {
-        Assert.hasText(code, "code is blank.");
+    public List<CommentVO> relation(String code) {
+        Assert.hasText(code, "code must not be blank.");
         Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
-        if (posts == null) {
+        if (null == posts) {
             return Collections.emptyList();
         }
-        return commentRepository.findByPostsIdAndEnabledTrue(posts.getId())
+        return commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(posts.getId())
                 .stream().map(this::convertOuter).collect(Collectors.toList());
     }
 
     @Override
+    public List<CommentVO> replies(String replier) {
+        return commentRepository.findByReplierAndEnabledTrue(replier)
+                .stream().map(this::convertOuter).collect(Collectors.toList());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
     public CommentVO create(CommentDTO commentDTO) {
+        Posts posts = postsRepository.getByCodeAndEnabledTrue(commentDTO.getPosts());
+        if (null == posts) {
+            throw new NoSuchElementException();
+        }
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDTO, comment);
+        comment.setCode(this.generateCode());
+        comment.setPostsId(posts.getId());
         comment = commentRepository.saveAndFlush(comment);
+        // 添加关联帖子的评论数
         this.increaseComment(comment.getPostsId());
         return this.convertOuter(comment);
     }
@@ -67,6 +83,8 @@ public class CommentServiceImpl implements CommentService {
     private CommentVO convertOuter(Comment comment) {
         CommentVO vo = new CommentVO();
         BeanUtils.copyProperties(comment, vo);
+        Long count = commentRepository.countByReplierAndEnabledTrue(comment.getCode());
+        vo.setCount(count);
         return vo;
     }
 
@@ -76,7 +94,6 @@ public class CommentServiceImpl implements CommentService {
      * @param id 主键
      */
     private void increaseComment(long id) {
-        Optional<Posts> optional = postsRepository.findById(id);
-        optional.ifPresent(posts -> postsRepository.increaseComment(posts.getCode()));
+        postsRepository.increaseComment(id);
     }
 }

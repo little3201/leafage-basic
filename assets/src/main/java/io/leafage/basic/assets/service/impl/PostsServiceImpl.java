@@ -66,13 +66,15 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public PostsContentVO details(String code) {
         Assert.hasText(code, MESSAGE);
-        // viewed自增一，异步执行
-        this.increaseViewed(code);
+
         //查询基本信息
         Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
         if (posts == null) {
             return null;
         }
+        // viewed自增一，异步执行
+        this.increaseViewed(posts.getId());
+
         PostsContentVO postsContentVO = new PostsContentVO();
         BeanUtils.copyProperties(posts, postsContentVO);
         postsContentVO.setPostsId(posts.getId());
@@ -156,9 +158,9 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Async
-    public void increaseViewed(String code) {
-        Assert.hasText(code, MESSAGE);
-        postsRepository.increaseViewed(code);
+    public void increaseViewed(Long id) {
+        Assert.notNull(id, "id must not be null");
+        postsRepository.increaseViewed(id);
     }
 
     /**

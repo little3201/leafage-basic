@@ -48,7 +48,6 @@ class CommentControllerTest {
     @Test
     void retrieve() throws Exception {
         CommentVO commentVO = new CommentVO();
-        commentVO.setNickname("test");
         commentVO.setContent("评论信息");
         commentVO.setPosts("21389KO6");
         Page<CommentVO> page = new PageImpl<>(List.of(commentVO));
@@ -67,36 +66,50 @@ class CommentControllerTest {
     }
 
     @Test
-    void posts() throws Exception {
+    void relation() throws Exception {
         CommentVO commentVO = new CommentVO();
-        commentVO.setNickname("test");
         commentVO.setContent("评论信息");
         commentVO.setPosts("21389KO6");
-        given(this.commentService.posts(Mockito.anyString())).willReturn(List.of(commentVO));
+        given(this.commentService.relation(Mockito.anyString())).willReturn(List.of(commentVO));
 
         mvc.perform(get("/comment/{code}", "21389KO6")).andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
-    void posts_error() throws Exception {
-        given(this.commentService.posts(Mockito.anyString())).willThrow(new NoSuchElementException());
+    void relation_error() throws Exception {
+        given(this.commentService.relation(Mockito.anyString())).willThrow(new NoSuchElementException());
 
         mvc.perform(get("/comment/{code}", "21389KO6")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
+    void replies() throws Exception {
+        CommentVO commentVO = new CommentVO();
+        commentVO.setContent("评论信息");
+        commentVO.setPosts("21389KO6");
+        given(this.commentService.replies(Mockito.anyString())).willReturn(List.of(commentVO));
+
+        mvc.perform(get("/comment/{code}/replies", "21389KO1")).andExpect(status().isOk()).andDo(print()).andReturn();
+    }
+
+    @Test
+    void replies_error() throws Exception {
+        given(this.commentService.replies(Mockito.anyString())).willThrow(new NoSuchElementException());
+
+        mvc.perform(get("/comment/{code}/replies", "21389KO1")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+    }
+
+    @Test
     void create() throws Exception {
         CommentVO commentVO = new CommentVO();
-        commentVO.setNickname("test");
         commentVO.setContent("评论信息");
         commentVO.setPosts("21389KO6");
         given(this.commentService.create(Mockito.any(CommentDTO.class))).willReturn(commentVO);
 
         CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setNickname("test");
         commentDTO.setPosts("21389KO6");
         commentDTO.setContent("评论了内容");
-        commentDTO.setEmail("leafage@leafage.top");
+        commentDTO.setReplier("21389KO1");
         mvc.perform(post("/comment").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(commentDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.content").value("评论信息")).andDo(print()).andReturn();
@@ -107,10 +120,8 @@ class CommentControllerTest {
         given(this.commentService.create(Mockito.any(CommentDTO.class))).willThrow(new NoSuchElementException());
 
         CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setNickname("test");
         commentDTO.setPosts("21389KO6");
         commentDTO.setContent("评论了内容");
-        commentDTO.setEmail("leafage@leafage.top");
         mvc.perform(post("/comment").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(commentDTO)).with(csrf().asHeader())).andExpect(status()
                 .isExpectationFailed()).andDo(print()).andReturn();

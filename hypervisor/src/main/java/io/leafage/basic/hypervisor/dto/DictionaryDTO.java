@@ -1,32 +1,26 @@
-/*
- * Copyright (c) 2021. Leafage All Right Reserved.
- */
-package io.leafage.basic.hypervisor.entity;
+package io.leafage.basic.hypervisor.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
- * Model class for role.
+ * DTO class for dictionary.
  *
- * @author liwenqiang 2020-12-20 9:54
+ * @author liwenqiang 2022-04-06 17:33
  */
-@Entity
-@Table(name = "role")
-public class Role extends AbstractEntity {
+public class DictionaryDTO implements Serializable {
 
-    /**
-     * 代码
-     */
-    @Column(unique = true)
-    private String code;
+    private static final long serialVersionUID = 7474353752670394489L;
+
     /**
      * 名称
      */
     private String name;
     /**
-     * 上级主键
+     * 简称
+     */
+    private String alias;
+    /**
+     * 上级
      */
     private Long superior;
     /**
@@ -34,13 +28,6 @@ public class Role extends AbstractEntity {
      */
     private String description;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getName() {
         return name;
@@ -48,6 +35,14 @@ public class Role extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public Long getSuperior() {
@@ -65,5 +60,4 @@ public class Role extends AbstractEntity {
     public void setDescription(String description) {
         this.description = description;
     }
-
 }

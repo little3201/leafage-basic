@@ -17,9 +17,9 @@ import javax.persistence.Table;
 public class Category extends AbstractEntity {
 
     /**
-     * 唯一标识
+     * 代码
      */
-    @Column(name = "code", unique = true, nullable = false)
+    @Column(unique = true)
     private String code;
     /**
      * 名称

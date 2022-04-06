@@ -16,7 +16,7 @@ public class Resource extends AbstractEntity {
     /**
      * 代码
      */
-    @Column(name = "code", unique = true, nullable = false)
+    @Column(unique = true)
     private String code;
     /**
      * 标题

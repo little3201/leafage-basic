@@ -19,7 +19,7 @@ public class Posts extends AbstractEntity {
     /**
      * 唯一标识
      */
-    @Column(name = "code", unique = true, nullable = false)
+    @Column(unique = true)
     private String code;
     /**
      * 标题

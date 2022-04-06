@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ public class User extends AbstractEntity {
     /**
      * 账号
      */
+    @Column(unique = true)
     private String username;
     /**
      * 姓

@@ -1,22 +1,19 @@
-package io.leafage.basic.hypervisor.entity;
+package io.leafage.basic.hypervisor.vo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
- * Model class for region.
+ * VO class for dictionary.
  *
- * @author liwenqiang 2021-10-12 10:06
+ * @author liwenqiang 2022-04-06 17:33
  */
-@Entity
-@Table(name = "region")
-public class Region extends AbstractEntity {
+public class DictionaryVO implements Serializable {
+
+    private static final long serialVersionUID = -7090071767983351672L;
 
     /**
      * 代码
      */
-    @Column(unique = true)
     private Long code;
     /**
      * 名称
@@ -29,15 +26,12 @@ public class Region extends AbstractEntity {
     /**
      * 上级
      */
-    private Long superior;
-    /**
-     * 邮编
-     */
-    private String zip;
+    private String superior;
     /**
      * 描述
      */
     private String description;
+
 
     public Long getCode() {
         return code;
@@ -63,20 +57,12 @@ public class Region extends AbstractEntity {
         this.alias = alias;
     }
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
     }
 
     public String getDescription() {

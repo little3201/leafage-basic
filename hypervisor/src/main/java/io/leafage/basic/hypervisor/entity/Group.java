@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -18,6 +19,7 @@ public class Group extends AbstractEntity {
     /**
      * 代码
      */
+    @Column(unique = true)
     private String code;
     /**
      * 名称

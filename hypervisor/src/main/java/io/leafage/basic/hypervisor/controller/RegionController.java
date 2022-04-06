@@ -58,7 +58,7 @@ public class RegionController {
         try {
             child = regionService.lower(code);
         } catch (Exception e) {
-            logger.info("Retrieve region tree occurred an error: ", e);
+            logger.info("Retrieve region lower occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(child);
@@ -108,14 +108,14 @@ public class RegionController {
      */
     @PostMapping
     public ResponseEntity<RegionVO> create(@RequestBody RegionDTO regionDTO) {
-        RegionVO regionVO;
+        RegionVO vo;
         try {
-            regionVO = regionService.create(regionDTO);
+            vo = regionService.create(regionDTO);
         } catch (Exception e) {
             logger.error("Create region occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(regionVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
 
     /**

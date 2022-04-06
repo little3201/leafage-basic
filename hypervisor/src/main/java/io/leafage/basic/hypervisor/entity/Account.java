@@ -17,6 +17,7 @@ public class Account extends AbstractEntity {
     /**
      * 用户名
      */
+    @Column(unique = true)
     private String username;
     /**
      * 昵称

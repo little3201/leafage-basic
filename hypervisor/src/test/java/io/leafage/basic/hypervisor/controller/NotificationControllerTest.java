@@ -43,6 +43,7 @@ class NotificationControllerTest {
     @Test
     void retrieve() throws Exception {
         NotificationVO notificationVO = new NotificationVO();
+        notificationVO.setTitle("标题");
         notificationVO.setReceiver("test");
         notificationVO.setContent("测试内容");
         Page<NotificationVO> voPage = new PageImpl<>(List.of(notificationVO));

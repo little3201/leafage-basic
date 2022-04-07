@@ -46,7 +46,7 @@ class RegionServiceImplTest {
         given(this.regionRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(regions);
 
         Region superior = new Region();
-        superior.setId(region.getSuperior());
+        superior.setCode(region.getSuperior());
         superior.setName("北京市");
         given(this.regionRepository.findById(Mockito.anyLong())).willReturn(Optional.of(superior));
 

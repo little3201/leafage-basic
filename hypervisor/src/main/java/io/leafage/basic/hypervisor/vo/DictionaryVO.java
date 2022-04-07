@@ -14,7 +14,7 @@ public class DictionaryVO implements Serializable {
     /**
      * 代码
      */
-    private Long code;
+    private String code;
     /**
      * 名称
      */
@@ -33,11 +33,11 @@ public class DictionaryVO implements Serializable {
     private String description;
 
 
-    public Long getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Long code) {
+    public void setCode(String code) {
         this.code = code;
     }
 

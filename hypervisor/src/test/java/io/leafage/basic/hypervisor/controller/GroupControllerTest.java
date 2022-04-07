@@ -53,8 +53,10 @@ class GroupControllerTest {
     @Test
     void retrieve() throws Exception {
         GroupVO groupVO = new GroupVO();
+        groupVO.setAlias("IT");
         groupVO.setPrincipal("admin");
         groupVO.setSuperior("superior");
+        groupVO.setCount(2L);
         Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO));
         given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 

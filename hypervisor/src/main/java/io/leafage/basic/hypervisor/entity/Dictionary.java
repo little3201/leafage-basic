@@ -17,7 +17,7 @@ public class Dictionary extends AbstractEntity {
      * 代码
      */
     @Column(unique = true)
-    private Long code;
+    private String code;
     /**
      * 名称
      */
@@ -29,18 +29,18 @@ public class Dictionary extends AbstractEntity {
     /**
      * 上级
      */
-    private Long superior;
+    private String superior;
     /**
      * 描述
      */
     private String description;
 
 
-    public Long getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(Long code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -60,11 +60,11 @@ public class Dictionary extends AbstractEntity {
         this.alias = alias;
     }
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
     }
 

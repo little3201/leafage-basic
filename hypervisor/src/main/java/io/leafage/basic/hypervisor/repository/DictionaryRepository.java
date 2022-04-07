@@ -36,5 +36,13 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long> {
      *
      * @return 结果信息
      */
-    List<Dictionary> findBySuperiorAndEnabledTrue(Long code);
+    List<Dictionary> findBySuperiorAndEnabledTrue(String code);
+
+    /**
+     * 根据code查询
+     *
+     * @param code 代码
+     * @return 数据信息
+     */
+    Dictionary getByCodeAndEnabledTrue(String code);
 }

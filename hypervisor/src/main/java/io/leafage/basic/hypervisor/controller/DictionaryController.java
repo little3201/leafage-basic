@@ -53,7 +53,7 @@ public class DictionaryController {
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/{code}/lower")
-    public ResponseEntity<List<DictionaryVO>> lower(@PathVariable Long code) {
+    public ResponseEntity<List<DictionaryVO>> lower(@PathVariable String code) {
         List<DictionaryVO> child;
         try {
             child = dictionaryService.lower(code);
@@ -71,7 +71,7 @@ public class DictionaryController {
      * @return 查询的数据，异常时返回204状态码
      */
     @GetMapping("/{code}")
-    public ResponseEntity<DictionaryVO> fetch(@PathVariable Long code) {
+    public ResponseEntity<DictionaryVO> fetch(@PathVariable String code) {
         DictionaryVO vo;
         try {
             vo = dictionaryService.fetch(code);

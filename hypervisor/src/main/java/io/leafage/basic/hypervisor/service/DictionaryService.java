@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author liwenqiang 2022-04-06 17:38
  **/
-public interface DictionaryService extends ServletBasicService<DictionaryDTO, DictionaryVO, Long> {
+public interface DictionaryService extends ServletBasicService<DictionaryDTO, DictionaryVO, String> {
 
 
     /**
@@ -28,5 +28,5 @@ public interface DictionaryService extends ServletBasicService<DictionaryDTO, Di
      *
      * @return 数据集
      */
-    List<DictionaryVO> lower(long code);
+    List<DictionaryVO> lower(String code);
 }

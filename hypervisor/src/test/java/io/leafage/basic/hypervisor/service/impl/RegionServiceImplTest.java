@@ -53,21 +53,6 @@ class RegionServiceImplTest {
     }
 
     @Test
-    void fetch_superior() {
-        Region region = new Region();
-        region.setId(new ObjectId());
-        region.setCode(2L);
-        region.setSuperior(11L);
-        region.setName("北京市");
-        region.setAlias("京");
-        region.setPostalCode(23423080);
-        region.setDescription("描述");
-        given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
-
-        StepVerifier.create(regionService.fetch(1100L)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
     void lower() {
         Region region = new Region();
         region.setId(new ObjectId());

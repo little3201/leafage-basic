@@ -30,7 +30,7 @@ public interface DictionaryRepository extends ReactiveMongoRepository<Dictionary
      * @param code 代码
      * @return 查询结果信息
      */
-    Mono<Dictionary> getByCodeAndEnabledTrue(Long code);
+    Mono<Dictionary> getByCodeAndEnabledTrue(String code);
 
     /**
      * 是否已存在

@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -17,15 +18,17 @@ public class DictionaryDTO implements Serializable {
     /**
      * 名称
      */
+    @NotBlank
     private String name;
-    /**
-     * 上级
-     */
-    private Long superior;
     /**
      * 简称
      */
+    @NotBlank
     private String alias;
+    /**
+     * 上级
+     */
+    private String superior;
     /**
      * 描述
      */
@@ -40,11 +43,11 @@ public class DictionaryDTO implements Serializable {
         this.name = name;
     }
 
-    public Long getSuperior() {
+    public String getSuperior() {
         return superior;
     }
 
-    public void setSuperior(Long superior) {
+    public void setSuperior(String superior) {
         this.superior = superior;
     }
 

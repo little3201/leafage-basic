@@ -1,6 +1,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Dictionary;
+import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -72,4 +73,14 @@ class DictionaryServiceImplTest {
         StepVerifier.create(dictionaryService.count()).expectNextCount(1).verifyComplete();
     }
 
+    @Test
+    void create() {
+        given(this.dictionaryRepository.insert(Mockito.any(Dictionary.class))).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
+
+        DictionaryDTO dictionaryDTO = new DictionaryDTO();
+        dictionaryDTO.setName("Gender");
+        dictionaryDTO.setAlias("性别");
+        dictionaryDTO.setDescription("描述");
+        StepVerifier.create(dictionaryService.create(dictionaryDTO)).expectNextCount(1).verifyComplete();
+    }
 }

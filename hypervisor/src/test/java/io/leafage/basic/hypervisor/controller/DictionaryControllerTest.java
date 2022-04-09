@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import io.leafage.basic.hypervisor.vo.RegionVO;
@@ -36,6 +37,9 @@ class DictionaryControllerTest {
     void retrieve() {
         DictionaryVO dictionaryVO = new DictionaryVO();
         dictionaryVO.setName("test");
+        dictionaryVO.setAlias("性别");
+        dictionaryVO.setSuperior("2247K10L");
+        dictionaryVO.setDescription("描述");
         given(this.dictionaryService.retrieve(0, 2)).willReturn(Flux.just(dictionaryVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/dictionary").queryParam("page", 0)
@@ -97,5 +101,34 @@ class DictionaryControllerTest {
         given(this.dictionaryService.count()).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/dictionary/count").exchange().expectStatus().isNoContent();
+    }
+
+    @Test
+    void create() {
+        DictionaryVO dictionaryVO = new DictionaryVO();
+        dictionaryVO.setName("Gender");
+        dictionaryVO.setAlias("性别");
+        dictionaryVO.setDescription("描述");
+        given(this.dictionaryService.create(Mockito.any(DictionaryDTO.class))).willReturn(Mono.just(dictionaryVO));
+
+        DictionaryDTO dictionaryDTO = new DictionaryDTO();
+        dictionaryDTO.setName("Gender");
+        dictionaryDTO.setAlias("性别");
+        dictionaryDTO.setDescription("描述");
+        webTestClient.post().uri("/dictionary").bodyValue(dictionaryDTO).exchange()
+                .expectStatus().isCreated()
+                .expectBody().jsonPath("$.name").isEqualTo("Gender");
+    }
+
+    @Test
+    void create_error() {
+        given(this.dictionaryService.create(Mockito.any(DictionaryDTO.class))).willThrow(new RuntimeException());
+
+        DictionaryDTO dictionaryDTO = new DictionaryDTO();
+        dictionaryDTO.setName("Gender");
+        dictionaryDTO.setAlias("性别");
+        dictionaryDTO.setDescription("描述");
+        webTestClient.post().uri("/dictionary").bodyValue(dictionaryDTO).exchange()
+                .expectStatus().is4xxClientError();
     }
 }

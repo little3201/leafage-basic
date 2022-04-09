@@ -1,9 +1,11 @@
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -97,4 +99,21 @@ public class DictionaryController {
         return ResponseEntity.ok(voFlux);
     }
 
+    /**
+     * 添加信息
+     *
+     * @param dictionaryDTO 要添加的数据
+     * @return 添加后的信息，异常时返回417状态码
+     */
+    @PostMapping
+    public ResponseEntity<Mono<DictionaryVO>> create(@RequestBody DictionaryDTO dictionaryDTO) {
+        Mono<DictionaryVO> voMono;
+        try {
+            voMono = dictionaryService.create(dictionaryDTO);
+        } catch (Exception e) {
+            logger.info("Create dictionary occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
+    }
 }

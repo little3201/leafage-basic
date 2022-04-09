@@ -15,6 +15,7 @@ public class CommentDTO implements Serializable {
     /**
      * 帖子
      */
+    @NotBlank
     private String posts;
     /**
      * 内容

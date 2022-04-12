@@ -21,5 +21,4 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://192.168.100.131:8761/.well-known/jwks.json
-          issuer-uri: http://192.168.100.131:8761
+          issuer-uri: http://localhost:8761

@@ -8,10 +8,10 @@ import io.leafage.basic.hypervisor.service.NotificationService;
 import io.leafage.basic.hypervisor.vo.NotificationVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 
@@ -40,32 +40,15 @@ public class NotificationController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Flux<NotificationVO>> retrieve(@RequestParam int page, @RequestParam int size, boolean read) {
-        Flux<NotificationVO> voFlux;
+    public ResponseEntity<Mono<Page<NotificationVO>>> retrieve(@RequestParam int page, @RequestParam int size, boolean read) {
+        Mono<Page<NotificationVO>> pageMono;
         try {
-            voFlux = notificationService.retrieve(page, size, read);
+            pageMono = notificationService.retrieve(page, size, read);
         } catch (Exception e) {
             logger.error("Retrieve notification occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @return 查询的记录数，异常时返回204状态码
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
-        Mono<Long> count;
-        try {
-            count = notificationService.count();
-        } catch (Exception e) {
-            logger.error("Count notification occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
+        return ResponseEntity.ok(pageMono);
     }
 
     /**

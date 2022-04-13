@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.ValidMessage;
 import java.util.NoSuchElementException;
 
 
@@ -24,8 +25,6 @@ import java.util.NoSuchElementException;
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
 
-    private static final String MESSAGE = "username is blank.";
-
     private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
@@ -34,6 +33,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<Boolean> exist(String username) {
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
     }
 
@@ -46,7 +46,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<UserVO> modify(String username, UserDTO userDTO) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(user -> {
                     BeanUtils.copyProperties(userDTO, user);
@@ -56,14 +56,14 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<Void> remove(String username) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(user -> userRepository.deleteById(user.getId()));
     }
 
     @Override
     public Mono<UserVO> fetch(String username) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(this::convertOuter);
     }

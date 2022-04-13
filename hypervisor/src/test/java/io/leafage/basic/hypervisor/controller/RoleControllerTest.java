@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -47,17 +49,8 @@ class RoleControllerTest {
     void retrieve() {
         RoleVO roleVO = new RoleVO();
         roleVO.setName("test");
-        given(this.roleService.retrieve()).willReturn(Flux.just(roleVO));
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/role").build()).exchange()
-                .expectStatus().isOk().expectBodyList(RoleVO.class);
-    }
-
-    @Test
-    void retrieve_page() {
-        RoleVO roleVO = new RoleVO();
-        roleVO.setName("test");
-        given(this.roleService.retrieve(0, 2)).willReturn(Flux.just(roleVO));
+        Page<RoleVO> voPage = new PageImpl<>(List.of(roleVO));
+        given(this.roleService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/role").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -103,20 +96,6 @@ class RoleControllerTest {
         given(this.roleService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/role/{code}", "21612OL34").exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.roleService.count()).willReturn(Mono.just(2L));
-
-        webTestClient.get().uri("/role/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.roleService.count()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/role/count").exchange().expectStatus().isNoContent();
     }
 
     @Test

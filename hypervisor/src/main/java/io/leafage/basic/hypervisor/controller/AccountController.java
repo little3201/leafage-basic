@@ -11,6 +11,7 @@ import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,32 +54,15 @@ public class AccountController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Flux<AccountVO>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Flux<AccountVO> voFlux;
+    public ResponseEntity<Mono<Page<AccountVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<AccountVO>> pageMono;
         try {
-            voFlux = accountService.retrieve(page, size);
+            pageMono = accountService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Retrieve user occurred an error: ", e);
+            logger.error("Retrieve account occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @return 查询的记录数，异常时返回204状态码
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
-        Mono<Long> count;
-        try {
-            count = accountService.count();
-        } catch (Exception e) {
-            logger.error("Count user occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
+        return ResponseEntity.ok(pageMono);
     }
 
     /**

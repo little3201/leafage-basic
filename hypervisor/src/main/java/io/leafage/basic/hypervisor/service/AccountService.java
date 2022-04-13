@@ -5,6 +5,7 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.vo.AccountVO;
+import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
@@ -23,4 +24,12 @@ public interface AccountService extends ReactiveBasicService<AccountDTO, Account
      */
     Mono<Boolean> unlock(String username);
 
+    /**
+     * 分页查询
+     *
+     * @param page 页码
+     * @param size 大小
+     * @return 结果集
+     */
+    Mono<Page<AccountVO>> retrieve(int page, int size);
 }

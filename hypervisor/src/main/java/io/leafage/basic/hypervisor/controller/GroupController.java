@@ -10,6 +10,7 @@ import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,19 +46,15 @@ public class GroupController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Flux<GroupVO>> retrieve(Integer page, Integer size) {
-        Flux<GroupVO> voFlux;
+    public ResponseEntity<Mono<Page<GroupVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<GroupVO>> pageMono;
         try {
-            if (page == null || size == null) {
-                voFlux = groupService.retrieve();
-            } else {
-                voFlux = groupService.retrieve(page, size);
-            }
+            pageMono = groupService.retrieve(page, size);
         } catch (Exception e) {
             logger.error("Retrieve group occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(pageMono);
     }
 
     /**
@@ -93,23 +90,6 @@ public class GroupController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @return 查询的记录数，异常时返回204状态码
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
-        Mono<Long> count;
-        try {
-            count = groupService.count();
-        } catch (Exception e) {
-            logger.error("Count group occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
     }
 
     /**

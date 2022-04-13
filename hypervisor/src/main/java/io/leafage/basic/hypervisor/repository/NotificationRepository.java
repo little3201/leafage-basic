@@ -22,7 +22,7 @@ public interface NotificationRepository extends ReactiveMongoRepository<Notifica
      * @param pageable 分页参数
      * @return 有效数据集
      */
-    Flux<Notification> findByReadAndEnabledTrue(Pageable pageable, boolean read);
+    Flux<Notification> findByReadAndEnabledTrue(boolean read, Pageable pageable);
 
     /**
      * 根据code查询enabled信息
@@ -37,5 +37,5 @@ public interface NotificationRepository extends ReactiveMongoRepository<Notifica
      *
      * @return 记录数
      */
-    Mono<Long> countByReadFalse();
+    Mono<Long> countByReadAndEnabledTrue(boolean read);
 }

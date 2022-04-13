@@ -8,11 +8,14 @@ import io.leafage.basic.hypervisor.repository.NotificationRepository;
 import io.leafage.basic.hypervisor.service.NotificationService;
 import io.leafage.basic.hypervisor.vo.NotificationVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.NoSuchElementException;
 
@@ -24,8 +27,6 @@ import java.util.NoSuchElementException;
 @Service
 public class NotificationServiceImpl extends ReactiveAbstractTreeNodeService<Group> implements NotificationService {
 
-    private static final String CODE_MESSAGE = "code must not null";
-
     private final NotificationRepository notificationRepository;
     private final AccountRepository accountRepository;
 
@@ -35,20 +36,21 @@ public class NotificationServiceImpl extends ReactiveAbstractTreeNodeService<Gro
     }
 
     @Override
-    public Flux<NotificationVO> retrieve(int page, int size, boolean read) {
-        return notificationRepository.findByReadAndEnabledTrue(PageRequest.of(page, size), read).map(this::convertOuter);
+    public Mono<Page<NotificationVO>> retrieve(int page, int size, boolean read) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Flux<NotificationVO> voFlux = notificationRepository.findByReadAndEnabledTrue(read, pageRequest).map(this::convertOuter);
+
+        Mono<Long> count = notificationRepository.countByReadAndEnabledTrue(read);
+
+        return voFlux.collectList().zipWith(count).flatMap(objects ->
+                Mono.just(new PageImpl<>(objects.getT1(), pageRequest, objects.getT2())));
     }
 
     @Override
     public Mono<NotificationVO> fetch(String code) {
-        Assert.notNull(code, CODE_MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return notificationRepository.getByCodeAndEnabledTrue(code).doOnNext(notification ->
                 notification.setRead(true)).flatMap(notificationRepository::save).map(this::convertOuter);
-    }
-
-    @Override
-    public Mono<Long> count() {
-        return notificationRepository.countByReadFalse();
     }
 
     @Override
@@ -66,7 +68,7 @@ public class NotificationServiceImpl extends ReactiveAbstractTreeNodeService<Gro
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, CODE_MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return notificationRepository.getByCodeAndEnabledTrue(code).flatMap(group ->
                 notificationRepository.deleteById(group.getId()));
     }

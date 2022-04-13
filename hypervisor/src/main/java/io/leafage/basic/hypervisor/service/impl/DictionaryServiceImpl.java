@@ -6,10 +6,14 @@ import io.leafage.basic.hypervisor.repository.DictionaryRepository;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
 /**
@@ -27,8 +31,14 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     }
 
     @Override
-    public Flux<DictionaryVO> retrieve(int page, int size) {
-        return dictionaryRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convert);
+    public Mono<Page<DictionaryVO>> retrieve(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageRequest).map(this::convert);
+
+        Mono<Long> count = dictionaryRepository.countByEnabledTrue();
+
+        return voFlux.collectList().zipWith(count).flatMap(objects ->
+                Mono.just(new PageImpl<>(objects.getT1(), pageRequest, objects.getT2())));
     }
 
     @Override
@@ -38,22 +48,20 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
 
     @Override
     public Flux<DictionaryVO> lower(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return dictionaryRepository.findBySuperiorAndEnabledTrue(code).map(this::convert);
     }
 
     @Override
     public Mono<DictionaryVO> fetch(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return dictionaryRepository.getByCodeAndEnabledTrue(code).map(this::convert);
     }
 
     @Override
     public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
         return dictionaryRepository.existsByName(name);
-    }
-
-    @Override
-    public Mono<Long> count() {
-        return dictionaryRepository.count();
     }
 
     @Override

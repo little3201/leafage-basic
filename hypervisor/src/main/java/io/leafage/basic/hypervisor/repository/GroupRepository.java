@@ -58,4 +58,11 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId
      * @return true-是，false-否
      */
     Mono<Boolean> existsByName(String name);
+
+    /**
+     * 统计
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByEnabledTrue();
 }

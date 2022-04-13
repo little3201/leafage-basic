@@ -13,6 +13,8 @@ import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -20,6 +22,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.*;
 
@@ -30,8 +33,6 @@ import java.util.*;
  **/
 @Service
 public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Authority> implements AuthorityService {
-
-    private static final String MESSAGE = "code is blank.";
 
     private final AccountRepository accountRepository;
     private final AccountRoleRepository accountRoleRepository;
@@ -47,9 +48,14 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
     }
 
     @Override
-    public Flux<AuthorityVO> retrieve(int page, int size) {
-        return authorityRepository.findByEnabledTrue(PageRequest.of(page, size)).flatMap(this::convertOuter)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+    public Mono<Page<AuthorityVO>> retrieve(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Flux<AuthorityVO> voFlux = authorityRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+
+        Mono<Long> count = authorityRepository.countByEnabledTrue();
+
+        return voFlux.collectList().zipWith(count).flatMap(objects ->
+                Mono.just(new PageImpl<>(objects.getT1(), pageRequest, objects.getT2())));
     }
 
     @Override
@@ -66,7 +72,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
 
     @Override
     public Flux<TreeNode> authorities(String username) {
-        Assert.hasText(username, "username is blank.");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Mono<Account> accountMono = accountRepository.getByUsernameAndEnabledTrue(username)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
 
@@ -77,20 +83,15 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
 
     @Override
     public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "name is blank.");
+        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
         return authorityRepository.existsByName(name);
     }
 
     @Override
     public Mono<AuthorityVO> fetch(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return authorityRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
-    }
-
-    @Override
-    public Mono<Long> count() {
-        return authorityRepository.count();
     }
 
     @Override
@@ -109,7 +110,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
 
     @Override
     public Mono<AuthorityVO> modify(String code, AuthorityDTO authorityDTO) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return authorityRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(authority -> this.superior(authorityDTO.getSuperior(), authority))

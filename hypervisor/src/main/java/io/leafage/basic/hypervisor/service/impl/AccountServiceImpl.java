@@ -10,6 +10,8 @@ import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.service.AccountService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.ValidMessage;
 import java.util.NoSuchElementException;
 
 /**
@@ -38,19 +41,19 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Flux<AccountVO> retrieve(int page, int size) {
-        return accountRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .map(this::convertOuter);
-    }
+    public Mono<Page<AccountVO>> retrieve(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Flux<AccountVO> voFlux = accountRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
 
-    @Override
-    public Mono<Long> count() {
-        return accountRepository.count();
+        Mono<Long> count = accountRepository.countByEnabledTrue();
+
+        return voFlux.collectList().zipWith(count).flatMap(objects ->
+                Mono.just(new PageImpl<>(objects.getT1(), pageRequest, objects.getT2())));
     }
 
     @Override
     public Mono<AccountVO> fetch(String username) {
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(this::convertOuter);
     }
@@ -64,7 +67,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Mono<AccountVO> modify(String username, AccountDTO accountDTO) {
-        Assert.hasText(username, "username must not blank.");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(account -> {
                     BeanUtils.copyProperties(accountDTO, account);
@@ -74,13 +77,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Mono<Boolean> unlock(String username) {
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("username").is(username)),
                 new Update().set("is_account_locked", false), Account.class).map(UpdateResult::wasAcknowledged);
     }
 
     @Override
     public Mono<Void> remove(String username) {
-        Assert.hasText(username, "username must no blank.");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(account -> accountRepository.deleteById(account.getId()));
     }

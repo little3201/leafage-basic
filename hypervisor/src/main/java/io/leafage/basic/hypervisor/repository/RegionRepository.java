@@ -46,4 +46,11 @@ public interface RegionRepository extends ReactiveMongoRepository<Region, Object
      * @return 结果信息
      */
     Flux<Region> findBySuperiorAndEnabledTrue(long superior);
+
+    /**
+     * 统计
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByEnabledTrue();
 }

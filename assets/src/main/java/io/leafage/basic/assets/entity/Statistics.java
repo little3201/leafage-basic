@@ -43,8 +43,8 @@ public class Statistics extends AbstractEntity {
     /**
      * 浏览量评论量
      */
-    @Column(name = "over_comment")
-    private double overComment;
+    @Column(name = "over_comments")
+    private double overComments;
 
     public LocalDate getDate() {
         return date;
@@ -94,11 +94,11 @@ public class Statistics extends AbstractEntity {
         this.comments = comments;
     }
 
-    public double getOverComment() {
-        return overComment;
+    public double getOverComments() {
+        return overComments;
     }
 
-    public void setOverComment(double overComment) {
-        this.overComment = overComment;
+    public void setOverComments(double overComments) {
+        this.overComments = overComments;
     }
 }

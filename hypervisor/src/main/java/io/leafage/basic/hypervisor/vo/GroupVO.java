@@ -36,6 +36,10 @@ public class GroupVO extends AbstractVO<String> implements Serializable {
      */
     private String description;
     /**
+     * 是否可用
+     */
+    private boolean enabled;
+    /**
      * 用户数
      */
     private long count;
@@ -78,6 +82,14 @@ public class GroupVO extends AbstractVO<String> implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public long getCount() {

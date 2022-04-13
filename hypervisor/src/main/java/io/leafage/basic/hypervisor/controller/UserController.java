@@ -86,21 +86,4 @@ public class UserController {
         return ResponseEntity.accepted().body(userVO);
     }
 
-    /**
-     * 删除信息
-     *
-     * @param username 账户
-     * @return 如果删除成功，返回200状态码，否则返回417状态码
-     */
-    @DeleteMapping("/{username}")
-    public ResponseEntity<Void> remove(@PathVariable String username) {
-        try {
-            userService.remove(username);
-        } catch (Exception e) {
-            logger.error("Remove user occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
-        }
-        return ResponseEntity.ok().build();
-    }
-
 }

@@ -105,7 +105,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
 
     @Override
     public AuthorityVO modify(String code, AuthorityDTO authorityDTO) {
-        Assert.hasText(code, "code is blank.");
+        Assert.hasText(code, "code must not be blank.");
         Authority authority = authorityRepository.getByCodeAndEnabledTrue(code);
         if (authority == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -123,6 +123,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
 
     @Override
     public void remove(String code) {
+        Assert.hasText(code, "code must not be blank.");
         Authority authority = authorityRepository.getByCodeAndEnabledTrue(code);
         authorityRepository.deleteById(authority.getId());
     }

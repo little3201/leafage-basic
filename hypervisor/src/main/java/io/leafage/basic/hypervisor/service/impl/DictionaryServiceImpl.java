@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
 
     @Override
     public Page<DictionaryVO> retrieve(int page, int size) {
-        return dictionaryRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+        return dictionaryRepository.findAll(PageRequest.of(page, size)).map(this::convertOuter);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     private DictionaryVO convertOuter(Dictionary dictionary) {
         DictionaryVO vo = this.convert(dictionary);
 
-        if (dictionary.getSuperior() != null) {
+        if (StringUtils.hasText(dictionary.getSuperior())) {
             Dictionary superior = dictionaryRepository.getByCodeAndEnabledTrue(dictionary.getSuperior());
             vo.setSuperior(superior.getName());
         }

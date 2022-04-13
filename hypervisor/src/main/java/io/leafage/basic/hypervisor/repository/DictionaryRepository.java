@@ -1,8 +1,6 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.entity.Dictionary;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -14,14 +12,6 @@ import java.util.List;
  **/
 @Repository
 public interface DictionaryRepository extends JpaRepository<Dictionary, Long> {
-
-    /**
-     * 分页查询
-     *
-     * @param pageable 分页参数
-     * @return 有效数据集
-     */
-    Page<Dictionary> findByEnabledTrue(Pageable pageable);
 
     /**
      * 是否存在

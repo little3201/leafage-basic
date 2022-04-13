@@ -291,3 +291,46 @@ create table share
 );
 
 alter table share comment '共享';
+
+drop table if exists dictionary;
+
+/*==============================================================*/
+/* Table: dictionary                                            */
+/*==============================================================*/
+create table dictionary
+(
+   id                   bigint unsigned not null auto_increment comment '主键',
+   code                 varchar(9) not null comment '代码',
+   name                 varchar(64) comment '名称',
+   alias                varchar(64) comment '别名',
+   superior             bigint comment '上级',
+   description          varchar(127) comment '描述',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
+   modifier             varchar(16) not null comment '修改人',
+   modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+   primary key (id),
+   unique key AK_code (code)
+);
+
+alter table dictionary comment '字典';
+
+
+drop table if exists notification;
+
+/*==============================================================*/
+/* Table: notification                                          */
+/*==============================================================*/
+create table notification
+(
+   id                   bigint unsigned not null auto_increment comment '主键',
+   code                 varchar(9) not null comment '代码',
+   content              longtext comment '内容',
+   is_read              tinyint(1) comment '是否已读',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
+   modifier             varchar(16) not null comment '修改人',
+   modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+   primary key (id),
+   unique key AK_code (code)
+);
+
+alter table notification comment '通知';

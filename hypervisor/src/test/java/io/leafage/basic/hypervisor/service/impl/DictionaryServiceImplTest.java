@@ -43,7 +43,7 @@ class DictionaryServiceImplTest {
         dictionary.setAlias("性别");
         dictionary.setSuperior("2247J0IL");
         Page<Dictionary> regions = new PageImpl<>(List.of(dictionary));
-        given(this.dictionaryRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(regions);
+        given(this.dictionaryRepository.findAll(PageRequest.of(0, 2))).willReturn(regions);
 
         Dictionary superior = new Dictionary();
         superior.setCode(dictionary.getSuperior());

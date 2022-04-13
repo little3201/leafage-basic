@@ -43,7 +43,7 @@ class AccountServiceImplTest {
         account.setAccountLocked(false);
         account.setCredentialsExpiresAt(LocalDateTime.now().plusHours(2));
         Page<Account> accountsPage = new PageImpl<>(List.of(account));
-        given(this.accountRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(accountsPage);
+        given(this.accountRepository.findAll(PageRequest.of(0, 2))).willReturn(accountsPage);
 
         Page<AccountVO> voPage = accountService.retrieve(0, 2);
 
@@ -87,7 +87,7 @@ class AccountServiceImplTest {
 
         accountService.remove("test");
 
-        verify(this.accountRepository, times(1)).saveAndFlush(Mockito.any(Account.class));
+        verify(this.accountRepository, times(1)).deleteById(Mockito.anyLong());
     }
 
     @Test

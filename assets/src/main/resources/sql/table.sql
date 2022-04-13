@@ -108,3 +108,27 @@ create table resource
 );
 
 alter table resource comment '资源';
+
+drop table if exists statistics;
+
+/*==============================================================*/
+/* Table: statistics                                            */
+/*==============================================================*/
+create table statistics
+(
+   id                   bigint unsigned not null auto_increment comment '主键',
+   date                 date not null comment '日期',
+   viewed               int comment '浏览量',
+   likes                int comment '点赞数',
+   comments             int comment '评论数',
+   overViewed           float(7,2) comment '浏览量环比',
+   overLikes            float(7,2) comment '点赞数环比',
+   overComments         float(7,2) comment '评论数环比',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
+   modifier             varchar(16) not null comment '修改人',
+   modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+   primary key (id),
+   unique key AK_code (date)
+);
+
+alter table statistics comment '统计';

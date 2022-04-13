@@ -11,6 +11,7 @@ import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.TreeNode;
@@ -37,7 +38,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
     @Override
     public Page<RoleVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return roleRepository.findByEnabledTrue(pageable).map(this::convertOuter);
+        return roleRepository.findAll(pageable).map(this::convertOuter);
     }
 
 
@@ -94,6 +95,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
 
     @Override
     public void remove(String code) {
+        Assert.hasText(code, "code must not be blank.");
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         roleRepository.deleteById(role.getId());
     }

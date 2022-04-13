@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.TreeNode;
@@ -44,7 +45,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     @Override
     public Page<GroupVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return groupRepository.findByEnabledTrue(pageable).map(this::convertOuter);
+        return groupRepository.findAll(pageable).map(this::convertOuter);
     }
 
     @Override
@@ -107,6 +108,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
 
     @Override
     public void remove(String code) {
+        Assert.hasText(code, "code must not be blank.");
         Group group = groupRepository.getByCodeAndEnabledTrue(code);
         groupRepository.deleteById(group.getId());
     }

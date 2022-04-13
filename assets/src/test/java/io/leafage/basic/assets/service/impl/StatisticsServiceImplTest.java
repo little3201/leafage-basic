@@ -72,7 +72,7 @@ class StatisticsServiceImplTest {
         Statistics statistics = new Statistics();
         statistics.setOverViewed(9.0);
         statistics.setOverLikes(9.3);
-        statistics.setOverComment(9.4);
+        statistics.setOverComments(9.4);
         given(this.statisticsRepository.saveAndFlush(Mockito.any(Statistics.class))).willReturn(statistics);
 
         Statistics st = statisticsService.create();
@@ -97,7 +97,7 @@ class StatisticsServiceImplTest {
 
         statistics.setOverViewed(9.0);
         statistics.setOverLikes(9.3);
-        statistics.setOverComment(9.4);
+        statistics.setOverComments(9.4);
         given(this.statisticsRepository.saveAndFlush(Mockito.any(Statistics.class))).willReturn(statistics);
 
         Statistics st = statisticsService.create();

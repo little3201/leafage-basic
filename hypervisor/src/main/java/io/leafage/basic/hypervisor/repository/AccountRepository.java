@@ -4,8 +4,6 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.entity.Account;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,14 +14,6 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-
-    /**
-     * 分页查询
-     *
-     * @param pageable 分页参数
-     * @return 信息
-     */
-    Page<Account> findByEnabledTrue(Pageable pageable);
 
     /**
      * 查询用户信息

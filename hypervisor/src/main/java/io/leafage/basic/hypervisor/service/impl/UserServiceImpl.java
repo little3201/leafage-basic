@@ -30,6 +30,18 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
+    public UserVO fetch(String username) {
+        Assert.hasText(username, MESSAGE);
+        User user = userRepository.getByUsernameAndEnabledTrue(username);
+        return this.convertOuter(user);
+    }
+
+    @Override
+    public boolean exist(String username) {
+        return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
+    }
+
+    @Override
     public UserVO create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
@@ -50,20 +62,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public void remove(String username) {
         Assert.hasText(username, MESSAGE);
         User user = userRepository.getByUsernameAndEnabledTrue(username);
-        user.setEnabled(false);
-        userRepository.saveAndFlush(user);
-    }
-
-    @Override
-    public UserVO fetch(String username) {
-        Assert.hasText(username, MESSAGE);
-        User user = userRepository.getByUsernameAndEnabledTrue(username);
-        return this.convertOuter(user);
-    }
-
-    @Override
-    public boolean exist(String username) {
-        return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
+        userRepository.deleteById(user.getId());
     }
 
     /**

@@ -2,7 +2,9 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.entity.Account;
+import io.leafage.basic.hypervisor.entity.User;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.AccountService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.springframework.beans.BeanUtils;
@@ -23,15 +25,17 @@ public class AccountServiceImpl implements AccountService {
     private static final String MESSAGE = "username is blank.";
 
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public Page<AccountVO> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return accountRepository.findByEnabledTrue(pageable).map(this::convertOuter);
+        return accountRepository.findAll(pageable).map(this::convertOuter);
     }
 
     @Override
@@ -56,8 +60,10 @@ public class AccountServiceImpl implements AccountService {
     public void remove(String username) {
         Assert.hasText(username, MESSAGE);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
-        account.setEnabled(false);
-        accountRepository.saveAndFlush(account);
+        accountRepository.deleteById(account.getId());
+
+        User user = userRepository.getByUsernameAndEnabledTrue(username);
+        userRepository.deleteById(user.getId());
     }
 
     @Override

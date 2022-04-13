@@ -27,6 +27,10 @@ public class RoleVO extends AbstractVO<String> implements Serializable {
      * 描述
      */
     private String description;
+    /**
+     * 是否可用
+     */
+    private boolean enabled;
 
     public String getName() {
         return name;
@@ -52,4 +56,11 @@ public class RoleVO extends AbstractVO<String> implements Serializable {
         this.description = description;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

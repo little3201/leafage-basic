@@ -42,7 +42,7 @@ class RoleServiceImplTest {
         Role role = new Role();
         role.setName("test");
         Page<Role> page = new PageImpl<>(List.of(role));
-        given(this.roleRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
+        given(this.roleRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
 
         Page<RoleVO> voPage = roleService.retrieve(0, 2, "id");
 

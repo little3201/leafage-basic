@@ -25,6 +25,10 @@ public class AccountVO implements Serializable {
      */
     private String avatar;
     /**
+     * 是否可用
+     */
+    private boolean enabled;
+    /**
      * 有效期
      */
     private LocalDateTime accountExpiresAt;
@@ -63,6 +67,14 @@ public class AccountVO implements Serializable {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public LocalDateTime getAccountExpiresAt() {

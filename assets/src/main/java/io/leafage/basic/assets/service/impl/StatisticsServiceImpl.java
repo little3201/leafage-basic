@@ -52,7 +52,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         Statistics bys = statisticsRepository.getByDate(now.minusDays(3));
         statistics.setOverViewed(this.dayOverDay(statistics.getViewed(), ys.getViewed(), bys.getViewed()));
         statistics.setOverLikes(this.dayOverDay(statistics.getLikes(), ys.getLikes(), bys.getLikes()));
-        statistics.setOverComment(this.dayOverDay(statistics.getComments(), ys.getComments(), bys.getComments()));
+        statistics.setOverComments(this.dayOverDay(statistics.getComments(), ys.getComments(), bys.getComments()));
         return statisticsRepository.saveAndFlush(statistics);
     }
 

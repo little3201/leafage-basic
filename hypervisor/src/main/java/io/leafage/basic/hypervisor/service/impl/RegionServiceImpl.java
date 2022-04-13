@@ -70,6 +70,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public void remove(Long code) {
+        Assert.notNull(code, "code must not be null.");
         Region region = regionRepository.getByCodeAndEnabledTrue(code);
         regionRepository.deleteById(region.getId());
     }

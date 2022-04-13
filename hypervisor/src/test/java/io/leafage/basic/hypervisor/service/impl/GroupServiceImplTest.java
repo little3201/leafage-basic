@@ -42,7 +42,7 @@ class GroupServiceImplTest {
         group.setName("test");
         group.setPrincipal(1L);
         Page<Group> page = new PageImpl<>(List.of(group));
-        given(this.groupRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id"))))
+        given(this.groupRepository.findAll(PageRequest.of(0, 2, Sort.by("id"))))
                 .willReturn(page);
 
         Page<GroupVO> voPage = groupService.retrieve(0, 2, "id");

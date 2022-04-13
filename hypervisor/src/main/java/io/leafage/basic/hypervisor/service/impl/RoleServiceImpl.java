@@ -5,8 +5,8 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
+import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
@@ -105,7 +105,6 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
                     return roleRepository.save(role);
                 }).flatMap(this::convertOuter);
     }
-
 
     /**
      * 设置上级

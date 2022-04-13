@@ -21,6 +21,14 @@ import java.util.Collection;
 public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId> {
 
     /**
+     * 分页查询
+     *
+     * @param pageable 分页参数
+     * @return 有效组
+     */
+    Flux<Group> findByEnabledTrue(Pageable pageable);
+
+    /**
      * 查询所有
      *
      * @return 有效组
@@ -34,14 +42,6 @@ public interface GroupRepository extends ReactiveMongoRepository<Group, ObjectId
      * @return 角色信息
      */
     Flux<Group> findByCodeInAndEnabledTrue(Collection<String> codes);
-
-    /**
-     * 分页查询
-     *
-     * @param pageable 分页参数
-     * @return 有效组
-     */
-    Flux<Group> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据code查询enabled信息

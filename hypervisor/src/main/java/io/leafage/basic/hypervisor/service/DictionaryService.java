@@ -12,10 +12,19 @@ import top.leafage.common.reactive.ReactiveBasicService;
  **/
 public interface DictionaryService extends ReactiveBasicService<DictionaryDTO, DictionaryVO, String> {
 
+
+    /**
+     * 获取上级
+     *
+     * @return 数据集
+     */
+    Flux<DictionaryVO> superior();
+
     /**
      * 获取下级
      *
      * @return 数据集
      */
     Flux<DictionaryVO> lower(String code);
+
 }

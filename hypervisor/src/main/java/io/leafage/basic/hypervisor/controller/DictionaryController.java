@@ -48,6 +48,23 @@ public class DictionaryController {
     }
 
     /**
+     * 查询上级
+     *
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @GetMapping("/superior")
+    public ResponseEntity<Flux<DictionaryVO>> retrieve() {
+        Flux<DictionaryVO> voFlux;
+        try {
+            voFlux = dictionaryService.superior();
+        } catch (Exception e) {
+            logger.error("Retrieve dictionary superior occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
+    }
+
+    /**
      * 根据 code 查询
      *
      * @param code 业务id
@@ -116,4 +133,5 @@ public class DictionaryController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
     }
+
 }

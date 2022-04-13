@@ -49,14 +49,14 @@ public class StatisticsServiceImpl implements StatisticsService {
             postsList.forEach(posts -> {
                 statistics.setViewed(statistics.getViewed() + posts.getViewed());
                 statistics.setLikes(statistics.getLikes() + posts.getLikes());
-                statistics.setComment(statistics.getComment() + posts.getComment());
+                statistics.setComments(statistics.getComments() + posts.getComment());
             });
             // 统计前天数据，大前天的数据，做差值，计算环比数据
             return statisticsRepository.getByDate(yesterday.minusDays(2L)).flatMap(tda ->
                     statisticsRepository.getByDate(yesterday.minusDays(1L)).map(bys -> {
                         statistics.setOverViewed(this.dayOverDay(statistics.getViewed(), bys.getViewed(), tda.getViewed()));
                         statistics.setOverLikes(this.dayOverDay(statistics.getLikes(), bys.getLikes(), tda.getLikes()));
-                        statistics.setOverComment(this.dayOverDay(statistics.getComment(), bys.getComment(), tda.getComment()));
+                        statistics.setOverComments(this.dayOverDay(statistics.getComments(), bys.getComments(), tda.getComments()));
                         return statistics;
                     }));
         }).flatMap(statisticsRepository::insert);

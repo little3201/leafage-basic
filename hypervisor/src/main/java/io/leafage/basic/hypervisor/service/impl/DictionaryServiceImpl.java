@@ -27,6 +27,16 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     }
 
     @Override
+    public Flux<DictionaryVO> retrieve(int page, int size) {
+        return dictionaryRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convert);
+    }
+
+    @Override
+    public Flux<DictionaryVO> superior() {
+        return dictionaryRepository.findBySuperiorIsNullAndEnabledTrue().map(this::convert);
+    }
+
+    @Override
     public Flux<DictionaryVO> lower(String code) {
         return dictionaryRepository.findBySuperiorAndEnabledTrue(code).map(this::convert);
     }
@@ -34,11 +44,6 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Mono<DictionaryVO> fetch(String code) {
         return dictionaryRepository.getByCodeAndEnabledTrue(code).map(this::convert);
-    }
-
-    @Override
-    public Flux<DictionaryVO> retrieve(int page, int size) {
-        return dictionaryRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convert);
     }
 
     @Override

@@ -22,4 +22,5 @@ public interface RoleService extends ReactiveBasicService<RoleDTO, RoleVO, Strin
      * @return 数据集
      */
     Flux<TreeNode> tree();
+
 }

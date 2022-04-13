@@ -16,10 +16,11 @@ import top.leafage.common.reactive.ReactiveBasicService;
 public interface AccountService extends ReactiveBasicService<AccountDTO, AccountVO, String> {
 
     /**
-     * unlock account
+     * unlock
      *
      * @param username 账号
      * @return 结果
      */
     Mono<Boolean> unlock(String username);
+
 }

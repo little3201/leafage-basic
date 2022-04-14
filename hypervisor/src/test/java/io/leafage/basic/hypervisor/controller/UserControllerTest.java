@@ -30,7 +30,6 @@ class UserControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-
     @Test
     void fetch() {
         UserVO userVO = new UserVO();

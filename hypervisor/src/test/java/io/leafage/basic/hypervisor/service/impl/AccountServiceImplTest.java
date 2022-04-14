@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -44,14 +45,11 @@ class AccountServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.accountRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(Mockito.mock(Account.class)));
-        StepVerifier.create(accountService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
-    }
+        given(this.accountRepository.findByEnabledTrue(Mockito.any(Pageable.class))).willReturn(Flux.just(Mockito.mock(Account.class)));
 
-    @Test
-    void count() {
-        given(this.accountRepository.count()).willReturn(Mono.just(2L));
-        StepVerifier.create(accountService.count()).expectNextCount(1).verifyComplete();
+        given(this.accountRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
+
+        StepVerifier.create(accountService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
     @Test

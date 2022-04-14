@@ -11,6 +11,7 @@ import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,19 +52,15 @@ public class RoleController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Flux<RoleVO>> retrieve(Integer page, Integer size) {
-        Flux<RoleVO> voFlux;
+    public ResponseEntity<Mono<Page<RoleVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<RoleVO>> pageMono;
         try {
-            if (page == null || size == null) {
-                voFlux = roleService.retrieve();
-            } else {
-                voFlux = roleService.retrieve(page, size);
-            }
+            pageMono = roleService.retrieve(page, size);
         } catch (Exception e) {
             logger.error("Retrieve role occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(pageMono);
     }
 
     /**
@@ -99,23 +96,6 @@ public class RoleController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @return 查询的记录数，异常时返回204状态码
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
-        Mono<Long> count;
-        try {
-            count = roleService.count();
-        } catch (Exception e) {
-            logger.error("Count role occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
     }
 
     /**

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.ValidMessage;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -37,6 +38,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
 
     @Override
     public Flux<AccountVO> accounts(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return groupRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(group -> accountGroupRepository.findByGroupIdAndEnabledTrue(group.getId()).flatMap(userGroup ->
                         accountRepository.findById(userGroup.getAccountId()).map(account -> {
@@ -49,6 +51,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
 
     @Override
     public Mono<List<String>> groups(String username) {
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(account -> accountGroupRepository.findByAccountIdAndEnabledTrue(account.getId())
                         .flatMap(accountGroup -> groupRepository.findById(accountGroup.getGroupId()).map(Group::getCode))
@@ -58,7 +61,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
 
     @Override
     public Mono<Boolean> relation(String username, Set<String> groups) {
-        Assert.hasText(username, "username is blank");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Assert.notNull(groups, "groups is null");
         Flux<AccountGroup> flux = accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(user -> {

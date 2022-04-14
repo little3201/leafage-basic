@@ -6,11 +6,14 @@ import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.service.RegionService;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.ValidMessage;
 import java.util.NoSuchElementException;
 
 /**
@@ -30,8 +33,14 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Flux<RegionVO> retrieve(int page, int size) {
-        return regionRepository.findByEnabledTrue(PageRequest.of(page, size)).flatMap(this::convertOuter);
+    public Mono<Page<RegionVO>> retrieve(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+
+        Mono<Long> count = regionRepository.countByEnabledTrue();
+
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override
@@ -42,12 +51,8 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
         return regionRepository.existsByName(name);
-    }
-
-    @Override
-    public Mono<Long> count() {
-        return regionRepository.count();
     }
 
     @Override
@@ -67,7 +72,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Mono<RegionVO> modify(Long code, RegionDTO regionDTO) {
-        Assert.notNull(code, CODE_MESSAGE);
+        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
         return regionRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(region -> BeanUtils.copyProperties(regionDTO, region))
@@ -76,7 +81,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Mono<Void> remove(Long code) {
-        Assert.notNull(code, CODE_MESSAGE);
+        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
         return regionRepository.getByCodeAndEnabledTrue(code).flatMap(group ->
                 regionRepository.deleteById(group.getId()));
     }

@@ -59,6 +59,8 @@ class CommentServiceImplTest {
 
         given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 
+        given(this.commentRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
+
         StepVerifier.create(commentService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 

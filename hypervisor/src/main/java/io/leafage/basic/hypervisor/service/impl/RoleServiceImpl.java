@@ -5,11 +5,13 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
+import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -17,6 +19,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -28,8 +31,6 @@ import java.util.Objects;
  **/
 @Service
 public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> implements RoleService {
-
-    private static final String MESSAGE = "code is blank.";
 
     private final AccountRoleRepository accountRoleRepository;
     private final RoleRepository roleRepository;
@@ -45,9 +46,14 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
     }
 
     @Override
-    public Flux<RoleVO> retrieve(int page, int size) {
-        return roleRepository.findByEnabledTrue(PageRequest.of(page, size))
-                .flatMap(this::convertOuter);
+    public Mono<Page<RoleVO>> retrieve(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Flux<RoleVO> voFlux = roleRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+
+        Mono<Long> count = roleRepository.countByEnabledTrue();
+
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override
@@ -64,20 +70,15 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
 
     @Override
     public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "name is blank.");
+        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
         return roleRepository.existsByName(name);
     }
 
     @Override
     public Mono<RoleVO> fetch(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return roleRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
-    }
-
-    @Override
-    public Mono<Long> count() {
-        return roleRepository.count();
     }
 
     @Override
@@ -96,7 +97,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
 
     @Override
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return roleRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(vo -> this.superior(roleDTO.getSuperior(), vo))
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
@@ -105,7 +106,6 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
                     return roleRepository.save(role);
                 }).flatMap(this::convertOuter);
     }
-
 
     /**
      * 设置上级

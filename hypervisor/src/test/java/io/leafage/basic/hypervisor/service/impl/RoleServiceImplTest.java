@@ -15,10 +15,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -56,12 +56,14 @@ class RoleServiceImplTest {
         Role role = new Role();
         role.setId(new ObjectId());
         role.setSuperior(new ObjectId());
-        given(this.roleRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(role));
+        given(this.roleRepository.findByEnabledTrue(Mockito.any(Pageable.class))).willReturn(Flux.just(role));
 
         given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         role.setName("test");
         given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(role));
+
+        given(this.roleRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 
         StepVerifier.create(roleService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
@@ -142,13 +144,6 @@ class RoleServiceImplTest {
 
         StepVerifier.create(roleService.tree()).expectNextCount(1).verifyComplete();
     }
-
-    @Test
-    void count() {
-        given(this.roleRepository.count()).willReturn(Mono.just(2L));
-        StepVerifier.create(roleService.count()).expectNextCount(1).verifyComplete();
-    }
-
 
     @Test
     void exist() {

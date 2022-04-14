@@ -12,6 +12,8 @@ import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -19,6 +21,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -30,8 +33,6 @@ import java.util.Objects;
  **/
 @Service
 public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> implements GroupService {
-
-    private static final String CODE_MESSAGE = "code must not blank";
 
     private final GroupRepository groupRepository;
     private final AccountGroupRepository accountGroupRepository;
@@ -51,9 +52,14 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
     }
 
     @Override
-    public Flux<GroupVO> retrieve(int page, int size) {
-        return groupRepository.findByEnabledTrue(PageRequest.of(page, size)).flatMap(this::convertOuter)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+    public Mono<Page<GroupVO>> retrieve(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Flux<GroupVO> voFlux = groupRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+
+        Mono<Long> count = groupRepository.countByEnabledTrue();
+
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override
@@ -71,19 +77,15 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
 
     @Override
     public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
         return groupRepository.existsByName(name);
     }
 
     @Override
     public Mono<GroupVO> fetch(String code) {
-        Assert.hasText(code, CODE_MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return groupRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
-    }
-
-    @Override
-    public Mono<Long> count() {
-        return groupRepository.count();
     }
 
     @Override
@@ -101,7 +103,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
 
     @Override
     public Mono<GroupVO> modify(String code, GroupDTO groupDTO) {
-        Assert.hasText(code, CODE_MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return groupRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
@@ -112,7 +114,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, CODE_MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return groupRepository.getByCodeAndEnabledTrue(code).flatMap(group ->
                 groupRepository.deleteById(group.getId()));
     }

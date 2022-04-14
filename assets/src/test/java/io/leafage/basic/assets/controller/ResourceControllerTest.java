@@ -12,14 +12,14 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import java.util.List;
 import java.util.NoSuchElementException;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -38,10 +38,12 @@ class ResourceControllerTest {
     private WebTestClient webTestClient;
 
     @Test
-    void retrieve_page() {
+    void retrieve() {
         ResourceVO resourceVO = new ResourceVO();
         resourceVO.setTitle("test");
-        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(Flux.just(resourceVO));
+        Page<ResourceVO> page = new PageImpl<>(List.of(resourceVO));
+        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyString())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -49,22 +51,27 @@ class ResourceControllerTest {
     }
 
     @Test
-    void retrieve_page_category() {
+    void retrieve_category() {
         ResourceVO resourceVO = new ResourceVO();
         resourceVO.setTitle("test");
-        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString())).willReturn(Flux.just(resourceVO));
+        Page<ResourceVO> page = new PageImpl<>(List.of(resourceVO));
+        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyString())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
+                        .queryParam("size", 2).queryParam("category", "21213G0J2")
+                        .queryParam("sort", "").build()).exchange()
                 .expectStatus().isOk().expectBodyList(ResourceVO.class);
     }
 
     @Test
-    void retrieve_page_error() {
-        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
+    void retrieve_error() {
+        given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("sort", "").build()).exchange()
+                        .queryParam("size", 2).queryParam("category", "21213G0J2")
+                        .queryParam("sort", "").build()).exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -85,19 +92,6 @@ class ResourceControllerTest {
 
         webTestClient.get().uri("/resource/{code}", "21213G0J2").exchange()
                 .expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.resourceService.count(Mockito.anyString())).willReturn(Mono.just(2L));
-        webTestClient.get().uri("/resource/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.resourceService.count(Mockito.anyString())).willThrow(new RuntimeException());
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource/count")
-                .queryParam("category", "").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test

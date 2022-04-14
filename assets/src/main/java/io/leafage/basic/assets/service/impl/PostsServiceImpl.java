@@ -4,6 +4,7 @@
 package io.leafage.basic.assets.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
+import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.dto.PostsDTO;
@@ -16,6 +17,8 @@ import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -29,7 +32,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
+import top.leafage.common.basic.ValidMessage;
 import javax.naming.NotContextException;
 
 /**
@@ -39,8 +42,6 @@ import javax.naming.NotContextException;
  **/
 @Service
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {
-
-    private static final String MESSAGE = "code is blank.";
 
     private final PostsRepository postsRepository;
     private final PostsContentService postsContentService;
@@ -57,27 +58,28 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Flux<PostsVO> retrieve() {
-        return postsRepository.findByEnabledTrue().flatMap(this::convertOuter);
-    }
+    public Mono<Page<PostsVO>> retrieve(int page, int size, String sort, String category) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime"));
+        Flux<PostsVO> voFlux;
+        Mono<Long> count;
 
-    @Override
-    public Flux<PostsVO> retrieve(int page, int size, String sort) {
-        Sort s = Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
-        return postsRepository.findByEnabledTrue(PageRequest.of(page, size, s)).flatMap(this::convertOuter);
-    }
+        if (StringUtils.hasText(category)) {
+            Mono<Category> categoryMono = categoryRepository.getByCodeAndEnabledTrue(category);
+            voFlux = categoryMono.flatMapMany(c -> postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), pageRequest)
+                    .flatMap(this::convertOuter));
+            count = categoryMono.flatMap(c -> postsRepository.countByCategoryIdAndEnabledTrue(c.getId()));
+        } else {
+            voFlux = postsRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+            count = postsRepository.countByEnabledTrue();
+        }
 
-    @Override
-    public Flux<PostsVO> retrieve(int page, int size, String sort, String category) {
-        Sort s = Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
-        return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
-                postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, s))
-                        .flatMap(this::convertOuter));
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override
     public Mono<PostsContentVO> details(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(posts -> this.increaseViewed(posts.getId()).map(updateResult -> {
@@ -101,7 +103,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsVO> fetch(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> {
                             PostsVO pcv = new PostsVO();
@@ -115,7 +117,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<ContentVO> content(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsContentService.fetchByPostsId(posts.getId()).map(postsContent -> {
                     ContentVO contentVO = new ContentVO();
@@ -123,15 +125,6 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     return contentVO;
                 })
         );
-    }
-
-    @Override
-    public Mono<Long> count(String category) {
-        if (StringUtils.hasText(category)) {
-            return categoryRepository.getByCodeAndEnabledTrue(category).flatMap(ca ->
-                    postsRepository.countByCategoryIdAndEnabledTrue(ca.getId()));
-        }
-        return postsRepository.count();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -158,7 +151,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostsVO> modify(String code, PostsDTO postsDTO) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
@@ -181,7 +174,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(posts.getId())),
                         Update.update("enabled", false), Posts.class).then()
@@ -190,7 +183,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsVO> next(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdGreaterThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.ASC, "id")).next()
@@ -199,7 +192,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<PostsVO> previous(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdLessThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.DESC, "id")).next()
@@ -208,6 +201,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Mono<Integer> like(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
                 new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
                 postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes));
@@ -215,12 +209,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public Flux<PostsVO> search(String keyword) {
+        Assert.hasText(keyword, "keyword must not be blank.");
         return postsRepository.findByTitleIgnoreCaseLikeAndEnabledTrue(keyword).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Boolean> exist(String title) {
-        Assert.hasText(title, "title is blank.");
+        Assert.hasText(title, "title must not be blank.");
         return postsRepository.existsByTitle(title);
     }
 

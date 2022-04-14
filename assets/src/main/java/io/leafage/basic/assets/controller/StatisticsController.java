@@ -4,12 +4,13 @@ import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * statistics controller
@@ -36,15 +37,15 @@ public class StatisticsController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<StatisticsVO>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Flux<StatisticsVO> voFlux;
+    public ResponseEntity<Mono<Page<StatisticsVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<StatisticsVO>> pageMono;
         try {
-            voFlux = statisticsService.retrieve(page, size);
+            pageMono = statisticsService.retrieve(page, size);
         } catch (Exception e) {
             logger.error("Statistics viewed occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(pageMono);
     }
 
 }

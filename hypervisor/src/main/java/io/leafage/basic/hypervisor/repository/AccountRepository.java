@@ -23,7 +23,7 @@ public interface AccountRepository extends ReactiveMongoRepository<Account, Obje
      * 分页查询
      *
      * @param pageable 分页参数
-     * @return 有效用户
+     * @return 有效记录
      */
     Flux<Account> findByEnabledTrue(Pageable pageable);
 
@@ -34,4 +34,11 @@ public interface AccountRepository extends ReactiveMongoRepository<Account, Obje
      * @return 账户信息
      */
     Mono<Account> getByUsernameAndEnabledTrue(String username);
+
+    /**
+     * 统计
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByEnabledTrue();
 }

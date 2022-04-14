@@ -28,9 +28,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.util.Set;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -59,18 +57,6 @@ class PostsServiceImplTest {
     @Test
     void retrieve() {
         Posts posts = new Posts();
-        posts.setId(new ObjectId());
-        posts.setCategoryId(new ObjectId());
-        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
-
-        given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        StepVerifier.create(this.postsService.retrieve()).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void retrieve_page() {
-        Posts posts = new Posts();
         ObjectId categoryId = new ObjectId();
         posts.setCategoryId(categoryId);
         given(this.postsRepository.findByEnabledTrue(PageRequest.of(0, 2,
@@ -78,11 +64,13 @@ class PostsServiceImplTest {
 
         given(this.categoryRepository.findById(categoryId)).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        StepVerifier.create(this.postsService.retrieve(0, 2, "id")).expectNextCount(1).verifyComplete();
+        given(this.postsRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
+
+        StepVerifier.create(this.postsService.retrieve(0, 2, "id", "")).expectNextCount(1).verifyComplete();
     }
 
     @Test
-    void retrieve_page_category() {
+    void retrieve_category() {
         Category category = new Category();
         category.setId(new ObjectId());
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
@@ -94,6 +82,8 @@ class PostsServiceImplTest {
                 Sort.by(Sort.Direction.DESC, "id")))).willReturn(Flux.just(posts));
 
         given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
+
+        given(this.postsRepository.countByCategoryIdAndEnabledTrue(Mockito.any())).willReturn(Mono.just(Mockito.anyLong()));
 
         StepVerifier.create(this.postsService.retrieve(0, 2, "id", "21213G0J2"))
                 .expectNextCount(1).verifyComplete();
@@ -152,24 +142,6 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void count() {
-        Category category = new Category();
-        category.setId(new ObjectId());
-        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
-
-        given(this.postsRepository.countByCategoryIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
-
-        StepVerifier.create(postsService.count("21213G0J2")).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void count_all() {
-        given(this.postsRepository.count()).willReturn(Mono.just(2L));
-
-        StepVerifier.create(postsService.count("")).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
     void exist() {
         given(this.postsRepository.existsByTitle(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
@@ -187,7 +159,7 @@ class PostsServiceImplTest {
         given(this.postsRepository.insert(Mockito.any(Posts.class))).willReturn(Mono.just(posts));
 
         given(this.postsContentService.create(Mockito.any(PostsContent.class))).willReturn(Mono.empty());
-        
+
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setCategory("21213G0J2");
         StepVerifier.create(this.postsService.create(postsDTO)).verifyComplete();

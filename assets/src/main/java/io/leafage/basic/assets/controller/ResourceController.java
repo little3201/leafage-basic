@@ -8,13 +8,11 @@ import io.leafage.basic.assets.service.ResourceService;
 import io.leafage.basic.assets.vo.ResourceVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.Valid;
 
 /**
@@ -44,20 +42,16 @@ public class ResourceController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<ResourceVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                     String sort, String category) {
-        Flux<ResourceVO> voFlux;
+    public ResponseEntity<Mono<Page<ResourceVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                           String sort, String category) {
+        Mono<Page<ResourceVO>> pageMono;
         try {
-            if (StringUtils.hasText(category)) {
-                voFlux = resourceService.retrieve(page, size, sort, category);
-            } else {
-                voFlux = resourceService.retrieve(page, size, sort);
-            }
+            pageMono = resourceService.retrieve(page, size, sort, category);
         } catch (Exception e) {
             logger.error("Retrieve resource occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(pageMono);
     }
 
     /**
@@ -76,23 +70,6 @@ public class ResourceController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @return 查询到数据，异常时返回204
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count(String category) {
-        Mono<Long> count;
-        try {
-            count = resourceService.count(category);
-        } catch (Exception e) {
-            logger.error("Count resource occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
     }
 
     /**

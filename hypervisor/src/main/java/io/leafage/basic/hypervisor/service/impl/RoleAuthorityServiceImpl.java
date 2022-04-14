@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.ValidMessage;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -23,8 +24,6 @@ import java.util.Set;
  **/
 @Service
 public class RoleAuthorityServiceImpl implements RoleAuthorityService {
-
-    private static final String MESSAGE = "code must not be blank.";
 
     private final RoleRepository roleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
@@ -39,7 +38,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public Mono<List<String>> authorities(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(group -> roleAuthorityRepository.findByRoleIdAndEnabledTrue(group.getId()).flatMap(roleAuthority ->
                         authorityRepository.findById(roleAuthority.getAuthorityId()).map(Authority::getCode))
@@ -48,7 +47,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public Flux<RoleVO> roles(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return authorityRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(authority -> roleAuthorityRepository.findByAuthorityIdAndEnabledTrue(authority.getId()).flatMap(roleAuthority ->
                         roleRepository.findById(roleAuthority.getRoleId()).map(role -> {
@@ -61,7 +60,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public Mono<Boolean> relation(String code, Set<String> authorities) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Assert.notNull(authorities, "authorities is null");
         Flux<RoleAuthority> flux = roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(role -> {

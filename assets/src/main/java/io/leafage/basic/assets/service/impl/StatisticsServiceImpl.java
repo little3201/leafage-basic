@@ -6,13 +6,13 @@ import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -34,9 +34,14 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Flux<StatisticsVO> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifyTime"));
-        return statisticsRepository.findByEnabledTrue(pageable).map(this::convertOuter);
+    public Mono<Page<StatisticsVO>> retrieve(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifyTime"));
+        Flux<StatisticsVO> voFlux = statisticsRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
+
+        Mono<Long> count = statisticsRepository.countByEnabledTrue();
+
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override
@@ -49,14 +54,14 @@ public class StatisticsServiceImpl implements StatisticsService {
             postsList.forEach(posts -> {
                 statistics.setViewed(statistics.getViewed() + posts.getViewed());
                 statistics.setLikes(statistics.getLikes() + posts.getLikes());
-                statistics.setComment(statistics.getComment() + posts.getComment());
+                statistics.setComments(statistics.getComments() + posts.getComment());
             });
             // 统计前天数据，大前天的数据，做差值，计算环比数据
             return statisticsRepository.getByDate(yesterday.minusDays(2L)).flatMap(tda ->
                     statisticsRepository.getByDate(yesterday.minusDays(1L)).map(bys -> {
                         statistics.setOverViewed(this.dayOverDay(statistics.getViewed(), bys.getViewed(), tda.getViewed()));
                         statistics.setOverLikes(this.dayOverDay(statistics.getLikes(), bys.getLikes(), tda.getLikes()));
-                        statistics.setOverComment(this.dayOverDay(statistics.getComment(), bys.getComment(), tda.getComment()));
+                        statistics.setOverComments(this.dayOverDay(statistics.getComments(), bys.getComments(), tda.getComments()));
                         return statistics;
                     }));
         }).flatMap(statisticsRepository::insert);

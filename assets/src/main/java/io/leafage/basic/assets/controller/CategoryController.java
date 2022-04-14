@@ -8,12 +8,11 @@ import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.Valid;
 
 /**
@@ -41,19 +40,15 @@ public class CategoryController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<CategoryVO>> retrieve(Integer page, Integer size) {
-        Flux<CategoryVO> voFlux;
+    public ResponseEntity<Mono<Page<CategoryVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<CategoryVO>> pageMono;
         try {
-            if (page == null || size == null) {
-                voFlux = categoryService.retrieve();
-            } else {
-                voFlux = categoryService.retrieve(page, size);
-            }
+            pageMono = categoryService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Retrieve category occurred an error: ", e);
+            logger.error("Retrieve category by page occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(pageMono);
     }
 
     /**
@@ -72,23 +67,6 @@ public class CategoryController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @return 查询到数据，异常时返回204
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
-        Mono<Long> count;
-        try {
-            count = categoryService.count();
-        } catch (Exception e) {
-            logger.error("Count category occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
     }
 
     /**

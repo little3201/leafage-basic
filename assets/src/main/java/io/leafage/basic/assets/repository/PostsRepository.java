@@ -92,4 +92,11 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * @return true-是，false-否
      */
     Mono<Boolean> existsByTitle(String title);
+
+    /**
+     * 统计
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByEnabledTrue();
 }

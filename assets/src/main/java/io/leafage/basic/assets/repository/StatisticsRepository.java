@@ -32,4 +32,11 @@ public interface StatisticsRepository extends ReactiveMongoRepository<Statistics
      * @return 有效帖子
      */
     Flux<Statistics> findByEnabledTrue(Pageable pageable);
+
+    /**
+     * 统计
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByEnabledTrue();
 }

@@ -12,11 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -38,10 +37,12 @@ class NotificationServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.notificationRepository.findByReadAndEnabledTrue(PageRequest.of(0, 2), true))
+        given(this.notificationRepository.findByReadAndEnabledTrue(Mockito.anyBoolean(), Mockito.any(Pageable.class)))
                 .willReturn(Flux.just(Mockito.mock(Notification.class)));
 
-        StepVerifier.create(notificationService.retrieve(0, 2, true)).expectNextCount(1).verifyComplete();
+        given(this.notificationRepository.countByReadAndEnabledTrue(Mockito.anyBoolean())).willReturn(Mono.just(2L));
+
+        StepVerifier.create(notificationService.retrieve(0, 2, false)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -58,13 +59,6 @@ class NotificationServiceImplTest {
         given(this.notificationRepository.save(Mockito.any(Notification.class))).willReturn(Mono.just(Mockito.mock(Notification.class)));
 
         StepVerifier.create(notificationService.fetch("32309FJK0")).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void count() {
-        given(this.notificationRepository.countByReadFalse()).willReturn(Mono.just(2L));
-
-        StepVerifier.create(notificationService.count()).expectNextCount(1).verifyComplete();
     }
 
     @Test

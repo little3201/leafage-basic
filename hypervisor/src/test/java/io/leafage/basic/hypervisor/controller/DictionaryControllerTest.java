@@ -11,11 +11,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -40,7 +42,8 @@ class DictionaryControllerTest {
         dictionaryVO.setAlias("性别");
         dictionaryVO.setSuperior("2247K10L");
         dictionaryVO.setDescription("描述");
-        given(this.dictionaryService.retrieve(0, 2)).willReturn(Flux.just(dictionaryVO));
+        Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO));
+        given(this.dictionaryService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/dictionary").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -73,6 +76,23 @@ class DictionaryControllerTest {
     }
 
     @Test
+    void superior() {
+        DictionaryVO dictionaryVO = new DictionaryVO();
+        dictionaryVO.setName("test");
+        given(this.dictionaryService.superior()).willReturn(Flux.just(dictionaryVO));
+
+        webTestClient.get().uri("/dictionary/superior").exchange()
+                .expectStatus().isOk().expectBodyList(RegionVO.class);
+    }
+
+    @Test
+    void superior_error() {
+        given(this.dictionaryService.superior()).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/dictionary/superior").exchange().expectStatus().isNoContent();
+    }
+
+    @Test
     void lower() {
         DictionaryVO dictionaryVO = new DictionaryVO();
         dictionaryVO.setName("test");
@@ -87,20 +107,6 @@ class DictionaryControllerTest {
         given(this.dictionaryService.lower(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/dictionary/{code}/lower", "2247K100").exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.dictionaryService.count()).willReturn(Mono.just(2L));
-
-        webTestClient.get().uri("/dictionary/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.dictionaryService.count()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/dictionary/count").exchange().expectStatus().isNoContent();
     }
 
     @Test

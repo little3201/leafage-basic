@@ -49,4 +49,11 @@ public interface CategoryRepository extends ReactiveMongoRepository<Category, Ob
      * @return true-是，false-否
      */
     Mono<Boolean> existsByAlias(String alias);
+
+    /**
+     * 统计
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByEnabledTrue();
 }

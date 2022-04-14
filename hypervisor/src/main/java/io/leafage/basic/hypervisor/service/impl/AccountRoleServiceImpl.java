@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.ValidMessage;
 import javax.naming.NotContextException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -38,7 +39,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
 
     @Override
     public Flux<AccountVO> accounts(String code) {
-        Assert.hasText(code, "code is blank");
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return roleRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(role -> accountRoleRepository.findByRoleIdAndEnabledTrue(role.getId()).flatMap(userRole ->
                         accountRepository.findById(userRole.getAccountId()).map(account -> {
@@ -51,17 +52,16 @@ public class AccountRoleServiceImpl implements AccountRoleService {
 
     @Override
     public Mono<List<String>> roles(String username) {
-        Assert.hasText(username, "username must not blank");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(account -> accountRoleRepository.findByAccountIdAndEnabledTrue(account.getId())
                         .flatMap(accountRole -> roleRepository.findById(accountRole.getRoleId()).map(Role::getCode))
-                        .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 ).collectList();
     }
 
     @Override
     public Mono<Boolean> relation(String username, Set<String> roles) {
-        Assert.hasText(username, "username must not blank");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Assert.notEmpty(roles, "roles must not empty");
         Flux<AccountRole> flux = accountRepository.getByUsernameAndEnabledTrue(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMapMany(user -> {

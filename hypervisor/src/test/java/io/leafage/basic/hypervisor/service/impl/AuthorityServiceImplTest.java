@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -53,12 +54,14 @@ class AuthorityServiceImplTest {
         Authority authority = new Authority();
         authority.setId(new ObjectId());
         authority.setSuperior(new ObjectId());
-        given(this.authorityRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(authority));
+        given(this.authorityRepository.findByEnabledTrue(Mockito.any(Pageable.class))).willReturn(Flux.just(authority));
 
         given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         authority.setName("test");
         given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));
+
+        given(this.authorityRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 
         StepVerifier.create(authorityService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
@@ -153,12 +156,6 @@ class AuthorityServiceImplTest {
         child.setName("test-sub");
         given(this.authorityRepository.findByEnabledTrue()).willReturn(Flux.just(authority, child));
         StepVerifier.create(authorityService.tree()).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void count() {
-        given(this.authorityRepository.count()).willReturn(Mono.just(2L));
-        StepVerifier.create(authorityService.count()).expectNextCount(1).verifyComplete();
     }
 
     @Test

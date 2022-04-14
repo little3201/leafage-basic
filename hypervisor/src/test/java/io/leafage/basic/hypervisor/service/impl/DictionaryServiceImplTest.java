@@ -10,11 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -33,8 +32,10 @@ class DictionaryServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.dictionaryRepository.findByEnabledTrue(PageRequest.of(0, 2)))
+        given(this.dictionaryRepository.findByEnabledTrue(Mockito.any(Pageable.class)))
                 .willReturn(Flux.just(Mockito.mock(Dictionary.class)));
+
+        given(this.dictionaryRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 
         StepVerifier.create(dictionaryService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
@@ -53,6 +54,19 @@ class DictionaryServiceImplTest {
     }
 
     @Test
+    void superior() {
+        Dictionary dictionary = new Dictionary();
+        dictionary.setId(new ObjectId());
+        dictionary.setCode("2247KS91");
+        dictionary.setName("Gender");
+        dictionary.setAlias("性别");
+        dictionary.setDescription("描述");
+        given(this.dictionaryRepository.findBySuperiorIsNullAndEnabledTrue()).willReturn(Flux.just(dictionary));
+
+        StepVerifier.create(dictionaryService.superior()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
     void lower() {
         Dictionary dictionary = new Dictionary();
         dictionary.setId(new ObjectId());
@@ -67,13 +81,6 @@ class DictionaryServiceImplTest {
     }
 
     @Test
-    void count() {
-        given(this.dictionaryRepository.count()).willReturn(Mono.just(2L));
-
-        StepVerifier.create(dictionaryService.count()).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
     void create() {
         given(this.dictionaryRepository.insert(Mockito.any(Dictionary.class))).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
 
@@ -82,5 +89,12 @@ class DictionaryServiceImplTest {
         dictionaryDTO.setAlias("性别");
         dictionaryDTO.setDescription("描述");
         StepVerifier.create(dictionaryService.create(dictionaryDTO)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void exist() {
+        given(this.dictionaryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+
+        StepVerifier.create(dictionaryService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

@@ -46,4 +46,18 @@ public interface DictionaryRepository extends ReactiveMongoRepository<Dictionary
      * @return 结果信息
      */
     Flux<Dictionary> findBySuperiorAndEnabledTrue(String superior);
+
+    /**
+     * 查询上级
+     *
+     * @return 结果信息
+     */
+    Flux<Dictionary> findBySuperiorIsNullAndEnabledTrue();
+
+    /**
+     * 统计
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByEnabledTrue();
 }

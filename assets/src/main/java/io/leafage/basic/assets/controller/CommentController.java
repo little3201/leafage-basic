@@ -8,12 +8,12 @@ import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.Valid;
 
 /**
@@ -41,32 +41,15 @@ public class CommentController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Flux<CommentVO> voFlux;
+    public ResponseEntity<Mono<Page<CommentVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<CommentVO>> pageMono;
         try {
-            voFlux = commentService.retrieve(page, size);
+            pageMono = commentService.retrieve(page, size);
         } catch (Exception e) {
             logger.error("Retrieve comment occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @return 查询到数据，异常时返回204
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
-        Mono<Long> count;
-        try {
-            count = commentService.count();
-        } catch (Exception e) {
-            logger.error("Count category occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
+        return ResponseEntity.ok(pageMono);
     }
 
     /**

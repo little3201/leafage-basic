@@ -10,6 +10,7 @@ import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,19 +46,15 @@ public class AuthorityController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Flux<AuthorityVO>> retrieve(Integer page, Integer size) {
-        Flux<AuthorityVO> voFlux;
+    public ResponseEntity<Mono<Page<AuthorityVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<AuthorityVO>> pageMono;
         try {
-            if (page == null || size == null) {
-                voFlux = authorityService.retrieve();
-            } else {
-                voFlux = authorityService.retrieve(page, size);
-            }
+            pageMono = authorityService.retrieve(page, size);
         } catch (Exception e) {
             logger.error("Retrieve authority occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(pageMono);
     }
 
     /**
@@ -93,23 +90,6 @@ public class AuthorityController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @return 查询的记录数，异常时返回204状态码
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
-        Mono<Long> count;
-        try {
-            count = authorityService.count();
-        } catch (Exception e) {
-            logger.error("Count authority occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
     }
 
     /**

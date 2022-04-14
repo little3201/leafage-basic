@@ -59,4 +59,11 @@ public interface ResourceRepository extends ReactiveMongoRepository<Resource, Ob
      * @return 帖子数
      */
     Mono<Long> countByCategoryIdAndEnabledTrue(ObjectId categoryId);
+
+    /**
+     * 统计
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByEnabledTrue();
 }

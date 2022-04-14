@@ -10,13 +10,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.time.LocalDateTime;
-
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -34,7 +34,6 @@ class NotificationControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-
     @Test
     void retrieve() {
         NotificationVO notificationVO = new NotificationVO();
@@ -42,7 +41,8 @@ class NotificationControllerTest {
         notificationVO.setContent("内容");
         notificationVO.setReceiver("test");
         notificationVO.setModifyTime(LocalDateTime.now());
-        given(this.notificationService.retrieve(0, 2, false)).willReturn(Flux.just(notificationVO));
+        Page<NotificationVO> voPage = new PageImpl<>(List.of(notificationVO));
+        given(this.notificationService.retrieve(0, 2, false)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/notification").queryParam("page", 0)
                         .queryParam("size", 2).queryParam("read", "false").build()).exchange()
@@ -74,22 +74,6 @@ class NotificationControllerTest {
 
         webTestClient.get().uri("/notification/{code}", "1100").exchange().expectStatus().isNoContent();
     }
-
-
-    @Test
-    void count() {
-        given(this.notificationService.count()).willReturn(Mono.just(2L));
-
-        webTestClient.get().uri("/notification/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.notificationService.count()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/notification/count").exchange().expectStatus().isNoContent();
-    }
-
 
     @Test
     void create() {

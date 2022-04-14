@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -68,13 +69,15 @@ class GroupServiceImplTest {
         group.setSuperior(new ObjectId());
         group.setName("test");
         group.setPrincipal(new ObjectId());
-        given(this.groupRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(group));
+        given(this.groupRepository.findByEnabledTrue(Mockito.any(Pageable.class))).willReturn(Flux.just(group));
 
         given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
         given(this.accountRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Account.class)));
+
+        given(this.groupRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 
         StepVerifier.create(groupService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
@@ -170,13 +173,6 @@ class GroupServiceImplTest {
 
         StepVerifier.create(groupService.tree()).expectNextCount(1).verifyComplete();
     }
-
-    @Test
-    void count() {
-        given(this.groupRepository.count()).willReturn(Mono.just(2L));
-        StepVerifier.create(groupService.count()).expectNextCount(1).verifyComplete();
-    }
-
 
     @Test
     void exist() {

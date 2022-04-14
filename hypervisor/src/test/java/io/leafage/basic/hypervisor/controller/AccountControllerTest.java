@@ -13,6 +13,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -52,7 +54,8 @@ class AccountControllerTest {
         AccountVO accountVO = new AccountVO();
         accountVO.setUsername("little3201");
         accountVO.setNickname("test");
-        given(this.accountService.retrieve(0, 2)).willReturn(Flux.just(accountVO));
+        Page<AccountVO> voPage = new PageImpl<>(List.of(accountVO));
+        given(this.accountService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/account").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -65,20 +68,6 @@ class AccountControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/account").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.accountService.count()).willReturn(Mono.just(2L));
-
-        webTestClient.get().uri("/account/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.accountService.count()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/account/count").exchange().expectStatus().isNoContent();
     }
 
     @Test

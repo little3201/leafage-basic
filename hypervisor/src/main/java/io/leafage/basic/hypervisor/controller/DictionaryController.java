@@ -5,6 +5,7 @@ import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,12 +37,29 @@ public class DictionaryController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Flux<DictionaryVO>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Flux<DictionaryVO> voFlux;
+    public ResponseEntity<Mono<Page<DictionaryVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<DictionaryVO>> pageMono;
         try {
-            voFlux = dictionaryService.retrieve(page, size);
+            pageMono = dictionaryService.retrieve(page, size);
         } catch (Exception e) {
             logger.error("Retrieve dictionary occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(pageMono);
+    }
+
+    /**
+     * 查询上级
+     *
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @GetMapping("/superior")
+    public ResponseEntity<Flux<DictionaryVO>> superior() {
+        Flux<DictionaryVO> voFlux;
+        try {
+            voFlux = dictionaryService.superior();
+        } catch (Exception e) {
+            logger.error("Retrieve dictionary superior occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);
@@ -63,23 +81,6 @@ public class DictionaryController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @return 查询的记录数，异常时返回204状态码
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count() {
-        Mono<Long> count;
-        try {
-            count = dictionaryService.count();
-        } catch (Exception e) {
-            logger.error("Count dictionary occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
     }
 
     /**
@@ -116,4 +117,5 @@ public class DictionaryController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
     }
+
 }

@@ -10,11 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -33,7 +32,9 @@ class RegionServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.regionRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(Mockito.mock(Region.class)));
+        given(this.regionRepository.findByEnabledTrue(Mockito.any(Pageable.class))).willReturn(Flux.just(Mockito.mock(Region.class)));
+
+        given(this.regionRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 
         StepVerifier.create(regionService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
@@ -45,6 +46,7 @@ class RegionServiceImplTest {
         region.setCode(2L);
         region.setName("北京市");
         region.setAlias("京");
+        region.setSuperior(1101L);
         region.setPostalCode(23423080);
         region.setDescription("描述");
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
@@ -65,13 +67,6 @@ class RegionServiceImplTest {
                 .willReturn(Flux.just(region));
 
         StepVerifier.create(regionService.lower(11L)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void count() {
-        given(this.regionRepository.count()).willReturn(Mono.just(2L));
-
-        StepVerifier.create(regionService.count()).expectNextCount(1).verifyComplete();
     }
 
     @Test

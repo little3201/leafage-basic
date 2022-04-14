@@ -10,13 +10,12 @@ import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import javax.validation.Valid;
 
 /**
@@ -46,21 +45,16 @@ public class PostsController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Flux<PostsVO>> retrieve(Integer page, Integer size, String sort, String category) {
-        Flux<PostsVO> voFlux;
+    public ResponseEntity<Mono<Page<PostsVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                        String sort, String category) {
+        Mono<Page<PostsVO>> pageMono;
         try {
-            if (page == null || size == null) {
-                voFlux = postsService.retrieve();
-            } else if (StringUtils.hasText(category)) {
-                voFlux = postsService.retrieve(page, size, sort, category);
-            } else {
-                voFlux = postsService.retrieve(page, size, sort);
-            }
+            pageMono = postsService.retrieve(page, size, sort, category);
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(pageMono);
     }
 
     /**
@@ -133,24 +127,6 @@ public class PostsController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 统计记录数
-     *
-     * @param category 类目code
-     * @return 查询到数据，异常时返回204
-     */
-    @GetMapping("/count")
-    public ResponseEntity<Mono<Long>> count(String category) {
-        Mono<Long> count;
-        try {
-            count = postsService.count(category);
-        } catch (Exception e) {
-            logger.error("Count posts occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(count);
     }
 
     /**

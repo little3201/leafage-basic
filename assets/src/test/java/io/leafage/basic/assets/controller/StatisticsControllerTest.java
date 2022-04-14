@@ -8,10 +8,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
-
+import reactor.core.publisher.Mono;
+import java.time.LocalDate;
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -32,8 +35,11 @@ class StatisticsControllerTest {
     @Test
     void retrieve() {
         StatisticsVO statisticsVO = new StatisticsVO();
-        given(this.statisticsService.retrieve(Mockito.anyInt(), Mockito.anyInt()))
-                .willReturn(Flux.just(statisticsVO));
+        statisticsVO.setDate(LocalDate.now());
+        statisticsVO.setComments(23);
+        statisticsVO.setOverComments(2.23);
+        Page<StatisticsVO> page = new PageImpl<>(List.of(statisticsVO));
+        given(this.statisticsService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/statistics").queryParam("page", 0)
                         .queryParam("size", 7).build()).exchange().expectStatus().isOk()

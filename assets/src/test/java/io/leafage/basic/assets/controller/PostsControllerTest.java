@@ -14,14 +14,15 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.Collections;
-
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 
@@ -44,34 +45,26 @@ class PostsControllerTest {
     void retrieve() {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
+        Page<PostsVO> page = new PageImpl<>(List.of(postsVO));
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
-                .willReturn(Flux.just(postsVO));
+                .willReturn(Mono.just(page));
 
-        webTestClient.get().uri("/posts").exchange().expectStatus().isOk().expectBodyList(PostsVO.class);
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
+                        .queryParam("size", 2).queryParam("category", "21213G0J2").build())
+                .exchange().expectStatus().isOk().expectBodyList(PostsVO.class);
     }
 
     @Test
-    void retrieve_page() {
+    void retrieve_category() {
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
+        Page<PostsVO> page = new PageImpl<>(List.of(postsVO));
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
-                .willReturn(Flux.just(postsVO));
+                .willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(PostsVO.class);
-    }
-
-    @Test
-    void retrieve_page_category() {
-        PostsVO postsVO = new PostsVO();
-        postsVO.setTitle("test");
-        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
-                .willReturn(Flux.just(postsVO));
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("category", "21213G0J2").build()).exchange()
-                .expectStatus().isOk().expectBodyList(PostsVO.class);
+                        .queryParam("size", 2).queryParam("category", "21213G0J2").build())
+                .exchange().expectStatus().isOk().expectBodyList(PostsVO.class);
     }
 
     @Test
@@ -213,20 +206,6 @@ class PostsControllerTest {
         webTestClient.get().uri(uriBuilder ->
                         uriBuilder.path("/posts/search").queryParam("keyword", "test").build()).exchange()
                 .expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.postsService.count(Mockito.anyString())).willReturn(Mono.just(2L));
-        webTestClient.get().uri("/posts/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.postsService.count(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/count")
-                .queryParam("category", "").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test

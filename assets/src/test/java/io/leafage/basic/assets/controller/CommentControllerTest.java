@@ -10,12 +10,14 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -37,8 +39,8 @@ class CommentControllerTest {
     void retrieve() {
         CommentVO commentVO = new CommentVO();
         commentVO.setContent("test content");
-        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt()))
-                .willReturn(Flux.just(commentVO));
+        Page<CommentVO> page = new PageImpl<>(List.of(commentVO));
+        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comment").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -47,8 +49,7 @@ class CommentControllerTest {
 
     @Test
     void retrieve_error() {
-        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt()))
-                .willThrow(new RuntimeException());
+        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comment").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -89,18 +90,6 @@ class CommentControllerTest {
 
         webTestClient.get().uri("/comment/{code}/replies", "21319JO01").exchange()
                 .expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.commentService.count()).willReturn(Mono.just(2L));
-        webTestClient.get().uri("/comment/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.commentService.count()).willThrow(new RuntimeException());
-        webTestClient.get().uri("/comment/count").exchange().expectStatus().isNoContent();
     }
 
     @Test

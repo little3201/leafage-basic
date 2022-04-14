@@ -41,6 +41,8 @@ class StatisticsServiceImplTest {
         given(this.statisticsRepository.findByEnabledTrue(Mockito.any(PageRequest.class)))
                 .willReturn(Flux.just(Mockito.mock(Statistics.class)));
 
+        given(this.statisticsRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
+
         StepVerifier.create(statisticsService.retrieve(0, 7)).expectNextCount(1).verifyComplete();
     }
 
@@ -56,8 +58,8 @@ class StatisticsServiceImplTest {
         bys.setDate(LocalDate.now().minusDays(3));
         bys.setLikes(123);
         bys.setOverLikes(30.4);
-        bys.setComment(12);
-        bys.setOverComment(33.4);
+        bys.setComments(12);
+        bys.setOverComments(33.4);
         bys.setViewed(3234);
         bys.setOverViewed(3.23);
         given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(2)))
@@ -67,8 +69,8 @@ class StatisticsServiceImplTest {
         tda.setDate(LocalDate.now().minusDays(2));
         tda.setLikes(198);
         tda.setOverLikes(bys.getOverLikes() - 1.0);
-        tda.setComment(27);
-        tda.setOverComment(bys.getOverComment() - 2.0);
+        tda.setComments(27);
+        tda.setOverComments(bys.getOverComments() - 2.0);
         tda.setViewed(8390);
         tda.setOverViewed(bys.getOverViewed() - 0.3);
         given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(3)))

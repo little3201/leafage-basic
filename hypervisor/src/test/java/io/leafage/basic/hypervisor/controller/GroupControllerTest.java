@@ -2,24 +2,25 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.document.AccountRole;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
-import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.service.AccountGroupService;
+import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
-
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -41,20 +42,11 @@ class GroupControllerTest {
     private GroupService groupService;
 
     @Test
-    void retrieve() {
-        GroupVO groupVO = new GroupVO();
-        groupVO.setName("test");
-        given(this.groupService.retrieve()).willReturn(Flux.just(groupVO));
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/group").build()).exchange()
-                .expectStatus().isOk().expectBodyList(RoleVO.class);
-    }
-
-    @Test
     void retrieve_page() {
         GroupVO groupVO = new GroupVO();
         groupVO.setName("test");
-        given(this.groupService.retrieve(0, 2)).willReturn(Flux.just(groupVO));
+        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO));
+        given(this.groupService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/group").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -99,20 +91,6 @@ class GroupControllerTest {
         given(this.groupService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/group/{code}", "21612OL34").exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.groupService.count()).willReturn(Mono.just(2L));
-
-        webTestClient.get().uri("/group/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.groupService.count()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/group/count").exchange().expectStatus().isNoContent();
     }
 
     @Test

@@ -9,11 +9,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -35,7 +37,8 @@ class RegionControllerTest {
     void retrieve() {
         RegionVO regionVO = new RegionVO();
         regionVO.setName("test");
-        given(this.regionService.retrieve(0, 2)).willReturn(Flux.just(regionVO));
+        Page<RegionVO> voPage = new PageImpl<>(List.of(regionVO));
+        given(this.regionService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/region").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -84,17 +87,4 @@ class RegionControllerTest {
         webTestClient.get().uri("/region/{code}/lower", "1100").exchange().expectStatus().isNoContent();
     }
 
-    @Test
-    void count() {
-        given(this.regionService.count()).willReturn(Mono.just(2L));
-
-        webTestClient.get().uri("/region/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.regionService.count()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/region/count").exchange().expectStatus().isNoContent();
-    }
 }

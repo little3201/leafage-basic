@@ -2,7 +2,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.vo.StatisticsVO;
-import reactor.core.publisher.Flux;
+import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
 
 /**
@@ -19,7 +19,7 @@ public interface StatisticsService {
      * @param size 大小
      * @return 结果集
      */
-    Flux<StatisticsVO> retrieve(int page, int size);
+    Mono<Page<StatisticsVO>> retrieve(int page, int size);
 
     /**
      * 浏览量记录

@@ -11,11 +11,14 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -35,22 +38,13 @@ class AuthorityControllerTest {
 
     @MockBean
     private AuthorityService authorityService;
-
+    
     @Test
     void retrieve() {
         AuthorityVO authorityVO = new AuthorityVO();
         authorityVO.setName("test");
-        given(this.authorityService.retrieve()).willReturn(Flux.just(authorityVO));
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority").build()).exchange()
-                .expectStatus().isOk().expectBodyList(RoleVO.class);
-    }
-
-    @Test
-    void retrieve_page() {
-        AuthorityVO authorityVO = new AuthorityVO();
-        authorityVO.setName("test");
-        given(this.authorityService.retrieve(0, 2)).willReturn(Flux.just(authorityVO));
+        Page<AuthorityVO> voPage = new PageImpl<>(List.of(authorityVO));
+        given(this.authorityService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -97,20 +91,6 @@ class AuthorityControllerTest {
 
         webTestClient.get().uri("/authority/{code}", "21612OL34").exchange()
                 .expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.authorityService.count()).willReturn(Mono.just(2L));
-
-        webTestClient.get().uri("/authority/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.authorityService.count()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/authority/count").exchange().expectStatus().isNoContent();
     }
 
     @Test

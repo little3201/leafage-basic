@@ -56,4 +56,11 @@ public interface CommentRepository extends ReactiveMongoRepository<Comment, Obje
      * @return 评论信息
      */
     Mono<Comment> getByCodeAndEnabledTrue(String code);
+
+    /**
+     * 统计
+     *
+     * @return 记录数
+     */
+    Mono<Long> countByEnabledTrue();
 }

@@ -1,20 +1,15 @@
-##========server port=======##
 server:
   port: 8764
 
-##=====application name=====##
 spring:
   application:
     name: assets
+  profiles:
+    active: dev
   web:
     resources:
       add-mappings: false
 
-  ##=====active=====##
-  profiles:
-    active: dev
-
-  ##=====consul config=====##
   cloud:
     consul:
       discovery:

@@ -58,8 +58,8 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
 
         Mono<Long> count = groupRepository.countByEnabledTrue();
 
-        return voFlux.collectList().zipWith(count).flatMap(objects ->
-                Mono.just(new PageImpl<>(objects.getT1(), pageRequest, objects.getT2())));
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override

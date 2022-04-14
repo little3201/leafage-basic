@@ -1,20 +1,17 @@
-##========server port=======##
 server:
   port: 8763
 
-##=====application name=====##
 spring:
   application:
     name: hypervisor
+
   web:
     resources:
       add-mappings: false
 
-  ##=====active assets=====##
   profiles:
     active: dev
 
-  ##=====consul config=====##
   cloud:
     consul:
       discovery:

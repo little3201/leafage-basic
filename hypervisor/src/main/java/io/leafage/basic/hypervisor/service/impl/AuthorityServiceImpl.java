@@ -54,8 +54,8 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
 
         Mono<Long> count = authorityRepository.countByEnabledTrue();
 
-        return voFlux.collectList().zipWith(count).flatMap(objects ->
-                Mono.just(new PageImpl<>(objects.getT1(), pageRequest, objects.getT2())));
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override

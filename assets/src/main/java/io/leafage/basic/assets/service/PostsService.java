@@ -7,6 +7,7 @@ import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
+import org.springframework.data.domain.Page;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
@@ -19,15 +20,15 @@ import top.leafage.common.reactive.ReactiveBasicService;
 public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO, String> {
 
     /**
-     * 按照分页和分类进行查询并排序
+     * 分页查询
      *
-     * @param page     分页
+     * @param page     页码
      * @param size     大小
      * @param sort     排序
      * @param category 分类
      * @return 结果集
      */
-    Flux<PostsVO> retrieve(int page, int size, String sort, String category);
+    Mono<Page<PostsVO>> retrieve(int page, int size, String sort, String category);
 
     /**
      * 根据代码查询详细信息
@@ -44,14 +45,6 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO, St
      * @return 详细信息
      */
     Mono<ContentVO> content(String code);
-
-    /**
-     * 统计
-     *
-     * @param category 类目
-     * @return 统计数
-     */
-    Mono<Long> count(String category);
 
     /**
      * 下一条记录

@@ -41,6 +41,8 @@ class StatisticsServiceImplTest {
         given(this.statisticsRepository.findByEnabledTrue(Mockito.any(PageRequest.class)))
                 .willReturn(Flux.just(Mockito.mock(Statistics.class)));
 
+        given(this.statisticsRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
+
         StepVerifier.create(statisticsService.retrieve(0, 7)).expectNextCount(1).verifyComplete();
     }
 

@@ -2,7 +2,9 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.vo.CommentVO;
+import org.springframework.data.domain.Page;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -11,6 +13,15 @@ import top.leafage.common.reactive.ReactiveBasicService;
  * @author liwenqiang 2018-12-06 22:09
  **/
 public interface CommentService extends ReactiveBasicService<CommentDTO, CommentVO, String> {
+
+    /**
+     * 分页查询
+     *
+     * @param page 页码
+     * @param size 大小
+     * @return 结果集
+     */
+    Mono<Page<CommentVO>> retrieve(int page, int size);
 
     /**
      * 查询
@@ -27,4 +38,5 @@ public interface CommentService extends ReactiveBasicService<CommentDTO, Comment
      * @return 回复的评论
      */
     Flux<CommentVO> replies(String replier);
+
 }

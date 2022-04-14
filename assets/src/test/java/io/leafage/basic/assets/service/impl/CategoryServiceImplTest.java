@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -42,21 +41,12 @@ class CategoryServiceImplTest {
     void retrieve() {
         Category category = new Category();
         category.setId(new ObjectId());
-        given(this.categoryRepository.findByEnabledTrue()).willReturn(Flux.just(category));
-
-        given(this.postsRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
-
-        StepVerifier.create(this.categoryService.retrieve()).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void retrieve_page() {
-        Category category = new Category();
-        category.setId(new ObjectId());
         given(this.categoryRepository.findByEnabledTrue(PageRequest.of(0, 2)))
                 .willReturn(Flux.just(category));
 
         given(this.postsRepository.countByCategoryIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        given(this.categoryRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 
         StepVerifier.create(this.categoryService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
@@ -67,12 +57,6 @@ class CategoryServiceImplTest {
                 .willReturn(Mono.just(Mockito.mock(Category.class)));
 
         StepVerifier.create(categoryService.fetch("21318H9FH")).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void count() {
-        given(this.categoryRepository.count()).willReturn(Mono.just(2L));
-        StepVerifier.create(categoryService.count()).expectNextCount(1).verifyComplete();
     }
 
     @Test

@@ -5,7 +5,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.vo.ResourceVO;
-import reactor.core.publisher.Flux;
+import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
@@ -17,21 +17,14 @@ import top.leafage.common.reactive.ReactiveBasicService;
 public interface ResourceService extends ReactiveBasicService<ResourceDTO, ResourceVO, String> {
 
     /**
-     * 按照分页和分类进行查询并排序
+     * 分页查询
      *
-     * @param page     分页
+     * @param page     页码
      * @param size     大小
      * @param sort     排序
      * @param category 分类
      * @return 结果集
      */
-    Flux<ResourceVO> retrieve(int page, int size, String sort, String category);
+    Mono<Page<ResourceVO>> retrieve(int page, int size, String sort, String category);
 
-    /**
-     * 统计¬
-     *
-     * @param category 类目
-     * @return 统计数
-     */
-    Mono<Long> count(String category);
 }

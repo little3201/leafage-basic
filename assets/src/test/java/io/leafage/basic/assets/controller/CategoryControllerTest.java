@@ -12,12 +12,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
+import java.util.List;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -39,16 +40,8 @@ class CategoryControllerTest {
     void retrieve() {
         CategoryVO categoryVO = new CategoryVO();
         categoryVO.setAlias("test");
-        given(this.categoryService.retrieve()).willReturn(Flux.just(categoryVO));
-
-        webTestClient.get().uri("/category").exchange().expectStatus().isOk().expectBodyList(CategoryVO.class);
-    }
-
-    @Test
-    void retrieve_page() {
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setAlias("test");
-        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Flux.just(categoryVO));
+        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
+        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/category").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -57,9 +50,10 @@ class CategoryControllerTest {
 
     @Test
     void retrieve_error() {
-        given(this.categoryService.retrieve()).willThrow(new RuntimeException());
+        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/category").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/category").queryParam("page", 0)
+                .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -79,20 +73,6 @@ class CategoryControllerTest {
 
         webTestClient.get().uri("/category/{code}", "21213G0J2").exchange()
                 .expectStatus().isNoContent();
-    }
-
-    @Test
-    void count() {
-        given(this.categoryService.count()).willReturn(Mono.just(2L));
-
-        webTestClient.get().uri("/category/count").exchange().expectStatus().isOk();
-    }
-
-    @Test
-    void count_error() {
-        given(this.categoryService.count()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/category/count").exchange().expectStatus().isNoContent();
     }
 
     @Test

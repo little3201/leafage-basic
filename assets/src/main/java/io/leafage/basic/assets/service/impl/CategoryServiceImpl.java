@@ -10,13 +10,15 @@ import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
+import top.leafage.common.basic.ValidMessage;
 import javax.naming.NotContextException;
 
 /**
@@ -27,8 +29,6 @@ import javax.naming.NotContextException;
 @Service
 public class CategoryServiceImpl extends AbstractBasicService implements CategoryService {
 
-    private static final String MESSAGE = "code is blank.";
-
     private final CategoryRepository categoryRepository;
     private final PostsRepository postsRepository;
 
@@ -38,24 +38,20 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Flux<CategoryVO> retrieve() {
-        return categoryRepository.findByEnabledTrue().flatMap(this::convertOuter);
-    }
+    public Mono<Page<CategoryVO>> retrieve(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
 
-    @Override
-    public Flux<CategoryVO> retrieve(int page, int size) {
-        return categoryRepository.findByEnabledTrue(PageRequest.of(page, size)).flatMap(this::convertOuter);
+        Mono<Long> count = categoryRepository.countByEnabledTrue();
+
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override
     public Mono<CategoryVO> fetch(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter);
-    }
-
-    @Override
-    public Mono<Long> count() {
-        return categoryRepository.count();
     }
 
     @Override
@@ -68,7 +64,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Mono<CategoryVO> modify(String code, CategoryDTO categoryDTO) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return categoryRepository.getByCodeAndEnabledTrue(code).doOnNext(category ->
                         BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(categoryRepository::save).flatMap(this::convertOuter);
@@ -76,7 +72,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(topic -> categoryRepository.deleteById(topic.getId()));
     }
 

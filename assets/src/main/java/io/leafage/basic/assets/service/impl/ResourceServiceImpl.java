@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Resource;
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
@@ -10,6 +11,8 @@ import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.service.ResourceService;
 import io.leafage.basic.assets.vo.ResourceVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,7 +21,7 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-
+import top.leafage.common.basic.ValidMessage;
 import javax.naming.NotContextException;
 
 /**
@@ -29,8 +32,6 @@ import javax.naming.NotContextException;
 @Service
 public class ResourceServiceImpl extends AbstractBasicService implements ResourceService {
 
-    private static final String MESSAGE = "code is blank.";
-
     private final ResourceRepository resourceRepository;
     private final CategoryRepository categoryRepository;
 
@@ -40,22 +41,30 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     }
 
     @Override
-    public Flux<ResourceVO> retrieve(int page, int size, String sort) {
-        return resourceRepository.findByEnabledTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
-                StringUtils.hasText(sort) ? sort : "modifyTime"))).flatMap(this::convertOuter);
-    }
+    public Mono<Page<ResourceVO>> retrieve(int page, int size, String sort, String category) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
+        Flux<ResourceVO> voFlux;
+        Mono<Long> count;
 
-    @Override
-    public Flux<ResourceVO> retrieve(int page, int size, String sort, String category) {
-        Sort s = Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime");
-        return categoryRepository.getByCodeAndEnabledTrue(category).flatMapMany(c ->
-                resourceRepository.findByCategoryIdAndEnabledTrue(c.getId(), PageRequest.of(page, size, s))
-                        .flatMap(this::convertOuter));
+        if (!StringUtils.hasText(category)) {
+            voFlux = resourceRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+
+            count = resourceRepository.countByEnabledTrue();
+        } else {
+            Mono<Category> categoryMono = categoryRepository.getByCodeAndEnabledTrue(category);
+            voFlux = categoryMono.flatMapMany(c -> resourceRepository.findByCategoryIdAndEnabledTrue(c.getId(), pageRequest)
+                    .flatMap(this::convertOuter));
+
+            count = categoryMono.flatMap(c -> resourceRepository.countByCategoryIdAndEnabledTrue(c.getId()));
+        }
+
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override
     public Mono<ResourceVO> fetch(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return resourceRepository.getByCodeAndEnabledTrue(code)
                 .flatMap(resource -> categoryRepository.findById(resource.getCategoryId())
                         .map(category -> {
@@ -73,15 +82,6 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     }
 
     @Override
-    public Mono<Long> count(String category) {
-        if (StringUtils.hasText(category)) {
-            return categoryRepository.getByCodeAndEnabledTrue(category).flatMap(ca ->
-                    resourceRepository.countByCategoryIdAndEnabledTrue(ca.getId()));
-        }
-        return resourceRepository.count();
-    }
-
-    @Override
     public Mono<ResourceVO> create(ResourceDTO resourceDTO) {
         return categoryRepository.getByCodeAndEnabledTrue(resourceDTO.getCategory())
                 .switchIfEmpty(Mono.error(NotContextException::new))
@@ -96,7 +96,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
 
     @Override
     public Mono<ResourceVO> modify(String code, ResourceDTO resourceDTO) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return resourceRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
                 .doOnNext(resource -> BeanUtils.copyProperties(resourceDTO, resource))
                 .flatMap(resource -> categoryRepository.getByCodeAndEnabledTrue(resourceDTO.getCategory())
@@ -110,7 +110,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
 
     @Override
     public Mono<Void> remove(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return resourceRepository.getByCodeAndEnabledTrue(code).flatMap(article -> resourceRepository.deleteById(article.getId()));
     }
 

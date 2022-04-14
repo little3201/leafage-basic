@@ -54,7 +54,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             postsList.forEach(posts -> {
                 statistics.setViewed(statistics.getViewed() + posts.getViewed());
                 statistics.setLikes(statistics.getLikes() + posts.getLikes());
-                statistics.setComments(statistics.getComments() + posts.getComment());
+                statistics.setComments(statistics.getComments() + posts.getComments());
             });
             // 统计前天数据，大前天的数据，做差值，计算环比数据
             return statisticsRepository.getByDate(yesterday.minusDays(2L)).flatMap(tda ->

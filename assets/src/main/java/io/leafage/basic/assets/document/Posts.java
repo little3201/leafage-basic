@@ -47,7 +47,7 @@ public class Posts extends AbstractDocument {
     /**
      * 评论
      */
-    private int comment;
+    private int comments;
     /**
      * 查看
      */
@@ -101,12 +101,12 @@ public class Posts extends AbstractDocument {
         this.likes = likes;
     }
 
-    public int getComment() {
-        return comment;
+    public int getComments() {
+        return comments;
     }
 
-    public void setComment(int comment) {
-        this.comment = comment;
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 
     public int getViewed() {

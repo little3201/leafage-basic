@@ -51,7 +51,7 @@ class StatisticsServiceImplTest {
         Posts posts = new Posts();
         posts.setViewed(12);
         posts.setLikes(23);
-        posts.setComment(2);
+        posts.setComments(2);
         given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
 
         Statistics bys = new Statistics();
@@ -87,7 +87,7 @@ class StatisticsServiceImplTest {
         Posts posts = new Posts();
         posts.setViewed(12);
         posts.setLikes(23);
-        posts.setComment(2);
+        posts.setComments(2);
         given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
 
         given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))

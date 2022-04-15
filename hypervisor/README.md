@@ -1,8 +1,8 @@
 # hypervisor
 
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2021.0.0-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.6.1-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2021.0.1-green.svg" alt="Coverage Status">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.6.6-green.svg" alt="Downloads">
 </p>
 
 服务相关接口，主要包含：
@@ -27,6 +27,6 @@
 
 |               依赖               |            说明            |
 |:-------------------------------:|:-------------------------:|
-|       Spring Boot Webflux       |           web框架          |
-|  Spring Data Mongodb Reactive   |          数据访问层         |
-|              mongodb            |           数据存储          |
+|         Spring Boot Web         |           web框架          |
+|  Spring Data Reactive Mongodb   |          数据访问层         |
+|               mongodb           |           数据存储          |

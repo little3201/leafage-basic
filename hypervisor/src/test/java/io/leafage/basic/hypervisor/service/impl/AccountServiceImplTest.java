@@ -2,7 +2,9 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.AccountDTO;
 import io.leafage.basic.hypervisor.entity.Account;
+import io.leafage.basic.hypervisor.entity.User;
 import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.vo.AccountVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,9 @@ class AccountServiceImplTest {
 
     @Mock
     private AccountRepository accountRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -68,7 +73,7 @@ class AccountServiceImplTest {
         account.setUsername("test");
         account.setNickname("测试");
         // 保存更新信息
-        given(this.accountRepository.saveAndFlush(Mockito.any(Account.class))).willReturn(account);
+        given(this.accountRepository.save(Mockito.any(Account.class))).willReturn(account);
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setNickname("管理员");
@@ -78,12 +83,14 @@ class AccountServiceImplTest {
         account.setCredentialsExpiresAt(LocalDateTime.now().plusHours(2));
         accountService.modify("test", accountDTO);
 
-        verify(accountRepository, Mockito.times(1)).saveAndFlush(Mockito.any(Account.class));
+        verify(accountRepository, Mockito.times(1)).save(Mockito.any(Account.class));
     }
 
     @Test
     void remove() {
         given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Account.class));
+
+        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
 
         accountService.remove("test");
 

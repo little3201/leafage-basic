@@ -1,6 +1,7 @@
 package io.leafage.basic.hypervisor.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.leafage.basic.hypervisor.dto.NotificationDTO;
 import io.leafage.basic.hypervisor.service.NotificationService;
 import io.leafage.basic.hypervisor.vo.NotificationVO;
 import org.junit.jupiter.api.Test;
@@ -11,12 +12,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -78,6 +82,40 @@ class NotificationControllerTest {
         given(this.notificationService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/notification/{code}", "213ADJ09")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void create() throws Exception {
+        // 构造返回对象
+        NotificationVO notificationVO = new NotificationVO();
+        notificationVO.setTitle("test");
+        given(this.notificationService.create(Mockito.any(NotificationDTO.class))).willReturn(notificationVO);
+
+        // 构造请求对象
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setTitle("test");
+        notificationDTO.setReceiver("23234");
+        notificationDTO.setContent("描述");
+        mvc.perform(post("/notification").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(notificationDTO)).with(csrf().asHeader()))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.title").value("test"))
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void create_error() throws Exception {
+        given(this.notificationService.create(Mockito.any(NotificationDTO.class))).willThrow(new RuntimeException());
+
+        // 构造请求对象
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setTitle("test");
+        notificationDTO.setReceiver("23234");
+        notificationDTO.setContent("描述");
+        mvc.perform(post("/notification").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(notificationDTO)).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 }

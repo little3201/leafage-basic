@@ -52,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
         Assert.hasText(username, MESSAGE);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(accountDTO, account);
-        accountRepository.saveAndFlush(account);
+        accountRepository.save(account);
         return this.convertOuter(account);
     }
 

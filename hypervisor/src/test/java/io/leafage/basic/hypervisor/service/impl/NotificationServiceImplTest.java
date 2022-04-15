@@ -41,8 +41,8 @@ class NotificationServiceImplTest {
         notification.setContent("测试内容");
         notification.setReceiver("test");
         notification.setRead(false);
-        Page<Notification> regions = new PageImpl<>(List.of(notification));
-        given(this.notificationRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(regions);
+        Page<Notification> page = new PageImpl<>(List.of(notification));
+        given(this.notificationRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(page);
 
         Page<NotificationVO> voPage = notificationService.retrieve(0, 2);
 
@@ -61,15 +61,15 @@ class NotificationServiceImplTest {
 
     @Test
     void create() {
-        given(this.notificationRepository.save(Mockito.any(Notification.class))).willReturn(Mockito.mock(Notification.class));
+        given(this.notificationRepository.saveAndFlush(Mockito.any(Notification.class))).willReturn(Mockito.mock(Notification.class));
 
         NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setTitle("标题");
         notificationDTO.setReceiver("test");
         notificationDTO.setContent("测试内容");
-        notificationDTO.setRead(false);
         NotificationVO notificationVO = notificationService.create(notificationDTO);
 
-        verify(this.notificationRepository, times(1)).save(Mockito.any(Notification.class));
+        verify(this.notificationRepository, times(1)).saveAndFlush(Mockito.any(Notification.class));
         Assertions.assertNotNull(notificationVO);
     }
 }

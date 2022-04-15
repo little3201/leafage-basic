@@ -71,7 +71,7 @@ class AuthorityServiceImplTest {
         superior.setId(1L);
         given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(superior);
 
-        given(this.authorityRepository.save(Mockito.any(Authority.class))).willReturn(Mockito.mock(Authority.class));
+        given(this.authorityRepository.saveAndFlush(Mockito.any(Authority.class))).willReturn(Mockito.mock(Authority.class));
 
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
@@ -80,7 +80,7 @@ class AuthorityServiceImplTest {
         authorityDTO.setSuperior("2119JD09");
         AuthorityVO authorityVO = authorityService.create(authorityDTO);
 
-        verify(this.authorityRepository, times(1)).save(Mockito.any(Authority.class));
+        verify(this.authorityRepository, times(1)).saveAndFlush(Mockito.any(Authority.class));
         Assertions.assertNotNull(authorityVO);
     }
 
@@ -94,7 +94,7 @@ class AuthorityServiceImplTest {
         superior.setId(1L);
         given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(superior);
 
-        given(this.authorityRepository.saveAndFlush(Mockito.any(Authority.class))).willReturn(Mockito.mock(Authority.class));
+        given(this.authorityRepository.save(Mockito.any(Authority.class))).willReturn(Mockito.mock(Authority.class));
 
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
@@ -103,7 +103,7 @@ class AuthorityServiceImplTest {
         authorityDTO.setSuperior("2119JD09");
         AuthorityVO authorityVO = authorityService.modify("2119JD09", authorityDTO);
 
-        verify(this.authorityRepository, times(1)).saveAndFlush(Mockito.any(Authority.class));
+        verify(this.authorityRepository, times(1)).save(Mockito.any(Authority.class));
         Assertions.assertNotNull(authorityVO);
     }
 

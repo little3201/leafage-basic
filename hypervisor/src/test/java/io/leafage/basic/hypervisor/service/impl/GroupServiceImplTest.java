@@ -1,7 +1,10 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
+import io.leafage.basic.hypervisor.entity.Account;
 import io.leafage.basic.hypervisor.entity.Group;
+import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.junit.jupiter.api.Assertions;
@@ -31,7 +34,13 @@ import static org.mockito.Mockito.verify;
 class GroupServiceImplTest {
 
     @Mock
+    private AccountGroupRepository accountGroupRepository;
+
+    @Mock
     private GroupRepository groupRepository;
+
+    @Mock
+    private AccountRepository accountRepository;
 
     @InjectMocks
     private GroupServiceImpl groupService;
@@ -39,11 +48,14 @@ class GroupServiceImplTest {
     @Test
     void retrieve() {
         Group group = new Group();
+        group.setId(1L);
         group.setName("test");
         group.setPrincipal(1L);
         Page<Group> page = new PageImpl<>(List.of(group));
         given(this.groupRepository.findAll(PageRequest.of(0, 2, Sort.by("id"))))
                 .willReturn(page);
+
+        given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         Page<GroupVO> voPage = groupService.retrieve(0, 2, "id");
         Assertions.assertNotNull(voPage.getContent());
@@ -55,14 +67,40 @@ class GroupServiceImplTest {
         group.setId(2L);
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
-        given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
+        given(this.groupRepository.saveAndFlush(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
+
+        given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         groupDTO.setSuperior("2119JD09");
         GroupVO groupVO = groupService.create(groupDTO);
 
-        verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));
+        verify(this.groupRepository, times(1)).saveAndFlush(Mockito.any(Group.class));
+        Assertions.assertNotNull(groupVO);
+    }
+
+    @Test
+    void create_principal() {
+        Account account = new Account();
+        account.setId(1L);
+        given(this.accountRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(account);
+
+        Group group = new Group();
+        group.setId(2L);
+        given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
+
+        given(this.groupRepository.saveAndFlush(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
+
+        given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
+
+        GroupDTO groupDTO = new GroupDTO();
+        groupDTO.setName("test");
+        groupDTO.setPrincipal("little3201");
+        groupDTO.setSuperior("2119JD09");
+        GroupVO groupVO = groupService.create(groupDTO);
+
+        verify(this.groupRepository, times(1)).saveAndFlush(Mockito.any(Group.class));
         Assertions.assertNotNull(groupVO);
     }
 
@@ -72,14 +110,16 @@ class GroupServiceImplTest {
         group.setId(2L);
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
-        given(this.groupRepository.saveAndFlush(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
+        given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
+
+        given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         groupDTO.setSuperior("2119JD09");
         GroupVO groupVO = groupService.modify("", groupDTO);
 
-        verify(this.groupRepository, times(1)).saveAndFlush(Mockito.any(Group.class));
+        verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));
         Assertions.assertNotNull(groupVO);
     }
 

@@ -18,6 +18,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * resource 接口测试
@@ -37,7 +39,7 @@ class ResourceServiceImplTest {
     private ResourceServiceImpl resourceService;
 
     @Test
-    void retrieve_page() {
+    void retrieve() {
         Resource resource = new Resource();
         resource.setTitle("java");
         resource.setType('E');
@@ -52,7 +54,7 @@ class ResourceServiceImplTest {
 
 
     @Test
-    void retrieve_page_category() {
+    void retrieve_category() {
         Category category = new Category();
         category.setId(1L);
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(category);
@@ -109,6 +111,8 @@ class ResourceServiceImplTest {
         resourceDTO.setType('E');
         resourceDTO.setDescription("描述");
         ResourceVO resourceVO = resourceService.create(resourceDTO);
+
+        verify(this.resourceRepository, times(1)).saveAndFlush(Mockito.any(Resource.class));
         Assertions.assertNotNull(resourceVO);
     }
 
@@ -126,6 +130,8 @@ class ResourceServiceImplTest {
         resourceDTO.setType('E');
         resourceDTO.setDescription("描述");
         ResourceVO resourceVO = resourceService.modify("21389KO6", resourceDTO);
+
+        verify(this.resourceRepository, times(1)).save(Mockito.any(Resource.class));
         Assertions.assertNotNull(resourceVO);
     }
 

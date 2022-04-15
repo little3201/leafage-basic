@@ -49,24 +49,6 @@ public class UserController {
     }
 
     /**
-     * 添加信息
-     *
-     * @param userDTO 要添加的数据
-     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
-     */
-    @PostMapping
-    public ResponseEntity<UserVO> create(@RequestBody @Valid UserDTO userDTO) {
-        UserVO userVO;
-        try {
-            userVO = userService.create(userDTO);
-        } catch (Exception e) {
-            logger.error("Save user occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(userVO);
-    }
-
-    /**
      * 修改信息.
      *
      * @param username 账户

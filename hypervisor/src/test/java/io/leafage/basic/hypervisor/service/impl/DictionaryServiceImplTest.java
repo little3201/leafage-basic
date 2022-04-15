@@ -45,11 +45,6 @@ class DictionaryServiceImplTest {
         Page<Dictionary> regions = new PageImpl<>(List.of(dictionary));
         given(this.dictionaryRepository.findAll(PageRequest.of(0, 2))).willReturn(regions);
 
-        Dictionary superior = new Dictionary();
-        superior.setCode(dictionary.getSuperior());
-        superior.setName("男");
-        given(this.dictionaryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(superior);
-
         Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2);
 
         Assertions.assertNotNull(voPage.getContent());
@@ -72,11 +67,6 @@ class DictionaryServiceImplTest {
         dictionary.setAlias("性别");
         dictionary.setSuperior("2247J0IL");
         given(this.dictionaryRepository.findBySuperiorAndEnabledTrue(Mockito.anyString())).willReturn(List.of(dictionary));
-
-        Dictionary superior = new Dictionary();
-        superior.setCode(dictionary.getSuperior());
-        superior.setName("男");
-        given(this.dictionaryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(superior);
 
         List<DictionaryVO> dictionaryVOS = dictionaryService.lower("2247JD0K");
 
@@ -101,14 +91,14 @@ class DictionaryServiceImplTest {
 
     @Test
     void create() {
-        given(this.dictionaryRepository.save(Mockito.any(Dictionary.class))).willReturn(Mockito.mock(Dictionary.class));
+        given(this.dictionaryRepository.saveAndFlush(Mockito.any(Dictionary.class))).willReturn(Mockito.mock(Dictionary.class));
 
         DictionaryDTO dictionaryDTO = new DictionaryDTO();
         dictionaryDTO.setName("性别");
         dictionaryDTO.setDescription("描述");
         DictionaryVO dictionaryVO = dictionaryService.create(dictionaryDTO);
 
-        verify(this.dictionaryRepository, times(1)).save(Mockito.any(Dictionary.class));
+        verify(this.dictionaryRepository, times(1)).saveAndFlush(Mockito.any(Dictionary.class));
         Assertions.assertNotNull(dictionaryVO);
     }
 

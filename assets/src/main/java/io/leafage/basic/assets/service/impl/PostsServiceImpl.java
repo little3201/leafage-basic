@@ -11,6 +11,7 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsContentRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.springframework.beans.BeanUtils;
@@ -91,6 +92,23 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
+    public ContentVO content(String code) {
+        //查询基本信息
+        Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
+        if (posts == null) {
+            return null;
+        }
+        ContentVO contentVO = new ContentVO();
+        // 获取内容详情
+        PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        if (postsContent != null) {
+            contentVO.setContent(postsContent.getContent());
+            contentVO.setCatalog(postsContent.getCatalog());
+        }
+        return contentVO;
+    }
+
+    @Override
     public boolean exist(String title) {
         return postsRepository.existsByTitle(title);
     }
@@ -116,7 +134,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         }
         postsContent.setPostsId(posts.getId());
         postsContent.setContent(postsDTO.getContent());
-        postsContentRepository.save(postsContent);
+        postsContentRepository.saveAndFlush(postsContent);
         //转换结果
         return this.convertOuter(posts);
     }
@@ -143,7 +161,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
             postsContent = new PostsContent();
         }
         postsContent.setContent(postsDTO.getContent());
-        postsContentRepository.saveAndFlush(postsContent);
+        postsContentRepository.save(postsContent);
         //转换结果
         return this.convertOuter(posts);
     }
@@ -170,12 +188,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
      * @return 输出转换后的vo对象
      */
     private PostsVO convertOuter(Posts posts) {
-        PostsVO outer = new PostsVO();
-        BeanUtils.copyProperties(posts, outer);
+        PostsVO vo = new PostsVO();
+        BeanUtils.copyProperties(posts, vo);
         // 转换分类
         Optional<Category> optional = categoryRepository.findById(posts.getCategoryId());
-        optional.ifPresent(category -> outer.setCategory(category.getName()));
-        return outer;
+        optional.ifPresent(category -> vo.setCategory(category.getName()));
+        return vo;
     }
 
 }

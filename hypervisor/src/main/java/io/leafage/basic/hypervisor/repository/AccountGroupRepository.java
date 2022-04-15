@@ -31,4 +31,12 @@ public interface AccountGroupRepository extends JpaRepository<AccountGroup, Long
      * @return 关联数据集
      */
     List<AccountGroup> findByAccountId(Long accountId);
+
+    /**
+     * 统计关联账号
+     *
+     * @param groupId 分组ID
+     * @return 用户数
+     */
+    long countByGroupIdAndEnabledTrue(Long groupId);
 }

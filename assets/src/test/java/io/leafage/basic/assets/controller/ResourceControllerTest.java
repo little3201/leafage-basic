@@ -48,6 +48,7 @@ class ResourceControllerTest {
     void retrieve_page() throws Exception {
         ResourceVO resourceVO = new ResourceVO();
         resourceVO.setTitle("java");
+        resourceVO.setCategory("分类");
         Page<ResourceVO> page = new PageImpl<>(List.of(resourceVO));
         given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.isNull())).willReturn(page);
 

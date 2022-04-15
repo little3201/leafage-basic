@@ -99,7 +99,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
                 authority.setSuperior(superior.getId());
             }
         }
-        authority = authorityRepository.save(authority);
+        authority = authorityRepository.saveAndFlush(authority);
         return this.convertOuter(authority);
     }
 
@@ -117,7 +117,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
                 authority.setSuperior(superior.getId());
             }
         }
-        authority = authorityRepository.saveAndFlush(authority);
+        authority = authorityRepository.save(authority);
         return this.convertOuter(authority);
     }
 
@@ -137,6 +137,8 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
     private AuthorityVO convertOuter(Authority info) {
         AuthorityVO authorityVO = new AuthorityVO();
         BeanUtils.copyProperties(info, authorityVO);
+        long count = roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(info.getId());
+        authorityVO.setCount(count);
         return authorityVO;
     }
 

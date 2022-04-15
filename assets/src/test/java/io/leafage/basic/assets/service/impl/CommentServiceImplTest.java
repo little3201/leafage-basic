@@ -19,6 +19,8 @@ import org.springframework.data.domain.PageRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * comment 接口测试
@@ -103,6 +105,18 @@ class CommentServiceImplTest {
     }
 
     @Test
+    void create_posts_null() {
+        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
+
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setContent("评论信息");
+        commentDTO.setPosts("2112JK02");
+        CommentVO commentVO = commentService.create(commentDTO);
+
+        Assertions.assertNull(commentVO);
+    }
+
+    @Test
     void create() {
         Posts posts = new Posts();
         posts.setId(1L);
@@ -120,6 +134,8 @@ class CommentServiceImplTest {
         commentDTO.setContent("评论信息");
         commentDTO.setPosts("2112JK02");
         CommentVO commentVO = commentService.create(commentDTO);
+
+        verify(this.commentRepository, times(1)).saveAndFlush(Mockito.any(Comment.class));
         Assertions.assertNotNull(commentVO);
     }
 }

@@ -17,7 +17,7 @@ import javax.persistence.Table;
 public class AccountRole extends AbstractEntity {
 
     /**
-     * 用户主键
+     * 账号主键
      */
     @Column(name = "account_id")
     private Long accountId;

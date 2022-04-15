@@ -33,7 +33,13 @@ public class Region extends AbstractEntity {
     /**
      * 邮编
      */
-    private String zip;
+    @Column(name = "postal_code")
+    private String postalCode;
+    /**
+     * 区号
+     */
+    @Column(name = "area_code")
+    private String areaCode;
     /**
      * 描述
      */
@@ -71,12 +77,20 @@ public class Region extends AbstractEntity {
         this.superior = superior;
     }
 
-    public String getZip() {
-        return zip;
+    public String getPostalCode() {
+        return postalCode;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
 
     public String getDescription() {

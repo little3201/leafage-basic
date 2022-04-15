@@ -17,12 +17,12 @@ import javax.persistence.Table;
 public class RoleAuthority extends AbstractEntity {
 
     /**
-     * 角色ID
+     * 角色主键
      */
     @Column(name = "role_id")
     private Long roleId;
     /**
-     * 资源ID
+     * 资源主键
      */
     @Column(name = "authority_id")
     private Long authorityId;

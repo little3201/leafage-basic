@@ -10,9 +10,10 @@ create table posts
    title                varchar(32) comment '标题',
    tags                 varchar(255) comment '标签',
    cover                varchar(127) comment '封面图',
+   category_id          bigint comment '分类',
    likes                int comment '点赞',
    viewed               int comment '阅读量',
-   comment              int comment '评论数',
+   comments             int comment '评论数',
    is_enabled           tinyint(1) not null default 1 comment '是否可用',
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
@@ -21,6 +22,7 @@ create table posts
 );
 
 alter table posts comment '帖子';
+
 
 
 drop table if exists posts_content;
@@ -98,8 +100,11 @@ create table resource
    code                 varchar(9) not null comment '代码',
    title                varchar(32) comment '标题',
    cover                varchar(127) comment '封面图',
+   type                 char(1) comment '类型',
+   category_id          bigint comment '分类',
    viewed               int comment '浏览量',
    downloads            int comment '下载量',
+   description          text comment '描述',
    is_enabled           tinyint(1) not null default 1 comment '是否可用',
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
@@ -108,6 +113,9 @@ create table resource
 );
 
 alter table resource comment '资源';
+
+
+
 
 drop table if exists statistics;
 
@@ -121,9 +129,9 @@ create table statistics
    viewed               int comment '浏览量',
    likes                int comment '点赞数',
    comments             int comment '评论数',
-   overViewed           float(7,2) comment '浏览量环比',
-   overLikes            float(7,2) comment '点赞数环比',
-   overComments         float(7,2) comment '评论数环比',
+   over_viewed          float(7,2) comment '浏览量环比',
+   over_likes           float(7,2) comment '点赞数环比',
+   over_comments        float(7,2) comment '评论数环比',
    is_enabled           tinyint(1) not null default 1 comment '是否可用',
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
@@ -132,3 +140,4 @@ create table statistics
 );
 
 alter table statistics comment '统计';
+

@@ -5,6 +5,7 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.entity.Role;
+import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
@@ -30,9 +31,11 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implements RoleService {
 
     private final RoleRepository roleRepository;
+    private final AccountRoleRepository accountRoleRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, AccountRoleRepository accountRoleRepository) {
         this.roleRepository = roleRepository;
+        this.accountRoleRepository = accountRoleRepository;
     }
 
     @Override
@@ -72,7 +75,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
                 role.setSuperior(superior.getId());
             }
         }
-        role = roleRepository.save(role);
+        role = roleRepository.saveAndFlush(role);
         return this.convertOuter(role);
     }
 
@@ -89,7 +92,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
                 role.setSuperior(superior.getId());
             }
         }
-        role = roleRepository.saveAndFlush(role);
+        role = roleRepository.save(role);
         return this.convertOuter(role);
     }
 
@@ -109,6 +112,8 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
     private RoleVO convertOuter(Role info) {
         RoleVO roleVO = new RoleVO();
         BeanUtils.copyProperties(info, roleVO);
+        long count = accountRoleRepository.countByRoleIdAndEnabledTrue(info.getId());
+        roleVO.setCount(count);
         return roleVO;
     }
 

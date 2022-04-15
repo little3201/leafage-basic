@@ -31,4 +31,12 @@ public interface RoleAuthorityRepository extends JpaRepository<RoleAuthority, Lo
      * @return 关联数据集
      */
     List<RoleAuthority> findByAuthorityId(Long roleId);
+
+    /**
+     * 统计关联角色
+     *
+     * @param authorityId 权限ID
+     * @return 用户数
+     */
+    long countByAuthorityIdAndEnabledTrue(Long authorityId);
 }

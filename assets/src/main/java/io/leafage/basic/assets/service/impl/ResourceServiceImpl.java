@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
+import java.util.Optional;
 
 /**
  * resource service impl.
@@ -88,6 +89,9 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     private ResourceVO convertOuter(Resource resource) {
         ResourceVO vo = new ResourceVO();
         BeanUtils.copyProperties(resource, vo);
+        // 转换分类
+        Optional<Category> optional = categoryRepository.findById(resource.getCategoryId());
+        optional.ifPresent(category -> vo.setCategory(category.getName()));
         return vo;
     }
 

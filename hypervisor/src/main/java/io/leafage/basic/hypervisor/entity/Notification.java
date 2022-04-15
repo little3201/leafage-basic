@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -17,12 +18,17 @@ public class Notification extends AbstractEntity {
      */
     private String code;
     /**
+     * 代码
+     */
+    private String title;
+    /**
      * 内容
      */
     private String content;
     /**
      * 是否已读
      */
+    @Column(name = "is_read")
     private boolean read;
     /**
      * 接收人
@@ -36,6 +42,14 @@ public class Notification extends AbstractEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContent() {

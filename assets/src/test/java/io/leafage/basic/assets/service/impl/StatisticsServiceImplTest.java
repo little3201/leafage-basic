@@ -18,6 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import java.time.LocalDate;
 import java.util.List;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * statistics 接口测试
@@ -76,6 +78,8 @@ class StatisticsServiceImplTest {
         given(this.statisticsRepository.saveAndFlush(Mockito.any(Statistics.class))).willReturn(statistics);
 
         Statistics st = statisticsService.create();
+
+        verify(this.statisticsRepository, times(1)).saveAndFlush(Mockito.any(Statistics.class));
         Assertions.assertNotNull(st);
     }
 

@@ -45,7 +45,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public UserVO create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
-        user = userRepository.save(user);
+        user = userRepository.saveAndFlush(user);
         return this.convertOuter(user);
     }
 
@@ -54,7 +54,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
         Assert.hasText(username, MESSAGE);
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(userDTO, user);
-        user = userRepository.saveAndFlush(user);
+        user = userRepository.save(user);
         return this.convertOuter(user);
     }
 

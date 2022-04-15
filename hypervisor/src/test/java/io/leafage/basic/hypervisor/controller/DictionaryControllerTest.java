@@ -146,7 +146,8 @@ class DictionaryControllerTest {
 
         // 构造请求对象
         DictionaryDTO dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setName("gender");
+        dictionaryDTO.setName("Gender");
+        dictionaryDTO.setAlias("性别");
         mvc.perform(post("/dictionary").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dictionaryDTO)).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())

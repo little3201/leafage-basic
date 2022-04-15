@@ -131,7 +131,7 @@ class RegionControllerTest {
         // 构造请求对象
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("test");
-        regionDTO.setZip("23234");
+        regionDTO.setAreaCode("23234");
         regionDTO.setDescription("描述");
         mvc.perform(post("/region").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(regionDTO)).with(csrf().asHeader()))

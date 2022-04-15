@@ -56,7 +56,7 @@ public class RegionServiceImpl implements RegionService {
     public RegionVO create(RegionDTO regionDTO) {
         Region region = new Region();
         BeanUtils.copyProperties(regionDTO, region);
-        regionRepository.save(region);
+        regionRepository.saveAndFlush(region);
         return this.convertOuter(region);
     }
 
@@ -64,7 +64,7 @@ public class RegionServiceImpl implements RegionService {
     public RegionVO modify(Long code, RegionDTO regionDTO) {
         Region region = regionRepository.getByCodeAndEnabledTrue(code);
         BeanUtils.copyProperties(regionDTO, region);
-        regionRepository.saveAndFlush(region);
+        regionRepository.save(region);
         return this.convertOuter(region);
     }
 

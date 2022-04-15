@@ -66,21 +66,35 @@ class CategoryServiceImplTest {
 
     @Test
     void create() {
-        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
+        Category category = new Category();
+        category.setId(1L);
+        given(this.categoryRepository.saveAndFlush(Mockito.any(Category.class))).willReturn(category);
 
-        CategoryVO categoryVO = categoryService.create(Mockito.mock(CategoryDTO.class));
+        given(this.postsRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-        verify(this.categoryRepository, times(1)).save(Mockito.any(Category.class));
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setName("test");
+        CategoryVO categoryVO = categoryService.create(categoryDTO);
+
+        verify(this.categoryRepository, times(1)).saveAndFlush(Mockito.any(Category.class));
         Assertions.assertNotNull(categoryVO);
     }
 
     @Test
     void modify() {
-        given(this.categoryRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
+        Category category = new Category();
+        category.setId(1L);
+        given(this.categoryRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(category);
 
-        CategoryVO categoryVO = categoryService.modify("2112JK02", Mockito.mock(CategoryDTO.class));
+        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(category);
 
-        verify(this.categoryRepository, times(1)).saveAndFlush(Mockito.any(Category.class));
+        given(this.postsRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setName("test");
+        CategoryVO categoryVO = categoryService.modify("2112JK02", categoryDTO);
+
+        verify(this.categoryRepository, times(1)).save(Mockito.any(Category.class));
         Assertions.assertNotNull(categoryVO);
     }
 

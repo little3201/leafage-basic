@@ -16,7 +16,6 @@ import org.springframework.util.Assert;
 import top.leafage.common.basic.AbstractBasicService;
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 /**
@@ -62,7 +61,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     public CommentVO create(CommentDTO commentDTO) {
         Posts posts = postsRepository.getByCodeAndEnabledTrue(commentDTO.getPosts());
         if (null == posts) {
-            throw new NoSuchElementException();
+            return null;
         }
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDTO, comment);

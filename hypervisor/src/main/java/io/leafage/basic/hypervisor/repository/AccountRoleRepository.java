@@ -31,4 +31,12 @@ public interface AccountRoleRepository extends JpaRepository<AccountRole, Long> 
      * @return 关联数据集
      */
     List<AccountRole> findByRoleId(Long roleId);
+
+    /**
+     * 统计关联账号
+     *
+     * @param roleId 角色ID
+     * @return 用户数
+     */
+    long countByRoleIdAndEnabledTrue(Long roleId);
 }

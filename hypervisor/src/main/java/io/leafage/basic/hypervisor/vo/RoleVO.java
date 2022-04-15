@@ -28,6 +28,10 @@ public class RoleVO extends AbstractVO<String> implements Serializable {
      */
     private String description;
     /**
+     * 账号数
+     */
+    private long count;
+    /**
      * 是否可用
      */
     private boolean enabled;
@@ -54,6 +58,14 @@ public class RoleVO extends AbstractVO<String> implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 
     public boolean isEnabled() {

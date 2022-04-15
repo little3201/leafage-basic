@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -107,7 +108,7 @@ public class RegionController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<RegionVO> create(@RequestBody RegionDTO regionDTO) {
+    public ResponseEntity<RegionVO> create(@RequestBody @Valid RegionDTO regionDTO) {
         RegionVO vo;
         try {
             vo = regionService.create(regionDTO);

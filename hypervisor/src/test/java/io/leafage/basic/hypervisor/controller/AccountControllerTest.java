@@ -25,7 +25,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
 import java.util.Collections;
 import java.util.List;
@@ -136,6 +135,35 @@ class AccountControllerTest {
         given(this.accountService.unlock(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(patch("/account/{username}", "test").with(csrf().asHeader())).andExpect(status().isNotModified())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void create() throws Exception {
+        // 构造返回对象
+        AccountVO accountVO = new AccountVO();
+        accountVO.setNickname("test");
+        given(this.accountService.create(Mockito.any(AccountDTO.class))).willReturn(accountVO);
+
+        // 构造请求对象
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername("test");
+        mvc.perform(post("/account").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
+                .andExpect(status().isCreated())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void create_error() throws Exception {
+        given(this.accountService.create(Mockito.any(AccountDTO.class))).willThrow(new RuntimeException());
+
+        // 构造请求对象
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername("test");
+        mvc.perform(post("/account").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

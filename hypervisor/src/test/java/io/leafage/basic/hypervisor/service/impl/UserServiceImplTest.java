@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -45,13 +44,13 @@ class UserServiceImplTest {
     void create() {
         User user = new User();
         user.setId(1L);
-        given(this.userRepository.save(Mockito.any(User.class))).willReturn(user);
+        given(this.userRepository.saveAndFlush(Mockito.any(User.class))).willReturn(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstname("管理员");
         userService.create(userDTO);
 
-        verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
+        verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any(User.class));
     }
 
     @Test
@@ -64,22 +63,13 @@ class UserServiceImplTest {
         user.setLastname("test");
 
         // 保存更新信息
-        given(this.userRepository.saveAndFlush(Mockito.any(User.class))).willReturn(user);
+        given(this.userRepository.save(Mockito.any(User.class))).willReturn(user);
 
         UserDTO userDTO = new UserDTO();
         userDTO.setLastname("管理员");
         userService.modify("test", userDTO);
 
-        verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any(User.class));
-    }
-
-    @Test
-    void remove() {
-        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
-
-        userService.remove("test");
-
-        verify(this.userRepository, times(1)).saveAndFlush(Mockito.any(User.class));
+        verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
     }
 
     @Test
@@ -100,5 +90,16 @@ class UserServiceImplTest {
         boolean exist = userService.exist("test");
 
         Assertions.assertFalse(exist);
+    }
+
+    @Test
+    void remove() {
+        User user = new User();
+        user.setId(1L);
+        given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(user);
+
+        userService.remove("test");
+
+        verify(userRepository, Mockito.times(1)).deleteById(Mockito.anyLong());
     }
 }

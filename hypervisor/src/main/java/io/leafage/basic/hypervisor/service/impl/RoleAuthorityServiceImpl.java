@@ -93,6 +93,6 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
             roleAuthority.setAuthorityId(authority.getId());
             return roleAuthority;
         }).collect(Collectors.toList());
-        return roleAuthorityRepository.saveAll(roleAuthorities);
+        return roleAuthorityRepository.saveAllAndFlush(roleAuthorities);
     }
 }

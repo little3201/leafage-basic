@@ -45,7 +45,7 @@ public class NotificationServiceImpl extends ServletAbstractTreeNodeService<Noti
         Notification notification = new Notification();
         BeanUtils.copyProperties(notificationDTO, notification);
         notification.setCode(this.generateCode());
-        notificationRepository.save(notification);
+        notificationRepository.saveAndFlush(notification);
         return this.convertOuter(notification);
     }
 

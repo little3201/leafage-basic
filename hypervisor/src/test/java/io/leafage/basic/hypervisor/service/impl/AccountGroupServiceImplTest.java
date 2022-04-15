@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * user group service test
@@ -81,9 +83,11 @@ class AccountGroupServiceImplTest {
         group.setPrincipal(1L);
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(group);
 
-        given(this.accountGroupRepository.saveAll(Mockito.anyCollection())).willReturn(Mockito.anyList());
+        given(this.accountGroupRepository.saveAllAndFlush(Mockito.anyCollection())).willReturn(Mockito.anyList());
 
         List<AccountGroup> relation = userGroupService.relation("test", Collections.singleton("test"));
+
+        verify(this.accountGroupRepository, times(1)).saveAllAndFlush(Mockito.anyList());
         Assertions.assertNotNull(relation);
     }
 }

@@ -5,6 +5,7 @@ package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,14 +60,14 @@ public class PostsController {
      */
     @GetMapping("/{code}")
     public ResponseEntity<PostsVO> fetch(@PathVariable String code) {
-        PostsVO article;
+        PostsVO vo;
         try {
-            article = postsService.fetch(code);
+            vo = postsService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(article);
+        return ResponseEntity.ok(vo);
     }
 
     /**
@@ -77,14 +78,32 @@ public class PostsController {
      */
     @GetMapping("/{code}/details")
     public ResponseEntity<PostsVO> details(@PathVariable String code) {
-        PostsVO article;
+        PostsVO vo;
         try {
-            article = postsService.details(code);
+            vo = postsService.details(code);
         } catch (Exception e) {
             logger.info("Fetch posts details occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(article);
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * 查询帖子详细信息，同时viewed自增1
+     *
+     * @param code 代码
+     * @return 帖子所有信息，包括内容
+     */
+    @GetMapping("/{code}/content")
+    public ResponseEntity<ContentVO> content(@PathVariable String code) {
+        ContentVO vo;
+        try {
+            vo = postsService.content(code);
+        } catch (Exception e) {
+            logger.info("Fetch posts content occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(vo);
     }
 
     /**
@@ -113,14 +132,14 @@ public class PostsController {
      */
     @PostMapping
     public ResponseEntity<PostsVO> create(@RequestBody @Valid PostsDTO postsDTO) {
-        PostsVO postsVO;
+        PostsVO vo;
         try {
-            postsVO = postsService.create(postsDTO);
+            vo = postsService.create(postsDTO);
         } catch (Exception e) {
             logger.error("Save posts occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(postsVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
 
     /**
@@ -132,14 +151,14 @@ public class PostsController {
      */
     @PutMapping("/{code}")
     public ResponseEntity<PostsVO> modify(@PathVariable String code, @RequestBody @Valid PostsDTO postsDTO) {
-        PostsVO postsVO;
+        PostsVO vo;
         try {
-            postsVO = postsService.modify(code, postsDTO);
+            vo = postsService.modify(code, postsDTO);
         } catch (Exception e) {
             logger.error("Modify posts occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.accepted().body(postsVO);
+        return ResponseEntity.accepted().body(vo);
     }
 
     /**

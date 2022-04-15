@@ -9,7 +9,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +29,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
 
     @Override
     public Page<DictionaryVO> retrieve(int page, int size) {
-        return dictionaryRepository.findAll(PageRequest.of(page, size)).map(this::convertOuter);
+        return dictionaryRepository.findAll(PageRequest.of(page, size)).map(this::convert);
     }
 
     @Override
@@ -42,7 +41,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     @Override
     public List<DictionaryVO> lower(String code) {
         return dictionaryRepository.findBySuperiorAndEnabledTrue(code)
-                .stream().map(this::convertOuter).collect(Collectors.toList());
+                .stream().map(this::convert).collect(Collectors.toList());
     }
 
     @Override
@@ -55,9 +54,9 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
         Dictionary dictionary = new Dictionary();
         BeanUtils.copyProperties(dictionaryDTO, dictionary);
         dictionary.setCode(this.generateCode());
-        dictionaryRepository.save(dictionary);
+        dictionaryRepository.saveAndFlush(dictionary);
 
-        return this.convertOuter(dictionary);
+        return this.convert(dictionary);
     }
 
     /**
@@ -69,22 +68,6 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     private DictionaryVO convert(Dictionary dictionary) {
         DictionaryVO vo = new DictionaryVO();
         BeanUtils.copyProperties(dictionary, vo);
-        return vo;
-    }
-
-    /**
-     * 数据转换
-     *
-     * @param dictionary 信息
-     * @return DictionaryVO 输出对象
-     */
-    private DictionaryVO convertOuter(Dictionary dictionary) {
-        DictionaryVO vo = this.convert(dictionary);
-
-        if (StringUtils.hasText(dictionary.getSuperior())) {
-            Dictionary superior = dictionaryRepository.getByCodeAndEnabledTrue(dictionary.getSuperior());
-            vo.setSuperior(superior.getName());
-        }
         return vo;
     }
 }

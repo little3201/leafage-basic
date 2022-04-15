@@ -96,15 +96,15 @@ class RegionServiceImplTest {
 
     @Test
     void create() {
-        given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mockito.mock(Region.class));
+        given(this.regionRepository.saveAndFlush(Mockito.any(Region.class))).willReturn(Mockito.mock(Region.class));
 
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("test");
-        regionDTO.setZip("23234");
+        regionDTO.setAreaCode("23234");
         regionDTO.setDescription("描述");
         RegionVO regionVO = regionService.create(regionDTO);
 
-        verify(this.regionRepository, times(1)).save(Mockito.any(Region.class));
+        verify(this.regionRepository, times(1)).saveAndFlush(Mockito.any(Region.class));
         Assertions.assertNotNull(regionVO);
     }
 
@@ -117,15 +117,15 @@ class RegionServiceImplTest {
         region.setSuperior(1L);
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(region);
 
-        given(this.regionRepository.saveAndFlush(Mockito.any(Region.class))).willReturn(Mockito.mock(Region.class));
+        given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mockito.mock(Region.class));
 
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("test");
-        regionDTO.setZip("23234");
+        regionDTO.setPostalCode("23234");
         regionDTO.setDescription("描述");
         RegionVO regionVO = regionService.modify(11L, regionDTO);
 
-        verify(this.regionRepository, times(1)).saveAndFlush(Mockito.any(Region.class));
+        verify(this.regionRepository, times(1)).save(Mockito.any(Region.class));
         Assertions.assertNotNull(regionVO);
     }
 

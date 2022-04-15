@@ -55,6 +55,11 @@ create table user
    lastname             varchar(64) comment '名',
    gender               tinyint(1) comment '性别',
    birthday             date comment '生日',
+   hobbies              varchar(255) comment '兴趣爱好',
+   nationality          varchar(127) comment '民族',
+   degree               varchar(127) comment '学历',
+   company              varchar(255) comment '公司',
+   position             varchar(255) comment '职位',
    description          varchar(255) comment '描述',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) comment '修改人',
@@ -66,7 +71,6 @@ create table user
 );
 
 alter table user comment '用户';
-
 
 
 
@@ -324,6 +328,7 @@ create table notification
 (
    id                   bigint unsigned not null auto_increment comment '主键',
    code                 varchar(9) not null comment '代码',
+   title                varchar(255) comment '标题',
    content              longtext comment '内容',
    is_read              tinyint(1) comment '是否已读',
    is_enabled           tinyint(1) not null default 1 comment '是否可用',
@@ -334,3 +339,28 @@ create table notification
 );
 
 alter table notification comment '通知';
+
+
+
+drop table if exists region;
+
+/*==============================================================*/
+/* Table: region                                                */
+/*==============================================================*/
+create table region
+(
+   id                   bigint unsigned not null auto_increment comment '主键',
+   code                 varchar(9) not null comment '代码',
+   name                 varchar(64) comment '名称',
+   superior             bigint comment '上级',
+   postal_code          int comment '邮编',
+   area_code            int comment '区号',
+   description          varchar(127) comment '描述',
+   is_enabled           tinyint(1) not null default 1 comment '是否可用',
+   modifier             varchar(16) not null comment '修改人',
+   modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+   primary key (id),
+   unique key AK_code (code)
+);
+
+alter table region comment '行政区划';

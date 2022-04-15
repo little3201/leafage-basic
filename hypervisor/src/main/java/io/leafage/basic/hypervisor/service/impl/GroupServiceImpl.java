@@ -4,10 +4,11 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.GroupDTO;
+import io.leafage.basic.hypervisor.entity.Account;
 import io.leafage.basic.hypervisor.entity.Group;
-import io.leafage.basic.hypervisor.entity.User;
+import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
+import io.leafage.basic.hypervisor.repository.AccountRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.beans.BeanUtils;
@@ -35,11 +36,14 @@ import java.util.stream.Collectors;
 public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> implements GroupService {
 
     private final GroupRepository groupRepository;
-    private final UserRepository userRepository;
+    private final AccountGroupRepository accountGroupRepository;
+    private final AccountRepository accountRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, UserRepository userRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, AccountGroupRepository accountGroupRepository,
+                            AccountRepository accountRepository) {
         this.groupRepository = groupRepository;
-        this.userRepository = userRepository;
+        this.accountGroupRepository = accountGroupRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -67,9 +71,9 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         BeanUtils.copyProperties(groupDTO, group);
         group.setCode(this.generateCode());
         if (StringUtils.hasText(groupDTO.getPrincipal())) {
-            User user = userRepository.getByUsernameAndEnabledTrue(groupDTO.getPrincipal());
-            if (user != null) {
-                group.setPrincipal(user.getId());
+            Account account = accountRepository.getByUsernameAndEnabledTrue(groupDTO.getPrincipal());
+            if (account != null) {
+                group.setPrincipal(account.getId());
             }
         }
         if (StringUtils.hasText(groupDTO.getSuperior())) {
@@ -79,7 +83,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
             }
             group.setSuperior(superior.getId());
         }
-        group = groupRepository.save(group);
+        group = groupRepository.saveAndFlush(group);
         return this.convertOuter(group);
     }
 
@@ -97,12 +101,12 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
             }
         }
         if (StringUtils.hasText(groupDTO.getPrincipal())) {
-            User user = userRepository.getByUsernameAndEnabledTrue(groupDTO.getPrincipal());
-            if (user != null) {
-                group.setPrincipal(user.getId());
+            Account account = accountRepository.getByUsernameAndEnabledTrue(groupDTO.getPrincipal());
+            if (account != null) {
+                group.setPrincipal(account.getId());
             }
         }
-        group = groupRepository.saveAndFlush(group);
+        group = groupRepository.save(group);
         return this.convertOuter(group);
     }
 
@@ -122,6 +126,8 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     private GroupVO convertOuter(Group info) {
         GroupVO groupVO = new GroupVO();
         BeanUtils.copyProperties(info, groupVO);
+        long count = accountGroupRepository.countByGroupIdAndEnabledTrue(info.getId());
+        groupVO.setCount(count);
         return groupVO;
     }
 

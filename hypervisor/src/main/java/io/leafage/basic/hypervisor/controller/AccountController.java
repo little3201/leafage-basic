@@ -103,6 +103,25 @@ public class AccountController {
         return ResponseEntity.ok(exist);
     }
 
+
+    /**
+     * 新增信息.
+     *
+     * @param accountDTO 要添加的数据
+     * @return 添加后的信息，否则返回417状态码
+     */
+    @PostMapping
+    public ResponseEntity<AccountVO> create(@RequestBody @Valid AccountDTO accountDTO) {
+        AccountVO accountVO;
+        try {
+            accountVO = accountService.create(accountDTO);
+        } catch (Exception e) {
+            logger.error("Create account occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountVO);
+    }
+
     /**
      * 修改信息.
      *

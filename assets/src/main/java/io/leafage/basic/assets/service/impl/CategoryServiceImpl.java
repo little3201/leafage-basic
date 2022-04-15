@@ -60,7 +60,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
         category.setCode(this.generateCode());
-        categoryRepository.save(category);
+        category = categoryRepository.saveAndFlush(category);
         return this.convertOuter(category);
     }
 
@@ -69,7 +69,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Assert.hasText(code, MESSAGE);
         Category category = categoryRepository.findByCodeAndEnabledTrue(code);
         BeanUtils.copyProperties(categoryDTO, category);
-        categoryRepository.saveAndFlush(category);
+        category = categoryRepository.save(category);
         return this.convertOuter(category);
     }
 
@@ -89,8 +89,11 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
      * @return 输出转换后的vo对象
      */
     private CategoryVO convertOuter(Category info) {
-        CategoryVO outer = new CategoryVO();
-        BeanUtils.copyProperties(info, outer);
-        return outer;
+        CategoryVO vo = new CategoryVO();
+        BeanUtils.copyProperties(info, vo);
+
+        long count = postsRepository.countByCategoryId(info.getId());
+        vo.setCount(count);
+        return vo;
     }
 }

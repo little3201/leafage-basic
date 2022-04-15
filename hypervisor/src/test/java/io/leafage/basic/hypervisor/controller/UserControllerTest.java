@@ -18,9 +18,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -63,35 +63,6 @@ class UserControllerTest {
     }
 
     @Test
-    void create() throws Exception {
-        // 构造返回对象
-        UserVO userVO = new UserVO();
-        userVO.setFirstname("test");
-        given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(userVO);
-
-        // 构造请求对象
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername("test");
-        mvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.firstname").value("test"))
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void create_error() throws Exception {
-        given(this.userService.create(Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
-
-        // 构造请求对象
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername("test");
-        mvc.perform(post("/user").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
-                .andExpect(status().isExpectationFailed())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
     void modify() throws Exception {
         // 构造返回对象
         UserVO userVO = new UserVO();
@@ -117,23 +88,6 @@ class UserControllerTest {
         mvc.perform(put("/user/{username}", "test").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void remove() throws Exception {
-        this.userService.remove(Mockito.anyString());
-
-        mvc.perform(delete("/user/{username}", "test").with(csrf().asHeader())).andExpect(status().isOk())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void remove_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.userService).remove(Mockito.anyString());
-
-        mvc.perform(delete("/user/{username}", "test").with(csrf().asHeader()))
-                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

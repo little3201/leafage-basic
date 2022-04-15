@@ -17,6 +17,12 @@ public class GroupDTO implements Serializable {
     private static final long serialVersionUID = 5146594305386328379L;
 
     /**
+     * 名称
+     */
+    @NotBlank
+    @Size(max = 16)
+    private String name;
+    /**
      * 负责人
      */
     private String principal;
@@ -24,12 +30,6 @@ public class GroupDTO implements Serializable {
      * 上级
      */
     private String superior;
-    /**
-     * 名称
-     */
-    @NotBlank
-    @Size(max = 16)
-    private String name;
     /**
      * 描述
      */

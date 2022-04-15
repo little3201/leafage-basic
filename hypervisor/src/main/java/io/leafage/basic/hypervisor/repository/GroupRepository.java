@@ -30,4 +30,5 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
      * @return 结果信息
      */
     List<Group> findByEnabledTrue();
+
 }

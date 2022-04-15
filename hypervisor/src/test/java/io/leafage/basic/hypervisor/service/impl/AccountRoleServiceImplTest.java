@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * user role service test
@@ -80,9 +82,11 @@ class AccountRoleServiceImplTest {
         role.setId(2L);
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(role);
 
-        given(this.accountRoleRepository.saveAll(Mockito.anyCollection())).willReturn(Mockito.anyList());
+        given(this.accountRoleRepository.saveAllAndFlush(Mockito.anyCollection())).willReturn(Mockito.anyList());
 
         List<AccountRole> relation = userRoleService.relation("test", Collections.singleton("test"));
+
+        verify(this.accountRoleRepository, times(1)).saveAllAndFlush(Mockito.anyList());
         Assertions.assertNotNull(relation);
     }
 }

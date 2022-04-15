@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -10,13 +11,11 @@ import java.io.Serializable;
 public class RegionDTO implements Serializable {
 
     private static final long serialVersionUID = -7556508514406968775L;
-    /**
-     * 代码
-     */
-    private Long code;
+
     /**
      * 名称
      */
+    @NotBlank
     private String name;
     /**
      * 上级
@@ -25,19 +24,16 @@ public class RegionDTO implements Serializable {
     /**
      * 邮编
      */
-    private String zip;
+    private String postalCode;
+    /**
+     * 区号
+     */
+    private String areaCode;
     /**
      * 描述
      */
     private String description;
 
-    public Long getCode() {
-        return code;
-    }
-
-    public void setCode(Long code) {
-        this.code = code;
-    }
 
     public String getName() {
         return name;
@@ -55,12 +51,20 @@ public class RegionDTO implements Serializable {
         this.superior = superior;
     }
 
-    public String getZip() {
-        return zip;
+    public String getPostalCode() {
+        return postalCode;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
 
     public String getDescription() {

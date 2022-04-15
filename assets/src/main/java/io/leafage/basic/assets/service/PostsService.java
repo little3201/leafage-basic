@@ -4,6 +4,7 @@
 package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.PostsDTO;
+import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.springframework.data.domain.Page;
@@ -33,4 +34,12 @@ public interface PostsService extends ServletBasicService<PostsDTO, PostsVO, Str
      * @return 查询结果
      */
     PostsContentVO details(String code);
+
+    /**
+     * 根据代码查询内容
+     *
+     * @param code 代码
+     * @return 详细信息
+     */
+    ContentVO content(String code);
 }

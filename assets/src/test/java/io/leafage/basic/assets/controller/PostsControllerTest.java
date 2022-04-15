@@ -6,6 +6,7 @@ package io.leafage.basic.assets.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -93,6 +95,7 @@ class PostsControllerTest {
     void details() throws Exception {
         PostsContentVO contentVO = new PostsContentVO();
         contentVO.setTitle("test");
+        contentVO.setCatalog("目录");
         given(this.postsService.details(Mockito.anyString())).willReturn(contentVO);
 
         mvc.perform(get("/posts/{code}/details", "21389KO6")).andExpect(status().isOk())
@@ -104,6 +107,25 @@ class PostsControllerTest {
         given(this.postsService.details(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/posts/{code}/details", "21389KO6")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void content() throws Exception {
+        ContentVO contentVO = new ContentVO();
+        contentVO.setContent("test");
+        contentVO.setCatalog("目录");
+        given(this.postsService.content(Mockito.anyString())).willReturn(contentVO);
+
+        mvc.perform(get("/posts/{code}/content", "21389KO6")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").value("test")).andDo(print()).andReturn();
+    }
+
+    @Test
+    void content_error() throws Exception {
+        given(this.postsService.content(Mockito.anyString())).willThrow(new RuntimeException());
+
+        mvc.perform(get("/posts/{code}/content", "21389KO6")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -128,6 +150,7 @@ class PostsControllerTest {
         // 构造返回对象
         PostsVO postsVO = new PostsVO();
         postsVO.setTitle("test");
+        postsVO.setTags(Set.of("tag"));
         given(this.postsService.create(Mockito.any(PostsDTO.class))).willReturn(postsVO);
 
         // 构造请求对象

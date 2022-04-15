@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.dto;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -14,16 +15,25 @@ public class NotificationDTO implements Serializable {
     /**
      * 内容
      */
-    private String content;
+    @NotBlank
+    private String title;
     /**
-     * 是否已读
+     * 内容
      */
-    private boolean read;
+    @NotBlank
+    private String content;
     /**
      * 接收人
      */
     private String receiver;
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getContent() {
         return content;
@@ -31,14 +41,6 @@ public class NotificationDTO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
     }
 
     public String getReceiver() {

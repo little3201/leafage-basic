@@ -87,6 +87,6 @@ public class AccountGroupServiceImpl implements AccountGroupService {
             userRole.setGroupId(group.getId());
             return userRole;
         }).collect(Collectors.toList());
-        return accountGroupRepository.saveAll(accountGroups);
+        return accountGroupRepository.saveAllAndFlush(accountGroups);
     }
 }

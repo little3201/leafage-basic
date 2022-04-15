@@ -11,6 +11,7 @@ import io.leafage.basic.assets.entity.PostsContent;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsContentRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -94,12 +95,68 @@ class PostsServiceImplTest {
     }
 
     @Test
+    void content_posts_null() {
+        given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
+
+        ContentVO contentVO = postsService.content("2112JK02");
+
+        Assertions.assertNull(contentVO);
+    }
+
+    @Test
+    void content() {
+        Posts posts = new Posts();
+        posts.setId(12L);
+        posts.setTags("测试,test");
+        posts.setCategoryId(2L);
+        given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(posts);
+
+        PostsContent postsContent = new PostsContent();
+        postsContent.setContent("测试内容");
+        postsContent.setPostsId(posts.getId());
+        postsContent.setCatalog("目录");
+        given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(postsContent);
+
+        ContentVO contentVO = postsService.content("2112JK02");
+
+        Assertions.assertNotNull(contentVO);
+    }
+
+    @Test
     void exist() {
         given(this.postsRepository.existsByTitle(Mockito.anyString())).willReturn(true);
 
         boolean exist = postsService.exist("spring");
 
         Assertions.assertTrue(exist);
+    }
+
+    @Test
+    void create_content_null() {
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
+
+        Posts posts = new Posts();
+        posts.setId(12L);
+        posts.setTags("测试,test");
+        given(this.postsRepository.saveAndFlush(Mockito.any(Posts.class))).willReturn(posts);
+
+        PostsContent postsContent = new PostsContent();
+        postsContent.setContent("测试内容");
+        postsContent.setPostsId(posts.getId());
+        postsContent.setCatalog("目录");
+        given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(null);
+
+        given(this.postsContentRepository.saveAndFlush(Mockito.any(PostsContent.class))).willReturn(postsContent);
+
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setCategory("2112JOP2");
+        postsDTO.setTags(Set.of(posts.getTags().split(",")));
+        PostsVO postsVO = postsService.create(postsDTO);
+
+        posts.setId(postsContent.getPostsId());
+        verify(this.postsRepository, times(1)).saveAndFlush(Mockito.any(Posts.class));
+        verify(this.postsContentRepository, times(1)).saveAndFlush(Mockito.any(PostsContent.class));
+        Assertions.assertNotNull(postsVO);
     }
 
     @Test
@@ -117,7 +174,7 @@ class PostsServiceImplTest {
         postsContent.setCatalog("目录");
         given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(postsContent);
 
-        given(this.postsContentRepository.save(Mockito.any(PostsContent.class))).willReturn(postsContent);
+        given(this.postsContentRepository.saveAndFlush(Mockito.any(PostsContent.class))).willReturn(postsContent);
 
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setCategory("2112JOP2");
@@ -126,26 +183,59 @@ class PostsServiceImplTest {
 
         posts.setId(postsContent.getPostsId());
         verify(this.postsRepository, times(1)).saveAndFlush(Mockito.any(Posts.class));
-        verify(this.postsContentRepository, times(1)).save(Mockito.any(PostsContent.class));
+        verify(this.postsContentRepository, times(1)).saveAndFlush(Mockito.any(PostsContent.class));
         Assertions.assertNotNull(postsVO);
     }
 
     @Test
-    void modify() {
+    void modify_category_null() {
         given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Posts.class));
 
         given(this.postsRepository.save(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
 
         given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostsContent.class));
 
-        given(this.postsContentRepository.saveAndFlush(Mockito.any(PostsContent.class))).willReturn(Mockito.mock(PostsContent.class));
+        given(this.postsContentRepository.save(Mockito.any(PostsContent.class))).willReturn(Mockito.mock(PostsContent.class));
 
         PostsDTO postsDTO = new PostsDTO();
         postsDTO.setCategory("2112JOP2");
         PostsVO postsVO = postsService.modify("2112JK02", postsDTO);
 
         verify(this.postsRepository, times(1)).save(Mockito.any(Posts.class));
-        verify(this.postsContentRepository, times(1)).saveAndFlush(Mockito.any(PostsContent.class));
+        verify(this.postsContentRepository, times(1)).save(Mockito.any(PostsContent.class));
+        Assertions.assertNotNull(postsVO);
+    }
+
+    @Test
+    void modify_posts_null() {
+        given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
+
+        PostsVO postsVO = postsService.modify("2112JK02", Mockito.mock(PostsDTO.class));
+
+        Assertions.assertNull(postsVO);
+    }
+
+
+    @Test
+    void modify() {
+        given(this.postsRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Posts.class));
+
+        Category category = new Category();
+        category.setId(1L);
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(category);
+
+        given(this.postsRepository.save(Mockito.any(Posts.class))).willReturn(Mockito.mock(Posts.class));
+
+        given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostsContent.class));
+
+        given(this.postsContentRepository.save(Mockito.any(PostsContent.class))).willReturn(Mockito.mock(PostsContent.class));
+
+        PostsDTO postsDTO = new PostsDTO();
+        postsDTO.setCategory("2112JOP2");
+        PostsVO postsVO = postsService.modify("2112JK02", postsDTO);
+
+        verify(this.postsRepository, times(1)).save(Mockito.any(Posts.class));
+        verify(this.postsContentRepository, times(1)).save(Mockito.any(PostsContent.class));
         Assertions.assertNotNull(postsVO);
     }
 
@@ -157,12 +247,12 @@ class PostsServiceImplTest {
 
         given(this.postsContentRepository.findByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(null);
 
-        given(this.postsContentRepository.saveAndFlush(Mockito.any(PostsContent.class))).willReturn(Mockito.mock(PostsContent.class));
+        given(this.postsContentRepository.save(Mockito.any(PostsContent.class))).willReturn(Mockito.mock(PostsContent.class));
 
         PostsVO postsVO = postsService.modify("2112JK02", Mockito.mock(PostsDTO.class));
 
         verify(this.postsRepository, times(1)).save(Mockito.any(Posts.class));
-        verify(this.postsContentRepository, times(1)).saveAndFlush(Mockito.any(PostsContent.class));
+        verify(this.postsContentRepository, times(1)).save(Mockito.any(PostsContent.class));
         Assertions.assertNotNull(postsVO);
     }
 

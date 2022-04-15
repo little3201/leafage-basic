@@ -88,6 +88,6 @@ public class AccountRoleServiceImpl implements AccountRoleService {
             accountRole.setRoleId(role.getId());
             return accountRole;
         }).collect(Collectors.toList());
-        return accountRoleRepository.saveAll(accountRoles);
+        return accountRoleRepository.saveAllAndFlush(accountRoles);
     }
 }

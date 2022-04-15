@@ -36,6 +36,10 @@ public class AuthorityVO extends AbstractVO<String> implements Serializable {
      */
     private String path;
     /**
+     * 角色数
+     */
+    private long count;
+    /**
      * 描述
      */
     private String description;
@@ -67,6 +71,14 @@ public class AuthorityVO extends AbstractVO<String> implements Serializable {
 
     public void setType(Character type) {
         this.type = type;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 
     public String getIcon() {

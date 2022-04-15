@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.vo;
 
+import top.leafage.common.basic.AbstractVO;
 import java.io.Serializable;
 
 /**
@@ -7,14 +8,10 @@ import java.io.Serializable;
  *
  * @author liwenqiang 2022-04-06 17:33
  */
-public class DictionaryVO implements Serializable {
+public class DictionaryVO extends AbstractVO<String> implements Serializable {
 
     private static final long serialVersionUID = -7090071767983351672L;
 
-    /**
-     * 代码
-     */
-    private String code;
     /**
      * 名称
      */
@@ -36,14 +33,6 @@ public class DictionaryVO implements Serializable {
      */
     private boolean enabled;
 
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getName() {
         return name;

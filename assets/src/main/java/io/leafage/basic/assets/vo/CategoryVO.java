@@ -6,8 +6,6 @@ package io.leafage.basic.assets.vo;
 import top.leafage.common.basic.AbstractVO;
 import java.io.Serializable;
 
-import java.io.Serializable;
-
 /**
  * VO class for Category
  *
@@ -16,10 +14,11 @@ import java.io.Serializable;
 public class CategoryVO extends AbstractVO<String> implements Serializable {
 
     private static final long serialVersionUID = 6078275280120953852L;
+
     /**
      * 别名
      */
-    private String alias;
+    private String name;
     /**
      * 贴子数
      */
@@ -29,12 +28,12 @@ public class CategoryVO extends AbstractVO<String> implements Serializable {
      */
     private String description;
 
-    public String getAlias() {
-        return alias;
+    public String getName() {
+        return name;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getCount() {

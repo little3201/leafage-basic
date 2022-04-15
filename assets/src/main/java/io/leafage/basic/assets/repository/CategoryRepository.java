@@ -48,7 +48,7 @@ public interface CategoryRepository extends ReactiveMongoRepository<Category, Ob
      * @param alias 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByAlias(String alias);
+    Mono<Boolean> existsByName(String alias);
 
     /**
      * 统计

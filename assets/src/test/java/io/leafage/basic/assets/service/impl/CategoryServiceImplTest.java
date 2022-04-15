@@ -61,7 +61,7 @@ class CategoryServiceImplTest {
 
     @Test
     void exist() {
-        given(this.categoryRepository.existsByAlias(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.categoryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(categoryService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
     }
@@ -75,7 +75,7 @@ class CategoryServiceImplTest {
         given(this.postsRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
 
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setAlias("test");
+        categoryDTO.setName("test");
         StepVerifier.create(categoryService.create(categoryDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -90,7 +90,7 @@ class CategoryServiceImplTest {
         given(this.postsRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
 
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setAlias("test");
+        categoryDTO.setName("test");
         StepVerifier.create(categoryService.modify("21318H9FH", categoryDTO)).expectNextCount(1).verifyComplete();
     }
 

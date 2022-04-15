@@ -39,7 +39,7 @@ class CategoryControllerTest {
     @Test
     void retrieve() {
         CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setAlias("test");
+        categoryVO.setName("test");
         Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
         given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
@@ -59,12 +59,12 @@ class CategoryControllerTest {
     @Test
     void fetch() {
         CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setAlias("test");
+        categoryVO.setName("test");
         given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoryVO));
 
         webTestClient.get().uri("/category/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk()
-                .expectBody().jsonPath("$.alias").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -80,7 +80,7 @@ class CategoryControllerTest {
         given(this.categoryService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/category/exist")
-                .queryParam("alias", "test").build()).exchange().expectStatus().isOk();
+                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test
@@ -88,23 +88,23 @@ class CategoryControllerTest {
         given(this.categoryService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/category/exist")
-                .queryParam("alias", "test").build()).exchange().expectStatus().isNoContent();
+                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
     void create() {
         // 构造返回对象
         CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setAlias("test");
+        categoryVO.setName("test");
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
 
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setAlias("test");
+        categoryDTO.setName("test");
         webTestClient.post().uri("/category").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.alias").isNotEmpty();
+                .expectBody().jsonPath("$.name").isNotEmpty();
     }
 
     @Test
@@ -113,7 +113,7 @@ class CategoryControllerTest {
 
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setAlias("test");
+        categoryDTO.setName("test");
         webTestClient.post().uri("/category").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().is4xxClientError();
@@ -123,16 +123,16 @@ class CategoryControllerTest {
     void modify() {
         // 构造返回对象
         CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setAlias("test");
+        categoryVO.setName("test");
         given(this.categoryService.modify(Mockito.anyString(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
 
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setAlias("test");
+        categoryDTO.setName("test");
         webTestClient.put().uri("/category/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.alias").isNotEmpty();
+                .expectBody().jsonPath("$.name").isNotEmpty();
     }
 
     @Test
@@ -141,7 +141,7 @@ class CategoryControllerTest {
 
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setAlias("test");
+        categoryDTO.setName("test");
         webTestClient.put().uri("/category/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isNotModified();

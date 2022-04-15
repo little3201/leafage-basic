@@ -20,9 +20,9 @@ public class Category extends AbstractDocument {
     @Indexed(unique = true)
     private String code;
     /**
-     * 别名
+     * 名称
      */
-    private String alias;
+    private String name;
     /**
      * 描述
      */
@@ -37,12 +37,12 @@ public class Category extends AbstractDocument {
         this.code = code;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getName() {
+        return name;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

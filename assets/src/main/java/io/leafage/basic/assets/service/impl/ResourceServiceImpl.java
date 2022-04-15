@@ -126,7 +126,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
             BeanUtils.copyProperties(r, outer);
             return outer;
         }).flatMap(resourceVO -> categoryRepository.findById(resource.getCategoryId()).map(category -> {
-            resourceVO.setCategory(category.getAlias());
+            resourceVO.setCategory(category.getName());
             return resourceVO;
         }).switchIfEmpty(Mono.just(resourceVO)));
     }

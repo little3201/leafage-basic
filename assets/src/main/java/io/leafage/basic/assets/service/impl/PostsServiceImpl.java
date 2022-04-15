@@ -91,7 +91,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> {
                             PostsContentVO pcv = new PostsContentVO();
                             BeanUtils.copyProperties(posts, pcv);
-                            pcv.setCategory(category.getAlias());
+                            pcv.setCategory(category.getName());
                             return pcv;
                         }).flatMap(pcv -> postsContentService.fetchByPostsId(posts.getId()).map(contentInfo -> {
                             pcv.setContent(contentInfo.getContent());
@@ -243,7 +243,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
             return postsVO;
         }).flatMap(postsVO -> categoryRepository.findById(posts.getCategoryId())
                 .map(category -> {
-                    postsVO.setCategory(category.getAlias());
+                    postsVO.setCategory(category.getName());
                     return postsVO;
                 }).switchIfEmpty(Mono.just(postsVO)));
     }

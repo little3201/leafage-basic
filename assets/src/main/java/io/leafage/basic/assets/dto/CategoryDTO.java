@@ -16,21 +16,21 @@ public class CategoryDTO implements Serializable {
     private static final long serialVersionUID = -6972802402513706361L;
 
     /**
-     * 别名
+     * 名称
      */
     @NotBlank
-    private String alias;
+    private String name;
     /**
      * 描述
      */
     private String description;
 
-    public String getAlias() {
-        return alias;
+    public String getName() {
+        return name;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

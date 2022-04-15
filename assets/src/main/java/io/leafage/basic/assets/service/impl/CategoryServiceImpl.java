@@ -110,8 +110,8 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Mono<Boolean> exist(String alias) {
-        Assert.hasText(alias, "alias is blank.");
-        return categoryRepository.existsByAlias(alias);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
+        return categoryRepository.existsByName(name);
     }
 }

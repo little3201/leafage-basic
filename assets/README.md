@@ -29,5 +29,5 @@
 |               依赖               |            说明            |
 |:-------------------------------:|:-------------------------:|
 |         Spring Boot Web         |           web框架          |
-|         Spring Data Jpa         |          数据访问层         |
-|               mysql             |           数据存储          |
+|  Spring Data Reactive Mongodb   |          数据访问层         |
+|               mongodb           |           数据存储          |

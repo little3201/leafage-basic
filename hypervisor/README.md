@@ -1,8 +1,8 @@
 # hypervisor
 
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2021.0.0-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.6.1-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2021.0.1-green.svg" alt="Coverage Status">
+ <img src="https://img.shields.io/badge/Spring%20Boot-2.6.6-green.svg" alt="Downloads">
 </p>
 
 服务相关接口，主要包含：

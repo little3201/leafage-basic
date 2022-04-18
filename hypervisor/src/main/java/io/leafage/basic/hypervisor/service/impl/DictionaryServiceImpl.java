@@ -9,6 +9,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,18 +36,21 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
 
     @Override
     public DictionaryVO fetch(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Dictionary dictionary = dictionaryRepository.getByCodeAndEnabledTrue(code);
         return this.convert(dictionary);
     }
 
     @Override
     public List<DictionaryVO> lower(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return dictionaryRepository.findBySuperiorAndEnabledTrue(code)
                 .stream().map(this::convert).collect(Collectors.toList());
     }
 
     @Override
     public boolean exist(String name) {
+        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
         return dictionaryRepository.existsByName(name);
     }
 

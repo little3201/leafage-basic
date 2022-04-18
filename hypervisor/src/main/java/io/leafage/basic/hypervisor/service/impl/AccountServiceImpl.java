@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import top.leafage.common.basic.ValidMessage;
 
 /**
  * account service impl.
@@ -21,8 +22,6 @@ import org.springframework.util.Assert;
  **/
 @Service
 public class AccountServiceImpl implements AccountService {
-
-    private static final String MESSAGE = "username is blank.";
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
@@ -40,7 +39,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountVO unlock(String username) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         account.setAccountLocked(false);
         accountRepository.saveAndFlush(account);
@@ -49,7 +48,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountVO modify(String username, AccountDTO accountDTO) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(accountDTO, account);
         accountRepository.save(account);
@@ -58,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void remove(String username) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         accountRepository.deleteById(account.getId());
 
@@ -68,13 +67,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountVO fetch(String username) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         return this.convertOuter(account);
     }
 
     @Override
     public boolean exist(String username) {
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         return accountRepository.existsByUsername(username);
     }
 

@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import top.leafage.common.basic.ValidMessage;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +41,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
 
     @Override
     public List<AccountVO> accounts(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Group group = groupRepository.getByCodeAndEnabledTrue(code);
         if (group == null) {
             return Collections.emptyList();
@@ -55,7 +57,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
 
     @Override
     public List<GroupVO> groups(String username) {
-        Assert.hasText(username, "username is blank");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         if (account == null) {
             return Collections.emptyList();
@@ -74,7 +76,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
 
     @Override
     public List<AccountGroup> relation(String username, Set<String> groups) {
-        Assert.hasText(username, "username is blank");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Assert.notNull(groups, "groups is null");
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         if (account == null) {

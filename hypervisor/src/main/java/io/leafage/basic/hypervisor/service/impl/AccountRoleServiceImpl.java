@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import top.leafage.common.basic.ValidMessage;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
 
     @Override
     public List<AccountVO> accounts(String code) {
-        Assert.hasText(code, "code is blank.");
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         if (role == null) {
             return Collections.emptyList();
@@ -56,7 +57,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
 
     @Override
     public List<RoleVO> roles(String username) {
-        Assert.hasText(username, "username is blank.");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         if (account == null) {
             return Collections.emptyList();
@@ -75,7 +76,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
 
     @Override
     public List<AccountRole> relation(String username, Set<String> roles) {
-        Assert.hasText(username, "username is blank.");
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Assert.notNull(roles, "roles is empty.");
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         if (account == null) {

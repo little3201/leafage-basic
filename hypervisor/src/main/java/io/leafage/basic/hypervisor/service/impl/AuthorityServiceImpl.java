@@ -24,6 +24,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,6 +64,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
 
     @Override
     public List<TreeNode> authorities(String username, Character type) {
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Account account = accountRepository.getByUsernameAndEnabledTrue(username);
         if (account == null) {
             throw new NoSuchElementException("Not Found User.");
@@ -105,7 +107,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
 
     @Override
     public AuthorityVO modify(String code, AuthorityDTO authorityDTO) {
-        Assert.hasText(code, "code must not be blank.");
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Authority authority = authorityRepository.getByCodeAndEnabledTrue(code);
         if (authority == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -123,7 +125,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
 
     @Override
     public void remove(String code) {
-        Assert.hasText(code, "code must not be blank.");
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Authority authority = authorityRepository.getByCodeAndEnabledTrue(code);
         authorityRepository.deleteById(authority.getId());
     }

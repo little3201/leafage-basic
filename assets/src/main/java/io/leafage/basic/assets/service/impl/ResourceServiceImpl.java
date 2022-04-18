@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.ValidMessage;
 import java.util.Optional;
 
 /**
@@ -23,8 +24,6 @@ import java.util.Optional;
  **/
 @Service
 public class ResourceServiceImpl extends AbstractBasicService implements ResourceService {
-
-    private static final String MESSAGE = "code is blank.";
 
     private final ResourceRepository resourceRepository;
     private final CategoryRepository categoryRepository;
@@ -45,7 +44,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
 
     @Override
     public ResourceVO fetch(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Resource resource = resourceRepository.getByCodeAndEnabledTrue(code);
         if (resource == null) {
             return null;
@@ -70,7 +69,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
 
     @Override
     public ResourceVO modify(String code, ResourceDTO resourceDTO) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Resource resource = resourceRepository.getByCodeAndEnabledTrue(code);
         if (resource == null) {
             return null;

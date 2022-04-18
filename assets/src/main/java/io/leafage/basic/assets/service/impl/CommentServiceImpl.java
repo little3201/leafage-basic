@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.ValidMessage;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
 
     @Override
     public List<CommentVO> relation(String code) {
-        Assert.hasText(code, "code must not be blank.");
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
         if (null == posts) {
             return Collections.emptyList();

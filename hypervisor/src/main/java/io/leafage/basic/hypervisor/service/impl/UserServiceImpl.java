@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.ValidMessage;
 
 /**
  * user service impl.
@@ -21,8 +22,6 @@ import top.leafage.common.basic.AbstractBasicService;
 @Service
 public class UserServiceImpl extends AbstractBasicService implements UserService {
 
-    private static final String MESSAGE = "username must not blank.";
-
     private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
@@ -31,7 +30,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public UserVO fetch(String username) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         return this.convertOuter(user);
     }
@@ -51,7 +50,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public UserVO modify(String username, UserDTO userDTO) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         BeanUtils.copyProperties(userDTO, user);
         user = userRepository.save(user);
@@ -60,7 +59,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public void remove(String username) {
-        Assert.hasText(username, MESSAGE);
+        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         User user = userRepository.getByUsernameAndEnabledTrue(username);
         userRepository.deleteById(user.getId());
     }

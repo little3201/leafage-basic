@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
 /**
@@ -35,7 +36,7 @@ public class NotificationServiceImpl extends ServletAbstractTreeNodeService<Noti
 
     @Override
     public NotificationVO fetch(String code) {
-        Assert.notNull(code, "code must not null.");
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Notification notification = notificationRepository.getByCodeAndEnabledTrue(code);
         return this.convertOuter(notification);
     }

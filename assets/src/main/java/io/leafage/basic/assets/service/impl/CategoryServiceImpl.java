@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.ValidMessage;
 
 /**
  * category service impl.
@@ -26,8 +27,6 @@ import top.leafage.common.basic.AbstractBasicService;
  **/
 @Service
 public class CategoryServiceImpl extends AbstractBasicService implements CategoryService {
-
-    private static final String MESSAGE = "code is blank.";
 
     private final CategoryRepository categoryRepository;
     private final PostsRepository postsRepository;
@@ -50,7 +49,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public CategoryVO fetch(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Category category = categoryRepository.getByCodeAndEnabledTrue(code);
         return this.convertOuter(category);
     }
@@ -66,7 +65,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public CategoryVO modify(String code, CategoryDTO categoryDTO) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Category category = categoryRepository.getByCodeAndEnabledTrue(code);
         BeanUtils.copyProperties(categoryDTO, category);
         category = categoryRepository.save(category);
@@ -75,7 +74,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
 
     @Override
     public void remove(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Category category = categoryRepository.getByCodeAndEnabledTrue(code);
         if (category != null) {
             categoryRepository.deleteById(category.getId());

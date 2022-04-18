@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.Collections;
 import java.util.List;
@@ -89,6 +90,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
 
     @Override
     public GroupVO modify(String code, GroupDTO groupDTO) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Group group = groupRepository.getByCodeAndEnabledTrue(code);
         if (group == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -112,7 +114,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
 
     @Override
     public void remove(String code) {
-        Assert.hasText(code, "code must not be blank.");
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Group group = groupRepository.getByCodeAndEnabledTrue(code);
         groupRepository.deleteById(group.getId());
     }

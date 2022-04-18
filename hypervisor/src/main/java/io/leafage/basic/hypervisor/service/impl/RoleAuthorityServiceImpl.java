@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import top.leafage.common.basic.ValidMessage;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +28,6 @@ import java.util.stream.Collectors;
 @Service
 public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
-    private static final String MESSAGE = "code is blank.";
-
     private final RoleRepository roleRepository;
     private final RoleAuthorityRepository roleAuthorityRepository;
     private final AuthorityRepository authorityRepository;
@@ -42,7 +41,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public List<AuthorityVO> authorities(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         if (role == null) {
             return Collections.emptyList();
@@ -61,7 +60,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public List<RoleVO> roles(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Authority authority = authorityRepository.getByCodeAndEnabledTrue(code);
         if (authority == null) {
             return Collections.emptyList();
@@ -80,7 +79,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
 
     @Override
     public List<RoleAuthority> relation(String code, Set<String> authorities) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Assert.notNull(authorities, "authorities is empty.");
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         if (role == null) {

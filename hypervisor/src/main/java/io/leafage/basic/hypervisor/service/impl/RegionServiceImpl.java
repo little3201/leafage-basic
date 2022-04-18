@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import top.leafage.common.basic.ValidMessage;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,20 +36,21 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public List<RegionVO> lower(Long code) {
+        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
         return regionRepository.findBySuperiorAndEnabledTrue(code)
                 .stream().map(this::convertOuter).collect(Collectors.toList());
     }
 
     @Override
     public RegionVO fetch(Long code) {
-        Assert.notNull(code, "code must not null.");
+        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
         Region region = regionRepository.getByCodeAndEnabledTrue(code);
         return this.convertOuter(region);
     }
 
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, "name must not null.");
+        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
         return regionRepository.existsByName(name);
     }
 
@@ -62,6 +64,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public RegionVO modify(Long code, RegionDTO regionDTO) {
+        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
         Region region = regionRepository.getByCodeAndEnabledTrue(code);
         BeanUtils.copyProperties(regionDTO, region);
         regionRepository.save(region);
@@ -70,7 +73,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public void remove(Long code) {
-        Assert.notNull(code, "code must not be null.");
+        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
         Region region = regionRepository.getByCodeAndEnabledTrue(code);
         regionRepository.deleteById(region.getId());
     }

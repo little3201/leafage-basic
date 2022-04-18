@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.TreeNode;
+import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.Collections;
 import java.util.List;
@@ -60,6 +61,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
 
     @Override
     public RoleVO fetch(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         return this.convertOuter(role);
     }
@@ -81,6 +83,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
 
     @Override
     public RoleVO modify(String code, RoleDTO roleDTO) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         if (role == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -98,7 +101,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
 
     @Override
     public void remove(String code) {
-        Assert.hasText(code, "code must not be blank.");
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         Role role = roleRepository.getByCodeAndEnabledTrue(code);
         roleRepository.deleteById(role.getId());
     }

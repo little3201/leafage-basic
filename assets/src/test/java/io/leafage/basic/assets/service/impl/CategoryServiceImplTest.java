@@ -56,7 +56,7 @@ class CategoryServiceImplTest {
 
     @Test
     void fetch() {
-        given(this.categoryRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
 
         CategoryVO categoryVO = categoryService.fetch("21319IDJ0");
 
@@ -84,7 +84,7 @@ class CategoryServiceImplTest {
     void modify() {
         Category category = new Category();
         category.setId(1L);
-        given(this.categoryRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(category);
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(category);
 
         given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(category);
 
@@ -100,7 +100,7 @@ class CategoryServiceImplTest {
 
     @Test
     void remove() {
-        given(this.categoryRepository.findByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
+        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
 
         categoryService.remove("2112JK02");
 

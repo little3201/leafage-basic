@@ -21,5 +21,5 @@ public interface PostsContentRepository extends JpaRepository<PostsContent, Stri
      * @param postsId 帖子ID
      * @return 查询结果
      */
-    PostsContent findByPostsIdAndEnabledTrue(Long postsId);
+    PostsContent getByPostsIdAndEnabledTrue(Long postsId);
 }

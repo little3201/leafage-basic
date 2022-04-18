@@ -91,6 +91,42 @@ class PostsControllerTest {
                 .andDo(print()).andReturn();
     }
 
+
+    @Test
+    void next() throws Exception {
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.next(Mockito.anyString())).willReturn(postsVO);
+
+        mvc.perform(get("/posts/{code}/next", "21389KO6")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
+    }
+
+    @Test
+    void next_error() throws Exception {
+        given(this.postsService.next(Mockito.anyString())).willThrow(new RuntimeException());
+        mvc.perform(get("/posts/{code}/next", "21389KO6")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+
+    @Test
+    void previous() throws Exception {
+        PostsVO postsVO = new PostsVO();
+        postsVO.setTitle("test");
+        given(this.postsService.previous(Mockito.anyString())).willReturn(postsVO);
+
+        mvc.perform(get("/posts/{code}/previous", "21389KO6")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
+    }
+
+    @Test
+    void previous_error() throws Exception {
+        given(this.postsService.previous(Mockito.anyString())).willThrow(new RuntimeException());
+        mvc.perform(get("/posts/{code}/previous", "21389KO6")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
     @Test
     void details() throws Exception {
         PostsContentVO contentVO = new PostsContentVO();

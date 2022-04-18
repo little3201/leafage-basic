@@ -42,4 +42,20 @@ public interface PostsService extends ServletBasicService<PostsDTO, PostsVO, Str
      * @return 详细信息
      */
     ContentVO content(String code);
+
+    /**
+     * 下一篇
+     *
+     * @param code 代码
+     * @return 信息
+     */
+    PostsVO next(String code);
+
+    /**
+     * 上一篇
+     *
+     * @param code 代码
+     * @return 信息
+     */
+    PostsVO previous(String code);
 }

@@ -51,7 +51,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     @Override
     public CategoryVO fetch(String code) {
         Assert.hasText(code, MESSAGE);
-        Category category = categoryRepository.findByCodeAndEnabledTrue(code);
+        Category category = categoryRepository.getByCodeAndEnabledTrue(code);
         return this.convertOuter(category);
     }
 
@@ -67,7 +67,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     @Override
     public CategoryVO modify(String code, CategoryDTO categoryDTO) {
         Assert.hasText(code, MESSAGE);
-        Category category = categoryRepository.findByCodeAndEnabledTrue(code);
+        Category category = categoryRepository.getByCodeAndEnabledTrue(code);
         BeanUtils.copyProperties(categoryDTO, category);
         category = categoryRepository.save(category);
         return this.convertOuter(category);
@@ -76,7 +76,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     @Override
     public void remove(String code) {
         Assert.hasText(code, MESSAGE);
-        Category category = categoryRepository.findByCodeAndEnabledTrue(code);
+        Category category = categoryRepository.getByCodeAndEnabledTrue(code);
         if (category != null) {
             categoryRepository.deleteById(category.getId());
         }

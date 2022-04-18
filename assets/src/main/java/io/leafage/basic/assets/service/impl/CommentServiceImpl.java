@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 import top.leafage.common.basic.AbstractBasicService;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -82,6 +83,10 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     private CommentVO convertOuter(Comment comment) {
         CommentVO vo = new CommentVO();
         BeanUtils.copyProperties(comment, vo);
+
+        Optional<Posts> optional = postsRepository.findById(comment.getPostsId());
+        optional.ifPresent(o -> vo.setPosts(o.getCode()));
+
         Long count = commentRepository.countByReplierAndEnabledTrue(comment.getCode());
         vo.setCount(count);
         return vo;
@@ -95,4 +100,5 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     private void increaseComment(long id) {
         postsRepository.increaseComment(id);
     }
+
 }

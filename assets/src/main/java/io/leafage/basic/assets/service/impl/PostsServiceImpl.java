@@ -19,13 +19,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.ValidMessage;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * posts service impl.
@@ -34,8 +35,6 @@ import java.util.Optional;
  **/
 @Service
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {
-
-    private static final String MESSAGE = "code is blank.";
 
     private final PostsRepository postsRepository;
     private final PostsContentRepository postsContentRepository;
@@ -55,52 +54,49 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public PostsVO fetch(String code) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         //查询基本信息
-        Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
+        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
         if (posts == null) {
             return null;
         }
         return this.convertOuter(posts);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public PostsContentVO details(String code) {
-        Assert.hasText(code, MESSAGE);
-
-        //查询基本信息
-        Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
+        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
         if (posts == null) {
             return null;
         }
         // viewed自增一，异步执行
         this.increaseViewed(posts.getId());
 
+        PostsVO vo = this.convertOuter(posts);
         PostsContentVO postsContentVO = new PostsContentVO();
-        BeanUtils.copyProperties(posts, postsContentVO);
+        BeanUtils.copyProperties(vo, postsContentVO);
         postsContentVO.setPostsId(posts.getId());
-        // 转换分类
-        Optional<Category> optional = categoryRepository.findById(posts.getCategoryId());
-        optional.ifPresent(category -> postsContentVO.setCategory(category.getName()));
         // 获取内容详情
-        PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        PostsContent postsContent = postsContentRepository.getByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent != null) {
             postsContentVO.setContent(postsContent.getContent());
-            postsContentVO.setCategory(postsContent.getCatalog());
+            postsContentVO.setCatalog(postsContent.getCatalog());
         }
         return postsContentVO;
     }
 
     @Override
     public ContentVO content(String code) {
-        //查询基本信息
-        Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
+        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
         if (posts == null) {
             return null;
         }
         ContentVO contentVO = new ContentVO();
         // 获取内容详情
-        PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        PostsContent postsContent = postsContentRepository.getByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent != null) {
             contentVO.setContent(postsContent.getContent());
             contentVO.setCatalog(postsContent.getCatalog());
@@ -109,16 +105,34 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
+    public PostsVO next(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
+        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
+        Posts next = postsRepository.getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(posts.getId());
+        return this.convertOuter(next);
+    }
+
+    @Override
+    public PostsVO previous(String code) {
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
+        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
+        Posts previous = postsRepository.getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(posts.getId());
+        return this.convertOuter(previous);
+    }
+
+    @Override
     public boolean exist(String title) {
         return postsRepository.existsByTitle(title);
     }
 
-    @Override
     @Transactional(rollbackFor = Exception.class)
+    @Override
     public PostsVO create(PostsDTO postsDTO) {
         Posts posts = new Posts();
         BeanUtils.copyProperties(postsDTO, posts);
         posts.setCode(this.generateCode());
+        posts.setTags(postsDTO.getTags().toString());
         if (StringUtils.hasText(postsDTO.getCategory())) {
             Category category = categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory());
             if (category != null) {
@@ -128,7 +142,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         // 保存并立即刷盘
         posts = postsRepository.saveAndFlush(posts);
         //保存帖子内容
-        PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        PostsContent postsContent = postsContentRepository.getByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent == null) {
             postsContent = new PostsContent();
         }
@@ -141,13 +155,14 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public PostsVO modify(String code, PostsDTO postsDTO) {
-        Assert.hasText(code, MESSAGE);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         //查询基本信息
-        Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
+        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
         if (posts == null) {
             return null;
         }
         BeanUtils.copyProperties(postsDTO, posts);
+        posts.setTags(postsDTO.getTags().toString());
         if (StringUtils.hasText(postsDTO.getCategory())) {
             Category category = categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory());
             if (category != null) {
@@ -156,7 +171,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         }
         posts = postsRepository.save(posts);
         //保存文章内容
-        PostsContent postsContent = postsContentRepository.findByPostsIdAndEnabledTrue(posts.getId());
+        PostsContent postsContent = postsContentRepository.getByPostsIdAndEnabledTrue(posts.getId());
         if (postsContent == null) {
             postsContent = new PostsContent();
         }
@@ -168,15 +183,14 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Override
     public void remove(String code) {
-        Assert.hasText(code, MESSAGE);
-        Posts posts = postsRepository.findByCodeAndEnabledTrue(code);
+        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
+        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
         if (posts != null) {
             postsRepository.deleteById(posts.getId());
         }
     }
 
-    @Async
-    public void increaseViewed(Long id) {
+    private void increaseViewed(Long id) {
         Assert.notNull(id, "id must not be null");
         postsRepository.increaseViewed(id);
     }
@@ -190,6 +204,10 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     private PostsVO convertOuter(Posts posts) {
         PostsVO vo = new PostsVO();
         BeanUtils.copyProperties(posts, vo);
+        // 转换 tags
+        String tags = posts.getTags().substring(1, posts.getTags().length() - 1)
+                .replace(" ", "").replace("\"", "");
+        vo.setTags(Set.of(tags.split(",")));
         // 转换分类
         Optional<Category> optional = categoryRepository.findById(posts.getCategoryId());
         optional.ifPresent(category -> vo.setCategory(category.getName()));

@@ -21,14 +21,6 @@ import java.util.List;
 public interface PostsRepository extends JpaRepository<Posts, Long> {
 
     /**
-     * 根据code查询
-     *
-     * @param code 代码
-     * @return 信息
-     */
-    Posts findByCodeAndEnabledTrue(String code);
-
-    /**
      * 分页查询
      *
      * @param pageable 分页参数
@@ -84,4 +76,20 @@ public interface PostsRepository extends JpaRepository<Posts, Long> {
      * @return true-是，false-否
      */
     boolean existsByTitle(String title);
+
+    /**
+     * 下一篇
+     *
+     * @param id 主键
+     * @return 信息
+     */
+    Posts getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(Long id);
+
+    /**
+     * 上一篇
+     *
+     * @param id 主键
+     * @return 信息
+     */
+    Posts getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(Long id);
 }

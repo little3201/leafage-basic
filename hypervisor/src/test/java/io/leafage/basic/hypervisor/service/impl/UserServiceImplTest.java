@@ -50,7 +50,7 @@ class UserServiceImplTest {
         user.setPhone("18710023032");
         user.setEmail("test@leafage.top");
         user.setBirthday(LocalDate.now());
-        user.setEthnicity("汉族");
+        user.setNationality("汉族");
         given(this.userRepository.insert(Mockito.any(User.class))).willReturn(Mono.just(user));
         StepVerifier.create(userService.create(Mockito.mock(UserDTO.class))).expectNextCount(1).verifyComplete();
     }

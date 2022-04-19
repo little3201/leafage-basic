@@ -50,7 +50,7 @@ public class UserDTO implements Serializable {
     /**
      * 民族
      */
-    private String ethnicity;
+    private String nationality;
     /**
      * 公司
      */
@@ -125,12 +125,12 @@ public class UserDTO implements Serializable {
         this.hobbies = hobbies;
     }
 
-    public String getEthnicity() {
-        return ethnicity;
+    public String getNationality() {
+        return nationality;
     }
 
-    public void setEthnicity(String ethnicity) {
-        this.ethnicity = ethnicity;
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
     }
 
     public String getCompany() {

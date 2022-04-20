@@ -65,6 +65,10 @@ public class UserVO implements Serializable {
      */
     private String position;
     /**
+     * 描述
+     */
+    private String description;
+    /**
      * 修改时间
      */
     private LocalDateTime modifyTime;
@@ -163,6 +167,14 @@ public class UserVO implements Serializable {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getModifyTime() {

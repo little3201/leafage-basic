@@ -59,6 +59,10 @@ public class UserDTO implements Serializable {
      * 职位
      */
     private String position;
+    /**
+     * 描述
+     */
+    private String description;
 
 
     public String getFirstname() {
@@ -147,5 +151,13 @@ public class UserDTO implements Serializable {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

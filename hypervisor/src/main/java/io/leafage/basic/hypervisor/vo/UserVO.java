@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  */
 public class UserVO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 635350278320138075L;
 
     /**
@@ -64,6 +66,10 @@ public class UserVO implements Serializable {
      * 职位
      */
     private String position;
+    /**
+     * 描述
+     */
+    private String description;
     /**
      * 修改时间
      */
@@ -163,6 +169,14 @@ public class UserVO implements Serializable {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public LocalDateTime getModifyTime() {

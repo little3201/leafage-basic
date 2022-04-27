@@ -1,6 +1,7 @@
 package io.leafage.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -10,6 +11,7 @@ import java.io.Serializable;
  */
 public class CommentDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -684841439303848020L;
 
     /**

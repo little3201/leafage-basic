@@ -1,6 +1,7 @@
 package io.leafage.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -10,6 +11,7 @@ import java.io.Serializable;
  */
 public class NotificationDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3855317962733834747L;
 
     /**

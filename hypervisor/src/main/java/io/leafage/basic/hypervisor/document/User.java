@@ -64,6 +64,10 @@ public class User extends AbstractDocument {
      * 职位
      */
     private String position;
+    /**
+     * 描述
+     */
+    private String description;
 
     public String getUsername() {
         return username;
@@ -159,5 +163,13 @@ public class User extends AbstractDocument {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

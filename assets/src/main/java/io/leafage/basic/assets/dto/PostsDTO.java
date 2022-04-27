@@ -5,6 +5,7 @@ package io.leafage.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import java.util.Set;
  */
 public class PostsDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 248576207213923230L;
     /**
      * 标题

@@ -5,6 +5,7 @@ package io.leafage.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,7 @@ import java.io.Serializable;
  */
 public class GroupDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 5146594305386328379L;
 
     /**

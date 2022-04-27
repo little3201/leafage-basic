@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -12,7 +13,8 @@ import java.time.LocalDate;
  * @author liwenqiang 2020-10-06 22:09
  */
 public class UserDTO implements Serializable {
-
+    
+    @Serial
     private static final long serialVersionUID = -2259398095472923567L;
 
     /**
@@ -59,7 +61,10 @@ public class UserDTO implements Serializable {
      * 职位
      */
     private String position;
-
+    /**
+     * 描述
+     */
+    private String description;
 
     public String getFirstname() {
         return firstname;
@@ -147,5 +152,13 @@ public class UserDTO implements Serializable {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

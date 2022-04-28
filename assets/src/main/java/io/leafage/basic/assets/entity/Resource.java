@@ -1,6 +1,5 @@
 package io.leafage.basic.assets.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -11,26 +10,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "resource")
-public class Resource extends AbstractEntity {
+public class Resource extends AssetsAbstractEntity {
 
-    /**
-     * 代码
-     */
-    @Column(unique = true)
-    private String code;
-    /**
-     * 标题
-     */
-    private String title;
-    /**
-     * 分类
-     */
-    @Column(name = "category_id", nullable = false)
-    private Long categoryId;
-    /**
-     * cover
-     */
-    private String cover;
     /**
      * 类型
      */
@@ -40,45 +21,10 @@ public class Resource extends AbstractEntity {
      */
     private int downloads;
     /**
-     * 查看
-     */
-    private int viewed;
-    /**
      * 描述
      */
     private String description;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
 
     public Character getType() {
         return type;
@@ -94,14 +40,6 @@ public class Resource extends AbstractEntity {
 
     public void setDownloads(int downloads) {
         this.downloads = downloads;
-    }
-
-    public int getViewed() {
-        return viewed;
-    }
-
-    public void setViewed(int viewed) {
-        this.viewed = viewed;
     }
 
     public String getDescription() {

@@ -11,9 +11,15 @@
     <name>leafage-basic</name>
     <description>basic module of leafage</description>
 
+    <properties>
+        <sonar.projectKey>little3201_leafage-basic</sonar.projectKey>
+        <sonar.organization>little3201</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    </properties>
+
     <developers>
         <developer>
-            <name>liwenqiang</name>
+            <name>li wenqiang</name>
             <email>little3201@gmail.com</email>
         </developer>
     </developers>

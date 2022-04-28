@@ -73,7 +73,7 @@ class GroupServiceImplTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
-        groupDTO.setSuperior("2119JD09");
+        groupDTO.setSuperior("2119JD19");
         GroupVO groupVO = groupService.create(groupDTO);
 
         verify(this.groupRepository, times(1)).saveAndFlush(Mockito.any(Group.class));
@@ -97,7 +97,7 @@ class GroupServiceImplTest {
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
         groupDTO.setPrincipal("little3201");
-        groupDTO.setSuperior("2119JD09");
+        groupDTO.setSuperior("2119JD19");
         GroupVO groupVO = groupService.create(groupDTO);
 
         verify(this.groupRepository, times(1)).saveAndFlush(Mockito.any(Group.class));
@@ -116,8 +116,8 @@ class GroupServiceImplTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
-        groupDTO.setSuperior("2119JD09");
-        GroupVO groupVO = groupService.modify("", groupDTO);
+        groupDTO.setSuperior("2119JD19");
+        GroupVO groupVO = groupService.modify("2119JD09", groupDTO);
 
         verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));
         Assertions.assertNotNull(groupVO);

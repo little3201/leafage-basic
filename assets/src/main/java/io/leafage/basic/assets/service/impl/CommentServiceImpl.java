@@ -18,7 +18,6 @@ import top.leafage.common.basic.ValidMessage;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * comment service impl.
@@ -49,13 +48,13 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
             return Collections.emptyList();
         }
         return commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(posts.getId())
-                .stream().map(this::convertOuter).collect(Collectors.toList());
+                .stream().map(this::convertOuter).toList();
     }
 
     @Override
     public List<CommentVO> replies(String replier) {
         return commentRepository.findByReplierAndEnabledTrue(replier)
-                .stream().map(this::convertOuter).collect(Collectors.toList());
+                .stream().map(this::convertOuter).toList();
     }
 
     @Transactional(rollbackFor = Exception.class)

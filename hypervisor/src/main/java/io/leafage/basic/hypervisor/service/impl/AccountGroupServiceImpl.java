@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * account group service impl.
@@ -52,7 +51,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
                     AccountVO accountVO = new AccountVO();
                     BeanUtils.copyProperties(account, accountVO);
                     return accountVO;
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
     @Override
@@ -71,7 +70,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
                     GroupVO groupVO = new GroupVO();
                     BeanUtils.copyProperties(role, groupVO);
                     return groupVO;
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
     @Override
@@ -88,7 +87,7 @@ public class AccountGroupServiceImpl implements AccountGroupService {
             userRole.setAccountId(account.getId());
             userRole.setGroupId(group.getId());
             return userRole;
-        }).collect(Collectors.toList());
+        }).toList();
         return accountGroupRepository.saveAllAndFlush(accountGroups);
     }
 }

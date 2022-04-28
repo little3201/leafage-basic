@@ -13,7 +13,6 @@ import org.springframework.util.Assert;
 import top.leafage.common.basic.ValidMessage;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * region service impl.
@@ -38,7 +37,7 @@ public class RegionServiceImpl implements RegionService {
     public List<RegionVO> lower(Long code) {
         Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
         return regionRepository.findBySuperiorAndEnabledTrue(code)
-                .stream().map(this::convertOuter).collect(Collectors.toList());
+                .stream().map(this::convertOuter).toList();
     }
 
     @Override

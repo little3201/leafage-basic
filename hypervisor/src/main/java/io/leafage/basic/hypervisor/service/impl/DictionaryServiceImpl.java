@@ -13,7 +13,6 @@ import org.springframework.util.Assert;
 import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * dictionary service impl.
@@ -45,7 +44,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     public List<DictionaryVO> lower(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return dictionaryRepository.findBySuperiorAndEnabledTrue(code)
-                .stream().map(this::convert).collect(Collectors.toList());
+                .stream().map(this::convert).toList();
     }
 
     @Override

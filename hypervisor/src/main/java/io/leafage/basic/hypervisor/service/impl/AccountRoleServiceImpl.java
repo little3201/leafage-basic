@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * account role service impl.
@@ -52,7 +51,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
                     AccountVO accountVO = new AccountVO();
                     BeanUtils.copyProperties(account, accountVO);
                     return accountVO;
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
     @Override
@@ -69,7 +68,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
                         RoleVO roleVO = new RoleVO();
                         BeanUtils.copyProperties(role, roleVO);
                         return roleVO;
-                    }).collect(Collectors.toList());
+                    }).toList();
         }
         return Collections.emptyList();
     }
@@ -88,7 +87,7 @@ public class AccountRoleServiceImpl implements AccountRoleService {
             accountRole.setAccountId(account.getId());
             accountRole.setRoleId(role.getId());
             return accountRole;
-        }).collect(Collectors.toList());
+        }).toList();
         return accountRoleRepository.saveAllAndFlush(accountRoles);
     }
 }

@@ -27,7 +27,6 @@ import top.leafage.common.basic.TreeNode;
 import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * authority service impl.
@@ -82,10 +81,10 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
         });
         List<Authority> authorities = roleAuthorities.stream().distinct().map(roleAuthority ->
                         authorityRepository.findById(roleAuthority.getAuthorityId()))
-                .map(Optional::orElseThrow).filter(Objects::nonNull).collect(Collectors.toList());
+                .map(Optional::orElseThrow).filter(Objects::nonNull).toList();
         if (Objects.nonNull(type) && Character.isLetter(type)) {
             authorities = authorities.stream().filter(authority -> type.equals(authority.getType()))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return this.convertTree(authorities);
     }
@@ -161,7 +160,7 @@ public class AuthorityServiceImpl extends ServletAbstractTreeNodeService<Authori
             expand.add("path");
             treeNode.setChildren(this.children(a, authorities, expand));
             return treeNode;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     /**

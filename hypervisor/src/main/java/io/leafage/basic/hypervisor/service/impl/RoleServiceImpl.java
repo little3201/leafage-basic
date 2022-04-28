@@ -10,7 +10,10 @@ import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -21,7 +24,6 @@ import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * role service impl.
@@ -56,7 +58,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
             TreeNode treeNode = new TreeNode(r.getCode(), r.getName());
             treeNode.setChildren(this.children(r, roles));
             return treeNode;
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     @Override

@@ -26,7 +26,6 @@ import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 /**
  * group service impl.
@@ -61,7 +60,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
                 TreeNode treeNode = new TreeNode(g.getCode(), g.getName());
                 treeNode.setChildren(this.children(g, groups));
                 return treeNode;
-            }).collect(Collectors.toList());
+            }).toList();
         }
         return Collections.emptyList();
     }

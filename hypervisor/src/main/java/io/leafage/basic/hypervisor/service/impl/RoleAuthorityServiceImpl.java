@@ -18,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * role authority service impl.
@@ -55,7 +54,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
                     AuthorityVO authorityVO = new AuthorityVO();
                     BeanUtils.copyProperties(authority, authorityVO);
                     return authorityVO;
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
     @Override
@@ -74,7 +73,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
                     RoleVO roleVO = new RoleVO();
                     BeanUtils.copyProperties(role, roleVO);
                     return roleVO;
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
     @Override
@@ -91,7 +90,7 @@ public class RoleAuthorityServiceImpl implements RoleAuthorityService {
             roleAuthority.setRoleId(role.getId());
             roleAuthority.setAuthorityId(authority.getId());
             return roleAuthority;
-        }).collect(Collectors.toList());
+        }).toList();
         return roleAuthorityRepository.saveAllAndFlush(roleAuthorities);
     }
 }

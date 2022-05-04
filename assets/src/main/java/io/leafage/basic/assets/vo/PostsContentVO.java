@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.assets.vo;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 public class PostsContentVO extends PostsVO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -3631862762916498067L;
 
     /**

@@ -4,6 +4,7 @@
 package io.leafage.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 public class CategoryDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -6972802402513706361L;
 
     /**

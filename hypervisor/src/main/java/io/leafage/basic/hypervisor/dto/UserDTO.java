@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
  */
 public class UserDTO implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -2259398095472923567L;
 
     /**
@@ -63,7 +65,6 @@ public class UserDTO implements Serializable {
      * 描述
      */
     private String description;
-
 
     public String getFirstname() {
         return firstname;

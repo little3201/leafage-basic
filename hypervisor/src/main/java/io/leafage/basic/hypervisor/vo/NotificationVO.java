@@ -1,6 +1,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 import top.leafage.common.basic.AbstractVO;
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -10,6 +11,7 @@ import java.io.Serializable;
  */
 public class NotificationVO extends AbstractVO<String> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 8227446021967887934L;
 
     /**

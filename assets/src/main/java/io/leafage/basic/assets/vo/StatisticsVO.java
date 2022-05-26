@@ -4,6 +4,11 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+/**
+ * everyday statistics vo
+ *
+ * @author liwenqiang 2022/5/25 19:53
+ */
 public class StatisticsVO implements Serializable {
 
     @Serial

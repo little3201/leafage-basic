@@ -1,6 +1,7 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.service.StatisticsService;
+import io.leafage.basic.assets.vo.StatisticsTotalVO;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class StatisticsController {
     }
 
     /**
-     * 分页查询
+     * 查询周期统计
      *
      * @param page 页码
      * @param size 大小
@@ -42,10 +43,27 @@ public class StatisticsController {
         try {
             pageMono = statisticsService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Statistics viewed occurred an error: ", e);
+            logger.error("Statistics periodicity occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);
+    }
+
+    /**
+     * 查询周期统计
+     *
+     * @return 查询到数据，异常时返回204
+     */
+    @GetMapping("/total")
+    public ResponseEntity<Mono<StatisticsTotalVO>> fetch() {
+        Mono<StatisticsTotalVO> voMono;
+        try {
+            voMono = statisticsService.fetch();
+        } catch (Exception e) {
+            logger.error("Statistics total occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voMono);
     }
 
 }

@@ -18,15 +18,28 @@ public class StatisticsTasks {
     }
 
     /**
-     * 执行统计任务，每天凌晨执行一次
+     * 创建每日统计数据
      */
     @Scheduled(cron = "1 0 0 * * ?")
-    public void execute() {
+    public void everydayCreate() {
         try {
             statisticsService.create().subscribe(statistics ->
-                    logger.info("定时统计任务执行完成: {}", statistics.getDate()));
+                    logger.info("创建每日统计数据任务执行完成: {}", statistics.getDate()));
         } catch (Exception e) {
-            logger.error("定时统计任务执行异常: ", e);
+            logger.error("创建每日统计数据任务执行异常: ", e);
+        }
+    }
+
+    /**
+     * 计算昨日统计数据
+     */
+    @Scheduled(cron = "30 0 0 * * ?")
+    public void yesterdayCalculate() {
+        try {
+            statisticsService.modify().subscribe(statistics ->
+                    logger.info("计算昨日统计数据任务执行完成: {}", statistics.getDate()));
+        } catch (Exception e) {
+            logger.error("计算昨日统计数据任务执行异常: ", e);
         }
     }
 

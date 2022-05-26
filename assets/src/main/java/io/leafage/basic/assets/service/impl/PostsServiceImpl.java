@@ -14,6 +14,7 @@ import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -81,7 +82,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(posts -> this.increaseViewed(posts.getCode()).map(viewed -> {
+                .flatMap(posts -> this.increaseViewed(posts.getId()).map(viewed -> {
                     posts.setViewed(viewed);
                     return posts;
                 }))
@@ -219,13 +220,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     /**
      * viewed 原子更新（自增 1）
      *
-     * @param code 代码
+     * @param id 主键
      * @return UpdateResult
      */
-    private Mono<Integer> increaseViewed(String code) {
-        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
+    private Mono<Integer> increaseViewed(ObjectId id) {
+        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
                 new Update().inc("viewed", 1), Posts.class).flatMap(updateResult ->
-                postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getViewed));
+                postsRepository.findById(id).map(Posts::getViewed));
     }
 
     /**

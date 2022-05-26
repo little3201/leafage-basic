@@ -1,8 +1,10 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Posts;
+import io.leafage.basic.assets.document.Resource;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +35,9 @@ class StatisticsServiceImplTest {
     @Mock
     private PostsRepository postsRepository;
 
+    @Mock
+    private ResourceRepository resourceRepository;
+
     @InjectMocks
     private StatisticsServiceImpl statisticsService;
 
@@ -48,12 +53,14 @@ class StatisticsServiceImplTest {
 
     @Test
     void create() {
-        Posts posts = new Posts();
-        posts.setViewed(12);
-        posts.setLikes(23);
-        posts.setComments(2);
-        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
+        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 
+        StepVerifier.create(statisticsService.create()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void modify() {
         Statistics bys = new Statistics();
         bys.setDate(LocalDate.now().minusDays(3));
         bys.setLikes(123);
@@ -62,7 +69,7 @@ class StatisticsServiceImplTest {
         bys.setOverComments(33.4);
         bys.setViewed(3234);
         bys.setOverViewed(3.23);
-        given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(2)))
+        given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(1L)))
                 .willReturn(Mono.just(bys));
 
         Statistics tda = new Statistics();
@@ -73,29 +80,20 @@ class StatisticsServiceImplTest {
         tda.setOverComments(bys.getOverComments() - 2.0);
         tda.setViewed(8390);
         tda.setOverViewed(bys.getOverViewed() - 0.3);
-        given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(3)))
+        given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(2L)))
                 .willReturn(Mono.just(tda));
 
-        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
-                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
+        given(this.statisticsRepository.save(Mockito.any(Statistics.class))).willReturn(Mono.empty());
 
-        StepVerifier.create(statisticsService.create()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(statisticsService.modify()).verifyComplete();
     }
 
     @Test
-    void create_null() {
-        Posts posts = new Posts();
-        posts.setViewed(12);
-        posts.setLikes(23);
-        posts.setComments(2);
-        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(posts));
+    void fetch() {
+        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(Mockito.mock(Posts.class)));
 
-        given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
-                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
+        given(this.resourceRepository.findByEnabledTrue()).willReturn(Flux.just(Mockito.mock(Resource.class)));
 
-        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
-                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
-
-        StepVerifier.create(statisticsService.create()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(statisticsService.fetch()).expectNextCount(1).verifyComplete();
     }
 }

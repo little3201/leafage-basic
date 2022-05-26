@@ -82,7 +82,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                     ysd.setOverLikes(this.dayOverDay(ysd.getLikes(), bys.getLikes()));
                     ysd.setOverComments(this.dayOverDay(ysd.getComments(), bys.getComments()));
                     return ysd;
-                })).flatMap(statisticsRepository::insert);
+                })).flatMap(statisticsRepository::save);
     }
 
 

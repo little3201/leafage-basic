@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -41,7 +40,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Mono<Page<StatisticsVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifyTime"));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
         Flux<StatisticsVO> voFlux = statisticsRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
 
         Mono<Long> count = statisticsRepository.countByEnabledTrue();
@@ -85,7 +84,6 @@ public class StatisticsServiceImpl implements StatisticsService {
                 })).flatMap(statisticsRepository::save);
     }
 
-
     /**
      * 对象转换为输出结果对象
      *
@@ -106,12 +104,12 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @return 计算结果
      */
     private double dayOverDay(int y, int by) {
-        if (y - by != 0) {
+        if (by != 0) {
             // 计算增长率（百分比表示），四舍五入，保留2位小数
-            double over = (y - by) * 1.0 / by * 100;
+            double over = (y - by + 0.0) / by * 100;
             return BigDecimal.valueOf(over).setScale(2, RoundingMode.HALF_UP).doubleValue();
         }
-        return 0.0;
+        return y * 100.0;
     }
 
 }

@@ -69,6 +69,8 @@ class StatisticsServiceImplTest {
         bys.setOverComments(33.4);
         bys.setViewed(3234);
         bys.setOverViewed(3.23);
+        bys.setDownloads(234);
+        bys.setOverDownloads(232.32);
         given(this.statisticsRepository.getByDate(LocalDate.now().minusDays(1L)))
                 .willReturn(Mono.just(bys));
 

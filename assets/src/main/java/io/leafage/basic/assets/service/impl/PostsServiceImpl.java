@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.assets.service.impl;
 
-import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
@@ -33,6 +32,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.ValidMessage;
+
 import javax.naming.NotContextException;
 
 /**
@@ -82,10 +82,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(posts -> this.increaseViewed(posts.getId()).map(updateResult -> {
-                    if (updateResult.wasAcknowledged()) {
-                        posts.setViewed(posts.getViewed() + 1);
-                    }
+                .flatMap(posts -> this.increaseViewed(posts.getId()).map(viewed -> {
+                    posts.setViewed(viewed);
                     return posts;
                 }))
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> {
@@ -225,9 +223,10 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
      * @param id 主键
      * @return UpdateResult
      */
-    private Mono<UpdateResult> increaseViewed(ObjectId id) {
+    private Mono<Integer> increaseViewed(ObjectId id) {
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
-                new Update().inc("viewed", 1), Posts.class);
+                new Update().inc("viewed", 1), Posts.class).flatMap(updateResult ->
+                postsRepository.findById(id).map(Posts::getViewed));
     }
 
     /**

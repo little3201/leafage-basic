@@ -1,6 +1,7 @@
 package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.document.Statistics;
+import io.leafage.basic.assets.vo.StatisticsTotalVO;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
@@ -13,7 +14,7 @@ import reactor.core.publisher.Mono;
 public interface StatisticsService {
 
     /**
-     * 按照分页进行查询并排序
+     * 分页查询
      *
      * @param page 分页
      * @param size 大小
@@ -22,9 +23,23 @@ public interface StatisticsService {
     Mono<Page<StatisticsVO>> retrieve(int page, int size);
 
     /**
-     * 浏览量记录
+     * 统计总量
+     *
+     * @return 结果
+     */
+    Mono<StatisticsTotalVO> fetch();
+
+    /**
+     * 添加
      *
      * @return 记录结果
      */
     Mono<Statistics> create();
+
+    /**
+     * 修改
+     *
+     * @return 记录结果
+     */
+    Mono<Statistics> modify();
 }

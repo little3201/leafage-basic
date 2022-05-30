@@ -28,7 +28,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import java.util.Set;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -92,21 +94,23 @@ class PostsServiceImplTest {
     @Test
     void details() {
         Posts posts = new Posts();
-        ObjectId id = new ObjectId();
-        posts.setId(id);
-        ObjectId categoryId = new ObjectId();
-        posts.setCategoryId(categoryId);
+        posts.setId(new ObjectId());
+        posts.setCategoryId(new ObjectId());
+        posts.setLikes(12);
+        posts.setComments(232);
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(posts));
 
         UpdateResult acknowledged = UpdateResult.acknowledged(1, 1L, null);
-        given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
+        given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(posts.getId())),
                 new Update().inc("viewed", 1), Posts.class))
                 .willReturn(Mono.just(acknowledged));
 
-        given(this.categoryRepository.findById(categoryId)).willReturn(Mono.just(Mockito.mock(Category.class)));
+        given(this.postsRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(posts));
 
-        given(this.postsContentService.fetchByPostsId(id)).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
+        given(this.categoryRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
+
+        given(this.postsContentService.fetchByPostsId(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
 
         StepVerifier.create(this.postsService.details("21213G0J2")).expectNextCount(1).verifyComplete();
     }

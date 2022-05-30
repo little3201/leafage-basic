@@ -5,6 +5,7 @@ package io.leafage.basic.hypervisor.document;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDate;
 
 /**

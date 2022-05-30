@@ -28,6 +28,13 @@ public interface ResourceRepository extends ReactiveMongoRepository<Resource, Ob
     Flux<Resource> findByEnabledTrue(Pageable pageable);
 
     /**
+     * 查询
+     *
+     * @return 有效作品集
+     */
+    Flux<Resource> findByEnabledTrue();
+
+    /**
      * 根据分类分页查询
      *
      * @param categoryId 分类ID

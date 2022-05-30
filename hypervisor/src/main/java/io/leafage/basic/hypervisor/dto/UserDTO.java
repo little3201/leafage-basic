@@ -13,7 +13,7 @@ import java.time.LocalDate;
  * @author liwenqiang 2020-10-06 22:09
  */
 public class UserDTO implements Serializable {
-    
+
     @Serial
     private static final long serialVersionUID = -2259398095472923567L;
 

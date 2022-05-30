@@ -8,7 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
+
 import java.time.LocalDate;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -23,22 +25,42 @@ class StatisticsTasksTest {
     private StatisticsTasks statisticsTasks;
 
     @Test
-    void execute() {
+    void everydayCreate() {
         Statistics statistics = new Statistics();
         statistics.setDate(LocalDate.now());
         given(this.statisticsService.create()).willReturn(Mono.just(statistics));
 
-        statisticsTasks.execute();
+        statisticsTasks.everydayCreate();
 
         verify(statisticsService, times(1)).create();
     }
 
     @Test
-    void execute_error() {
+    void everydayCreate_error() {
         given(this.statisticsService.create()).willThrow(new RuntimeException());
 
-        statisticsTasks.execute();
+        statisticsTasks.everydayCreate();
 
         verify(statisticsService, times(1)).create();
+    }
+
+    @Test
+    void yesterdayCalculate() {
+        Statistics statistics = new Statistics();
+        statistics.setDate(LocalDate.now());
+        given(this.statisticsService.modify()).willReturn(Mono.just(statistics));
+
+        statisticsTasks.yesterdayCalculate();
+
+        verify(statisticsService, times(1)).modify();
+    }
+
+    @Test
+    void yesterdayCalculate_error() {
+        given(this.statisticsService.modify()).willThrow(new RuntimeException());
+
+        statisticsTasks.yesterdayCalculate();
+
+        verify(statisticsService, times(1)).modify();
     }
 }

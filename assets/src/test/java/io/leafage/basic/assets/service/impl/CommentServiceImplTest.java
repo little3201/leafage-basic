@@ -22,6 +22,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -122,6 +123,7 @@ class CommentServiceImplTest {
 
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21318H9FH");
+        commentDTO.setReplier(comment.getReplier());
         StepVerifier.create(commentService.create(commentDTO)).expectNextCount(1).verifyComplete();
     }
 

@@ -38,6 +38,15 @@ public class Statistics extends AbstractDocument {
      */
     @Field("over_comments")
     private double overComments;
+    /**
+     * 下载量
+     */
+    private int downloads;
+    /**
+     * 下载量环比
+     */
+    @Field("over_downloads")
+    private double overDownloads;
 
     public LocalDate getDate() {
         return date;
@@ -93,5 +102,21 @@ public class Statistics extends AbstractDocument {
 
     public void setOverComments(double overComments) {
         this.overComments = overComments;
+    }
+
+    public int getDownloads() {
+        return downloads;
+    }
+
+    public void setDownloads(int downloads) {
+        this.downloads = downloads;
+    }
+
+    public double getOverDownloads() {
+        return overDownloads;
+    }
+
+    public void setOverDownloads(double overDownloads) {
+        this.overDownloads = overDownloads;
     }
 }

@@ -1,6 +1,7 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.service.StatisticsService;
+import io.leafage.basic.assets.vo.StatisticsTotalVO;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,8 +14,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
 import java.time.LocalDate;
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -55,4 +58,20 @@ class StatisticsControllerTest {
                 .queryParam("size", 7).build()).exchange().expectStatus().isNoContent();
     }
 
+    @Test
+    void fetch() {
+        StatisticsTotalVO totalVO = new StatisticsTotalVO();
+        totalVO.setViewed(121);
+        given(this.statisticsService.fetch()).willReturn(Mono.just(totalVO));
+
+        webTestClient.get().uri("/statistics/total").exchange().expectStatus().isOk()
+                .expectBody().jsonPath("$.viewed").isEqualTo(121);
+    }
+
+    @Test
+    void fetch_error() {
+        given(this.statisticsService.fetch()).willThrow(new RuntimeException());
+
+        webTestClient.get().uri("/statistics/total").exchange().expectStatus().isNoContent();
+    }
 }

@@ -4,6 +4,11 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+/**
+ * everyday statistics vo
+ *
+ * @author liwenqiang 2022/5/25 19:53
+ */
 public class StatisticsVO implements Serializable {
 
     @Serial
@@ -37,6 +42,14 @@ public class StatisticsVO implements Serializable {
      * 评论量环比
      */
     private double overComments;
+    /**
+     * 下载量
+     */
+    private int downloads;
+    /**
+     * 下载量环比
+     */
+    private double overDownloads;
 
     public LocalDate getDate() {
         return date;
@@ -92,5 +105,21 @@ public class StatisticsVO implements Serializable {
 
     public void setOverComments(double overComments) {
         this.overComments = overComments;
+    }
+
+    public int getDownloads() {
+        return downloads;
+    }
+
+    public void setDownloads(int downloads) {
+        this.downloads = downloads;
+    }
+
+    public double getOverDownloads() {
+        return overDownloads;
+    }
+
+    public void setOverDownloads(double overDownloads) {
+        this.overDownloads = overDownloads;
     }
 }

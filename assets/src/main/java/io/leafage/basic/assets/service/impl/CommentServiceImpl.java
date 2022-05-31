@@ -1,12 +1,14 @@
 package io.leafage.basic.assets.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
+import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Comment;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.CommentService;
+import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +28,7 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.ValidMessage;
 import javax.naming.NotContextException;
+import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
 /**
@@ -40,11 +43,14 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     private final PostsRepository postsRepository;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
+    private final StatisticsService statisticsService;
+
     public CommentServiceImpl(CommentRepository commentRepository, PostsRepository postsRepository,
-                              ReactiveMongoTemplate reactiveMongoTemplate) {
+                              ReactiveMongoTemplate reactiveMongoTemplate, StatisticsService statisticsService) {
         this.commentRepository = commentRepository;
         this.postsRepository = postsRepository;
         this.reactiveMongoTemplate = reactiveMongoTemplate;
+        this.statisticsService = statisticsService;
     }
 
     @Override
@@ -82,7 +88,10 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
                     return comment;
                 }).switchIfEmpty(Mono.error(new NoSuchElementException()))
                 .flatMap(comment -> commentRepository.insert(comment).flatMap(comm ->
-                        this.incrementComment(comm.getPostsId()).map(updateResult -> comm)))
+                        this.incrementComment(comm.getPostsId()).flatMap(updateResult ->
+                                statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.COMMENTS)
+                                        .map(c -> comm)))
+                )
                 .flatMap(this::convertOuter);
     }
 

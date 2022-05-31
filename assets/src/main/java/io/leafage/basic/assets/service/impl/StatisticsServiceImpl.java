@@ -1,5 +1,6 @@
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
@@ -12,6 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,20 +32,24 @@ import java.time.LocalDate;
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
 
+    private static final String DATE = "date";
+
     private final PostsRepository postsRepository;
     private final ResourceRepository resourceRepository;
     private final StatisticsRepository statisticsRepository;
+    private final ReactiveMongoTemplate reactiveMongoTemplate;
 
     public StatisticsServiceImpl(PostsRepository postsRepository, ResourceRepository resourceRepository,
-                                 StatisticsRepository statisticsRepository) {
+                                 StatisticsRepository statisticsRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
         this.postsRepository = postsRepository;
         this.resourceRepository = resourceRepository;
         this.statisticsRepository = statisticsRepository;
+        this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
     @Override
     public Mono<Page<StatisticsVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "date"));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, DATE));
         Flux<StatisticsVO> voFlux = statisticsRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
 
         Mono<Long> count = statisticsRepository.countByEnabledTrue();
@@ -82,6 +91,13 @@ public class StatisticsServiceImpl implements StatisticsService {
                     ysd.setOverComments(this.dayOverDay(ysd.getComments(), bys.getComments()));
                     return ysd;
                 })).flatMap(statisticsRepository::save);
+    }
+
+    @Override
+    public Mono<Statistics> increase(LocalDate today, StatisticsFieldEnum statisticsFieldEnum) {
+        return reactiveMongoTemplate.upsert(Query.query(Criteria.where(DATE).is(today)),
+                new Update().inc(statisticsFieldEnum.value, 1), Statistics.class).flatMap(updateResult ->
+                statisticsRepository.getByDate(today));
     }
 
     /**

@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
@@ -11,6 +12,7 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
@@ -32,8 +34,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.ValidMessage;
-
 import javax.naming.NotContextException;
+import java.time.LocalDate;
 
 /**
  * posts service impl
@@ -46,15 +48,18 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     private final PostsRepository postsRepository;
     private final PostsContentService postsContentService;
     private final CategoryRepository categoryRepository;
-
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
+    private final StatisticsService statisticsService;
+
     public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService,
-                            CategoryRepository categoryRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
+                            CategoryRepository categoryRepository, ReactiveMongoTemplate reactiveMongoTemplate,
+                            StatisticsService statisticsService) {
         this.postsRepository = postsRepository;
         this.postsContentService = postsContentService;
         this.categoryRepository = categoryRepository;
         this.reactiveMongoTemplate = reactiveMongoTemplate;
+        this.statisticsService = statisticsService;
     }
 
     @Override
@@ -83,9 +88,10 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(posts -> this.increaseViewed(posts.getId()).map(viewed -> {
-                    posts.setViewed(viewed);
-                    return posts;
-                }))
+                            posts.setViewed(viewed);
+                            return posts;
+                        })
+                        .flatMap(p -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED).map(v -> p)))
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> {
                             PostsContentVO pcv = new PostsContentVO();
                             BeanUtils.copyProperties(posts, pcv);
@@ -201,8 +207,10 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Mono<Integer> like(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
-                new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
-                postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes));
+                        new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
+                        postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes))
+                .flatMap(likes -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED)
+                        .map(v -> likes));
     }
 
     @Override

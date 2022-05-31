@@ -1,10 +1,12 @@
 package io.leafage.basic.assets.service;
 
+import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.vo.StatisticsTotalVO;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
+import java.time.LocalDate;
 
 /**
  * statistics service
@@ -42,4 +44,14 @@ public interface StatisticsService {
      * @return 记录结果
      */
     Mono<Statistics> modify();
+
+    /**
+     * 记录统计量
+     *
+     * @param today           当日
+     * @param statisticsField 统计记录属性名（viewed, likes, comments, downloads）
+     * @return 浏览量
+     */
+    Mono<Statistics> increase(LocalDate today, StatisticsFieldEnum statisticsField);
+
 }

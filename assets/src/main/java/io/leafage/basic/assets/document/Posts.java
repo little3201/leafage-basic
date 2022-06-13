@@ -40,6 +40,7 @@ public class Posts extends AbstractDocument {
     /**
      * 标签
      */
+    @TextIndexed
     private Set<String> tags;
     /**
      * 点赞

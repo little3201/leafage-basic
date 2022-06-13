@@ -292,7 +292,7 @@ class PostsServiceImplTest {
         Posts posts = new Posts();
         posts.setId(new ObjectId());
         posts.setCategoryId(new ObjectId());
-        given(this.postsRepository.findByTitle(Mockito.anyString(), Mockito.any(TextCriteria.class))).willReturn(Flux.just(posts));
+        given(this.postsRepository.findAllBy(Mockito.anyString(), Mockito.any(TextCriteria.class))).willReturn(Flux.just(posts));
 
         given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 

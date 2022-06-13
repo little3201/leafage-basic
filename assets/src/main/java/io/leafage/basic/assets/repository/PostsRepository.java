@@ -79,12 +79,12 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
     Flux<Posts> findByIdLessThanAndEnabledTrue(ObjectId id, Pageable pageable);
 
     /**
-     * 根据title查询
+     * 关键词查询
      *
-     * @param title 标题
+     * @param keyword 关键词
      * @return 匹配结果
      */
-    Flux<Posts> findByTitle(String title, TextCriteria criteria);
+    Flux<Posts> findAllBy(String keyword, TextCriteria criteria);
 
     /**
      * 是否已存在

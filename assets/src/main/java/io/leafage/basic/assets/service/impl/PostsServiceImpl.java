@@ -216,8 +216,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Flux<PostsVO> search(String keyword) {
         Assert.hasText(keyword, "keyword must not be blank.");
-        TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(keyword);
-        return postsRepository.findByTitle(keyword, criteria).flatMap(this::convertOuter);
+        TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(keyword);
+        return postsRepository.findAllBy(keyword, criteria).flatMap(this::convertOuter);
     }
 
     @Override

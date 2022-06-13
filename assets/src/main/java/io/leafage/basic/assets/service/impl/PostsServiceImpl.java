@@ -208,10 +208,9 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Mono<Integer> like(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
-                        new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
-                        postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes))
-                .flatMap(likes -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED)
-                        .map(v -> likes));
+                        new Update().inc("likes", 1), Posts.class)
+                .flatMap(updateResult -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED))
+                .flatMap(updateResult -> postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes));
     }
 
     @Override

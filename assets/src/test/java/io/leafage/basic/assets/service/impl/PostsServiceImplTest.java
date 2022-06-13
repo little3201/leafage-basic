@@ -279,10 +279,10 @@ class PostsServiceImplTest {
         given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is("21213G0J2")),
                 new Update().inc("likes", 1), Posts.class)).willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
 
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Posts.class)));
-
         given(this.statisticsService.increase(Mockito.any(), Mockito.any(StatisticsFieldEnum.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
+
+        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
         StepVerifier.create(postsService.like("21213G0J2")).expectNextCount(1).verifyComplete();
     }
@@ -296,7 +296,7 @@ class PostsServiceImplTest {
 
         given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        StepVerifier.create(postsService.search("leafag")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(postsService.search("leafage")).expectNextCount(1).verifyComplete();
     }
 
 }

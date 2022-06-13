@@ -1,11 +1,14 @@
 package io.leafage.basic.assets.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
+import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Comment;
 import io.leafage.basic.assets.document.Posts;
+import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.service.StatisticsService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +25,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -41,6 +43,9 @@ class CommentServiceImplTest {
 
     @Mock
     private ReactiveMongoTemplate reactiveMongoTemplate;
+
+    @Mock
+    private StatisticsService statisticsService;
 
     @InjectMocks
     private CommentServiceImpl commentService;
@@ -120,6 +125,9 @@ class CommentServiceImplTest {
         given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
         given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
+
+        given(this.statisticsService.increase(Mockito.any(), Mockito.any(StatisticsFieldEnum.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21318H9FH");

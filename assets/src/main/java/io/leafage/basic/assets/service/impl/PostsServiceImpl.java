@@ -25,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -216,7 +217,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Flux<PostsVO> search(String keyword) {
         Assert.hasText(keyword, "keyword must not be blank.");
-        return postsRepository.findByTitleIgnoreCaseLikeAndEnabledTrue(keyword).flatMap(this::convertOuter);
+        TextCriteria criteria = TextCriteria.forDefaultLanguage().matching(keyword);
+        return postsRepository.findByTitle(keyword, criteria).flatMap(this::convertOuter);
     }
 
     @Override

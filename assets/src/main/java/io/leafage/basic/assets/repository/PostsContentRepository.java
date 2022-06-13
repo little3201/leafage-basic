@@ -24,5 +24,4 @@ public interface PostsContentRepository extends ReactiveMongoRepository<PostsCon
      * @return 内容
      */
     Mono<PostsContent> getByPostsIdAndEnabledTrue(ObjectId postsId);
-
 }

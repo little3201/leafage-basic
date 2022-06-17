@@ -209,7 +209,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
                         new Update().inc("likes", 1), Posts.class)
-                .flatMap(updateResult -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED))
+                .flatMap(updateResult -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.LIKES))
                 .flatMap(updateResult -> postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes));
     }
 

@@ -5,13 +5,16 @@ package io.leafage.basic.assets.service.impl;
 
 
 import com.mongodb.client.result.UpdateResult;
+import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
+import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
+import io.leafage.basic.assets.service.StatisticsService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,13 +27,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.util.Set;
-
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -52,6 +54,9 @@ class PostsServiceImplTest {
 
     @Mock
     private ReactiveMongoTemplate reactiveMongoTemplate;
+
+    @Mock
+    private StatisticsService statisticsService;
 
     @InjectMocks
     private PostsServiceImpl postsService;
@@ -111,6 +116,9 @@ class PostsServiceImplTest {
         given(this.categoryRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
 
         given(this.postsContentService.fetchByPostsId(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
+
+        given(this.statisticsService.increase(Mockito.any(), Mockito.any(StatisticsFieldEnum.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 
         StepVerifier.create(this.postsService.details("21213G0J2")).expectNextCount(1).verifyComplete();
     }
@@ -271,6 +279,9 @@ class PostsServiceImplTest {
         given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is("21213G0J2")),
                 new Update().inc("likes", 1), Posts.class)).willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
 
+        given(this.statisticsService.increase(Mockito.any(), Mockito.any(StatisticsFieldEnum.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
+
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Posts.class)));
 
         StepVerifier.create(postsService.like("21213G0J2")).expectNextCount(1).verifyComplete();
@@ -281,11 +292,11 @@ class PostsServiceImplTest {
         Posts posts = new Posts();
         posts.setId(new ObjectId());
         posts.setCategoryId(new ObjectId());
-        given(this.postsRepository.findByTitleIgnoreCaseLikeAndEnabledTrue(Mockito.anyString())).willReturn(Flux.just(posts));
+        given(this.postsRepository.findAllBy(Mockito.anyString(), Mockito.any(TextCriteria.class))).willReturn(Flux.just(posts));
 
         given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        StepVerifier.create(postsService.search("leafag")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(postsService.search("leafage")).expectNextCount(1).verifyComplete();
     }
 
 }

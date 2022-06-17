@@ -5,7 +5,6 @@ package io.leafage.basic.assets.document;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -26,7 +25,6 @@ public class PostsContent extends AbstractDocument {
     /**
      * 内容
      */
-    @TextIndexed
     private String content;
     /**
      * 目录

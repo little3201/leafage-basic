@@ -25,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -207,16 +208,16 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Mono<Integer> like(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
-                        new Update().inc("likes", 1), Posts.class).flatMap(updateResult ->
-                        postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes))
-                .flatMap(likes -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED)
-                        .map(v -> likes));
+                        new Update().inc("likes", 1), Posts.class)
+                .flatMap(updateResult -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.LIKES))
+                .flatMap(updateResult -> postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes));
     }
 
     @Override
     public Flux<PostsVO> search(String keyword) {
         Assert.hasText(keyword, "keyword must not be blank.");
-        return postsRepository.findByTitleIgnoreCaseLikeAndEnabledTrue(keyword).flatMap(this::convertOuter);
+        TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(keyword);
+        return postsRepository.findAllBy(keyword, criteria).flatMap(this::convertOuter);
     }
 
     @Override

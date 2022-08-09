@@ -1,5 +1,7 @@
 package io.leafage.basic.assets.service.impl;
 
+import com.mongodb.client.result.UpdateResult;
+import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.Resource;
 import io.leafage.basic.assets.document.Statistics;
@@ -13,6 +15,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -37,6 +43,9 @@ class StatisticsServiceImplTest {
 
     @Mock
     private ResourceRepository resourceRepository;
+
+    @Mock
+    private ReactiveMongoTemplate reactiveMongoTemplate;
 
     @InjectMocks
     private StatisticsServiceImpl statisticsService;
@@ -97,5 +106,18 @@ class StatisticsServiceImplTest {
         given(this.resourceRepository.findByEnabledTrue()).willReturn(Flux.just(Mockito.mock(Resource.class)));
 
         StepVerifier.create(statisticsService.fetch()).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void increase() {
+        given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("date").is(LocalDate.now())),
+                new Update().inc(StatisticsFieldEnum.VIEWED.value, 1), Statistics.class))
+                .willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
+
+        given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
+
+        StepVerifier.create(statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED))
+                .expectNextCount(1).verifyComplete();
     }
 }

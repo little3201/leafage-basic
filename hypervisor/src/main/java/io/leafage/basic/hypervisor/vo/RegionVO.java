@@ -4,6 +4,8 @@
 package io.leafage.basic.hypervisor.vo;
 
 import top.leafage.common.basic.AbstractVO;
+import top.leafage.common.basic.BasicVO;
+
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -24,7 +26,7 @@ public class RegionVO extends AbstractVO<Long> implements Serializable {
     /**
      * 上级
      */
-    private String superior;
+    private BasicVO<Long> superior;
     /**
      * 简称
      */
@@ -51,11 +53,11 @@ public class RegionVO extends AbstractVO<Long> implements Serializable {
         this.name = name;
     }
 
-    public String getSuperior() {
+    public BasicVO<Long> getSuperior() {
         return superior;
     }
 
-    public void setSuperior(String superior) {
+    public void setSuperior(BasicVO<Long> superior) {
         this.superior = superior;
     }
 

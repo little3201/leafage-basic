@@ -33,7 +33,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Mono<Page<DictionaryVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageRequest).map(this::convert);
+        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
 
         Mono<Long> count = dictionaryRepository.countByEnabledTrue();
 
@@ -43,19 +43,19 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
 
     @Override
     public Flux<DictionaryVO> superior() {
-        return dictionaryRepository.findBySuperiorIsNullAndEnabledTrue().map(this::convert);
+        return dictionaryRepository.findBySuperiorIsNullAndEnabledTrue().map(this::convertOuter);
     }
 
     @Override
     public Flux<DictionaryVO> lower(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return dictionaryRepository.findBySuperiorAndEnabledTrue(code).map(this::convert);
+        return dictionaryRepository.findBySuperiorAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
     public Mono<DictionaryVO> fetch(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return dictionaryRepository.getByCodeAndEnabledTrue(code).map(this::convert);
+        return dictionaryRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
     }
 
     @Override
@@ -69,10 +69,10 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
         Dictionary dictionary = new Dictionary();
         BeanUtils.copyProperties(dictionaryDTO, dictionary);
         dictionary.setCode(this.generateCode());
-        return dictionaryRepository.insert(dictionary).map(this::convert);
+        return dictionaryRepository.insert(dictionary).map(this::convertOuter);
     }
 
-    private DictionaryVO convert(Dictionary dictionary) {
+    private DictionaryVO convertOuter(Dictionary dictionary) {
         DictionaryVO vo = new DictionaryVO();
         BeanUtils.copyProperties(dictionary, vo);
         return vo;

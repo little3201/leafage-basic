@@ -23,8 +23,8 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
 import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
+
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 /**
  * group service impl
@@ -47,14 +47,14 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
 
     @Override
     public Flux<GroupVO> retrieve() {
-        return groupRepository.findByEnabledTrue().flatMap(this::convertOuter)
+        return groupRepository.findByEnabledTrue().flatMap(this::convertOuterWithCount)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
     @Override
     public Mono<Page<GroupVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<GroupVO> voFlux = groupRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Flux<GroupVO> voFlux = groupRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuterWithCount);
 
         Mono<Long> count = groupRepository.countByEnabledTrue();
 
@@ -66,13 +66,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
     public Flux<TreeNode> tree() {
         Flux<Group> groupFlux = groupRepository.findByEnabledTrue()
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
-        return groupFlux.filter(g -> !Objects.nonNull(g.getSuperior())).flatMap(group -> {
-            TreeNode treeNode = new TreeNode(group.getCode(), group.getName());
-            return this.children(group, groupFlux).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
-            });
-        });
+        return this.convert(groupFlux);
     }
 
     @Override
@@ -84,7 +78,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
     @Override
     public Mono<GroupVO> fetch(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return groupRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
+        return groupRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
@@ -98,7 +92,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
                 })
                 .flatMap(group -> this.superior(groupDTO.getSuperior(), group))
                 .flatMap(group -> this.principal(groupDTO.getPrincipal(), group))
-                .flatMap(groupRepository::insert).flatMap(this::convertOuter);
+                .flatMap(groupRepository::insert).flatMap(this::convertOuterWithCount);
     }
 
     @Override
@@ -109,7 +103,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
                 .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
                 .flatMap(group -> this.superior(groupDTO.getSuperior(), group))
                 .flatMap(group -> this.principal(groupDTO.getPrincipal(), group))
-                .flatMap(groupRepository::save).flatMap(this::convertOuter);
+                .flatMap(groupRepository::save).flatMap(this::convertOuterWithCount);
     }
 
     @Override
@@ -158,70 +152,12 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
     }
 
     /**
-     * 对象转换为输出结果对象
-     *
-     * @param group 信息
-     * @return 输出转换后的vo对象
-     */
-    private Mono<GroupVO> convertOuter(Group group) {
-        return Mono.just(group).map(g -> {
-                    GroupVO groupVO = new GroupVO();
-                    BeanUtils.copyProperties(g, groupVO);
-                    return groupVO;
-                }).flatMap(groupVO -> accountGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
-                        .switchIfEmpty(Mono.just(0L)).map(count -> {
-                            groupVO.setCount(count);
-                            return groupVO;
-                        })).flatMap(vo -> this.convertPrincipal(group.getPrincipal(), vo))
-                .flatMap(vo -> this.convertSuperior(group.getSuperior(), vo));
-    }
-
-
-    /**
-     * principal 转换
-     *
-     * @param principal 主键
-     * @param vo        对象
-     * @return 转换principal后的对象
-     */
-    private Mono<GroupVO> convertPrincipal(ObjectId principal, GroupVO vo) {
-        return Mono.just(vo).flatMap(v -> {
-            if (principal != null) {
-                return accountRepository.findById(principal).map(account -> {
-                    v.setPrincipal(account.getNickname());
-                    return v;
-                }).switchIfEmpty(Mono.just(v));
-            }
-            return Mono.just(v);
-        });
-    }
-
-    /**
-     * superior 转换
-     *
-     * @param superior 主键
-     * @param vo       对象
-     * @return 转换superior后的对象
-     */
-    private Mono<GroupVO> convertSuperior(ObjectId superior, GroupVO vo) {
-        return Mono.just(vo).flatMap(v -> {
-            if (superior != null) {
-                return groupRepository.findById(superior).map(s -> {
-                    v.setSuperior(s.getName());
-                    return v;
-                }).switchIfEmpty(Mono.just(v));
-            }
-            return Mono.just(v);
-        });
-    }
-
-    /**
      * 对象转换为输出结果对象(单条查询)
      *
      * @param group 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<GroupVO> fetchOuter(Group group) {
+    private Mono<GroupVO> convertOuter(Group group) {
         return Mono.just(group).map(g -> {
                     GroupVO groupVO = new GroupVO();
                     BeanUtils.copyProperties(g, groupVO);
@@ -236,6 +172,41 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
                     }
                     return Mono.just(v);
                 });
+    }
+
+    /**
+     * 对象转换为输出结果对象
+     *
+     * @param group 信息
+     * @return 输出转换后的vo对象
+     */
+    private Mono<GroupVO> convertOuterWithCount(Group group) {
+        return this.convertOuter(group).flatMap(groupVO ->
+                accountGroupRepository.countByGroupIdAndEnabledTrue(group.getId())
+                        .switchIfEmpty(Mono.just(0L)).map(count -> {
+                            groupVO.setCount(count);
+                            return groupVO;
+                        })).flatMap(vo -> this.convertPrincipal(group.getPrincipal(), vo));
+    }
+
+
+    /**
+     * principal 转换
+     *
+     * @param principalId 主键
+     * @param vo          对象
+     * @return 转换principal后的对象
+     */
+    private Mono<GroupVO> convertPrincipal(ObjectId principalId, GroupVO vo) {
+        return Mono.just(vo).flatMap(v -> {
+            if (principalId != null) {
+                return accountRepository.findById(principalId).map(account -> {
+                    v.setPrincipal(account.getNickname());
+                    return v;
+                }).switchIfEmpty(Mono.just(v));
+            }
+            return Mono.just(v);
+        });
     }
 
 }

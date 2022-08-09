@@ -17,7 +17,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.basic.BasicVO;
+
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -39,8 +42,11 @@ class DictionaryControllerTest {
     void retrieve() {
         DictionaryVO dictionaryVO = new DictionaryVO();
         dictionaryVO.setName("test");
-        dictionaryVO.setAlias("性别");
-        dictionaryVO.setSuperior("2247K10L");
+        dictionaryVO.setAlias("性别-男");
+        BasicVO<String> superior = new BasicVO<>();
+        superior.setCode("2247K10L");
+        superior.setName("性别");
+        dictionaryVO.setSuperior(superior);
         dictionaryVO.setDescription("描述");
         Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO));
         given(this.dictionaryService.retrieve(0, 2)).willReturn(Mono.just(voPage));

@@ -21,7 +21,9 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
+import top.leafage.common.basic.BasicVO;
 import top.leafage.common.basic.ValidMessage;
+
 import javax.naming.NotContextException;
 
 /**
@@ -70,7 +72,10 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
                         .map(category -> {
                             ResourceVO resourceVO = new ResourceVO();
                             BeanUtils.copyProperties(resource, resourceVO);
-                            resourceVO.setCategory(category.getCode());
+                            // 转换category
+                            BasicVO<String> basicVO = new BasicVO<>();
+                            BeanUtils.copyProperties(category, basicVO);
+                            resourceVO.setCategory(basicVO);
                             return resourceVO;
                         }));
     }
@@ -126,7 +131,10 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
             BeanUtils.copyProperties(r, outer);
             return outer;
         }).flatMap(resourceVO -> categoryRepository.findById(resource.getCategoryId()).map(category -> {
-            resourceVO.setCategory(category.getName());
+            // 转换category
+            BasicVO<String> basicVO = new BasicVO<>();
+            BeanUtils.copyProperties(category, basicVO);
+            resourceVO.setCategory(basicVO);
             return resourceVO;
         }).switchIfEmpty(Mono.just(resourceVO)));
     }

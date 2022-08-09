@@ -4,6 +4,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 import top.leafage.common.basic.AbstractVO;
+import top.leafage.common.basic.BasicVO;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -25,7 +26,7 @@ public class DictionaryVO extends AbstractVO<String> implements Serializable {
     /**
      * 上级
      */
-    private String superior;
+    private BasicVO<String> superior;
     /**
      * 简称
      */
@@ -44,11 +45,11 @@ public class DictionaryVO extends AbstractVO<String> implements Serializable {
         this.name = name;
     }
 
-    public String getSuperior() {
+    public BasicVO<String> getSuperior() {
         return superior;
     }
 
-    public void setSuperior(String superior) {
+    public void setSuperior(BasicVO<String> superior) {
         this.superior = superior;
     }
 

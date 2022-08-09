@@ -19,11 +19,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -72,8 +72,6 @@ class AuthorityServiceImplTest {
         authority.setId(new ObjectId());
         authority.setSuperior(new ObjectId());
         given(this.authorityRepository.findByTypeAndEnabledTrue('M')).willReturn(Flux.just(authority));
-
-        given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         authority.setName("test");
         given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(authority));

@@ -3,9 +3,6 @@
  */
 package io.leafage.basic.assets.vo;
 
-import top.leafage.common.basic.AbstractVO;
-import top.leafage.common.basic.BasicVO;
-
 import java.io.Serial;
 import java.io.Serializable;
 

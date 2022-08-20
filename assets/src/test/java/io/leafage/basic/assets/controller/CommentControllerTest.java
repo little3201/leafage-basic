@@ -17,7 +17,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -42,7 +44,7 @@ class CommentControllerTest {
         Page<CommentVO> page = new PageImpl<>(List.of(commentVO));
         given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comment").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comments").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
@@ -51,7 +53,7 @@ class CommentControllerTest {
     void retrieve_error() {
         given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comment").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comments").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isNoContent();
     }
@@ -62,7 +64,7 @@ class CommentControllerTest {
         commentVO.setContent("test content");
         given(this.commentService.relation(Mockito.anyString())).willReturn(Flux.just(commentVO));
 
-        webTestClient.get().uri("/comment/{code}", "21319JO01").exchange()
+        webTestClient.get().uri("/comments/{code}", "21319JO01").exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
@@ -70,7 +72,7 @@ class CommentControllerTest {
     void relation_error() {
         given(this.commentService.relation(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/comment/{code}", "21319JO01").exchange()
+        webTestClient.get().uri("/comments/{code}", "21319JO01").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -80,7 +82,7 @@ class CommentControllerTest {
         commentVO.setContent("test content");
         given(this.commentService.replies(Mockito.anyString())).willReturn(Flux.just(commentVO));
 
-        webTestClient.get().uri("/comment/{code}/replies", "21319JO01").exchange()
+        webTestClient.get().uri("/comments/{code}/replies", "21319JO01").exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
@@ -88,7 +90,7 @@ class CommentControllerTest {
     void repliers_error() {
         given(this.commentService.replies(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/comment/{code}/replies", "21319JO01").exchange()
+        webTestClient.get().uri("/comments/{code}/replies", "21319JO01").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -102,7 +104,7 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/comments").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.content").isEqualTo("test");
@@ -116,7 +118,7 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        webTestClient.post().uri("/comment").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/comments").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange().expectStatus().is4xxClientError();
     }
 
@@ -130,7 +132,7 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        webTestClient.put().uri("/comment/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/comments/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.content").isNotEmpty();
@@ -144,7 +146,7 @@ class CommentControllerTest {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setPosts("21213G0J2");
         commentDTO.setContent("test");
-        webTestClient.put().uri("/comment/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/comments/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isNotModified();
     }
@@ -152,14 +154,14 @@ class CommentControllerTest {
     @Test
     void remove() {
         given(this.commentService.remove(Mockito.anyString())).willReturn(Mono.empty());
-        webTestClient.delete().uri("/comment/{code}", "21213G0J2").exchange()
+        webTestClient.delete().uri("/comments/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void remove_error() {
         given(this.commentService.remove(Mockito.anyString())).willThrow(new RuntimeException());
-        webTestClient.delete().uri("/comment/{code}", "21213G0J2").exchange()
+        webTestClient.delete().uri("/comments/{code}", "21213G0J2").exchange()
                 .expectStatus().is4xxClientError();
     }
 }

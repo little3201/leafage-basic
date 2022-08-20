@@ -12,7 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
 import java.time.LocalDate;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -38,7 +40,7 @@ class UserControllerTest {
         userVO.setPosition("engineer");
         given(this.userService.fetch(Mockito.anyString())).willReturn(Mono.just(userVO));
 
-        webTestClient.get().uri("/user/{username}", "leafage").exchange()
+        webTestClient.get().uri("/users/{username}", "leafage").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.username").isEqualTo("leafage");
     }
@@ -47,7 +49,7 @@ class UserControllerTest {
     void fetch_error() {
         given(this.userService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/user/{username}", "little3201").exchange()
+        webTestClient.get().uri("/users/{username}", "little3201").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -55,14 +57,14 @@ class UserControllerTest {
     void exist() {
         given(this.userService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.get().uri("/user/{username}/exist", "little3201").exchange().expectStatus().isOk();
+        webTestClient.get().uri("/users/{username}/exist", "little3201").exchange().expectStatus().isOk();
     }
 
     @Test
     void exist_error() {
         given(this.userService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/user/{username}/exist", "little3201").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/users/{username}/exist", "little3201").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -74,7 +76,7 @@ class UserControllerTest {
 
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail("test@test.com");
-        webTestClient.put().uri("/user/{username}", "test").bodyValue(userDTO).exchange()
+        webTestClient.put().uri("/users/{username}", "test").bodyValue(userDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.degree").isNotEmpty();
     }
@@ -85,7 +87,7 @@ class UserControllerTest {
 
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail("test@test.com");
-        webTestClient.put().uri("/user/{username}", "test").bodyValue(userDTO).exchange()
+        webTestClient.put().uri("/users/{username}", "test").bodyValue(userDTO).exchange()
                 .expectStatus().isNotModified();
     }
 
@@ -93,7 +95,7 @@ class UserControllerTest {
     void remove() {
         given(this.userService.remove(Mockito.anyString())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/user/{username}", "little3201").exchange()
+        webTestClient.delete().uri("/users/{username}", "little3201").exchange()
                 .expectStatus().isOk();
     }
 
@@ -101,7 +103,7 @@ class UserControllerTest {
     void remove_error() {
         given(this.userService.remove(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/user/{username}", "little3201").exchange()
+        webTestClient.delete().uri("/users/{username}", "little3201").exchange()
                 .expectStatus().is4xxClientError();
     }
 

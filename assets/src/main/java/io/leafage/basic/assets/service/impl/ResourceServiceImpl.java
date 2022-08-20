@@ -9,6 +9,7 @@ import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.service.ResourceService;
+import io.leafage.basic.assets.vo.BasicVO;
 import io.leafage.basic.assets.vo.ResourceVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,6 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.basic.BasicVO;
 import top.leafage.common.basic.ValidMessage;
 
 import javax.naming.NotContextException;

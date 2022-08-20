@@ -15,8 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -43,7 +45,7 @@ class AccessLogControllerTest {
         Page<AccessLogVO> page = new PageImpl<>(List.of(accessLogVO));
         given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/access-log").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/access-logs").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(AccessLogVO.class);
     }
@@ -52,7 +54,7 @@ class AccessLogControllerTest {
     void retrieve_error() {
         given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new NoSuchElementException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/access-log").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/access-logs").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
     }
 
@@ -70,7 +72,7 @@ class AccessLogControllerTest {
         accessLogDTO.setIp("12.1.2.1");
         accessLogDTO.setLocation("某国某城市");
         accessLogDTO.setDescription("更新个人资料");
-        webTestClient.post().uri("/access-log").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/access-logs").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(accessLogDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.location").isNotEmpty();
@@ -85,7 +87,7 @@ class AccessLogControllerTest {
         accessLogDTO.setIp("12.1.2.1");
         accessLogDTO.setLocation("某国某城市");
         accessLogDTO.setDescription("更新个人资料");
-        webTestClient.post().uri("/access-log").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/access-logs").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(accessLogDTO).exchange()
                 .expectStatus().is4xxClientError();
     }

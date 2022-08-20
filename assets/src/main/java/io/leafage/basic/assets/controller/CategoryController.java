@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
 import javax.validation.Valid;
 
 /**
@@ -21,7 +22,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2020/2/16 14:26
  **/
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
 public class CategoryController {
 
     private final Logger logger = LoggerFactory.getLogger(CategoryController.class);

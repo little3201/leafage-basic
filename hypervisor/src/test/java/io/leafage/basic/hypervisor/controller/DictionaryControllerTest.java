@@ -2,6 +2,7 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.service.DictionaryService;
+import io.leafage.basic.hypervisor.vo.BasicVO;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
@@ -17,7 +18,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.BasicVO;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ class DictionaryControllerTest {
         Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO));
         given(this.dictionaryService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/dictionary").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/dictionaries").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(RoleVO.class);
     }
@@ -60,7 +60,7 @@ class DictionaryControllerTest {
     void retrieve_error() {
         given(this.dictionaryService.retrieve(0, 2)).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/dictionary").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/dictionaries").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
     }
 
@@ -70,7 +70,7 @@ class DictionaryControllerTest {
         dictionaryVO.setName("test");
         given(this.dictionaryService.fetch(Mockito.anyString())).willReturn(Mono.just(dictionaryVO));
 
-        webTestClient.get().uri("/dictionary/{code}", "2247K100").exchange()
+        webTestClient.get().uri("/dictionaries/{code}", "2247K100").exchange()
                 .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
@@ -78,7 +78,7 @@ class DictionaryControllerTest {
     void fetch_error() {
         given(this.dictionaryService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/dictionary/{code}", "2247K100").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/dictionaries/{code}", "2247K100").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -87,7 +87,7 @@ class DictionaryControllerTest {
         dictionaryVO.setName("test");
         given(this.dictionaryService.superior()).willReturn(Flux.just(dictionaryVO));
 
-        webTestClient.get().uri("/dictionary/superior").exchange()
+        webTestClient.get().uri("/dictionaries/superior").exchange()
                 .expectStatus().isOk().expectBodyList(RegionVO.class);
     }
 
@@ -95,7 +95,7 @@ class DictionaryControllerTest {
     void superior_error() {
         given(this.dictionaryService.superior()).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/dictionary/superior").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/dictionaries/superior").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -104,7 +104,7 @@ class DictionaryControllerTest {
         dictionaryVO.setName("test");
         given(this.dictionaryService.lower(Mockito.anyString())).willReturn(Flux.just(dictionaryVO));
 
-        webTestClient.get().uri("/dictionary/{code}/lower", "2247K100").exchange()
+        webTestClient.get().uri("/dictionaries/{code}/lower", "2247K100").exchange()
                 .expectStatus().isOk().expectBodyList(RegionVO.class);
     }
 
@@ -112,7 +112,7 @@ class DictionaryControllerTest {
     void lower_error() {
         given(this.dictionaryService.lower(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/dictionary/{code}/lower", "2247K100").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/dictionaries/{code}/lower", "2247K100").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -127,7 +127,7 @@ class DictionaryControllerTest {
         dictionaryDTO.setName("Gender");
         dictionaryDTO.setAlias("性别");
         dictionaryDTO.setDescription("描述");
-        webTestClient.post().uri("/dictionary").bodyValue(dictionaryDTO).exchange()
+        webTestClient.post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("Gender");
     }
@@ -140,7 +140,7 @@ class DictionaryControllerTest {
         dictionaryDTO.setName("Gender");
         dictionaryDTO.setAlias("性别");
         dictionaryDTO.setDescription("描述");
-        webTestClient.post().uri("/dictionary").bodyValue(dictionaryDTO).exchange()
+        webTestClient.post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
 }

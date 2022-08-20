@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2022/04/02 17:19
  **/
 @RestController
-@RequestMapping("/dictionary")
+@RequestMapping("/dictionaries")
 public class DictionaryController {
 
     private final Logger logger = LoggerFactory.getLogger(DictionaryController.class);

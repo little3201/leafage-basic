@@ -20,7 +20,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2022-03-18 21:01
  **/
 @RestController
-@RequestMapping("/access-log")
+@RequestMapping("/access-logs")
 public class AccessLogController {
 
     private final Logger logger = LoggerFactory.getLogger(AccessLogController.class);

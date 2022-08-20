@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +29,7 @@ import java.util.Set;
  * @author liwenqiang 2018/12/17 19:38
  **/
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/roles")
 public class RoleController {
 
     private final Logger logger = LoggerFactory.getLogger(RoleController.class);

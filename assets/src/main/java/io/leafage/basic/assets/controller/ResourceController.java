@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
 import javax.validation.Valid;
 
 /**
@@ -21,7 +22,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2020/2/20 9:54
  **/
 @RestController
-@RequestMapping("/resource")
+@RequestMapping("/resources")
 public class ResourceController {
 
     private final Logger logger = LoggerFactory.getLogger(ResourceController.class);

@@ -15,7 +15,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -40,7 +42,7 @@ class RegionControllerTest {
         Page<RegionVO> voPage = new PageImpl<>(List.of(regionVO));
         given(this.regionService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/region").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/regions").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(RoleVO.class);
     }
@@ -49,7 +51,7 @@ class RegionControllerTest {
     void retrieve_error() {
         given(this.regionService.retrieve(0, 2)).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/region").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/regions").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
     }
 
@@ -59,7 +61,7 @@ class RegionControllerTest {
         regionVO.setName("test");
         given(this.regionService.fetch(Mockito.anyLong())).willReturn(Mono.just(regionVO));
 
-        webTestClient.get().uri("/region/{code}", "1100").exchange()
+        webTestClient.get().uri("/regions/{code}", "1100").exchange()
                 .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
@@ -67,7 +69,7 @@ class RegionControllerTest {
     void fetch_error() {
         given(this.regionService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/region/{code}", "1100").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/regions/{code}", "1100").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -76,7 +78,7 @@ class RegionControllerTest {
         regionVO.setName("test");
         given(this.regionService.lower(Mockito.anyLong())).willReturn(Flux.just(regionVO));
 
-        webTestClient.get().uri("/region/{code}/lower", "1100").exchange()
+        webTestClient.get().uri("/regions/{code}/lower", "1100").exchange()
                 .expectStatus().isOk().expectBodyList(RegionVO.class);
     }
 
@@ -84,7 +86,7 @@ class RegionControllerTest {
     void lower_error() {
         given(this.regionService.lower(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/region/{code}/lower", "1100").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/regions/{code}/lower", "1100").exchange().expectStatus().isNoContent();
     }
 
 }

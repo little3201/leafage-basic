@@ -13,6 +13,7 @@ import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.service.StatisticsService;
+import io.leafage.basic.assets.vo.BasicVO;
 import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
@@ -34,7 +35,6 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.basic.BasicVO;
 import top.leafage.common.basic.ValidMessage;
 
 import javax.naming.NotContextException;

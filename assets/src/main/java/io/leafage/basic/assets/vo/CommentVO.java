@@ -1,6 +1,5 @@
 package io.leafage.basic.assets.vo;
 
-import top.leafage.common.basic.AbstractVO;
 import java.io.Serial;
 import java.io.Serializable;
 

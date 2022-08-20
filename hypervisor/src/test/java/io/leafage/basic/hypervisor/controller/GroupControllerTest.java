@@ -20,7 +20,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -48,7 +50,7 @@ class GroupControllerTest {
         Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO));
         given(this.groupService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/group").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(RoleVO.class);
     }
@@ -57,7 +59,7 @@ class GroupControllerTest {
     void retrieve_error() {
         given(this.groupService.retrieve(0, 2)).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/group").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
     }
 
@@ -66,14 +68,14 @@ class GroupControllerTest {
         TreeNode treeNode = new TreeNode("21612OL34", "test");
         given(this.groupService.tree()).willReturn(Flux.just(treeNode));
 
-        webTestClient.get().uri("/group/tree").exchange().expectStatus().isOk().expectBodyList(TreeNode.class);
+        webTestClient.get().uri("/groups/tree").exchange().expectStatus().isOk().expectBodyList(TreeNode.class);
     }
 
     @Test
     void tree_error() {
         given(this.groupService.tree()).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/group/tree").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/groups/tree").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -82,7 +84,7 @@ class GroupControllerTest {
         groupVO.setName("test");
         given(this.groupService.fetch(Mockito.anyString())).willReturn(Mono.just(groupVO));
 
-        webTestClient.get().uri("/group/{code}", "21612OL34").exchange()
+        webTestClient.get().uri("/groups/{code}", "21612OL34").exchange()
                 .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
@@ -90,14 +92,14 @@ class GroupControllerTest {
     void fetch_error() {
         given(this.groupService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/group/{code}", "21612OL34").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/groups/{code}", "21612OL34").exchange().expectStatus().isNoContent();
     }
 
     @Test
     void exist() {
         given(this.groupService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/group/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
                 .queryParam("name", "test").build()).exchange().expectStatus().isOk();
     }
 
@@ -105,7 +107,7 @@ class GroupControllerTest {
     void exist_error() {
         given(this.groupService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/group/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
                 .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
@@ -117,7 +119,7 @@ class GroupControllerTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
-        webTestClient.post().uri("/group").bodyValue(groupDTO).exchange()
+        webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -128,7 +130,7 @@ class GroupControllerTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
-        webTestClient.post().uri("/group").bodyValue(groupDTO).exchange()
+        webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
 
@@ -140,7 +142,7 @@ class GroupControllerTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
-        webTestClient.put().uri("/group/{code}", "21612OL34").bodyValue(groupDTO).exchange()
+        webTestClient.put().uri("/groups/{code}", "21612OL34").bodyValue(groupDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -151,7 +153,7 @@ class GroupControllerTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
-        webTestClient.put().uri("/group/{code}", "21612OL34").bodyValue(groupDTO).exchange()
+        webTestClient.put().uri("/groups/{code}", "21612OL34").bodyValue(groupDTO).exchange()
                 .expectStatus().isNotModified();
     }
 
@@ -159,7 +161,7 @@ class GroupControllerTest {
     void remove() {
         given(this.groupService.remove(Mockito.anyString())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/group/{code}", "21612OL34").exchange()
+        webTestClient.delete().uri("/groups/{code}", "21612OL34").exchange()
                 .expectStatus().isOk();
     }
 
@@ -167,7 +169,7 @@ class GroupControllerTest {
     void remove_error() {
         given(this.groupService.remove(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/group/{code}", "21612OL34").exchange()
+        webTestClient.delete().uri("/groups/{code}", "21612OL34").exchange()
                 .expectStatus().is4xxClientError();
     }
 
@@ -177,7 +179,7 @@ class GroupControllerTest {
         accountVO.setUsername("little3201");
         given(this.accountGroupService.accounts(Mockito.anyString())).willReturn(Flux.just(accountVO));
 
-        webTestClient.get().uri("/group/{code}/account", "21612OL34").exchange()
+        webTestClient.get().uri("/groups/{code}/account", "21612OL34").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(AccountRole.class);
     }
@@ -186,7 +188,7 @@ class GroupControllerTest {
     void accounts_error() {
         given(this.accountGroupService.accounts(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/group/{code}/account", "21612OL34").exchange()
+        webTestClient.get().uri("/groups/{code}/account", "21612OL34").exchange()
                 .expectStatus().isNoContent();
     }
 }

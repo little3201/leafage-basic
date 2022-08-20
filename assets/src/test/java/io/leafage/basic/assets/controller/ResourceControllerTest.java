@@ -18,8 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -45,7 +47,7 @@ class ResourceControllerTest {
         given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
                 Mockito.anyString())).willReturn(Mono.just(page));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resources").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(ResourceVO.class);
     }
@@ -58,7 +60,7 @@ class ResourceControllerTest {
         given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
                 Mockito.anyString())).willReturn(Mono.just(page));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resources").queryParam("page", 0)
                         .queryParam("size", 2).queryParam("category", "21213G0J2")
                         .queryParam("sort", "").build()).exchange()
                 .expectStatus().isOk().expectBodyList(ResourceVO.class);
@@ -69,7 +71,7 @@ class ResourceControllerTest {
         given(this.resourceService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
                 Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resources").queryParam("page", 0)
                         .queryParam("size", 2).queryParam("category", "21213G0J2")
                         .queryParam("sort", "").build()).exchange()
                 .expectStatus().isNoContent();
@@ -81,7 +83,7 @@ class ResourceControllerTest {
         resourceVO.setTitle("test");
         given(this.resourceService.fetch(Mockito.anyString())).willReturn(Mono.just(resourceVO));
 
-        webTestClient.get().uri("/resource/{code}", "21213G0J2").exchange()
+        webTestClient.get().uri("/resources/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
     }
@@ -90,7 +92,7 @@ class ResourceControllerTest {
     void fetch_error() {
         given(this.resourceService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/resource/{code}", "21213G0J2").exchange()
+        webTestClient.get().uri("/resources/{code}", "21213G0J2").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -98,7 +100,7 @@ class ResourceControllerTest {
     void exist() {
         given(this.resourceService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resources/exist")
                 .queryParam("title", "test").build()).exchange().expectStatus().isOk();
     }
 
@@ -106,7 +108,7 @@ class ResourceControllerTest {
     void exist_error() {
         given(this.resourceService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resource/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/resources/exist")
                 .queryParam("title", "test").build()).exchange().expectStatus().isNoContent();
     }
 
@@ -122,7 +124,7 @@ class ResourceControllerTest {
         resourceDTO.setTitle("test");
         resourceDTO.setCover("../test.jpg");
         resourceDTO.setCategory("21318000");
-        webTestClient.post().uri("/resource").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/resources").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isNotEmpty();
@@ -137,7 +139,7 @@ class ResourceControllerTest {
         resourceDTO.setTitle("test");
         resourceDTO.setCover("../test.jpg");
         resourceDTO.setCategory("21318000");
-        webTestClient.post().uri("/resource").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.post().uri("/resources").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
@@ -154,7 +156,7 @@ class ResourceControllerTest {
         resourceDTO.setTitle("test");
         resourceDTO.setCover("../test.jpg");
         resourceDTO.setCategory("21318000");
-        webTestClient.put().uri("/resource/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/resources/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.title").isNotEmpty();
@@ -170,7 +172,7 @@ class ResourceControllerTest {
         resourceDTO.setCover("../test.jpg");
         resourceDTO.setType('E');
         resourceDTO.setCategory("21318000");
-        webTestClient.put().uri("/resource/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/resources/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().isNotModified();
     }

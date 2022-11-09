@@ -4,6 +4,7 @@ import io.leafage.basic.hypervisor.document.Region;
 import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.service.RegionService;
+import io.leafage.basic.hypervisor.vo.BasicVO;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.ValidMessage;
+
 import java.util.NoSuchElementException;
 
 /**
@@ -46,7 +48,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public Mono<RegionVO> fetch(Long code) {
         Assert.notNull(code, CODE_MESSAGE);
-        return regionRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter);
+        return regionRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Flux<RegionVO> lower(long code) {
-        return regionRepository.findBySuperiorAndEnabledTrue(code).flatMap(this::fetchOuter);
+        return regionRepository.findBySuperiorAndEnabledTrue(code).flatMap(this::convertOuter);
     }
 
     @Override
@@ -92,42 +94,22 @@ public class RegionServiceImpl implements RegionService {
      * @param region 信息
      * @return RegionVO 输出对象
      */
-    private Mono<RegionVO> fetchOuter(Region region) {
+    private Mono<RegionVO> convertOuter(Region region) {
         return Mono.just(region).map(r -> {
             RegionVO vo = new RegionVO();
             BeanUtils.copyProperties(r, vo);
             return vo;
         }).flatMap(vo -> {
             if (region.getSuperior() != null && region.getSuperior() != 0) {
+                // 存在上级，则查询
                 return regionRepository.getByCodeAndEnabledTrue(region.getSuperior()).map(superior -> {
-                    vo.setSuperior(String.valueOf(superior.getCode()));
+                    BasicVO<Long> basicVO = new BasicVO<>();
+                    BeanUtils.copyProperties(superior, basicVO);
+                    vo.setSuperior(basicVO);
                     return vo;
                 }).switchIfEmpty(Mono.just(vo));
             }
             return Mono.just(vo);
         });
-    }
-
-    /**
-     * 数据转换
-     *
-     * @param region 信息
-     * @return RegionVO 输出对象
-     */
-    private Mono<RegionVO> convertOuter(Region region) {
-        Mono<RegionVO> voMono = Mono.just(region).map(r -> {
-            RegionVO vo = new RegionVO();
-            BeanUtils.copyProperties(r, vo);
-            return vo;
-        });
-
-        if (region.getSuperior() != null && region.getSuperior() != 0) {
-            Mono<Region> superiorMono = regionRepository.getByCodeAndEnabledTrue(region.getSuperior());
-            return voMono.zipWith(superiorMono, (vo, superior) -> {
-                vo.setSuperior(superior.getName());
-                return vo;
-            });
-        }
-        return voMono;
     }
 }

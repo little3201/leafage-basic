@@ -31,7 +31,7 @@ public class AccessLogServiceImpl extends AbstractBasicService implements Access
     @Override
     public Mono<Page<AccessLogVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<AccessLogVO> voFlux = accessLogRepository.findByEnabledTrue(pageRequest).map(this::convert);
+        Flux<AccessLogVO> voFlux = accessLogRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
 
         Mono<Long> count = accessLogRepository.countByEnabledTrue();
 
@@ -44,15 +44,16 @@ public class AccessLogServiceImpl extends AbstractBasicService implements Access
         AccessLog info = new AccessLog();
         BeanUtils.copyProperties(accessLogDTO, info);
         info.setCode(this.generateCode());
-        return accessLogRepository.insert(info).map(this::convert);
+        return accessLogRepository.insert(info).map(this::convertOuter);
     }
 
     /**
      * 对象转换
+     *
      * @param info 数据对象
      * @return 输出对象
      */
-    private AccessLogVO convert(AccessLog info) {
+    private AccessLogVO convertOuter(AccessLog info) {
         AccessLogVO outer = new AccessLogVO();
         BeanUtils.copyProperties(info, outer);
         return outer;

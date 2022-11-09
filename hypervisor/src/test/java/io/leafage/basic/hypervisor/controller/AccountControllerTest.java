@@ -20,9 +20,11 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -57,7 +59,7 @@ class AccountControllerTest {
         Page<AccountVO> voPage = new PageImpl<>(List.of(accountVO));
         given(this.accountService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/account").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/accounts").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(AccountVO.class);
     }
@@ -66,7 +68,7 @@ class AccountControllerTest {
     void retrieve_error() {
         given(this.accountService.retrieve(0, 2)).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/account").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/accounts").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
     }
 
@@ -77,7 +79,7 @@ class AccountControllerTest {
         accountVO.setAvatar("/avatar.jpg");
         given(this.accountService.fetch(Mockito.anyString())).willReturn(Mono.just(accountVO));
 
-        webTestClient.get().uri("/account/{username}", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}", "little3201").exchange()
                 .expectStatus().isOk().expectBody().jsonPath("$.username").isEqualTo("leafage");
     }
 
@@ -85,7 +87,7 @@ class AccountControllerTest {
     void fetch_error() {
         given(this.accountService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/account/{username}", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}", "little3201").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -98,7 +100,7 @@ class AccountControllerTest {
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setUsername("leafage");
-        webTestClient.post().uri("/account").bodyValue(accountDTO).exchange()
+        webTestClient.post().uri("/accounts").bodyValue(accountDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.username").isEqualTo("leafage");
     }
@@ -109,7 +111,7 @@ class AccountControllerTest {
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setUsername("leafage");
-        webTestClient.post().uri("/account").bodyValue(accountDTO).exchange()
+        webTestClient.post().uri("/accounts").bodyValue(accountDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
 
@@ -122,7 +124,7 @@ class AccountControllerTest {
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setUsername("leafage");
-        webTestClient.put().uri("/account/{username}", "little3201").bodyValue(accountDTO).exchange()
+        webTestClient.put().uri("/accounts/{username}", "little3201").bodyValue(accountDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.username").isEqualTo("leafage");
     }
@@ -133,7 +135,7 @@ class AccountControllerTest {
 
         AccountDTO accountDTO = new AccountDTO();
         accountDTO.setUsername("leafage");
-        webTestClient.put().uri("/account/{username}", "little3201").bodyValue(accountDTO).exchange()
+        webTestClient.put().uri("/accounts/{username}", "little3201").bodyValue(accountDTO).exchange()
                 .expectStatus().isNotModified();
     }
 
@@ -141,7 +143,7 @@ class AccountControllerTest {
     void unlock() {
         given(this.accountService.unlock(Mockito.anyString())).willReturn(Mono.empty());
 
-        webTestClient.patch().uri("/account/{username}", "little3201").exchange()
+        webTestClient.patch().uri("/accounts/{username}", "little3201").exchange()
                 .expectStatus().isAccepted();
     }
 
@@ -149,7 +151,7 @@ class AccountControllerTest {
     void unlock_error() {
         given(this.accountService.unlock(Mockito.anyString())).willThrow(new NoSuchElementException());
 
-        webTestClient.patch().uri("/account/{username}", "little3201").exchange()
+        webTestClient.patch().uri("/accounts/{username}", "little3201").exchange()
                 .expectStatus().isNotModified();
     }
 
@@ -157,7 +159,7 @@ class AccountControllerTest {
     void remove() {
         given(this.accountService.remove(Mockito.anyString())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/account/{username}", "little3201").exchange()
+        webTestClient.delete().uri("/accounts/{username}", "little3201").exchange()
                 .expectStatus().isOk();
     }
 
@@ -165,7 +167,7 @@ class AccountControllerTest {
     void remove_error() {
         given(this.accountService.remove(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/account/{username}", "little3201").exchange()
+        webTestClient.delete().uri("/accounts/{username}", "little3201").exchange()
                 .expectStatus().is4xxClientError();
     }
 
@@ -174,7 +176,7 @@ class AccountControllerTest {
     void groups() {
         given(this.accountGroupService.groups(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
 
-        webTestClient.get().uri("/account/{username}/group", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/group", "little3201").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(String.class);
     }
@@ -183,7 +185,7 @@ class AccountControllerTest {
     void groups_error() {
         given(this.accountGroupService.groups(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/account/{username}/group", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/group", "little3201").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -191,7 +193,7 @@ class AccountControllerTest {
     void group() {
         given(this.accountGroupService.relation(Mockito.anyString(), Mockito.anySet())).willReturn(Mono.just(true));
 
-        webTestClient.patch().uri("/account/{username}/group", "little3201")
+        webTestClient.patch().uri("/accounts/{username}/group", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().isAccepted();
     }
@@ -200,7 +202,7 @@ class AccountControllerTest {
     void group_error() {
         given(this.accountGroupService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
-        webTestClient.patch().uri("/account/{username}/group", "little3201")
+        webTestClient.patch().uri("/accounts/{username}/group", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().is4xxClientError();
     }
@@ -209,7 +211,7 @@ class AccountControllerTest {
     void roles() {
         given(this.accountRoleService.roles(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
 
-        webTestClient.get().uri("/account/{username}/role", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/role", "little3201").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(String.class);
     }
@@ -218,7 +220,7 @@ class AccountControllerTest {
     void roles_error() {
         given(this.accountRoleService.roles(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/account/{username}/role", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/role", "little3201").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -226,7 +228,7 @@ class AccountControllerTest {
     void role() {
         given(this.accountRoleService.relation(Mockito.anyString(), Mockito.anySet())).willReturn(Mono.just(true));
 
-        webTestClient.patch().uri("/account/{username}/role", "little3201")
+        webTestClient.patch().uri("/accounts/{username}/role", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().isAccepted();
     }
@@ -235,7 +237,7 @@ class AccountControllerTest {
     void role_error() {
         given(this.accountRoleService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
-        webTestClient.patch().uri("/account/{username}/role", "little3201")
+        webTestClient.patch().uri("/accounts/{username}/role", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().is4xxClientError();
     }
@@ -245,7 +247,7 @@ class AccountControllerTest {
         TreeNode treeNode = new TreeNode("21612OL31", "Dashboard");
         given(this.authorityService.authorities(Mockito.anyString())).willReturn(Flux.just(treeNode));
 
-        webTestClient.get().uri("/account/{username}/authority", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/authority", "little3201").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(RoleVO.class);
     }
@@ -254,7 +256,7 @@ class AccountControllerTest {
     void authority_error() {
         given(this.authorityService.authorities(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/account/{username}/authority", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/authority", "little3201").exchange()
                 .expectStatus().isNoContent();
     }
 }

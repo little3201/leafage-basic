@@ -8,7 +8,9 @@ import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
+import io.leafage.basic.hypervisor.vo.BasicVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,8 +23,8 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
 import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
+
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 /**
  * role service impl
@@ -42,13 +44,13 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
 
     @Override
     public Flux<RoleVO> retrieve() {
-        return roleRepository.findByEnabledTrue().flatMap(this::convertOuter);
+        return roleRepository.findByEnabledTrue().flatMap(this::convertOuterWithCount);
     }
 
     @Override
     public Mono<Page<RoleVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<RoleVO> voFlux = roleRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Flux<RoleVO> voFlux = roleRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuterWithCount);
 
         Mono<Long> count = roleRepository.countByEnabledTrue();
 
@@ -58,14 +60,9 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
 
     @Override
     public Flux<TreeNode> tree() {
-        Flux<Role> roleFlux = roleRepository.findByEnabledTrue().switchIfEmpty(Mono.error(NoSuchElementException::new));
-        return roleFlux.filter(r -> Objects.isNull(r.getSuperior())).flatMap(role -> {
-            TreeNode treeNode = new TreeNode(role.getCode(), role.getName());
-            return this.children(role, roleFlux).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
-            });
-        });
+        Flux<Role> roleFlux = roleRepository.findByEnabledTrue()
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+        return this.convert(roleFlux);
     }
 
     @Override
@@ -77,7 +74,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
     @Override
     public Mono<RoleVO> fetch(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return roleRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
+        return roleRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
@@ -92,7 +89,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
                 .switchIfEmpty(Mono.error(NoSuchElementException::new)).flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
                     return roleRepository.insert(role);
-                }).flatMap(this::convertOuter);
+                }).flatMap(this::convertOuterWithCount);
     }
 
     @Override
@@ -104,7 +101,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
                 .flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
                     return roleRepository.save(role);
-                }).flatMap(this::convertOuter);
+                }).flatMap(this::convertOuterWithCount);
     }
 
     /**
@@ -133,20 +130,31 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
      * @param role 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<RoleVO> fetchOuter(Role role) {
+    private Mono<RoleVO> convertOuter(Role role) {
         return Mono.just(role).map(a -> {
             RoleVO roleVO = new RoleVO();
             BeanUtils.copyProperties(role, roleVO);
             return roleVO;
-        }).flatMap(vo -> {
-            if (role.getSuperior() != null) {
-                return roleRepository.findById(role.getSuperior()).map(superior -> {
-                    vo.setSuperior(superior.getCode());
-                    return vo;
-                }).switchIfEmpty(Mono.just(vo));
-            }
-            return Mono.just(vo);
-        });
+        }).flatMap(vo -> superior(role.getSuperior(), vo));
+    }
+
+    /**
+     * 转换superior
+     *
+     * @param superiorId superior主键
+     * @param vo         vo
+     * @return 设置后的vo
+     */
+    private Mono<RoleVO> superior(ObjectId superiorId, RoleVO vo) {
+        if (superiorId != null) {
+            return roleRepository.findById(superiorId).map(superior -> {
+                BasicVO<String> basicVO = new BasicVO<>();
+                BeanUtils.copyProperties(superior, basicVO);
+                vo.setSuperior(basicVO);
+                return vo;
+            }).switchIfEmpty(Mono.just(vo));
+        }
+        return Mono.just(vo);
     }
 
     /**
@@ -155,23 +163,11 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
      * @param role 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<RoleVO> convertOuter(Role role) {
-        return Mono.just(role).map(r -> {
-            RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(r, roleVO);
-            return roleVO;
-        }).flatMap(vo -> accountRoleRepository.countByRoleIdAndEnabledTrue(role.getId())
-                .map(count -> {
+    private Mono<RoleVO> convertOuterWithCount(Role role) {
+        return this.convertOuter(role).flatMap(vo ->
+                accountRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
                     vo.setCount(count);
                     return vo;
-                })).flatMap(vo -> {
-            if (role.getSuperior() != null) {
-                return roleRepository.findById(role.getSuperior()).map(superior -> {
-                    vo.setSuperior(superior.getName());
-                    return vo;
-                }).switchIfEmpty(Mono.just(vo));
-            }
-            return Mono.just(vo);
-        });
+                }));
     }
 }

@@ -4,8 +4,10 @@ server:
 spring:
   application:
     name: assets
+
   profiles:
     active: dev
+
   web:
     resources:
       add-mappings: false

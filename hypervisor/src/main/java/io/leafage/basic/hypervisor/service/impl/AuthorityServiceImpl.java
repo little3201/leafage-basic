@@ -12,6 +12,8 @@ import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
+import io.leafage.basic.hypervisor.vo.BasicVO;
+import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,7 +26,10 @@ import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
 import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * authority service impl
@@ -50,7 +55,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
     @Override
     public Mono<Page<AuthorityVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<AuthorityVO> voFlux = authorityRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Flux<AuthorityVO> voFlux = authorityRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuterWithCount);
 
         Mono<Long> count = authorityRepository.countByEnabledTrue();
 
@@ -76,9 +81,10 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
         Mono<Account> accountMono = accountRepository.getByUsernameAndEnabledTrue(username)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
 
-        return accountMono.map(account -> accountRoleRepository.findByAccountIdAndEnabledTrue(account.getId()).flatMap(userRole ->
-                roleAuthorityRepository.findByRoleIdAndEnabledTrue(userRole.getRoleId()).flatMap(roleAuthority ->
-                        authorityRepository.findById(roleAuthority.getAuthorityId())))).flatMapMany(this::convertTree);
+        return accountMono.map(account -> accountRoleRepository.findByAccountIdAndEnabledTrue(account.getId())
+                        .flatMap(userRole -> roleAuthorityRepository.findByRoleIdAndEnabledTrue(userRole.getRoleId())
+                                .flatMap(roleAuthority -> authorityRepository.findById(roleAuthority.getAuthorityId()))))
+                .flatMapMany(this::convertTree);
     }
 
     @Override
@@ -90,7 +96,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
     @Override
     public Mono<AuthorityVO> fetch(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return authorityRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter)
+        return authorityRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
@@ -105,7 +111,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
                 .switchIfEmpty(Mono.error(NoSuchElementException::new)).flatMap(authority -> {
                     BeanUtils.copyProperties(authorityDTO, authority);
                     return authorityRepository.insert(authority);
-                }).flatMap(this::convertOuter);
+                }).flatMap(this::convertOuterWithCount);
     }
 
     @Override
@@ -117,7 +123,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
                 .flatMap(authority -> {
                     BeanUtils.copyProperties(authorityDTO, authority);
                     return authorityRepository.save(authority);
-                }).flatMap(this::convertOuter);
+                }).flatMap(this::convertOuterWithCount);
     }
 
     /**
@@ -146,20 +152,12 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @param authority 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<AuthorityVO> fetchOuter(Authority authority) {
+    private Mono<AuthorityVO> convertOuter(Authority authority) {
         return Mono.just(authority).map(a -> {
             AuthorityVO authorityVO = new AuthorityVO();
             BeanUtils.copyProperties(authority, authorityVO);
             return authorityVO;
-        }).flatMap(vo -> {
-            if (authority.getSuperior() != null) {
-                return authorityRepository.findById(authority.getSuperior()).map(s -> {
-                    vo.setSuperior(s.getCode());
-                    return vo;
-                }).switchIfEmpty(Mono.just(vo));
-            }
-            return Mono.just(vo);
-        });
+        }).flatMap(vo -> superior(authority.getSuperior(), vo));
     }
 
     /**
@@ -168,25 +166,33 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @param authority 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<AuthorityVO> convertOuter(Authority authority) {
-        return Mono.just(authority).map(a -> {
-            AuthorityVO authorityVO = new AuthorityVO();
-            BeanUtils.copyProperties(authority, authorityVO);
-            return authorityVO;
-        }).flatMap(vo -> roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
-                .switchIfEmpty(Mono.just(0L))
-                .map(count -> {
-                    vo.setCount(count);
-                    return vo;
-                })).flatMap(v -> {
-            if (authority.getSuperior() != null) {
-                return authorityRepository.findById(authority.getSuperior()).map(s -> {
-                    v.setSuperior(s.getName());
-                    return v;
-                }).switchIfEmpty(Mono.just(v));
-            }
-            return Mono.just(v);
-        });
+    private Mono<AuthorityVO> convertOuterWithCount(Authority authority) {
+        return this.convertOuter(authority).flatMap(vo ->
+                roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(authority.getId())
+                        .switchIfEmpty(Mono.just(0L))
+                        .map(count -> {
+                            vo.setCount(count);
+                            return vo;
+                        }));
+    }
+
+    /**
+     * 转换superior
+     *
+     * @param superiorId superior主键
+     * @param vo         vo
+     * @return 设置后的vo
+     */
+    private Mono<AuthorityVO> superior(ObjectId superiorId, AuthorityVO vo) {
+        if (superiorId != null) {
+            return authorityRepository.findById(superiorId).map(superior -> {
+                BasicVO<String> basicVO = new BasicVO<>();
+                BeanUtils.copyProperties(superior, basicVO);
+                vo.setSuperior(basicVO);
+                return vo;
+            }).switchIfEmpty(Mono.just(vo));
+        }
+        return Mono.just(vo);
     }
 
     /**
@@ -196,35 +202,10 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @return TreeNode of Flux
      */
     private Flux<TreeNode> convertTree(Flux<Authority> authorities) {
-        return authorities.filter(a -> Objects.isNull(a.getSuperior())).flatMap(authority -> {
-            TreeNode treeNode = this.constructNode(authority.getCode(), authority);
-
-            Set<String> expand = new HashSet<>();
-            expand.add("icon");
-            expand.add("path");
-
-            return this.children(authority, authorities, expand).collectList().map(treeNodes -> {
-                treeNode.setChildren(treeNodes);
-                return treeNode;
-            });
-        });
-    }
-
-    /**
-     * construct tree node
-     *
-     * @param superior  superior code
-     * @param authority data
-     * @return tree node
-     */
-    private TreeNode constructNode(String superior, Authority authority) {
-        TreeNode treeNode = new TreeNode(authority.getCode(), authority.getName());
-        treeNode.setSuperior(superior);
-        Map<String, Object> expand = new HashMap<>();
-        expand.put("icon", authority.getIcon());
-        expand.put("path", authority.getPath());
-        treeNode.setExpand(expand);
-        return treeNode;
+        Set<String> expand = new HashSet<>();
+        expand.add("icon");
+        expand.add("path");
+        return this.convert(authorities, expand);
     }
 
 }

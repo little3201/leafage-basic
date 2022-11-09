@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import javax.validation.Valid;
 
 /**
@@ -25,7 +26,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2018/12/17 19:39
  **/
 @RestController
-@RequestMapping("/authority")
+@RequestMapping("/authorities")
 public class AuthorityController {
 
     private final Logger logger = LoggerFactory.getLogger(AuthorityController.class);

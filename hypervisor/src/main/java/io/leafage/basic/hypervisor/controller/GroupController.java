@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import javax.validation.Valid;
 
 /**
@@ -25,7 +26,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2018/12/20 9:54
  **/
 @RestController
-@RequestMapping("/group")
+@RequestMapping("/groups")
 public class GroupController {
 
     private final Logger logger = LoggerFactory.getLogger(GroupController.class);

@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
-import top.leafage.common.basic.AbstractVO;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -18,10 +17,6 @@ public class AuthorityVO extends AbstractVO<String> implements Serializable {
     private static final long serialVersionUID = 9207337014543117619L;
 
     /**
-     * 上级
-     */
-    private String superior;
-    /**
      * 名称
      */
     private String name;
@@ -29,6 +24,10 @@ public class AuthorityVO extends AbstractVO<String> implements Serializable {
      * 类型
      */
     private Character type;
+    /**
+     * 上级
+     */
+    private BasicVO<String> superior;
     /**
      * 图标
      */
@@ -47,14 +46,6 @@ public class AuthorityVO extends AbstractVO<String> implements Serializable {
     private String description;
 
 
-    public String getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(String superior) {
-        this.superior = superior;
-    }
-
     public String getName() {
         return name;
     }
@@ -69,6 +60,14 @@ public class AuthorityVO extends AbstractVO<String> implements Serializable {
 
     public void setType(Character type) {
         this.type = type;
+    }
+
+    public BasicVO<String> getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(BasicVO<String> superior) {
+        this.superior = superior;
     }
 
     public String getIcon() {

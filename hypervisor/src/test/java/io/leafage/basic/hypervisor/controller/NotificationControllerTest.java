@@ -15,8 +15,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -44,7 +46,7 @@ class NotificationControllerTest {
         Page<NotificationVO> voPage = new PageImpl<>(List.of(notificationVO));
         given(this.notificationService.retrieve(0, 2, false)).willReturn(Mono.just(voPage));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/notification").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/notifications").queryParam("page", 0)
                         .queryParam("size", 2).queryParam("read", "false").build()).exchange()
                 .expectStatus().isOk().expectBodyList(RoleVO.class);
     }
@@ -53,7 +55,7 @@ class NotificationControllerTest {
     void retrieve_error() {
         given(this.notificationService.retrieve(0, 2, false)).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/notification").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/notifications").queryParam("page", 0)
                         .queryParam("size", 2).queryParam("read", "false").build())
                 .exchange().expectStatus().isNoContent();
     }
@@ -64,7 +66,7 @@ class NotificationControllerTest {
         notificationVO.setTitle("标题");
         given(this.notificationService.fetch(Mockito.anyString())).willReturn(Mono.just(notificationVO));
 
-        webTestClient.get().uri("/notification/{code}", "1100").exchange()
+        webTestClient.get().uri("/notifications/{code}", "1100").exchange()
                 .expectStatus().isOk().expectBody().jsonPath("$.title").isEqualTo("标题");
     }
 
@@ -72,7 +74,7 @@ class NotificationControllerTest {
     void fetch_error() {
         given(this.notificationService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/notification/{code}", "1100").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/notifications/{code}", "1100").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -85,7 +87,7 @@ class NotificationControllerTest {
         notificationDTO.setTitle("标题");
         notificationDTO.setContent("内容信息");
         notificationDTO.setReceiver("test");
-        webTestClient.post().uri("/notification").bodyValue(notificationDTO).exchange()
+        webTestClient.post().uri("/notifications").bodyValue(notificationDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isEqualTo("标题");
     }
@@ -98,7 +100,7 @@ class NotificationControllerTest {
         notificationDTO.setTitle("标题");
         notificationDTO.setContent("内容信息");
         notificationDTO.setReceiver("test");
-        webTestClient.post().uri("/notification").bodyValue(notificationDTO).exchange()
+        webTestClient.post().uri("/notifications").bodyValue(notificationDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
 
@@ -106,7 +108,7 @@ class NotificationControllerTest {
     void remove() {
         given(this.notificationService.remove(Mockito.anyString())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/notification/{code}", "21612OL34").exchange()
+        webTestClient.delete().uri("/notifications/{code}", "21612OL34").exchange()
                 .expectStatus().isOk();
     }
 
@@ -114,7 +116,7 @@ class NotificationControllerTest {
     void remove_error() {
         given(this.notificationService.remove(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/notification/{code}", "21612OL34").exchange()
+        webTestClient.delete().uri("/notifications/{code}", "21612OL34").exchange()
                 .expectStatus().is4xxClientError();
     }
 }

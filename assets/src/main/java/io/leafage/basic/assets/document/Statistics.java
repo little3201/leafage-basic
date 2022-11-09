@@ -2,6 +2,7 @@ package io.leafage.basic.assets.document;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDate;
 
 @Document(collection = "statistics")

@@ -18,7 +18,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
+
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -46,7 +48,7 @@ class AuthorityControllerTest {
         Page<AuthorityVO> voPage = new PageImpl<>(List.of(authorityVO));
         given(this.authorityService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authorities").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
                 .expectStatus().isOk().expectBodyList(RoleVO.class);
     }
@@ -55,7 +57,7 @@ class AuthorityControllerTest {
     void retrieve_error() {
         given(this.authorityService.retrieve(0, 2)).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority").queryParam("page", 0)
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authorities").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
     }
 
@@ -64,7 +66,7 @@ class AuthorityControllerTest {
         TreeNode treeNode = new TreeNode("21612OL34", "test");
         given(this.authorityService.tree()).willReturn(Flux.just(treeNode));
 
-        webTestClient.get().uri("/authority/tree").exchange()
+        webTestClient.get().uri("/authorities/tree").exchange()
                 .expectStatus().isOk().expectBodyList(TreeNode.class);
     }
 
@@ -72,7 +74,7 @@ class AuthorityControllerTest {
     void tree_error() {
         given(this.authorityService.tree()).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/authority/tree").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/authorities/tree").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -81,7 +83,7 @@ class AuthorityControllerTest {
         authorityVO.setName("test");
         given(this.authorityService.fetch(Mockito.anyString())).willReturn(Mono.just(authorityVO));
 
-        webTestClient.get().uri("/authority/{code}", "21612OL34").exchange()
+        webTestClient.get().uri("/authorities/{code}", "21612OL34").exchange()
                 .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
@@ -89,7 +91,7 @@ class AuthorityControllerTest {
     void fetch_error() {
         given(this.authorityService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/authority/{code}", "21612OL34").exchange()
+        webTestClient.get().uri("/authorities/{code}", "21612OL34").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -97,7 +99,7 @@ class AuthorityControllerTest {
     void exist() {
         given(this.authorityService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authorities/exist")
                 .queryParam("name", "test").build()).exchange().expectStatus().isOk();
     }
 
@@ -105,7 +107,7 @@ class AuthorityControllerTest {
     void exist_error() {
         given(this.authorityService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authority/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/authorities/exist")
                 .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
@@ -118,7 +120,7 @@ class AuthorityControllerTest {
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
         authorityDTO.setType('M');
-        webTestClient.post().uri("/authority").bodyValue(authorityDTO).exchange()
+        webTestClient.post().uri("/authorities").bodyValue(authorityDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -130,7 +132,7 @@ class AuthorityControllerTest {
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
         authorityDTO.setType('M');
-        webTestClient.post().uri("/authority").bodyValue(authorityDTO).exchange().expectStatus().is4xxClientError();
+        webTestClient.post().uri("/authorities").bodyValue(authorityDTO).exchange().expectStatus().is4xxClientError();
     }
 
     @Test
@@ -142,7 +144,7 @@ class AuthorityControllerTest {
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
         authorityDTO.setType('M');
-        webTestClient.put().uri("/authority/{code}", "21612OL34").bodyValue(authorityDTO).exchange()
+        webTestClient.put().uri("/authorities/{code}", "21612OL34").bodyValue(authorityDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -154,7 +156,7 @@ class AuthorityControllerTest {
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
         authorityDTO.setType('M');
-        webTestClient.put().uri("/authority/{code}", "21612OL34").bodyValue(authorityDTO).exchange()
+        webTestClient.put().uri("/authorities/{code}", "21612OL34").bodyValue(authorityDTO).exchange()
                 .expectStatus().isNotModified();
     }
 
@@ -164,7 +166,7 @@ class AuthorityControllerTest {
         roleVO.setName("test");
         given(this.roleAuthorityService.roles(Mockito.anyString())).willReturn(Flux.just(roleVO));
 
-        webTestClient.get().uri("/authority/{code}/role", "21612OL34").exchange()
+        webTestClient.get().uri("/authorities/{code}/role", "21612OL34").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(RoleVO.class);
     }
@@ -173,7 +175,7 @@ class AuthorityControllerTest {
     void roles_error() {
         given(this.roleAuthorityService.roles(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/authority/{code}/role", "21612OL34").exchange()
+        webTestClient.get().uri("/authorities/{code}/role", "21612OL34").exchange()
                 .expectStatus().isNoContent();
     }
 }

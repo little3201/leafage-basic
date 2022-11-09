@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import javax.validation.Valid;
 
 /**
@@ -22,7 +23,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2021/7/17 21:01
  **/
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/comments")
 public class CommentController {
 
     private final Logger logger = LoggerFactory.getLogger(CommentController.class);

@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.assets.vo;
 
-import top.leafage.common.basic.AbstractVO;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -28,7 +27,7 @@ public class ResourceVO extends AbstractVO<String> implements Serializable {
     /**
      * 分类
      */
-    private String category;
+    private BasicVO<String> category;
     /**
      * 类型
      */
@@ -70,11 +69,11 @@ public class ResourceVO extends AbstractVO<String> implements Serializable {
         this.cover = cover;
     }
 
-    public String getCategory() {
+    public BasicVO<String> getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(BasicVO<String> category) {
         this.category = category;
     }
 

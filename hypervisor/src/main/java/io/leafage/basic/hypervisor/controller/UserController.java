@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
 import javax.validation.Valid;
 
 /**
@@ -20,7 +21,7 @@ import javax.validation.Valid;
  * @author liwenqiang 2018/8/2 21:02
  **/
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);

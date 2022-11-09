@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2021/08/20 17:08
  **/
 @RestController
-@RequestMapping("/region")
+@RequestMapping("/regions")
 public class RegionController {
 
     private final Logger logger = LoggerFactory.getLogger(RegionController.class);

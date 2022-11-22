@@ -19,26 +19,13 @@ public class PostsContentVO extends PostsVO implements Serializable {
     /**
      * 内容
      */
-    private String content;
-    /**
-     * 目录
-     */
-    private String catalog;
+    private ContentVO content;
 
-
-    public String getContent() {
+    public ContentVO getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(ContentVO content) {
         this.content = content;
-    }
-
-    public String getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
     }
 }

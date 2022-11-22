@@ -13,7 +13,7 @@ import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.service.StatisticsService;
-import io.leafage.basic.assets.vo.BasicVO;
+import io.leafage.basic.assets.vo.CategoryVO;
 import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
@@ -95,19 +95,21 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     return posts;
                 }).flatMap(p -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED).map(v -> p)))
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> { // 查询关联分类信息
-                            PostsContentVO pcv = new PostsContentVO();
-                            BeanUtils.copyProperties(posts, pcv);
+                            PostsContentVO extendVO = new PostsContentVO();
+                            BeanUtils.copyProperties(posts, extendVO);
                             // 转换分类对象
-                            BasicVO<String> basicVO = new BasicVO<>();
+                            CategoryVO basicVO = new CategoryVO();
                             BeanUtils.copyProperties(category, basicVO);
-                            pcv.setCategory(basicVO);
-                            return pcv;
-                        }).flatMap(pcv -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
+                            extendVO.setCategory(basicVO);
+                            return extendVO;
+                        }).flatMap(extendVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
                                 .map(contentInfo -> {
-                                    pcv.setContent(contentInfo.getContent());
-                                    pcv.setCatalog(contentInfo.getCatalog());
-                                    return pcv;
-                                }).defaultIfEmpty(pcv))
+                                    ContentVO contentVO = new ContentVO();
+                                    contentVO.setContent(contentInfo.getContent());
+                                    contentVO.setCatalog(contentInfo.getCatalog());
+                                    extendVO.setContent(contentVO);
+                                    return extendVO;
+                                }).defaultIfEmpty(extendVO))
                 );
     }
 
@@ -261,7 +263,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return categoryRepository.findById(categoryId)
                 .map(category -> {
                     // 转换分类对象
-                    BasicVO<String> basicVO = new BasicVO<>();
+                    CategoryVO basicVO = new CategoryVO();
                     BeanUtils.copyProperties(category, basicVO);
                     vo.setCategory(basicVO);
                     return vo;

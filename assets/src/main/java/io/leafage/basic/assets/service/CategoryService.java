@@ -4,7 +4,7 @@
 package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.vo.CategoryVO;
+import io.leafage.basic.assets.vo.CategoriesVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
@@ -14,7 +14,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2020/2/13 20:16
  **/
-public interface CategoryService extends ReactiveBasicService<CategoryDTO, CategoryVO, String> {
+public interface CategoryService extends ReactiveBasicService<CategoryDTO, CategoriesVO, String> {
 
     /**
      * 分页查询
@@ -23,5 +23,5 @@ public interface CategoryService extends ReactiveBasicService<CategoryDTO, Categ
      * @param size 大小
      * @return 结果集
      */
-    Mono<Page<CategoryVO>> retrieve(int page, int size);
+    Mono<Page<CategoriesVO>> retrieve(int page, int size);
 }

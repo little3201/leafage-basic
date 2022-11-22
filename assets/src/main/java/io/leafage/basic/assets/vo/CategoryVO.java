@@ -1,43 +1,34 @@
-/*
- * Copyright (c) 2021. Leafage All Right Reserved.
- */
 package io.leafage.basic.assets.vo;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
- * VO class for Category
+ * desc
  *
- * @author liwenqiang 2020-10-06 22:09
- */
-public class CategoryVO extends BasicVO<String> implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 8389570117461784047L;
+ * @author wilsonli 2022/8/20 12:28
+ **/
+public class CategoryVO {
 
     /**
-     * 贴子数
+     * 编号
      */
-    private long count;
+    private String code;
     /**
-     * 描述
+     * 名称
      */
-    private String description;
+    private String name;
 
-    public long getCount() {
-        return count;
+    public String getCode() {
+        return code;
     }
 
-    public void setCount(long count) {
-        this.count = count;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 }

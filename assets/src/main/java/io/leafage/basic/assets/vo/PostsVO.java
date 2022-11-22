@@ -5,6 +5,7 @@ package io.leafage.basic.assets.vo;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Set;
 
 /**
@@ -12,11 +13,15 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PostsVO extends AbstractVO<String> implements Serializable {
+public class PostsVO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -2692474466082844624L;
 
+    /**
+     * 编号
+     */
+    private String code;
     /**
      * 标题
      */
@@ -32,7 +37,7 @@ public class PostsVO extends AbstractVO<String> implements Serializable {
     /**
      * 分类
      */
-    private BasicVO<String> category;
+    private CategoryVO category;
     /**
      * 点赞
      */
@@ -45,6 +50,18 @@ public class PostsVO extends AbstractVO<String> implements Serializable {
      * 查看
      */
     private int viewed;
+    /**
+     * 时间
+     */
+    private Instant modifyTime;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getTitle() {
         return title;
@@ -70,11 +87,11 @@ public class PostsVO extends AbstractVO<String> implements Serializable {
         this.tags = tags;
     }
 
-    public BasicVO<String> getCategory() {
+    public CategoryVO getCategory() {
         return category;
     }
 
-    public void setCategory(BasicVO<String> category) {
+    public void setCategory(CategoryVO category) {
         this.category = category;
     }
 
@@ -100,5 +117,13 @@ public class PostsVO extends AbstractVO<String> implements Serializable {
 
     public void setViewed(int viewed) {
         this.viewed = viewed;
+    }
+
+    public Instant getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Instant modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

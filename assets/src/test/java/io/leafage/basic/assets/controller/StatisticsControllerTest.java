@@ -1,7 +1,7 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.service.StatisticsService;
-import io.leafage.basic.assets.vo.StatisticsTotalVO;
+import io.leafage.basic.assets.vo.StatisticsExtendVO;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,16 +37,18 @@ class StatisticsControllerTest {
 
     @Test
     void retrieve() {
-        StatisticsVO statisticsVO = new StatisticsVO();
-        statisticsVO.setDate(LocalDate.now());
-        statisticsVO.setComments(23);
-        statisticsVO.setOverComments(2.23);
-        Page<StatisticsVO> page = new PageImpl<>(List.of(statisticsVO));
+        StatisticsExtendVO statisticsExtendVO = new StatisticsExtendVO();
+        statisticsExtendVO.setDate(LocalDate.now());
+        statisticsExtendVO.setOverDownloads(23);
+        statisticsExtendVO.setOverLikes(23.3);
+        statisticsExtendVO.setOverViewed(3.4);
+        statisticsExtendVO.setOverComments(2.23);
+        Page<StatisticsExtendVO> page = new PageImpl<>(List.of(statisticsExtendVO));
         given(this.statisticsService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/statistics").queryParam("page", 0)
                         .queryParam("size", 7).build()).exchange().expectStatus().isOk()
-                .expectBodyList(StatisticsVO.class);
+                .expectBodyList(StatisticsExtendVO.class);
     }
 
     @Test
@@ -60,7 +62,7 @@ class StatisticsControllerTest {
 
     @Test
     void fetch() {
-        StatisticsTotalVO totalVO = new StatisticsTotalVO();
+        StatisticsVO totalVO = new StatisticsVO();
         totalVO.setViewed(121);
         given(this.statisticsService.fetch()).willReturn(Mono.just(totalVO));
 

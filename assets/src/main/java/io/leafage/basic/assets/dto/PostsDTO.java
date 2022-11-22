@@ -45,7 +45,6 @@ public class PostsDTO implements Serializable {
     /**
      * 分类
      */
-    @NotBlank
     private CategoryDTO category;
 
     public String getTitle() {

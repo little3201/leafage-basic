@@ -5,7 +5,7 @@ package io.leafage.basic.assets.vo;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -53,7 +53,7 @@ public class PostsVO implements Serializable {
     /**
      * 时间
      */
-    private Instant modifyTime;
+    private LocalDateTime modifyTime;
 
     public String getCode() {
         return code;
@@ -119,11 +119,11 @@ public class PostsVO implements Serializable {
         this.viewed = viewed;
     }
 
-    public Instant getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(Instant modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

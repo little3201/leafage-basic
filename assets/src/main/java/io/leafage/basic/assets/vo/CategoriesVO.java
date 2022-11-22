@@ -5,7 +5,7 @@ package io.leafage.basic.assets.vo;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * VO class for Category
@@ -36,7 +36,7 @@ public class CategoriesVO implements Serializable {
     /**
      * 时间
      */
-    private Instant modifyTime;
+    private LocalDateTime modifyTime;
 
     public String getCode() {
         return code;
@@ -70,11 +70,11 @@ public class CategoriesVO implements Serializable {
         this.description = description;
     }
 
-    public Instant getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(Instant modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

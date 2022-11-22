@@ -5,7 +5,7 @@ package io.leafage.basic.assets.vo;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * VO for Resource
@@ -52,7 +52,7 @@ public class ResourceVO implements Serializable {
     /**
      * 时间
      */
-    private Instant modifyTime;
+    private LocalDateTime modifyTime;
 
     public String getCode() {
         return code;
@@ -118,11 +118,11 @@ public class ResourceVO implements Serializable {
         this.downloads = downloads;
     }
 
-    public Instant getModifyTime() {
+    public LocalDateTime getModifyTime() {
         return modifyTime;
     }
 
-    public void setModifyTime(Instant modifyTime) {
+    public void setModifyTime(LocalDateTime modifyTime) {
         this.modifyTime = modifyTime;
     }
 }

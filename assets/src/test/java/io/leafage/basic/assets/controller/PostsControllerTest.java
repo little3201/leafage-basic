@@ -21,8 +21,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.Collections;
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 
@@ -98,12 +100,15 @@ class PostsControllerTest {
     @Test
     void details() {
         PostsContentVO postsContentVO = new PostsContentVO();
-        postsContentVO.setContent("test");
+        ContentVO contentVO = new ContentVO();
+        contentVO.setContent("test");
+        postsContentVO.setContent(contentVO);
+        postsContentVO.setTitle("cate");
         given(this.postsService.details(Mockito.anyString())).willReturn(Mono.just(postsContentVO));
 
         webTestClient.get().uri("/posts/{code}/details", "21213G0J2").exchange()
                 .expectStatus().isOk()
-                .expectBody().jsonPath("$.content").isEqualTo("test");
+                .expectBody().jsonPath("$.title").isEqualTo("cate");
     }
 
     @Test

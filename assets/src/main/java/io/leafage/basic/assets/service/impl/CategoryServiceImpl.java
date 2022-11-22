@@ -8,7 +8,7 @@ import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.CategoryService;
-import io.leafage.basic.assets.vo.CategoryVO;
+import io.leafage.basic.assets.vo.CategoriesVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -39,9 +39,9 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Mono<Page<CategoryVO>> retrieve(int page, int size) {
+    public Mono<Page<CategoriesVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Flux<CategoriesVO> voFlux = categoryRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
 
         Mono<Long> count = categoryRepository.countByEnabledTrue();
 
@@ -50,13 +50,13 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Mono<CategoryVO> fetch(String code) {
+    public Mono<CategoriesVO> fetch(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter);
     }
 
     @Override
-    public Mono<CategoryVO> create(CategoryDTO categoryDTO) {
+    public Mono<CategoriesVO> create(CategoryDTO categoryDTO) {
         Category info = new Category();
         BeanUtils.copyProperties(categoryDTO, info);
         info.setCode(this.generateCode());
@@ -64,7 +64,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Mono<CategoryVO> modify(String code, CategoryDTO categoryDTO) {
+    public Mono<CategoriesVO> modify(String code, CategoryDTO categoryDTO) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return categoryRepository.getByCodeAndEnabledTrue(code).doOnNext(category ->
                         BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
@@ -83,11 +83,11 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
      * @param category 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<CategoryVO> fetchOuter(Category category) {
+    private Mono<CategoriesVO> fetchOuter(Category category) {
         return Mono.just(category).map(c -> {
-            CategoryVO categoryVO = new CategoryVO();
-            BeanUtils.copyProperties(category, categoryVO);
-            return categoryVO;
+            CategoriesVO categoriesVO = new CategoriesVO();
+            BeanUtils.copyProperties(category, categoriesVO);
+            return categoriesVO;
         });
     }
 
@@ -97,11 +97,11 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
      * @param category 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<CategoryVO> convertOuter(Category category) {
+    private Mono<CategoriesVO> convertOuter(Category category) {
         return Mono.just(category).map(c -> {
-            CategoryVO categoryVO = new CategoryVO();
-            BeanUtils.copyProperties(c, categoryVO);
-            return categoryVO;
+            CategoriesVO categoriesVO = new CategoriesVO();
+            BeanUtils.copyProperties(c, categoriesVO);
+            return categoriesVO;
         }).flatMap(categoryVO -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
                 .switchIfEmpty(Mono.just(0L))
                 .map(count -> {

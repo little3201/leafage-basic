@@ -1,7 +1,7 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.service.StatisticsService;
-import io.leafage.basic.assets.vo.StatisticsTotalVO;
+import io.leafage.basic.assets.vo.StatisticsExtendVO;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +38,8 @@ public class StatisticsController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<StatisticsVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Mono<Page<StatisticsVO>> pageMono;
+    public ResponseEntity<Mono<Page<StatisticsExtendVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<StatisticsExtendVO>> pageMono;
         try {
             pageMono = statisticsService.retrieve(page, size);
         } catch (Exception e) {
@@ -55,8 +55,8 @@ public class StatisticsController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/total")
-    public ResponseEntity<Mono<StatisticsTotalVO>> fetch() {
-        Mono<StatisticsTotalVO> voMono;
+    public ResponseEntity<Mono<StatisticsVO>> fetch() {
+        Mono<StatisticsVO> voMono;
         try {
             voMono = statisticsService.fetch();
         } catch (Exception e) {

@@ -5,17 +5,22 @@ package io.leafage.basic.assets.vo;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * VO for Resource
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceVO extends AbstractVO<String> implements Serializable {
+public class ResourceVO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -2168494818144125736L;
 
+    /**
+     * 编号
+     */
+    private String code;
     /**
      * 标题
      */
@@ -27,7 +32,7 @@ public class ResourceVO extends AbstractVO<String> implements Serializable {
     /**
      * 分类
      */
-    private BasicVO<String> category;
+    private CategoryVO category;
     /**
      * 类型
      */
@@ -44,6 +49,18 @@ public class ResourceVO extends AbstractVO<String> implements Serializable {
      * 查看
      */
     private int viewed;
+    /**
+     * 时间
+     */
+    private Instant modifyTime;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public int getViewed() {
         return viewed;
@@ -69,11 +86,11 @@ public class ResourceVO extends AbstractVO<String> implements Serializable {
         this.cover = cover;
     }
 
-    public BasicVO<String> getCategory() {
+    public CategoryVO getCategory() {
         return category;
     }
 
-    public void setCategory(BasicVO<String> category) {
+    public void setCategory(CategoryVO category) {
         this.category = category;
     }
 
@@ -99,5 +116,13 @@ public class ResourceVO extends AbstractVO<String> implements Serializable {
 
     public void setDownloads(int downloads) {
         this.downloads = downloads;
+    }
+
+    public Instant getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(Instant modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

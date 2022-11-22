@@ -5,7 +5,7 @@ package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.service.CategoryService;
-import io.leafage.basic.assets.vo.CategoryVO;
+import io.leafage.basic.assets.vo.CategoriesVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -41,8 +41,8 @@ public class CategoryController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<CategoryVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Mono<Page<CategoryVO>> pageMono;
+    public ResponseEntity<Mono<Page<CategoriesVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<CategoriesVO>> pageMono;
         try {
             pageMono = categoryService.retrieve(page, size);
         } catch (Exception e) {
@@ -59,8 +59,8 @@ public class CategoryController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Mono<CategoryVO>> fetch(@PathVariable String code) {
-        Mono<CategoryVO> voMono;
+    public ResponseEntity<Mono<CategoriesVO>> fetch(@PathVariable String code) {
+        Mono<CategoriesVO> voMono;
         try {
             voMono = categoryService.fetch(code);
         } catch (Exception e) {
@@ -95,8 +95,8 @@ public class CategoryController {
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<CategoryVO>> create(@RequestBody @Valid CategoryDTO categoryDTO) {
-        Mono<CategoryVO> voMono;
+    public ResponseEntity<Mono<CategoriesVO>> create(@RequestBody @Valid CategoryDTO categoryDTO) {
+        Mono<CategoriesVO> voMono;
         try {
             voMono = categoryService.create(categoryDTO);
         } catch (Exception e) {
@@ -114,8 +114,8 @@ public class CategoryController {
      * @return 修改后的信息，异常时返回304状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Mono<CategoryVO>> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
-        Mono<CategoryVO> voMono;
+    public ResponseEntity<Mono<CategoriesVO>> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
+        Mono<CategoriesVO> voMono;
         try {
             voMono = categoryService.modify(code, categoryDTO);
         } catch (Exception e) {

@@ -5,7 +5,7 @@ package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.service.CategoryService;
-import io.leafage.basic.assets.vo.CategoryVO;
+import io.leafage.basic.assets.vo.CategoriesVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -40,14 +40,14 @@ class CategoryControllerTest {
 
     @Test
     void retrieve() {
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
-        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
+        CategoriesVO categoriesVO = new CategoriesVO();
+        categoriesVO.setName("test");
+        Page<CategoriesVO> page = new PageImpl<>(List.of(categoriesVO));
         given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(CategoryVO.class);
+                .expectStatus().isOk().expectBodyList(CategoriesVO.class);
     }
 
     @Test
@@ -60,9 +60,9 @@ class CategoryControllerTest {
 
     @Test
     void fetch() {
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
-        given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoryVO));
+        CategoriesVO categoriesVO = new CategoriesVO();
+        categoriesVO.setName("test");
+        given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoriesVO));
 
         webTestClient.get().uri("/categories/{code}", "21213G0J2").exchange()
                 .expectStatus().isOk()
@@ -96,9 +96,9 @@ class CategoryControllerTest {
     @Test
     void create() {
         // 构造返回对象
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
-        given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
+        CategoriesVO categoriesVO = new CategoriesVO();
+        categoriesVO.setName("test");
+        given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoriesVO));
 
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
@@ -124,9 +124,9 @@ class CategoryControllerTest {
     @Test
     void modify() {
         // 构造返回对象
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
-        given(this.categoryService.modify(Mockito.anyString(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
+        CategoriesVO categoriesVO = new CategoriesVO();
+        categoriesVO.setName("test");
+        given(this.categoryService.modify(Mockito.anyString(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoriesVO));
 
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();

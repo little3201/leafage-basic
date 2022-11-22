@@ -6,7 +6,7 @@ import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
-import io.leafage.basic.assets.vo.StatisticsTotalVO;
+import io.leafage.basic.assets.vo.StatisticsExtendVO;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -49,9 +49,9 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<Page<StatisticsVO>> retrieve(int page, int size) {
+    public Mono<Page<StatisticsExtendVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, DATE));
-        Flux<StatisticsVO> voFlux = statisticsRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
+        Flux<StatisticsExtendVO> voFlux = statisticsRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
 
         Mono<Long> count = statisticsRepository.countByEnabledTrue();
 
@@ -60,9 +60,9 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<StatisticsTotalVO> fetch() {
+    public Mono<StatisticsVO> fetch() {
         return postsRepository.findByEnabledTrue().collectList().map(postsList -> {
-            StatisticsTotalVO totalVO = new StatisticsTotalVO();
+            StatisticsVO totalVO = new StatisticsVO();
             postsList.forEach(posts -> {
                 totalVO.setViewed(posts.getViewed() + totalVO.getViewed());
                 totalVO.setLikes(posts.getLikes() + totalVO.getLikes());
@@ -107,8 +107,8 @@ public class StatisticsServiceImpl implements StatisticsService {
      * @param info 信息
      * @return 输出转换后的vo对象
      */
-    private StatisticsVO convertOuter(Statistics info) {
-        StatisticsVO outer = new StatisticsVO();
+    private StatisticsExtendVO convertOuter(Statistics info) {
+        StatisticsExtendVO outer = new StatisticsExtendVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
     }

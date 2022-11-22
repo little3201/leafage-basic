@@ -46,7 +46,7 @@ public class PostsDTO implements Serializable {
      * 分类
      */
     @NotBlank
-    private String category;
+    private CategoryDTO category;
 
     public String getTitle() {
         return title;
@@ -88,11 +88,11 @@ public class PostsDTO implements Serializable {
         this.tags = tags;
     }
 
-    public String getCategory() {
+    public CategoryDTO getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryDTO category) {
         this.category = category;
     }
 }

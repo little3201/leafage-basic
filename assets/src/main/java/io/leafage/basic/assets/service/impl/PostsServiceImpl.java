@@ -135,7 +135,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostsVO> create(PostsDTO postsDTO) {
-        return categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
+        return categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory().getCode())
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(category -> {
                     Posts info = new Posts();
@@ -144,8 +144,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     info.setCategoryId(category.getId());
                     return info;
                 }).flatMap(info -> postsRepository.insert(info).map(posts -> {
-                            PostsContent postsContent = new PostsContent();
-                            postsContent.setPostsId(posts.getId());
+                    PostsContent postsContent = new PostsContent();
+                    postsContent.setPostsId(posts.getId());
                             postsContent.setCatalog(postsDTO.getCatalog());
                             postsContent.setContent(postsDTO.getContent());
                             return postsContent;
@@ -159,7 +159,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory())
+                .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory().getCode())
                         .switchIfEmpty(Mono.error(NotContextException::new))
                         .map(category -> {
                             // 将信息复制到info

@@ -30,7 +30,7 @@ public class ResourceDTO implements Serializable {
      * 分类
      */
     @NotBlank
-    private String category;
+    private CategoryDTO category;
     /**
      * 类型
      */
@@ -56,11 +56,11 @@ public class ResourceDTO implements Serializable {
         this.cover = cover;
     }
 
-    public String getCategory() {
+    public CategoryDTO getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryDTO category) {
         this.category = category;
     }
 

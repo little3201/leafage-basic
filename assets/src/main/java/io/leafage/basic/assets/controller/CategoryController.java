@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.dto.CategoryDTO;
+import io.leafage.basic.assets.dto.CategoriesDTO;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoriesVO;
 import org.slf4j.Logger;
@@ -91,14 +91,14 @@ public class CategoryController {
     /**
      * 添加信息
      *
-     * @param categoryDTO 要添加的数据
+     * @param categoriesDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<CategoriesVO>> create(@RequestBody @Valid CategoryDTO categoryDTO) {
+    public ResponseEntity<Mono<CategoriesVO>> create(@RequestBody @Valid CategoriesDTO categoriesDTO) {
         Mono<CategoriesVO> voMono;
         try {
-            voMono = categoryService.create(categoryDTO);
+            voMono = categoryService.create(categoriesDTO);
         } catch (Exception e) {
             logger.error("Create category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
@@ -109,15 +109,15 @@ public class CategoryController {
     /**
      * 修改信息
      *
-     * @param code        代码
-     * @param categoryDTO 要修改的数据
+     * @param code          代码
+     * @param categoriesDTO 要修改的数据
      * @return 修改后的信息，异常时返回304状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Mono<CategoriesVO>> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
+    public ResponseEntity<Mono<CategoriesVO>> modify(@PathVariable String code, @RequestBody @Valid CategoriesDTO categoriesDTO) {
         Mono<CategoriesVO> voMono;
         try {
-            voMono = categoryService.modify(code, categoryDTO);
+            voMono = categoryService.modify(code, categoriesDTO);
         } catch (Exception e) {
             logger.error("Modify category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

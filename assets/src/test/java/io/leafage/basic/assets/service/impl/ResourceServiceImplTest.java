@@ -5,6 +5,7 @@ package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Resource;
+import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
@@ -111,7 +112,10 @@ class ResourceServiceImplTest {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setCover("./avatar.jpg");
-        resourceDTO.setCategory("21318000");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21318000");
+        resourceDTO.setCategory(categoryDTO);
         StepVerifier.create(resourceService.create(resourceDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -136,7 +140,10 @@ class ResourceServiceImplTest {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setCover("./avatar.jpg");
-        resourceDTO.setCategory("21318000");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21318000");
+        resourceDTO.setCategory(categoryDTO);
         StepVerifier.create(resourceService.modify("21318H9FH", resourceDTO)).expectNextCount(1).verifyComplete();
     }
 

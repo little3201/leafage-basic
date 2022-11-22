@@ -4,7 +4,7 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Category;
-import io.leafage.basic.assets.dto.CategoryDTO;
+import io.leafage.basic.assets.dto.CategoriesDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.CategoryService;
@@ -56,18 +56,18 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     }
 
     @Override
-    public Mono<CategoriesVO> create(CategoryDTO categoryDTO) {
+    public Mono<CategoriesVO> create(CategoriesDTO categoriesDTO) {
         Category info = new Category();
-        BeanUtils.copyProperties(categoryDTO, info);
+        BeanUtils.copyProperties(categoriesDTO, info);
         info.setCode(this.generateCode());
         return categoryRepository.insert(info).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<CategoriesVO> modify(String code, CategoryDTO categoryDTO) {
+    public Mono<CategoriesVO> modify(String code, CategoriesDTO categoriesDTO) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return categoryRepository.getByCodeAndEnabledTrue(code).doOnNext(category ->
-                        BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
+                        BeanUtils.copyProperties(categoriesDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(categoryRepository::save).flatMap(this::convertOuter);
     }
 

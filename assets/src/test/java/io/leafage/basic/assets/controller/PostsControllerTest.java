@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.assets.controller;
 
+import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.ContentVO;
@@ -241,7 +242,9 @@ class PostsControllerTest {
         postsDTO.setTitle("test");
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setCover("../test.jpg");
-        postsDTO.setCategory("21213G0J2");
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21213G0J2");
+        postsDTO.setCategory(categoryDTO);
         postsDTO.setContent("content");
         webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postsDTO).exchange()
@@ -258,7 +261,10 @@ class PostsControllerTest {
         postsDTO.setTitle("test");
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setCover("../test.jpg");
-        postsDTO.setCategory("21213G0J2");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21213G0J2");
+        postsDTO.setCategory(categoryDTO);
         postsDTO.setContent("content");
         webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postsDTO).exchange()
@@ -277,7 +283,10 @@ class PostsControllerTest {
         postsDTO.setTitle("test");
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setCover("../test.jpg");
-        postsDTO.setCategory("21213G0J2");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21213G0J2");
+        postsDTO.setCategory(categoryDTO);
         postsDTO.setContent("content");
         webTestClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postsDTO).exchange().expectStatus().isAccepted();
@@ -292,7 +301,10 @@ class PostsControllerTest {
         postsDTO.setTitle("test");
         postsDTO.setTags(Collections.singleton("java"));
         postsDTO.setCover("../test.jpg");
-        postsDTO.setCategory("21213G0J2");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21213G0J2");
+        postsDTO.setCategory(categoryDTO);
         postsDTO.setContent("content");
         webTestClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postsDTO).exchange().expectStatus().isNotModified();

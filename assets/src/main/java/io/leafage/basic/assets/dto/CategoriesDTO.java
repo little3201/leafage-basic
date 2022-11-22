@@ -12,28 +12,20 @@ import java.io.Serializable;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class CategoryDTO implements Serializable {
+public class CategoriesDTO implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -4716083233926076297L;
+    private static final long serialVersionUID = -6972802402513706361L;
 
-    /**
-     * 编号
-     */
-    private String code;
     /**
      * 名称
      */
     @NotBlank
     private String name;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
+    /**
+     * 描述
+     */
+    private String description;
 
     public String getName() {
         return name;
@@ -43,4 +35,11 @@ public class CategoryDTO implements Serializable {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

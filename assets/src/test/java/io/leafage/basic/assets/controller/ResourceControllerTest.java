@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.assets.controller;
 
+import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.service.ResourceService;
 import io.leafage.basic.assets.vo.ResourceVO;
@@ -123,7 +124,10 @@ class ResourceControllerTest {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setCover("../test.jpg");
-        resourceDTO.setCategory("21318000");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21318000");
+        resourceDTO.setCategory(categoryDTO);
         webTestClient.post().uri("/resources").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().isCreated()
@@ -138,7 +142,10 @@ class ResourceControllerTest {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setCover("../test.jpg");
-        resourceDTO.setCategory("21318000");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21318000");
+        resourceDTO.setCategory(categoryDTO);
         webTestClient.post().uri("/resources").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().is4xxClientError();
@@ -155,7 +162,10 @@ class ResourceControllerTest {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setCover("../test.jpg");
-        resourceDTO.setCategory("21318000");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21318000");
+        resourceDTO.setCategory(categoryDTO);
         webTestClient.put().uri("/resources/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().isAccepted()
@@ -171,7 +181,10 @@ class ResourceControllerTest {
         resourceDTO.setTitle("test");
         resourceDTO.setCover("../test.jpg");
         resourceDTO.setType('E');
-        resourceDTO.setCategory("21318000");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21318000");
+        resourceDTO.setCategory(categoryDTO);
         webTestClient.put().uri("/resources/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
                 .expectStatus().isNotModified();

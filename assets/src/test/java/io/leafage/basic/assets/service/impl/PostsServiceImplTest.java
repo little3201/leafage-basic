@@ -10,6 +10,7 @@ import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.document.Statistics;
+import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
@@ -175,14 +176,18 @@ class PostsServiceImplTest {
         given(this.postsContentService.create(Mockito.any(PostsContent.class))).willReturn(Mono.empty());
 
         PostsDTO postsDTO = new PostsDTO();
-        postsDTO.setCategory("21213G0J2");
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21213G0J2");
+        postsDTO.setCategory(categoryDTO);
         StepVerifier.create(this.postsService.create(postsDTO)).verifyComplete();
     }
 
     @Test
     void create_error_null() {
         PostsDTO postsDTO = new PostsDTO();
-        postsDTO.setCategory("21213G0J2");
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21213G0J2");
+        postsDTO.setCategory(categoryDTO);
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.empty());
 
         StepVerifier.create(this.postsService.create(postsDTO)).verifyError();
@@ -191,7 +196,9 @@ class PostsServiceImplTest {
     @Test
     void create_error() {
         PostsDTO postsDTO = new PostsDTO();
-        postsDTO.setCategory("21213G0J2");
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21213G0J2");
+        postsDTO.setCategory(categoryDTO);
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(Mockito.mock(Category.class)));
 
@@ -226,7 +233,10 @@ class PostsServiceImplTest {
         postsDTO.setTitle("标题");
         postsDTO.setTags(Set.of("test"));
         postsDTO.setCover("./avatar.jpg");
-        postsDTO.setCategory("21213G0J2");
+
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setCode("21213G0J2");
+        postsDTO.setCategory(categoryDTO);
         postsDTO.setContent("内容信息");
         StepVerifier.create(this.postsService.modify("21213G0J2", postsDTO)).verifyComplete();
     }

@@ -88,7 +88,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
 
     @Override
     public Mono<ResourceVO> create(ResourceDTO resourceDTO) {
-        return categoryRepository.getByCodeAndEnabledTrue(resourceDTO.getCategory())
+        return categoryRepository.getByCodeAndEnabledTrue(resourceDTO.getCategory().getCode())
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(category -> {
                     Resource resource = new Resource();
@@ -104,7 +104,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return resourceRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
                 .doOnNext(resource -> BeanUtils.copyProperties(resourceDTO, resource))
-                .flatMap(resource -> categoryRepository.getByCodeAndEnabledTrue(resourceDTO.getCategory())
+                .flatMap(resource -> categoryRepository.getByCodeAndEnabledTrue(resourceDTO.getCategory().getCode())
                         .switchIfEmpty(Mono.error(NotContextException::new))
                         .map(category -> {
                             resource.setCategoryId(category.getId());

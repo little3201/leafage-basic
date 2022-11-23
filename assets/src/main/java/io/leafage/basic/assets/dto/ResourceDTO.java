@@ -29,7 +29,6 @@ public class ResourceDTO implements Serializable {
     /**
      * 分类
      */
-    @NotBlank
     private CategoryDTO category;
     /**
      * 类型

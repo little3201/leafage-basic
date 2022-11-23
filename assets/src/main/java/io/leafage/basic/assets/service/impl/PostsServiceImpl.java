@@ -86,7 +86,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<PostsContentVO> details(String code) {
+    public Mono<PostsVO> fetch(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new)) // 如果查询没有返回则抛出异常
@@ -113,25 +113,6 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                 );
     }
 
-    @Override
-    public Mono<PostsVO> fetch(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code)
-                .flatMap(this::convertOuter);
-    }
-
-    @Override
-    public Mono<ContentVO> content(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
-                postsContentService.fetchByPostsId(posts.getId()).map(postsContent -> {
-                    ContentVO contentVO = new ContentVO();
-                    BeanUtils.copyProperties(postsContent, contentVO);
-                    return contentVO;
-                })
-        );
-    }
-
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostsVO> create(PostsDTO postsDTO) {
@@ -144,8 +125,8 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     info.setCategoryId(category.getId());
                     return info;
                 }).flatMap(info -> postsRepository.insert(info).map(posts -> {
-                    PostsContent postsContent = new PostsContent();
-                    postsContent.setPostsId(posts.getId());
+                            PostsContent postsContent = new PostsContent();
+                            postsContent.setPostsId(posts.getId());
                             postsContent.setCatalog(postsDTO.getCatalog());
                             postsContent.setContent(postsDTO.getContent());
                             return postsContent;

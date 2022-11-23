@@ -5,8 +5,6 @@ package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
-import io.leafage.basic.assets.vo.ContentVO;
-import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,49 +80,13 @@ public class PostsController {
      * @param code 代码
      * @return 查询到数据，异常时返回204
      */
-    @GetMapping("/{code}/details")
-    public ResponseEntity<Mono<PostsContentVO>> details(@PathVariable String code) {
-        Mono<PostsContentVO> voMono;
-        try {
-            voMono = postsService.details(code);
-        } catch (Exception e) {
-            logger.error("Fetch posts details occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 根据 code 查询
-     *
-     * @param code 代码
-     * @return 查询到数据，异常时返回204
-     */
     @GetMapping("/{code}")
-    public ResponseEntity<Mono<PostsVO>> fetch(@PathVariable String code) {
+    public ResponseEntity<Mono<PostsVO>> details(@PathVariable String code) {
         Mono<PostsVO> voMono;
         try {
             voMono = postsService.fetch(code);
         } catch (Exception e) {
-            logger.error("Fetch posts occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 根据 code 查询内容
-     *
-     * @param code 代码
-     * @return 查询到数据，异常时返回204
-     */
-    @GetMapping("/{code}/content")
-    public ResponseEntity<Mono<ContentVO>> content(@PathVariable String code) {
-        Mono<ContentVO> voMono;
-        try {
-            voMono = postsService.content(code);
-        } catch (Exception e) {
-            logger.error("Fetch posts occurred an error: ", e);
+            logger.error("Fetch posts details occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);

@@ -100,7 +100,7 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void details() {
+    void fetch() {
         Posts posts = new Posts();
         posts.setId(new ObjectId());
         posts.setCategoryId(new ObjectId());
@@ -123,37 +123,13 @@ class PostsServiceImplTest {
         given(this.statisticsService.increase(Mockito.any(), Mockito.any(StatisticsFieldEnum.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 
-        StepVerifier.create(this.postsService.details("21213G0J2")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsService.fetch("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 
     @Test
-    void details_empty() {
+    void fetch_empty() {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.empty());
-        StepVerifier.create(this.postsService.details("21213G0J2")).verifyError();
-    }
-
-    @Test
-    void fetch() {
-        Posts posts = new Posts();
-        ObjectId categoryId = new ObjectId();
-        posts.setCategoryId(categoryId);
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
-
-        given(this.categoryRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        StepVerifier.create(postsService.fetch("21213G0J2")).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void fetchContent() {
-        Posts posts = new Posts();
-        ObjectId id = new ObjectId();
-        posts.setId(id);
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
-
-        given(this.postsContentService.fetchByPostsId(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
-
-        StepVerifier.create(postsService.content("21213G0J2")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsService.fetch("21213G0J2")).verifyError();
     }
 
     @Test

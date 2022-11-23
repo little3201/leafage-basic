@@ -127,6 +127,7 @@ class ResourceControllerTest {
 
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setCode("21318000");
+        categoryDTO.setName("Technology");
         resourceDTO.setCategory(categoryDTO);
         webTestClient.post().uri("/resources").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
@@ -145,6 +146,7 @@ class ResourceControllerTest {
 
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setCode("21318000");
+        categoryDTO.setName("Technology");
         resourceDTO.setCategory(categoryDTO);
         webTestClient.post().uri("/resources").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
@@ -165,6 +167,7 @@ class ResourceControllerTest {
 
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setCode("21318000");
+        categoryDTO.setName("Technology");
         resourceDTO.setCategory(categoryDTO);
         webTestClient.put().uri("/resources/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()
@@ -184,6 +187,7 @@ class ResourceControllerTest {
 
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setCode("21318000");
+        categoryDTO.setName("Technology");
         resourceDTO.setCategory(categoryDTO);
         webTestClient.put().uri("/resources/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(resourceDTO).exchange()

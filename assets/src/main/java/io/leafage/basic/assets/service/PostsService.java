@@ -4,8 +4,6 @@
 package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.PostsDTO;
-import io.leafage.basic.assets.vo.ContentVO;
-import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Flux;
@@ -29,22 +27,6 @@ public interface PostsService extends ReactiveBasicService<PostsDTO, PostsVO, St
      * @return 结果集
      */
     Mono<Page<PostsVO>> retrieve(int page, int size, String sort, String category);
-
-    /**
-     * 根据代码查询详细信息
-     *
-     * @param code 代码
-     * @return 详细信息
-     */
-    Mono<PostsContentVO> details(String code);
-
-    /**
-     * 根据代码查询内容
-     *
-     * @param code 代码
-     * @return 详细信息
-     */
-    Mono<ContentVO> content(String code);
 
     /**
      * 下一条记录

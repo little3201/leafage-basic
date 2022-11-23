@@ -6,8 +6,6 @@ package io.leafage.basic.assets.controller;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.dto.PostsDTO;
 import io.leafage.basic.assets.service.PostsService;
-import io.leafage.basic.assets.vo.ContentVO;
-import io.leafage.basic.assets.vo.PostsContentVO;
 import io.leafage.basic.assets.vo.PostsVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -96,47 +94,6 @@ class PostsControllerTest {
         given(this.postsService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/posts/{code}", "21213G0J2").exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void details() {
-        PostsContentVO postsContentVO = new PostsContentVO();
-        ContentVO contentVO = new ContentVO();
-        contentVO.setContent("test");
-        postsContentVO.setContent(contentVO);
-        postsContentVO.setTitle("cate");
-        given(this.postsService.details(Mockito.anyString())).willReturn(Mono.just(postsContentVO));
-
-        webTestClient.get().uri("/posts/{code}/details", "21213G0J2").exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.title").isEqualTo("cate");
-    }
-
-    @Test
-    void details_error() {
-        given(this.postsService.details(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/posts/{code}/details", "21213G0J2").exchange()
-                .expectStatus().isNoContent();
-    }
-
-    @Test
-    void content() {
-        ContentVO contentVO = new ContentVO();
-        contentVO.setContent("test");
-        given(this.postsService.content(Mockito.anyString())).willReturn(Mono.just(contentVO));
-
-        webTestClient.get().uri("/posts/{code}/content", "21213G0J2").exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.content").isEqualTo("test");
-    }
-
-    @Test
-    void content_error() {
-        given(this.postsService.content(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/posts/{code}/content", "21213G0J2").exchange()
-                .expectStatus().isNoContent();
     }
 
     @Test

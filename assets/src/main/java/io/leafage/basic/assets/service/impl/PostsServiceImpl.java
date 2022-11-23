@@ -95,21 +95,21 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     return posts;
                 }).flatMap(p -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED).map(v -> p)))
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> { // 查询关联分类信息
-                            PostsContentVO extendVO = new PostsContentVO();
-                            BeanUtils.copyProperties(posts, extendVO);
+                            PostsContentVO contentVO = new PostsContentVO();
+                            BeanUtils.copyProperties(posts, contentVO);
                             // 转换分类对象
                             CategoryVO basicVO = new CategoryVO();
                             BeanUtils.copyProperties(category, basicVO);
-                            extendVO.setCategory(basicVO);
-                            return extendVO;
-                        }).flatMap(extendVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
+                            contentVO.setCategory(basicVO);
+                            return contentVO;
+                        }).flatMap(postsContentVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
                                 .map(contentInfo -> {
                                     ContentVO contentVO = new ContentVO();
                                     contentVO.setContent(contentInfo.getContent());
                                     contentVO.setCatalog(contentInfo.getCatalog());
-                                    extendVO.setContent(contentVO);
-                                    return extendVO;
-                                }).defaultIfEmpty(extendVO))
+                                    postsContentVO.setContent(contentVO);
+                                    return postsContentVO;
+                                }).defaultIfEmpty(postsContentVO))
                 );
     }
 

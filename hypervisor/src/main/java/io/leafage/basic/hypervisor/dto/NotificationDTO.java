@@ -1,18 +1,13 @@
 package io.leafage.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serial;
-import java.io.Serializable;
 
 /**
  * DTO class for Notification
  *
  * @author liwenqiang 2022-02-10 13:49
  */
-public class NotificationDTO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 3855317962733834747L;
+public class NotificationDTO {
 
     /**
      * 标题

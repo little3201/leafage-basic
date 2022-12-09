@@ -5,13 +5,13 @@ package io.leafage.basic.assets.service.impl;
 
 
 import com.mongodb.client.result.UpdateResult;
+import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
 import io.leafage.basic.assets.document.Statistics;
-import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.dto.PostsDTO;
+import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
@@ -100,12 +100,10 @@ class PostsServiceImplTest {
     }
 
     @Test
-    void details() {
+    void fetch() {
         Posts posts = new Posts();
         posts.setId(new ObjectId());
         posts.setCategoryId(new ObjectId());
-        posts.setLikes(12);
-        posts.setComments(232);
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(posts));
 
@@ -123,37 +121,13 @@ class PostsServiceImplTest {
         given(this.statisticsService.increase(Mockito.any(), Mockito.any(StatisticsFieldEnum.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 
-        StepVerifier.create(this.postsService.details("21213G0J2")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsService.fetch("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 
     @Test
-    void details_empty() {
+    void fetch_empty() {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.empty());
-        StepVerifier.create(this.postsService.details("21213G0J2")).verifyError();
-    }
-
-    @Test
-    void fetch() {
-        Posts posts = new Posts();
-        ObjectId categoryId = new ObjectId();
-        posts.setCategoryId(categoryId);
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
-
-        given(this.categoryRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        StepVerifier.create(postsService.fetch("21213G0J2")).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void fetchContent() {
-        Posts posts = new Posts();
-        ObjectId id = new ObjectId();
-        posts.setId(id);
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
-
-        given(this.postsContentService.fetchByPostsId(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
-
-        StepVerifier.create(postsService.content("21213G0J2")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsService.fetch("21213G0J2")).verifyError();
     }
 
     @Test
@@ -175,36 +149,36 @@ class PostsServiceImplTest {
 
         given(this.postsContentService.create(Mockito.any(PostsContent.class))).willReturn(Mono.empty());
 
-        PostsDTO postsDTO = new PostsDTO();
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCode("21213G0J2");
-        postsDTO.setCategory(categoryDTO);
-        StepVerifier.create(this.postsService.create(postsDTO)).verifyComplete();
+        PostDTO postDTO = new PostDTO();
+        CategoryBO categoryBO = new CategoryBO();
+        categoryBO.setCode("21213G0J2");
+        postDTO.setCategory(categoryBO);
+        StepVerifier.create(this.postsService.create(postDTO)).verifyComplete();
     }
 
     @Test
     void create_error_null() {
-        PostsDTO postsDTO = new PostsDTO();
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCode("21213G0J2");
-        postsDTO.setCategory(categoryDTO);
+        PostDTO postDTO = new PostDTO();
+        CategoryBO categoryBO = new CategoryBO();
+        categoryBO.setCode("21213G0J2");
+        postDTO.setCategory(categoryBO);
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.empty());
 
-        StepVerifier.create(this.postsService.create(postsDTO)).verifyError();
+        StepVerifier.create(this.postsService.create(postDTO)).verifyError();
     }
 
     @Test
     void create_error() {
-        PostsDTO postsDTO = new PostsDTO();
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCode("21213G0J2");
-        postsDTO.setCategory(categoryDTO);
+        PostDTO postDTO = new PostDTO();
+        CategoryBO categoryBO = new CategoryBO();
+        categoryBO.setCode("21213G0J2");
+        postDTO.setCategory(categoryBO);
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(Mockito.mock(Category.class)));
 
         given(this.postsRepository.insert(Mockito.any(Posts.class))).willThrow(new RuntimeException());
 
-        StepVerifier.create(this.postsService.create(postsDTO)).verifyError();
+        StepVerifier.create(this.postsService.create(postDTO)).verifyError();
     }
 
     @Test
@@ -229,16 +203,16 @@ class PostsServiceImplTest {
         given(this.postsContentService.modify(posts.getId(), postsContent))
                 .willReturn(Mono.empty());
 
-        PostsDTO postsDTO = new PostsDTO();
-        postsDTO.setTitle("标题");
-        postsDTO.setTags(Set.of("test"));
-        postsDTO.setCover("./avatar.jpg");
+        PostDTO postDTO = new PostDTO();
+        postDTO.setTitle("标题");
+        postDTO.setTags(Set.of("test"));
+        postDTO.setCover("./avatar.jpg");
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCode("21213G0J2");
-        postsDTO.setCategory(categoryDTO);
-        postsDTO.setContent("内容信息");
-        StepVerifier.create(this.postsService.modify("21213G0J2", postsDTO)).verifyComplete();
+        CategoryBO categoryBO = new CategoryBO();
+        categoryBO.setCode("21213G0J2");
+        postDTO.setCategory(categoryBO);
+        postDTO.setContent("内容信息");
+        StepVerifier.create(this.postsService.modify("21213G0J2", postDTO)).verifyComplete();
     }
 
     @Test
@@ -284,19 +258,6 @@ class PostsServiceImplTest {
         given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
         StepVerifier.create(postsService.previous("21213G0J2")).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void likes() {
-        given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is("21213G0J2")),
-                new Update().inc("likes", 1), Posts.class)).willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
-
-        given(this.statisticsService.increase(Mockito.any(), Mockito.any(StatisticsFieldEnum.class)))
-                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
-
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Posts.class)));
-
-        StepVerifier.create(postsService.like("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 
     @Test

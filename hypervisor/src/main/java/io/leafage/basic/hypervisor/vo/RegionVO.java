@@ -3,31 +3,13 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * VO class for Region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/
-public class RegionVO extends AbstractVO<Long> implements Serializable {
+public class RegionVO extends SuperVO<Long> {
 
-    @Serial
-    private static final long serialVersionUID = 5064068749809388291L;
-
-    /**
-     * 名称
-     */
-    private String name;
-    /**
-     * 上级
-     */
-    private BasicVO<Long> superior;
-    /**
-     * 简称
-     */
-    private String alias;
     /**
      * 邮编
      */
@@ -36,35 +18,7 @@ public class RegionVO extends AbstractVO<Long> implements Serializable {
      * 区号
      */
     private String areaCode;
-    /**
-     * 描述
-     */
-    private String description;
 
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public BasicVO<Long> getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(BasicVO<Long> superior) {
-        this.superior = superior;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
 
     public Integer getPostalCode() {
         return postalCode;
@@ -82,11 +36,4 @@ public class RegionVO extends AbstractVO<Long> implements Serializable {
         this.areaCode = areaCode;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

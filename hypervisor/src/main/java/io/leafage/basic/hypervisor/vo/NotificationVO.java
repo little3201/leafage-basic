@@ -1,17 +1,11 @@
 package io.leafage.basic.hypervisor.vo;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * VO class for Notification
  *
  * @author liwenqiang 2022-02-10 13:53
  */
-public class NotificationVO extends AbstractVO<String> implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 8227446021967887934L;
+public class NotificationVO extends AbstractVO<String> {
 
     /**
      * 标题

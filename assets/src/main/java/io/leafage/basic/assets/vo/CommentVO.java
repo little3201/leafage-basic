@@ -1,7 +1,5 @@
 package io.leafage.basic.assets.vo;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -9,10 +7,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2021-07-15 22:12
  */
-public class CommentVO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -3606281697452944193L;
+public class CommentVO {
 
     /**
      * 编号

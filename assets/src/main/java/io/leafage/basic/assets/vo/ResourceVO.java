@@ -3,36 +3,13 @@
  */
 package io.leafage.basic.assets.vo;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 /**
  * VO for Resource
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceVO implements Serializable {
+public class ResourceVO extends PostVO {
 
-    @Serial
-    private static final long serialVersionUID = -2168494818144125736L;
-
-    /**
-     * 编号
-     */
-    private String code;
-    /**
-     * 标题
-     */
-    private String title;
-    /**
-     * cover
-     */
-    private String cover;
-    /**
-     * 分类
-     */
-    private CategoryVO category;
     /**
      * 类型
      */
@@ -41,58 +18,7 @@ public class ResourceVO implements Serializable {
      * 描述
      */
     private String description;
-    /**
-     * 点赞
-     */
-    private int downloads;
-    /**
-     * 查看
-     */
-    private int viewed;
-    /**
-     * 时间
-     */
-    private LocalDateTime modifyTime;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public int getViewed() {
-        return viewed;
-    }
-
-    public void setViewed(int viewed) {
-        this.viewed = viewed;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    public CategoryVO getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryVO category) {
-        this.category = category;
-    }
 
     public Character getType() {
         return type;
@@ -110,19 +36,4 @@ public class ResourceVO implements Serializable {
         this.description = description;
     }
 
-    public int getDownloads() {
-        return downloads;
-    }
-
-    public void setDownloads(int downloads) {
-        this.downloads = downloads;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

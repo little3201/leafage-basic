@@ -100,9 +100,9 @@ public class RegionServiceImpl implements RegionService {
             BeanUtils.copyProperties(r, vo);
             return vo;
         }).flatMap(vo -> {
-            if (region.getSuperior() != null && region.getSuperior() != 0) {
+            if (region.getSuperior() != null) {
                 // 存在上级，则查询
-                return regionRepository.getByCodeAndEnabledTrue(region.getSuperior()).map(superior -> {
+                return regionRepository.findById(region.getSuperior()).map(superior -> {
                     BasicVO<Long> basicVO = new BasicVO<>();
                     BeanUtils.copyProperties(superior, basicVO);
                     vo.setSuperior(basicVO);

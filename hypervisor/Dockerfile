@@ -1,5 +1,5 @@
 # Start with a base image containing Java runtime
-FROM openjdk:11.0.13-jre-slim
+FROM openjdk:17.0.2-jdk-slim-buster
 
 # Add Maintainer Info
 LABEL maintainer="little3201@gmail.com"

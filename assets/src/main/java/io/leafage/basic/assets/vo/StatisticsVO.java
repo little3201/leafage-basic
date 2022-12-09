@@ -1,64 +1,78 @@
 package io.leafage.basic.assets.vo;
 
+import io.leafage.basic.assets.bo.StatisticsBO;
+
 import java.io.Serial;
-import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
- * total statistics vo
+ * everyday statistics vo
  *
  * @author liwenqiang 2022/5/25 19:53
- **/
-public class StatisticsVO implements Serializable {
+ */
+public class StatisticsVO extends StatisticsBO {
 
     @Serial
-    private static final long serialVersionUID = -7855604253532295935L;
+    private static final long serialVersionUID = 4288475041155960116L;
 
     /**
-     * 浏览量
+     * 统计日期
      */
-    private int viewed;
+    private LocalDate date;
     /**
-     * 点赞量
+     * 浏览量环比
      */
-    private int likes;
+    private double overViewed;
     /**
-     * 评论量
+     * 点赞量环比
      */
-    private int comments;
+    private double overLikes;
     /**
-     * 下载量
+     * 评论量环比
      */
-    private int downloads;
+    private double overComments;
+    /**
+     * 下载量环比
+     */
+    private double overDownloads;
 
-    public int getViewed() {
-        return viewed;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setViewed(int viewed) {
-        this.viewed = viewed;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public int getLikes() {
-        return likes;
+    public double getOverViewed() {
+        return overViewed;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
+    public void setOverViewed(double overViewed) {
+        this.overViewed = overViewed;
     }
 
-    public int getComments() {
-        return comments;
+    public double getOverLikes() {
+        return overLikes;
     }
 
-    public void setComments(int comments) {
-        this.comments = comments;
+    public void setOverLikes(double overLikes) {
+        this.overLikes = overLikes;
     }
 
-    public int getDownloads() {
-        return downloads;
+    public double getOverComments() {
+        return overComments;
     }
 
-    public void setDownloads(int downloads) {
-        this.downloads = downloads;
+    public void setOverComments(double overComments) {
+        this.overComments = overComments;
+    }
+
+    public double getOverDownloads() {
+        return overDownloads;
+    }
+
+    public void setOverDownloads(double overDownloads) {
+        this.overDownloads = overDownloads;
     }
 }

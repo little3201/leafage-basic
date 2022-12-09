@@ -3,8 +3,6 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,10 +11,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class UserVO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 635350278320138075L;
+public class UserVO {
 
     /**
      * 账号

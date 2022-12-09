@@ -1,34 +1,54 @@
+/*
+ * Copyright (c) 2021. Leafage All Right Reserved.
+ */
 package io.leafage.basic.assets.vo;
 
+import io.leafage.basic.assets.bo.CategoryBO;
+
+import java.time.LocalDateTime;
+
 /**
- * desc
+ * VO class for Category
  *
- * @author wilsonli 2022/8/20 12:28
- **/
-public class CategoryVO {
+ * @author liwenqiang 2020-10-06 22:09
+ */
+public class CategoryVO extends CategoryBO {
 
     /**
-     * 编号
+     * 贴子数
      */
-    private String code;
+    private long count;
     /**
-     * 名称
+     * 描述
      */
-    private String name;
+    private String description;
+    /**
+     * 时间
+     */
+    private LocalDateTime modifyTime;
 
-    public String getCode() {
-        return code;
+
+    public long getCount() {
+        return count;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCount(long count) {
+        this.count = count;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

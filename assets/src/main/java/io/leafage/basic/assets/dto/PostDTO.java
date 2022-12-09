@@ -3,10 +3,10 @@
  */
 package io.leafage.basic.assets.dto;
 
+import io.leafage.basic.assets.bo.CategoryBO;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -14,10 +14,8 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PostsDTO implements Serializable {
+public class PostDTO {
 
-    @Serial
-    private static final long serialVersionUID = 248576207213923230L;
     /**
      * 标题
      */
@@ -45,7 +43,7 @@ public class PostsDTO implements Serializable {
     /**
      * 分类
      */
-    private CategoryDTO category;
+    private CategoryBO category;
 
     public String getTitle() {
         return title;
@@ -87,11 +85,11 @@ public class PostsDTO implements Serializable {
         this.tags = tags;
     }
 
-    public CategoryDTO getCategory() {
+    public CategoryBO getCategory() {
         return category;
     }
 
-    public void setCategory(CategoryDTO category) {
+    public void setCategory(CategoryBO category) {
         this.category = category;
     }
 }

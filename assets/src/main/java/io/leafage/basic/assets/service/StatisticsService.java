@@ -1,8 +1,8 @@
 package io.leafage.basic.assets.service;
 
+import io.leafage.basic.assets.bo.StatisticsBO;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Statistics;
-import io.leafage.basic.assets.vo.StatisticsExtendVO;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
@@ -23,14 +23,14 @@ public interface StatisticsService {
      * @param size 大小
      * @return 结果集
      */
-    Mono<Page<StatisticsExtendVO>> retrieve(int page, int size);
+    Mono<Page<StatisticsVO>> retrieve(int page, int size);
 
     /**
      * 统计总量
      *
      * @return 结果
      */
-    Mono<StatisticsVO> fetch();
+    Mono<StatisticsBO> fetch();
 
     /**
      * 添加

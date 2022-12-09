@@ -3,20 +3,18 @@
  */
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.constants.StatisticsFieldEnum;
+import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
-import io.leafage.basic.assets.dto.PostsDTO;
+import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import io.leafage.basic.assets.service.PostsService;
-import io.leafage.basic.assets.service.StatisticsService;
-import io.leafage.basic.assets.vo.CategoryVO;
 import io.leafage.basic.assets.vo.ContentVO;
-import io.leafage.basic.assets.vo.PostsContentVO;
-import io.leafage.basic.assets.vo.PostsVO;
+import io.leafage.basic.assets.vo.PostContentVO;
+import io.leafage.basic.assets.vo.PostVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -38,7 +36,6 @@ import top.leafage.common.basic.AbstractBasicService;
 import top.leafage.common.basic.ValidMessage;
 
 import javax.naming.NotContextException;
-import java.time.LocalDate;
 
 /**
  * posts service impl
@@ -53,22 +50,19 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     private final CategoryRepository categoryRepository;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
-    private final StatisticsService statisticsService;
 
     public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService,
-                            CategoryRepository categoryRepository, ReactiveMongoTemplate reactiveMongoTemplate,
-                            StatisticsService statisticsService) {
+                            CategoryRepository categoryRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
         this.postsRepository = postsRepository;
         this.postsContentService = postsContentService;
         this.categoryRepository = categoryRepository;
         this.reactiveMongoTemplate = reactiveMongoTemplate;
-        this.statisticsService = statisticsService;
     }
 
     @Override
-    public Mono<Page<PostsVO>> retrieve(int page, int size, String sort, String category) {
+    public Mono<Page<PostVO>> retrieve(int page, int size, String sort, String category) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime"));
-        Flux<PostsVO> voFlux;
+        Flux<PostVO> voFlux;
         Mono<Long> count;
 
         if (StringUtils.hasText(category)) {
@@ -86,68 +80,46 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<PostsContentVO> details(String code) {
+    public Mono<PostVO> fetch(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new)) // 如果查询没有返回则抛出异常
-                .flatMap(posts -> this.increaseViewed(posts.getId()).map(viewed -> { // 浏览量+1
-                    posts.setViewed(viewed);
-                    return posts;
-                }).flatMap(p -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.VIEWED).map(v -> p)))
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> { // 查询关联分类信息
-                            PostsContentVO extendVO = new PostsContentVO();
-                            BeanUtils.copyProperties(posts, extendVO);
+                            PostContentVO contentVO = new PostContentVO();
+                            BeanUtils.copyProperties(posts, contentVO);
                             // 转换分类对象
-                            CategoryVO basicVO = new CategoryVO();
-                            BeanUtils.copyProperties(category, basicVO);
-                            extendVO.setCategory(basicVO);
-                            return extendVO;
-                        }).flatMap(extendVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
+                            CategoryBO categoryBO = new CategoryBO();
+                            categoryBO.setCode(category.getCode());
+                            categoryBO.setName(category.getName());
+                            contentVO.setCategory(categoryBO);
+                            return contentVO;
+                        }).flatMap(postsContentVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
                                 .map(contentInfo -> {
                                     ContentVO contentVO = new ContentVO();
                                     contentVO.setContent(contentInfo.getContent());
                                     contentVO.setCatalog(contentInfo.getCatalog());
-                                    extendVO.setContent(contentVO);
-                                    return extendVO;
-                                }).defaultIfEmpty(extendVO))
+                                    postsContentVO.setContent(contentVO);
+                                    return postsContentVO;
+                                }).defaultIfEmpty(postsContentVO))
                 );
-    }
-
-    @Override
-    public Mono<PostsVO> fetch(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code)
-                .flatMap(this::convertOuter);
-    }
-
-    @Override
-    public Mono<ContentVO> content(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
-                postsContentService.fetchByPostsId(posts.getId()).map(postsContent -> {
-                    ContentVO contentVO = new ContentVO();
-                    BeanUtils.copyProperties(postsContent, contentVO);
-                    return contentVO;
-                })
-        );
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Mono<PostsVO> create(PostsDTO postsDTO) {
-        return categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory().getCode())
+    public Mono<PostVO> create(PostDTO postDTO) {
+        return categoryRepository.getByCodeAndEnabledTrue(postDTO.getCategory().getCode())
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(category -> {
-                    Posts info = new Posts();
-                    BeanUtils.copyProperties(postsDTO, info);
-                    info.setCode(this.generateCode());
-                    info.setCategoryId(category.getId());
-                    return info;
+                    Posts posts = new Posts();
+                    BeanUtils.copyProperties(postDTO, posts);
+                    posts.setCode(this.generateCode());
+                    posts.setCategoryId(category.getId());
+                    return posts;
                 }).flatMap(info -> postsRepository.insert(info).map(posts -> {
-                    PostsContent postsContent = new PostsContent();
-                    postsContent.setPostsId(posts.getId());
-                            postsContent.setCatalog(postsDTO.getCatalog());
-                            postsContent.setContent(postsDTO.getContent());
+                            PostsContent postsContent = new PostsContent();
+                            postsContent.setPostsId(posts.getId());
+                            postsContent.setCatalog(postDTO.getCatalog());
+                            postsContent.setContent(postDTO.getContent());
                             return postsContent;
                         }).flatMap(postsContentService::create).map(postsContent -> info)
                 ).flatMap(this::convertOuter);
@@ -155,22 +127,22 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Mono<PostsVO> modify(String code, PostsDTO postsDTO) {
+    public Mono<PostVO> modify(String code, PostDTO postDTO) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory().getCode())
+                .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postDTO.getCategory().getCode())
                         .switchIfEmpty(Mono.error(NotContextException::new))
                         .map(category -> {
                             // 将信息复制到info
-                            BeanUtils.copyProperties(postsDTO, info);
+                            BeanUtils.copyProperties(postDTO, info);
                             info.setCategoryId(category.getId());
                             return info;
                         }).flatMap(postsInfo -> postsRepository.save(postsInfo).flatMap(posts ->
                                 postsContentService.fetchByPostsId(posts.getId())
                                         .doOnNext(postsContent -> {
-                                            postsContent.setCatalog(postsDTO.getCatalog());
-                                            postsContent.setContent(postsDTO.getContent());
+                                            postsContent.setCatalog(postDTO.getCatalog());
+                                            postsContent.setContent(postDTO.getContent());
                                         })
                                         .flatMap(postsContent -> postsContentService.modify(posts.getId(), postsContent))
                                         .map(postsContent -> postsInfo)).flatMap(this::convertOuter))
@@ -187,7 +159,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<PostsVO> next(String code) {
+    public Mono<PostVO> next(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdGreaterThanAndEnabledTrue(posts.getId(),
@@ -196,7 +168,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<PostsVO> previous(String code) {
+    public Mono<PostVO> previous(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 postsRepository.findByIdLessThanAndEnabledTrue(posts.getId(),
@@ -205,16 +177,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     @Override
-    public Mono<Integer> like(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("code").is(code)),
-                        new Update().inc("likes", 1), Posts.class)
-                .flatMap(updateResult -> statisticsService.increase(LocalDate.now(), StatisticsFieldEnum.LIKES))
-                .flatMap(updateResult -> postsRepository.getByCodeAndEnabledTrue(code).map(Posts::getLikes));
-    }
-
-    @Override
-    public Flux<PostsVO> search(String keyword) {
+    public Flux<PostVO> search(String keyword) {
         Assert.hasText(keyword, "keyword must not be blank.");
         TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(keyword);
         return postsRepository.findAllBy(keyword, criteria).flatMap(this::convertOuter);
@@ -227,28 +190,16 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     }
 
     /**
-     * viewed 原子更新（自增 1）
-     *
-     * @param id 主键
-     * @return UpdateResult
-     */
-    private Mono<Integer> increaseViewed(ObjectId id) {
-        return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
-                new Update().inc("viewed", 1), Posts.class).flatMap(updateResult ->
-                postsRepository.findById(id).map(Posts::getViewed));
-    }
-
-    /**
      * 对象转换为输出结果对象
      *
      * @param posts 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<PostsVO> convertOuter(Posts posts) {
+    private Mono<PostVO> convertOuter(Posts posts) {
         return Mono.just(posts).map(p -> {
-            PostsVO postsVO = new PostsVO();
-            BeanUtils.copyProperties(p, postsVO);
-            return postsVO;
+            PostVO postVO = new PostVO();
+            BeanUtils.copyProperties(p, postVO);
+            return postVO;
         }).flatMap(postsVO -> category(posts.getCategoryId(), postsVO));
     }
 
@@ -259,11 +210,11 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
      * @param vo         vo
      * @return 设置后的vo
      */
-    private Mono<PostsVO> category(ObjectId categoryId, PostsVO vo) {
+    private Mono<PostVO> category(ObjectId categoryId, PostVO vo) {
         return categoryRepository.findById(categoryId)
                 .map(category -> {
                     // 转换分类对象
-                    CategoryVO basicVO = new CategoryVO();
+                    CategoryBO basicVO = new CategoryBO();
                     BeanUtils.copyProperties(category, basicVO);
                     vo.setCategory(basicVO);
                     return vo;

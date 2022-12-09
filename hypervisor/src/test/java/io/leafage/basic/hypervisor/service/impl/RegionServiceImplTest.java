@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -46,7 +47,7 @@ class RegionServiceImplTest {
         region.setCode(2L);
         region.setName("北京市");
         region.setAlias("京");
-        region.setSuperior(1101L);
+        region.setSuperior(new ObjectId());
         region.setPostalCode(23423080);
         region.setDescription("描述");
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
@@ -106,7 +107,7 @@ class RegionServiceImplTest {
 
         Region region = new Region();
         region.setId(new ObjectId());
-        region.setSuperior(2L);
+        region.setSuperior(new ObjectId());
         given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mono.just(region));
 
         RegionDTO regionDTO = new RegionDTO();

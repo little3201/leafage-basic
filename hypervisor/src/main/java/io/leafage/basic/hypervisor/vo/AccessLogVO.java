@@ -1,17 +1,11 @@
 package io.leafage.basic.hypervisor.vo;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * VO class for Record
  *
  * @author liwenqiang 2022-03-18 21:09
  */
-public class AccessLogVO extends AbstractVO<String> implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -8300347588391830399L;
+public class AccessLogVO extends AbstractVO<String> {
 
     /**
      * ip

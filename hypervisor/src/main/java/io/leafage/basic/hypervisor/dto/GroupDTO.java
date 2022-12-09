@@ -3,49 +3,17 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
  * DTO class for Group
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class GroupDTO implements Serializable {
+public class GroupDTO extends SuperDTO<String> {
 
-    @Serial
-    private static final long serialVersionUID = 5146594305386328379L;
-
-    /**
-     * 名称
-     */
-    @NotBlank
-    @Size(max = 16)
-    private String name;
     /**
      * 负责人
      */
     private String principal;
-    /**
-     * 上级
-     */
-    private String superior;
-    /**
-     * 描述
-     */
-    @Size(max = 64)
-    private String description;
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getPrincipal() {
         return principal;
@@ -55,20 +23,4 @@ public class GroupDTO implements Serializable {
         this.principal = principal;
     }
 
-    public String getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(String superior) {
-        this.superior = superior;
-    }
-
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

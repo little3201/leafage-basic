@@ -4,7 +4,7 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.document.Category;
-import io.leafage.basic.assets.dto.CategoriesDTO;
+import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import org.bson.types.ObjectId;
@@ -75,9 +75,9 @@ class CategoryServiceImplTest {
 
         given(this.postsRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
 
-        CategoriesDTO categoriesDTO = new CategoriesDTO();
-        categoriesDTO.setName("test");
-        StepVerifier.create(categoryService.create(categoriesDTO)).expectNextCount(1).verifyComplete();
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setName("test");
+        StepVerifier.create(categoryService.create(categoryDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -90,9 +90,9 @@ class CategoryServiceImplTest {
 
         given(this.postsRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
 
-        CategoriesDTO categoriesDTO = new CategoriesDTO();
-        categoriesDTO.setName("test");
-        StepVerifier.create(categoryService.modify("21318H9FH", categoriesDTO)).expectNextCount(1).verifyComplete();
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setName("test");
+        StepVerifier.create(categoryService.modify("21318H9FH", categoryDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test

@@ -2,7 +2,7 @@ package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.service.CommentService;
-import io.leafage.basic.assets.vo.CategoriesVO;
+import io.leafage.basic.assets.vo.CategoryVO;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +46,7 @@ class CommentControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/comments").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(CategoriesVO.class);
+                .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test
@@ -65,7 +65,7 @@ class CommentControllerTest {
         given(this.commentService.relation(Mockito.anyString())).willReturn(Flux.just(commentVO));
 
         webTestClient.get().uri("/comments/{code}", "21319JO01").exchange()
-                .expectStatus().isOk().expectBodyList(CategoriesVO.class);
+                .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test
@@ -83,7 +83,7 @@ class CommentControllerTest {
         given(this.commentService.replies(Mockito.anyString())).willReturn(Flux.just(commentVO));
 
         webTestClient.get().uri("/comments/{code}/replies", "21319JO01").exchange()
-                .expectStatus().isOk().expectBodyList(CategoriesVO.class);
+                .expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test

@@ -3,9 +3,9 @@
  */
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Resource;
-import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
@@ -103,8 +103,6 @@ class ResourceServiceImplTest {
         resource.setCategoryId(category.getId());
         resource.setType('E');
         resource.setCode("21318H9FH");
-        resource.setViewed(232);
-        resource.setDownloads(1);
         given(this.resourceRepository.insert(Mockito.any(Resource.class))).willReturn(Mono.just(resource));
 
         given(this.categoryRepository.findById(resource.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
@@ -113,9 +111,9 @@ class ResourceServiceImplTest {
         resourceDTO.setTitle("test");
         resourceDTO.setCover("./avatar.jpg");
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCode("21318000");
-        resourceDTO.setCategory(categoryDTO);
+        CategoryBO categoryBO = new CategoryBO();
+        categoryBO.setCode("21318000");
+        resourceDTO.setCategory(categoryBO);
         StepVerifier.create(resourceService.create(resourceDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -125,8 +123,6 @@ class ResourceServiceImplTest {
         resource.setId(new ObjectId());
         resource.setType('P');
         resource.setCode("21318H9FH");
-        resource.setViewed(232);
-        resource.setDownloads(23);
         given(this.resourceRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(resource));
 
         Category category = new Category();
@@ -141,9 +137,9 @@ class ResourceServiceImplTest {
         resourceDTO.setTitle("test");
         resourceDTO.setCover("./avatar.jpg");
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCode("21318000");
-        resourceDTO.setCategory(categoryDTO);
+        CategoryBO categoryBO = new CategoryBO();
+        categoryBO.setCode("21318000");
+        resourceDTO.setCategory(categoryBO);
         StepVerifier.create(resourceService.modify("21318H9FH", resourceDTO)).expectNextCount(1).verifyComplete();
     }
 

@@ -6,18 +6,13 @@ package io.leafage.basic.hypervisor.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serial;
-import java.io.Serializable;
 
 /**
  * DTO class for Authority
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AuthorityDTO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 8659525799803097800L;
+public class AuthorityDTO {
 
     /**
      * 名称

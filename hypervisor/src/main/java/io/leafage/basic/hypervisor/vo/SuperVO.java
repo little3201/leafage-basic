@@ -4,34 +4,26 @@
 package io.leafage.basic.hypervisor.vo;
 
 /**
- * VO class for Authority
+ * VO class
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author liwenqiang 2022-12-09 22:23
  */
-public class AuthorityVO extends AbstractVO<String> {
+public abstract class SuperVO<T> extends AbstractVO<T> {
 
     /**
      * 名称
      */
     private String name;
     /**
-     * 类型
+     * 别名
      */
-    private Character type;
+    private String alias;
     /**
      * 上级
      */
-    private BasicVO<String> superior;
+    private BasicVO<T> superior;
     /**
-     * 图标
-     */
-    private String icon;
-    /**
-     * 路径
-     */
-    private String path;
-    /**
-     * 角色数
+     * 用户数
      */
     private long count;
     /**
@@ -48,36 +40,20 @@ public class AuthorityVO extends AbstractVO<String> {
         this.name = name;
     }
 
-    public Character getType() {
-        return type;
+    public String getAlias() {
+        return alias;
     }
 
-    public void setType(Character type) {
-        this.type = type;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
-    public BasicVO<String> getSuperior() {
+    public BasicVO<T> getSuperior() {
         return superior;
     }
 
-    public void setSuperior(BasicVO<String> superior) {
+    public void setSuperior(BasicVO<T> superior) {
         this.superior = superior;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public String getDescription() {

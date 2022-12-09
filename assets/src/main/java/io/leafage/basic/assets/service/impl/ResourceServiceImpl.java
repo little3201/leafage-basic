@@ -3,13 +3,13 @@
  */
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Resource;
 import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.service.ResourceService;
-import io.leafage.basic.assets.vo.CategoryVO;
 import io.leafage.basic.assets.vo.ResourceVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -73,7 +73,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
                             ResourceVO resourceVO = new ResourceVO();
                             BeanUtils.copyProperties(resource, resourceVO);
                             // 转换category
-                            CategoryVO basicVO = new CategoryVO();
+                            CategoryBO basicVO = new CategoryBO();
                             BeanUtils.copyProperties(category, basicVO);
                             resourceVO.setCategory(basicVO);
                             return resourceVO;
@@ -132,7 +132,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
             return outer;
         }).flatMap(resourceVO -> categoryRepository.findById(resource.getCategoryId()).map(category -> {
             // 转换category
-            CategoryVO basicVO = new CategoryVO();
+            CategoryBO basicVO = new CategoryBO();
             BeanUtils.copyProperties(category, basicVO);
             resourceVO.setCategory(basicVO);
             return resourceVO;

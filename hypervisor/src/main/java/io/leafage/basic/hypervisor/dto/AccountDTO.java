@@ -4,8 +4,6 @@
 package io.leafage.basic.hypervisor.dto;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -13,10 +11,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AccountDTO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 5424195124842285237L;
+public class AccountDTO {
 
     /**
      * 用户名

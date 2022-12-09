@@ -3,8 +3,8 @@
  */
 package io.leafage.basic.assets.vo;
 
-import java.io.Serial;
-import java.io.Serializable;
+import io.leafage.basic.assets.bo.CategoryBO;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -13,10 +13,7 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PostsVO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -2692474466082844624L;
+public class PostVO {
 
     /**
      * 编号
@@ -37,19 +34,7 @@ public class PostsVO implements Serializable {
     /**
      * 分类
      */
-    private CategoryVO category;
-    /**
-     * 点赞
-     */
-    private int likes;
-    /**
-     * 评论
-     */
-    private int comments;
-    /**
-     * 查看
-     */
-    private int viewed;
+    private CategoryBO category;
     /**
      * 时间
      */
@@ -87,36 +72,12 @@ public class PostsVO implements Serializable {
         this.tags = tags;
     }
 
-    public CategoryVO getCategory() {
+    public CategoryBO getCategory() {
         return category;
     }
 
-    public void setCategory(CategoryVO category) {
+    public void setCategory(CategoryBO category) {
         this.category = category;
-    }
-
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getComments() {
-        return comments;
-    }
-
-    public void setComments(int comments) {
-        this.comments = comments;
-    }
-
-    public int getViewed() {
-        return viewed;
-    }
-
-    public void setViewed(int viewed) {
-        this.viewed = viewed;
     }
 
     public LocalDateTime getModifyTime() {

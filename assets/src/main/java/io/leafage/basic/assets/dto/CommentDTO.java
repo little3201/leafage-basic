@@ -1,18 +1,13 @@
 package io.leafage.basic.assets.dto;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serial;
-import java.io.Serializable;
 
 /**
  * DTO class for Comment
  *
  * @author liwenqiang 2021-07-15 22:12
  */
-public class CommentDTO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -684841439303848020L;
+public class CommentDTO {
 
     /**
      * 帖子

@@ -3,9 +3,9 @@
  */
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.dto.CategoriesDTO;
+import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.service.CategoryService;
-import io.leafage.basic.assets.vo.CategoriesVO;
+import io.leafage.basic.assets.vo.CategoryVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -41,8 +41,8 @@ public class CategoryController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<CategoriesVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Mono<Page<CategoriesVO>> pageMono;
+    public ResponseEntity<Mono<Page<CategoryVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<CategoryVO>> pageMono;
         try {
             pageMono = categoryService.retrieve(page, size);
         } catch (Exception e) {
@@ -59,8 +59,8 @@ public class CategoryController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/{code}")
-    public ResponseEntity<Mono<CategoriesVO>> fetch(@PathVariable String code) {
-        Mono<CategoriesVO> voMono;
+    public ResponseEntity<Mono<CategoryVO>> fetch(@PathVariable String code) {
+        Mono<CategoryVO> voMono;
         try {
             voMono = categoryService.fetch(code);
         } catch (Exception e) {
@@ -91,14 +91,14 @@ public class CategoryController {
     /**
      * 添加信息
      *
-     * @param categoriesDTO 要添加的数据
+     * @param categoryDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<CategoriesVO>> create(@RequestBody @Valid CategoriesDTO categoriesDTO) {
-        Mono<CategoriesVO> voMono;
+    public ResponseEntity<Mono<CategoryVO>> create(@RequestBody @Valid CategoryDTO categoryDTO) {
+        Mono<CategoryVO> voMono;
         try {
-            voMono = categoryService.create(categoriesDTO);
+            voMono = categoryService.create(categoryDTO);
         } catch (Exception e) {
             logger.error("Create category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
@@ -109,15 +109,15 @@ public class CategoryController {
     /**
      * 修改信息
      *
-     * @param code          代码
-     * @param categoriesDTO 要修改的数据
+     * @param code        代码
+     * @param categoryDTO 要修改的数据
      * @return 修改后的信息，异常时返回304状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Mono<CategoriesVO>> modify(@PathVariable String code, @RequestBody @Valid CategoriesDTO categoriesDTO) {
-        Mono<CategoriesVO> voMono;
+    public ResponseEntity<Mono<CategoryVO>> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
+        Mono<CategoryVO> voMono;
         try {
-            voMono = categoryService.modify(code, categoriesDTO);
+            voMono = categoryService.modify(code, categoryDTO);
         } catch (Exception e) {
             logger.error("Modify category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

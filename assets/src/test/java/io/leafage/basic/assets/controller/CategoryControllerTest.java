@@ -103,6 +103,7 @@ class CategoryControllerTest {
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
+        categoryDTO.setDescription("description");
         webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isCreated()

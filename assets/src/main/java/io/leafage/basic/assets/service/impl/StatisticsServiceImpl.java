@@ -3,8 +3,6 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.bo.StatisticsBO;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Statistics;
-import io.leafage.basic.assets.repository.PostsRepository;
-import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
@@ -35,15 +33,10 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private static final String DATE = "date";
 
-    private final PostsRepository postsRepository;
-    private final ResourceRepository resourceRepository;
     private final StatisticsRepository statisticsRepository;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
-    public StatisticsServiceImpl(PostsRepository postsRepository, ResourceRepository resourceRepository,
-                                 StatisticsRepository statisticsRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
-        this.postsRepository = postsRepository;
-        this.resourceRepository = resourceRepository;
+    public StatisticsServiceImpl(StatisticsRepository statisticsRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
         this.statisticsRepository = statisticsRepository;
         this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
@@ -61,18 +54,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public Mono<StatisticsBO> fetch() {
-        return postsRepository.findByEnabledTrue().collectList().map(postsList -> {
-            StatisticsBO totalVO = new StatisticsBO();
-            postsList.forEach(posts -> {
-                totalVO.setViewed(posts.getViewed() + totalVO.getViewed());
-                totalVO.setLikes(posts.getLikes() + totalVO.getLikes());
-                totalVO.setComments(posts.getComments() + totalVO.getComments());
-            });
-            return totalVO;
-        }).flatMap(vo -> resourceRepository.findByEnabledTrue().collectList().map(resources -> {
-            resources.forEach(resource -> vo.setDownloads(vo.getDownloads() + resource.getDownloads()));
-            return vo;
-        }));
+        return Mono.empty();
     }
 
     @Override

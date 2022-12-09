@@ -1,6 +1,5 @@
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.bo.StatisticsBO;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.repository.StatisticsRepository;
@@ -53,8 +52,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<StatisticsBO> fetch() {
-        return Mono.empty();
+    public Mono<StatisticsVO> fetch() {
+        return statisticsRepository.getByDate(LocalDate.now()).map(this::convertOuter);
     }
 
     @Override

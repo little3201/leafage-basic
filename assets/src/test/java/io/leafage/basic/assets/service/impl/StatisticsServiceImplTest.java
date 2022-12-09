@@ -2,11 +2,7 @@ package io.leafage.basic.assets.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
-import io.leafage.basic.assets.document.Posts;
-import io.leafage.basic.assets.document.Resource;
 import io.leafage.basic.assets.document.Statistics;
-import io.leafage.basic.assets.repository.PostsRepository;
-import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,12 +33,6 @@ class StatisticsServiceImplTest {
 
     @Mock
     private StatisticsRepository statisticsRepository;
-
-    @Mock
-    private PostsRepository postsRepository;
-
-    @Mock
-    private ResourceRepository resourceRepository;
 
     @Mock
     private ReactiveMongoTemplate reactiveMongoTemplate;
@@ -101,9 +91,8 @@ class StatisticsServiceImplTest {
 
     @Test
     void fetch() {
-        given(this.postsRepository.findByEnabledTrue()).willReturn(Flux.just(Mockito.mock(Posts.class)));
-
-        given(this.resourceRepository.findByEnabledTrue()).willReturn(Flux.just(Mockito.mock(Resource.class)));
+        given(this.statisticsRepository.getByDate(Mockito.any(LocalDate.class)))
+                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 
         StepVerifier.create(statisticsService.fetch()).expectNextCount(1).verifyComplete();
     }

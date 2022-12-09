@@ -1,6 +1,5 @@
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.bo.StatisticsBO;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.slf4j.Logger;
@@ -55,8 +54,8 @@ public class StatisticsController {
      * @return 查询到数据，异常时返回204
      */
     @GetMapping("/total")
-    public ResponseEntity<Mono<StatisticsBO>> fetch() {
-        Mono<StatisticsBO> voMono;
+    public ResponseEntity<Mono<StatisticsVO>> fetch() {
+        Mono<StatisticsVO> voMono;
         try {
             voMono = statisticsService.fetch();
         } catch (Exception e) {

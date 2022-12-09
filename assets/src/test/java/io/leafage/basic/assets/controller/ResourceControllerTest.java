@@ -22,6 +22,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static org.mockito.BDDMockito.given;
 
@@ -124,6 +125,7 @@ class ResourceControllerTest {
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setCover("../test.jpg");
+        resourceDTO.setTags(Set.of("sas"));
 
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21318000");
@@ -142,6 +144,7 @@ class ResourceControllerTest {
         // 构造请求对象
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
+        resourceDTO.setTags(Set.of("sas"));
         resourceDTO.setCover("../test.jpg");
 
         CategoryBO categoryBO = new CategoryBO();
@@ -163,6 +166,7 @@ class ResourceControllerTest {
         // 构造请求对象
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
+        resourceDTO.setTags(Set.of("sas"));
         resourceDTO.setCover("../test.jpg");
 
         CategoryBO categoryBO = new CategoryBO();
@@ -182,6 +186,7 @@ class ResourceControllerTest {
         // 构造请求对象
         ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
+        resourceDTO.setTags(Set.of("sas"));
         resourceDTO.setCover("../test.jpg");
         resourceDTO.setType('E');
 

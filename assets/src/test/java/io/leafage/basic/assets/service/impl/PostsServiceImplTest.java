@@ -6,16 +6,13 @@ package io.leafage.basic.assets.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.bo.CategoryBO;
-import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
-import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
-import io.leafage.basic.assets.service.StatisticsService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,9 +54,6 @@ class PostsServiceImplTest {
 
     @Mock
     private ReactiveMongoTemplate reactiveMongoTemplate;
-
-    @Mock
-    private StatisticsService statisticsService;
 
     @InjectMocks
     private PostsServiceImpl postsService;
@@ -107,19 +101,10 @@ class PostsServiceImplTest {
         given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(posts));
 
-        UpdateResult acknowledged = UpdateResult.acknowledged(1, 1L, null);
-        given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(posts.getId())),
-                new Update().inc("viewed", 1), Posts.class))
-                .willReturn(Mono.just(acknowledged));
-
-        given(this.postsRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(posts));
-
         given(this.categoryRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
 
         given(this.postsContentService.fetchByPostsId(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
 
-        given(this.statisticsService.increase(Mockito.any(), Mockito.any(StatisticsFieldEnum.class)))
-                .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 
         StepVerifier.create(this.postsService.fetch("21213G0J2")).expectNextCount(1).verifyComplete();
     }

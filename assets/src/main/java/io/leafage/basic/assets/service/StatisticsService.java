@@ -1,6 +1,5 @@
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.bo.StatisticsBO;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.vo.StatisticsVO;
@@ -30,7 +29,7 @@ public interface StatisticsService {
      *
      * @return 结果
      */
-    Mono<StatisticsBO> fetch();
+    Mono<StatisticsVO> fetch();
 
     /**
      * 添加

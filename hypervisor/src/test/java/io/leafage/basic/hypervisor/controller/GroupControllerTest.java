@@ -119,6 +119,7 @@ class GroupControllerTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
+        groupDTO.setAlias("Test");
         webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
@@ -130,6 +131,7 @@ class GroupControllerTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
+        groupDTO.setAlias("Test");
         webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
@@ -142,6 +144,7 @@ class GroupControllerTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
+        groupDTO.setAlias("Test");
         webTestClient.put().uri("/groups/{code}", "21612OL34").bodyValue(groupDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
@@ -153,6 +156,7 @@ class GroupControllerTest {
 
         GroupDTO groupDTO = new GroupDTO();
         groupDTO.setName("test");
+        groupDTO.setAlias("Test");
         webTestClient.put().uri("/groups/{code}", "21612OL34").bodyValue(groupDTO).exchange()
                 .expectStatus().isNotModified();
     }

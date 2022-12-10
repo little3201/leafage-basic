@@ -52,6 +52,9 @@ class RegionServiceImplTest {
         region.setDescription("描述");
         given(this.regionRepository.getByCodeAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(region));
 
+        given(this.regionRepository.findById(Mockito.any(ObjectId.class)))
+                .willReturn(Mono.just(Mockito.mock(Region.class)));
+
         StepVerifier.create(regionService.fetch(1100L)).expectNextCount(1).verifyComplete();
     }
 
@@ -110,8 +113,12 @@ class RegionServiceImplTest {
         region.setSuperior(new ObjectId());
         given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mono.just(region));
 
+        given(this.regionRepository.findById(Mockito.any(ObjectId.class)))
+                .willReturn(Mono.just(Mockito.mock(Region.class)));
+
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("测试村");
+        region.setAlias("Test");
         regionDTO.setSuperior(1100L);
         StepVerifier.create(regionService.modify(11L, regionDTO)).expectNextCount(1).verifyComplete();
     }

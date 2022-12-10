@@ -124,6 +124,7 @@ class RoleControllerTest {
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
+        roleDTO.setAlias("Test");
         webTestClient.post().uri("/roles").bodyValue(roleDTO).exchange().expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -134,6 +135,7 @@ class RoleControllerTest {
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
+        roleDTO.setAlias("Test");
         webTestClient.post().uri("/roles").bodyValue(roleDTO).exchange().expectStatus().is4xxClientError();
     }
 
@@ -145,6 +147,7 @@ class RoleControllerTest {
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
+        roleDTO.setAlias("Test");
         webTestClient.put().uri("/roles/{code}", "21612OL34").bodyValue(roleDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
@@ -156,6 +159,7 @@ class RoleControllerTest {
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
+        roleDTO.setAlias("Test");
         webTestClient.put().uri("/roles/{code}", "21612OL34").bodyValue(roleDTO).exchange()
                 .expectStatus().isNotModified();
     }

@@ -1,6 +1,5 @@
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.bo.StatisticsBO;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.junit.jupiter.api.Test;
@@ -62,7 +61,7 @@ class StatisticsControllerTest {
 
     @Test
     void fetch() {
-        StatisticsBO totalVO = new StatisticsBO();
+        StatisticsVO totalVO = new StatisticsVO();
         totalVO.setViewed(121);
         given(this.statisticsService.fetch()).willReturn(Mono.just(totalVO));
 

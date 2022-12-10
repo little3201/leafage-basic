@@ -8,7 +8,7 @@ package io.leafage.basic.assets.dto;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceDTO extends PostDTO {
+public class ResourceDTO extends SuperDTO {
 
     /**
      * 类型

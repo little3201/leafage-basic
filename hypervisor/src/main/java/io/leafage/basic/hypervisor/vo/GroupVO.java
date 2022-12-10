@@ -3,8 +3,6 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
-import java.time.LocalDateTime;
-
 /**
  * VO class for Group
  *
@@ -13,25 +11,9 @@ import java.time.LocalDateTime;
 public class GroupVO extends SuperVO<String> {
 
     /**
-     * 编号
-     */
-    private String code;
-    /**
      * 负责人
      */
     private String principal;
-    /**
-     * 更新时间
-     */
-    private LocalDateTime modifyTime;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
 
     public String getPrincipal() {
@@ -41,14 +23,5 @@ public class GroupVO extends SuperVO<String> {
     public void setPrincipal(String principal) {
         this.principal = principal;
     }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
 
 }

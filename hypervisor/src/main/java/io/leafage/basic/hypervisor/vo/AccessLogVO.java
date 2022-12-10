@@ -1,6 +1,6 @@
 package io.leafage.basic.hypervisor.vo;
 
-import io.leafage.basic.hypervisor.bo.BasicBO;
+import io.leafage.basic.hypervisor.bo.AccessLogBO;
 
 import java.time.LocalDateTime;
 
@@ -9,47 +9,31 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2022-03-18 21:09
  */
-public class AccessLogVO extends BasicBO<String> {
+public class AccessLogVO extends AccessLogBO {
 
-    /**
-     * ip
-     */
-    private String ip;
-    /**
-     * location
-     */
-    private String location;
-    /**
-     * description
-     */
-    private String description;
+    private String code;
+
+    private String name;
     /**
      * 更新时间
      */
     private LocalDateTime modifyTime;
 
-    public String getIp() {
-        return ip;
+
+    public String getCode() {
+        return code;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getLocation() {
-        return location;
+    public String getName() {
+        return name;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDateTime getModifyTime() {

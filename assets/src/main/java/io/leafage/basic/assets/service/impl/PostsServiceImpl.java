@@ -7,7 +7,7 @@ import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
-import io.leafage.basic.assets.dto.PostDTO;
+import io.leafage.basic.assets.dto.PostBO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
@@ -106,7 +106,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Mono<PostVO> create(PostDTO postDTO) {
+    public Mono<PostVO> create(PostBO postDTO) {
         return categoryRepository.getByCodeAndEnabledTrue(postDTO.getCategory().getCode())
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(category -> {
@@ -116,7 +116,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                     posts.setCategoryId(category.getId());
                     return posts;
                 }).flatMap(info -> postsRepository.insert(info).map(posts -> {
-                            PostsContent postsContent = new PostsContent();
+                    PostsContent postsContent = new PostsContent();
                             postsContent.setPostsId(posts.getId());
                             postsContent.setCatalog(postDTO.getCatalog());
                             postsContent.setContent(postDTO.getContent());
@@ -127,7 +127,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public Mono<PostVO> modify(String code, PostDTO postDTO) {
+    public Mono<PostVO> modify(String code, PostBO postDTO) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))

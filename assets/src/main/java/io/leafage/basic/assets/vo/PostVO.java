@@ -3,38 +3,21 @@
  */
 package io.leafage.basic.assets.vo;
 
-import io.leafage.basic.assets.bo.CategoryBO;
+import io.leafage.basic.assets.bo.SuperBO;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 /**
  * VO class for Posts
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PostVO {
+public class PostVO extends SuperBO {
 
     /**
      * 编号
      */
     private String code;
-    /**
-     * 标题
-     */
-    private String title;
-    /**
-     * 封面¬
-     */
-    private String cover;
-    /**
-     * 标签
-     */
-    private Set<String> tags;
-    /**
-     * 分类
-     */
-    private CategoryBO category;
     /**
      * 时间
      */
@@ -46,38 +29,6 @@ public class PostVO {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    public Set<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<String> tags) {
-        this.tags = tags;
-    }
-
-    public CategoryBO getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryBO category) {
-        this.category = category;
     }
 
     public LocalDateTime getModifyTime() {

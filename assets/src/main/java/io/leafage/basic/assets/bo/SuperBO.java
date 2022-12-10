@@ -1,9 +1,7 @@
 /*
  * Copyright (c) 2021. Leafage All Right Reserved.
  */
-package io.leafage.basic.assets.dto;
-
-import io.leafage.basic.assets.bo.CategoryBO;
+package io.leafage.basic.assets.bo;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -14,7 +12,7 @@ import java.util.Set;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public abstract class SuperDTO {
+public abstract class SuperBO {
 
     /**
      * 标题

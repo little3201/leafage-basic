@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.assets.dto;
 
+import io.leafage.basic.assets.bo.SuperBO;
+
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -10,7 +12,7 @@ import javax.validation.constraints.NotBlank;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PostDTO extends SuperDTO {
+public class PostBO extends SuperBO {
 
     /**
      * 内容

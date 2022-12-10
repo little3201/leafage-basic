@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.dto.ResourceDTO;
+import io.leafage.basic.assets.dto.ResourceBO;
 import io.leafage.basic.assets.service.ResourceService;
 import io.leafage.basic.assets.vo.ResourceVO;
 import org.slf4j.Logger;
@@ -98,7 +98,7 @@ public class ResourceController {
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<ResourceVO>> create(@RequestBody @Valid ResourceDTO resourceDTO) {
+    public ResponseEntity<Mono<ResourceVO>> create(@RequestBody @Valid ResourceBO resourceDTO) {
         Mono<ResourceVO> voMono;
         try {
             voMono = resourceService.create(resourceDTO);
@@ -117,7 +117,7 @@ public class ResourceController {
      * @return 修改后的信息，异常时返回304状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Mono<ResourceVO>> modify(@PathVariable String code, @RequestBody @Valid ResourceDTO resourceDTO) {
+    public ResponseEntity<Mono<ResourceVO>> modify(@PathVariable String code, @RequestBody @Valid ResourceBO resourceDTO) {
         Mono<ResourceVO> voMono;
         try {
             voMono = resourceService.modify(code, resourceDTO);

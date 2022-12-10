@@ -3,12 +3,14 @@
  */
 package io.leafage.basic.assets.dto;
 
+import io.leafage.basic.assets.bo.SuperBO;
+
 /**
  * DTO class for Resource
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceDTO extends SuperDTO {
+public class ResourceBO extends SuperBO {
 
     /**
      * 类型

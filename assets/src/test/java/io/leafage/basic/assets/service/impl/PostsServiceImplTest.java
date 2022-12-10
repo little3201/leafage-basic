@@ -9,7 +9,7 @@ import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
-import io.leafage.basic.assets.dto.PostDTO;
+import io.leafage.basic.assets.dto.PostBO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
@@ -134,7 +134,7 @@ class PostsServiceImplTest {
 
         given(this.postsContentService.create(Mockito.any(PostsContent.class))).willReturn(Mono.empty());
 
-        PostDTO postDTO = new PostDTO();
+        PostBO postDTO = new PostBO();
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
@@ -143,7 +143,7 @@ class PostsServiceImplTest {
 
     @Test
     void create_error_null() {
-        PostDTO postDTO = new PostDTO();
+        PostBO postDTO = new PostBO();
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
@@ -154,7 +154,7 @@ class PostsServiceImplTest {
 
     @Test
     void create_error() {
-        PostDTO postDTO = new PostDTO();
+        PostBO postDTO = new PostBO();
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
@@ -188,7 +188,7 @@ class PostsServiceImplTest {
         given(this.postsContentService.modify(posts.getId(), postsContent))
                 .willReturn(Mono.empty());
 
-        PostDTO postDTO = new PostDTO();
+        PostBO postDTO = new PostBO();
         postDTO.setTitle("标题");
         postDTO.setTags(Set.of("test"));
         postDTO.setCover("./avatar.jpg");

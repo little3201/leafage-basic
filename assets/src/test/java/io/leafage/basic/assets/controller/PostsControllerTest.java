@@ -4,7 +4,7 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.bo.CategoryBO;
-import io.leafage.basic.assets.dto.PostDTO;
+import io.leafage.basic.assets.dto.PostBO;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostVO;
 import org.junit.jupiter.api.Test;
@@ -174,10 +174,10 @@ class PostsControllerTest {
         // 构造返回对象
         PostVO postVO = new PostVO();
         postVO.setTitle("test");
-        given(this.postsService.create(Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
+        given(this.postsService.create(Mockito.any(PostBO.class))).willReturn(Mono.just(postVO));
 
         // 构造请求对象
-        PostDTO postDTO = new PostDTO();
+        PostBO postDTO = new PostBO();
         postDTO.setTitle("test");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setCover("../test.jpg");
@@ -193,10 +193,10 @@ class PostsControllerTest {
 
     @Test
     void create_error() {
-        given(this.postsService.create(Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
+        given(this.postsService.create(Mockito.any(PostBO.class))).willThrow(new RuntimeException());
 
         // 构造请求对象
-        PostDTO postDTO = new PostDTO();
+        PostBO postDTO = new PostBO();
         postDTO.setTitle("test");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setCover("../test.jpg");
@@ -216,10 +216,10 @@ class PostsControllerTest {
         // 构造返回对象
         PostVO postVO = new PostVO();
         postVO.setTitle("test");
-        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
+        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostBO.class))).willReturn(Mono.just(postVO));
 
         // 构造请求对象
-        PostDTO postDTO = new PostDTO();
+        PostBO postDTO = new PostBO();
         postDTO.setTitle("test");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setCover("../test.jpg");
@@ -234,10 +234,10 @@ class PostsControllerTest {
 
     @Test
     void modify_error() {
-        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
+        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostBO.class))).willThrow(new RuntimeException());
 
         // 构造请求对象
-        PostDTO postDTO = new PostDTO();
+        PostBO postDTO = new PostBO();
         postDTO.setTitle("test");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setCover("../test.jpg");

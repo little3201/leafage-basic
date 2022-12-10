@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2021. Leafage All Right Reserved.
  */
-package io.leafage.basic.assets.vo;
+package io.leafage.basic.assets.bo;
 
 /**
  * VO class for posts content
  *
  * @author liwenqiang 2021-02-26 22:17
  */
-public class ContentVO {
+public class ContentBO {
 
     /**
      * 内容

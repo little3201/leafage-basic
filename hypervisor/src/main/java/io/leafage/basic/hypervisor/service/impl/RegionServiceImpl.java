@@ -1,10 +1,10 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.bo.BasicBO;
 import io.leafage.basic.hypervisor.document.Region;
 import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.service.RegionService;
-import io.leafage.basic.hypervisor.vo.BasicVO;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -103,7 +103,7 @@ public class RegionServiceImpl implements RegionService {
             if (region.getSuperior() != null) {
                 // 存在上级，则查询
                 return regionRepository.findById(region.getSuperior()).map(superior -> {
-                    BasicVO<Long> basicVO = new BasicVO<>();
+                    BasicBO<Long> basicVO = new BasicBO<>();
                     BeanUtils.copyProperties(superior, basicVO);
                     vo.setSuperior(basicVO);
                     return vo;

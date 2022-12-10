@@ -142,14 +142,14 @@ public class AccountController {
     /**
      * 删除信息（逻辑删除）
      *
-     * @param code 代码
+     * @param username 账号
      * @return 200状态码，异常时返回417状态码
      */
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Mono<Void>> remove(@PathVariable String code) {
+    @DeleteMapping("/{username}")
+    public ResponseEntity<Mono<Void>> remove(@PathVariable String username) {
         Mono<Void> voidMono;
         try {
-            voidMono = accountService.remove(code);
+            voidMono = accountService.remove(username);
         } catch (Exception e) {
             logger.error("Remove account occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

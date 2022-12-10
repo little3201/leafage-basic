@@ -3,12 +3,14 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
+import io.leafage.basic.hypervisor.bo.SuperBO;
+
 /**
  * DTO class for Group
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class GroupDTO extends SuperDTO<String> {
+public class GroupDTO extends SuperBO<String> {
 
     /**
      * 负责人

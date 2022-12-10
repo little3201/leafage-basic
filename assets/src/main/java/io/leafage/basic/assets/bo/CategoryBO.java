@@ -1,9 +1,9 @@
 package io.leafage.basic.assets.bo;
 
 /**
- * desc
+ * BO class for category
  *
- * @author wilsonli 2022/8/20 12:28
+ * @author wilsonli 2022-12-10 22:28
  **/
 public class CategoryBO {
 

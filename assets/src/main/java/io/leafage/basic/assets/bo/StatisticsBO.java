@@ -4,9 +4,9 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * total statistics vo
+ * BO class for statistics
  *
- * @author liwenqiang 2022/5/25 19:53
+ * @author liwenqiang 2022-12-10 22:53
  **/
 public class StatisticsBO implements Serializable {
 

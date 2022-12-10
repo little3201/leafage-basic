@@ -1,8 +1,8 @@
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.bo.BasicBO;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.service.DictionaryService;
-import io.leafage.basic.hypervisor.vo.BasicVO;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
@@ -43,7 +43,7 @@ class DictionaryControllerTest {
         DictionaryVO dictionaryVO = new DictionaryVO();
         dictionaryVO.setName("test");
         dictionaryVO.setAlias("性别-男");
-        BasicVO<String> superior = new BasicVO<>();
+        BasicBO<String> superior = new BasicBO<>();
         superior.setCode("2247K10L");
         superior.setName("性别");
         dictionaryVO.setSuperior(superior);

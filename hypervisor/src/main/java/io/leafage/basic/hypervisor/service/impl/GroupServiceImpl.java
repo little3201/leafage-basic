@@ -90,7 +90,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
                     group.setCode(this.generateCode());
                     return group;
                 })
-                .flatMap(group -> this.superior(groupDTO.getSuperior(), group))
+                .flatMap(group -> this.superior(groupDTO.getSuperior().getCode(), group))
                 .flatMap(group -> this.principal(groupDTO.getPrincipal(), group))
                 .flatMap(groupRepository::insert).flatMap(this::convertOuterWithCount);
     }
@@ -101,7 +101,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
         return groupRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
-                .flatMap(group -> this.superior(groupDTO.getSuperior(), group))
+                .flatMap(group -> this.superior(groupDTO.getSuperior().getCode(), group))
                 .flatMap(group -> this.principal(groupDTO.getPrincipal(), group))
                 .flatMap(groupRepository::save).flatMap(this::convertOuterWithCount);
     }

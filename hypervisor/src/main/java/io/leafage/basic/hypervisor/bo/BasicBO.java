@@ -1,11 +1,11 @@
-package io.leafage.basic.hypervisor.vo;
+package io.leafage.basic.hypervisor.bo;
 
 /**
- * desc
+ * BO class
  *
- * @author wilsonli 2022/8/20 12:28
+ * @author wilsonli 2022-12-09 22:55
  **/
-public class BasicVO<T> {
+public class BasicBO<T> {
 
     private T code;
 

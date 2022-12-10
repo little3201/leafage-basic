@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.bo.BasicBO;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.document.Authority;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
@@ -12,7 +13,6 @@ import io.leafage.basic.hypervisor.repository.AuthorityRepository;
 import io.leafage.basic.hypervisor.repository.RoleAuthorityRepository;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
-import io.leafage.basic.hypervisor.vo.BasicVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -107,7 +107,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
                     BeanUtils.copyProperties(authorityDTO, authority);
                     authority.setCode(this.generateCode());
                     return authority;
-                }).flatMap(authority -> this.superior(authorityDTO.getSuperior(), authority))
+                }).flatMap(authority -> this.superior(authorityDTO.getSuperior().getCode(), authority))
                 .switchIfEmpty(Mono.error(NoSuchElementException::new)).flatMap(authority -> {
                     BeanUtils.copyProperties(authorityDTO, authority);
                     return authorityRepository.insert(authority);
@@ -119,7 +119,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return authorityRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(authority -> this.superior(authorityDTO.getSuperior(), authority))
+                .flatMap(authority -> this.superior(authorityDTO.getSuperior().getCode(), authority))
                 .flatMap(authority -> {
                     BeanUtils.copyProperties(authorityDTO, authority);
                     return authorityRepository.save(authority);
@@ -186,7 +186,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
     private Mono<AuthorityVO> superior(ObjectId superiorId, AuthorityVO vo) {
         if (superiorId != null) {
             return authorityRepository.findById(superiorId).map(superior -> {
-                BasicVO<String> basicVO = new BasicVO<>();
+                BasicBO<String> basicVO = new BasicBO<>();
                 BeanUtils.copyProperties(superior, basicVO);
                 vo.setSuperior(basicVO);
                 return vo;

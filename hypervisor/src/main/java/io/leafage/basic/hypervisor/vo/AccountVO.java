@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.AccountBO;
+
 import java.time.LocalDateTime;
 
 /**
@@ -10,20 +12,8 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AccountVO {
+public class AccountVO extends AccountBO {
 
-    /**
-     * 账号
-     */
-    private String username;
-    /**
-     * 昵称
-     */
-    private String nickname;
-    /**
-     * 头像
-     */
-    private String avatar;
     /**
      * 账号有效期
      */
@@ -36,30 +26,6 @@ public class AccountVO {
      * 密码有效期
      */
     private LocalDateTime credentialsExpiresAt;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 
     public LocalDateTime getAccountExpiresAt() {
         return accountExpiresAt;

@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.bo.BasicBO;
 import io.leafage.basic.hypervisor.document.Region;
 import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
@@ -87,10 +88,14 @@ class RegionServiceImplTest {
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("西安市");
         regionDTO.setAlias("秦");
-        regionDTO.setSuperior(11001L);
         regionDTO.setAreaCode("029");
         regionDTO.setPostalCode(710000);
         regionDTO.setDescription("描述信息");
+
+        BasicBO<Long> partBO = new BasicBO<>();
+        partBO.setCode(2L);
+        partBO.setName("Test");
+        regionDTO.setSuperior(partBO);
         StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -100,7 +105,11 @@ class RegionServiceImplTest {
 
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("测试村");
-        regionDTO.setSuperior(1100L);
+
+        BasicBO<Long> partBO = new BasicBO<>();
+        partBO.setCode(2L);
+        partBO.setName("Test");
+        regionDTO.setSuperior(partBO);
         StepVerifier.create(regionService.create(regionDTO)).expectError(RuntimeException.class).verify();
     }
 
@@ -119,7 +128,11 @@ class RegionServiceImplTest {
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("测试村");
         region.setAlias("Test");
-        regionDTO.setSuperior(1100L);
+
+        BasicBO<Long> partBO = new BasicBO<>();
+        partBO.setCode(2L);
+        partBO.setName("Test");
+        regionDTO.setSuperior(partBO);
         StepVerifier.create(regionService.modify(11L, regionDTO)).expectNextCount(1).verifyComplete();
     }
 

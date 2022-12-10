@@ -3,12 +3,14 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
+import io.leafage.basic.hypervisor.bo.SuperBO;
+
 /**
  * DTO class for Region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/
-public class RegionDTO extends SuperDTO<Long> {
+public class RegionDTO extends SuperBO<Long> {
 
     /**
      * 邮编

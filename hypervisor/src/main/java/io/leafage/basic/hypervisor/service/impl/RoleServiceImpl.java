@@ -3,12 +3,12 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.bo.BasicBO;
 import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
-import io.leafage.basic.hypervisor.vo.BasicVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
@@ -85,7 +85,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
                     BeanUtils.copyProperties(roleDTO, role);
                     role.setCode(this.generateCode());
                     return role;
-                }).flatMap(vo -> this.superior(roleDTO.getSuperior(), vo))
+                }).flatMap(vo -> this.superior(roleDTO.getSuperior().getCode(), vo))
                 .switchIfEmpty(Mono.error(NoSuchElementException::new)).flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
                     return roleRepository.insert(role);
@@ -96,7 +96,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return roleRepository.getByCodeAndEnabledTrue(code)
-                .flatMap(vo -> this.superior(roleDTO.getSuperior(), vo))
+                .flatMap(vo -> this.superior(roleDTO.getSuperior().getCode(), vo))
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
@@ -148,7 +148,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
     private Mono<RoleVO> superior(ObjectId superiorId, RoleVO vo) {
         if (superiorId != null) {
             return roleRepository.findById(superiorId).map(superior -> {
-                BasicVO<String> basicVO = new BasicVO<>();
+                BasicBO<String> basicVO = new BasicBO<>();
                 BeanUtils.copyProperties(superior, basicVO);
                 vo.setSuperior(basicVO);
                 return vo;

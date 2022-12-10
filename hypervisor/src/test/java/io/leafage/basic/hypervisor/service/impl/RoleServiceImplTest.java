@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.bo.BasicBO;
 import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
@@ -14,11 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -93,6 +94,8 @@ class RoleServiceImplTest {
 
     @Test
     void create() {
+        given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Role.class)));
+
         Role role = new Role();
         role.setId(new ObjectId());
         given(this.roleRepository.insert(Mockito.any(Role.class))).willReturn(Mono.just(role));
@@ -101,7 +104,13 @@ class RoleServiceImplTest {
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
+        roleDTO.setAlias("Test");
         roleDTO.setDescription("描述信息");
+
+        BasicBO<String> partBO = new BasicBO<>();
+        partBO.setCode("21612OL12");
+        partBO.setName("Test");
+        roleDTO.setSuperior(partBO);
         StepVerifier.create(roleService.create(roleDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -120,7 +129,14 @@ class RoleServiceImplTest {
         given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(role));
 
         RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setSuperior("21612OL12");
+        roleDTO.setName("test");
+        roleDTO.setAlias("Test");
+        roleDTO.setDescription("描述信息");
+
+        BasicBO<String> partBO = new BasicBO<>();
+        partBO.setCode("21612OL12");
+        partBO.setName("Test");
+        roleDTO.setSuperior(partBO);
         StepVerifier.create(roleService.modify("21612OL34", roleDTO)).expectNextCount(1).verifyComplete();
     }
 

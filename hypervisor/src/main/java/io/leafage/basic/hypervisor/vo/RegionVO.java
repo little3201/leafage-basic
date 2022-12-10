@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import java.time.LocalDateTime;
+
 /**
  * VO class for Region
  *
@@ -11,6 +13,10 @@ package io.leafage.basic.hypervisor.vo;
 public class RegionVO extends SuperVO<Long> {
 
     /**
+     * 编号
+     */
+    private String code;
+    /**
      * 邮编
      */
     private Integer postalCode;
@@ -18,7 +24,19 @@ public class RegionVO extends SuperVO<Long> {
      * 区号
      */
     private String areaCode;
+    /**
+     * 更新时间
+     */
+    private LocalDateTime modifyTime;
 
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public Integer getPostalCode() {
         return postalCode;
@@ -36,4 +54,11 @@ public class RegionVO extends SuperVO<Long> {
         this.areaCode = areaCode;
     }
 
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 }

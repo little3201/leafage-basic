@@ -3,96 +3,51 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.AuthorityBO;
+
+import java.time.LocalDateTime;
+
 /**
  * VO class for Authority
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class AuthorityVO extends AbstractVO<String> {
+public class AuthorityVO extends AuthorityBO {
 
     /**
-     * 名称
+     * 编号
      */
-    private String name;
+    private String code;
     /**
-     * 类型
+     * 统计数
      */
-    private Character type;
+    private Long count;
     /**
-     * 上级
+     * 更新时间
      */
-    private BasicVO<String> superior;
-    /**
-     * 图标
-     */
-    private String icon;
-    /**
-     * 路径
-     */
-    private String path;
-    /**
-     * 角色数
-     */
-    private long count;
-    /**
-     * 描述
-     */
-    private String description;
+    private LocalDateTime modifyTime;
 
-
-    public String getName() {
-        return name;
+    public String getCode() {
+        return code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public Character getType() {
-        return type;
-    }
-
-    public void setType(Character type) {
-        this.type = type;
-    }
-
-    public BasicVO<String> getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(BasicVO<String> superior) {
-        this.superior = superior;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(long count) {
+    public void setCount(Long count) {
         this.count = count;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

@@ -1,17 +1,17 @@
 /*
  * Copyright (c) 2021. Leafage All Right Reserved.
  */
-package io.leafage.basic.hypervisor.dto;
+package io.leafage.basic.hypervisor.bo;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
- * DTO class
+ * BO class
  *
  * @author liwenqiang 2022-12-09 22:23
  */
-public abstract class SuperDTO<T> {
+public abstract class SuperBO<T> {
 
     /**
      * 名称
@@ -28,7 +28,7 @@ public abstract class SuperDTO<T> {
     /**
      * 上级
      */
-    private T superior;
+    private BasicBO<T> superior;
     /**
      * 描述
      */
@@ -51,11 +51,11 @@ public abstract class SuperDTO<T> {
         this.alias = alias;
     }
 
-    public T getSuperior() {
+    public BasicBO<T> getSuperior() {
         return superior;
     }
 
-    public void setSuperior(T superior) {
+    public void setSuperior(BasicBO<T> superior) {
         this.superior = superior;
     }
 

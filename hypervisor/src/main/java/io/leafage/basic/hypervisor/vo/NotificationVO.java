@@ -1,46 +1,38 @@
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.NotificationBO;
+
+import java.time.LocalDateTime;
+
 /**
  * VO class for Notification
  *
  * @author liwenqiang 2022-02-10 13:53
  */
-public class NotificationVO extends AbstractVO<String> {
+public class NotificationVO extends NotificationBO {
 
     /**
-     * 标题
+     * 编号
      */
-    private String title;
+    private String code;
     /**
-     * 内容
+     * 更新时间
      */
-    private String content;
-    /**
-     * 接收人
-     */
-    private String receiver;
+    private LocalDateTime modifyTime;
 
-    public String getTitle() {
-        return title;
+    public String getCode() {
+        return code;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getContent() {
-        return content;
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

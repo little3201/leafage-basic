@@ -8,9 +8,9 @@ import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 /**
- * DTO class for Posts
+ * BO class
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author liwenqiang 2022-12-10 22:09
  */
 public abstract class SuperBO {
 

@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.bo.BasicBO;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.document.AccountRole;
 import io.leafage.basic.hypervisor.document.Authority;
@@ -103,6 +104,8 @@ class AuthorityServiceImplTest {
 
     @Test
     void create() {
+        given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Authority.class)));
+
         Authority authority = new Authority();
         authority.setId(new ObjectId());
         authority.setName("test");
@@ -116,6 +119,11 @@ class AuthorityServiceImplTest {
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
         authorityDTO.setType('M');
+
+        BasicBO<String> partBO = new BasicBO<>();
+        partBO.setCode("21612OL35");
+        partBO.setName("Test");
+        authorityDTO.setSuperior(partBO);
         StepVerifier.create(authorityService.create(authorityDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -135,7 +143,11 @@ class AuthorityServiceImplTest {
         AuthorityDTO authorityDTO = new AuthorityDTO();
         authorityDTO.setName("test");
         authorityDTO.setType('M');
-        authorityDTO.setSuperior("21612OL35");
+
+        BasicBO<String> partBO = new BasicBO<>();
+        partBO.setCode("21612OL35");
+        partBO.setName("Test");
+        authorityDTO.setSuperior(partBO);
         StepVerifier.create(authorityService.modify("21612OL34", authorityDTO)).expectNextCount(1).verifyComplete();
     }
 

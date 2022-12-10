@@ -14,7 +14,7 @@ class ScheduleConfigurationTest {
             .withConfiguration(AutoConfigurations.of(ScheduleConfiguration.class));
 
     @Test
-    public void configTest() {
+    void configTest() {
         this.contextRunner.run((context) -> {
             assertThat(context).hasSingleBean(ScheduleConfiguration.class);
             assertThat(context).getBeanNames(ScheduleConfiguration.class).hasSize(1);

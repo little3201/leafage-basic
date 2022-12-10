@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.assets.vo;
 
+import io.leafage.basic.assets.bo.ContentBO;
+
 /**
  * VO class for Posts Details
  *
@@ -13,13 +15,13 @@ public class PostContentVO extends PostVO {
     /**
      * 内容
      */
-    private ContentVO content;
+    private ContentBO content;
 
-    public ContentVO getContent() {
+    public ContentBO getContent() {
         return content;
     }
 
-    public void setContent(ContentVO content) {
+    public void setContent(ContentBO content) {
         this.content = content;
     }
 }

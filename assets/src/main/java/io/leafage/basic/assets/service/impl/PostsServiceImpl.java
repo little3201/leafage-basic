@@ -4,6 +4,7 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.bo.CategoryBO;
+import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
@@ -12,7 +13,6 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import io.leafage.basic.assets.service.PostsService;
-import io.leafage.basic.assets.vo.ContentVO;
 import io.leafage.basic.assets.vo.PostContentVO;
 import io.leafage.basic.assets.vo.PostVO;
 import org.bson.types.ObjectId;
@@ -95,7 +95,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                             return contentVO;
                         }).flatMap(postsContentVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
                                 .map(contentInfo -> {
-                                    ContentVO contentVO = new ContentVO();
+                                    ContentBO contentVO = new ContentBO();
                                     contentVO.setContent(contentInfo.getContent());
                                     contentVO.setCatalog(contentInfo.getCatalog());
                                     postsContentVO.setContent(contentVO);

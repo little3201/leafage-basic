@@ -4,7 +4,7 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.bo.CategoryBO;
-import io.leafage.basic.assets.dto.ResourceBO;
+import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.service.ResourceService;
 import io.leafage.basic.assets.vo.ResourceVO;
 import org.junit.jupiter.api.Test;
@@ -119,10 +119,10 @@ class ResourceControllerTest {
         // 构造返回对象
         ResourceVO resourceVO = new ResourceVO();
         resourceVO.setTitle("test");
-        given(this.resourceService.create(Mockito.any(ResourceBO.class))).willReturn(Mono.just(resourceVO));
+        given(this.resourceService.create(Mockito.any(ResourceDTO.class))).willReturn(Mono.just(resourceVO));
 
         // 构造请求对象
-        ResourceBO resourceDTO = new ResourceBO();
+        ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setCover("../test.jpg");
         resourceDTO.setTags(Set.of("sas"));
@@ -139,10 +139,10 @@ class ResourceControllerTest {
 
     @Test
     void create_error() {
-        given(this.resourceService.create(Mockito.any(ResourceBO.class))).willThrow(new NoSuchElementException());
+        given(this.resourceService.create(Mockito.any(ResourceDTO.class))).willThrow(new NoSuchElementException());
 
         // 构造请求对象
-        ResourceBO resourceDTO = new ResourceBO();
+        ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setTags(Set.of("sas"));
         resourceDTO.setCover("../test.jpg");
@@ -161,10 +161,10 @@ class ResourceControllerTest {
         // 构造返回对象
         ResourceVO resourceVO = new ResourceVO();
         resourceVO.setTitle("test");
-        given(this.resourceService.modify(Mockito.anyString(), Mockito.any(ResourceBO.class))).willReturn(Mono.just(resourceVO));
+        given(this.resourceService.modify(Mockito.anyString(), Mockito.any(ResourceDTO.class))).willReturn(Mono.just(resourceVO));
 
         // 构造请求对象
-        ResourceBO resourceDTO = new ResourceBO();
+        ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setTags(Set.of("sas"));
         resourceDTO.setCover("../test.jpg");
@@ -181,10 +181,10 @@ class ResourceControllerTest {
 
     @Test
     void modify_error() {
-        given(this.resourceService.modify(Mockito.anyString(), Mockito.any(ResourceBO.class))).willThrow(new NoSuchElementException());
+        given(this.resourceService.modify(Mockito.anyString(), Mockito.any(ResourceDTO.class))).willThrow(new NoSuchElementException());
 
         // 构造请求对象
-        ResourceBO resourceDTO = new ResourceBO();
+        ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setTags(Set.of("sas"));
         resourceDTO.setCover("../test.jpg");

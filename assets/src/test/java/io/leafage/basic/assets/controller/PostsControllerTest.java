@@ -4,7 +4,8 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.bo.CategoryBO;
-import io.leafage.basic.assets.dto.PostBO;
+import io.leafage.basic.assets.bo.ContentBO;
+import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostVO;
 import org.junit.jupiter.api.Test;
@@ -174,17 +175,21 @@ class PostsControllerTest {
         // 构造返回对象
         PostVO postVO = new PostVO();
         postVO.setTitle("test");
-        given(this.postsService.create(Mockito.any(PostBO.class))).willReturn(Mono.just(postVO));
+        given(this.postsService.create(Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
 
         // 构造请求对象
-        PostBO postDTO = new PostBO();
+        PostDTO postDTO = new PostDTO();
         postDTO.setTitle("test");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setCover("../test.jpg");
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
-        postDTO.setContent("content");
+
+        ContentBO contentBO = new ContentBO();
+        contentBO.setCatalog("目录");
+        contentBO.setContent("内容信息");
+        postDTO.setContent(contentBO);
         webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange()
                 .expectStatus().isCreated()
@@ -193,10 +198,10 @@ class PostsControllerTest {
 
     @Test
     void create_error() {
-        given(this.postsService.create(Mockito.any(PostBO.class))).willThrow(new RuntimeException());
+        given(this.postsService.create(Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
         // 构造请求对象
-        PostBO postDTO = new PostBO();
+        PostDTO postDTO = new PostDTO();
         postDTO.setTitle("test");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setCover("../test.jpg");
@@ -205,7 +210,11 @@ class PostsControllerTest {
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
-        postDTO.setContent("content");
+
+        ContentBO contentBO = new ContentBO();
+        contentBO.setCatalog("目录");
+        contentBO.setContent("内容信息");
+        postDTO.setContent(contentBO);
         webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange()
                 .expectStatus().is4xxClientError();
@@ -216,10 +225,10 @@ class PostsControllerTest {
         // 构造返回对象
         PostVO postVO = new PostVO();
         postVO.setTitle("test");
-        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostBO.class))).willReturn(Mono.just(postVO));
+        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
 
         // 构造请求对象
-        PostBO postDTO = new PostBO();
+        PostDTO postDTO = new PostDTO();
         postDTO.setTitle("test");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setCover("../test.jpg");
@@ -227,17 +236,21 @@ class PostsControllerTest {
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
-        postDTO.setContent("content");
+
+        ContentBO contentBO = new ContentBO();
+        contentBO.setCatalog("目录");
+        contentBO.setContent("内容信息");
+        postDTO.setContent(contentBO);
         webTestClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange().expectStatus().isAccepted();
     }
 
     @Test
     void modify_error() {
-        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostBO.class))).willThrow(new RuntimeException());
+        given(this.postsService.modify(Mockito.anyString(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
         // 构造请求对象
-        PostBO postDTO = new PostBO();
+        PostDTO postDTO = new PostDTO();
         postDTO.setTitle("test");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setCover("../test.jpg");
@@ -245,7 +258,11 @@ class PostsControllerTest {
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
-        postDTO.setContent("content");
+
+        ContentBO contentBO = new ContentBO();
+        contentBO.setCatalog("目录");
+        contentBO.setContent("内容信息");
+        postDTO.setContent(contentBO);
         webTestClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange().expectStatus().isNotModified();
     }

@@ -10,7 +10,7 @@ import io.leafage.basic.assets.bo.SuperBO;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceBO extends SuperBO {
+public class ResourceDTO extends SuperBO {
 
     /**
      * 类型

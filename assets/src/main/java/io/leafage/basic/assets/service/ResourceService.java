@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.dto.ResourceBO;
+import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.vo.ResourceVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
@@ -14,7 +14,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2020/2/24 11:59
  **/
-public interface ResourceService extends ReactiveBasicService<ResourceBO, ResourceVO, String> {
+public interface ResourceService extends ReactiveBasicService<ResourceDTO, ResourceVO, String> {
 
     /**
      * 分页查询

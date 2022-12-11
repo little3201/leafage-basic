@@ -6,10 +6,11 @@ package io.leafage.basic.assets.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.bo.CategoryBO;
+import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Posts;
 import io.leafage.basic.assets.document.PostsContent;
-import io.leafage.basic.assets.dto.PostBO;
+import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
@@ -134,16 +135,21 @@ class PostsServiceImplTest {
 
         given(this.postsContentService.create(Mockito.any(PostsContent.class))).willReturn(Mono.empty());
 
-        PostBO postDTO = new PostBO();
+        PostDTO postDTO = new PostDTO();
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
+
+        ContentBO contentBO = new ContentBO();
+        contentBO.setCatalog("目录");
+        contentBO.setContent("内容信息");
+        postDTO.setContent(contentBO);
         StepVerifier.create(this.postsService.create(postDTO)).verifyComplete();
     }
 
     @Test
     void create_error_null() {
-        PostBO postDTO = new PostBO();
+        PostDTO postDTO = new PostDTO();
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
@@ -154,7 +160,7 @@ class PostsServiceImplTest {
 
     @Test
     void create_error() {
-        PostBO postDTO = new PostBO();
+        PostDTO postDTO = new PostDTO();
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
@@ -188,7 +194,7 @@ class PostsServiceImplTest {
         given(this.postsContentService.modify(posts.getId(), postsContent))
                 .willReturn(Mono.empty());
 
-        PostBO postDTO = new PostBO();
+        PostDTO postDTO = new PostDTO();
         postDTO.setTitle("标题");
         postDTO.setTags(Set.of("test"));
         postDTO.setCover("./avatar.jpg");
@@ -196,7 +202,11 @@ class PostsServiceImplTest {
         CategoryBO categoryBO = new CategoryBO();
         categoryBO.setCode("21213G0J2");
         postDTO.setCategory(categoryBO);
-        postDTO.setContent("内容信息");
+
+        ContentBO contentBO = new ContentBO();
+        contentBO.setCatalog("目录");
+        contentBO.setContent("内容信息");
+        postDTO.setContent(contentBO);
         StepVerifier.create(this.postsService.modify("21213G0J2", postDTO)).verifyComplete();
     }
 

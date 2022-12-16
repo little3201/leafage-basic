@@ -13,7 +13,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * posts service
  *
- * @author liwenqiang 2018/12/17 19:26
+ * @author liwenqiang 2018-12-17 19:26
  **/
 public interface PostsService extends ReactiveBasicService<PostDTO, PostVO, String> {
 

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 /**
  * statistics repository
  *
- * @author liwenqiang 2020/2/13 22:01
+ * @author liwenqiang 2020-02-13 22:01
  **/
 @Repository
 public interface StatisticsRepository extends ReactiveMongoRepository<Statistics, ObjectId> {
@@ -24,7 +24,7 @@ public interface StatisticsRepository extends ReactiveMongoRepository<Statistics
      * @param date 日期
      * @return 统计数据
      */
-    Mono<Statistics> getByDate(LocalDate date);
+    Mono<Statistics> getByModifyTime(LocalDate date);
 
     /**
      * 分页查询

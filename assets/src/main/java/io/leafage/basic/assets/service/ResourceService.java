@@ -12,7 +12,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * resource service
  *
- * @author liwenqiang 2020/2/24 11:59
+ * @author liwenqiang 2020-02-24 11:59
  **/
 public interface ResourceService extends ReactiveBasicService<ResourceDTO, ResourceVO, String> {
 

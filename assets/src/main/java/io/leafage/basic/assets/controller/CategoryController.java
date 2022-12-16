@@ -19,7 +19,7 @@ import javax.validation.Valid;
 /**
  * category controller
  *
- * @author liwenqiang 2020/2/16 14:26
+ * @author liwenqiang 2020-02-16 14:26
  **/
 @RestController
 @RequestMapping("/categories")

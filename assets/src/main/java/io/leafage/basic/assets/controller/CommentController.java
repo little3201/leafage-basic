@@ -20,7 +20,7 @@ import javax.validation.Valid;
 /**
  * comment controller
  *
- * @author liwenqiang 2021/7/17 21:01
+ * @author liwenqiang 2021-07-17 21:01
  **/
 @RestController
 @RequestMapping("/comments")

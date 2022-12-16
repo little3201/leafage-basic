@@ -20,7 +20,7 @@ import javax.validation.Valid;
 /**
  * posts controller
  *
- * @author liwenqiang 2018/12/20 9:54
+ * @author liwenqiang 2018-12-20 09:54
  **/
 @RestController
 @RequestMapping("/posts")

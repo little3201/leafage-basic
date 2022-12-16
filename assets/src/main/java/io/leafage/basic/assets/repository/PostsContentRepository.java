@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 /**
  * posts content repository
  *
- * @author liwenqiang 2020/2/26 18:29
+ * @author liwenqiang 2020-02-26 18:29
  **/
 @Repository
 public interface PostsContentRepository extends ReactiveMongoRepository<PostsContent, ObjectId> {

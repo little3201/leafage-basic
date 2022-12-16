@@ -19,7 +19,7 @@ import javax.validation.Valid;
 /**
  * resource controller
  *
- * @author liwenqiang 2020/2/20 9:54
+ * @author liwenqiang 2020-02-20 09:54
  **/
 @RestController
 @RequestMapping("/resources")

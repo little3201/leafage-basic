@@ -40,7 +40,7 @@ import javax.naming.NotContextException;
 /**
  * posts service impl
  *
- * @author liwenqiang 2018/12/20 9:54
+ * @author liwenqiang 2018-12-20 9:54
  **/
 @Service
 public class PostsServiceImpl extends AbstractBasicService implements PostsService {

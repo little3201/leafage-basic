@@ -2,30 +2,24 @@ package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Statistics;
+import io.leafage.basic.assets.dto.StatisticsDTO;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 
 /**
  * statistics service impl
  *
- * @author liwenqiang 2021/5/19 10:54
+ * @author liwenqiang 2021-05-19 10:54
  **/
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
@@ -41,45 +35,18 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public Mono<Page<StatisticsVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, DATE));
-        Flux<StatisticsVO> voFlux = statisticsRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
-
-        Mono<Long> count = statisticsRepository.countByEnabledTrue();
-
-        return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
-    }
-
-    @Override
-    public Mono<StatisticsVO> fetch() {
-        return statisticsRepository.getByDate(LocalDate.now()).map(this::convertOuter);
-    }
-
-    @Override
-    public Mono<Statistics> create() {
+    public Mono<StatisticsVO> create(StatisticsDTO statisticsDTO) {
         Statistics statistics = new Statistics();
-        statistics.setDate(LocalDate.now());
+        BeanUtils.copyProperties(statisticsDTO, statistics);
         // 统计昨天数据，前天的数据，做差值，计算环比数据
-        return statisticsRepository.insert(statistics);
-    }
-
-    @Override
-    public Mono<Statistics> modify() {
-        return statisticsRepository.getByDate(LocalDate.now().minusDays(1L)).flatMap(ysd ->
-                statisticsRepository.getByDate(LocalDate.now().minusDays(2L)).map(bys -> {
-                    ysd.setOverViewed(this.dayOverDay(ysd.getViewed(), bys.getViewed()));
-                    ysd.setOverLikes(this.dayOverDay(ysd.getLikes(), bys.getLikes()));
-                    ysd.setOverComments(this.dayOverDay(ysd.getComments(), bys.getComments()));
-                    return ysd;
-                })).flatMap(statisticsRepository::save);
+        return statisticsRepository.insert(statistics).map(this::convertOuter);
     }
 
     @Override
     public Mono<Statistics> increase(LocalDate today, StatisticsFieldEnum statisticsFieldEnum) {
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where(DATE).is(today)),
-                new Update().inc(statisticsFieldEnum.value, 1), Statistics.class).flatMap(updateResult ->
-                statisticsRepository.getByDate(today));
+                        new Update().inc(statisticsFieldEnum.value, 1), Statistics.class)
+                .flatMap(updateResult -> statisticsRepository.getByModifyTime(today));
     }
 
     /**
@@ -92,22 +59,6 @@ public class StatisticsServiceImpl implements StatisticsService {
         StatisticsVO outer = new StatisticsVO();
         BeanUtils.copyProperties(info, outer);
         return outer;
-    }
-
-    /**
-     * over data 计算
-     *
-     * @param y  昨天数据
-     * @param by 前天数据
-     * @return 计算结果
-     */
-    private double dayOverDay(int y, int by) {
-        if (by != 0) {
-            // 计算增长率（百分比表示），四舍五入，保留2位小数
-            double over = (y - by + 0.0) / by * 100;
-            return BigDecimal.valueOf(over).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        }
-        return y * 100.0;
     }
 
 }

@@ -12,7 +12,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * category service
  *
- * @author liwenqiang 2020/2/13 20:16
+ * @author liwenqiang 2020-02-13 20:16
  **/
 public interface CategoryService extends ReactiveBasicService<CategoryDTO, CategoryVO, String> {
 

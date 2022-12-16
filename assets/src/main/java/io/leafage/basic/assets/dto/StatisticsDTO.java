@@ -1,18 +1,18 @@
-package io.leafage.basic.assets.bo;
+package io.leafage.basic.assets.dto;
 
-import java.io.Serial;
-import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * BO class for statistics
+ * statistics dto
  *
- * @author liwenqiang 2022-12-10 22:53
- **/
-public class StatisticsBO implements Serializable {
+ * @author liwenqiang 2022-05-25 19:53
+ */
+public class StatisticsDTO {
 
-    @Serial
-    private static final long serialVersionUID = -7855604253532295935L;
-
+    /**
+     * 帖子
+     */
+    private String post;
     /**
      * 浏览量
      */
@@ -26,9 +26,17 @@ public class StatisticsBO implements Serializable {
      */
     private int comments;
     /**
-     * 下载量
+     * 时间
      */
-    private int downloads;
+    private LocalDateTime modifyTime;
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
+    }
 
     public int getViewed() {
         return viewed;
@@ -54,11 +62,11 @@ public class StatisticsBO implements Serializable {
         this.comments = comments;
     }
 
-    public int getDownloads() {
-        return downloads;
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
     }
 
-    public void setDownloads(int downloads) {
-        this.downloads = downloads;
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

@@ -17,7 +17,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
@@ -25,6 +24,7 @@ import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * role service impl
@@ -85,7 +85,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
                     BeanUtils.copyProperties(roleDTO, role);
                     role.setCode(this.generateCode());
                     return role;
-                }).flatMap(vo -> this.superior(roleDTO.getSuperior().getCode(), vo))
+                }).flatMap(vo -> this.superior(roleDTO.getSuperior(), vo))
                 .switchIfEmpty(Mono.error(NoSuchElementException::new)).flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
                     return roleRepository.insert(role);
@@ -96,7 +96,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
     public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return roleRepository.getByCodeAndEnabledTrue(code)
-                .flatMap(vo -> this.superior(roleDTO.getSuperior().getCode(), vo))
+                .flatMap(vo -> this.superior(roleDTO.getSuperior(), vo))
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
@@ -111,12 +111,12 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
      * @param role     当前对象
      * @return 设置上级后的对象
      */
-    private Mono<Role> superior(String superior, Role role) {
+    private Mono<Role> superior(BasicBO<String> superior, Role role) {
         return Mono.just(role).flatMap(r -> {
-            if (!StringUtils.hasText(superior)) {
+            if (Objects.isNull(superior)) {
                 return Mono.just(r);
             }
-            return roleRepository.getByCodeAndEnabledTrue(superior).map(s -> {
+            return roleRepository.getByCodeAndEnabledTrue(superior.getCode()).map(s -> {
                         r.setSuperior(s.getId());
                         return r;
                     })

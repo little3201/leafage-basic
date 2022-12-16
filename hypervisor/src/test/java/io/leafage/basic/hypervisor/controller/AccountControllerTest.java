@@ -176,7 +176,7 @@ class AccountControllerTest {
     void groups() {
         given(this.accountGroupService.groups(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
 
-        webTestClient.get().uri("/accounts/{username}/group", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/groups", "little3201").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(String.class);
     }
@@ -185,7 +185,7 @@ class AccountControllerTest {
     void groups_error() {
         given(this.accountGroupService.groups(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/accounts/{username}/group", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/groups", "little3201").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -193,7 +193,7 @@ class AccountControllerTest {
     void group() {
         given(this.accountGroupService.relation(Mockito.anyString(), Mockito.anySet())).willReturn(Mono.just(true));
 
-        webTestClient.patch().uri("/accounts/{username}/group", "little3201")
+        webTestClient.patch().uri("/accounts/{username}/groups", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().isAccepted();
     }
@@ -202,7 +202,7 @@ class AccountControllerTest {
     void group_error() {
         given(this.accountGroupService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
-        webTestClient.patch().uri("/accounts/{username}/group", "little3201")
+        webTestClient.patch().uri("/accounts/{username}/groups", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().is4xxClientError();
     }
@@ -211,7 +211,7 @@ class AccountControllerTest {
     void roles() {
         given(this.accountRoleService.roles(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
 
-        webTestClient.get().uri("/accounts/{username}/role", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/roles", "little3201").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(String.class);
     }
@@ -220,7 +220,7 @@ class AccountControllerTest {
     void roles_error() {
         given(this.accountRoleService.roles(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/accounts/{username}/role", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/roles", "little3201").exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -228,7 +228,7 @@ class AccountControllerTest {
     void role() {
         given(this.accountRoleService.relation(Mockito.anyString(), Mockito.anySet())).willReturn(Mono.just(true));
 
-        webTestClient.patch().uri("/accounts/{username}/role", "little3201")
+        webTestClient.patch().uri("/accounts/{username}/roles", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().isAccepted();
     }
@@ -237,7 +237,7 @@ class AccountControllerTest {
     void role_error() {
         given(this.accountRoleService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
-        webTestClient.patch().uri("/accounts/{username}/role", "little3201")
+        webTestClient.patch().uri("/accounts/{username}/roles", "little3201")
                 .bodyValue(Collections.singleton("21612OL34"))
                 .exchange().expectStatus().is4xxClientError();
     }
@@ -247,7 +247,7 @@ class AccountControllerTest {
         TreeNode treeNode = new TreeNode("21612OL31", "Dashboard");
         given(this.authorityService.authorities(Mockito.anyString())).willReturn(Flux.just(treeNode));
 
-        webTestClient.get().uri("/accounts/{username}/authority", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/authorities", "little3201").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(RoleVO.class);
     }
@@ -256,7 +256,7 @@ class AccountControllerTest {
     void authority_error() {
         given(this.authorityService.authorities(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/accounts/{username}/authority", "little3201").exchange()
+        webTestClient.get().uri("/accounts/{username}/authorities", "little3201").exchange()
                 .expectStatus().isNoContent();
     }
 }

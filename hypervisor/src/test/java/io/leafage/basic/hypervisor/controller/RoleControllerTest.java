@@ -170,7 +170,7 @@ class RoleControllerTest {
         accountVO.setUsername("little3201");
         given(this.accountRoleService.accounts(Mockito.anyString())).willReturn(Flux.just(accountVO));
 
-        webTestClient.get().uri("/roles/{code}/account", "21612OL34").exchange()
+        webTestClient.get().uri("/roles/{code}/accounts", "21612OL34").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(AccountRole.class);
     }
@@ -179,14 +179,14 @@ class RoleControllerTest {
     void accounts_error() {
         given(this.accountRoleService.accounts(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/roles/{code}/account", "21612OL34").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/roles/{code}/accounts", "21612OL34").exchange().expectStatus().isNoContent();
     }
 
     @Test
     void authorities() {
         given(this.roleAuthorityService.authorities(Mockito.anyString())).willReturn(Mono.just(List.of("21612OL34")));
 
-        webTestClient.get().uri("/roles/{code}/authority", "21612OL34").exchange()
+        webTestClient.get().uri("/roles/{code}/authorities", "21612OL34").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(String.class);
     }
@@ -195,7 +195,7 @@ class RoleControllerTest {
     void authorities_error() {
         given(this.roleAuthorityService.authorities(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/roles/{code}/authority", "21612OL34").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/roles/{code}/authorities", "21612OL34").exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -203,7 +203,7 @@ class RoleControllerTest {
         given(this.roleAuthorityService.relation(Mockito.anyString(), Mockito.anySet()))
                 .willReturn(Mono.just(true));
 
-        webTestClient.patch().uri("/roles/{code}/authority", "21612OL34")
+        webTestClient.patch().uri("/roles/{code}/authorities", "21612OL34")
                 .bodyValue(Collections.singleton("21612OP34"))
                 .exchange().expectStatus().isAccepted();
     }
@@ -212,7 +212,7 @@ class RoleControllerTest {
     void relation_error() {
         given(this.roleAuthorityService.relation(Mockito.anyString(), Mockito.anySet())).willThrow(new RuntimeException());
 
-        webTestClient.patch().uri("/roles/{code}/authority", "21612OL34")
+        webTestClient.patch().uri("/roles/{code}/authorities", "21612OL34")
                 .bodyValue(Collections.singleton("21612OP34"))
                 .exchange().expectStatus().is4xxClientError();
     }

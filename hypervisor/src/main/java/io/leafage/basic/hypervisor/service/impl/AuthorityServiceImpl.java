@@ -20,7 +20,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.basic.TreeNode;
@@ -29,6 +28,7 @@ import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
 import java.util.HashSet;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -107,7 +107,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
                     BeanUtils.copyProperties(authorityDTO, authority);
                     authority.setCode(this.generateCode());
                     return authority;
-                }).flatMap(authority -> this.superior(authorityDTO.getSuperior().getCode(), authority))
+                }).flatMap(authority -> this.superior(authorityDTO.getSuperior(), authority))
                 .switchIfEmpty(Mono.error(NoSuchElementException::new)).flatMap(authority -> {
                     BeanUtils.copyProperties(authorityDTO, authority);
                     return authorityRepository.insert(authority);
@@ -119,7 +119,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return authorityRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(authority -> this.superior(authorityDTO.getSuperior().getCode(), authority))
+                .flatMap(authority -> this.superior(authorityDTO.getSuperior(), authority))
                 .flatMap(authority -> {
                     BeanUtils.copyProperties(authorityDTO, authority);
                     return authorityRepository.save(authority);
@@ -133,10 +133,10 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @param authority 当前对象
      * @return 设置上级后的对象
      */
-    private Mono<Authority> superior(String superior, Authority authority) {
+    private Mono<Authority> superior(BasicBO<String> superior, Authority authority) {
         return Mono.just(authority).flatMap(a -> {
-            if (StringUtils.hasText(superior)) {
-                return authorityRepository.getByCodeAndEnabledTrue(superior).map(s -> {
+            if (Objects.nonNull(superior)) {
+                return authorityRepository.getByCodeAndEnabledTrue(superior.getCode()).map(s -> {
                             authority.setSuperior(s.getId());
                             return authority;
                         })

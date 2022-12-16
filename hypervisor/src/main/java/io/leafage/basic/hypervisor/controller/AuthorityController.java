@@ -154,7 +154,7 @@ public class AuthorityController {
      * @param code 代码
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{code}/role")
+    @GetMapping("/{code}/roles")
     public ResponseEntity<Flux<RoleVO>> roles(@PathVariable String code) {
         Flux<RoleVO> voFlux;
         try {

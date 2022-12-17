@@ -3,6 +3,7 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.dto.StatisticsDTO;
+import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
@@ -27,10 +28,12 @@ public class StatisticsServiceImpl implements StatisticsService {
     private static final String DATE = "date";
 
     private final StatisticsRepository statisticsRepository;
+    private final PostsRepository postsRepository;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
-    public StatisticsServiceImpl(StatisticsRepository statisticsRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
+    public StatisticsServiceImpl(StatisticsRepository statisticsRepository, PostsRepository postsRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
         this.statisticsRepository = statisticsRepository;
+        this.postsRepository = postsRepository;
         this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
@@ -38,8 +41,11 @@ public class StatisticsServiceImpl implements StatisticsService {
     public Mono<StatisticsVO> create(StatisticsDTO statisticsDTO) {
         Statistics statistics = new Statistics();
         BeanUtils.copyProperties(statisticsDTO, statistics);
-        // 统计昨天数据，前天的数据，做差值，计算环比数据
-        return statisticsRepository.insert(statistics).map(this::convertOuter);
+
+        return postsRepository.getByCodeAndEnabledTrue(statisticsDTO.getPost()).map(posts -> {
+            statistics.setPostId(posts.getId());
+            return statistics;
+        }).flatMap(statisticsRepository::insert).flatMap(this::convertOuter);
     }
 
     @Override
@@ -52,13 +58,16 @@ public class StatisticsServiceImpl implements StatisticsService {
     /**
      * 对象转换为输出结果对象
      *
-     * @param info 信息
+     * @param statistics 信息
      * @return 输出转换后的vo对象
      */
-    private StatisticsVO convertOuter(Statistics info) {
+    private Mono<StatisticsVO> convertOuter(Statistics statistics) {
         StatisticsVO outer = new StatisticsVO();
-        BeanUtils.copyProperties(info, outer);
-        return outer;
+        BeanUtils.copyProperties(statistics, outer);
+        return postsRepository.findById(statistics.getPostId()).map(posts -> {
+            outer.setPost(posts.getCode());
+            return outer;
+        });
     }
 
 }

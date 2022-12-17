@@ -6,7 +6,7 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Resource;
-import io.leafage.basic.assets.dto.ResourceBO;
+import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
 import io.leafage.basic.assets.service.ResourceService;
@@ -29,7 +29,7 @@ import javax.naming.NotContextException;
 /**
  * resource service impl
  *
- * @author liwenqiang 2020/2/24 11:59
+ * @author liwenqiang 2020-02-24 11:59
  **/
 @Service
 public class ResourceServiceImpl extends AbstractBasicService implements ResourceService {
@@ -87,7 +87,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     }
 
     @Override
-    public Mono<ResourceVO> create(ResourceBO resourceDTO) {
+    public Mono<ResourceVO> create(ResourceDTO resourceDTO) {
         return categoryRepository.getByCodeAndEnabledTrue(resourceDTO.getCategory().getCode())
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(category -> {
@@ -100,7 +100,7 @@ public class ResourceServiceImpl extends AbstractBasicService implements Resourc
     }
 
     @Override
-    public Mono<ResourceVO> modify(String code, ResourceBO resourceDTO) {
+    public Mono<ResourceVO> modify(String code, ResourceDTO resourceDTO) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return resourceRepository.getByCodeAndEnabledTrue(code).switchIfEmpty(Mono.error(NotContextException::new))
                 .doOnNext(resource -> BeanUtils.copyProperties(resourceDTO, resource))

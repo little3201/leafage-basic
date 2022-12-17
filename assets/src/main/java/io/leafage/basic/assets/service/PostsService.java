@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.dto.PostBO;
+import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.vo.PostVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Flux;
@@ -13,9 +13,9 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * posts service
  *
- * @author liwenqiang 2018/12/17 19:26
+ * @author liwenqiang 2018-12-17 19:26
  **/
-public interface PostsService extends ReactiveBasicService<PostBO, PostVO, String> {
+public interface PostsService extends ReactiveBasicService<PostDTO, PostVO, String> {
 
     /**
      * 分页查询

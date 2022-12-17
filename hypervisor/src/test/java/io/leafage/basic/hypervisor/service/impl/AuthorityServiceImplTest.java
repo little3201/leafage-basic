@@ -127,6 +127,26 @@ class AuthorityServiceImplTest {
         StepVerifier.create(authorityService.create(authorityDTO)).expectNextCount(1).verifyComplete();
     }
 
+
+    @Test
+    void create_no_superior() {
+        Authority authority = new Authority();
+        authority.setId(new ObjectId());
+        authority.setName("test");
+        authority.setType('M');
+        authority.setPath("/authority");
+        authority.setDescription("description");
+        given(this.authorityRepository.insert(Mockito.any(Authority.class))).willReturn(Mono.just(authority));
+
+        given(this.roleAuthorityRepository.countByAuthorityIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        AuthorityDTO authorityDTO = new AuthorityDTO();
+        authorityDTO.setName("test");
+        authorityDTO.setType('M');
+
+        StepVerifier.create(authorityService.create(authorityDTO)).expectNextCount(1).verifyComplete();
+    }
+
     @Test
     void modify() {
         given(this.authorityRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Authority.class)));

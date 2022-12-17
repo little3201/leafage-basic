@@ -71,14 +71,14 @@ public class RoleController {
      */
     @GetMapping("/tree")
     public ResponseEntity<Flux<TreeNode>> tree() {
-        Flux<TreeNode> authorities;
+        Flux<TreeNode> roles;
         try {
-            authorities = roleService.tree();
+            roles = roleService.tree();
         } catch (Exception e) {
             logger.info("Retrieve role occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(authorities);
+        return ResponseEntity.ok(roles);
     }
 
     /**
@@ -160,7 +160,7 @@ public class RoleController {
      * @param code 角色code
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{code}/account")
+    @GetMapping("/{code}/accounts")
     public ResponseEntity<Flux<AccountVO>> accounts(@PathVariable String code) {
         Flux<AccountVO> voFlux;
         try {
@@ -178,7 +178,7 @@ public class RoleController {
      * @param code 角色代码
      * @return 操作结果
      */
-    @GetMapping("/{code}/authority")
+    @GetMapping("/{code}/authorities")
     public ResponseEntity<Mono<List<String>>> authorities(@PathVariable String code) {
         Mono<List<String>> listMono;
         try {
@@ -197,7 +197,7 @@ public class RoleController {
      * @param authorities 权限信息
      * @return 操作结果
      */
-    @PatchMapping("/{code}/authority")
+    @PatchMapping("/{code}/authorities")
     public ResponseEntity<Mono<Boolean>> relation(@PathVariable String code, @RequestBody Set<String> authorities) {
         Mono<Boolean> voMono;
         try {

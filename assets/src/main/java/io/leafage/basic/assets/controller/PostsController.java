@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.dto.PostBO;
+import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostVO;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ import javax.validation.Valid;
 /**
  * posts controller
  *
- * @author liwenqiang 2018/12/20 9:54
+ * @author liwenqiang 2018-12-20 09:54
  **/
 @RestController
 @RequestMapping("/posts")
@@ -153,7 +153,7 @@ public class PostsController {
      * @return 添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<PostVO>> create(@RequestBody @Valid PostBO postDTO) {
+    public ResponseEntity<Mono<PostVO>> create(@RequestBody @Valid PostDTO postDTO) {
         Mono<PostVO> voMono;
         try {
             voMono = postsService.create(postDTO);
@@ -172,7 +172,7 @@ public class PostsController {
      * @return 修改后的信息，否则返回304状态码
      */
     @PutMapping("/{code}")
-    public ResponseEntity<Mono<PostVO>> modify(@PathVariable String code, @RequestBody @Valid PostBO postDTO) {
+    public ResponseEntity<Mono<PostVO>> modify(@PathVariable String code, @RequestBody @Valid PostDTO postDTO) {
         Mono<PostVO> voMono;
         try {
             voMono = postsService.modify(code, postDTO);

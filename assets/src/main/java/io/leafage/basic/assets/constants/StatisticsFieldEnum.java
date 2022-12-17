@@ -3,7 +3,7 @@ package io.leafage.basic.assets.constants;
 /**
  * desc
  *
- * @author liwenqiang 2022/5/31 9:03
+ * @author liwenqiang 2022-05-31 09:03
  **/
 public enum StatisticsFieldEnum {
 

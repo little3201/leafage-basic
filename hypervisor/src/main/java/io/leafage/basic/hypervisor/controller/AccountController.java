@@ -163,7 +163,7 @@ public class AccountController {
      * @param username 账号
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{username}/group")
+    @GetMapping("/{username}/groups")
     public ResponseEntity<Mono<List<String>>> group(@PathVariable String username) {
         Mono<List<String>> listMono;
         try {
@@ -182,7 +182,7 @@ public class AccountController {
      * @param groups   分组
      * @return 操作结果
      */
-    @PatchMapping("/{username}/group")
+    @PatchMapping("/{username}/groups")
     public ResponseEntity<Mono<Boolean>> group(@PathVariable String username, @RequestBody Set<String> groups) {
         Mono<Boolean> voMono;
         try {
@@ -200,7 +200,7 @@ public class AccountController {
      * @param username 用户username
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{username}/role")
+    @GetMapping("/{username}/roles")
     public ResponseEntity<Mono<List<String>>> role(@PathVariable String username) {
         Mono<List<String>> listMono;
         try {
@@ -219,7 +219,7 @@ public class AccountController {
      * @param roles    分组
      * @return 操作结果
      */
-    @PatchMapping("/{username}/role")
+    @PatchMapping("/{username}/roles")
     public ResponseEntity<Mono<Boolean>> role(@PathVariable String username, @RequestBody Set<String> roles) {
         Mono<Boolean> voMono;
         try {
@@ -237,7 +237,7 @@ public class AccountController {
      * @param username 用户username
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{username}/authority")
+    @GetMapping("/{username}/authorities")
     public ResponseEntity<Flux<TreeNode>> authority(@PathVariable String username) {
         Flux<TreeNode> authorities;
         try {

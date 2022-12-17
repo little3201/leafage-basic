@@ -166,7 +166,7 @@ class AuthorityControllerTest {
         roleVO.setName("test");
         given(this.roleAuthorityService.roles(Mockito.anyString())).willReturn(Flux.just(roleVO));
 
-        webTestClient.get().uri("/authorities/{code}/role", "21612OL34").exchange()
+        webTestClient.get().uri("/authorities/{code}/roles", "21612OL34").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(RoleVO.class);
     }
@@ -175,7 +175,7 @@ class AuthorityControllerTest {
     void roles_error() {
         given(this.roleAuthorityService.roles(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/authorities/{code}/role", "21612OL34").exchange()
+        webTestClient.get().uri("/authorities/{code}/roles", "21612OL34").exchange()
                 .expectStatus().isNoContent();
     }
 }

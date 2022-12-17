@@ -183,7 +183,7 @@ class GroupControllerTest {
         accountVO.setUsername("little3201");
         given(this.accountGroupService.accounts(Mockito.anyString())).willReturn(Flux.just(accountVO));
 
-        webTestClient.get().uri("/groups/{code}/account", "21612OL34").exchange()
+        webTestClient.get().uri("/groups/{code}/accounts", "21612OL34").exchange()
                 .expectStatus().isOk()
                 .expectBodyList(AccountRole.class);
     }
@@ -192,7 +192,7 @@ class GroupControllerTest {
     void accounts_error() {
         given(this.accountGroupService.accounts(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/groups/{code}/account", "21612OL34").exchange()
+        webTestClient.get().uri("/groups/{code}/accounts", "21612OL34").exchange()
                 .expectStatus().isNoContent();
     }
 }

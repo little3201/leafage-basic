@@ -6,7 +6,7 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.document.Resource;
-import io.leafage.basic.assets.dto.ResourceBO;
+import io.leafage.basic.assets.dto.ResourceDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.ResourceRepository;
 import org.bson.types.ObjectId;
@@ -107,7 +107,7 @@ class ResourceServiceImplTest {
 
         given(this.categoryRepository.findById(resource.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        ResourceBO resourceDTO = new ResourceBO();
+        ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setCover("./avatar.jpg");
 
@@ -133,7 +133,7 @@ class ResourceServiceImplTest {
 
         given(this.categoryRepository.findById(resource.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        ResourceBO resourceDTO = new ResourceBO();
+        ResourceDTO resourceDTO = new ResourceDTO();
         resourceDTO.setTitle("test");
         resourceDTO.setCover("./avatar.jpg");
 

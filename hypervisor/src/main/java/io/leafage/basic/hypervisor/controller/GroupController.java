@@ -65,14 +65,14 @@ public class GroupController {
      */
     @GetMapping("/tree")
     public ResponseEntity<Flux<TreeNode>> tree() {
-        Flux<TreeNode> authorities;
+        Flux<TreeNode> groups;
         try {
-            authorities = groupService.tree();
+            groups = groupService.tree();
         } catch (Exception e) {
             logger.info("Retrieve group occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(authorities);
+        return ResponseEntity.ok(groups);
     }
 
     /**
@@ -172,7 +172,7 @@ public class GroupController {
      * @param code 组code
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{code}/account")
+    @GetMapping("/{code}/accounts")
     public ResponseEntity<Flux<AccountVO>> accounts(@PathVariable String code) {
         Flux<AccountVO> voFlux;
         try {

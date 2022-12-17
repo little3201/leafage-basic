@@ -1,78 +1,72 @@
 package io.leafage.basic.assets.vo;
 
-import io.leafage.basic.assets.bo.StatisticsBO;
-
-import java.io.Serial;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * everyday statistics vo
  *
- * @author liwenqiang 2022/5/25 19:53
+ * @author liwenqiang 2022-05-25 19:53
  */
-public class StatisticsVO extends StatisticsBO {
-
-    @Serial
-    private static final long serialVersionUID = 4288475041155960116L;
+public class StatisticsVO {
 
     /**
-     * 统计日期
+     * 帖子
      */
-    private LocalDate date;
+    private String post;
     /**
-     * 浏览量环比
+     * 浏览量
      */
-    private double overViewed;
+    private int viewed;
     /**
-     * 点赞量环比
+     * 点赞量
      */
-    private double overLikes;
+    private int likes;
     /**
-     * 评论量环比
+     * 评论量
      */
-    private double overComments;
+    private int comments;
     /**
-     * 下载量环比
+     * 时间
      */
-    private double overDownloads;
+    private LocalDateTime modifyTime;
 
-    public LocalDate getDate() {
-        return date;
+    public String getPost() {
+        return post;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setPost(String post) {
+        this.post = post;
     }
 
-    public double getOverViewed() {
-        return overViewed;
+    public int getViewed() {
+        return viewed;
     }
 
-    public void setOverViewed(double overViewed) {
-        this.overViewed = overViewed;
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
     }
 
-    public double getOverLikes() {
-        return overLikes;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setOverLikes(double overLikes) {
-        this.overLikes = overLikes;
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
-    public double getOverComments() {
-        return overComments;
+    public int getComments() {
+        return comments;
     }
 
-    public void setOverComments(double overComments) {
-        this.overComments = overComments;
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 
-    public double getOverDownloads() {
-        return overDownloads;
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
     }
 
-    public void setOverDownloads(double overDownloads) {
-        this.overDownloads = overDownloads;
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

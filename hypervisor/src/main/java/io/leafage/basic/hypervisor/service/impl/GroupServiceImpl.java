@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.bo.BasicBO;
 import io.leafage.basic.hypervisor.document.Group;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
@@ -25,6 +26,7 @@ import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * group service impl
@@ -90,7 +92,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
                     group.setCode(this.generateCode());
                     return group;
                 })
-                .flatMap(group -> this.superior(groupDTO.getSuperior().getCode(), group))
+                .flatMap(group -> this.superior(groupDTO.getSuperior(), group))
                 .flatMap(group -> this.principal(groupDTO.getPrincipal(), group))
                 .flatMap(groupRepository::insert).flatMap(this::convertOuterWithCount);
     }
@@ -101,7 +103,7 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
         return groupRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
-                .flatMap(group -> this.superior(groupDTO.getSuperior().getCode(), group))
+                .flatMap(group -> this.superior(groupDTO.getSuperior(), group))
                 .flatMap(group -> this.principal(groupDTO.getPrincipal(), group))
                 .flatMap(groupRepository::save).flatMap(this::convertOuterWithCount);
     }
@@ -139,10 +141,10 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
      * @param g        对象
      * @return 转换superior后的对象
      */
-    private Mono<Group> superior(String superior, Group g) {
+    private Mono<Group> superior(BasicBO<String> superior, Group g) {
         return Mono.just(g).flatMap(group -> {
-            if (StringUtils.hasText(superior)) {
-                return groupRepository.getByCodeAndEnabledTrue(superior).map(s -> {
+            if (Objects.nonNull(superior)) {
+                return groupRepository.getByCodeAndEnabledTrue(superior.getCode()).map(s -> {
                     group.setSuperior(s.getId());
                     return group;
                 }).switchIfEmpty(Mono.error(new NoSuchElementException()));

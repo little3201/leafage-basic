@@ -131,6 +131,20 @@ class GroupServiceImplTest {
     }
 
     @Test
+    void create_no_superior() {
+        Group group = new Group();
+        group.setId(new ObjectId());
+        given(this.groupRepository.insert(Mockito.any(Group.class))).willReturn(Mono.just(group));
+
+        given(this.accountGroupRepository.countByGroupIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        GroupDTO groupDTO = new GroupDTO();
+        groupDTO.setName("test");
+        groupDTO.setAlias("Test");
+        StepVerifier.create(groupService.create(groupDTO)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
     void modify() {
         given(this.groupRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Group.class)));
 

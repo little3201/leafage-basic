@@ -115,6 +115,22 @@ class RoleServiceImplTest {
     }
 
     @Test
+    void create_no_superior() {
+        Role role = new Role();
+        role.setId(new ObjectId());
+        given(this.roleRepository.insert(Mockito.any(Role.class))).willReturn(Mono.just(role));
+
+        given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setName("test");
+        roleDTO.setAlias("Test");
+        roleDTO.setDescription("描述信息");
+
+        StepVerifier.create(roleService.create(roleDTO)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
     void modify() {
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Role.class)));
 

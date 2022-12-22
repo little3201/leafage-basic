@@ -17,6 +17,7 @@
 
 package io.leafage.basic.assets.vo;
 
+import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.bo.SuperBO;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,10 @@ public class PostVO extends SuperBO {
      */
     private String code;
     /**
+     * 内容和目录
+     */
+    private ContentBO content;
+    /**
      * 时间
      */
     private LocalDateTime modifyTime;
@@ -43,6 +48,14 @@ public class PostVO extends SuperBO {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public ContentBO getContent() {
+        return content;
+    }
+
+    public void setContent(ContentBO content) {
+        this.content = content;
     }
 
     public LocalDateTime getModifyTime() {

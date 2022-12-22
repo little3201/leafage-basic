@@ -15,27 +15,32 @@
  *
  */
 
-package io.leafage.basic.assets.vo;
-
-import io.leafage.basic.assets.bo.ContentBO;
+package io.leafage.basic.hypervisor.bo;
 
 /**
- * VO class for Posts Details
+ * BO class
  *
- * @author liwenqiang 2020-10-06 22:09
- */
-public class PostContentVO extends PostVO {
+ * @author wilsonli 2022-12-09 22:55
+ **/
+public class SimpleBO<T> {
 
-    /**
-     * 内容
-     */
-    private ContentBO content;
+    private T code;
 
-    public ContentBO getContent() {
-        return content;
+    private String name;
+
+    public T getCode() {
+        return code;
     }
 
-    public void setContent(ContentBO content) {
-        this.content = content;
+    public void setCode(T code) {
+        this.code = code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

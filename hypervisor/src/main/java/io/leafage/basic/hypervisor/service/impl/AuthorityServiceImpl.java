@@ -1,9 +1,23 @@
 /*
- * Copyright (c) 2021. Leafage All Right Reserved.
+ *  Copyright 2018-2022 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
  */
+
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.bo.BasicBO;
+import io.leafage.basic.hypervisor.bo.SimpleBO;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.document.Authority;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
@@ -133,7 +147,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @param authority 当前对象
      * @return 设置上级后的对象
      */
-    private Mono<Authority> superior(BasicBO<String> superior, Authority authority) {
+    private Mono<Authority> superior(SimpleBO<String> superior, Authority authority) {
         return Mono.just(authority).flatMap(a -> {
             if (Objects.nonNull(superior)) {
                 return authorityRepository.getByCodeAndEnabledTrue(superior.getCode()).map(s -> {
@@ -184,15 +198,15 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @return 设置后的vo
      */
     private Mono<AuthorityVO> superior(ObjectId superiorId, AuthorityVO vo) {
-        if (superiorId != null) {
-            return authorityRepository.findById(superiorId).map(superior -> {
-                BasicBO<String> basicVO = new BasicBO<>();
-                BeanUtils.copyProperties(superior, basicVO);
-                vo.setSuperior(basicVO);
-                return vo;
-            }).switchIfEmpty(Mono.just(vo));
+        if (Objects.isNull(superiorId)) {
+            return Mono.just(vo);
         }
-        return Mono.just(vo);
+        return authorityRepository.findById(superiorId).map(superior -> {
+            SimpleBO<String> basicVO = new SimpleBO<>();
+            BeanUtils.copyProperties(superior, basicVO);
+            vo.setSuperior(basicVO);
+            return vo;
+        }).switchIfEmpty(Mono.just(vo));
     }
 
     /**

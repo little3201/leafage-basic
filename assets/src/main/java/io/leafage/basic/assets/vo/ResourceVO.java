@@ -17,13 +17,21 @@
 
 package io.leafage.basic.assets.vo;
 
+import io.leafage.basic.assets.bo.SuperBO;
+
+import java.time.LocalDateTime;
+
 /**
  * VO for Resource
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceVO extends PostVO {
+public class ResourceVO extends SuperBO {
 
+    /**
+     * 编号
+     */
+    private String code;
     /**
      * 类型
      */
@@ -32,7 +40,18 @@ public class ResourceVO extends PostVO {
      * 描述
      */
     private String description;
+    /**
+     * 时间
+     */
+    private LocalDateTime modifyTime;
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public Character getType() {
         return type;
@@ -50,4 +69,11 @@ public class ResourceVO extends PostVO {
         this.description = description;
     }
 
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 }

@@ -120,7 +120,6 @@ class PostsServiceImplTest {
 
         given(this.postsContentService.fetchByPostsId(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(PostsContent.class)));
 
-
         StepVerifier.create(this.postsService.fetch("21213G0J2")).expectNextCount(1).verifyComplete();
     }
 

@@ -27,7 +27,6 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import io.leafage.basic.assets.service.PostsService;
-import io.leafage.basic.assets.vo.PostContentVO;
 import io.leafage.basic.assets.vo.PostVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
@@ -99,7 +98,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new)) // 如果查询没有返回则抛出异常
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> { // 查询关联分类信息
-                            PostContentVO contentVO = new PostContentVO();
+                            PostVO contentVO = new PostVO();
                             BeanUtils.copyProperties(posts, contentVO);
                             // 转换分类对象
                             CategoryBO categoryBO = new CategoryBO();
@@ -107,14 +106,14 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                             categoryBO.setName(category.getName());
                             contentVO.setCategory(categoryBO);
                             return contentVO;
-                        }).flatMap(postsContentVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
-                                .map(contentInfo -> {
+                        }).flatMap(postVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
+                                .map(postsContent -> {
                                     ContentBO contentVO = new ContentBO();
-                                    contentVO.setContent(contentInfo.getContent());
-                                    contentVO.setCatalog(contentInfo.getCatalog());
-                                    postsContentVO.setContent(contentVO);
-                                    return postsContentVO;
-                                }).defaultIfEmpty(postsContentVO))
+                                    contentVO.setContent(postsContent.getContent());
+                                    contentVO.setCatalog(postsContent.getCatalog());
+                                    postVO.setContent(contentVO);
+                                    return postVO;
+                                }).defaultIfEmpty(postVO))
                 );
     }
 

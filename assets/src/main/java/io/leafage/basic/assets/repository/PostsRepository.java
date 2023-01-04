@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -77,11 +77,10 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
     /**
      * 查询下一相邻的记录
      *
-     * @param id       主键
-     * @param pageable 分页对象
+     * @param id 主键
      * @return 帖子信息
      */
-    Flux<Posts> findByIdGreaterThanAndEnabledTrue(ObjectId id, Pageable pageable);
+    Mono<Posts> findFirstByIdGreaterThanAndEnabledTrue(ObjectId id);
 
     /**
      * 查询上一相邻的记录

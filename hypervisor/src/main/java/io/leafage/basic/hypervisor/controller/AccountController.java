@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,9 +30,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
+import top.leafage.common.TreeNode;
 
 import java.util.List;
 import java.util.Set;
@@ -252,8 +251,8 @@ public class AccountController {
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{username}/authorities")
-    public ResponseEntity<Flux<TreeNode>> authority(@PathVariable String username) {
-        Flux<TreeNode> authorities;
+    public ResponseEntity<Mono<List<TreeNode>>> authority(@PathVariable String username) {
+        Mono<List<TreeNode>> authorities;
         try {
             authorities = authorityService.authorities(username);
         } catch (Exception e) {

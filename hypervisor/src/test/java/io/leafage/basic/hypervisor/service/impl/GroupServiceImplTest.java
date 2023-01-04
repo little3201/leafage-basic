@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -137,10 +137,10 @@ class GroupServiceImplTest {
         groupDTO.setName("test");
         groupDTO.setAlias("Test");
 
-        SimpleBO<String> partBO = new SimpleBO<>();
-        partBO.setCode("21612OL34");
-        partBO.setName("Test");
-        groupDTO.setSuperior(partBO);
+        SimpleBO<String> simpleBO = new SimpleBO<>();
+        simpleBO.setCode("21612OL34");
+        simpleBO.setName("Test");
+        groupDTO.setSuperior(simpleBO);
         StepVerifier.create(groupService.create(groupDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -178,10 +178,10 @@ class GroupServiceImplTest {
         groupDTO.setAlias("Test");
         groupDTO.setPrincipal("little3201");
 
-        SimpleBO<String> partBO = new SimpleBO<>();
-        partBO.setCode("21612OL34");
-        partBO.setName("Test");
-        groupDTO.setSuperior(partBO);
+        SimpleBO<String> simpleBO = new SimpleBO<>();
+        simpleBO.setCode("21612OL34");
+        simpleBO.setName("Test");
+        groupDTO.setSuperior(simpleBO);
         StepVerifier.create(groupService.modify("21612OL34", groupDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -213,6 +213,8 @@ class GroupServiceImplTest {
         child.setCode("21612OL34");
         child.setName("test-sub");
         given(this.groupRepository.findByEnabledTrue()).willReturn(Flux.just(group, child));
+
+        given(this.groupRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
         StepVerifier.create(groupService.tree()).expectNextCount(1).verifyComplete();
     }

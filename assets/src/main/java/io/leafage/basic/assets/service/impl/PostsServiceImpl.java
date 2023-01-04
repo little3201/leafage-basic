@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,8 +45,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.basic.ValidMessage;
+import top.leafage.common.AbstractBasicService;
+import top.leafage.common.ValidMessage;
 
 import javax.naming.NotContextException;
 
@@ -175,8 +175,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Mono<PostVO> next(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
-                postsRepository.findByIdGreaterThanAndEnabledTrue(posts.getId(),
-                        PageRequest.of(0, 1, Sort.Direction.ASC, "id")).next()
+                postsRepository.findFirstByIdGreaterThanAndEnabledTrue(posts.getId())
         ).flatMap(this::convertOuter);
     }
 

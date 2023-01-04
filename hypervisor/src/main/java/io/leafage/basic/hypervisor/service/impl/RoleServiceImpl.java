@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,10 +33,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
-import top.leafage.common.basic.ValidMessage;
+import top.leafage.common.TreeNode;
+import top.leafage.common.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -46,7 +47,7 @@ import java.util.Objects;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> implements RoleService {
+public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<RoleVO> implements RoleService {
 
     private final AccountRoleRepository accountRoleRepository;
     private final RoleRepository roleRepository;
@@ -73,9 +74,10 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
     }
 
     @Override
-    public Flux<TreeNode> tree() {
-        Flux<Role> roleFlux = roleRepository.findByEnabledTrue()
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+    public Mono<List<TreeNode>> tree() {
+        Flux<RoleVO> roleFlux = roleRepository.findByEnabledTrue()
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(this::convertOuter);
         return this.convert(roleFlux);
     }
 

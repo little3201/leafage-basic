@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -121,10 +121,10 @@ class RoleServiceImplTest {
         roleDTO.setAlias("Test");
         roleDTO.setDescription("描述信息");
 
-        SimpleBO<String> partBO = new SimpleBO<>();
-        partBO.setCode("21612OL12");
-        partBO.setName("Test");
-        roleDTO.setSuperior(partBO);
+        SimpleBO<String> simpleBO = new SimpleBO<>();
+        simpleBO.setCode("21612OL12");
+        simpleBO.setName("Test");
+        roleDTO.setSuperior(simpleBO);
         StepVerifier.create(roleService.create(roleDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -163,10 +163,10 @@ class RoleServiceImplTest {
         roleDTO.setAlias("Test");
         roleDTO.setDescription("描述信息");
 
-        SimpleBO<String> partBO = new SimpleBO<>();
-        partBO.setCode("21612OL12");
-        partBO.setName("Test");
-        roleDTO.setSuperior(partBO);
+        SimpleBO<String> simpleBO = new SimpleBO<>();
+        simpleBO.setCode("21612OL12");
+        simpleBO.setName("Test");
+        roleDTO.setSuperior(simpleBO);
         StepVerifier.create(roleService.modify("21612OL34", roleDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -187,6 +187,8 @@ class RoleServiceImplTest {
         child.setModifier(role.getModifier());
         child.setEnabled(role.isEnabled());
         given(this.roleRepository.findByEnabledTrue()).willReturn(Flux.just(role, child));
+
+        given(this.roleRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
 
         StepVerifier.create(roleService.tree()).expectNextCount(1).verifyComplete();
     }

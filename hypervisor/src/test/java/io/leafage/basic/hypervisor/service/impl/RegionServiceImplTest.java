@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -109,10 +109,10 @@ class RegionServiceImplTest {
         regionDTO.setPostalCode(710000);
         regionDTO.setDescription("描述信息");
 
-        SimpleBO<Long> partBO = new SimpleBO<>();
-        partBO.setCode(2L);
-        partBO.setName("Test");
-        regionDTO.setSuperior(partBO);
+        SimpleBO<Long> simpleBO = new SimpleBO<>();
+        simpleBO.setCode(2L);
+        simpleBO.setName("Test");
+        regionDTO.setSuperior(simpleBO);
         StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -123,10 +123,10 @@ class RegionServiceImplTest {
         RegionDTO regionDTO = new RegionDTO();
         regionDTO.setName("测试村");
 
-        SimpleBO<Long> partBO = new SimpleBO<>();
-        partBO.setCode(2L);
-        partBO.setName("Test");
-        regionDTO.setSuperior(partBO);
+        SimpleBO<Long> simpleBO = new SimpleBO<>();
+        simpleBO.setCode(2L);
+        simpleBO.setName("Test");
+        regionDTO.setSuperior(simpleBO);
         StepVerifier.create(regionService.create(regionDTO)).expectError(RuntimeException.class).verify();
     }
 
@@ -146,10 +146,10 @@ class RegionServiceImplTest {
         regionDTO.setName("测试村");
         region.setAlias("Test");
 
-        SimpleBO<Long> partBO = new SimpleBO<>();
-        partBO.setCode(2L);
-        partBO.setName("Test");
-        regionDTO.setSuperior(partBO);
+        SimpleBO<Long> simpleBO = new SimpleBO<>();
+        simpleBO.setCode(2L);
+        simpleBO.setName("Test");
+        regionDTO.setSuperior(simpleBO);
         StepVerifier.create(regionService.modify(11L, regionDTO)).expectNextCount(1).verifyComplete();
     }
 

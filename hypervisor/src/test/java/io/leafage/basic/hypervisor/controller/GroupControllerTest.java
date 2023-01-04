@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
+import top.leafage.common.TreeNode;
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ class GroupControllerTest {
     @Test
     void tree() {
         TreeNode treeNode = new TreeNode("21612OL34", "test");
-        given(this.groupService.tree()).willReturn(Flux.just(treeNode));
+        given(this.groupService.tree()).willReturn(Mono.just(List.of(treeNode)));
 
         webTestClient.get().uri("/groups/tree").exchange().expectStatus().isOk().expectBodyList(TreeNode.class);
     }

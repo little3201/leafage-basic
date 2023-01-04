@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -134,10 +134,10 @@ class AuthorityServiceImplTest {
         authorityDTO.setName("test");
         authorityDTO.setType('M');
 
-        SimpleBO<String> partBO = new SimpleBO<>();
-        partBO.setCode("21612OL35");
-        partBO.setName("Test");
-        authorityDTO.setSuperior(partBO);
+        SimpleBO<String> simpleBO = new SimpleBO<>();
+        simpleBO.setCode("21612OL35");
+        simpleBO.setName("Test");
+        authorityDTO.setSuperior(simpleBO);
         StepVerifier.create(authorityService.create(authorityDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -178,27 +178,29 @@ class AuthorityServiceImplTest {
         authorityDTO.setName("test");
         authorityDTO.setType('M');
 
-        SimpleBO<String> partBO = new SimpleBO<>();
-        partBO.setCode("21612OL35");
-        partBO.setName("Test");
-        authorityDTO.setSuperior(partBO);
+        SimpleBO<String> simpleBO = new SimpleBO<>();
+        simpleBO.setCode("21612OL35");
+        simpleBO.setName("Test");
+        authorityDTO.setSuperior(simpleBO);
         StepVerifier.create(authorityService.modify("21612OL34", authorityDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void tree() {
         Authority authority = new Authority();
-        ObjectId id = new ObjectId();
-        authority.setId(id);
+        authority.setId(new ObjectId());
         authority.setCode("21612OL34");
         authority.setName("test");
 
         Authority child = new Authority();
         child.setId(new ObjectId());
-        child.setSuperior(id);
+        child.setSuperior(authority.getId());
         child.setCode("21612OL35");
         child.setName("test-sub");
         given(this.authorityRepository.findByEnabledTrue()).willReturn(Flux.just(authority, child));
+
+        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Authority.class)));
+
         StepVerifier.create(authorityService.tree()).expectNextCount(1).verifyComplete();
     }
 

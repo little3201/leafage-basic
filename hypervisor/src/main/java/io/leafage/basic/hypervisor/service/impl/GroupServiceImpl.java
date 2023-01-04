@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,10 +34,11 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
-import top.leafage.common.basic.ValidMessage;
+import top.leafage.common.TreeNode;
+import top.leafage.common.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -47,7 +48,7 @@ import java.util.Objects;
  * @author liwenqiang 2018/12/17 19:25
  **/
 @Service
-public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> implements GroupService {
+public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<GroupVO> implements GroupService {
 
     private final GroupRepository groupRepository;
     private final AccountGroupRepository accountGroupRepository;
@@ -78,9 +79,10 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
     }
 
     @Override
-    public Flux<TreeNode> tree() {
-        Flux<Group> groupFlux = groupRepository.findByEnabledTrue()
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+    public Mono<List<TreeNode>> tree() {
+        Flux<GroupVO> groupFlux = groupRepository.findByEnabledTrue()
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(this::convertOuter);
         return this.convert(groupFlux);
     }
 

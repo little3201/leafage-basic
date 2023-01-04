@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
+import top.leafage.common.TreeNode;
+
+import java.util.List;
 
 
 /**
@@ -78,8 +80,8 @@ public class GroupController {
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")
-    public ResponseEntity<Flux<TreeNode>> tree() {
-        Flux<TreeNode> groups;
+    public ResponseEntity<Mono<List<TreeNode>>> tree() {
+        Mono<List<TreeNode>> groups;
         try {
             groups = groupService.tree();
         } catch (Exception e) {

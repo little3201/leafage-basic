@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,10 +20,11 @@ package io.leafage.basic.hypervisor.service;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
 import io.leafage.basic.hypervisor.vo.AuthorityVO;
 import org.springframework.data.domain.Page;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
+import top.leafage.common.TreeNode;
 import top.leafage.common.reactive.ReactiveBasicService;
+
+import java.util.List;
 
 /**
  * authority srvice
@@ -37,7 +38,7 @@ public interface AuthorityService extends ReactiveBasicService<AuthorityDTO, Aut
      *
      * @return 数据集
      */
-    Flux<TreeNode> tree();
+    Mono<List<TreeNode>> tree();
 
     /**
      * 查询用户权限
@@ -45,7 +46,7 @@ public interface AuthorityService extends ReactiveBasicService<AuthorityDTO, Aut
      * @param username 用户名
      * @return 权限树
      */
-    Flux<TreeNode> authorities(String username);
+    Mono<List<TreeNode>> authorities(String username);
 
     /**
      * 分页查询

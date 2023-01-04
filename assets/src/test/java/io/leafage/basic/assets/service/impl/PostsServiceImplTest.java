@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -244,8 +244,7 @@ class PostsServiceImplTest {
                 .willReturn(Mono.just(posts));
 
         posts.setCategoryId(new ObjectId());
-        given(this.postsRepository.findByIdGreaterThanAndEnabledTrue(Mockito.any(ObjectId.class),
-                Mockito.any(PageRequest.class))).willReturn(Flux.just(posts));
+        given(this.postsRepository.findFirstByIdGreaterThanAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(posts));
 
         given(this.categoryRepository.findById(posts.getCategoryId())).willReturn(Mono.just(Mockito.mock(Category.class)));
 

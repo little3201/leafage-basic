@@ -1,6 +1,20 @@
 /*
- * Copyright (c) 2021. Leafage All Right Reserved.
+ *  Copyright 2018-2023 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
  */
+
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.bo.CategoryBO;
@@ -13,7 +27,6 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostsRepository;
 import io.leafage.basic.assets.service.PostsContentService;
 import io.leafage.basic.assets.service.PostsService;
-import io.leafage.basic.assets.vo.PostContentVO;
 import io.leafage.basic.assets.vo.PostVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
@@ -32,8 +45,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.basic.ValidMessage;
+import top.leafage.common.AbstractBasicService;
+import top.leafage.common.ValidMessage;
 
 import javax.naming.NotContextException;
 
@@ -85,7 +98,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return postsRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new)) // 如果查询没有返回则抛出异常
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> { // 查询关联分类信息
-                            PostContentVO contentVO = new PostContentVO();
+                            PostVO contentVO = new PostVO();
                             BeanUtils.copyProperties(posts, contentVO);
                             // 转换分类对象
                             CategoryBO categoryBO = new CategoryBO();
@@ -93,14 +106,14 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                             categoryBO.setName(category.getName());
                             contentVO.setCategory(categoryBO);
                             return contentVO;
-                        }).flatMap(postsContentVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
-                                .map(contentInfo -> {
+                        }).flatMap(postVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
+                                .map(postsContent -> {
                                     ContentBO contentVO = new ContentBO();
-                                    contentVO.setContent(contentInfo.getContent());
-                                    contentVO.setCatalog(contentInfo.getCatalog());
-                                    postsContentVO.setContent(contentVO);
-                                    return postsContentVO;
-                                }).defaultIfEmpty(postsContentVO))
+                                    contentVO.setContent(postsContent.getContent());
+                                    contentVO.setCatalog(postsContent.getCatalog());
+                                    postVO.setContent(contentVO);
+                                    return postVO;
+                                }).defaultIfEmpty(postVO))
                 );
     }
 
@@ -162,8 +175,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Mono<PostVO> next(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
         return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
-                postsRepository.findByIdGreaterThanAndEnabledTrue(posts.getId(),
-                        PageRequest.of(0, 1, Sort.Direction.ASC, "id")).next()
+                postsRepository.findFirstByIdGreaterThanAndEnabledTrue(posts.getId())
         ).flatMap(this::convertOuter);
     }
 

@@ -15,40 +15,32 @@
  *
  */
 
-package io.leafage.basic.hypervisor.dto;
-
-import io.leafage.basic.hypervisor.bo.SuperBO;
+package io.leafage.basic.hypervisor.bo;
 
 /**
- * DTO class for Region
+ * BO class
  *
- * @author liwenqiang 2021-08-20 16:59
+ * @author wilsonli 2022-12-09 22:55
  **/
-public class RegionDTO extends SuperBO<Long> {
+public class SimpleBO<T> {
 
-    /**
-     * 邮编
-     */
-    private Integer postalCode;
-    /**
-     * 区号
-     */
-    private String areaCode;
+    private T code;
 
-    public Integer getPostalCode() {
-        return postalCode;
+    private String name;
+
+    public T getCode() {
+        return code;
     }
 
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
+    public void setCode(T code) {
+        this.code = code;
     }
 
-    public String getAreaCode() {
-        return areaCode;
+    public String getName() {
+        return name;
     }
 
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
+    public void setName(String name) {
+        this.name = name;
     }
-
 }

@@ -1,6 +1,23 @@
+/*
+ *  Copyright 2018-2023 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.bo.BasicBO;
+import io.leafage.basic.hypervisor.bo.SimpleBO;
 import io.leafage.basic.hypervisor.document.Region;
 import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
@@ -14,7 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.ValidMessage;
+import top.leafage.common.ValidMessage;
 
 import java.util.NoSuchElementException;
 
@@ -103,9 +120,9 @@ public class RegionServiceImpl implements RegionService {
             if (region.getSuperior() != null) {
                 // 存在上级，则查询
                 return regionRepository.findById(region.getSuperior()).map(superior -> {
-                    BasicBO<Long> basicVO = new BasicBO<>();
-                    BeanUtils.copyProperties(superior, basicVO);
-                    vo.setSuperior(basicVO);
+                    SimpleBO<Long> simpleBO = new SimpleBO<>();
+                    BeanUtils.copyProperties(superior, simpleBO);
+                    vo.setSuperior(simpleBO);
                     return vo;
                 }).switchIfEmpty(Mono.just(vo));
             }

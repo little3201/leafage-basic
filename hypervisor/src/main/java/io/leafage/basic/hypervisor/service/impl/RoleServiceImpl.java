@@ -1,9 +1,23 @@
 /*
- * Copyright (c) 2021. Leafage All Right Reserved.
+ *  Copyright 2018-2023 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
  */
+
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.bo.BasicBO;
+import io.leafage.basic.hypervisor.bo.SimpleBO;
 import io.leafage.basic.hypervisor.document.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
@@ -19,10 +33,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
-import top.leafage.common.basic.ValidMessage;
+import top.leafage.common.TreeNode;
+import top.leafage.common.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -32,7 +47,7 @@ import java.util.Objects;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> implements RoleService {
+public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<RoleVO> implements RoleService {
 
     private final AccountRoleRepository accountRoleRepository;
     private final RoleRepository roleRepository;
@@ -59,9 +74,10 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
     }
 
     @Override
-    public Flux<TreeNode> tree() {
-        Flux<Role> roleFlux = roleRepository.findByEnabledTrue()
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+    public Mono<List<TreeNode>> tree() {
+        Flux<RoleVO> roleFlux = roleRepository.findByEnabledTrue()
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(this::convertOuter);
         return this.convert(roleFlux);
     }
 
@@ -111,7 +127,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
      * @param role     当前对象
      * @return 设置上级后的对象
      */
-    private Mono<Role> superior(BasicBO<String> superior, Role role) {
+    private Mono<Role> superior(SimpleBO<String> superior, Role role) {
         return Mono.just(role).flatMap(r -> {
             if (Objects.isNull(superior)) {
                 return Mono.just(r);
@@ -148,7 +164,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
     private Mono<RoleVO> superior(ObjectId superiorId, RoleVO vo) {
         if (superiorId != null) {
             return roleRepository.findById(superiorId).map(superior -> {
-                BasicBO<String> basicVO = new BasicBO<>();
+                SimpleBO<String> basicVO = new SimpleBO<>();
                 BeanUtils.copyProperties(superior, basicVO);
                 vo.setSuperior(basicVO);
                 return vo;

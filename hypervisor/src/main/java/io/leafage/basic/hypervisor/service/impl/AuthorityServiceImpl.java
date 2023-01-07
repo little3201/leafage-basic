@@ -1,9 +1,23 @@
 /*
- * Copyright (c) 2021. Leafage All Right Reserved.
+ *  Copyright 2018-2023 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
  */
+
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.bo.BasicBO;
+import io.leafage.basic.hypervisor.bo.SimpleBO;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.document.Authority;
 import io.leafage.basic.hypervisor.dto.AuthorityDTO;
@@ -22,14 +36,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
-import top.leafage.common.basic.ValidMessage;
+import top.leafage.common.TreeNode;
+import top.leafage.common.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * authority service impl
@@ -37,7 +48,7 @@ import java.util.Set;
  * @author liwenqiang 2018/12/17 19:36
  **/
 @Service
-public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Authority> implements AuthorityService {
+public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<AuthorityVO> implements AuthorityService {
 
     private final AccountRepository accountRepository;
     private final AccountRoleRepository accountRoleRepository;
@@ -64,9 +75,10 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
     }
 
     @Override
-    public Flux<TreeNode> tree() {
-        Flux<Authority> authorities = authorityRepository.findByEnabledTrue()
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+    public Mono<List<TreeNode>> tree() {
+        Flux<AuthorityVO> authorities = authorityRepository.findByEnabledTrue()
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(this::convertOuter);
         return this.convertTree(authorities);
     }
 
@@ -76,15 +88,16 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
     }
 
     @Override
-    public Flux<TreeNode> authorities(String username) {
+    public Mono<List<TreeNode>> authorities(String username) {
         Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
         Mono<Account> accountMono = accountRepository.getByUsernameAndEnabledTrue(username)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
 
         return accountMono.map(account -> accountRoleRepository.findByAccountIdAndEnabledTrue(account.getId())
                         .flatMap(userRole -> roleAuthorityRepository.findByRoleIdAndEnabledTrue(userRole.getRoleId())
-                                .flatMap(roleAuthority -> authorityRepository.findById(roleAuthority.getAuthorityId()))))
-                .flatMapMany(this::convertTree);
+                                .flatMap(roleAuthority -> authorityRepository.findById(roleAuthority.getAuthorityId()))
+                                .flatMap(this::convertOuter)))
+                .flatMap(this::convertTree);
     }
 
     @Override
@@ -133,7 +146,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @param authority 当前对象
      * @return 设置上级后的对象
      */
-    private Mono<Authority> superior(BasicBO<String> superior, Authority authority) {
+    private Mono<Authority> superior(SimpleBO<String> superior, Authority authority) {
         return Mono.just(authority).flatMap(a -> {
             if (Objects.nonNull(superior)) {
                 return authorityRepository.getByCodeAndEnabledTrue(superior.getCode()).map(s -> {
@@ -157,7 +170,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
             AuthorityVO authorityVO = new AuthorityVO();
             BeanUtils.copyProperties(authority, authorityVO);
             return authorityVO;
-        }).flatMap(vo -> superior(authority.getSuperior(), vo));
+        }).flatMap(vo -> this.superior(authority.getSuperior(), vo));
     }
 
     /**
@@ -184,15 +197,15 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @return 设置后的vo
      */
     private Mono<AuthorityVO> superior(ObjectId superiorId, AuthorityVO vo) {
-        if (superiorId != null) {
-            return authorityRepository.findById(superiorId).map(superior -> {
-                BasicBO<String> basicVO = new BasicBO<>();
-                BeanUtils.copyProperties(superior, basicVO);
-                vo.setSuperior(basicVO);
-                return vo;
-            }).switchIfEmpty(Mono.just(vo));
+        if (Objects.isNull(superiorId)) {
+            return Mono.just(vo);
         }
-        return Mono.just(vo);
+        return authorityRepository.findById(superiorId).map(superior -> {
+            SimpleBO<String> simpleBO = new SimpleBO<>();
+            BeanUtils.copyProperties(superior, simpleBO);
+            vo.setSuperior(simpleBO);
+            return vo;
+        }).switchIfEmpty(Mono.just(vo));
     }
 
     /**
@@ -201,7 +214,7 @@ public class AuthorityServiceImpl extends ReactiveAbstractTreeNodeService<Author
      * @param authorities flux of authority
      * @return TreeNode of Flux
      */
-    private Flux<TreeNode> convertTree(Flux<Authority> authorities) {
+    private Mono<List<TreeNode>> convertTree(Flux<AuthorityVO> authorities) {
         Set<String> expand = new HashSet<>();
         expand.add("icon");
         expand.add("path");

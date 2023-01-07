@@ -1,9 +1,23 @@
 /*
- * Copyright (c) 2021. Leafage All Right Reserved.
+ *  Copyright 2018-2023 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
  */
+
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.bo.BasicBO;
+import io.leafage.basic.hypervisor.bo.SimpleBO;
 import io.leafage.basic.hypervisor.document.Account;
 import io.leafage.basic.hypervisor.document.AccountRole;
 import io.leafage.basic.hypervisor.document.Authority;
@@ -120,10 +134,10 @@ class AuthorityServiceImplTest {
         authorityDTO.setName("test");
         authorityDTO.setType('M');
 
-        BasicBO<String> partBO = new BasicBO<>();
-        partBO.setCode("21612OL35");
-        partBO.setName("Test");
-        authorityDTO.setSuperior(partBO);
+        SimpleBO<String> simpleBO = new SimpleBO<>();
+        simpleBO.setCode("21612OL35");
+        simpleBO.setName("Test");
+        authorityDTO.setSuperior(simpleBO);
         StepVerifier.create(authorityService.create(authorityDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -164,27 +178,29 @@ class AuthorityServiceImplTest {
         authorityDTO.setName("test");
         authorityDTO.setType('M');
 
-        BasicBO<String> partBO = new BasicBO<>();
-        partBO.setCode("21612OL35");
-        partBO.setName("Test");
-        authorityDTO.setSuperior(partBO);
+        SimpleBO<String> simpleBO = new SimpleBO<>();
+        simpleBO.setCode("21612OL35");
+        simpleBO.setName("Test");
+        authorityDTO.setSuperior(simpleBO);
         StepVerifier.create(authorityService.modify("21612OL34", authorityDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void tree() {
         Authority authority = new Authority();
-        ObjectId id = new ObjectId();
-        authority.setId(id);
+        authority.setId(new ObjectId());
         authority.setCode("21612OL34");
         authority.setName("test");
 
         Authority child = new Authority();
         child.setId(new ObjectId());
-        child.setSuperior(id);
+        child.setSuperior(authority.getId());
         child.setCode("21612OL35");
         child.setName("test-sub");
         given(this.authorityRepository.findByEnabledTrue()).willReturn(Flux.just(authority, child));
+
+        given(this.authorityRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Authority.class)));
+
         StepVerifier.create(authorityService.tree()).expectNextCount(1).verifyComplete();
     }
 

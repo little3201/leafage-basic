@@ -1,10 +1,24 @@
 /*
- * Copyright (c) 2021. Leafage All Right Reserved.
+ *  Copyright 2018-2022 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
  */
+
 package io.leafage.basic.hypervisor.bo;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  * BO class
@@ -28,7 +42,7 @@ public abstract class SuperBO<T> {
     /**
      * 上级
      */
-    private BasicBO<T> superior;
+    private SimpleBO<T> superior;
     /**
      * 描述
      */
@@ -51,11 +65,11 @@ public abstract class SuperBO<T> {
         this.alias = alias;
     }
 
-    public BasicBO<T> getSuperior() {
+    public SimpleBO<T> getSuperior() {
         return superior;
     }
 
-    public void setSuperior(BasicBO<T> superior) {
+    public void setSuperior(SimpleBO<T> superior) {
         this.superior = superior;
     }
 

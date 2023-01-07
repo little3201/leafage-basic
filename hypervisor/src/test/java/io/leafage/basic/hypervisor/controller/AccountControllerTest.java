@@ -1,3 +1,20 @@
+/*
+ *  Copyright 2018-2023 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.AccountDTO;
@@ -17,9 +34,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
+import top.leafage.common.TreeNode;
 
 import java.util.Collections;
 import java.util.List;
@@ -245,7 +261,7 @@ class AccountControllerTest {
     @Test
     void authority() {
         TreeNode treeNode = new TreeNode("21612OL31", "Dashboard");
-        given(this.authorityService.authorities(Mockito.anyString())).willReturn(Flux.just(treeNode));
+        given(this.authorityService.authorities(Mockito.anyString())).willReturn(Mono.just(List.of(treeNode)));
 
         webTestClient.get().uri("/accounts/{username}/authorities", "little3201").exchange()
                 .expectStatus().isOk()

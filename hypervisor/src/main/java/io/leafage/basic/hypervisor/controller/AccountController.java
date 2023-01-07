@@ -1,6 +1,20 @@
 /*
- * Copyright (c) 2021. Leafage All Right Reserved.
+ *  Copyright 2018-2023 the original author or authors.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
  */
+
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.dto.AccountDTO;
@@ -9,17 +23,16 @@ import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.service.AccountService;
 import io.leafage.basic.hypervisor.service.AuthorityService;
 import io.leafage.basic.hypervisor.vo.AccountVO;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.basic.TreeNode;
+import top.leafage.common.TreeNode;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -238,8 +251,8 @@ public class AccountController {
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{username}/authorities")
-    public ResponseEntity<Flux<TreeNode>> authority(@PathVariable String username) {
-        Flux<TreeNode> authorities;
+    public ResponseEntity<Mono<List<TreeNode>>> authority(@PathVariable String username) {
+        Mono<List<TreeNode>> authorities;
         try {
             authorities = authorityService.authorities(username);
         } catch (Exception e) {

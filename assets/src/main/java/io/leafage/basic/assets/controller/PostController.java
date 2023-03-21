@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.PostDTO;
-import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.service.PostService;
 import io.leafage.basic.assets.vo.PostVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -38,14 +38,14 @@ import reactor.core.publisher.Mono;
  **/
 @RestController
 @RequestMapping("/posts")
-public class PostsController {
+public class PostController {
 
-    private final Logger logger = LoggerFactory.getLogger(PostsController.class);
+    private final Logger logger = LoggerFactory.getLogger(PostController.class);
 
-    private final PostsService postsService;
+    private final PostService postService;
 
-    public PostsController(PostsService postsService) {
-        this.postsService = postsService;
+    public PostController(PostService postService) {
+        this.postService = postService;
     }
 
     /**
@@ -62,7 +62,7 @@ public class PostsController {
                                                        String sort, String category) {
         Mono<Page<PostVO>> pageMono;
         try {
-            pageMono = postsService.retrieve(page, size, sort, category);
+            pageMono = postService.retrieve(page, size, sort, category);
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -80,7 +80,7 @@ public class PostsController {
     public ResponseEntity<Flux<PostVO>> search(@RequestParam String keyword) {
         Flux<PostVO> voFlux;
         try {
-            voFlux = postsService.search(keyword);
+            voFlux = postService.search(keyword);
         } catch (Exception e) {
             logger.error("Search posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -98,7 +98,7 @@ public class PostsController {
     public ResponseEntity<Mono<PostVO>> fetch(@PathVariable String code) {
         Mono<PostVO> voMono;
         try {
-            voMono = postsService.fetch(code);
+            voMono = postService.fetch(code);
         } catch (Exception e) {
             logger.error("Fetch posts details occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -116,7 +116,7 @@ public class PostsController {
     public ResponseEntity<Mono<Boolean>> exist(@RequestParam String title) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = postsService.exist(title);
+            existsMono = postService.exist(title);
         } catch (Exception e) {
             logger.error("Check posts is exist an error: ", e);
             return ResponseEntity.noContent().build();
@@ -134,7 +134,7 @@ public class PostsController {
     public ResponseEntity<Mono<PostVO>> next(@PathVariable String code) {
         Mono<PostVO> voMono;
         try {
-            voMono = postsService.next(code);
+            voMono = postService.next(code);
         } catch (Exception e) {
             logger.error("Fetch next posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -152,7 +152,7 @@ public class PostsController {
     public ResponseEntity<Mono<PostVO>> previous(@PathVariable String code) {
         Mono<PostVO> voMono;
         try {
-            voMono = postsService.previous(code);
+            voMono = postService.previous(code);
         } catch (Exception e) {
             logger.error("Fetch previous posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -170,7 +170,7 @@ public class PostsController {
     public ResponseEntity<Mono<PostVO>> create(@RequestBody @Valid PostDTO postDTO) {
         Mono<PostVO> voMono;
         try {
-            voMono = postsService.create(postDTO);
+            voMono = postService.create(postDTO);
         } catch (Exception e) {
             logger.error("Create posts occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
@@ -189,7 +189,7 @@ public class PostsController {
     public ResponseEntity<Mono<PostVO>> modify(@PathVariable String code, @RequestBody @Valid PostDTO postDTO) {
         Mono<PostVO> voMono;
         try {
-            voMono = postsService.modify(code, postDTO);
+            voMono = postService.modify(code, postDTO);
         } catch (Exception e) {
             logger.error("Modify posts occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

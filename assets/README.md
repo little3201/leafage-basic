@@ -7,7 +7,7 @@
 
 服务相关接口，主要包含：
 
-- 帖子 posts
+- 帖子 post
 - 类目 category
 - 作品 resource
 - 评论 comment

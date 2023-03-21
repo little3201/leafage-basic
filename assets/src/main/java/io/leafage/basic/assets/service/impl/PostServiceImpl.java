@@ -20,13 +20,13 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.document.Category;
-import io.leafage.basic.assets.document.Posts;
-import io.leafage.basic.assets.document.PostsContent;
+import io.leafage.basic.assets.document.Post;
+import io.leafage.basic.assets.document.PostContent;
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
-import io.leafage.basic.assets.service.PostsContentService;
-import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.service.PostContentService;
+import io.leafage.basic.assets.service.PostService;
 import io.leafage.basic.assets.vo.PostVO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
@@ -56,18 +56,18 @@ import javax.naming.NotContextException;
  * @author liwenqiang 2018-12-20 9:54
  **/
 @Service
-public class PostsServiceImpl extends AbstractBasicService implements PostsService {
+public class PostServiceImpl extends AbstractBasicService implements PostService {
 
-    private final PostsRepository postsRepository;
-    private final PostsContentService postsContentService;
+    private final PostRepository postRepository;
+    private final PostContentService postContentService;
     private final CategoryRepository categoryRepository;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
 
-    public PostsServiceImpl(PostsRepository postsRepository, PostsContentService postsContentService,
-                            CategoryRepository categoryRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
-        this.postsRepository = postsRepository;
-        this.postsContentService = postsContentService;
+    public PostServiceImpl(PostRepository postRepository, PostContentService postContentService,
+                           CategoryRepository categoryRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
+        this.postRepository = postRepository;
+        this.postContentService = postContentService;
         this.categoryRepository = categoryRepository;
         this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
@@ -80,12 +80,12 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
 
         if (StringUtils.hasText(category)) {
             Mono<Category> categoryMono = categoryRepository.getByCodeAndEnabledTrue(category);
-            voFlux = categoryMono.flatMapMany(c -> postsRepository.findByCategoryIdAndEnabledTrue(c.getId(), pageRequest)
+            voFlux = categoryMono.flatMapMany(c -> postRepository.findByCategoryIdAndEnabledTrue(c.getId(), pageRequest)
                     .flatMap(this::convertOuter));
-            count = categoryMono.flatMap(c -> postsRepository.countByCategoryIdAndEnabledTrue(c.getId()));
+            count = categoryMono.flatMap(c -> postRepository.countByCategoryIdAndEnabledTrue(c.getId()));
         } else {
-            voFlux = postsRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
-            count = postsRepository.countByEnabledTrue();
+            voFlux = postRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+            count = postRepository.countByEnabledTrue();
         }
 
         return voFlux.collectList().zipWith(count).map(objects ->
@@ -95,7 +95,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Mono<PostVO> fetch(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code)
+        return postRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new)) // 如果查询没有返回则抛出异常
                 .flatMap(posts -> categoryRepository.findById(posts.getCategoryId()).map(category -> { // 查询关联分类信息
                             PostVO contentVO = new PostVO();
@@ -106,7 +106,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                             categoryBO.setName(category.getName());
                             contentVO.setCategory(categoryBO);
                             return contentVO;
-                        }).flatMap(postVO -> postsContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
+                        }).flatMap(postVO -> postContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
                                 .map(postsContent -> {
                                     ContentBO contentVO = new ContentBO();
                                     contentVO.setContent(postsContent.getContent());
@@ -123,18 +123,18 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
         return categoryRepository.getByCodeAndEnabledTrue(postDTO.getCategory().getCode())
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(category -> {
-                    Posts posts = new Posts();
-                    BeanUtils.copyProperties(postDTO, posts);
-                    posts.setCode(this.generateCode());
-                    posts.setCategoryId(category.getId());
-                    return posts;
-                }).flatMap(info -> postsRepository.insert(info).map(posts -> {
-                            PostsContent postsContent = new PostsContent();
-                            postsContent.setPostsId(posts.getId());
-                            postsContent.setCatalog(postDTO.getContent().getCatalog());
-                            postsContent.setContent(postDTO.getContent().getContent());
-                            return postsContent;
-                        }).flatMap(postsContentService::create).map(postsContent -> info)
+                    Post post = new Post();
+                    BeanUtils.copyProperties(postDTO, post);
+                    post.setCode(this.generateCode());
+                    post.setCategoryId(category.getId());
+                    return post;
+                }).flatMap(info -> postRepository.insert(info).map(posts -> {
+                            PostContent postContent = new PostContent();
+                            postContent.setPostsId(posts.getId());
+                            postContent.setCatalog(postDTO.getContent().getCatalog());
+                            postContent.setContent(postDTO.getContent().getContent());
+                            return postContent;
+                        }).flatMap(postContentService::create).map(postsContent -> info)
                 ).flatMap(this::convertOuter);
     }
 
@@ -142,7 +142,7 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Mono<PostVO> modify(String code, PostDTO postDTO) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code)
+        return postRepository.getByCodeAndEnabledTrue(code)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(info -> categoryRepository.getByCodeAndEnabledTrue(postDTO.getCategory().getCode())
                         .switchIfEmpty(Mono.error(NotContextException::new))
@@ -151,13 +151,13 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
                             BeanUtils.copyProperties(postDTO, info);
                             info.setCategoryId(category.getId());
                             return info;
-                        }).flatMap(postsInfo -> postsRepository.save(postsInfo).flatMap(posts ->
-                                postsContentService.fetchByPostsId(posts.getId())
+                        }).flatMap(postsInfo -> postRepository.save(postsInfo).flatMap(posts ->
+                                postContentService.fetchByPostsId(posts.getId())
                                         .doOnNext(postsContent -> {
                                             postsContent.setCatalog(postDTO.getContent().getCatalog());
                                             postsContent.setContent(postDTO.getContent().getContent());
                                         })
-                                        .flatMap(postsContent -> postsContentService.modify(posts.getId(), postsContent))
+                                        .flatMap(postsContent -> postContentService.modify(posts.getId(), postsContent))
                                         .map(postsContent -> postsInfo)).flatMap(this::convertOuter))
                 );
     }
@@ -165,25 +165,25 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     @Override
     public Mono<Void> remove(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
+        return postRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
                 reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(posts.getId())),
-                        Update.update("enabled", false), Posts.class).then()
+                        Update.update("enabled", false), Post.class).then()
         );
     }
 
     @Override
     public Mono<PostVO> next(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
-                postsRepository.findFirstByIdGreaterThanAndEnabledTrue(posts.getId())
+        return postRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
+                postRepository.findFirstByIdGreaterThanAndEnabledTrue(posts.getId())
         ).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<PostVO> previous(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
-                postsRepository.findByIdLessThanAndEnabledTrue(posts.getId(),
+        return postRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
+                postRepository.findByIdLessThanAndEnabledTrue(posts.getId(),
                         PageRequest.of(0, 1, Sort.Direction.DESC, "id")).next()
         ).flatMap(this::convertOuter);
     }
@@ -192,27 +192,27 @@ public class PostsServiceImpl extends AbstractBasicService implements PostsServi
     public Flux<PostVO> search(String keyword) {
         Assert.hasText(keyword, "keyword must not be blank.");
         TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(keyword);
-        return postsRepository.findAllBy(keyword, criteria).flatMap(this::convertOuter);
+        return postRepository.findAllBy(keyword, criteria).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Boolean> exist(String title) {
         Assert.hasText(title, "title must not be blank.");
-        return postsRepository.existsByTitle(title);
+        return postRepository.existsByTitle(title);
     }
 
     /**
      * 对象转换为输出结果对象
      *
-     * @param posts 信息
+     * @param post 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<PostVO> convertOuter(Posts posts) {
-        return Mono.just(posts).map(p -> {
+    private Mono<PostVO> convertOuter(Post post) {
+        return Mono.just(post).map(p -> {
             PostVO postVO = new PostVO();
             BeanUtils.copyProperties(p, postVO);
             return postVO;
-        }).flatMap(postsVO -> category(posts.getCategoryId(), postsVO));
+        }).flatMap(postsVO -> category(post.getCategoryId(), postsVO));
     }
 
     /**

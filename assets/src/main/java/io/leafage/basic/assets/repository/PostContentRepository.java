@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.document.PostsContent;
+import io.leafage.basic.assets.document.PostContent;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -29,7 +29,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2020-02-26 18:29
  **/
 @Repository
-public interface PostsContentRepository extends ReactiveMongoRepository<PostsContent, ObjectId> {
+public interface PostContentRepository extends ReactiveMongoRepository<PostContent, ObjectId> {
 
     /**
      * 查询信息
@@ -37,5 +37,5 @@ public interface PostsContentRepository extends ReactiveMongoRepository<PostsCon
      * @param postsId 帖子id
      * @return 内容
      */
-    Mono<PostsContent> getByPostsIdAndEnabledTrue(ObjectId postsId);
+    Mono<PostContent> getByPostsIdAndEnabledTrue(ObjectId postsId);
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package io.leafage.basic.assets.service.impl;
 
 import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
-import io.leafage.basic.assets.document.Posts;
+import io.leafage.basic.assets.document.Post;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.dto.StatisticsDTO;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -55,7 +55,7 @@ class StatisticsServiceImplTest {
     private StatisticsRepository statisticsRepository;
 
     @Mock
-    private PostsRepository postsRepository;
+    private PostRepository postRepository;
 
     @Mock
     private ReactiveMongoTemplate reactiveMongoTemplate;
@@ -65,15 +65,15 @@ class StatisticsServiceImplTest {
 
     @Test
     void create() {
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
-                .willReturn(Mono.just(Mockito.mock(Posts.class)));
+        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
+                .willReturn(Mono.just(Mockito.mock(Post.class)));
 
         Statistics statistics = new Statistics();
         statistics.setPostId(new ObjectId());
         given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
                 .willReturn(Mono.just(statistics));
 
-        given(this.postsRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Posts.class)));
+        given(this.postRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Post.class)));
 
         StatisticsDTO statisticsDTO = new StatisticsDTO();
         statisticsDTO.setPost("21213G0J2");

@@ -5,18 +5,12 @@ spring:
   application:
     name: hypervisor
 
-  web:
-    resources:
-      add-mappings: false
-
   profiles:
     active: dev
 
-  cloud:
-    consul:
-      discovery:
-        heartbeat:
-          enabled: true
+  web:
+    resources:
+      add-mappings: false
 
 management:
   endpoints:

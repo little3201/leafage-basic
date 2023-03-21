@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ package io.leafage.basic.assets.service.impl;
 import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Comment;
-import io.leafage.basic.assets.document.Posts;
+import io.leafage.basic.assets.document.Post;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.StatisticsService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -57,7 +57,7 @@ class CommentServiceImplTest {
     private CommentRepository commentRepository;
 
     @Mock
-    private PostsRepository postsRepository;
+    private PostRepository postRepository;
 
     @Mock
     private ReactiveMongoTemplate reactiveMongoTemplate;
@@ -79,7 +79,7 @@ class CommentServiceImplTest {
         given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2,
                 Sort.by(Sort.Direction.DESC, "modifyTime")))).willReturn(Flux.just(comment));
 
-        given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
+        given(this.postRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
         given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 
@@ -90,16 +90,16 @@ class CommentServiceImplTest {
 
     @Test
     void relation() {
-        Posts posts = new Posts();
-        posts.setId(new ObjectId());
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
+        Post post = new Post();
+        post.setId(new ObjectId());
+        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(post));
 
         Comment comment = new Comment();
         comment.setCode("21318H9F1");
-        comment.setPostsId(posts.getId());
-        given(this.commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(posts.getId())).willReturn(Flux.just(comment));
+        comment.setPostsId(post.getId());
+        given(this.commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(post.getId())).willReturn(Flux.just(comment));
 
-        given(this.postsRepository.findById(posts.getId())).willReturn(Mono.just(posts));
+        given(this.postRepository.findById(post.getId())).willReturn(Mono.just(post));
 
         given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 
@@ -114,9 +114,9 @@ class CommentServiceImplTest {
         comment.setReplier("21318H9F0");
         given(this.commentRepository.findByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Flux.just(comment));
 
-        Posts posts = new Posts();
-        posts.setId(comment.getPostsId());
-        given(this.postsRepository.findById(posts.getId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
+        Post post = new Post();
+        post.setId(comment.getPostsId());
+        given(this.postRepository.findById(post.getId())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
         given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 
@@ -125,22 +125,22 @@ class CommentServiceImplTest {
 
     @Test
     void create() {
-        Posts posts = new Posts();
-        posts.setId(new ObjectId());
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(posts));
+        Post post = new Post();
+        post.setId(new ObjectId());
+        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(post));
 
         Comment comment = new Comment();
         comment.setCode("21318H9F1");
         comment.setContent("test");
-        comment.setPostsId(posts.getId());
+        comment.setPostsId(post.getId());
         comment.setReplier("21318H9F0");
         given(this.commentRepository.insert(Mockito.any(Comment.class))).willReturn(Mono.just(comment));
 
         given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(comment.getPostsId())),
-                new Update().inc("comment", 1), Posts.class))
+                new Update().inc("comment", 1), Post.class))
                 .willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
 
-        given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
+        given(this.postRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
         given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 
@@ -165,7 +165,7 @@ class CommentServiceImplTest {
         comment.setContent("这里写内容");
         given(this.commentRepository.save(Mockito.any(Comment.class))).willReturn(Mono.just(comment));
 
-        given(this.postsRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Posts.class)));
+        given(this.postRepository.findById(comment.getPostsId())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
         given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
 

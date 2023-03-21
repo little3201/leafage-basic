@@ -22,7 +22,7 @@
     <parent>
         <groupId>top.leafage</groupId>
         <artifactId>leafage-starter-parent</artifactId>
-        <version>0.2.0</version>
+        <version>0.2.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -73,7 +73,6 @@
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
-            <version>3.0.2</version>
         </dependency>
     </dependencies>
 

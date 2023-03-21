@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Statistics;
 import io.leafage.basic.assets.dto.StatisticsDTO;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
@@ -45,12 +45,12 @@ public class StatisticsServiceImpl implements StatisticsService {
     private static final String DATE = "date";
 
     private final StatisticsRepository statisticsRepository;
-    private final PostsRepository postsRepository;
+    private final PostRepository postRepository;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
-    public StatisticsServiceImpl(StatisticsRepository statisticsRepository, PostsRepository postsRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
+    public StatisticsServiceImpl(StatisticsRepository statisticsRepository, PostRepository postRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
         this.statisticsRepository = statisticsRepository;
-        this.postsRepository = postsRepository;
+        this.postRepository = postRepository;
         this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
@@ -59,7 +59,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         Statistics statistics = new Statistics();
         BeanUtils.copyProperties(statisticsDTO, statistics);
 
-        return postsRepository.getByCodeAndEnabledTrue(statisticsDTO.getPost()).map(posts -> {
+        return postRepository.getByCodeAndEnabledTrue(statisticsDTO.getPost()).map(posts -> {
             statistics.setPostId(posts.getId());
             return statistics;
         }).flatMap(statisticsRepository::insert).flatMap(this::convertOuter);
@@ -81,7 +81,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     private Mono<StatisticsVO> convertOuter(Statistics statistics) {
         StatisticsVO outer = new StatisticsVO();
         BeanUtils.copyProperties(statistics, outer);
-        return postsRepository.findById(statistics.getPostId()).map(posts -> {
+        return postRepository.findById(statistics.getPostId()).map(posts -> {
             outer.setPost(posts.getCode());
             return outer;
         });

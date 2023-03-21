@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.document.Posts;
+import io.leafage.basic.assets.document.Post;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.TextCriteria;
@@ -32,14 +32,14 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018-12-20 09:51
  **/
 @Repository
-public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId> {
+public interface PostRepository extends ReactiveMongoRepository<Post, ObjectId> {
 
     /**
      * 查询
      *
      * @return 有效帖子
      */
-    Flux<Posts> findByEnabledTrue();
+    Flux<Post> findByEnabledTrue();
 
     /**
      * 分页查询
@@ -47,7 +47,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * @param pageable 分页参数
      * @return 有效帖子
      */
-    Flux<Posts> findByEnabledTrue(Pageable pageable);
+    Flux<Post> findByEnabledTrue(Pageable pageable);
 
     /**
      * 根据分类分页查询
@@ -56,7 +56,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * @param pageable   分页参数
      * @return 有效帖子
      */
-    Flux<Posts> findByCategoryIdAndEnabledTrue(ObjectId categoryId, Pageable pageable);
+    Flux<Post> findByCategoryIdAndEnabledTrue(ObjectId categoryId, Pageable pageable);
 
     /**
      * 根据code查询enabled信息
@@ -64,7 +64,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * @param code 代码
      * @return 帖子信息
      */
-    Mono<Posts> getByCodeAndEnabledTrue(String code);
+    Mono<Post> getByCodeAndEnabledTrue(String code);
 
     /**
      * 关联统计
@@ -80,7 +80,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * @param id 主键
      * @return 帖子信息
      */
-    Mono<Posts> findFirstByIdGreaterThanAndEnabledTrue(ObjectId id);
+    Mono<Post> findFirstByIdGreaterThanAndEnabledTrue(ObjectId id);
 
     /**
      * 查询上一相邻的记录
@@ -89,7 +89,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * @param pageable 分页对象
      * @return 帖子信息
      */
-    Flux<Posts> findByIdLessThanAndEnabledTrue(ObjectId id, Pageable pageable);
+    Flux<Post> findByIdLessThanAndEnabledTrue(ObjectId id, Pageable pageable);
 
     /**
      * 关键词查询
@@ -97,7 +97,7 @@ public interface PostsRepository extends ReactiveMongoRepository<Posts, ObjectId
      * @param keyword 关键词
      * @return 匹配结果
      */
-    Flux<Posts> findAllBy(String keyword, TextCriteria criteria);
+    Flux<Post> findAllBy(String keyword, TextCriteria criteria);
 
     /**
      * 是否已存在

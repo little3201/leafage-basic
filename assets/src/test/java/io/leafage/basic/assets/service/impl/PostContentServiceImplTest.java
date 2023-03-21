@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.document.PostsContent;
-import io.leafage.basic.assets.repository.PostsContentRepository;
+import io.leafage.basic.assets.document.PostContent;
+import io.leafage.basic.assets.repository.PostContentRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,34 +37,34 @@ import static org.mockito.BDDMockito.given;
  * @author liwenqiang 2020/3/1 22:07
  */
 @ExtendWith(MockitoExtension.class)
-class PostsContentServiceImplTest {
+class PostContentServiceImplTest {
 
     @Mock
-    private PostsContentRepository postsContentRepository;
+    private PostContentRepository postContentRepository;
 
     @InjectMocks
-    private PostsContentServiceImpl postsContentService;
+    private PostContentServiceImpl postsContentService;
 
     @Test
     void create() {
-        given(this.postsContentRepository.insert(Mockito.any(PostsContent.class)))
-                .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
+        given(this.postContentRepository.insert(Mockito.any(PostContent.class)))
+                .willReturn(Mono.just(Mockito.mock(PostContent.class)));
 
-        StepVerifier.create(this.postsContentService.create(Mockito.mock(PostsContent.class)))
+        StepVerifier.create(this.postsContentService.create(Mockito.mock(PostContent.class)))
                 .expectNextCount(1).verifyComplete();
     }
 
     @Test
     void modify() {
-        PostsContent postsContent = new PostsContent();
-        postsContent.setId(new ObjectId());
-        postsContent.setContent("test");
-        given(this.postsContentRepository.getByPostsIdAndEnabledTrue(Mockito.any(ObjectId.class)))
-                .willReturn(Mono.just(postsContent));
+        PostContent postContent = new PostContent();
+        postContent.setId(new ObjectId());
+        postContent.setContent("test");
+        given(this.postContentRepository.getByPostsIdAndEnabledTrue(Mockito.any(ObjectId.class)))
+                .willReturn(Mono.just(postContent));
 
-        given(this.postsContentRepository.save(Mockito.any(PostsContent.class)))
-                .willReturn(Mono.just(Mockito.mock(PostsContent.class)));
+        given(this.postContentRepository.save(Mockito.any(PostContent.class)))
+                .willReturn(Mono.just(Mockito.mock(PostContent.class)));
 
-        StepVerifier.create(this.postsContentService.modify(new ObjectId(), postsContent)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsContentService.modify(new ObjectId(), postContent)).expectNextCount(1).verifyComplete();
     }
 }

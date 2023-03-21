@@ -20,10 +20,10 @@ package io.leafage.basic.assets.service.impl;
 import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
 import io.leafage.basic.assets.document.Comment;
-import io.leafage.basic.assets.document.Posts;
+import io.leafage.basic.assets.document.Post;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.CommentVO;
@@ -58,15 +58,15 @@ import java.util.NoSuchElementException;
 public class CommentServiceImpl extends AbstractBasicService implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostsRepository postsRepository;
+    private final PostRepository postRepository;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
     private final StatisticsService statisticsService;
 
-    public CommentServiceImpl(CommentRepository commentRepository, PostsRepository postsRepository,
+    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository,
                               ReactiveMongoTemplate reactiveMongoTemplate, StatisticsService statisticsService) {
         this.commentRepository = commentRepository;
-        this.postsRepository = postsRepository;
+        this.postRepository = postRepository;
         this.reactiveMongoTemplate = reactiveMongoTemplate;
         this.statisticsService = statisticsService;
     }
@@ -85,7 +85,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     @Override
     public Flux<CommentVO> relation(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postsRepository.getByCodeAndEnabledTrue(code).flatMapMany(posts ->
+        return postRepository.getByCodeAndEnabledTrue(code).flatMapMany(posts ->
                 commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(posts.getId()).flatMap(this::convertOuter));
     }
 
@@ -98,7 +98,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<CommentVO> create(CommentDTO commentDTO) {
-        return postsRepository.getByCodeAndEnabledTrue(commentDTO.getPosts()).map(posts -> {
+        return postRepository.getByCodeAndEnabledTrue(commentDTO.getPosts()).map(posts -> {
                     Comment comment = new Comment();
                     BeanUtils.copyProperties(commentDTO, comment);
                     comment.setCode(this.generateCode());
@@ -132,7 +132,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
             CommentVO commentVO = new CommentVO();
             BeanUtils.copyProperties(c, commentVO);
             return commentVO;
-        }).flatMap(commentVO -> postsRepository.findById(comment.getPostsId())
+        }).flatMap(commentVO -> postRepository.findById(comment.getPostsId())
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(posts -> commentVO.setPosts(posts.getCode()))
                 .flatMap(vo -> commentRepository.countByReplierAndEnabledTrue(comment.getCode())
@@ -150,7 +150,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
      */
     private Mono<UpdateResult> incrementComment(ObjectId id) {
         return reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(id)),
-                new Update().inc("comment", 1), Posts.class);
+                new Update().inc("comment", 1), Post.class);
     }
 
 }

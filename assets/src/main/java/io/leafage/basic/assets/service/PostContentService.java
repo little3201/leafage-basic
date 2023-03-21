@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.document.PostsContent;
+import io.leafage.basic.assets.document.PostContent;
 import org.bson.types.ObjectId;
 import reactor.core.publisher.Mono;
 
@@ -26,24 +26,24 @@ import reactor.core.publisher.Mono;
  *
  * @author liwenqiang 2018-12-06 22:09
  **/
-public interface PostsContentService {
+public interface PostContentService {
 
     /**
      * 新增信息
      *
-     * @param postsContent 内容信息
+     * @param postContent 内容信息
      * @return 返回操作结果，否则返回empty
      */
-    Mono<PostsContent> create(PostsContent postsContent);
+    Mono<PostContent> create(PostContent postContent);
 
     /**
      * 根据帖子ID修改信息
      *
-     * @param postsId      帖子ID
-     * @param postsContent 信息
+     * @param postsId     帖子ID
+     * @param postContent 信息
      * @return 返回操作结果，否则返回empty
      */
-    Mono<PostsContent> modify(ObjectId postsId, PostsContent postsContent);
+    Mono<PostContent> modify(ObjectId postsId, PostContent postContent);
 
     /**
      * 根据帖子ID查询
@@ -51,5 +51,5 @@ public interface PostsContentService {
      * @param postsId 帖子ID
      * @return 返回查询到的信息，否则返回empty
      */
-    Mono<PostsContent> fetchByPostsId(ObjectId postsId);
+    Mono<PostContent> fetchByPostsId(ObjectId postsId);
 }

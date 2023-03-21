@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +47,7 @@ class CategoryServiceImplTest {
     private CategoryRepository categoryRepository;
 
     @Mock
-    private PostsRepository postsRepository;
+    private PostRepository postRepository;
 
     @InjectMocks
     private CategoryServiceImpl categoryService;
@@ -59,7 +59,7 @@ class CategoryServiceImplTest {
         given(this.categoryRepository.findByEnabledTrue(PageRequest.of(0, 2)))
                 .willReturn(Flux.just(category));
 
-        given(this.postsRepository.countByCategoryIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
 
         given(this.categoryRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 
@@ -87,7 +87,7 @@ class CategoryServiceImplTest {
         category.setId(new ObjectId());
         given(this.categoryRepository.insert(Mockito.any(Category.class))).willReturn(Mono.just(category));
 
-        given(this.postsRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
 
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
@@ -102,7 +102,7 @@ class CategoryServiceImplTest {
         category.setId(new ObjectId());
         given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(category));
 
-        given(this.postsRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
 
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");

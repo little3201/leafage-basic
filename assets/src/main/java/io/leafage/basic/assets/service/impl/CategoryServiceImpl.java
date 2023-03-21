@@ -20,7 +20,7 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.document.Category;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.springframework.beans.BeanUtils;
@@ -45,11 +45,11 @@ import javax.naming.NotContextException;
 public class CategoryServiceImpl extends AbstractBasicService implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final PostsRepository postsRepository;
+    private final PostRepository postRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, PostsRepository postsRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, PostRepository postRepository) {
         this.categoryRepository = categoryRepository;
-        this.postsRepository = postsRepository;
+        this.postRepository = postRepository;
     }
 
     @Override
@@ -116,7 +116,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
             CategoryVO categoryVO = new CategoryVO();
             BeanUtils.copyProperties(c, categoryVO);
             return categoryVO;
-        }).flatMap(categoryVO -> postsRepository.countByCategoryIdAndEnabledTrue(category.getId())
+        }).flatMap(categoryVO -> postRepository.countByCategoryIdAndEnabledTrue(category.getId())
                 .switchIfEmpty(Mono.just(0L))
                 .map(count -> {
                     categoryVO.setCount(count);

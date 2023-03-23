@@ -17,24 +17,19 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import com.mongodb.client.result.UpdateResult;
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
-import io.leafage.basic.assets.document.Post;
-import io.leafage.basic.assets.document.Statistics;
+import io.leafage.basic.assets.domain.Post;
+import io.leafage.basic.assets.domain.Statistics;
 import io.leafage.basic.assets.dto.StatisticsDTO;
 import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
-import org.bson.types.ObjectId;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -57,23 +52,26 @@ class StatisticsServiceImplTest {
     @Mock
     private PostRepository postRepository;
 
-    @Mock
-    private ReactiveMongoTemplate reactiveMongoTemplate;
-
     @InjectMocks
     private StatisticsServiceImpl statisticsService;
+
+    private Statistics statistics;
+
+    @BeforeEach
+    void init() {
+        statistics = new Statistics();
+        statistics.setPostId(1L);
+    }
 
     @Test
     void create() {
         given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
                 .willReturn(Mono.just(Mockito.mock(Post.class)));
 
-        Statistics statistics = new Statistics();
-        statistics.setPostId(new ObjectId());
-        given(this.statisticsRepository.insert(Mockito.any(Statistics.class)))
+        given(this.statisticsRepository.save(Mockito.any(Statistics.class)))
                 .willReturn(Mono.just(statistics));
 
-        given(this.postRepository.findById(Mockito.any(ObjectId.class))).willReturn(Mono.just(Mockito.mock(Post.class)));
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
         StatisticsDTO statisticsDTO = new StatisticsDTO();
         statisticsDTO.setPost("21213G0J2");
@@ -87,10 +85,6 @@ class StatisticsServiceImplTest {
 
     @Test
     void increase() {
-        given(this.reactiveMongoTemplate.upsert(Query.query(Criteria.where("date").is(LocalDate.now())),
-                new Update().inc(StatisticsFieldEnum.VIEWED.value, 1), Statistics.class))
-                .willReturn(Mono.just(Mockito.mock(UpdateResult.class)));
-
         given(this.statisticsRepository.getByModifyTime(Mockito.any(LocalDate.class)))
                 .willReturn(Mono.just(Mockito.mock(Statistics.class)));
 

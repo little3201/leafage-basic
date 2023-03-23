@@ -17,9 +17,8 @@
 
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.document.PostContent;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import io.leafage.basic.assets.domain.PostContent;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -29,13 +28,13 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2020-02-26 18:29
  **/
 @Repository
-public interface PostContentRepository extends ReactiveMongoRepository<PostContent, ObjectId> {
+public interface PostContentRepository extends R2dbcRepository<PostContent, Long> {
 
     /**
      * 查询信息
      *
-     * @param postsId 帖子id
+     * @param postId 帖子id
      * @return 内容
      */
-    Mono<PostContent> getByPostsIdAndEnabledTrue(ObjectId postsId);
+    Mono<PostContent> getByPostIdAndEnabledTrue(Long postId);
 }

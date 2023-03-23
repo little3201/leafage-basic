@@ -19,26 +19,20 @@ package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.bo.ContentBO;
-import io.leafage.basic.assets.document.Category;
-import io.leafage.basic.assets.document.Post;
-import io.leafage.basic.assets.document.PostContent;
+import io.leafage.basic.assets.domain.Category;
+import io.leafage.basic.assets.domain.Post;
+import io.leafage.basic.assets.domain.PostContent;
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.PostContentService;
 import io.leafage.basic.assets.service.PostService;
 import io.leafage.basic.assets.vo.PostVO;
-import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -61,15 +55,13 @@ public class PostServiceImpl extends AbstractBasicService implements PostService
     private final PostRepository postRepository;
     private final PostContentService postContentService;
     private final CategoryRepository categoryRepository;
-    private final ReactiveMongoTemplate reactiveMongoTemplate;
 
 
     public PostServiceImpl(PostRepository postRepository, PostContentService postContentService,
-                           CategoryRepository categoryRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
+                           CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
         this.postContentService = postContentService;
         this.categoryRepository = categoryRepository;
-        this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
     @Override
@@ -77,14 +69,16 @@ public class PostServiceImpl extends AbstractBasicService implements PostService
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime"));
         Flux<PostVO> voFlux;
         Mono<Long> count;
-
+        // if category has text query category
         if (StringUtils.hasText(category)) {
             Mono<Category> categoryMono = categoryRepository.getByCodeAndEnabledTrue(category);
             voFlux = categoryMono.flatMapMany(c -> postRepository.findByCategoryIdAndEnabledTrue(c.getId(), pageRequest)
                     .flatMap(this::convertOuter));
+            // count filter by category
             count = categoryMono.flatMap(c -> postRepository.countByCategoryIdAndEnabledTrue(c.getId()));
         } else {
             voFlux = postRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+            // count all
             count = postRepository.countByEnabledTrue();
         }
 
@@ -106,10 +100,10 @@ public class PostServiceImpl extends AbstractBasicService implements PostService
                             categoryBO.setName(category.getName());
                             contentVO.setCategory(categoryBO);
                             return contentVO;
-                        }).flatMap(postVO -> postContentService.fetchByPostsId(posts.getId()) // 查询帖子内容
+                        }).flatMap(postVO -> postContentService.fetchByPostId(posts.getId()) // 查询帖子内容
                                 .map(postsContent -> {
                                     ContentBO contentVO = new ContentBO();
-                                    contentVO.setContent(postsContent.getContent());
+                                    contentVO.setContext(postsContent.getContext());
                                     contentVO.setCatalog(postsContent.getCatalog());
                                     postVO.setContent(contentVO);
                                     return postVO;
@@ -128,11 +122,11 @@ public class PostServiceImpl extends AbstractBasicService implements PostService
                     post.setCode(this.generateCode());
                     post.setCategoryId(category.getId());
                     return post;
-                }).flatMap(info -> postRepository.insert(info).map(posts -> {
+                }).flatMap(info -> postRepository.save(info).map(posts -> {
                             PostContent postContent = new PostContent();
-                            postContent.setPostsId(posts.getId());
+                            postContent.setPostId(posts.getId());
                             postContent.setCatalog(postDTO.getContent().getCatalog());
-                            postContent.setContent(postDTO.getContent().getContent());
+                            postContent.setContext(postDTO.getContent().getContext());
                             return postContent;
                         }).flatMap(postContentService::create).map(postsContent -> info)
                 ).flatMap(this::convertOuter);
@@ -152,10 +146,10 @@ public class PostServiceImpl extends AbstractBasicService implements PostService
                             info.setCategoryId(category.getId());
                             return info;
                         }).flatMap(postsInfo -> postRepository.save(postsInfo).flatMap(posts ->
-                                postContentService.fetchByPostsId(posts.getId())
+                                postContentService.fetchByPostId(posts.getId())
                                         .doOnNext(postsContent -> {
                                             postsContent.setCatalog(postDTO.getContent().getCatalog());
-                                            postsContent.setContent(postDTO.getContent().getContent());
+                                            postsContent.setContext(postDTO.getContent().getContext());
                                         })
                                         .flatMap(postsContent -> postContentService.modify(posts.getId(), postsContent))
                                         .map(postsContent -> postsInfo)).flatMap(this::convertOuter))
@@ -165,10 +159,7 @@ public class PostServiceImpl extends AbstractBasicService implements PostService
     @Override
     public Mono<Void> remove(String code) {
         Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postRepository.getByCodeAndEnabledTrue(code).flatMap(posts ->
-                reactiveMongoTemplate.upsert(Query.query(Criteria.where("id").is(posts.getId())),
-                        Update.update("enabled", false), Post.class).then()
-        );
+        return postRepository.getByCodeAndEnabledTrue(code).flatMap(post -> postRepository.deleteById(post.getId()));
     }
 
     @Override
@@ -191,8 +182,7 @@ public class PostServiceImpl extends AbstractBasicService implements PostService
     @Override
     public Flux<PostVO> search(String keyword) {
         Assert.hasText(keyword, "keyword must not be blank.");
-        TextCriteria criteria = TextCriteria.forDefaultLanguage().matchingAny(keyword);
-        return postRepository.findAllBy(keyword, criteria).flatMap(this::convertOuter);
+        return postRepository.findAllBy(keyword).flatMap(this::convertOuter);
     }
 
     @Override
@@ -212,7 +202,7 @@ public class PostServiceImpl extends AbstractBasicService implements PostService
             PostVO postVO = new PostVO();
             BeanUtils.copyProperties(p, postVO);
             return postVO;
-        }).flatMap(postsVO -> category(post.getCategoryId(), postsVO));
+        }).flatMap(vo -> category(post.getCategoryId(), vo));
     }
 
     /**
@@ -222,7 +212,7 @@ public class PostServiceImpl extends AbstractBasicService implements PostService
      * @param vo         vo
      * @return 设置后的vo
      */
-    private Mono<PostVO> category(ObjectId categoryId, PostVO vo) {
+    private Mono<PostVO> category(Long categoryId, PostVO vo) {
         return categoryRepository.findById(categoryId)
                 .map(category -> {
                     // 转换分类对象

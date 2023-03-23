@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,18 +15,17 @@
  *
  */
 
-package io.leafage.basic.assets.document;
+package io.leafage.basic.assets.domain;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Document(collection = "statistics")
-public class Statistics extends AbstractDocument {
+@Table(name = "statistics")
+public class Statistics extends AbstractModel {
 
     /**
      * 帖子
      */
-    private ObjectId postId;
+    private Long postId;
     /**
      * 浏览量
      */
@@ -40,11 +39,11 @@ public class Statistics extends AbstractDocument {
      */
     private int comments;
 
-    public ObjectId getPostId() {
+    public Long getPostId() {
         return postId;
     }
 
-    public void setPostId(ObjectId postId) {
+    public void setPostId(Long postId) {
         this.postId = postId;
     }
 

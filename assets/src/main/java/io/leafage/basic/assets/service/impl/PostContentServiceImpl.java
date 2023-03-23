@@ -17,10 +17,9 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.document.PostContent;
+import io.leafage.basic.assets.domain.PostContent;
 import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.service.PostContentService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -42,20 +41,20 @@ public class PostContentServiceImpl implements PostContentService {
 
     @Override
     public Mono<PostContent> create(PostContent postContent) {
-        return postContentRepository.insert(postContent);
+        return postContentRepository.save(postContent);
     }
 
     @Override
-    public Mono<PostContent> modify(ObjectId postsId, PostContent postContent) {
-        Assert.notNull(postsId, "postsId must not be null.");
-        return this.fetchByPostsId(postsId).doOnNext(details -> BeanUtils.copyProperties(postContent, details))
+    public Mono<PostContent> modify(Long postId, PostContent postContent) {
+        Assert.notNull(postId, "postId must not be null.");
+        return this.fetchByPostId(postId).doOnNext(details -> BeanUtils.copyProperties(postContent, details))
                 .flatMap(postContentRepository::save);
     }
 
     @Override
-    public Mono<PostContent> fetchByPostsId(ObjectId postsId) {
+    public Mono<PostContent> fetchByPostId(Long postsId) {
         Assert.notNull(postsId, "postsId must not be null.");
-        return postContentRepository.getByPostsIdAndEnabledTrue(postsId);
+        return postContentRepository.getByPostIdAndEnabledTrue(postsId);
     }
 
 }

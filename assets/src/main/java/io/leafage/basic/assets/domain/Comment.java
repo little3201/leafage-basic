@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,12 +15,10 @@
  *
  */
 
-package io.leafage.basic.assets.document;
+package io.leafage.basic.assets.domain;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 
 /**
@@ -28,20 +26,18 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  * @author liwenqiang 2021-07-15 22:12
  */
-@Document(collection = "comment")
-public class Comment extends AbstractDocument {
+@Table(name = "comments")
+public class Comment extends AbstractModel {
 
     /**
      * 代码
      */
-    @Indexed(unique = true)
     private String code;
     /**
      * 帖子ID
      */
-    @Indexed
-    @Field(name = "posts_id")
-    private ObjectId postsId;
+    @Column(value = "post_id")
+    private Long postId;
     /**
      * 内容
      */
@@ -67,12 +63,12 @@ public class Comment extends AbstractDocument {
         this.code = code;
     }
 
-    public ObjectId getPostsId() {
-        return postsId;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPostsId(ObjectId postsId) {
-        this.postsId = postsId;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public String getContent() {

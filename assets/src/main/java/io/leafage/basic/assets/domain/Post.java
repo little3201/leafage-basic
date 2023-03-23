@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,39 +14,57 @@
  *  limitations under the License.
  *
  */
-package io.leafage.basic.assets.bo;
+package io.leafage.basic.assets.domain;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Set;
 
 /**
- * BO class
+ * Model class for posts
  *
- * @author liwenqiang 2022-12-10 22:09
+ * @author liwenqiang 2020-10-06 22:09
  */
-public abstract class SuperBO {
-
+@Table(name = "posts")
+public class Post extends AbstractModel {
+    /**
+     * 代码
+     */
+    private String code;
+    /**
+     * 分类ID
+     */
+    @Column(value = "category_id")
+    private Long categoryId;
     /**
      * 标题
      */
-    @NotBlank
     private String title;
     /**
      * 封面
      */
-    @NotBlank
     private String cover;
     /**
      * 标签
      */
-    @NotEmpty
     private Set<String> tags;
-    /**
-     * 分类
-     */
-    private CategoryBO category;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
 
     public String getTitle() {
         return title;
@@ -70,13 +88,5 @@ public abstract class SuperBO {
 
     public void setTags(Set<String> tags) {
         this.tags = tags;
-    }
-
-    public CategoryBO getCategory() {
-        return category;
-    }
-
-    public void setCategory(CategoryBO category) {
-        this.category = category;
     }
 }

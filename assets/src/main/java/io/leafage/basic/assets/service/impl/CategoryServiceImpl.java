@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.document.Category;
+import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostRepository;
@@ -74,7 +74,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Category info = new Category();
         BeanUtils.copyProperties(categoryDTO, info);
         info.setCode(this.generateCode());
-        return categoryRepository.insert(info).flatMap(this::convertOuter);
+        return categoryRepository.save(info).flatMap(this::convertOuter);
     }
 
     @Override

@@ -14,51 +14,48 @@
  *  limitations under the License.
  *
  */
-package io.leafage.basic.assets.document;
+package io.leafage.basic.assets.domain;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * Model class for Posts Content
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "posts_content")
-public class PostContent extends AbstractDocument {
+@Table(name = "post_content")
+public class PostContent extends AbstractModel {
 
     /**
      * 帖子ID
      */
-    @Field(value = "posts_id")
-    @Indexed(unique = true)
-    private ObjectId postsId;
+    @Column(value = "post_id")
+    private Long postId;
     /**
      * 内容
      */
-    private String content;
+    private String context;
     /**
      * 目录
      */
     private String catalog;
 
 
-    public ObjectId getPostsId() {
-        return postsId;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPostsId(ObjectId postsId) {
-        this.postsId = postsId;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
-    public String getContent() {
-        return content;
+    public String getContext() {
+        return context;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public String getCatalog() {

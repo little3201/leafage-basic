@@ -17,8 +17,7 @@
 
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.document.PostContent;
-import org.bson.types.ObjectId;
+import io.leafage.basic.assets.domain.PostContent;
 import reactor.core.publisher.Mono;
 
 /**
@@ -39,17 +38,17 @@ public interface PostContentService {
     /**
      * 根据帖子ID修改信息
      *
-     * @param postsId     帖子ID
+     * @param postId      帖子ID
      * @param postContent 信息
      * @return 返回操作结果，否则返回empty
      */
-    Mono<PostContent> modify(ObjectId postsId, PostContent postContent);
+    Mono<PostContent> modify(Long postId, PostContent postContent);
 
     /**
      * 根据帖子ID查询
      *
-     * @param postsId 帖子ID
+     * @param postId 帖子ID
      * @return 返回查询到的信息，否则返回empty
      */
-    Mono<PostContent> fetchByPostsId(ObjectId postsId);
+    Mono<PostContent> fetchByPostId(Long postId);
 }

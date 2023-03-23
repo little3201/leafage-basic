@@ -18,17 +18,13 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
-import io.leafage.basic.assets.document.Statistics;
+import io.leafage.basic.assets.domain.Statistics;
 import io.leafage.basic.assets.dto.StatisticsDTO;
 import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.StatisticsService;
 import io.leafage.basic.assets.vo.StatisticsVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -42,16 +38,12 @@ import java.time.LocalDate;
 @Service
 public class StatisticsServiceImpl implements StatisticsService {
 
-    private static final String DATE = "date";
-
     private final StatisticsRepository statisticsRepository;
     private final PostRepository postRepository;
-    private final ReactiveMongoTemplate reactiveMongoTemplate;
 
-    public StatisticsServiceImpl(StatisticsRepository statisticsRepository, PostRepository postRepository, ReactiveMongoTemplate reactiveMongoTemplate) {
+    public StatisticsServiceImpl(StatisticsRepository statisticsRepository, PostRepository postRepository) {
         this.statisticsRepository = statisticsRepository;
         this.postRepository = postRepository;
-        this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
     @Override
@@ -62,14 +54,12 @@ public class StatisticsServiceImpl implements StatisticsService {
         return postRepository.getByCodeAndEnabledTrue(statisticsDTO.getPost()).map(posts -> {
             statistics.setPostId(posts.getId());
             return statistics;
-        }).flatMap(statisticsRepository::insert).flatMap(this::convertOuter);
+        }).flatMap(statisticsRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Statistics> increase(LocalDate today, StatisticsFieldEnum statisticsFieldEnum) {
-        return reactiveMongoTemplate.upsert(Query.query(Criteria.where(DATE).is(today)),
-                        new Update().inc(statisticsFieldEnum.value, 1), Statistics.class)
-                .flatMap(updateResult -> statisticsRepository.getByModifyTime(today));
+        return statisticsRepository.getByModifyTime(today);
     }
 
     /**

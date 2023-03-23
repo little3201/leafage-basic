@@ -17,11 +17,11 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.document.Category;
+import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostRepository;
-import org.bson.types.ObjectId;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -52,14 +52,20 @@ class CategoryServiceImplTest {
     @InjectMocks
     private CategoryServiceImpl categoryService;
 
+    private Category category;
+
+    @BeforeEach
+    void init() {
+        category = new Category();
+        category.setId(1L);
+        category.setName("test");
+    }
+
     @Test
     void retrieve() {
-        Category category = new Category();
-        category.setId(new ObjectId());
-        given(this.categoryRepository.findByEnabledTrue(PageRequest.of(0, 2)))
-                .willReturn(Flux.just(category));
+        given(this.categoryRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(Flux.just(category));
 
-        given(this.postRepository.countByCategoryIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mono.just(1L));
 
         given(this.categoryRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 
@@ -83,9 +89,7 @@ class CategoryServiceImplTest {
 
     @Test
     void create() {
-        Category category = new Category();
-        category.setId(new ObjectId());
-        given(this.categoryRepository.insert(Mockito.any(Category.class))).willReturn(Mono.just(category));
+        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(category));
 
         given(this.postRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
 
@@ -98,8 +102,6 @@ class CategoryServiceImplTest {
     void modify() {
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        Category category = new Category();
-        category.setId(new ObjectId());
         given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(category));
 
         given(this.postRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
@@ -111,11 +113,9 @@ class CategoryServiceImplTest {
 
     @Test
     void remove() {
-        Category category = new Category();
-        category.setId(new ObjectId());
         given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
 
-        given(this.categoryRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());
+        given(this.categoryRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
         StepVerifier.create(categoryService.remove("21318H9FH")).verifyComplete();
     }

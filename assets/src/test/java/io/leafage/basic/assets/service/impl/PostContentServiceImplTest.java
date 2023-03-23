@@ -17,9 +17,9 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.document.PostContent;
+import io.leafage.basic.assets.domain.PostContent;
 import io.leafage.basic.assets.repository.PostContentRepository;
-import org.bson.types.ObjectId;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,9 +45,19 @@ class PostContentServiceImplTest {
     @InjectMocks
     private PostContentServiceImpl postsContentService;
 
+    private PostContent postContent;
+
+    @BeforeEach
+    void init() {
+        postContent = new PostContent();
+        postContent.setId(1L);
+        postContent.setContext("test");
+        postContent.setCatalog("## First");
+    }
+
     @Test
     void create() {
-        given(this.postContentRepository.insert(Mockito.any(PostContent.class)))
+        given(this.postContentRepository.save(Mockito.any(PostContent.class)))
                 .willReturn(Mono.just(Mockito.mock(PostContent.class)));
 
         StepVerifier.create(this.postsContentService.create(Mockito.mock(PostContent.class)))
@@ -56,15 +66,12 @@ class PostContentServiceImplTest {
 
     @Test
     void modify() {
-        PostContent postContent = new PostContent();
-        postContent.setId(new ObjectId());
-        postContent.setContent("test");
-        given(this.postContentRepository.getByPostsIdAndEnabledTrue(Mockito.any(ObjectId.class)))
+        given(this.postContentRepository.getByPostIdAndEnabledTrue(Mockito.any(Long.class)))
                 .willReturn(Mono.just(postContent));
 
         given(this.postContentRepository.save(Mockito.any(PostContent.class)))
                 .willReturn(Mono.just(Mockito.mock(PostContent.class)));
 
-        StepVerifier.create(this.postsContentService.modify(new ObjectId(), postContent)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsContentService.modify(Mockito.anyLong(), postContent)).expectNextCount(1).verifyComplete();
     }
 }

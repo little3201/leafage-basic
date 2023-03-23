@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.document.Statistics;
-import org.bson.types.ObjectId;
+import io.leafage.basic.assets.domain.Statistics;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -33,7 +32,7 @@ import java.time.LocalDate;
  * @author liwenqiang 2020-02-13 22:01
  **/
 @Repository
-public interface StatisticsRepository extends ReactiveMongoRepository<Statistics, ObjectId> {
+public interface StatisticsRepository extends R2dbcRepository<Statistics, Long> {
 
     /**
      * 根据data查询当日数据

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,58 +15,66 @@
  *
  */
 
-package io.leafage.basic.assets.vo;
+package io.leafage.basic.assets.domain;
 
-import io.leafage.basic.assets.bo.SuperBO;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
 
 /**
- * VO for Resource
+ * base document
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ResourceVO extends SuperBO {
+public abstract class AbstractModel {
 
     /**
-     * 编号
+     * 主键
      */
-    private String code;
+    @Id
+    private Long id;
+
     /**
-     * 类型
+     * 是否有效
      */
-    private Character type;
+    private boolean enabled = true;
+
     /**
-     * 描述
+     * 修改人(存放 username)
      */
-    private String description;
+    private String owner;
+
     /**
-     * 时间
+     * 修改时间
      */
+    @Column(value = "modify_time")
+    @LastModifiedDate
     private LocalDateTime modifyTime;
 
-    public String getCode() {
-        return code;
+    public Long getId() {
+        return id;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Character getType() {
-        return type;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setType(Character type) {
-        this.type = type;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public String getDescription() {
-        return description;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public LocalDateTime getModifyTime() {

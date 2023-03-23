@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.document.Category;
-import org.bson.types.ObjectId;
+import io.leafage.basic.assets.domain.Category;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,14 +30,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2020-02-13 22:01
  **/
 @Repository
-public interface CategoryRepository extends ReactiveMongoRepository<Category, ObjectId> {
-
-    /**
-     * 查询所有类别
-     *
-     * @return 有效类别
-     */
-    Flux<Category> findByEnabledTrue();
+public interface CategoryRepository extends R2dbcRepository<Category, Long> {
 
     /**
      * 分页查询类别

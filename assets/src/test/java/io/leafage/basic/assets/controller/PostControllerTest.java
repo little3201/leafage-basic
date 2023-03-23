@@ -202,7 +202,7 @@ class PostControllerTest {
 
         ContentBO contentBO = new ContentBO();
         contentBO.setCatalog("目录");
-        contentBO.setContent("内容信息");
+        contentBO.setContext("内容信息");
         postDTO.setContent(contentBO);
         webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange()
@@ -227,7 +227,7 @@ class PostControllerTest {
 
         ContentBO contentBO = new ContentBO();
         contentBO.setCatalog("目录");
-        contentBO.setContent("内容信息");
+        contentBO.setContext("内容信息");
         postDTO.setContent(contentBO);
         webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange()
@@ -253,7 +253,7 @@ class PostControllerTest {
 
         ContentBO contentBO = new ContentBO();
         contentBO.setCatalog("目录");
-        contentBO.setContent("内容信息");
+        contentBO.setContext("内容信息");
         postDTO.setContent(contentBO);
         webTestClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange().expectStatus().isAccepted();
@@ -275,7 +275,7 @@ class PostControllerTest {
 
         ContentBO contentBO = new ContentBO();
         contentBO.setCatalog("目录");
-        contentBO.setContent("内容信息");
+        contentBO.setContext("内容信息");
         postDTO.setContent(contentBO);
         webTestClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange().expectStatus().isNotModified();

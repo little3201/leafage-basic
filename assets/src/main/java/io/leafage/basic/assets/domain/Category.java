@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,23 +14,21 @@
  *  limitations under the License.
  *
  */
-package io.leafage.basic.assets.document;
+package io.leafage.basic.assets.domain;
 
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * Model class for Category
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Document(collection = "category")
-public class Category extends AbstractDocument {
+@Table(name = "categories")
+public class Category extends AbstractModel {
 
     /**
      * 代码
      */
-    @Indexed(unique = true)
     private String code;
     /**
      * 名称

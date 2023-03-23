@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,63 +14,39 @@
  *  limitations under the License.
  *
  */
+package io.leafage.basic.assets.bo;
 
-package io.leafage.basic.assets.document;
-
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.mapping.Field;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.Set;
 
 /**
- * Model class for posts
+ * BO class
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author liwenqiang 2022-12-10 22:09
  */
-public abstract class SuperDocument extends AbstractDocument {
+public abstract class PostBO {
 
-    /**
-     * 代码
-     */
-    @Indexed(unique = true)
-    private String code;
-    /**
-     * 分类ID
-     */
-    @Field(name = "category_id")
-    private ObjectId categoryId;
     /**
      * 标题
      */
-    @TextIndexed
+    @NotBlank
     private String title;
     /**
      * 封面
      */
+    @NotBlank
     private String cover;
     /**
      * 标签
      */
-    @TextIndexed
+    @NotEmpty
     private Set<String> tags;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public ObjectId getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(ObjectId categoryId) {
-        this.categoryId = categoryId;
-    }
+    /**
+     * 分类
+     */
+    private CategoryBO category;
 
     public String getTitle() {
         return title;
@@ -96,4 +72,11 @@ public abstract class SuperDocument extends AbstractDocument {
         this.tags = tags;
     }
 
+    public CategoryBO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryBO category) {
+        this.category = category;
+    }
 }

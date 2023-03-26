@@ -20,6 +20,11 @@ package io.leafage.basic.assets.domain;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+/**
+ * Model class for post statistics
+ *
+ * @author liwenqiang 2023-03-26 14:12
+ */
 @Table(name = "post_statistics")
 public class PostStatistics extends AbstractModel {
 

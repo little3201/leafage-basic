@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.constants.StatisticsFieldEnum;
+import io.leafage.basic.assets.constants.StatisticsEnum;
 import io.leafage.basic.assets.domain.PostStatistics;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.PostStatisticsService;
@@ -39,9 +39,9 @@ public class PostStatisticsServiceImpl implements PostStatisticsService {
     }
 
     @Override
-    public Mono<PostStatistics> increase(Long postId, StatisticsFieldEnum statisticsFieldEnum) {
+    public Mono<PostStatistics> increase(Long postId, StatisticsEnum statisticsEnum) {
         return statisticsRepository.getByPostId(postId).flatMap(postStatistics -> {
-            switch (statisticsFieldEnum) {
+            switch (statisticsEnum) {
                 case LIKES -> postStatistics.setLikes(postStatistics.getLikes() + 1);
                 case COMMENTS -> postStatistics.setComments(postStatistics.getComments() + 1);
                 case VIEWED -> postStatistics.setViewed(postStatistics.getViewed() + 1);

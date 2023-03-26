@@ -17,37 +17,39 @@
 
 package io.leafage.basic.assets.bo;
 
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * BO class for category
  *
  * @author wilsonli 2022-12-10 22:28
  **/
-public class CategoryBO {
-
-    /**
-     * 编号
-     */
-    private Long id;
+public abstract class CategoryBO {
 
     /**
      * 名称
      */
-    private String name;
+    @NotBlank(message = "categoryName is blank.")
+    private String categoryName;
 
+    /**
+     * 描述
+     */
+    private String description;
 
-    public Long getId() {
-        return id;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

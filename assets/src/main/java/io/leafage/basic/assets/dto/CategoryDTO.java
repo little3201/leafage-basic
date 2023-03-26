@@ -18,39 +18,13 @@
 package io.leafage.basic.assets.dto;
 
 
-import jakarta.validation.constraints.NotBlank;
+import io.leafage.basic.assets.bo.CategoryBO;
 
 /**
- * DTO class for Category
+ * DTO class for category
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class CategoryDTO {
+public class CategoryDTO extends CategoryBO {
 
-    /**
-     * 名称
-     */
-    @NotBlank
-    private String categoryName;
-
-    /**
-     * 描述
-     */
-    private String description;
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

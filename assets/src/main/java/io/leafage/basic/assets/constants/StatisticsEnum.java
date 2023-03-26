@@ -18,19 +18,21 @@
 package io.leafage.basic.assets.constants;
 
 /**
- * desc
+ * statistics type enum
  *
  * @author liwenqiang 2022-05-31 09:03
  **/
-public enum StatisticsFieldEnum {
+public enum StatisticsEnum {
 
     VIEWED("viewed"),
+
     LIKES("likes"),
+
     COMMENTS("comments");
 
     public final String value;
 
-    StatisticsFieldEnum(String value) {
+    StatisticsEnum(String value) {
         this.value = value;
     }
 }

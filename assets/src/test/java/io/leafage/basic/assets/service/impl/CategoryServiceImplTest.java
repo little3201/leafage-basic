@@ -58,12 +58,12 @@ class CategoryServiceImplTest {
     void init() {
         category = new Category();
         category.setId(1L);
-        category.setName("test");
+        category.setCategoryName("test");
     }
 
     @Test
     void retrieve() {
-        given(this.categoryRepository.findAll(PageRequest.of(0, 2))).willReturn(Flux.just(category));
+        given(this.categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(Flux.just(category));
 
         given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(1L));
 

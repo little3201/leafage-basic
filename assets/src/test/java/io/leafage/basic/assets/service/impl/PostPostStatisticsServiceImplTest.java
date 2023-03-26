@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.constants.StatisticsFieldEnum;
+import io.leafage.basic.assets.constants.StatisticsEnum;
 import io.leafage.basic.assets.domain.PostStatistics;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ class PostPostStatisticsServiceImplTest {
 
         given(this.statisticsRepository.save(Mockito.any(PostStatistics.class))).willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
 
-        StepVerifier.create(statisticsService.increase(Mockito.anyLong(), StatisticsFieldEnum.VIEWED))
+        StepVerifier.create(statisticsService.increase(Mockito.anyLong(), StatisticsEnum.VIEWED))
                 .expectNextCount(1).verifyComplete();
     }
 }

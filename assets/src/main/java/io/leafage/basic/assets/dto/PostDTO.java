@@ -21,7 +21,7 @@ import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.bo.PostBO;
 
 /**
- * DTO class for Posts
+ * DTO class for post
  *
  * @author liwenqiang 2020-10-06 22:09
  */

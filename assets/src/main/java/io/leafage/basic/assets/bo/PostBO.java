@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 
 /**
- * BO class
+ * BO class for post
  *
  * @author liwenqiang 2022-12-10 22:09
  */
@@ -49,7 +49,7 @@ public abstract class PostBO {
     /**
      * 分类
      */
-    private CategoryBO category;
+    private Long categoryId;
 
     public String getTitle() {
         return title;
@@ -75,11 +75,11 @@ public abstract class PostBO {
         this.tags = tags;
     }
 
-    public CategoryBO getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(CategoryBO category) {
-        this.category = category;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 }

@@ -17,22 +17,41 @@
 
 package io.leafage.basic.assets.bo;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 /**
- * VO class for post content
+ * BO class for comment
  *
- * @author liwenqiang 2021-02-26 22:17
+ * @author liwenqiang 2023-03-26 14:30
  */
-public class ContentBO {
+public abstract class CommentBO {
+
+    /**
+     * 帖子
+     */
+    @NotNull(message = "postId is null.")
+    private Long postId;
 
     /**
      * 内容
      */
+    @NotBlank(message = "context is blank.")
     private String context;
 
     /**
-     * 目录
+     * 回复人
      */
-    private String catalog;
+    private Long replier;
+
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
 
     public String getContext() {
         return context;
@@ -42,11 +61,11 @@ public class ContentBO {
         this.context = context;
     }
 
-    public String getCatalog() {
-        return catalog;
+    public Long getReplier() {
+        return replier;
     }
 
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
+    public void setReplier(Long replier) {
+        this.replier = replier;
     }
 }

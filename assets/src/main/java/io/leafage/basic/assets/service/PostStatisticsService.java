@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.constants.StatisticsFieldEnum;
+import io.leafage.basic.assets.constants.StatisticsEnum;
 import io.leafage.basic.assets.domain.PostStatistics;
 import reactor.core.publisher.Mono;
 
@@ -31,10 +31,10 @@ public interface PostStatisticsService {
     /**
      * 记录统计量
      *
-     * @param postId              帖子ID
-     * @param statisticsFieldEnum 统计枚举
+     * @param postId         帖子ID
+     * @param statisticsEnum 统计枚举
      * @return 浏览量
      */
-    Mono<PostStatistics> increase(Long postId, StatisticsFieldEnum statisticsFieldEnum);
+    Mono<PostStatistics> increase(Long postId, StatisticsEnum statisticsEnum);
 
 }

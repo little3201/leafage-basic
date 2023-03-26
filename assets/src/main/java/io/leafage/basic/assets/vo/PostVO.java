@@ -23,32 +23,21 @@ import io.leafage.basic.assets.bo.PostBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for Posts
+ * VO class for post
  *
  * @author liwenqiang 2020-10-06 22:09
  */
 public class PostVO extends PostBO {
 
     /**
-     * 编号
-     */
-    private String code;
-    /**
      * 内容和目录
      */
     private ContentBO content;
+
     /**
      * 时间
      */
     private LocalDateTime modifyTime;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public ContentBO getContent() {
         return content;

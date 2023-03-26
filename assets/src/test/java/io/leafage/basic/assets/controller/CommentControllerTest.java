@@ -34,6 +34,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -52,17 +54,26 @@ class CommentControllerTest {
     private WebTestClient webTestClient;
 
     private CommentDTO commentDTO;
+    private CommentVO commentVO;
 
     @BeforeEach
     void init() {
         commentDTO = new CommentDTO();
         commentDTO.setPostId(1L);
         commentDTO.setContext("test");
+
+        commentVO = new CommentVO();
+        commentVO.setPostId(commentDTO.getPostId());
+        commentVO.setContext(commentDTO.getContext());
+        commentVO.setCount(23L);
+        commentVO.setLocation("中国上海");
+        commentVO.setCountry("China");
+        commentVO.setModifyTime(LocalDateTime.now());
     }
 
     @Test
     void comments() {
-        given(this.commentService.comments(Mockito.anyLong())).willReturn(Flux.just(new CommentVO()));
+        given(this.commentService.comments(Mockito.anyLong())).willReturn(Flux.just(commentVO));
 
         webTestClient.get().uri("/comments/{id}", 1).exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
@@ -78,7 +89,7 @@ class CommentControllerTest {
 
     @Test
     void replies() {
-        given(this.commentService.replies(Mockito.anyLong())).willReturn(Flux.just(new CommentVO()));
+        given(this.commentService.replies(Mockito.anyLong())).willReturn(Flux.just(commentVO));
 
         webTestClient.get().uri("/comments/{id}/replies", 1).exchange()
                 .expectStatus().isOk().expectBodyList(CategoryVO.class);
@@ -94,11 +105,12 @@ class CommentControllerTest {
 
     @Test
     void create() {
-        given(this.commentService.create(Mockito.any(CommentDTO.class))).willReturn(Mono.just(new CommentVO()));
+        given(this.commentService.create(Mockito.any(CommentDTO.class))).willReturn(Mono.just(commentVO));
 
         webTestClient.post().uri("/comments").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
-                .expectStatus().isCreated();
+                .expectStatus().isCreated()
+                .expectBody().jsonPath("$.context").isEqualTo("test");
     }
 
     @Test

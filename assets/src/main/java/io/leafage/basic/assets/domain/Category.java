@@ -16,10 +16,11 @@
  */
 package io.leafage.basic.assets.domain;
 
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for Category
+ * Model class for category
  *
  * @author liwenqiang 2020-10-06 22:09
  */
@@ -29,7 +30,8 @@ public class Category extends AbstractModel {
     /**
      * 名称
      */
-    private String name;
+    @Column(value = "category_name")
+    private String categoryName;
 
     /**
      * 描述
@@ -37,12 +39,12 @@ public class Category extends AbstractModel {
     private String description;
 
 
-    public String getName() {
-        return name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getDescription() {

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,63 +20,57 @@ package io.leafage.basic.assets.vo;
 import java.time.LocalDateTime;
 
 /**
- * VO class for Comment
+ * VO class for comment
  *
  * @author liwenqiang 2021-07-15 22:12
  */
 public class CommentVO {
 
     /**
-     * 编号
+     * post主键
      */
-    private String code;
-    /**
-     * 帖子code
-     */
-    private String posts;
+    private Long postId;
+
     /**
      * 内容
      */
-    private String content;
+    private String context;
+
     /**
      * 国家
      */
     private String country;
+
     /**
      * 位置
      */
     private String location;
+
     /**
      * 回复数
      */
     private long count;
+
     /**
      * 时间
      */
     private LocalDateTime modifyTime;
 
-    public String getCode() {
-        return code;
+
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
-    public String getPosts() {
-        return posts;
+    public String getContext() {
+        return context;
     }
 
-    public void setPosts(String posts) {
-        this.posts = posts;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public String getCountry() {

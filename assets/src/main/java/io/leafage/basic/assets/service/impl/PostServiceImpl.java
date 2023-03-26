@@ -17,7 +17,6 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.bo.CategoryBO;
 import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.domain.PostContent;
@@ -61,7 +60,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Mono<Page<PostVO>> retrieve(int page, int size, String sort, Long categoryId) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, StringUtils.hasText(sort) ? sort : "modifyTime"));
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
+                StringUtils.hasText(sort) ? sort : "modifyTime"));
         Flux<Post> postFlux;
         Mono<Long> count;
         // if category not null
@@ -85,21 +85,17 @@ public class PostServiceImpl implements PostService {
         return postRepository.findById(id).flatMap(posts ->
                 // 查询关联分类信息
                 categoryRepository.findById(posts.getCategoryId()).map(category -> {
-                    PostVO contentVO = new PostVO();
-                    BeanUtils.copyProperties(posts, contentVO);
-                    // 转换分类对象
-                    CategoryBO categoryBO = new CategoryBO();
-                    categoryBO.setName(category.getName());
-                    contentVO.setCategory(categoryBO);
-                    return contentVO;
-                }).flatMap(postVO -> postContentRepository.getByPostId(posts.getId()) // 查询帖子内容
+                    PostVO postVO = new PostVO();
+                    BeanUtils.copyProperties(posts, postVO);
+                    return postVO;
+                }).flatMap(vo -> postContentRepository.getByPostId(posts.getId()) // 查询帖子内容
                         .map(postsContent -> {
-                            ContentBO contentVO = new ContentBO();
-                            contentVO.setContext(postsContent.getContext());
-                            contentVO.setCatalog(postsContent.getCatalog());
-                            postVO.setContent(contentVO);
-                            return postVO;
-                        }).defaultIfEmpty(postVO))
+                            ContentBO contentBO = new ContentBO();
+                            contentBO.setContext(postsContent.getContext());
+                            contentBO.setCatalog(postsContent.getCatalog());
+                            vo.setContent(contentBO);
+                            return vo;
+                        }).defaultIfEmpty(vo))
         );
     }
 
@@ -109,7 +105,7 @@ public class PostServiceImpl implements PostService {
         return Mono.just(postDTO).map(dto -> {
             Post post = new Post();
             BeanUtils.copyProperties(postDTO, post);
-            post.setCategoryId(dto.getCategory().getId());
+            post.setCategoryId(dto.getCategoryId());
             return post;
         }).flatMap(info -> postRepository.save(info).map(posts -> {
                     PostContent postContent = new PostContent();
@@ -129,7 +125,7 @@ public class PostServiceImpl implements PostService {
                 Mono.just(postDTO).map(dto -> {
                     // 将信息复制到info
                     BeanUtils.copyProperties(postDTO, post);
-                    post.setCategoryId(dto.getCategory().getId());
+                    post.setCategoryId(dto.getCategoryId());
                     return post;
                 }).flatMap(postsInfo -> postRepository.save(postsInfo).flatMap(posts ->
                         postContentRepository.getByPostId(posts.getId())
@@ -171,24 +167,7 @@ public class PostServiceImpl implements PostService {
             PostVO postVO = new PostVO();
             BeanUtils.copyProperties(p, postVO);
             return postVO;
-        }).flatMap(vo -> category(post.getCategoryId(), vo));
+        });
     }
 
-    /**
-     * 转换category
-     *
-     * @param categoryId category主键
-     * @param vo         vo
-     * @return 设置后的vo
-     */
-    private Mono<PostVO> category(Long categoryId, PostVO vo) {
-        return categoryRepository.findById(categoryId)
-                .map(category -> {
-                    // 转换分类对象
-                    CategoryBO basicVO = new CategoryBO();
-                    BeanUtils.copyProperties(category, basicVO);
-                    vo.setCategory(basicVO);
-                    return vo;
-                }).switchIfEmpty(Mono.just(vo));
-    }
 }

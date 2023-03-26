@@ -22,7 +22,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.util.Set;
 
 /**
- * Model class for posts
+ * Model class for post
  *
  * @author liwenqiang 2020-10-06 22:09
  */

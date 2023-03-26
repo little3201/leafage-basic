@@ -34,6 +34,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -54,6 +55,7 @@ class CategoryControllerTest {
     private WebTestClient webTestClient;
 
     private CategoryDTO categoryDTO;
+    private CategoryVO categoryVO;
 
     @BeforeEach
     void init() {
@@ -61,11 +63,16 @@ class CategoryControllerTest {
         categoryDTO = new CategoryDTO();
         categoryDTO.setCategoryName("test");
         categoryDTO.setDescription("描述信息");
+
+        categoryVO = new CategoryVO();
+        categoryVO.setCount(23L);
+        categoryVO.setCategoryName(categoryDTO.getCategoryName());
+        categoryVO.setModifyTime(LocalDateTime.now());
     }
 
     @Test
     void retrieve() {
-        Page<CategoryVO> page = new PageImpl<>(List.of(new CategoryVO()));
+        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
         given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories").queryParam("page", 0)
@@ -83,10 +90,11 @@ class CategoryControllerTest {
 
     @Test
     void fetch() {
-        given(this.categoryService.fetch(Mockito.anyLong())).willReturn(Mono.just(new CategoryVO()));
+        given(this.categoryService.fetch(Mockito.anyLong())).willReturn(Mono.just(categoryVO));
 
         webTestClient.get().uri("/categories/{id}", 1).exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
     }
 
     @Test
@@ -102,7 +110,8 @@ class CategoryControllerTest {
         given(this.categoryService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
-                .queryParam("categoryName", "test").build()).exchange().expectStatus().isOk();
+                        .queryParam("categoryName", "test").build()).exchange()
+                .expectStatus().isOk();
     }
 
     @Test
@@ -115,11 +124,12 @@ class CategoryControllerTest {
 
     @Test
     void create() {
-        given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(Mono.just(new CategoryVO()));
+        given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
 
         webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
-                .expectStatus().isCreated();
+                .expectStatus().isCreated()
+                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
     }
 
     @Test
@@ -133,11 +143,12 @@ class CategoryControllerTest {
 
     @Test
     void modify() {
-        given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(new CategoryVO()));
+        given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
 
         webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
-                .expectStatus().isAccepted();
+                .expectStatus().isAccepted()
+                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
     }
 
     @Test

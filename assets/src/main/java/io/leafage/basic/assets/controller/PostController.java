@@ -51,18 +51,18 @@ public class PostController {
     /**
      * 分页查询
      *
-     * @param page     页码
-     * @param size     大小
-     * @param sort     排序字段
-     * @param category 分类
+     * @param page       页码
+     * @param size       大小
+     * @param sort       排序字段
+     * @param categoryId 分类ID
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
     public ResponseEntity<Mono<Page<PostVO>>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                       String sort, String category) {
+                                                       String sort, Long categoryId) {
         Mono<Page<PostVO>> pageMono;
         try {
-            pageMono = postService.retrieve(page, size, sort, category);
+            pageMono = postService.retrieve(page, size, sort, categoryId);
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -89,18 +89,18 @@ public class PostController {
     }
 
     /**
-     * 根据 code 查询，包含内容
+     * 根据 id 查询
      *
-     * @param code 代码
+     * @param id 主键
      * @return 查询到数据，异常时返回204
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<Mono<PostVO>> fetch(@PathVariable String code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Mono<PostVO>> fetch(@PathVariable Long id) {
         Mono<PostVO> voMono;
         try {
-            voMono = postService.fetch(code);
+            voMono = postService.fetch(id);
         } catch (Exception e) {
-            logger.error("Fetch posts details occurred an error: ", e);
+            logger.error("Fetch post occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
@@ -118,46 +118,10 @@ public class PostController {
         try {
             existsMono = postService.exist(title);
         } catch (Exception e) {
-            logger.error("Check posts is exist an error: ", e);
+            logger.error("Check post is exist an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
-    }
-
-    /**
-     * 查询下一条记录
-     *
-     * @param code 代码
-     * @return 查询到数据，异常时返回204
-     */
-    @GetMapping("/{code}/next")
-    public ResponseEntity<Mono<PostVO>> next(@PathVariable String code) {
-        Mono<PostVO> voMono;
-        try {
-            voMono = postService.next(code);
-        } catch (Exception e) {
-            logger.error("Fetch next posts occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 查询上一条记录
-     *
-     * @param code 代码
-     * @return 查询到数据，异常时返回204
-     */
-    @GetMapping("/{code}/previous")
-    public ResponseEntity<Mono<PostVO>> previous(@PathVariable String code) {
-        Mono<PostVO> voMono;
-        try {
-            voMono = postService.previous(code);
-        } catch (Exception e) {
-            logger.error("Fetch previous posts occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voMono);
     }
 
     /**
@@ -172,7 +136,7 @@ public class PostController {
         try {
             voMono = postService.create(postDTO);
         } catch (Exception e) {
-            logger.error("Create posts occurred an error: ", e);
+            logger.error("Create post occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
@@ -181,20 +145,39 @@ public class PostController {
     /**
      * 修改信息
      *
-     * @param code    代码
+     * @param id      主键
      * @param postDTO 要修改的数据
      * @return 修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{code}")
-    public ResponseEntity<Mono<PostVO>> modify(@PathVariable String code, @RequestBody @Valid PostDTO postDTO) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Mono<PostVO>> modify(@PathVariable Long id, @RequestBody @Valid PostDTO postDTO) {
         Mono<PostVO> voMono;
         try {
-            voMono = postService.modify(code, postDTO);
+            voMono = postService.modify(id, postDTO);
         } catch (Exception e) {
-            logger.error("Modify posts occurred an error: ", e);
+            logger.error("Modify post occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.accepted().body(voMono);
+    }
+
+
+    /**
+     * 删除
+     *
+     * @param id 主键
+     * @return 查询到数据，异常时返回204
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Mono<Void>> remove(@PathVariable Long id) {
+        Mono<Void> voMono;
+        try {
+            voMono = postService.remove(id);
+        } catch (Exception e) {
+            logger.error("Remove post occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok(voMono);
     }
 
 }

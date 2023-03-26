@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package io.leafage.basic.assets.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * DTO class for Comment
@@ -29,39 +30,42 @@ public class CommentDTO {
     /**
      * 帖子
      */
-    @NotBlank
-    private String posts;
+    @NotNull
+    private Long postId;
+
     /**
      * 内容
      */
     @NotBlank
-    private String content;
+    private String context;
+
     /**
      * 回复人
      */
-    private String replier;
+    private Long replier;
 
-    public String getPosts() {
-        return posts;
+
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPosts(String posts) {
-        this.posts = posts;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
-    public String getContent() {
-        return content;
+    public String getContext() {
+        return context;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContext(String context) {
+        this.context = context;
     }
 
-    public String getReplier() {
+    public Long getReplier() {
         return replier;
     }
 
-    public void setReplier(String replier) {
+    public void setReplier(Long replier) {
         this.replier = replier;
     }
 }

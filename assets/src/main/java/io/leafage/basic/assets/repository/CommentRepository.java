@@ -18,7 +18,6 @@
 package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.domain.Comment;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -32,22 +31,13 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface CommentRepository extends R2dbcRepository<Comment, Long> {
 
-
-    /**
-     * 分页查询
-     *
-     * @param pageable 分页参数
-     * @return 有效评论
-     */
-    Flux<Comment> findByEnabledTrue(Pageable pageable);
-
     /**
      * 根据帖子ID查询
      *
      * @param postId 帖子ID
      * @return 关联的数据
      */
-    Flux<Comment> findByPostIdAndReplierIsNullAndEnabledTrue(Long postId);
+    Flux<Comment> findByPostIdAndReplierIsNull(Long postId);
 
     /**
      * 统计回复
@@ -55,7 +45,7 @@ public interface CommentRepository extends R2dbcRepository<Comment, Long> {
      * @param replier 关联代码
      * @return 关联的数据记录数
      */
-    Mono<Long> countByReplierAndEnabledTrue(String replier);
+    Mono<Long> countByReplier(Long replier);
 
     /**
      * 查询回复
@@ -63,20 +53,5 @@ public interface CommentRepository extends R2dbcRepository<Comment, Long> {
      * @param replier 关联代码
      * @return 关联的数据
      */
-    Flux<Comment> findByReplierAndEnabledTrue(String replier);
-
-    /**
-     * 根据code查询信息
-     *
-     * @param code 代码
-     * @return 评论信息
-     */
-    Mono<Comment> getByCodeAndEnabledTrue(String code);
-
-    /**
-     * 统计
-     *
-     * @return 记录数
-     */
-    Mono<Long> countByEnabledTrue();
+    Flux<Comment> findByReplier(Long replier);
 }

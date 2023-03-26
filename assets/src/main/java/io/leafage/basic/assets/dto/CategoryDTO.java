@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,18 +31,19 @@ public class CategoryDTO {
      * 名称
      */
     @NotBlank
-    private String name;
+    private String categoryName;
+
     /**
      * 描述
      */
     private String description;
 
-    public String getName() {
-        return name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getDescription() {

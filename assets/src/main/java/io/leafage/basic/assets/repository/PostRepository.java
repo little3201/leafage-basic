@@ -33,19 +33,12 @@ import reactor.core.publisher.Mono;
 public interface PostRepository extends R2dbcRepository<Post, Long> {
 
     /**
-     * 查询
-     *
-     * @return 有效帖子
-     */
-    Flux<Post> findByEnabledTrue();
-
-    /**
      * 分页查询
      *
      * @param pageable 分页参数
      * @return 有效帖子
      */
-    Flux<Post> findByEnabledTrue(Pageable pageable);
+    Flux<Post> findAll(Pageable pageable);
 
     /**
      * 根据分类分页查询
@@ -54,15 +47,7 @@ public interface PostRepository extends R2dbcRepository<Post, Long> {
      * @param pageable   分页参数
      * @return 有效帖子
      */
-    Flux<Post> findByCategoryIdAndEnabledTrue(Long categoryId, Pageable pageable);
-
-    /**
-     * 根据code查询enabled信息
-     *
-     * @param code 代码
-     * @return 帖子信息
-     */
-    Mono<Post> getByCodeAndEnabledTrue(String code);
+    Flux<Post> findByCategoryId(Long categoryId, Pageable pageable);
 
     /**
      * 关联统计
@@ -70,24 +55,7 @@ public interface PostRepository extends R2dbcRepository<Post, Long> {
      * @param categoryId 分类ID
      * @return 帖子数
      */
-    Mono<Long> countByCategoryIdAndEnabledTrue(Long categoryId);
-
-    /**
-     * 查询下一相邻的记录
-     *
-     * @param id 主键
-     * @return 帖子信息
-     */
-    Mono<Post> findFirstByIdGreaterThanAndEnabledTrue(Long id);
-
-    /**
-     * 查询上一相邻的记录
-     *
-     * @param id       主键
-     * @param pageable 分页对象
-     * @return 帖子信息
-     */
-    Flux<Post> findByIdLessThanAndEnabledTrue(Long id, Pageable pageable);
+    Mono<Long> countByCategoryId(Long categoryId);
 
     /**
      * 关键词查询
@@ -95,7 +63,7 @@ public interface PostRepository extends R2dbcRepository<Post, Long> {
      * @param keyword 关键词
      * @return 匹配结果
      */
-    Flux<Post> findAllBy(String keyword);
+    Flux<Post> findAllByTitle(String keyword);
 
     /**
      * 是否已存在
@@ -104,11 +72,4 @@ public interface PostRepository extends R2dbcRepository<Post, Long> {
      * @return true-是，false-否
      */
     Mono<Boolean> existsByTitle(String title);
-
-    /**
-     * 统计
-     *
-     * @return 记录数
-     */
-    Mono<Long> countByEnabledTrue();
 }

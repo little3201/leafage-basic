@@ -27,26 +27,15 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Category extends AbstractModel {
 
     /**
-     * 代码
-     */
-    private String code;
-    /**
      * 名称
      */
     private String name;
+
     /**
      * 描述
      */
     private String description;
 
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public String getName() {
         return name;

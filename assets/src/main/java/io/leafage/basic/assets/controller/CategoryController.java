@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,23 +60,23 @@ public class CategoryController {
         try {
             pageMono = categoryService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Retrieve category by page occurred an error: ", e);
+            logger.error("Retrieve categories occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);
     }
 
     /**
-     * 根据 code 查询信息
+     * 根据 id 查询信息
      *
-     * @param code 代码
+     * @param id 主键
      * @return 查询到数据，异常时返回204
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<Mono<CategoryVO>> fetch(@PathVariable String code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Mono<CategoryVO>> fetch(@PathVariable Long id) {
         Mono<CategoryVO> voMono;
         try {
-            voMono = categoryService.fetch(code);
+            voMono = categoryService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch category occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -87,16 +87,16 @@ public class CategoryController {
     /**
      * 是否已存在
      *
-     * @param name 名称
+     * @param categoryName 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String categoryName) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = categoryService.exist(name);
+            existsMono = categoryService.exist(categoryName);
         } catch (Exception e) {
-            logger.error("Check category is exist an error: ", e);
+            logger.error("Check category name is exist an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
@@ -123,15 +123,15 @@ public class CategoryController {
     /**
      * 修改信息
      *
-     * @param code        代码
+     * @param id          主键
      * @param categoryDTO 要修改的数据
      * @return 修改后的信息，异常时返回304状态码
      */
-    @PutMapping("/{code}")
-    public ResponseEntity<Mono<CategoryVO>> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Mono<CategoryVO>> modify(@PathVariable Long id, @RequestBody @Valid CategoryDTO categoryDTO) {
         Mono<CategoryVO> voMono;
         try {
-            voMono = categoryService.modify(code, categoryDTO);
+            voMono = categoryService.modify(id, categoryDTO);
         } catch (Exception e) {
             logger.error("Modify category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
@@ -142,14 +142,14 @@ public class CategoryController {
     /**
      * 删除信息
      *
-     * @param code 代码
+     * @param id 主键
      * @return 200状态码，异常时返回417状态码
      */
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Mono<Void>> remove(@PathVariable String code) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Mono<Void>> remove(@PathVariable Long id) {
         Mono<Void> voidMono;
         try {
-            voidMono = categoryService.remove(code);
+            voidMono = categoryService.remove(id);
         } catch (Exception e) {
             logger.error("Remove category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

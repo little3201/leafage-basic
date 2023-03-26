@@ -29,34 +29,18 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2018-12-17 19:26
  **/
-public interface PostService extends ReactiveBasicService<PostDTO, PostVO, String> {
+public interface PostService extends ReactiveBasicService<PostDTO, PostVO> {
 
     /**
      * 分页查询
      *
-     * @param page     页码
-     * @param size     大小
-     * @param sort     排序
-     * @param category 分类
+     * @param page       页码
+     * @param size       大小
+     * @param sort       排序
+     * @param categoryId 分类ID
      * @return 结果集
      */
-    Mono<Page<PostVO>> retrieve(int page, int size, String sort, String category);
-
-    /**
-     * 下一条记录
-     *
-     * @param code 代码
-     * @return 帖子信息
-     */
-    Mono<PostVO> next(String code);
-
-    /**
-     * 上一条记录
-     *
-     * @param code 代码
-     * @return 帖子信息
-     */
-    Mono<PostVO> previous(String code);
+    Mono<Page<PostVO>> retrieve(int page, int size, String sort, Long categoryId);
 
     /**
      * 全文搜索

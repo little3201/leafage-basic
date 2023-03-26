@@ -33,16 +33,19 @@ public abstract class PostBO {
      */
     @NotBlank
     private String title;
+
     /**
      * 封面
      */
     @NotBlank
     private String cover;
+
     /**
      * 标签
      */
     @NotEmpty
     private Set<String> tags;
+
     /**
      * 分类
      */

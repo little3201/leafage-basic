@@ -24,19 +24,12 @@ import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.AbstractBasicService;
-import top.leafage.common.ValidMessage;
 
-import javax.naming.NotContextException;
 import java.util.NoSuchElementException;
 
 /**
@@ -45,7 +38,7 @@ import java.util.NoSuchElementException;
  * @author liwenqiang 2018-12-06 22:09
  **/
 @Service
-public class CommentServiceImpl extends AbstractBasicService implements CommentService {
+public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
@@ -56,49 +49,28 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     }
 
     @Override
-    public Mono<Page<CommentVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "modifyTime"));
-        Flux<CommentVO> voFlux = commentRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
-
-        Mono<Long> count = commentRepository.countByEnabledTrue();
-
-        return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+    public Flux<CommentVO> comments(Long postId) {
+        Assert.notNull(postId, "postId must not be null.");
+        return commentRepository.findByPostIdAndReplierIsNull(postId).flatMap(this::convertOuter);
     }
 
     @Override
-    public Flux<CommentVO> relation(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return postRepository.getByCodeAndEnabledTrue(code).flatMapMany(posts ->
-                commentRepository.findByPostIdAndReplierIsNullAndEnabledTrue(posts.getId()).flatMap(this::convertOuter));
-    }
-
-    @Override
-    public Flux<CommentVO> replies(String replier) {
-        Assert.hasText(replier, "replier must not be blank.");
-        return commentRepository.findByReplierAndEnabledTrue(replier).flatMap(this::convertOuter);
+    public Flux<CommentVO> replies(Long replier) {
+        Assert.notNull(replier, "replier must not be null.");
+        return commentRepository.findByReplier(replier).flatMap(this::convertOuter);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<CommentVO> create(CommentDTO commentDTO) {
-        return postRepository.getByCodeAndEnabledTrue(commentDTO.getPosts()).map(posts -> {
+        return postRepository.findById(commentDTO.getPostId()).map(posts -> {
                     Comment comment = new Comment();
                     BeanUtils.copyProperties(commentDTO, comment);
-                    comment.setCode(this.generateCode());
                     comment.setPostId(posts.getId());
                     return comment;
                 }).switchIfEmpty(Mono.error(new NoSuchElementException()))
                 .flatMap(commentRepository::save)
                 .flatMap(this::convertOuter);
-    }
-
-    @Override
-    public Mono<CommentVO> modify(String code, CommentDTO commentDTO) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return commentRepository.getByCodeAndEnabledTrue(code).doOnNext(comment ->
-                        BeanUtils.copyProperties(commentDTO, comment)).switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(commentRepository::save).flatMap(this::convertOuter);
     }
 
     /**
@@ -114,8 +86,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
             return commentVO;
         }).flatMap(commentVO -> postRepository.findById(comment.getPostId())
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .doOnNext(posts -> commentVO.setPosts(posts.getCode()))
-                .flatMap(vo -> commentRepository.countByReplierAndEnabledTrue(comment.getCode())
+                .flatMap(vo -> commentRepository.countByReplier(comment.getReplier())
                         .switchIfEmpty(Mono.just(0L)).map(count -> {
                             commentVO.setCount(count);
                             return commentVO;

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,44 +15,41 @@
  *
  */
 
-package io.leafage.basic.assets.dto;
+package io.leafage.basic.assets.domain;
 
-import java.time.LocalDateTime;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-/**
- * statistics dto
- *
- * @author liwenqiang 2022-05-25 19:53
- */
-public class StatisticsDTO {
+@Table(name = "post_statistics")
+public class PostStatistics extends AbstractModel {
 
     /**
      * 帖子
      */
-    private String post;
+    @Column(value = "post_id")
+    private Long postId;
+
     /**
      * 浏览量
      */
     private int viewed;
+
     /**
      * 点赞量
      */
     private int likes;
+
     /**
      * 评论量
      */
     private int comments;
-    /**
-     * 时间
-     */
-    private LocalDateTime modifyTime;
 
-    public String getPost() {
-        return post;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPost(String post) {
-        this.post = post;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public int getViewed() {
@@ -79,11 +76,4 @@ public class StatisticsDTO {
         this.comments = comments;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
-    }
 }

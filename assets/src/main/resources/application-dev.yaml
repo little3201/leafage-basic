@@ -11,6 +11,6 @@ spring:
       port: 8500
 
   r2dbc:
-    url: r2dbc:postgresql://postgres@localhost:5432/leafage
+    url: r2dbc:postgresql://postgres@localhost:5432/postgres
     username: postgres
     password: zx110119

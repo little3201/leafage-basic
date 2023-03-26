@@ -31,8 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.AbstractBasicService;
-import top.leafage.common.ValidMessage;
 
 import javax.naming.NotContextException;
 
@@ -42,7 +40,7 @@ import javax.naming.NotContextException;
  * @author liwenqiang 2020-02-13 20:24
  **/
 @Service
-public class CategoryServiceImpl extends AbstractBasicService implements CategoryService {
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
@@ -55,40 +53,43 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     @Override
     public Mono<Page<CategoryVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Flux<CategoryVO> voFlux = categoryRepository.findAll(pageRequest).flatMap(this::convertOuter);
 
-        Mono<Long> count = categoryRepository.countByEnabledTrue();
+        Mono<Long> count = categoryRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
                 new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
     }
 
     @Override
-    public Mono<CategoryVO> fetch(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(this::fetchOuter);
+    public Mono<CategoryVO> fetch(Long id) {
+        return categoryRepository.findById(id).flatMap(this::fetchOuter);
+    }
+
+    @Override
+    public Mono<Boolean> exist(String categoryName) {
+        Assert.hasText(categoryName, "category name must not be blank.");
+        return categoryRepository.existsByCategoryName(categoryName);
     }
 
     @Override
     public Mono<CategoryVO> create(CategoryDTO categoryDTO) {
-        Category info = new Category();
-        BeanUtils.copyProperties(categoryDTO, info);
-        info.setCode(this.generateCode());
-        return categoryRepository.save(info).flatMap(this::convertOuter);
+        Category category = new Category();
+        BeanUtils.copyProperties(categoryDTO, category);
+        return categoryRepository.save(category).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<CategoryVO> modify(String code, CategoryDTO categoryDTO) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return categoryRepository.getByCodeAndEnabledTrue(code).doOnNext(category ->
+    public Mono<CategoryVO> modify(Long id, CategoryDTO categoryDTO) {
+        Assert.notNull(id, "id must not be null.");
+        return categoryRepository.findById(id).doOnNext(category ->
                         BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(categoryRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<Void> remove(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return categoryRepository.getByCodeAndEnabledTrue(code).flatMap(topic -> categoryRepository.deleteById(topic.getId()));
+    public Mono<Void> remove(Long id) {
+        return categoryRepository.deleteById(id);
     }
 
     /**
@@ -112,21 +113,13 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
      * @return 输出转换后的vo对象
      */
     private Mono<CategoryVO> convertOuter(Category category) {
-        return Mono.just(category).map(c -> {
-            CategoryVO categoryVO = new CategoryVO();
-            BeanUtils.copyProperties(c, categoryVO);
-            return categoryVO;
-        }).flatMap(categoryVO -> postRepository.countByCategoryIdAndEnabledTrue(category.getId())
-                .switchIfEmpty(Mono.just(0L))
-                .map(count -> {
-                    categoryVO.setCount(count);
-                    return categoryVO;
-                }));
+        return this.fetchOuter(category)
+                .flatMap(categoryVO -> postRepository.countByCategoryId(category.getId())
+                        .switchIfEmpty(Mono.just(0L))
+                        .map(count -> {
+                            categoryVO.setCount(count);
+                            return categoryVO;
+                        }));
     }
 
-    @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
-        return categoryRepository.existsByName(name);
-    }
 }

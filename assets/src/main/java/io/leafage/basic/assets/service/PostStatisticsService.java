@@ -18,28 +18,23 @@
 package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.constants.StatisticsFieldEnum;
-import io.leafage.basic.assets.domain.Statistics;
-import io.leafage.basic.assets.dto.StatisticsDTO;
-import io.leafage.basic.assets.vo.StatisticsVO;
+import io.leafage.basic.assets.domain.PostStatistics;
 import reactor.core.publisher.Mono;
-import top.leafage.common.reactive.ReactiveBasicService;
-
-import java.time.LocalDate;
 
 /**
  * statistics service
  *
  * @author liwenqiang 2021-05-19 10:54
  **/
-public interface StatisticsService extends ReactiveBasicService<StatisticsDTO, StatisticsVO, String> {
+public interface PostStatisticsService {
 
     /**
      * 记录统计量
      *
-     * @param today           当日
-     * @param statisticsField 统计记录属性名（viewed, likes, comments, downloads）
+     * @param postId              帖子ID
+     * @param statisticsFieldEnum 统计枚举
      * @return 浏览量
      */
-    Mono<Statistics> increase(LocalDate today, StatisticsFieldEnum statisticsField);
+    Mono<PostStatistics> increase(Long postId, StatisticsFieldEnum statisticsFieldEnum);
 
 }

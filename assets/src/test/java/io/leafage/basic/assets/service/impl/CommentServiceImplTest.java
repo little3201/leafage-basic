@@ -29,8 +29,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -54,91 +52,46 @@ class CommentServiceImplTest {
     @InjectMocks
     private CommentServiceImpl commentService;
 
-    private Comment comment;
-    private Post post;
+    private CommentDTO commentDTO;
 
     @BeforeEach
     void init() {
-        comment = new Comment();
-        comment.setCode("21318H9F1");
-        comment.setPostId(1L);
-        comment.setContent("这里写内容");
-        comment.setCountry("某国");
-        comment.setLocation("某地");
-
-        post = new Post();
-        post.setId(1L);
+        commentDTO = new CommentDTO();
+        commentDTO.setPostId(1L);
+        commentDTO.setReplier(1L);
     }
 
     @Test
-    void retrieve() {
-        given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2,
-                Sort.by(Sort.Direction.DESC, "modifyTime")))).willReturn(Flux.just(comment));
+    void comments() {
+        given(this.commentRepository.findByPostIdAndReplierIsNull(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Comment.class)));
 
-        given(this.postRepository.findById(comment.getPostId())).willReturn(Mono.just(Mockito.mock(Post.class)));
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
-        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
+        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(9L));
 
-        given(this.commentRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
-
-        StepVerifier.create(commentService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void relation() {
-        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(post));
-
-        given(this.commentRepository.findByPostIdAndReplierIsNullAndEnabledTrue(post.getId())).willReturn(Flux.just(comment));
-
-        given(this.postRepository.findById(post.getId())).willReturn(Mono.just(post));
-
-        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
-
-        StepVerifier.create(commentService.relation("21318H9FH")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(commentService.comments(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void repliers() {
-        given(this.commentRepository.findByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Flux.just(comment));
+        given(this.commentRepository.findByReplier(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Comment.class)));
 
-        given(this.postRepository.findById(post.getId())).willReturn(Mono.just(Mockito.mock(Post.class)));
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
-        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
+        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(9L));
 
-        StepVerifier.create(commentService.replies("21318H9FH")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(commentService.replies(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
-        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(post));
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
-        given(this.commentRepository.save(Mockito.any(Comment.class))).willReturn(Mono.just(comment));
+        given(this.commentRepository.save(Mockito.any(Comment.class))).willReturn(Mono.just(Mockito.mock(Comment.class)));
 
-        given(this.postRepository.findById(comment.getPostId())).willReturn(Mono.just(Mockito.mock(Post.class)));
+        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(Mockito.anyLong()));
 
-        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
-
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setPosts("21318H9FH");
-        commentDTO.setReplier(comment.getReplier());
         StepVerifier.create(commentService.create(commentDTO)).expectNextCount(1).verifyComplete();
     }
 
-    @Test
-    void modify() {
-        given(this.commentRepository.getByCodeAndEnabledTrue(Mockito.anyString())).
-                willReturn(Mono.just(Mockito.mock(Comment.class)));
-
-        given(this.commentRepository.save(Mockito.any(Comment.class))).willReturn(Mono.just(comment));
-
-        given(this.postRepository.findById(comment.getPostId())).willReturn(Mono.just(Mockito.mock(Post.class)));
-
-        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(9L));
-
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setContent("测试");
-        commentDTO.setContent(comment.getContent());
-        StepVerifier.create(commentService.modify("21318H9FH", commentDTO))
-                .expectNextCount(1).verifyComplete();
-    }
 }

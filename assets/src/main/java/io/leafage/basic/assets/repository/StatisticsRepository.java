@@ -17,14 +17,10 @@
 
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.domain.Statistics;
-import org.springframework.data.domain.Pageable;
+import io.leafage.basic.assets.domain.PostStatistics;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDate;
 
 /**
  * statistics repository
@@ -32,28 +28,13 @@ import java.time.LocalDate;
  * @author liwenqiang 2020-02-13 22:01
  **/
 @Repository
-public interface StatisticsRepository extends R2dbcRepository<Statistics, Long> {
+public interface StatisticsRepository extends R2dbcRepository<PostStatistics, Long> {
 
     /**
-     * 根据data查询当日数据
+     * 查询帖子数据
      *
-     * @param date 日期
+     * @param postId 帖子ID
      * @return 统计数据
      */
-    Mono<Statistics> getByModifyTime(LocalDate date);
-
-    /**
-     * 分页查询
-     *
-     * @param pageable 分页参数
-     * @return 有效帖子
-     */
-    Flux<Statistics> findByEnabledTrue(Pageable pageable);
-
-    /**
-     * 统计
-     *
-     * @return 记录数
-     */
-    Mono<Long> countByEnabledTrue();
+    Mono<PostStatistics> getByPostId(Long postId);
 }

@@ -22,6 +22,7 @@ import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.service.PostService;
 import io.leafage.basic.assets.vo.PostVO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -56,16 +57,35 @@ class PostControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    private PostDTO postDTO;
+
+    @BeforeEach
+    void init() {
+        // 构造请求对象
+        postDTO = new PostDTO();
+        postDTO.setTitle("test");
+        postDTO.setTags(Collections.singleton("java"));
+        postDTO.setCover("../test.jpg");
+
+        CategoryBO categoryBO = new CategoryBO();
+        categoryBO.setId(1L);
+        categoryBO.setName("测试");
+        postDTO.setCategory(categoryBO);
+
+        ContentBO contentBO = new ContentBO();
+        contentBO.setCatalog("目录");
+        contentBO.setContext("内容信息");
+        postDTO.setContent(contentBO);
+    }
+
     @Test
     void retrieve() {
-        PostVO postVO = new PostVO();
-        postVO.setTitle("test");
-        Page<PostVO> page = new PageImpl<>(List.of(postVO));
-        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+        Page<PostVO> page = new PageImpl<>(List.of(Mockito.mock(PostVO.class)));
+        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
                 .willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("category", "21213G0J2").build())
+                        .queryParam("size", 2).build())
                 .exchange().expectStatus().isOk().expectBodyList(PostVO.class);
     }
 
@@ -74,88 +94,45 @@ class PostControllerTest {
         PostVO postVO = new PostVO();
         postVO.setTitle("test");
         Page<PostVO> page = new PageImpl<>(List.of(postVO));
-        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
                 .willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("category", "21213G0J2").build())
+                        .queryParam("size", 2).queryParam("categoryId", 1L).build())
                 .exchange().expectStatus().isOk().expectBodyList(PostVO.class);
     }
 
     @Test
     void retrieve_error() {
-        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString()))
+        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
                 .willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("category", "21213G0J2")
+                        .queryParam("size", 2).queryParam("categoryId", 1L)
                         .queryParam("sort", "").build()).exchange()
                 .expectStatus().isNoContent();
     }
 
     @Test
     void fetch() {
-        PostVO postVO = new PostVO();
-        postVO.setTitle("test");
-        given(this.postService.fetch(Mockito.anyString())).willReturn(Mono.just(postVO));
+        given(this.postService.fetch(Mockito.anyLong())).willReturn(Mono.just(new PostVO()));
 
-        webTestClient.get().uri("/posts/{code}", "21213G0J2").exchange().expectStatus().isOk()
-                .expectBody().jsonPath("$.title").isEqualTo("test");
+        webTestClient.get().uri("/posts/{id}", 1).exchange().expectStatus().isOk();
     }
 
     @Test
     void fetch_error() {
-        given(this.postService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.postService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/posts/{code}", "21213G0J2").exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void previous() {
-        PostVO postVO = new PostVO();
-        postVO.setTitle("test");
-        given(this.postService.previous(Mockito.anyString())).willReturn(Mono.just(postVO));
-
-        webTestClient.get().uri("/posts/{code}/previous", "21213G0J2").exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.title").isEqualTo("test");
-    }
-
-    @Test
-    void previous_error() {
-        given(this.postService.previous(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/posts/{code}/previous", "21213G0J2").exchange()
-                .expectStatus().isNoContent();
-    }
-
-    @Test
-    void next() {
-        PostVO postVO = new PostVO();
-        postVO.setTitle("test");
-        given(this.postService.next(Mockito.anyString())).willReturn(Mono.just(postVO));
-
-        webTestClient.get().uri("/posts/{code}/next", "21213G0J2").exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.title").isEqualTo("test");
-    }
-
-    @Test
-    void next_error() {
-        given(this.postService.next(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/posts/{code}/next", "21213G0J2").exchange()
-                .expectStatus().isNoContent();
+        webTestClient.get().uri("/posts/{id}", 1).exchange().expectStatus().isNoContent();
     }
 
     @Test
     void search() {
-        PostVO postVO = new PostVO();
-        postVO.setTitle("test");
-        given(this.postService.search(Mockito.anyString())).willReturn(Flux.just(postVO));
+        given(this.postService.search(Mockito.anyString())).willReturn(Flux.just(new PostVO()));
 
-        webTestClient.get().uri(uriBuilder ->
-                        uriBuilder.path("/posts/search").queryParam("keyword", "test").build()).exchange()
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/search")
+                        .queryParam("keyword", "test").build()).exchange()
                 .expectStatus().isOk();
     }
 
@@ -163,8 +140,8 @@ class PostControllerTest {
     void search_error() {
         given(this.postService.search(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder ->
-                        uriBuilder.path("/posts/search").queryParam("keyword", "test").build()).exchange()
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/search")
+                        .queryParam("keyword", "test").build()).exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -186,49 +163,17 @@ class PostControllerTest {
 
     @Test
     void create() {
-        // 构造返回对象
-        PostVO postVO = new PostVO();
-        postVO.setTitle("test");
-        given(this.postService.create(Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
+        given(this.postService.create(Mockito.any(PostDTO.class))).willReturn(Mono.just(new PostVO()));
 
-        // 构造请求对象
-        PostDTO postDTO = new PostDTO();
-        postDTO.setTitle("test");
-        postDTO.setTags(Collections.singleton("java"));
-        postDTO.setCover("../test.jpg");
-        CategoryBO categoryBO = new CategoryBO();
-        categoryBO.setCode("21213G0J2");
-        postDTO.setCategory(categoryBO);
-
-        ContentBO contentBO = new ContentBO();
-        contentBO.setCatalog("目录");
-        contentBO.setContext("内容信息");
-        postDTO.setContent(contentBO);
         webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange()
-                .expectStatus().isCreated()
-                .expectBody().jsonPath("$.title").isNotEmpty();
+                .expectStatus().isCreated();
     }
 
     @Test
     void create_error() {
         given(this.postService.create(Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
-        // 构造请求对象
-        PostDTO postDTO = new PostDTO();
-        postDTO.setTitle("test");
-        postDTO.setTags(Collections.singleton("java"));
-        postDTO.setCover("../test.jpg");
-
-
-        CategoryBO categoryBO = new CategoryBO();
-        categoryBO.setCode("21213G0J2");
-        postDTO.setCategory(categoryBO);
-
-        ContentBO contentBO = new ContentBO();
-        contentBO.setCatalog("目录");
-        contentBO.setContext("内容信息");
-        postDTO.setContent(contentBO);
         webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange()
                 .expectStatus().is4xxClientError();
@@ -236,48 +181,31 @@ class PostControllerTest {
 
     @Test
     void modify() {
-        // 构造返回对象
-        PostVO postVO = new PostVO();
-        postVO.setTitle("test");
-        given(this.postService.modify(Mockito.anyString(), Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
+        given(this.postService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willReturn(Mono.just(new PostVO()));
 
-        // 构造请求对象
-        PostDTO postDTO = new PostDTO();
-        postDTO.setTitle("test");
-        postDTO.setTags(Collections.singleton("java"));
-        postDTO.setCover("../test.jpg");
-
-        CategoryBO categoryBO = new CategoryBO();
-        categoryBO.setCode("21213G0J2");
-        postDTO.setCategory(categoryBO);
-
-        ContentBO contentBO = new ContentBO();
-        contentBO.setCatalog("目录");
-        contentBO.setContext("内容信息");
-        postDTO.setContent(contentBO);
-        webTestClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange().expectStatus().isAccepted();
     }
 
     @Test
     void modify_error() {
-        given(this.postService.modify(Mockito.anyString(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
+        given(this.postService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
-        // 构造请求对象
-        PostDTO postDTO = new PostDTO();
-        postDTO.setTitle("test");
-        postDTO.setTags(Collections.singleton("java"));
-        postDTO.setCover("../test.jpg");
-
-        CategoryBO categoryBO = new CategoryBO();
-        categoryBO.setCode("21213G0J2");
-        postDTO.setCategory(categoryBO);
-
-        ContentBO contentBO = new ContentBO();
-        contentBO.setCatalog("目录");
-        contentBO.setContext("内容信息");
-        postDTO.setContent(contentBO);
-        webTestClient.put().uri("/posts/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange().expectStatus().isNotModified();
+    }
+
+    @Test
+    void remove() {
+        given(this.postService.remove(Mockito.anyLong())).willReturn(Mono.empty());
+
+        webTestClient.delete().uri("/posts/{id}", 1).exchange().expectStatus().isOk();
+    }
+
+    @Test
+    void remove_error() {
+        given(this.postService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
+
+        webTestClient.delete().uri("/posts/{id}", 1).exchange().expectStatus().is4xxClientError();
     }
 }

@@ -38,28 +38,13 @@ public interface CategoryRepository extends R2dbcRepository<Category, Long> {
      * @param pageable 分页参数
      * @return 有效类别
      */
-    Flux<Category> findByEnabledTrue(Pageable pageable);
-
-    /**
-     * 根据code查询enabled信息
-     *
-     * @param code 代码
-     * @return 类别信息
-     */
-    Mono<Category> getByCodeAndEnabledTrue(String code);
+    Flux<Category> findAll(Pageable pageable);
 
     /**
      * 是否已存在
      *
-     * @param alias 名称
+     * @param categoryName 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByName(String alias);
-
-    /**
-     * 统计
-     *
-     * @return 记录数
-     */
-    Mono<Long> countByEnabledTrue();
+    Mono<Boolean> existsByCategoryName(String categoryName);
 }

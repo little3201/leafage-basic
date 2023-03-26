@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,18 +27,20 @@ public class CategoryBO {
     /**
      * 编号
      */
-    private String code;
+    private Long id;
+
     /**
      * 名称
      */
     private String name;
 
-    public String getCode() {
-        return code;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

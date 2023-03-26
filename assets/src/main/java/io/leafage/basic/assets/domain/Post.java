@@ -28,35 +28,28 @@ import java.util.Set;
  */
 @Table(name = "posts")
 public class Post extends AbstractModel {
-    /**
-     * 代码
-     */
-    private String code;
+
     /**
      * 分类ID
      */
     @Column(value = "category_id")
     private Long categoryId;
+
     /**
      * 标题
      */
     private String title;
+
     /**
      * 封面
      */
     private String cover;
+
     /**
      * 标签
      */
     private Set<String> tags;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public Long getCategoryId() {
         return categoryId;

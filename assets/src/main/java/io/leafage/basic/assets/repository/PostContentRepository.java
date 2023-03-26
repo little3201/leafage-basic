@@ -36,5 +36,5 @@ public interface PostContentRepository extends R2dbcRepository<PostContent, Long
      * @param postId 帖子id
      * @return 内容
      */
-    Mono<PostContent> getByPostIdAndEnabledTrue(Long postId);
+    Mono<PostContent> getByPostId(Long postId);
 }

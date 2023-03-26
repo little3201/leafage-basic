@@ -30,38 +30,31 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Comment extends AbstractModel {
 
     /**
-     * 代码
-     */
-    private String code;
-    /**
      * 帖子ID
      */
     @Column(value = "post_id")
     private Long postId;
+
     /**
      * 内容
      */
-    private String content;
+    private String context;
+
     /**
      * 国家
      */
     private String country;
+
     /**
      * 位置
      */
     private String location;
+
     /**
-     * 回复人
+     * 回复给
      */
-    private String replier;
+    private Long replier;
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public Long getPostId() {
         return postId;
@@ -71,12 +64,12 @@ public class Comment extends AbstractModel {
         this.postId = postId;
     }
 
-    public String getContent() {
-        return content;
+    public String getContext() {
+        return context;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public String getCountry() {
@@ -95,11 +88,11 @@ public class Comment extends AbstractModel {
         this.location = location;
     }
 
-    public String getReplier() {
+    public Long getReplier() {
         return replier;
     }
 
-    public void setReplier(String replier) {
+    public void setReplier(Long replier) {
         this.replier = replier;
     }
 }

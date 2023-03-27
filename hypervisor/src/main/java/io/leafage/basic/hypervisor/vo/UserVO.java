@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,34 +22,49 @@ import io.leafage.basic.hypervisor.bo.UserBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for User
+ * VO class for user
  *
  * @author liwenqiang 2020-10-06 22:09
  */
 public class UserVO extends UserBO {
 
     /**
-     * 账号
+     * 账号有效期
      */
-    private String username;
+    private LocalDateTime accountExpiresAt;
+
     /**
-     * 修改时间
+     * 是否锁定
      */
-    private LocalDateTime modifyTime;
+    private boolean accountNonLocked;
 
-    public String getUsername() {
-        return username;
+    /**
+     * 密码有效期
+     */
+    private LocalDateTime credentialsExpiresAt;
+
+
+    public LocalDateTime getAccountExpiresAt() {
+        return accountExpiresAt;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
+        this.accountExpiresAt = accountExpiresAt;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public LocalDateTime getCredentialsExpiresAt() {
+        return credentialsExpiresAt;
+    }
+
+    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
+        this.credentialsExpiresAt = credentialsExpiresAt;
     }
 }

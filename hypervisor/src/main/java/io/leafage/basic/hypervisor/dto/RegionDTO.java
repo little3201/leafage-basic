@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,38 +17,13 @@
 
 package io.leafage.basic.hypervisor.dto;
 
-import io.leafage.basic.hypervisor.bo.SuperBO;
+import io.leafage.basic.hypervisor.bo.RegionBO;
 
 /**
- * DTO class for Region
+ * DTO class for region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/
-public class RegionDTO extends SuperBO<Long> {
-
-    /**
-     * 邮编
-     */
-    private Integer postalCode;
-    /**
-     * 区号
-     */
-    private String areaCode;
-
-    public Integer getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
-    }
+public class RegionDTO extends RegionBO {
 
 }

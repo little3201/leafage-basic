@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.document.Region;
-import org.bson.types.ObjectId;
+import io.leafage.basic.hypervisor.domain.Region;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,7 +30,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2021-08-20 16:59
  **/
 @Repository
-public interface RegionRepository extends ReactiveMongoRepository<Region, ObjectId> {
+public interface RegionRepository extends R2dbcRepository<Region, Long> {
 
     /**
      * 分页查询
@@ -39,30 +38,23 @@ public interface RegionRepository extends ReactiveMongoRepository<Region, Object
      * @param pageable 分页参数
      * @return 有效数据集
      */
-    Flux<Region> findByEnabledTrue(Pageable pageable);
-
-    /**
-     * 根据code查询enabled信息
-     *
-     * @param code 代码
-     * @return 查询结果信息
-     */
-    Mono<Region> getByCodeAndEnabledTrue(Long code);
+    Flux<Region> findAll(Pageable pageable);
 
     /**
      * 是否已存在
      *
-     * @param name 名称
+     * @param regionName 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByName(String name);
+    Mono<Boolean> existsByRegionName(String regionName);
 
     /**
      * 查询下级
      *
+     * @param superiorId superior id
      * @return 结果信息
      */
-    Flux<Region> findBySuperiorAndEnabledTrue(long superior);
+    Flux<Region> findBySuperiorId(Long superiorId);
 
     /**
      * 统计

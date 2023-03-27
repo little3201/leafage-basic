@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -64,16 +64,16 @@ public class RegionController {
     }
 
     /**
-     * 根据 code 查询
+     * 根据 id 查询
      *
-     * @param code 业务id
+     * @param id 主键
      * @return 查询的数据，异常时返回204状态码
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<Mono<RegionVO>> fetch(@PathVariable Long code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Mono<RegionVO>> fetch(@PathVariable Long id) {
         Mono<RegionVO> voMono;
         try {
-            voMono = regionService.fetch(code);
+            voMono = regionService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch region occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -86,11 +86,11 @@ public class RegionController {
      *
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/{code}/lower")
-    public ResponseEntity<Flux<RegionVO>> lower(@PathVariable Long code) {
+    @GetMapping("/{id}/subordinates")
+    public ResponseEntity<Flux<RegionVO>> subordinates(@PathVariable Long id) {
         Flux<RegionVO> voFlux;
         try {
-            voFlux = regionService.lower(code);
+            voFlux = regionService.subordinates(id);
         } catch (Exception e) {
             logger.info("Retrieve region lower occurred an error: ", e);
             return ResponseEntity.noContent().build();

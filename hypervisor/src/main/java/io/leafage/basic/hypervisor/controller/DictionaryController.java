@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -83,16 +83,16 @@ public class DictionaryController {
     }
 
     /**
-     * 根据 code 查询
+     * 根据 id 查询
      *
-     * @param code 业务id
+     * @param id 主键
      * @return 查询的数据，异常时返回204状态码
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<Mono<DictionaryVO>> fetch(@PathVariable String code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Mono<DictionaryVO>> fetch(@PathVariable Long id) {
         Mono<DictionaryVO> voMono;
         try {
-            voMono = dictionaryService.fetch(code);
+            voMono = dictionaryService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch dictionary occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -103,13 +103,14 @@ public class DictionaryController {
     /**
      * 查询下级数据
      *
+     * @param id 主键
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/{code}/lower")
-    public ResponseEntity<Flux<DictionaryVO>> lower(@PathVariable String code) {
+    @GetMapping("/{id}/subordinates")
+    public ResponseEntity<Flux<DictionaryVO>> subordinates(@PathVariable Long id) {
         Flux<DictionaryVO> voFlux;
         try {
-            voFlux = dictionaryService.lower(code);
+            voFlux = dictionaryService.subordinates(id);
         } catch (Exception e) {
             logger.info("Retrieve dictionary lower occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -118,7 +119,7 @@ public class DictionaryController {
     }
 
     /**
-     * 添加信息
+     * 添加
      *
      * @param dictionaryDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码

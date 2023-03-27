@@ -17,8 +17,7 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.bo.SimpleBO;
-import io.leafage.basic.hypervisor.document.Region;
+import io.leafage.basic.hypervisor.domain.Region;
 import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.service.RegionService;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.ValidMessage;
 
 import java.util.NoSuchElementException;
 
@@ -43,8 +41,6 @@ import java.util.NoSuchElementException;
 @Service
 public class RegionServiceImpl implements RegionService {
 
-    private static final String CODE_MESSAGE = "code must not null";
-
     private final RegionRepository regionRepository;
 
     public RegionServiceImpl(RegionRepository regionRepository) {
@@ -54,7 +50,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public Mono<Page<RegionVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Flux<RegionVO> voFlux = regionRepository.findAll(pageRequest).flatMap(this::convertOuter);
 
         Mono<Long> count = regionRepository.countByEnabledTrue();
 
@@ -63,20 +59,21 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Mono<RegionVO> fetch(Long code) {
-        Assert.notNull(code, CODE_MESSAGE);
-        return regionRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter);
+    public Mono<RegionVO> fetch(Long id) {
+        Assert.notNull(id, "region id must not be null.");
+        return regionRepository.findById(id).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
-        return regionRepository.existsByName(name);
+    public Mono<Boolean> exist(String regionName) {
+        Assert.hasText(regionName, "region name must not be blank.");
+        return regionRepository.existsByRegionName(regionName);
     }
 
     @Override
-    public Flux<RegionVO> lower(long code) {
-        return regionRepository.findBySuperiorAndEnabledTrue(code).flatMap(this::convertOuter);
+    public Flux<RegionVO> subordinates(Long superiorId) {
+        Assert.notNull(superiorId, "region superior id must not be null.");
+        return regionRepository.findBySuperiorId(superiorId).flatMap(this::convertOuter);
     }
 
     @Override
@@ -86,23 +83,22 @@ public class RegionServiceImpl implements RegionService {
                     BeanUtils.copyProperties(regionDTO, region);
                     return region;
                 })
-                .flatMap(regionRepository::insert).flatMap(this::convertOuter);
+                .flatMap(regionRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<RegionVO> modify(Long code, RegionDTO regionDTO) {
-        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
-        return regionRepository.getByCodeAndEnabledTrue(code)
+    public Mono<RegionVO> modify(Long id, RegionDTO regionDTO) {
+        Assert.notNull(id, "region id must not be null.");
+        return regionRepository.findById(id)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(region -> BeanUtils.copyProperties(regionDTO, region))
                 .flatMap(regionRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<Void> remove(Long code) {
-        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
-        return regionRepository.getByCodeAndEnabledTrue(code).flatMap(group ->
-                regionRepository.deleteById(group.getId()));
+    public Mono<Void> remove(Long id) {
+        Assert.notNull(id, "region id must not be null.");
+        return regionRepository.deleteById(id);
     }
 
     /**
@@ -116,17 +112,6 @@ public class RegionServiceImpl implements RegionService {
             RegionVO vo = new RegionVO();
             BeanUtils.copyProperties(r, vo);
             return vo;
-        }).flatMap(vo -> {
-            if (region.getSuperior() != null) {
-                // 存在上级，则查询
-                return regionRepository.findById(region.getSuperior()).map(superior -> {
-                    SimpleBO<Long> simpleBO = new SimpleBO<>();
-                    BeanUtils.copyProperties(superior, simpleBO);
-                    vo.setSuperior(simpleBO);
-                    return vo;
-                }).switchIfEmpty(Mono.just(vo));
-            }
-            return Mono.just(vo);
         });
     }
 }

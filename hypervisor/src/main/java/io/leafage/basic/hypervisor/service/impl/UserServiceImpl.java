@@ -17,7 +17,7 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.document.User;
+import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserService;
@@ -26,8 +26,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
-import top.leafage.common.AbstractBasicService;
-import top.leafage.common.ValidMessage;
 
 import java.util.NoSuchElementException;
 
@@ -38,7 +36,7 @@ import java.util.NoSuchElementException;
  * @author liwenqiang 2018/7/28 0:30
  **/
 @Service
-public class UserServiceImpl extends AbstractBasicService implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
@@ -48,7 +46,7 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<Boolean> exist(String username) {
-        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
+        Assert.hasText(username, "username must not be blank.");
         return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
     }
 
@@ -56,12 +54,12 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     public Mono<UserVO> create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
-        return userRepository.insert(user).map(this::convertOuter);
+        return userRepository.save(user).map(this::convertOuter);
     }
 
     @Override
     public Mono<UserVO> modify(String username, UserDTO userDTO) {
-        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
+        Assert.hasText(username, "username must not be blank.");
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(user -> {
                     BeanUtils.copyProperties(userDTO, user);
@@ -71,14 +69,13 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
 
     @Override
     public Mono<Void> remove(String username) {
-        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
-        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(user -> userRepository.deleteById(user.getId()));
+        Assert.hasText(username, "username must not be blank.");
+        return userRepository.deleteByUsername(username);
     }
 
     @Override
     public Mono<UserVO> fetch(String username) {
-        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
+        Assert.hasText(username, "username must not be blank.");
         return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(this::convertOuter);
     }

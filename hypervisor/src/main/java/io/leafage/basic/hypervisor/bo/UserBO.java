@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,157 +17,52 @@
 
 package io.leafage.basic.hypervisor.bo;
 
-import java.time.LocalDate;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * BO class for User
  *
  * @author liwenqiang 2022-12-10 22:27
  */
-public class UserBO {
+public abstract class UserBO {
 
     /**
-     * 姓
+     * 用户名
      */
-    private String firstname;
+    @NotBlank(message = "username is blank.")
+    private String username;
+
     /**
-     * 名
+     * 昵称
      */
-    private String lastname;
+    private String nickname;
+
     /**
-     * 电话
+     * 头像
      */
-    private String phone;
-    /**
-     * 邮箱
-     */
-    private String email;
-    /**
-     * 性别: null-未知 F-女 M-男
-     */
-    private Character gender;
-    /**
-     * 出生日期
-     */
-    private LocalDate birthday;
-    /**
-     * 学历
-     */
-    private String degree;
-    /**
-     * 兴趣爱好
-     */
-    private String hobbies;
-    /**
-     * 民族
-     */
-    private String nationality;
-    /**
-     * 公司
-     */
-    private String company;
-    /**
-     * 职位
-     */
-    private String position;
-    /**
-     * 描述
-     */
-    private String description;
+    private String avatar;
 
-    public String getFirstname() {
-        return firstname;
+    public String getUsername() {
+        return username;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Character getGender() {
-        return gender;
-    }
-
-    public void setGender(Character gender) {
-        this.gender = gender;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getDegree() {
-        return degree;
-    }
-
-    public void setDegree(String degree) {
-        this.degree = degree;
-    }
-
-    public String getHobbies() {
-        return hobbies;
-    }
-
-    public void setHobbies(String hobbies) {
-        this.hobbies = hobbies;
-    }
-
-    public String getNationality() {
-        return nationality;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

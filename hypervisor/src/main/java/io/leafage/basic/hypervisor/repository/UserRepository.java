@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@
 
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.document.User;
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import io.leafage.basic.hypervisor.domain.User;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -29,7 +28,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018/7/27 17:50
  **/
 @Repository
-public interface UserRepository extends ReactiveMongoRepository<User, ObjectId> {
+public interface UserRepository extends R2dbcRepository<User, Long> {
 
     /**
      * 根据账号查
@@ -48,4 +47,12 @@ public interface UserRepository extends ReactiveMongoRepository<User, ObjectId> 
      * @return true-是，false-否
      */
     Mono<Boolean> existsByUsernameOrPhoneOrEmail(String username, String phone, String email);
+
+    /**
+     * 删除
+     *
+     * @param username 账号
+     * @return 用户信息
+     */
+    Mono<Void> deleteByUsername(String username);
 }

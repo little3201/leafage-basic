@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.bo.SimpleBO;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -55,16 +55,22 @@ class DictionaryControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    private DictionaryDTO dictionaryDTO;
+    private DictionaryVO dictionaryVO;
+
+    @BeforeEach
+    void init() {
+        dictionaryDTO = new DictionaryDTO();
+        dictionaryDTO.setDictionaryName("Gender");
+        dictionaryDTO.setDescription("描述");
+
+        dictionaryVO = new DictionaryVO();
+        dictionaryVO.setDictionaryName("test");
+        dictionaryVO.setDescription("性别-男");
+    }
+
     @Test
     void retrieve() {
-        DictionaryVO dictionaryVO = new DictionaryVO();
-        dictionaryVO.setName("test");
-        dictionaryVO.setAlias("性别-男");
-        SimpleBO<String> superior = new SimpleBO<>();
-        superior.setCode("2247K10L");
-        superior.setName("性别");
-        dictionaryVO.setSuperior(superior);
-        dictionaryVO.setDescription("描述");
         Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO));
         given(this.dictionaryService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
@@ -83,25 +89,21 @@ class DictionaryControllerTest {
 
     @Test
     void fetch() {
-        DictionaryVO dictionaryVO = new DictionaryVO();
-        dictionaryVO.setName("test");
-        given(this.dictionaryService.fetch(Mockito.anyString())).willReturn(Mono.just(dictionaryVO));
+        given(this.dictionaryService.fetch(Mockito.anyLong())).willReturn(Mono.just(dictionaryVO));
 
-        webTestClient.get().uri("/dictionaries/{code}", "2247K100").exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
+        webTestClient.get().uri("/dictionaries/{id}", 1L).exchange()
+                .expectStatus().isOk().expectBody().jsonPath("$.dictionaryName").isEqualTo("test");
     }
 
     @Test
     void fetch_error() {
-        given(this.dictionaryService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.dictionaryService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/dictionaries/{code}", "2247K100").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/dictionaries/{id}", 1L).exchange().expectStatus().isNoContent();
     }
 
     @Test
     void superior() {
-        DictionaryVO dictionaryVO = new DictionaryVO();
-        dictionaryVO.setName("test");
         given(this.dictionaryService.superior()).willReturn(Flux.just(dictionaryVO));
 
         webTestClient.get().uri("/dictionaries/superior").exchange()
@@ -117,46 +119,32 @@ class DictionaryControllerTest {
 
     @Test
     void lower() {
-        DictionaryVO dictionaryVO = new DictionaryVO();
-        dictionaryVO.setName("test");
-        given(this.dictionaryService.lower(Mockito.anyString())).willReturn(Flux.just(dictionaryVO));
+        given(this.dictionaryService.subordinates(Mockito.anyLong())).willReturn(Flux.just(dictionaryVO));
 
-        webTestClient.get().uri("/dictionaries/{code}/lower", "2247K100").exchange()
+        webTestClient.get().uri("/dictionaries/{id}/subordinates", 1L).exchange()
                 .expectStatus().isOk().expectBodyList(RegionVO.class);
     }
 
     @Test
     void lower_error() {
-        given(this.dictionaryService.lower(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.dictionaryService.subordinates(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/dictionaries/{code}/lower", "2247K100").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/dictionaries/{id}/subordinates", 1L).exchange().expectStatus().isNoContent();
     }
 
     @Test
     void create() {
-        DictionaryVO dictionaryVO = new DictionaryVO();
-        dictionaryVO.setName("Gender");
-        dictionaryVO.setAlias("性别");
-        dictionaryVO.setDescription("描述");
         given(this.dictionaryService.create(Mockito.any(DictionaryDTO.class))).willReturn(Mono.just(dictionaryVO));
 
-        DictionaryDTO dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setName("Gender");
-        dictionaryDTO.setAlias("性别");
-        dictionaryDTO.setDescription("描述");
         webTestClient.post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.name").isEqualTo("Gender");
+                .expectBody().jsonPath("$.dictionaryName").isEqualTo("test");
     }
 
     @Test
     void create_error() {
         given(this.dictionaryService.create(Mockito.any(DictionaryDTO.class))).willThrow(new RuntimeException());
 
-        DictionaryDTO dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setName("Gender");
-        dictionaryDTO.setAlias("性别");
-        dictionaryDTO.setDescription("描述");
         webTestClient.post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
                 .expectStatus().is4xxClientError();
     }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package io.leafage.basic.hypervisor.controller;
 import io.leafage.basic.hypervisor.service.RegionService;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -52,10 +53,16 @@ class RegionControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    private RegionVO regionVO;
+
+    @BeforeEach
+    void init() {
+        regionVO = new RegionVO();
+        regionVO.setRegionName("test");
+    }
+
     @Test
     void retrieve() {
-        RegionVO regionVO = new RegionVO();
-        regionVO.setName("test");
         Page<RegionVO> voPage = new PageImpl<>(List.of(regionVO));
         given(this.regionService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
@@ -74,36 +81,32 @@ class RegionControllerTest {
 
     @Test
     void fetch() {
-        RegionVO regionVO = new RegionVO();
-        regionVO.setName("test");
         given(this.regionService.fetch(Mockito.anyLong())).willReturn(Mono.just(regionVO));
 
-        webTestClient.get().uri("/regions/{code}", "1100").exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
+        webTestClient.get().uri("/regions/{id}", 1L).exchange()
+                .expectStatus().isOk().expectBody().jsonPath("$.regionName").isEqualTo("test");
     }
 
     @Test
     void fetch_error() {
         given(this.regionService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/regions/{code}", "1100").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/regions/{id}", 1L).exchange().expectStatus().isNoContent();
     }
 
     @Test
-    void lower() {
-        RegionVO regionVO = new RegionVO();
-        regionVO.setName("test");
-        given(this.regionService.lower(Mockito.anyLong())).willReturn(Flux.just(regionVO));
+    void subordinates() {
+        given(this.regionService.subordinates(Mockito.anyLong())).willReturn(Flux.just(regionVO));
 
-        webTestClient.get().uri("/regions/{code}/lower", "1100").exchange()
+        webTestClient.get().uri("/regions/{id}/subordinates", 1L).exchange()
                 .expectStatus().isOk().expectBodyList(RegionVO.class);
     }
 
     @Test
-    void lower_error() {
-        given(this.regionService.lower(Mockito.anyLong())).willThrow(new RuntimeException());
+    void subordinates_error() {
+        given(this.regionService.subordinates(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/regions/{code}/lower", "1100").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/regions/{id}/subordinates", 1L).exchange().expectStatus().isNoContent();
     }
 
 }

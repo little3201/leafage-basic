@@ -41,7 +41,7 @@
         <dependency>
             <groupId>top.leafage</groupId>
             <artifactId>leafage-common</artifactId>
-            <version>0.2.0</version>
+            <version>0.2.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -49,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -17,7 +17,7 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.document.Dictionary;
+import io.leafage.basic.hypervisor.domain.Dictionary;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
 import io.leafage.basic.hypervisor.service.DictionaryService;
@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
 /**
@@ -50,9 +49,9 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Mono<Page<DictionaryVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
+        Flux<DictionaryVO> voFlux = dictionaryRepository.findAll(pageRequest).map(this::convertOuter);
 
-        Mono<Long> count = dictionaryRepository.countByEnabledTrue();
+        Mono<Long> count = dictionaryRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
                 new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
@@ -60,33 +59,32 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
 
     @Override
     public Flux<DictionaryVO> superior() {
-        return dictionaryRepository.findBySuperiorIsNullAndEnabledTrue().map(this::convertOuter);
+        return dictionaryRepository.findBySuperiorIsNull().map(this::convertOuter);
     }
 
     @Override
-    public Flux<DictionaryVO> lower(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return dictionaryRepository.findBySuperiorAndEnabledTrue(code).map(this::convertOuter);
+    public Flux<DictionaryVO> subordinates(Long id) {
+        Assert.notNull(id, "dictionary id must not be null.");
+        return dictionaryRepository.findBySuperiorId(id).map(this::convertOuter);
     }
 
     @Override
-    public Mono<DictionaryVO> fetch(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return dictionaryRepository.getByCodeAndEnabledTrue(code).map(this::convertOuter);
+    public Mono<DictionaryVO> fetch(Long id) {
+        Assert.notNull(id, "dictionary id must not be null.");
+        return dictionaryRepository.findById(id).map(this::convertOuter);
     }
 
     @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
-        return dictionaryRepository.existsByName(name);
+    public Mono<Boolean> exist(String dictionaryName) {
+        Assert.hasText(dictionaryName, "dictionary name must not be blank.");
+        return dictionaryRepository.existsByDictionaryName(dictionaryName);
     }
 
     @Override
     public Mono<DictionaryVO> create(DictionaryDTO dictionaryDTO) {
         Dictionary dictionary = new Dictionary();
         BeanUtils.copyProperties(dictionaryDTO, dictionary);
-        dictionary.setCode(this.generateCode());
-        return dictionaryRepository.insert(dictionary).map(this::convertOuter);
+        return dictionaryRepository.save(dictionary).map(this::convertOuter);
     }
 
     private DictionaryVO convertOuter(Dictionary dictionary) {

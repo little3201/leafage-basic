@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018/12/17 19:24
  **/
-public interface GroupService extends ReactiveBasicService<GroupDTO, GroupVO, String> {
+public interface GroupService extends ReactiveBasicService<GroupDTO, GroupVO> {
 
     /**
      * 查询构造树结构的数据

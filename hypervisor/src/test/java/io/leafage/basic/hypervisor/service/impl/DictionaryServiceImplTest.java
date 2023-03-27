@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,17 +17,16 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.document.Dictionary;
+import io.leafage.basic.hypervisor.domain.Dictionary;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -50,68 +49,48 @@ class DictionaryServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.dictionaryRepository.findByEnabledTrue(Mockito.any(Pageable.class)))
+        given(this.dictionaryRepository.findAll(Mockito.any(PageRequest.class)))
                 .willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
-        given(this.dictionaryRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
+        given(this.dictionaryRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
         StepVerifier.create(dictionaryService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void fetch() {
-        Dictionary dictionary = new Dictionary();
-        dictionary.setId(new ObjectId());
-        dictionary.setCode("2247KS91");
-        dictionary.setName("Gender");
-        dictionary.setAlias("性别");
-        dictionary.setDescription("描述");
-        given(this.dictionaryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(dictionary));
+        given(this.dictionaryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
 
-        StepVerifier.create(dictionaryService.fetch("2247KS91")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(dictionaryService.fetch(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void superior() {
-        Dictionary dictionary = new Dictionary();
-        dictionary.setId(new ObjectId());
-        dictionary.setCode("2247KS91");
-        dictionary.setName("Gender");
-        dictionary.setAlias("性别");
-        dictionary.setDescription("描述");
-        given(this.dictionaryRepository.findBySuperiorIsNullAndEnabledTrue()).willReturn(Flux.just(dictionary));
+        given(this.dictionaryRepository.findBySuperiorIsNull()).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
         StepVerifier.create(dictionaryService.superior()).expectNextCount(1).verifyComplete();
     }
 
     @Test
-    void lower() {
-        Dictionary dictionary = new Dictionary();
-        dictionary.setId(new ObjectId());
-        dictionary.setCode("2247KS91");
-        dictionary.setName("Gender");
-        dictionary.setAlias("性别");
-        dictionary.setDescription("描述");
-        given(this.dictionaryRepository.findBySuperiorAndEnabledTrue(Mockito.anyString()))
-                .willReturn(Flux.just(dictionary));
+    void subordinates() {
+        given(this.dictionaryRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
-        StepVerifier.create(dictionaryService.lower("2247KS91")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(dictionaryService.subordinates(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
-        given(this.dictionaryRepository.insert(Mockito.any(Dictionary.class))).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
+        given(this.dictionaryRepository.save(Mockito.any(Dictionary.class))).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
 
         DictionaryDTO dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setName("Gender");
-        dictionaryDTO.setAlias("性别");
+        dictionaryDTO.setDictionaryName("Gender");
         dictionaryDTO.setDescription("描述");
         StepVerifier.create(dictionaryService.create(dictionaryDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void exist() {
-        given(this.dictionaryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.dictionaryRepository.existsByDictionaryName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(dictionaryService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }

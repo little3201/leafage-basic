@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import io.leafage.basic.assets.bo.CategoryBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for Category
+ * VO class for category
  *
  * @author liwenqiang 2020-10-06 22:09
  */
@@ -32,10 +32,7 @@ public class CategoryVO extends CategoryBO {
      * 贴子数
      */
     private long count;
-    /**
-     * 描述
-     */
-    private String description;
+
     /**
      * 时间
      */
@@ -48,14 +45,6 @@ public class CategoryVO extends CategoryBO {
 
     public void setCount(long count) {
         this.count = count;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public LocalDateTime getModifyTime() {

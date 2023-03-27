@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,15 +17,12 @@
 
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.document.Role;
-import org.bson.types.ObjectId;
+import io.leafage.basic.hypervisor.domain.Role;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.Collection;
 
 /**
  * role epository
@@ -33,7 +30,7 @@ import java.util.Collection;
  * @author liwenqiang 2018/9/26 11:06
  **/
 @Repository
-public interface RoleRepository extends ReactiveMongoRepository<Role, ObjectId> {
+public interface RoleRepository extends R2dbcRepository<Role, Long> {
 
     /**
      * 分页查询有效角色
@@ -41,43 +38,13 @@ public interface RoleRepository extends ReactiveMongoRepository<Role, ObjectId> 
      * @param pageable 分页参数
      * @return 数据集
      */
-    Flux<Role> findByEnabledTrue(Pageable pageable);
-
-    /**
-     * 查询有效角色
-     *
-     * @return 数据集
-     */
-    Flux<Role> findByEnabledTrue();
-
-    /**
-     * 根据code查询enabled信息
-     *
-     * @param code 代码
-     * @return 角色信息
-     */
-    Mono<Role> getByCodeAndEnabledTrue(String code);
-
-    /**
-     * 查询角色
-     *
-     * @param codes 代码集合
-     * @return 角色信息
-     */
-    Flux<Role> findByCodeInAndEnabledTrue(Collection<String> codes);
+    Flux<Role> findAll(Pageable pageable);
 
     /**
      * 是否已存在
      *
-     * @param name 名称
+     * @param roleName 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByName(String name);
-
-    /**
-     * 统计
-     *
-     * @return 记录数
-     */
-    Mono<Long> countByEnabledTrue();
+    Mono<Boolean> existsByRoleName(String roleName);
 }

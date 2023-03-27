@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,26 +17,12 @@
 
 package io.leafage.basic.hypervisor.dto;
 
-import io.leafage.basic.hypervisor.bo.SuperBO;
+import io.leafage.basic.hypervisor.bo.GroupBO;
 
 /**
- * DTO class for Group
+ * DTO class for group
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class GroupDTO extends SuperBO<String> {
-
-    /**
-     * 负责人
-     */
-    private String principal;
-
-    public String getPrincipal() {
-        return principal;
-    }
-
-    public void setPrincipal(String principal) {
-        this.principal = principal;
-    }
-
+public class GroupDTO extends GroupBO {
 }

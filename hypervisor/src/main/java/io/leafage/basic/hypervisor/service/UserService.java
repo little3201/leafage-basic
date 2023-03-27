@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.vo.UserVO;
+import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -26,5 +27,11 @@ import top.leafage.common.reactive.ReactiveBasicService;
  *
  * @author liwenqiang 2018/7/28 0:29
  **/
-public interface UserService extends ReactiveBasicService<UserDTO, UserVO, String> {
+public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
+
+    Mono<UserVO> modify(String username, UserDTO userDTO);
+
+    Mono<UserVO> fetch(String username);
+
+    Mono<Void> remove(String username);
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@
 package io.leafage.basic.assets.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
+import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 
 @Configuration
-@EnableReactiveMongoAuditing
+@EnableR2dbcAuditing
 public class AuditConfiguration {
 }

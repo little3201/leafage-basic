@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,13 +17,13 @@
 
 package io.leafage.basic.hypervisor.dto;
 
-import io.leafage.basic.hypervisor.bo.SuperBO;
+import io.leafage.basic.hypervisor.bo.DictionaryBO;
 
 /**
- * DTO class for Dictionary
+ * DTO class for dictionary
  *
  * @author liwenqiang 2022-03-30 07:26
  **/
-public class DictionaryDTO extends SuperBO<String> {
+public class DictionaryDTO extends DictionaryBO {
 
 }

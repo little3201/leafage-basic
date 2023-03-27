@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.document.Dictionary;
-import org.bson.types.ObjectId;
+import io.leafage.basic.hypervisor.domain.Dictionary;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,7 +30,7 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2022-03-30 07:29
  **/
 @Repository
-public interface DictionaryRepository extends ReactiveMongoRepository<Dictionary, ObjectId> {
+public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> {
 
     /**
      * 分页查询
@@ -39,42 +38,27 @@ public interface DictionaryRepository extends ReactiveMongoRepository<Dictionary
      * @param pageable 分页参数
      * @return 有效数据集
      */
-    Flux<Dictionary> findByEnabledTrue(Pageable pageable);
-
-    /**
-     * 根据code查询enabled信息
-     *
-     * @param code 代码
-     * @return 查询结果信息
-     */
-    Mono<Dictionary> getByCodeAndEnabledTrue(String code);
+    Flux<Dictionary> findAll(Pageable pageable);
 
     /**
      * 是否已存在
      *
-     * @param name 名称
+     * @param dictionaryName 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByName(String name);
+    Mono<Boolean> existsByDictionaryName(String dictionaryName);
 
     /**
      * 查询下级
      *
      * @return 结果信息
      */
-    Flux<Dictionary> findBySuperiorAndEnabledTrue(String superior);
+    Flux<Dictionary> findBySuperiorId(Long superiorId);
 
     /**
      * 查询上级
      *
      * @return 结果信息
      */
-    Flux<Dictionary> findBySuperiorIsNullAndEnabledTrue();
-
-    /**
-     * 统计
-     *
-     * @return 记录数
-     */
-    Mono<Long> countByEnabledTrue();
+    Flux<Dictionary> findBySuperiorIsNull();
 }

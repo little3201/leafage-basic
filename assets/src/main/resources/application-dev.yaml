@@ -10,8 +10,7 @@ spring:
       host: 127.0.0.1
       port: 8500
 
-  data:
-    mongodb:
-      host: 127.0.0.1
-      port: 27017
-      database: assets
+  r2dbc:
+    url: r2dbc:postgresql://postgres@localhost:5432/postgres
+    username: postgres
+    password: zx110119

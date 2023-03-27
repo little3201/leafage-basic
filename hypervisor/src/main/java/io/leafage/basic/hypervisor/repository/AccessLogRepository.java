@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,13 +17,11 @@
 
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.document.AccessLog;
-import org.bson.types.ObjectId;
+import io.leafage.basic.hypervisor.domain.AccessLog;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 /**
  * record repository
@@ -31,19 +29,12 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface AccessLogRepository extends ReactiveMongoRepository<AccessLog, ObjectId> {
+public interface AccessLogRepository extends R2dbcRepository<AccessLog, Long> {
 
     /**
      * 查询
      *
      * @return 有效帖子
      */
-    Flux<AccessLog> findByEnabledTrue(Pageable pageable);
-
-    /**
-     * 统计
-     *
-     * @return 记录数
-     */
-    Mono<Long> countByEnabledTrue();
+    Flux<AccessLog> findAll(Pageable pageable);
 }

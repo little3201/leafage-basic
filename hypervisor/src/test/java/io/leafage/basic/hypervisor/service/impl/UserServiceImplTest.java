@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,9 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.document.User;
+import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.UserRepository;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,8 +28,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.time.LocalDate;
 
 import static org.mockito.BDDMockito.given;
 
@@ -59,15 +56,7 @@ class UserServiceImplTest {
      */
     @Test
     void create() {
-        User user = new User();
-        user.setUsername("leafage");
-        user.setFirstname("li");
-        user.setLastname("wq");
-        user.setPhone("18710023032");
-        user.setEmail("test@leafage.top");
-        user.setBirthday(LocalDate.now());
-        user.setNationality("汉族");
-        given(this.userRepository.insert(Mockito.any(User.class))).willReturn(Mono.just(user));
+        given(this.userRepository.save(Mockito.any(User.class))).willReturn(Mono.just(Mockito.mock(User.class)));
         StepVerifier.create(userService.create(Mockito.mock(UserDTO.class))).expectNextCount(1).verifyComplete();
     }
 
@@ -91,12 +80,7 @@ class UserServiceImplTest {
 
     @Test
     void remove() {
-        User user = new User();
-        user.setId(new ObjectId());
-        user.setHobbies("骑马、射箭");
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
-
-        given(this.userRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());
+        given(this.userRepository.deleteByUsername(Mockito.anyString())).willReturn(Mono.empty());
 
         StepVerifier.create(userService.remove("little3201")).verifyComplete();
     }

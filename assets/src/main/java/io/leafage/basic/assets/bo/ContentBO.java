@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 package io.leafage.basic.assets.bo;
 
 /**
- * VO class for posts content
+ * VO class for post content
  *
  * @author liwenqiang 2021-02-26 22:17
  */
@@ -27,18 +27,19 @@ public class ContentBO {
     /**
      * 内容
      */
-    private String content;
+    private String context;
+
     /**
      * 目录
      */
     private String catalog;
 
-    public String getContent() {
-        return content;
+    public String getContext() {
+        return context;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public String getCatalog() {

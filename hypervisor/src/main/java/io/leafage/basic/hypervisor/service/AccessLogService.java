@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,18 +17,16 @@
 
 package io.leafage.basic.hypervisor.service;
 
-import io.leafage.basic.hypervisor.dto.AccessLogDTO;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
-import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
- * record service
+ * access log service
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface AccessLogService extends ReactiveBasicService<AccessLogDTO, AccessLogVO, String> {
+public interface AccessLogService {
 
     /**
      * 分页查询

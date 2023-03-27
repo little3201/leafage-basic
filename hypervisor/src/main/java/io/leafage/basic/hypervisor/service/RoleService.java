@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018/9/27 14:18
  **/
-public interface RoleService extends ReactiveBasicService<RoleDTO, RoleVO, String> {
+public interface RoleService extends ReactiveBasicService<RoleDTO, RoleVO> {
 
     /**
      * 查询构造树结构的数据

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,37 +17,28 @@
 
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.RegionBO;
+
+import java.time.LocalDateTime;
+
 /**
  * VO class for Region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/
-public class RegionVO extends SuperVO<Long> {
+public class RegionVO extends RegionBO {
 
     /**
-     * 邮编
+     * 更新时间
      */
-    private Integer postalCode;
-    /**
-     * 区号
-     */
-    private String areaCode;
+    private LocalDateTime modifyTime;
 
 
-    public Integer getPostalCode() {
-        return postalCode;
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
     }
 
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
-
-    public String getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
-    }
-
 }

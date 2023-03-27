@@ -17,14 +17,11 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.bo.SimpleBO;
-import io.leafage.basic.hypervisor.document.Role;
+import io.leafage.basic.hypervisor.domain.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import org.bson.types.ObjectId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,12 +31,10 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.TreeNode;
-import top.leafage.common.ValidMessage;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 /**
  * role service impl
@@ -47,27 +42,25 @@ import java.util.Objects;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<RoleVO> implements RoleService {
+public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> implements RoleService {
 
-    private final AccountRoleRepository accountRoleRepository;
     private final RoleRepository roleRepository;
 
-    public RoleServiceImpl(AccountRoleRepository accountRoleRepository, RoleRepository roleRepository) {
-        this.accountRoleRepository = accountRoleRepository;
+    public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
     @Override
     public Flux<RoleVO> retrieve() {
-        return roleRepository.findByEnabledTrue().flatMap(this::convertOuterWithCount);
+        return roleRepository.findAll().flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Page<RoleVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<RoleVO> voFlux = roleRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuterWithCount);
+        Flux<RoleVO> voFlux = roleRepository.findAll(pageRequest).flatMap(this::convertOuter);
 
-        Mono<Long> count = roleRepository.countByEnabledTrue();
+        Mono<Long> count = roleRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
                 new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
@@ -75,22 +68,21 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<RoleVO> imp
 
     @Override
     public Mono<List<TreeNode>> tree() {
-        Flux<RoleVO> roleFlux = roleRepository.findByEnabledTrue()
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(this::convertOuter);
+        Flux<Role> roleFlux = roleRepository.findAll()
+                .switchIfEmpty(Mono.error(NoSuchElementException::new));
         return this.convert(roleFlux);
     }
 
     @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
-        return roleRepository.existsByName(name);
+    public Mono<Boolean> exist(String roleName) {
+        Assert.hasText(roleName, "role name must not be blank.");
+        return roleRepository.existsByRoleName(roleName);
     }
 
     @Override
-    public Mono<RoleVO> fetch(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return roleRepository.getByCodeAndEnabledTrue(code).flatMap(this::convertOuter)
+    public Mono<RoleVO> fetch(Long id) {
+        Assert.notNull(id, "role id must not be blank.");
+        return roleRepository.findById(id).flatMap(this::convertOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
@@ -99,45 +91,21 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<RoleVO> imp
         return Mono.just(roleDTO).map(dto -> {
                     Role role = new Role();
                     BeanUtils.copyProperties(roleDTO, role);
-                    role.setCode(this.generateCode());
                     return role;
-                }).flatMap(vo -> this.superior(roleDTO.getSuperior(), vo))
-                .switchIfEmpty(Mono.error(NoSuchElementException::new)).flatMap(role -> {
-                    BeanUtils.copyProperties(roleDTO, role);
-                    return roleRepository.insert(role);
-                }).flatMap(this::convertOuterWithCount);
+                })
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(roleRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<RoleVO> modify(String code, RoleDTO roleDTO) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return roleRepository.getByCodeAndEnabledTrue(code)
-                .flatMap(vo -> this.superior(roleDTO.getSuperior(), vo))
+    public Mono<RoleVO> modify(Long id, RoleDTO roleDTO) {
+        Assert.notNull(id, "role id must not be blank.");
+        return roleRepository.findById(id)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
                     return roleRepository.save(role);
-                }).flatMap(this::convertOuterWithCount);
-    }
-
-    /**
-     * 设置上级
-     *
-     * @param superior 上级code
-     * @param role     当前对象
-     * @return 设置上级后的对象
-     */
-    private Mono<Role> superior(SimpleBO<String> superior, Role role) {
-        return Mono.just(role).flatMap(r -> {
-            if (Objects.isNull(superior)) {
-                return Mono.just(r);
-            }
-            return roleRepository.getByCodeAndEnabledTrue(superior.getCode()).map(s -> {
-                        r.setSuperior(s.getId());
-                        return r;
-                    })
-                    .switchIfEmpty(Mono.error(NoSuchElementException::new));
-        });
+                }).flatMap(this::convertOuter);
     }
 
     /**
@@ -151,39 +119,7 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<RoleVO> imp
             RoleVO roleVO = new RoleVO();
             BeanUtils.copyProperties(role, roleVO);
             return roleVO;
-        }).flatMap(vo -> superior(role.getSuperior(), vo));
+        });
     }
 
-    /**
-     * 转换superior
-     *
-     * @param superiorId superior主键
-     * @param vo         vo
-     * @return 设置后的vo
-     */
-    private Mono<RoleVO> superior(ObjectId superiorId, RoleVO vo) {
-        if (superiorId != null) {
-            return roleRepository.findById(superiorId).map(superior -> {
-                SimpleBO<String> basicVO = new SimpleBO<>();
-                BeanUtils.copyProperties(superior, basicVO);
-                vo.setSuperior(basicVO);
-                return vo;
-            }).switchIfEmpty(Mono.just(vo));
-        }
-        return Mono.just(vo);
-    }
-
-    /**
-     * 对象转换为输出结果对象
-     *
-     * @param role 信息
-     * @return 输出转换后的vo对象
-     */
-    private Mono<RoleVO> convertOuterWithCount(Role role) {
-        return this.convertOuter(role).flatMap(vo ->
-                accountRoleRepository.countByRoleIdAndEnabledTrue(role.getId()).map(count -> {
-                    vo.setCount(count);
-                    return vo;
-                }));
-    }
 }

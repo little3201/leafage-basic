@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,19 +17,20 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.dto.AccessLogDTO;
 import io.leafage.basic.hypervisor.service.AccessLogService;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 /**
- * record controller
+ * access log controller
  *
  * @author liwenqiang 2022-03-18 21:01
  **/
@@ -61,23 +62,4 @@ public class AccessLogController {
         }
         return ResponseEntity.ok(pageMono);
     }
-
-    /**
-     * 新增信息
-     *
-     * @param accessLogDTO 帖子代码
-     * @return 添加后的信息，异常时返回417状态码
-     */
-    @PostMapping
-    public ResponseEntity<Mono<AccessLogVO>> create(@RequestBody AccessLogDTO accessLogDTO) {
-        Mono<AccessLogVO> voMono;
-        try {
-            voMono = accessLogService.create(accessLogDTO);
-        } catch (Exception e) {
-            logger.error("Create record occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
-    }
-
 }

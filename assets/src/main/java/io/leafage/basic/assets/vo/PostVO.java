@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,37 +18,26 @@
 package io.leafage.basic.assets.vo;
 
 import io.leafage.basic.assets.bo.ContentBO;
-import io.leafage.basic.assets.bo.SuperBO;
+import io.leafage.basic.assets.bo.PostBO;
 
 import java.time.LocalDateTime;
 
 /**
- * VO class for Posts
+ * VO class for post
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class PostVO extends SuperBO {
+public class PostVO extends PostBO {
 
-    /**
-     * 编号
-     */
-    private String code;
     /**
      * 内容和目录
      */
     private ContentBO content;
+
     /**
      * 时间
      */
     private LocalDateTime modifyTime;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 
     public ContentBO getContent() {
         return content;

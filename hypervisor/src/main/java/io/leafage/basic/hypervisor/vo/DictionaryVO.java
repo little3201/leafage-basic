@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,11 +17,28 @@
 
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.DictionaryBO;
+
+import java.time.LocalDateTime;
+
 /**
- * VO class for Dictionary
+ * VO class for dictionary
  *
  * @author liwenqiang 2022-03-30 07:27
  **/
-public class DictionaryVO extends SuperVO<String> {
+public class DictionaryVO extends DictionaryBO {
 
+    /**
+     * 更新时间
+     */
+    private LocalDateTime modifyTime;
+
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
+    }
 }

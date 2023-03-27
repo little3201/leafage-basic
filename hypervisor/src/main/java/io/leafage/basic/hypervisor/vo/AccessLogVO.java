@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.AccessLogBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for Record
+ * VO class for access log
  *
  * @author liwenqiang 2022-03-18 21:09
  */

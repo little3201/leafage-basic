@@ -12,12 +12,6 @@ spring:
     resources:
       add-mappings: false
 
-  cloud:
-    consul:
-      discovery:
-        heartbeat:
-          enabled: true
-
 management:
   endpoints:
     web:

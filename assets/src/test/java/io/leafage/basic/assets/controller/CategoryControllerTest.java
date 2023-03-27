@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package io.leafage.basic.assets.controller;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -33,6 +34,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -52,10 +54,24 @@ class CategoryControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    private CategoryDTO categoryDTO;
+    private CategoryVO categoryVO;
+
+    @BeforeEach
+    void init() {
+        // 构造请求对象
+        categoryDTO = new CategoryDTO();
+        categoryDTO.setCategoryName("test");
+        categoryDTO.setDescription("描述信息");
+
+        categoryVO = new CategoryVO();
+        categoryVO.setCount(23L);
+        categoryVO.setCategoryName(categoryDTO.getCategoryName());
+        categoryVO.setModifyTime(LocalDateTime.now());
+    }
+
     @Test
     void retrieve() {
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
         Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
         given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
@@ -74,20 +90,18 @@ class CategoryControllerTest {
 
     @Test
     void fetch() {
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
-        given(this.categoryService.fetch(Mockito.anyString())).willReturn(Mono.just(categoryVO));
+        given(this.categoryService.fetch(Mockito.anyLong())).willReturn(Mono.just(categoryVO));
 
-        webTestClient.get().uri("/categories/{code}", "21213G0J2").exchange()
+        webTestClient.get().uri("/categories/{id}", 1).exchange()
                 .expectStatus().isOk()
-                .expectBody().jsonPath("$.name").isEqualTo("test");
+                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
     }
 
     @Test
     void fetch_error() {
-        given(this.categoryService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.categoryService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/categories/{code}", "21213G0J2").exchange()
+        webTestClient.get().uri("/categories/{id}", 1).exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -96,7 +110,8 @@ class CategoryControllerTest {
         given(this.categoryService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
-                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
+                        .queryParam("categoryName", "test").build()).exchange()
+                .expectStatus().isOk();
     }
 
     @Test
@@ -104,33 +119,23 @@ class CategoryControllerTest {
         given(this.categoryService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
-                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
+                .queryParam("categoryName", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
     void create() {
-        // 构造返回对象
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
 
-        // 构造请求对象
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        categoryDTO.setDescription("description");
         webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.name").isNotEmpty();
+                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
     }
 
     @Test
     void create_error() {
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        // 构造请求对象
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
         webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().is4xxClientError();
@@ -138,45 +143,39 @@ class CategoryControllerTest {
 
     @Test
     void modify() {
-        // 构造返回对象
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
-        given(this.categoryService.modify(Mockito.anyString(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
+        given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
 
-        // 构造请求对象
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        webTestClient.put().uri("/categories/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.name").isNotEmpty();
+                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
     }
 
     @Test
     void modify_error() {
-        given(this.categoryService.modify(Mockito.anyString(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
+        given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        webTestClient.put().uri("/categories/{code}", "21213G0J2").contentType(MediaType.APPLICATION_JSON)
+        categoryDTO.setCategoryName("test");
+        webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isNotModified();
     }
 
     @Test
     void remove() {
-        given(this.categoryService.remove(Mockito.anyString())).willReturn(Mono.empty());
+        given(this.categoryService.remove(Mockito.anyLong())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/categories/{code}", "21213G0J2").exchange()
+        webTestClient.delete().uri("/categories/{id}", 1).exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void remove_error() {
-        given(this.categoryService.remove(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.categoryService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/categories/{code}", "21213G0J2").exchange()
+        webTestClient.delete().uri("/categories/{id}", 1).exchange()
                 .expectStatus().is4xxClientError();
     }
 }

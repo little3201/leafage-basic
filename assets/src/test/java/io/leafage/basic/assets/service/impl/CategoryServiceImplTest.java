@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.document.Category;
+import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
-import org.bson.types.ObjectId;
+import io.leafage.basic.assets.repository.PostRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,76 +47,74 @@ class CategoryServiceImplTest {
     private CategoryRepository categoryRepository;
 
     @Mock
-    private PostsRepository postsRepository;
+    private PostRepository postRepository;
 
     @InjectMocks
     private CategoryServiceImpl categoryService;
 
+    private Category category;
+
+    @BeforeEach
+    void init() {
+        category = new Category();
+        category.setId(1L);
+        category.setCategoryName("test");
+    }
+
     @Test
     void retrieve() {
-        Category category = new Category();
-        category.setId(new ObjectId());
-        given(this.categoryRepository.findByEnabledTrue(PageRequest.of(0, 2)))
-                .willReturn(Flux.just(category));
+        given(this.categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(Flux.just(category));
 
-        given(this.postsRepository.countByCategoryIdAndEnabledTrue(Mockito.any(ObjectId.class))).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(1L));
 
-        given(this.categoryRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
+        given(this.categoryRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
         StepVerifier.create(this.categoryService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void fetch() {
-        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString()))
+        given(this.categoryRepository.findById(Mockito.anyLong()))
                 .willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        StepVerifier.create(categoryService.fetch("21318H9FH")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(categoryService.fetch(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void exist() {
-        given(this.categoryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.categoryRepository.existsByCategoryName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(categoryService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test
     void create() {
-        Category category = new Category();
-        category.setId(new ObjectId());
-        given(this.categoryRepository.insert(Mockito.any(Category.class))).willReturn(Mono.just(category));
+        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(category));
 
-        given(this.postsRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryId(category.getId())).willReturn(Mono.just(2L));
 
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
+        categoryDTO.setCategoryName("test");
         StepVerifier.create(categoryService.create(categoryDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void modify() {
-        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(Category.class)));
+        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        Category category = new Category();
-        category.setId(new ObjectId());
         given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(category));
 
-        given(this.postsRepository.countByCategoryIdAndEnabledTrue(category.getId())).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryId(category.getId())).willReturn(Mono.just(2L));
 
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        StepVerifier.create(categoryService.modify("21318H9FH", categoryDTO)).expectNextCount(1).verifyComplete();
+        categoryDTO.setCategoryName("test");
+        StepVerifier.create(categoryService.modify(1L, categoryDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void remove() {
-        Category category = new Category();
-        category.setId(new ObjectId());
-        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mono.just(category));
+        given(this.categoryRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
-        given(this.categoryRepository.deleteById(Mockito.any(ObjectId.class))).willReturn(Mono.empty());
-
-        StepVerifier.create(categoryService.remove("21318H9FH")).verifyComplete();
+        StepVerifier.create(categoryService.remove(1L)).verifyComplete();
     }
 }

@@ -17,11 +17,12 @@
 
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.domain.RoleComponents;
+import io.leafage.basic.hypervisor.domain.RoleMembers;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.service.AccountRoleService;
-import io.leafage.basic.hypervisor.service.RoleAuthorityService;
+import io.leafage.basic.hypervisor.service.RoleComponentsService;
+import io.leafage.basic.hypervisor.service.RoleMembersService;
 import io.leafage.basic.hypervisor.service.RoleService;
-import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -30,7 +31,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.TreeNode;
 
@@ -48,15 +48,15 @@ public class RoleController {
 
     private final Logger logger = LoggerFactory.getLogger(RoleController.class);
 
-    private final AccountRoleService accountRoleService;
+    private final RoleMembersService roleMembersService;
     private final RoleService roleService;
-    private final RoleAuthorityService roleAuthorityService;
+    private final RoleComponentsService roleComponentsService;
 
-    public RoleController(AccountRoleService accountRoleService, RoleService roleService,
-                          RoleAuthorityService roleAuthorityService) {
-        this.accountRoleService = accountRoleService;
+    public RoleController(RoleMembersService roleMembersService, RoleService roleService,
+                          RoleComponentsService roleComponentsService) {
+        this.roleMembersService = roleMembersService;
         this.roleService = roleService;
-        this.roleAuthorityService = roleAuthorityService;
+        this.roleComponentsService = roleComponentsService;
     }
 
     /**
@@ -96,16 +96,16 @@ public class RoleController {
     }
 
     /**
-     * 根据 code 查询信息
+     * 根据 id 查询信息
      *
-     * @param code 代码
+     * @param id 主键
      * @return 查询的数据集，异常时返回204状态码
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<Mono<RoleVO>> fetch(@PathVariable String code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Mono<RoleVO>> fetch(@PathVariable Long id) {
         Mono<RoleVO> voMono;
         try {
-            voMono = roleService.fetch(code);
+            voMono = roleService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch role occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -116,14 +116,14 @@ public class RoleController {
     /**
      * 是否已存在
      *
-     * @param name 用户名
+     * @param roleName 用户名
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String roleName) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = roleService.exist(name);
+            existsMono = roleService.exist(roleName);
         } catch (Exception e) {
             logger.error("Check role is exist an error: ", e);
             return ResponseEntity.noContent().build();
@@ -152,15 +152,15 @@ public class RoleController {
     /**
      * 修改信息
      *
-     * @param code    代码
+     * @param id      主键
      * @param roleDTO 要修改的数据
      * @return 修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{code}")
-    public ResponseEntity<Mono<RoleVO>> modify(@PathVariable String code, @RequestBody @Valid RoleDTO roleDTO) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Mono<RoleVO>> modify(@PathVariable Long id, @RequestBody @Valid RoleDTO roleDTO) {
         Mono<RoleVO> voMono;
         try {
-            voMono = roleService.modify(code, roleDTO);
+            voMono = roleService.modify(id, roleDTO);
         } catch (Exception e) {
             logger.error("Modify role occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
@@ -171,32 +171,32 @@ public class RoleController {
     /**
      * 查询关联用户
      *
-     * @param code 角色code
+     * @param id 角色id
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{code}/accounts")
-    public ResponseEntity<Flux<AccountVO>> accounts(@PathVariable String code) {
-        Flux<AccountVO> voFlux;
+    @GetMapping("/{id}/members")
+    public ResponseEntity<Mono<List<RoleMembers>>> members(@PathVariable Long id) {
+        Mono<List<RoleMembers>> listMono;
         try {
-            voFlux = accountRoleService.accounts(code);
+            listMono = roleMembersService.members(id);
         } catch (Exception e) {
             logger.error("Retrieve role accounts occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(listMono);
     }
 
     /**
-     * 查询关联权限
+     * 查询关联组件
      *
-     * @param code 角色代码
+     * @param id 角色主键
      * @return 操作结果
      */
-    @GetMapping("/{code}/authorities")
-    public ResponseEntity<Mono<List<String>>> authorities(@PathVariable String code) {
-        Mono<List<String>> listMono;
+    @GetMapping("/{id}/components")
+    public ResponseEntity<Mono<List<RoleComponents>>> components(@PathVariable Long id) {
+        Mono<List<RoleComponents>> listMono;
         try {
-            listMono = roleAuthorityService.authorities(code);
+            listMono = roleComponentsService.components(id);
         } catch (Exception e) {
             logger.error("Relation role ah occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -205,17 +205,17 @@ public class RoleController {
     }
 
     /**
-     * 关联权限
+     * 关联
      *
-     * @param code        角色代码
-     * @param authorities 权限信息
+     * @param id           role主键
+     * @param componentIds component主键集合
      * @return 操作结果
      */
-    @PatchMapping("/{code}/authorities")
-    public ResponseEntity<Mono<Boolean>> relation(@PathVariable String code, @RequestBody Set<String> authorities) {
+    @PatchMapping("/{id}/components")
+    public ResponseEntity<Mono<Boolean>> relation(@PathVariable Long id, @RequestBody Set<Long> componentIds) {
         Mono<Boolean> voMono;
         try {
-            voMono = roleAuthorityService.relation(code, authorities);
+            voMono = roleComponentsService.relation(id, componentIds);
         } catch (Exception e) {
             logger.error("Relation role ah occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

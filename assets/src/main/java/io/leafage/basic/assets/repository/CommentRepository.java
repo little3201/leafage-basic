@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2022 the original author or authors.
+ *  Copyright 2018-2023 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,8 @@
 
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.document.Comment;
-import org.bson.types.ObjectId;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import io.leafage.basic.assets.domain.Comment;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,24 +29,15 @@ import reactor.core.publisher.Mono;
  * @author liwenqiang 2020-02-13 22:01
  **/
 @Repository
-public interface CommentRepository extends ReactiveMongoRepository<Comment, ObjectId> {
-
-
-    /**
-     * 分页查询
-     *
-     * @param pageable 分页参数
-     * @return 有效评论
-     */
-    Flux<Comment> findByEnabledTrue(Pageable pageable);
+public interface CommentRepository extends R2dbcRepository<Comment, Long> {
 
     /**
      * 根据帖子ID查询
      *
-     * @param postsId 帖子ID
+     * @param postId 帖子ID
      * @return 关联的数据
      */
-    Flux<Comment> findByPostsIdAndReplierIsNullAndEnabledTrue(ObjectId postsId);
+    Flux<Comment> findByPostIdAndReplierIsNull(Long postId);
 
     /**
      * 统计回复
@@ -56,7 +45,7 @@ public interface CommentRepository extends ReactiveMongoRepository<Comment, Obje
      * @param replier 关联代码
      * @return 关联的数据记录数
      */
-    Mono<Long> countByReplierAndEnabledTrue(String replier);
+    Mono<Long> countByReplier(Long replier);
 
     /**
      * 查询回复
@@ -64,20 +53,5 @@ public interface CommentRepository extends ReactiveMongoRepository<Comment, Obje
      * @param replier 关联代码
      * @return 关联的数据
      */
-    Flux<Comment> findByReplierAndEnabledTrue(String replier);
-
-    /**
-     * 根据code查询信息
-     *
-     * @param code 代码
-     * @return 评论信息
-     */
-    Mono<Comment> getByCodeAndEnabledTrue(String code);
-
-    /**
-     * 统计
-     *
-     * @return 记录数
-     */
-    Mono<Long> countByEnabledTrue();
+    Flux<Comment> findByReplier(Long replier);
 }

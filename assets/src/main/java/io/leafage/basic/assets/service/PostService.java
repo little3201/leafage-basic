@@ -19,6 +19,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.vo.PostVO;
+import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -40,7 +41,7 @@ public interface PostService extends ReactiveBasicService<PostDTO, PostVO> {
      * @param categoryId 分类ID
      * @return 结果集
      */
-    Mono<Page<PostVO>> retrieve(int page, int size, String sort, Long categoryId);
+    Mono<Page<PostVO>> retrieve(int page, int size, String sort, @Nullable Long categoryId);
 
     /**
      * 全文搜索

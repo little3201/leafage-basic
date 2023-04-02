@@ -17,7 +17,6 @@
 
 package io.leafage.basic.assets.vo;
 
-import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.bo.PostBO;
 
 import java.time.LocalDateTime;
@@ -30,21 +29,35 @@ import java.time.LocalDateTime;
 public class PostVO extends PostBO {
 
     /**
-     * 内容和目录
+     * category
      */
-    private ContentBO content;
+    private String category;
+
+    /**
+     * owner
+     */
+    private String owner;
 
     /**
      * 时间
      */
     private LocalDateTime modifyTime;
 
-    public ContentBO getContent() {
-        return content;
+
+    public String getCategory() {
+        return category;
     }
 
-    public void setContent(ContentBO content) {
-        this.content = content;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public LocalDateTime getModifyTime() {

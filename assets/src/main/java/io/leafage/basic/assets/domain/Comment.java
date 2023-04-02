@@ -51,7 +51,7 @@ public class Comment extends AbstractModel {
     private String location;
 
     /**
-     * 回复给
+     * 回复者
      */
     private Long replier;
 

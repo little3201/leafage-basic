@@ -17,7 +17,6 @@
 
 package io.leafage.basic.assets.dto;
 
-import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.bo.PostBO;
 
 /**
@@ -28,15 +27,16 @@ import io.leafage.basic.assets.bo.PostBO;
 public class PostDTO extends PostBO {
 
     /**
-     * 内容
+     * 分类
      */
-    private ContentBO content;
+    private Long categoryId;
 
-    public ContentBO getContent() {
-        return content;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setContent(ContentBO content) {
-        this.content = content;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
+
 }

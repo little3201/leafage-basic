@@ -38,11 +38,6 @@ public class PostContent extends AbstractModel {
      */
     private String context;
 
-    /**
-     * 目录
-     */
-    private String catalog;
-
 
     public Long getPostId() {
         return postId;
@@ -59,13 +54,4 @@ public class PostContent extends AbstractModel {
     public void setContext(String context) {
         this.context = context;
     }
-
-    public String getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
-    }
-
 }

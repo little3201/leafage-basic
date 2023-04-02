@@ -17,7 +17,6 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.domain.PostContent;
@@ -42,7 +41,7 @@ import java.util.Set;
 import static org.mockito.BDDMockito.given;
 
 /**
- * posts service test
+ * post service test
  *
  * @author liwenqiang 2019/9/19 9:27
  */
@@ -69,30 +68,30 @@ class PostServiceImplTest {
         postDTO.setTitle("标题");
         postDTO.setTags(Set.of("test"));
         postDTO.setCover("./avatar.jpg");
-
-        ContentBO contentBO = new ContentBO();
-        contentBO.setCatalog("目录");
-        contentBO.setContext("内容信息");
-        postDTO.setContent(contentBO);
+        postDTO.setContext("内容信息");
     }
 
     @Test
-    void retrieve() {
+    void retrieve_without_categoryId() {
         given(this.postRepository.findAll(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Post.class)));
 
         given(this.postRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
-        StepVerifier.create(this.postsService.retrieve(0, 2, "id", null))
+        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
+
+        StepVerifier.create(this.postsService.retrieve(0, 2, "", null))
                 .expectNextCount(1).verifyComplete();
     }
 
     @Test
-    void retrieve_category() {
+    void retrieve_with_categoryId() {
         given(this.postRepository.findByCategoryId(Mockito.anyLong(), Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Post.class)));
 
         given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(1L));
 
-        StepVerifier.create(this.postsService.retrieve(0, 2, "id", 1L))
+        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
+
+        StepVerifier.create(this.postsService.retrieve(0, 2, null, 1L))
                 .expectNextCount(1).verifyComplete();
     }
 
@@ -153,6 +152,8 @@ class PostServiceImplTest {
     @Test
     void search() {
         given(this.postRepository.findAllByTitle(Mockito.anyString())).willReturn(Flux.just(Mockito.mock(Post.class)));
+
+        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
         StepVerifier.create(postsService.search("test")).expectNextCount(1).verifyComplete();
     }

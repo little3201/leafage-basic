@@ -17,7 +17,6 @@
 
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.service.PostService;
 import io.leafage.basic.assets.vo.PostVO;
@@ -65,20 +64,15 @@ class PostControllerTest {
         // 构造请求对象
         postDTO = new PostDTO();
         postDTO.setTitle("test");
-        postDTO.setTags(Collections.singleton("java"));
         postDTO.setCover("../test.jpg");
-
-        ContentBO contentBO = new ContentBO();
-        contentBO.setCatalog("目录");
-        contentBO.setContext("内容信息");
-        postDTO.setContent(contentBO);
+        postDTO.setTags(Collections.singleton("java"));
+        postDTO.setContext("内容信息");
 
         postVO = new PostVO();
         postVO.setTitle(postDTO.getTitle());
         postVO.setTags(postDTO.getTags());
         postVO.setCover(postDTO.getCover());
-        postVO.setCategoryId(2L);
-        postVO.setContent(contentBO);
+        postVO.setContext(postDTO.getContext());
         postVO.setModifyTime(LocalDateTime.now());
     }
 

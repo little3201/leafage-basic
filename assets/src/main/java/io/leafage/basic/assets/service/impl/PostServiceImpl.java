@@ -17,7 +17,6 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.bo.ContentBO;
 import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.domain.PostContent;
 import io.leafage.basic.assets.dto.PostDTO;
@@ -39,7 +38,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * posts service impl
+ * post service impl
  *
  * @author liwenqiang 2018-12-20 9:54
  **/
@@ -64,15 +63,13 @@ public class PostServiceImpl implements PostService {
                 StringUtils.hasText(sort) ? sort : "modifyTime"));
         Flux<Post> postFlux;
         Mono<Long> count;
-        // if category not null
-        if (null != categoryId) {
-            postFlux = postRepository.findByCategoryId(categoryId, pageRequest);
-            // count filter by category
-            count = postRepository.countByCategoryId(categoryId);
-        } else {
+        // if categoryId null, select all, else filter by categoryId
+        if (null == categoryId) {
             postFlux = postRepository.findAll(pageRequest);
-            // count all
             count = postRepository.count();
+        } else {
+            postFlux = postRepository.findByCategoryId(categoryId, pageRequest);
+            count = postRepository.countByCategoryId(categoryId);
         }
 
         return postFlux.flatMap(this::convertOuter).collectList().zipWith(count).map(objects ->
@@ -82,18 +79,16 @@ public class PostServiceImpl implements PostService {
     @Override
     public Mono<PostVO> fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return postRepository.findById(id).flatMap(posts ->
+        return postRepository.findById(id).flatMap(post ->
                 // 查询关联分类信息
-                categoryRepository.findById(posts.getCategoryId()).map(category -> {
+                categoryRepository.findById(post.getCategoryId()).map(category -> {
                     PostVO postVO = new PostVO();
-                    BeanUtils.copyProperties(posts, postVO);
+                    BeanUtils.copyProperties(post, postVO);
+                    postVO.setCategory(category.getCategoryName());
                     return postVO;
-                }).flatMap(vo -> postContentRepository.getByPostId(posts.getId()) // 查询帖子内容
+                }).flatMap(vo -> postContentRepository.getByPostId(post.getId()) // 查询帖子内容
                         .map(postsContent -> {
-                            ContentBO contentBO = new ContentBO();
-                            contentBO.setContext(postsContent.getContext());
-                            contentBO.setCatalog(postsContent.getCatalog());
-                            vo.setContent(contentBO);
+                            vo.setContext(postsContent.getContext());
                             return vo;
                         }).defaultIfEmpty(vo))
         );
@@ -106,53 +101,50 @@ public class PostServiceImpl implements PostService {
             Post post = new Post();
             BeanUtils.copyProperties(postDTO, post);
             post.setCategoryId(dto.getCategoryId());
+            post.setOwner("little3201");
             return post;
-        }).flatMap(info -> postRepository.save(info).map(posts -> {
-                    PostContent postContent = new PostContent();
-                    postContent.setPostId(posts.getId());
-                    postContent.setCatalog(postDTO.getContent().getCatalog());
-                    postContent.setContext(postDTO.getContent().getContext());
-                    return postContent;
-                }).flatMap(postContentRepository::save).map(postsContent -> info)
-        ).flatMap(this::convertOuter);
+        }).flatMap(postRepository::save).flatMap(post -> {
+            PostContent postContent = new PostContent();
+            postContent.setPostId(post.getId());
+            postContent.setContext(postDTO.getContext());
+            postContent.setOwner(post.getOwner());
+            return postContentRepository.save(postContent).flatMap(pc -> this.convertOuter(post));
+        });
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostVO> modify(Long id, PostDTO postDTO) {
-        Assert.notNull(id, "id must not be null.");
-        return postRepository.findById(id).flatMap(post ->
-                Mono.just(postDTO).map(dto -> {
+        Assert.notNull(id, "id cannot be null.");
+        return postRepository.findById(id).flatMap(post -> Mono.just(postDTO).map(dto -> {
                     // 将信息复制到info
                     BeanUtils.copyProperties(postDTO, post);
-                    post.setCategoryId(dto.getCategoryId());
                     return post;
-                }).flatMap(postsInfo -> postRepository.save(postsInfo).flatMap(posts ->
-                        postContentRepository.getByPostId(posts.getId())
-                                .doOnNext(postsContent -> {
-                                    postsContent.setCatalog(postDTO.getContent().getCatalog());
-                                    postsContent.setContext(postDTO.getContent().getContext());
+                }).flatMap(entity -> postRepository.save(entity)
+                        .flatMap(p -> postContentRepository.getByPostId(p.getId())
+                                .flatMap(postContent -> {
+                                    postContent.setContext(postDTO.getContext());
+                                    return postContentRepository.save(postContent).flatMap(pc -> this.convertOuter(p));
                                 })
-                                .flatMap(postContentRepository::save)
-                                .map(postsContent -> postsInfo)).flatMap(this::convertOuter))
+                        ))
         );
     }
 
     @Override
     public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "id must not be null.");
+        Assert.notNull(id, "id cannot be null.");
         return postRepository.deleteById(id);
     }
 
     @Override
     public Flux<PostVO> search(String keyword) {
-        Assert.hasText(keyword, "keyword must not be blank.");
+        Assert.hasText(keyword, "keyword cannot be blank.");
         return postRepository.findAllByTitle(keyword).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Boolean> exist(String title) {
-        Assert.hasText(title, "title must not be blank.");
+        Assert.hasText(title, "title cannot be blank.");
         return postRepository.existsByTitle(title);
     }
 
@@ -163,10 +155,14 @@ public class PostServiceImpl implements PostService {
      * @return 输出转换后的vo对象
      */
     private Mono<PostVO> convertOuter(Post post) {
-        return Mono.just(post).map(p -> {
+        return Mono.just(post).flatMap(p -> {
             PostVO postVO = new PostVO();
             BeanUtils.copyProperties(p, postVO);
-            return postVO;
+            // 查询关联分类信息
+            return categoryRepository.findById(post.getCategoryId()).map(category -> {
+                postVO.setCategory(category.getCategoryName());
+                return postVO;
+            });
         });
     }
 

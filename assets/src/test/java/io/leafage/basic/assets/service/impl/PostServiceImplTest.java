@@ -72,10 +72,10 @@ class PostServiceImplTest {
     }
 
     @Test
-    void retrieve_without_categoryId() {
+    void retrieve() {
         given(this.postRepository.findAll(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Post.class)));
 
-        given(this.postRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
+        given(this.postRepository.count()).willReturn(Mono.just(2L));
 
         given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
 

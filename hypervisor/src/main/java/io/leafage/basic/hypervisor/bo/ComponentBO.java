@@ -32,20 +32,15 @@ public abstract class ComponentBO {
     /**
      * 名称
      */
-    @NotBlank(message = "component name is blank.")
-    @Size(max = 16, message = "component name max length is 16.")
+    @NotBlank(message = "componentName cannot be blank.")
+    @Size(max = 16, message = "componentName max length is 16.")
     private String componentName;
 
     /**
      * 类型
      */
-    @NotNull(message = "component type is null.")
+    @NotNull(message = "type cannot be null.")
     private Character type;
-
-    /**
-     * 上级
-     */
-    private Long superiorId;
 
     /**
      * 图标
@@ -73,14 +68,6 @@ public abstract class ComponentBO {
 
     public void setType(Character type) {
         this.type = type;
-    }
-
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
     }
 
     public String getIcon() {

@@ -26,4 +26,17 @@ import io.leafage.basic.hypervisor.bo.ComponentBO;
  */
 public class ComponentDTO extends ComponentBO {
 
+    /**
+     * 上级
+     */
+    private Long superiorId;
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
+    }
+
 }

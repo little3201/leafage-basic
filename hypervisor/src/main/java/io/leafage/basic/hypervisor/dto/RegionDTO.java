@@ -26,4 +26,17 @@ import io.leafage.basic.hypervisor.bo.RegionBO;
  **/
 public class RegionDTO extends RegionBO {
 
+    /**
+     * superior
+     */
+    private Long superiorId;
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
+    }
+
 }

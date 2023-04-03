@@ -76,7 +76,7 @@ class ComponentControllerTest {
         componentVO.setComponentName("test");
         componentVO.setIcon("add");
         componentVO.setPath("/test");
-        componentVO.setSuperiorId(1L);
+        componentVO.setSuperior("superior");
         componentVO.setType('M');
         componentVO.setModifyTime(LocalDateTime.now());
 

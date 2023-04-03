@@ -42,6 +42,7 @@ public abstract class UserBO {
      */
     private String avatar;
 
+
     public String getUsername() {
         return username;
     }

@@ -26,4 +26,16 @@ import io.leafage.basic.hypervisor.bo.GroupBO;
  */
 public class GroupVO extends GroupBO {
 
+    /**
+     * 上级
+     */
+    private String superior;
+
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
+    }
 }

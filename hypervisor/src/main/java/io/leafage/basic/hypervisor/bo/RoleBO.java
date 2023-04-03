@@ -29,7 +29,7 @@ public abstract class RoleBO {
     /**
      * 名称
      */
-    @NotBlank(message = "role name is blank.")
+    @NotBlank(message = "roleName cannot be blank.")
     private String roleName;
 
 

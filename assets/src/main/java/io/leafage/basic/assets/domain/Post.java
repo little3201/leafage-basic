@@ -50,6 +50,15 @@ public class Post extends AbstractModel {
      */
     private Set<String> tags;
 
+    /**
+     * 是否有效
+     */
+    private boolean enabled = true;
+
+    /**
+     * owner
+     */
+    private String owner;
 
     public Long getCategoryId() {
         return categoryId;
@@ -81,5 +90,21 @@ public class Post extends AbstractModel {
 
     public void setTags(Set<String> tags) {
         this.tags = tags;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

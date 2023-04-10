@@ -8,8 +8,6 @@ create table groups
    id                   bigserial not null primary key,
    group_name           varchar(64),
    principal            bigint ,
-   superior_id          bigint,
-   description          varchar(127),
    enabled              boolean not null default true,
    owner                varchar(16) not null ,
    modify_time          timestamp not null default CURRENT_TIMESTAMP
@@ -27,9 +25,7 @@ create table group_members
    group_id             bigint not null,
    username             varchar(16) not null,
    enabled              boolean not null default true,
-   owner                varchar(16) not null ,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP,
-   primary key (id),
+   modify_time          timestamp not null default CURRENT_TIMESTAMP
    constraint fk_group_members_group foreign key(group_id) references groups(id)
 );
 
@@ -52,7 +48,6 @@ create table users
    account_non_locked   boolean not null default true,
    constraint unique_uk_username unique(username)
 );
-
 
 
 drop table if exists authorities;
@@ -89,7 +84,6 @@ create table roles
 (
    id                   bigserial not null primary key,
    role_name            varchar(64),
-   superior_id          bigint,
    enabled              boolean not null default true,
    owner                varchar(16) not null ,
    modify_time          timestamp not null default CURRENT_TIMESTAMP
@@ -106,8 +100,6 @@ create table role_members
    id                   bigserial not null primary key,
    role_id              bigint not null,
    username             bigint not null,
-   enabled              boolean not null default true,
-   owner                varchar(16) not null ,
    modify_time          timestamp not null default CURRENT_TIMESTAMP,
    constraint fk_role_members_role foreign key(role_id) references roles(id)
 );
@@ -123,8 +115,9 @@ create table components
    id                   bigserial not null primary key,
    superior_id          bigint,
    component_name       varchar(64),
-   type                 tinyint(4),
+   type                 character(1),
    path                 varchar(127),
+   icon                 varchar(127),
    enabled              boolean not null default true,
    owner                varchar(16) not null ,
    modify_time          timestamp not null default CURRENT_TIMESTAMP
@@ -141,11 +134,9 @@ create table role_components
    id                   bigserial not null primary key,
    role_id              bigint not null,
    component_id         bigint not null,
-   enabled              boolean not null default true,
-   owner                varchar(16) not null ,
    modify_time          timestamp not null default CURRENT_TIMESTAMP,
    constraint fk_role_components_role foreign key(role_id) references roles(id),
-   constraint fk_role_components_comment foreign key(comment_id) references components(id)
+   constraint fk_role_components_comment foreign key(component_id) references components(id)
 );
 
 
@@ -174,11 +165,12 @@ drop table if exists messages;
 create table messages
 (
    id                   bigserial not null primary key,
-   title                varchar(255) comment '标题',
-   content              longtext comment '内容',
-   is_read              tinyint(1) comment '是否已读',
+   title                varchar(255),
+   context              text,
+   read                 boolean not null default false,
    enabled              boolean not null default true,
-   owner                varchar(16) not null ,
+   receiver             varchar(16) not null,
+   owner                varchar(16) not null,
    modify_time          timestamp not null default CURRENT_TIMESTAMP
 );
 

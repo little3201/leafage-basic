@@ -34,6 +34,16 @@ public class Category extends AbstractModel {
     private String categoryName;
 
     /**
+     * 是否有效
+     */
+    private boolean enabled = true;
+
+    /**
+     * owner
+     */
+    private String owner;
+
+    /**
      * 描述
      */
     private String description;
@@ -45,6 +55,22 @@ public class Category extends AbstractModel {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public String getDescription() {

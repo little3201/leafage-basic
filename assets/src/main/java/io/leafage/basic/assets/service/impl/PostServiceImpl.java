@@ -107,7 +107,6 @@ public class PostServiceImpl implements PostService {
             PostContent postContent = new PostContent();
             postContent.setPostId(post.getId());
             postContent.setContext(postDTO.getContext());
-            postContent.setOwner(post.getOwner());
             return postContentRepository.save(postContent).flatMap(pc -> this.convertOuter(post));
         });
     }

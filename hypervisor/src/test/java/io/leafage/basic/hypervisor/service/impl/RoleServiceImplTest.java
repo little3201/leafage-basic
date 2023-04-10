@@ -65,7 +65,7 @@ class RoleServiceImplTest {
 
     @Test
     void retrieve_page() {
-        given(this.roleRepository.findAll(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Role.class)));
+        given(this.roleRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Role.class)));
 
         given(this.roleRepository.count()).willReturn(Mono.just(2L));
 
@@ -100,21 +100,6 @@ class RoleServiceImplTest {
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
 
         StepVerifier.create(roleService.modify(1L, roleDTO)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void tree() {
-        Role role = new Role();
-        role.setId(1L);
-        role.setRoleName("test");
-
-        Role child = new Role();
-        child.setId(2L);
-        child.setSuperiorId(role.getId());
-        child.setRoleName("child");
-        given(this.roleRepository.findAll()).willReturn(Flux.just(role, child));
-
-        StepVerifier.create(roleService.tree()).expectNextCount(1).verifyComplete();
     }
 
     @Test

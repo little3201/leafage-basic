@@ -37,7 +37,7 @@ public interface ComponentRepository extends R2dbcRepository<Component, Long> {
      *
      * @return 有效帖子
      */
-    Flux<Component> findAll(Pageable pageable);
+    Flux<Component> findByEnabledTrue(Pageable pageable);
 
     /**
      * 是否已存在

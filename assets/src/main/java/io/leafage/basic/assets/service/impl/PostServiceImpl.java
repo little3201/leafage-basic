@@ -65,7 +65,7 @@ public class PostServiceImpl implements PostService {
         Mono<Long> count;
         // if categoryId null, select all, else filter by categoryId
         if (null == categoryId) {
-            postFlux = postRepository.findAll(pageRequest);
+            postFlux = postRepository.findByEnabledTrue(pageRequest);
             count = postRepository.count();
         } else {
             postFlux = postRepository.findByCategoryId(categoryId, pageRequest);

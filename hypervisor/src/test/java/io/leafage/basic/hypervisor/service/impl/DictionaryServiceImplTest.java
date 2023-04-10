@@ -49,7 +49,7 @@ class DictionaryServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.dictionaryRepository.findAll(Mockito.any(PageRequest.class)))
+        given(this.dictionaryRepository.findByEnabledTrue(Mockito.any(PageRequest.class)))
                 .willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
         given(this.dictionaryRepository.count()).willReturn(Mono.just(Mockito.anyLong()));

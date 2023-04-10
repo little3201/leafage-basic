@@ -24,7 +24,6 @@ create table group_members
    id                   bigserial not null primary key,
    group_id             bigint not null,
    username             varchar(16) not null,
-   enabled              boolean not null default true,
    modify_time          timestamp not null default CURRENT_TIMESTAMP
    constraint fk_group_members_group foreign key(group_id) references groups(id)
 );
@@ -152,7 +151,6 @@ create table dictionaries
    superior_id          bigint,
    description          varchar(127),
    enabled              boolean not null default true,
-   owner                varchar(16) not null ,
    modify_time          timestamp not null default CURRENT_TIMESTAMP
 );
 
@@ -188,6 +186,5 @@ create table regions
    postal_code          bigint,
    area_code            bigint,
    enabled              boolean not null default true,
-   owner                varchar(16) not null ,
    modify_time          datetime not null default CURRENT_TIMESTAMP
 );

@@ -35,7 +35,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import top.leafage.common.TreeNode;
 
 import java.util.List;
 
@@ -94,21 +93,6 @@ class GroupControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)
                 .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void tree() {
-        TreeNode treeNode = new TreeNode(1L, "test");
-        given(this.groupService.tree()).willReturn(Mono.just(List.of(treeNode)));
-
-        webTestClient.get().uri("/groups/tree").exchange().expectStatus().isOk().expectBodyList(TreeNode.class);
-    }
-
-    @Test
-    void tree_error() {
-        given(this.groupService.tree()).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/groups/tree").exchange().expectStatus().isNoContent();
     }
 
     @Test

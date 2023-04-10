@@ -30,7 +30,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import top.leafage.common.TreeNode;
 
 import java.util.List;
 
@@ -70,23 +69,6 @@ public class GroupController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);
-    }
-
-    /**
-     * 树形查询
-     *
-     * @return 查询到的数据，否则返回空
-     */
-    @GetMapping("/tree")
-    public ResponseEntity<Mono<List<TreeNode>>> tree() {
-        Mono<List<TreeNode>> groups;
-        try {
-            groups = groupService.tree();
-        } catch (Exception e) {
-            logger.info("Retrieve group occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(groups);
     }
 
     /**

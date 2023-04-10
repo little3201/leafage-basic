@@ -49,7 +49,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Mono<Page<DictionaryVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<DictionaryVO> voFlux = dictionaryRepository.findAll(pageRequest).map(this::convertOuter);
+        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
 
         Mono<Long> count = dictionaryRepository.count();
 

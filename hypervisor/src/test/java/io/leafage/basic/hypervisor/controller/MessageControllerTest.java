@@ -20,7 +20,6 @@ package io.leafage.basic.hypervisor.controller;
 import io.leafage.basic.hypervisor.dto.MessageDTO;
 import io.leafage.basic.hypervisor.service.MessageService;
 import io.leafage.basic.hypervisor.vo.MessageVO;
-import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,19 +73,19 @@ class MessageControllerTest {
     @Test
     void retrieve() {
         Page<MessageVO> voPage = new PageImpl<>(List.of(messageVO));
-        given(this.messageService.retrieve(0, 2, false)).willReturn(Mono.just(voPage));
+        given(this.messageService.retrieve(0, 2, "test")).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/messages").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("read", "false").build()).exchange()
-                .expectStatus().isOk().expectBodyList(RoleVO.class);
+                        .queryParam("size", 2).queryParam("receiver", "test").build()).exchange()
+                .expectStatus().isOk().expectBodyList(MessageVO.class);
     }
 
     @Test
     void retrieve_error() {
-        given(this.messageService.retrieve(0, 2, false)).willThrow(new RuntimeException());
+        given(this.messageService.retrieve(0, 2, "test")).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/messages").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("read", "false").build())
+                        .queryParam("size", 2).queryParam("receiver", "test").build())
                 .exchange().expectStatus().isNoContent();
     }
 

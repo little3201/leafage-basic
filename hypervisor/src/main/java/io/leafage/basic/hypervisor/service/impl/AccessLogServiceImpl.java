@@ -46,7 +46,7 @@ public class AccessLogServiceImpl implements AccessLogService {
     @Override
     public Mono<Page<AccessLogVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<AccessLogVO> voFlux = accessLogRepository.findAll(pageRequest).map(this::convertOuter);
+        Flux<AccessLogVO> voFlux = accessLogRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
 
         Mono<Long> count = accessLogRepository.count();
 

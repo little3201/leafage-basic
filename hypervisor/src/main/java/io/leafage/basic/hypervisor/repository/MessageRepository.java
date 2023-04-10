@@ -35,15 +35,16 @@ public interface MessageRepository extends R2dbcRepository<Message, Long> {
     /**
      * 分页查询
      *
+     * @param receiver 接收者
      * @param pageable 分页参数
      * @return 有效数据集
      */
-    Flux<Message> findByRead(boolean read, Pageable pageable);
+    Flux<Message> findByReceiver(String receiver, Pageable pageable);
 
     /**
      * 查询未读记录数
      *
      * @return 记录数
      */
-    Mono<Long> countByRead(boolean read);
+    Mono<Long> countByReceiver(String receiver);
 }

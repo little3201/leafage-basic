@@ -78,7 +78,7 @@ class ComponentServiceImplTest {
 
     @Test
     void retrieve_page() {
-        given(this.componentRepository.findAll(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Component.class)));
 
         given(this.componentRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 

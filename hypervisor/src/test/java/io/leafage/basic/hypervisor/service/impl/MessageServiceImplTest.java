@@ -54,12 +54,12 @@ class MessageServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.messageRepository.findByRead(Mockito.anyBoolean(), Mockito.any(PageRequest.class)))
+        given(this.messageRepository.findByReceiver(Mockito.anyString(), Mockito.any(PageRequest.class)))
                 .willReturn(Flux.just(Mockito.mock(Message.class)));
 
-        given(this.messageRepository.countByRead(Mockito.anyBoolean())).willReturn(Mono.just(2L));
+        given(this.messageRepository.countByReceiver(Mockito.anyString())).willReturn(Mono.just(2L));
 
-        StepVerifier.create(messageService.retrieve(0, 2, false)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(messageService.retrieve(0, 2, "test")).expectNextCount(1).verifyComplete();
     }
 
     @Test

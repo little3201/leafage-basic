@@ -49,6 +49,15 @@ public class Component extends SuperModel {
      */
     private String path;
 
+    /**
+     * 是否可用
+     */
+    private boolean enabled = true;
+
+    /**
+     * owner
+     */
+    private String owner;
 
     public String getComponentName() {
         return componentName;
@@ -80,5 +89,21 @@ public class Component extends SuperModel {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

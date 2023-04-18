@@ -29,13 +29,8 @@ public abstract class RegionBO {
     /**
      * 名称
      */
-    @NotBlank(message = "region name is blank.")
+    @NotBlank(message = "regionName cannot be blank.")
     private String regionName;
-
-    /**
-     * 上级
-     */
-    private Long superiorId;
 
     /**
      * 邮编
@@ -53,14 +48,6 @@ public abstract class RegionBO {
 
     public void setRegionName(String regionName) {
         this.regionName = regionName;
-    }
-
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
     }
 
     public Integer getPostalCode() {

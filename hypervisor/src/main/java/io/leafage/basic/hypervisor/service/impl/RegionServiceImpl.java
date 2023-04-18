@@ -50,7 +50,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public Mono<Page<RegionVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<RegionVO> voFlux = regionRepository.findAll(pageRequest).flatMap(this::convertOuter);
+        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
 
         Mono<Long> count = regionRepository.countByEnabledTrue();
 

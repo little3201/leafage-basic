@@ -42,6 +42,10 @@ public class AccessLog extends AbstractModel {
      */
     private String context;
 
+    /**
+     * owner
+     */
+    private String owner;
 
     public String getIp() {
         return ip;
@@ -65,5 +69,13 @@ public class AccessLog extends AbstractModel {
 
     public void setContext(String context) {
         this.context = context;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

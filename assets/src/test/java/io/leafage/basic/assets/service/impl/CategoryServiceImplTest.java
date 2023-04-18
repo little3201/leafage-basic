@@ -63,7 +63,7 @@ class CategoryServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(Flux.just(category));
+        given(this.categoryRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(category));
 
         given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(1L));
 

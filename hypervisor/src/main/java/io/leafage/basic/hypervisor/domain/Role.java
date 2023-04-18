@@ -26,7 +26,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "roles")
-public class Role extends SuperModel {
+public class Role extends AbstractModel {
 
     /**
      * 名称
@@ -34,11 +34,37 @@ public class Role extends SuperModel {
     @Column(value = "role_name")
     private String roleName;
 
+    /**
+     * 是否可用
+     */
+    private boolean enabled = true;
+
+    /**
+     * owner
+     */
+    private String owner;
+
     public String getRoleName() {
         return roleName;
     }
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

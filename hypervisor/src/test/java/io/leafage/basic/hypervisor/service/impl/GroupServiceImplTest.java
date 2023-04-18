@@ -66,7 +66,7 @@ class GroupServiceImplTest {
 
     @Test
     void retrieve_page() {
-        given(this.groupRepository.findAll(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Group.class)));
+        given(this.groupRepository.findBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Group.class)));
 
         given(this.groupRepository.count()).willReturn(Mono.just(2L));
 
@@ -108,22 +108,6 @@ class GroupServiceImplTest {
         given(this.groupRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
         StepVerifier.create(groupService.remove(1L)).verifyComplete();
-    }
-
-    @Test
-    void tree() {
-        Group group = new Group();
-        group.setId(1L);
-        group.setGroupName("21612OL35");
-        group.setPrincipal("test");
-
-        Group child = new Group();
-        child.setSuperiorId(group.getId());
-        child.setGroupName("21612OL34");
-        child.setPrincipal("test");
-        given(this.groupRepository.findAll()).willReturn(Flux.just(group, child));
-
-        StepVerifier.create(groupService.tree()).expectNextCount(1).verifyComplete();
     }
 
     @Test

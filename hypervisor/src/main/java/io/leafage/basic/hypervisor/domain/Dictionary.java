@@ -34,11 +34,25 @@ public class Dictionary extends SuperModel {
     @Column(value = "dictionary_name")
     private String dictionaryName;
 
+    /**
+     * 是否可用
+     */
+    private boolean enabled = true;
+
+
     public String getDictionaryName() {
         return dictionaryName;
     }
 
     public void setDictionaryName(String dictionaryName) {
         this.dictionaryName = dictionaryName;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

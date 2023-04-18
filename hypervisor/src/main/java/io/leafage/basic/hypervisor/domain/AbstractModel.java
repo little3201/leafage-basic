@@ -18,6 +18,9 @@
 package io.leafage.basic.hypervisor.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+
+import java.time.LocalDateTime;
 
 /**
  * base model
@@ -32,10 +35,9 @@ public abstract class AbstractModel {
     @Id
     private Long id;
 
-    /**
-     * 是否有效
-     */
-    private boolean enabled = true;
+    @Column(value = "modify_time")
+    private LocalDateTime modifyTime;
+
 
     public Long getId() {
         return id;
@@ -45,12 +47,11 @@ public abstract class AbstractModel {
         this.id = id;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
-
 }

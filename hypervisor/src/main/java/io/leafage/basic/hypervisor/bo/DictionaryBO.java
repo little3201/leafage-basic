@@ -29,13 +29,8 @@ public abstract class DictionaryBO {
     /**
      * 名称
      */
-    @NotBlank(message = "dictionary name is blank.")
+    @NotBlank(message = "dictionaryName cannot be blank.")
     private String dictionaryName;
-
-    /**
-     * superior
-     */
-    private Long superiorId;
 
     /**
      * 描述
@@ -49,14 +44,6 @@ public abstract class DictionaryBO {
 
     public void setDictionaryName(String dictionaryName) {
         this.dictionaryName = dictionaryName;
-    }
-
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
     }
 
     public String getDescription() {

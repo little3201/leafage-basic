@@ -21,10 +21,7 @@ import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
-import top.leafage.common.TreeNode;
 import top.leafage.common.reactive.ReactiveBasicService;
-
-import java.util.List;
 
 /**
  * group service
@@ -32,13 +29,6 @@ import java.util.List;
  * @author liwenqiang 2018/12/17 19:24
  **/
 public interface GroupService extends ReactiveBasicService<GroupDTO, GroupVO> {
-
-    /**
-     * 查询构造树结构的数据
-     *
-     * @return 数据集
-     */
-    Mono<List<TreeNode>> tree();
 
     /**
      * 分页查询

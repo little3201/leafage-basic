@@ -30,10 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.TreeNode;
-import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -42,7 +39,7 @@ import java.util.NoSuchElementException;
  * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> implements RoleService {
+public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
@@ -58,19 +55,12 @@ public class RoleServiceImpl extends ReactiveAbstractTreeNodeService<Role> imple
     @Override
     public Mono<Page<RoleVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<RoleVO> voFlux = roleRepository.findAll(pageRequest).flatMap(this::convertOuter);
+        Flux<RoleVO> voFlux = roleRepository.findBy(pageRequest).flatMap(this::convertOuter);
 
         Mono<Long> count = roleRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
                 new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
-    }
-
-    @Override
-    public Mono<List<TreeNode>> tree() {
-        Flux<Role> roleFlux = roleRepository.findAll()
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
-        return this.convert(roleFlux);
     }
 
     @Override

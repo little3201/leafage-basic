@@ -49,7 +49,7 @@ class DictionaryServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.dictionaryRepository.findAll(Mockito.any(PageRequest.class)))
+        given(this.dictionaryRepository.findByEnabledTrue(Mockito.any(PageRequest.class)))
                 .willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
         given(this.dictionaryRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
@@ -66,7 +66,7 @@ class DictionaryServiceImplTest {
 
     @Test
     void superior() {
-        given(this.dictionaryRepository.findBySuperiorIsNull()).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
+        given(this.dictionaryRepository.findBySuperiorIdIsNull()).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
         StepVerifier.create(dictionaryService.superior()).expectNextCount(1).verifyComplete();
     }

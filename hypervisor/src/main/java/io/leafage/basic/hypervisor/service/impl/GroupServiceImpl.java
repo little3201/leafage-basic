@@ -29,10 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.common.TreeNode;
-import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -41,7 +38,7 @@ import java.util.NoSuchElementException;
  * @author liwenqiang 2018/12/17 19:25
  **/
 @Service
-public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> implements GroupService {
+public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
 
@@ -58,19 +55,12 @@ public class GroupServiceImpl extends ReactiveAbstractTreeNodeService<Group> imp
     @Override
     public Mono<Page<GroupVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<GroupVO> voFlux = groupRepository.findAll(pageRequest).flatMap(this::convertOuter);
+        Flux<GroupVO> voFlux = groupRepository.findBy(pageRequest).flatMap(this::convertOuter);
 
         Mono<Long> count = groupRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
                 new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
-    }
-
-    @Override
-    public Mono<List<TreeNode>> tree() {
-        Flux<Group> groupFlux = groupRepository.findAll()
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
-        return this.convert(groupFlux);
     }
 
     @Override

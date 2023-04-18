@@ -26,4 +26,17 @@ import io.leafage.basic.hypervisor.bo.DictionaryBO;
  **/
 public class DictionaryDTO extends DictionaryBO {
 
+    /**
+     * superior
+     */
+    private Long superiorId;
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
+    }
+
 }

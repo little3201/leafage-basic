@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Mono<Page<CategoryVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<CategoryVO> voFlux = categoryRepository.findAll(pageRequest).flatMap(this::convertOuter);
+        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
 
         Mono<Long> count = categoryRepository.count();
 
@@ -68,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<Boolean> exist(String categoryName) {
-        Assert.hasText(categoryName, "category name must not be blank.");
+        Assert.hasText(categoryName, "categoryName cannot be blank.");
         return categoryRepository.existsByCategoryName(categoryName);
     }
 
@@ -81,7 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<CategoryVO> modify(Long id, CategoryDTO categoryDTO) {
-        Assert.notNull(id, "id must not be null.");
+        Assert.notNull(id, "id cannot be null.");
         return categoryRepository.findById(id).doOnNext(category ->
                         BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
                 .flatMap(categoryRepository::save).flatMap(this::convertOuter);
@@ -89,6 +89,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<Void> remove(Long id) {
+        Assert.notNull(id, "id cannot be null.");
         return categoryRepository.deleteById(id);
     }
 

@@ -37,16 +37,6 @@ public abstract class AbstractModel {
     private Long id;
 
     /**
-     * 是否有效
-     */
-    private boolean enabled = true;
-
-    /**
-     * 修改人(存放 username)
-     */
-    private String owner;
-
-    /**
      * 修改时间
      */
     @Column(value = "modify_time")
@@ -59,22 +49,6 @@ public abstract class AbstractModel {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public LocalDateTime getModifyTime() {

@@ -17,8 +17,6 @@
 
 package io.leafage.basic.hypervisor.bo;
 
-import jakarta.validation.constraints.NotBlank;
-
 /**
  * BO class for access log
  *
@@ -29,7 +27,6 @@ public abstract class AccessLogBO {
     /**
      * ip
      */
-    @NotBlank()
     private String ip;
 
     /**

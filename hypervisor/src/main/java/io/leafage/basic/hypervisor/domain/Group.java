@@ -26,7 +26,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "groups")
-public class Group extends SuperModel {
+public class Group extends AbstractModel {
 
     /**
      * 名称

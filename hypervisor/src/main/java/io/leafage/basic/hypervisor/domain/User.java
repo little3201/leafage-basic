@@ -53,7 +53,7 @@ public class User {
     private String avatar;
 
     /**
-     * 是否有效
+     * 是否可用
      */
     private boolean enabled = true;
 

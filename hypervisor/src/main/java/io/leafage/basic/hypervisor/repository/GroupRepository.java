@@ -38,7 +38,7 @@ public interface GroupRepository extends R2dbcRepository<Group, Long> {
      * @param pageable 分页参数
      * @return 有效组
      */
-    Flux<Group> findAll(Pageable pageable);
+    Flux<Group> findBy(Pageable pageable);
 
     /**
      * 是否已存在

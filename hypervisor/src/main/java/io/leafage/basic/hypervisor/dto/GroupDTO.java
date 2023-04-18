@@ -25,4 +25,18 @@ import io.leafage.basic.hypervisor.bo.GroupBO;
  * @author liwenqiang 2020-10-06 22:09
  */
 public class GroupDTO extends GroupBO {
+
+    /**
+     * superior
+     */
+    private Long superiorId;
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
+    }
+
 }

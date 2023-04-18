@@ -46,6 +46,11 @@ public class Region extends SuperModel {
     @Column(value = "area_code")
     private String areaCode;
 
+    /**
+     * 是否可用
+     */
+    private boolean enabled = true;
+
 
     public String getRegionName() {
         return regionName;
@@ -71,4 +76,11 @@ public class Region extends SuperModel {
         this.areaCode = areaCode;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

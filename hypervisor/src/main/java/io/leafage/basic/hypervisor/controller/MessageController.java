@@ -49,15 +49,16 @@ public class MessageController {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
+     * @param page     页码
+     * @param size     大小
+     * @param receiver 接收者
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<MessageVO>>> retrieve(@RequestParam int page, @RequestParam int size, boolean read) {
+    public ResponseEntity<Mono<Page<MessageVO>>> retrieve(@RequestParam int page, @RequestParam int size, @RequestParam String receiver) {
         Mono<Page<MessageVO>> pageMono;
         try {
-            pageMono = messageService.retrieve(page, size, read);
+            pageMono = messageService.retrieve(page, size, receiver);
         } catch (Exception e) {
             logger.error("Retrieve notification occurred an error: ", e);
             return ResponseEntity.noContent().build();

@@ -33,10 +33,10 @@ public interface MessageService extends ReactiveBasicService<MessageDTO, Message
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
-     * @param read 是否已读
+     * @param page     页码
+     * @param size     大小
+     * @param receiver 接收者
      * @return 结果集
      */
-    Mono<Page<MessageVO>> retrieve(int page, int size, boolean read);
+    Mono<Page<MessageVO>> retrieve(int page, int size, String receiver);
 }

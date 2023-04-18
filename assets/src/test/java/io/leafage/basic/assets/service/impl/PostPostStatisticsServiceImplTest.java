@@ -47,13 +47,35 @@ class PostPostStatisticsServiceImplTest {
 
 
     @Test
-    void increase() {
+    void increase_view() {
         given(this.statisticsRepository.getByPostId(Mockito.anyLong()))
                 .willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
 
         given(this.statisticsRepository.save(Mockito.any(PostStatistics.class))).willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
 
         StepVerifier.create(statisticsService.increase(Mockito.anyLong(), StatisticsEnum.VIEWED))
+                .expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void increase_likes() {
+        given(this.statisticsRepository.getByPostId(Mockito.anyLong()))
+                .willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
+
+        given(this.statisticsRepository.save(Mockito.any(PostStatistics.class))).willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
+
+        StepVerifier.create(statisticsService.increase(Mockito.anyLong(), StatisticsEnum.LIKES))
+                .expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void increase_comments() {
+        given(this.statisticsRepository.getByPostId(Mockito.anyLong()))
+                .willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
+
+        given(this.statisticsRepository.save(Mockito.any(PostStatistics.class))).willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
+
+        StepVerifier.create(statisticsService.increase(Mockito.anyLong(), StatisticsEnum.COMMENTS))
                 .expectNextCount(1).verifyComplete();
     }
 }

@@ -23,8 +23,12 @@ import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.NoSuchElementException;
@@ -45,9 +49,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Mono<Page<UserVO>> retrieve(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Flux<UserVO> voFlux = userRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
+
+        Mono<Long> count = userRepository.count();
+
+        return voFlux.collectList().zipWith(count).map(objects ->
+                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+    }
+
+    @Override
     public Mono<Boolean> exist(String username) {
         Assert.hasText(username, "username must not be blank.");
-        return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
+        return userRepository.existsByUsername(username);
     }
 
     @Override

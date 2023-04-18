@@ -38,7 +38,7 @@ public interface RegionRepository extends R2dbcRepository<Region, Long> {
      * @param pageable 分页参数
      * @return 有效数据集
      */
-    Flux<Region> findAll(Pageable pageable);
+    Flux<Region> findByEnabledTrue(Pageable pageable);
 
     /**
      * 是否已存在

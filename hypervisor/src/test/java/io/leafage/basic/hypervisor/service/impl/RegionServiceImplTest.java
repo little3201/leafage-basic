@@ -60,7 +60,7 @@ class RegionServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.regionRepository.findAll(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Region.class)));
+        given(this.regionRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Region.class)));
 
         given(this.regionRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 

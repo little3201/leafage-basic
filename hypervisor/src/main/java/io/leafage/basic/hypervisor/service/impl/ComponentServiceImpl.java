@@ -66,7 +66,7 @@ public class ComponentServiceImpl extends ReactiveAbstractTreeNodeService<Compon
     @Override
     public Mono<Page<ComponentVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<ComponentVO> voFlux = componentRepository.findAll(pageRequest).flatMap(this::convertOuter);
+        Flux<ComponentVO> voFlux = componentRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
 
         Mono<Long> count = componentRepository.count();
 

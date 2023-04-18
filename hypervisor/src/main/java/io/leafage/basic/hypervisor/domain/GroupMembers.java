@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -27,13 +26,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2019/9/16 10:09
  **/
 @Table(name = "group_members")
-public class GroupMembers {
-
-    /**
-     * 主键
-     */
-    @Id
-    private Long id;
+public class GroupMembers extends AbstractModel {
 
     /**
      * 账号
@@ -46,13 +39,6 @@ public class GroupMembers {
     @Column(value = "group_id")
     private Long groupId;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

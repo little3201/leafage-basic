@@ -51,9 +51,14 @@ public class Comment extends AbstractModel {
     private String location;
 
     /**
-     * 回复给
+     * 回复者
      */
     private Long replier;
+
+    /**
+     * 是否有效
+     */
+    private boolean enabled = true;
 
 
     public Long getPostId() {
@@ -94,5 +99,13 @@ public class Comment extends AbstractModel {
 
     public void setReplier(Long replier) {
         this.replier = replier;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

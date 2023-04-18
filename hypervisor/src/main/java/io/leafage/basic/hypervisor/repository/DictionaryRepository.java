@@ -38,7 +38,7 @@ public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> 
      * @param pageable 分页参数
      * @return 有效数据集
      */
-    Flux<Dictionary> findAll(Pageable pageable);
+    Flux<Dictionary> findByEnabledTrue(Pageable pageable);
 
     /**
      * 是否已存在
@@ -60,5 +60,5 @@ public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> 
      *
      * @return 结果信息
      */
-    Flux<Dictionary> findBySuperiorIsNull();
+    Flux<Dictionary> findBySuperiorIdIsNull();
 }

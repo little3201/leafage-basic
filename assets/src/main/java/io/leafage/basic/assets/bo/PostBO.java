@@ -31,25 +31,27 @@ public abstract class PostBO {
     /**
      * 标题
      */
-    @NotBlank
+    @NotBlank(message = "title cannot be blank.")
     private String title;
 
     /**
      * 封面
      */
-    @NotBlank
+    @NotBlank(message = "cover cannot be blank.")
     private String cover;
+
+    /**
+     * 内容
+     */
+    @NotBlank(message = "context cannot be blank.")
+    private String context;
 
     /**
      * 标签
      */
-    @NotEmpty
+    @NotEmpty(message = "tags cannot be empty.")
     private Set<String> tags;
 
-    /**
-     * 分类
-     */
-    private Long categoryId;
 
     public String getTitle() {
         return title;
@@ -67,6 +69,14 @@ public abstract class PostBO {
         this.cover = cover;
     }
 
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
     public Set<String> getTags() {
         return tags;
     }
@@ -75,11 +85,4 @@ public abstract class PostBO {
         this.tags = tags;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
 }

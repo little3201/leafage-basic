@@ -50,13 +50,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Flux<CommentVO> comments(Long postId) {
-        Assert.notNull(postId, "postId must not be null.");
+        Assert.notNull(postId, "postId cannot be null.");
         return commentRepository.findByPostIdAndReplierIsNull(postId).flatMap(this::convertOuter);
     }
 
     @Override
     public Flux<CommentVO> replies(Long replier) {
-        Assert.notNull(replier, "replier must not be null.");
+        Assert.notNull(replier, "replier cannot be null.");
         return commentRepository.findByReplier(replier).flatMap(this::convertOuter);
     }
 

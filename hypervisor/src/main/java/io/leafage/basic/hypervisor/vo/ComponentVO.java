@@ -29,10 +29,23 @@ import java.time.LocalDateTime;
 public class ComponentVO extends ComponentBO {
 
     /**
+     * 上级
+     */
+    private String superior;
+
+    /**
      * 更新时间
      */
     private LocalDateTime modifyTime;
 
+
+    public String getSuperior() {
+        return superior;
+    }
+
+    public void setSuperior(String superior) {
+        this.superior = superior;
+    }
 
     public LocalDateTime getModifyTime() {
         return modifyTime;

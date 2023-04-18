@@ -23,6 +23,7 @@ import io.leafage.basic.hypervisor.vo.UserVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,17 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping
+    public ResponseEntity<Mono<Page<UserVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<UserVO>> pageMono;
+        try {
+            pageMono = userService.retrieve(page, size);
+        } catch (Exception e) {
+            logger.error("Retrieve users occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(pageMono);
+    }
 
     /**
      * 根据 username 查询

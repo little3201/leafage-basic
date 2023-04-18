@@ -55,7 +55,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Mono<Page<GroupVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<GroupVO> voFlux = groupRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Flux<GroupVO> voFlux = groupRepository.findBy(pageRequest).flatMap(this::convertOuter);
 
         Mono<Long> count = groupRepository.count();
 

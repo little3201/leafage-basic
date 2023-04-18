@@ -66,7 +66,7 @@ class DictionaryServiceImplTest {
 
     @Test
     void superior() {
-        given(this.dictionaryRepository.findBySuperiorIsNull()).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
+        given(this.dictionaryRepository.findBySuperiorIdIsNull()).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
         StepVerifier.create(dictionaryService.superior()).expectNextCount(1).verifyComplete();
     }

@@ -60,5 +60,5 @@ public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> 
      *
      * @return 结果信息
      */
-    Flux<Dictionary> findBySuperiorIsNull();
+    Flux<Dictionary> findBySuperiorIdIsNull();
 }

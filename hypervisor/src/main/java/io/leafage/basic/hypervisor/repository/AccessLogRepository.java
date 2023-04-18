@@ -36,5 +36,5 @@ public interface AccessLogRepository extends R2dbcRepository<AccessLog, Long> {
      *
      * @return 有效帖子
      */
-    Flux<AccessLog> findByEnabledTrue(Pageable pageable);
+    Flux<AccessLog> findBy(Pageable pageable);
 }

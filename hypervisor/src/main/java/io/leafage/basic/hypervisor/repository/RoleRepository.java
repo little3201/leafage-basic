@@ -38,7 +38,7 @@ public interface RoleRepository extends R2dbcRepository<Role, Long> {
      * @param pageable 分页参数
      * @return 数据集
      */
-    Flux<Role> findByEnabledTrue(Pageable pageable);
+    Flux<Role> findBy(Pageable pageable);
 
     /**
      * 是否已存在

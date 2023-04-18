@@ -55,7 +55,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Mono<Page<RoleVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<RoleVO> voFlux = roleRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Flux<RoleVO> voFlux = roleRepository.findBy(pageRequest).flatMap(this::convertOuter);
 
         Mono<Long> count = roleRepository.count();
 

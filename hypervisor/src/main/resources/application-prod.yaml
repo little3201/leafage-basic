@@ -8,13 +8,10 @@ spring:
   cloud:
     consul:
       host: 127.0.0.1
-      port: 0000
+      port: 8500
 
-  data:
-    mongodb:
-      host: 127.0.0.1
-      port: 123456
-      username: xxxx
-      password: xxxx
-      database: xxxx
-      authentication-database: xxxx
+  r2dbc:
+    url: r2dbc:postgresql://postgres@localhost:5432
+    username: postgres
+    password: zx110119
+    name: postgres

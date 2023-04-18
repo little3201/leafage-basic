@@ -65,7 +65,7 @@ class RoleServiceImplTest {
 
     @Test
     void retrieve_page() {
-        given(this.roleRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Role.class)));
+        given(this.roleRepository.findBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Role.class)));
 
         given(this.roleRepository.count()).willReturn(Mono.just(2L));
 

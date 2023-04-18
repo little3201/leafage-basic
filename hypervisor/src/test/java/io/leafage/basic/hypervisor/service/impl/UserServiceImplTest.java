@@ -62,8 +62,7 @@ class UserServiceImplTest {
 
     @Test
     void exist() {
-        given(this.userRepository.existsByUsernameOrPhoneOrEmail(Mockito.anyString(), Mockito.anyString(),
-                Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(userService.exist("little3201")).expectNext(Boolean.TRUE).verifyComplete();
     }

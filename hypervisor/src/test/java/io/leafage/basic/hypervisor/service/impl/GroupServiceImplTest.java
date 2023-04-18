@@ -66,7 +66,7 @@ class GroupServiceImplTest {
 
     @Test
     void retrieve_page() {
-        given(this.groupRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Group.class)));
+        given(this.groupRepository.findBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Group.class)));
 
         given(this.groupRepository.count()).willReturn(Mono.just(2L));
 

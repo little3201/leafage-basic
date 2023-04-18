@@ -48,7 +48,7 @@ class AccessLogServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.accessLogRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(AccessLog.class)));
+        given(this.accessLogRepository.findBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(AccessLog.class)));
 
         given(this.accessLogRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 

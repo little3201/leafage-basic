@@ -24,8 +24,9 @@ create table group_members
    id                   bigserial not null primary key,
    group_id             bigint not null,
    username             varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
-   constraint fk_group_members_group foreign key(group_id) references groups(id)
+   modify_time          timestamp not null default CURRENT_TIMESTAMP,
+   constraint fk_group_members_group foreign key(group_id) references groups(id),
+   constraint fk_group_members_username foreign key(username) references users(username)
 );
 
 
@@ -43,9 +44,8 @@ create table users
    avatar               varchar(16) not null ,
    enabled              boolean not null default true,
    account_expires_at   timestamp,
-   credential_expires_at timestamp,
-   account_non_locked   boolean not null default true,
-   constraint unique_uk_username unique(username)
+   credentials_expires_at timestamp,
+   account_non_locked   boolean not null default true
 );
 
 
@@ -98,9 +98,10 @@ create table role_members
 (
    id                   bigserial not null primary key,
    role_id              bigint not null,
-   username             bigint not null,
+   username             varchar(16) not null,
    modify_time          timestamp not null default CURRENT_TIMESTAMP,
-   constraint fk_role_members_role foreign key(role_id) references roles(id)
+   constraint fk_role_members_role foreign key(role_id) references roles(id),
+   constraint fk_role_members_username foreign key(username) references users(username)
 );
 
 
@@ -118,7 +119,7 @@ create table components
    path                 varchar(127),
    icon                 varchar(127),
    enabled              boolean not null default true,
-   owner                varchar(16) not null ,
+   owner                varchar(16) not null,
    modify_time          timestamp not null default CURRENT_TIMESTAMP
 );
 
@@ -182,9 +183,26 @@ create table regions
 (
    id                   bigserial not null primary key,
    region_name          varchar(64),
-   superior             bigint,
+   superior_id          bigint,
    postal_code          bigint,
    area_code            bigint,
    enabled              boolean not null default true,
-   modify_time          datetime not null default CURRENT_TIMESTAMP
+   modify_time          timestamp not null default CURRENT_TIMESTAMP
+);
+
+
+drop table if exists access_logs;
+
+/*==============================================================*/
+/* Table: access_logs                                           */
+/*==============================================================*/
+create table access_logs
+(
+   id                   bigserial not null primary key,
+   ip                   inet,
+   location          varchar(127),
+   postal_code          bigint,
+   context            text,
+   owner                varchar(16) not null,
+   modify_time          timestamp not null default CURRENT_TIMESTAMP
 );

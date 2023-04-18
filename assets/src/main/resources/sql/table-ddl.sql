@@ -26,9 +26,9 @@ drop table if exists post_content;
 create table post_content
 (
    id                   bigserial not null primary key,
-   post_id              bigint not null comment '帖子主键',
-   context              text comment '内容',
-   modify_time          datetime not null default CURRENT_TIMESTAMP,
+   post_id              bigint not null,
+   context              text,
+   modify_time          timestamp not null default CURRENT_TIMESTAMP,
    constraint fk_post_content_post foreign key(post_id) references posts(id)
 );
 
@@ -45,7 +45,7 @@ create table categories
    description          varchar(255),
    enabled              boolean not null default true,
    owner                varchar(16) not null ,
-   modify_time          datetime not null default CURRENT_TIMESTAMP
+   modify_time          timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -62,7 +62,7 @@ create table comments
    location             varchar(255),
    context              text,
    enabled              boolean not null default true,
-   modify_time          datetime not null default CURRENT_TIMESTAMP,
+   modify_time          timestamp not null default CURRENT_TIMESTAMP,
    constraint fk_comments_post foreign key(post_id) references posts(id)
 );
 
@@ -79,6 +79,6 @@ create table post_statistics
    viewed               bigint,
    likes                bigint,
    comments             bigint,
-   modify_time          datetime not null default CURRENT_TIMESTAMP,
+   modify_time          timestamp not null default CURRENT_TIMESTAMP,
    constraint fk_post_statistics_post foreign key(post_id) references posts(id)
 );

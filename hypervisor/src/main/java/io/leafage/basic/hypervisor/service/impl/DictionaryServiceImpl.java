@@ -59,7 +59,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
 
     @Override
     public Flux<DictionaryVO> superior() {
-        return dictionaryRepository.findBySuperiorIsNull().map(this::convertOuter);
+        return dictionaryRepository.findBySuperiorIdIsNull().map(this::convertOuter);
     }
 
     @Override

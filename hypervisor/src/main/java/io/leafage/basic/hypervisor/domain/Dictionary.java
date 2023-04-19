@@ -39,6 +39,10 @@ public class Dictionary extends SuperModel {
      */
     private boolean enabled = true;
 
+    /**
+     * 描述
+     */
+    private String description;
 
     public String getDictionaryName() {
         return dictionaryName;
@@ -54,5 +58,13 @@ public class Dictionary extends SuperModel {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

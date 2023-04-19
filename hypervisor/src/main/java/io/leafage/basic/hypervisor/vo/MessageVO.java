@@ -29,10 +29,23 @@ import java.time.LocalDateTime;
 public class MessageVO extends MessageBO {
 
     /**
+     * 主键
+     */
+    private Long id;
+
+    /**
      * 更新时间
      */
     private LocalDateTime modifyTime;
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public LocalDateTime getModifyTime() {
         return modifyTime;

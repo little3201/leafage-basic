@@ -29,6 +29,11 @@ import java.time.LocalDateTime;
 public class RegionVO extends RegionBO {
 
     /**
+     * 主键
+     */
+    private Long id;
+
+    /**
      * 上级
      */
     private String superior;
@@ -37,6 +42,15 @@ public class RegionVO extends RegionBO {
      * 更新时间
      */
     private LocalDateTime modifyTime;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getSuperior() {
         return superior;

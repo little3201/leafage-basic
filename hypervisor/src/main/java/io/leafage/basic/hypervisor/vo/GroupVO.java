@@ -19,6 +19,8 @@ package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.GroupBO;
 
+import java.time.LocalDateTime;
+
 /**
  * VO class for group
  *
@@ -27,9 +29,28 @@ import io.leafage.basic.hypervisor.bo.GroupBO;
 public class GroupVO extends GroupBO {
 
     /**
+     * 主键
+     */
+    private Long id;
+
+    /**
      * 上级
      */
     private String superior;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime modifyTime;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getSuperior() {
         return superior;
@@ -37,5 +58,13 @@ public class GroupVO extends GroupBO {
 
     public void setSuperior(String superior) {
         this.superior = superior;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

@@ -7,7 +7,7 @@ create table groups
 (
    id                   bigserial not null primary key,
    group_name           varchar(64),
-   principal            bigint ,
+   principal            varchar(16) ,
    enabled              boolean not null default true,
    owner                varchar(16) not null ,
    modify_time          timestamp not null default CURRENT_TIMESTAMP
@@ -41,7 +41,7 @@ create table users
    username             varchar(16) not null,
    password             varchar(255) not null ,
    nickname             varchar(16) not null,
-   avatar               varchar(16) not null ,
+   avatar               varchar(127) not null ,
    enabled              boolean not null default true,
    account_expires_at   timestamp,
    credentials_expires_at timestamp,

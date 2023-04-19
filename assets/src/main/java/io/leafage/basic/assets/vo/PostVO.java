@@ -29,6 +29,11 @@ import java.time.LocalDateTime;
 public class PostVO extends PostBO {
 
     /**
+     * 主键
+     */
+    private Long id;
+
+    /**
      * category
      */
     private String category;
@@ -43,6 +48,14 @@ public class PostVO extends PostBO {
      */
     private LocalDateTime modifyTime;
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getCategory() {
         return category;

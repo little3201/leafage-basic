@@ -29,6 +29,11 @@ import java.time.LocalDateTime;
 public class CategoryVO extends CategoryBO {
 
     /**
+     * 主键
+     */
+    private Long id;
+
+    /**
      * 贴子数
      */
     private long count;
@@ -38,6 +43,14 @@ public class CategoryVO extends CategoryBO {
      */
     private LocalDateTime modifyTime;
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public long getCount() {
         return count;

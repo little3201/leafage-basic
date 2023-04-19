@@ -76,6 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Mono<CategoryVO> create(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
+        category.setOwner("admin");
         return categoryRepository.save(category).flatMap(this::convertOuter);
     }
 

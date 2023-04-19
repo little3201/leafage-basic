@@ -29,9 +29,14 @@ import java.time.LocalDateTime;
 public class RoleVO extends RoleBO {
 
     /**
+     * 主键
+     */
+    private Long id;
+
+    /**
      * 上级
      */
-    private String superior;
+    private boolean enabled;
 
     /**
      * 更新时间
@@ -39,12 +44,20 @@ public class RoleVO extends RoleBO {
     private LocalDateTime modifyTime;
 
 
-    public String getSuperior() {
-        return superior;
+    public Long getId() {
+        return id;
     }
 
-    public void setSuperior(String superior) {
-        this.superior = superior;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public LocalDateTime getModifyTime() {

@@ -29,6 +29,11 @@ import java.time.LocalDateTime;
 public class DictionaryVO extends DictionaryBO {
 
     /**
+     * 主键
+     */
+    private Long id;
+
+    /**
      * 上级
      */
     private String superior;
@@ -38,6 +43,14 @@ public class DictionaryVO extends DictionaryBO {
      */
     private LocalDateTime modifyTime;
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getSuperior() {
         return superior;

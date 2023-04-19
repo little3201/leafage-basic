@@ -101,7 +101,7 @@ public class PostServiceImpl implements PostService {
             Post post = new Post();
             BeanUtils.copyProperties(postDTO, post);
             post.setCategoryId(dto.getCategoryId());
-            post.setOwner("little3201");
+            post.setOwner("admin");
             return post;
         }).flatMap(postRepository::save).flatMap(post -> {
             PostContent postContent = new PostContent();

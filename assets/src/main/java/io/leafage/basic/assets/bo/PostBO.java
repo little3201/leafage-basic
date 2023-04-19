@@ -37,7 +37,6 @@ public abstract class PostBO {
     /**
      * 封面
      */
-    @NotBlank(message = "cover cannot be blank.")
     private String cover;
 
     /**

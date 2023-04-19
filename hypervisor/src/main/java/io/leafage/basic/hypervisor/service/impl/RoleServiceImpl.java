@@ -81,6 +81,7 @@ public class RoleServiceImpl implements RoleService {
         return Mono.just(roleDTO).map(dto -> {
                     Role role = new Role();
                     BeanUtils.copyProperties(roleDTO, role);
+                    role.setOwner("admin");
                     return role;
                 })
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))

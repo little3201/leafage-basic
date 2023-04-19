@@ -27,6 +27,11 @@ import java.time.LocalDateTime;
 public class CommentVO {
 
     /**
+     * 主键
+     */
+    private Long id;
+
+    /**
      * post主键
      */
     private Long postId;
@@ -56,6 +61,14 @@ public class CommentVO {
      */
     private LocalDateTime modifyTime;
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getPostId() {
         return postId;

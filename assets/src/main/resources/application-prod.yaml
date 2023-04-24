@@ -8,7 +8,7 @@ spring:
   cloud:
     consul:
       host: 127.0.0.1
-      port: 0000
+      port: 8500
 
   r2dbc:
     url: r2dbc:postgresql://postgres@localhost:5432

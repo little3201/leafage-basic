@@ -57,7 +57,7 @@ public class AccessLogController {
         try {
             pageMono = accessLogService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Retrieve record occurred an error: ", e);
+            logger.error("Retrieve access logs occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);

@@ -58,7 +58,7 @@ public class CommentController {
         try {
             voFlux = commentService.comments(postId);
         } catch (Exception e) {
-            logger.error("Fetch comment by postId occurred an error: ", e);
+            logger.error("Retrieve comments by postId occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);

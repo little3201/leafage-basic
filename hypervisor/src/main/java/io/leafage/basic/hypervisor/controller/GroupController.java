@@ -65,7 +65,7 @@ public class GroupController {
         try {
             pageMono = groupService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Retrieve group occurred an error: ", e);
+            logger.error("Retrieve groups occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);

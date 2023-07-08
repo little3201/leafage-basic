@@ -1,5 +1,5 @@
 # Start with a base image containing Java runtime
-FROM openjdk:17.0.2-jdk-slim-buster
+FROM eclipse-temurin:17-jre-alpine
 
 # Add Maintainer Info
 LABEL maintainer="little3201@gmail.com"
@@ -10,6 +10,8 @@ ENV VERSION=0.1.0
 # Make port 8763 available to the world outside this container
 EXPOSE 8763
 
+VOLUME /tmp
+
 # Add the application's jar to the container
 ARG JAR_FILE=target/hypervisor-${VERSION}.jar
 
@@ -17,4 +19,4 @@ ARG JAR_FILE=target/hypervisor-${VERSION}.jar
 COPY ${JAR_FILE} app.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]

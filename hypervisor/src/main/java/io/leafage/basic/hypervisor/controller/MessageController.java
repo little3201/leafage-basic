@@ -60,7 +60,7 @@ public class MessageController {
         try {
             pageMono = messageService.retrieve(page, size, receiver);
         } catch (Exception e) {
-            logger.error("Retrieve notification occurred an error: ", e);
+            logger.error("Retrieve messages occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);
@@ -78,7 +78,7 @@ public class MessageController {
         try {
             voMono = messageService.fetch(id);
         } catch (Exception e) {
-            logger.error("Fetch notification occurred an error: ", e);
+            logger.error("Fetch message occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
@@ -96,7 +96,7 @@ public class MessageController {
         try {
             voMono = messageService.create(messageDTO);
         } catch (Exception e) {
-            logger.error("Create notification occurred an error: ", e);
+            logger.error("Create message occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
@@ -114,7 +114,7 @@ public class MessageController {
         try {
             voidMono = messageService.remove(id);
         } catch (Exception e) {
-            logger.error("Remove notification occurred an error: ", e);
+            logger.error("Remove message occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok(voidMono);

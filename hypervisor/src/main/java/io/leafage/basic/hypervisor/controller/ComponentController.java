@@ -83,7 +83,7 @@ public class ComponentController {
         try {
             authorities = componentService.tree();
         } catch (Exception e) {
-            logger.info("Retrieve component occurred an error: ", e);
+            logger.info("Retrieve components occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(authorities);

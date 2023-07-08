@@ -7,7 +7,7 @@ create table posts
 (
    id                   bigserial not null primary key,
    title                varchar(32),
-   tags                 varchar(255),
+   tags                 varchar[],
    cover                varchar(127),
    category_id          bigint,
    context              text,

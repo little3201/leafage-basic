@@ -132,7 +132,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "id cannot be null.");
-        return postRepository.deleteById(id);
+        return postContentRepository.getByPostId(id).flatMap(postContent ->
+                        postContentRepository.deleteById(postContent.getId()))
+                .then(Mono.defer(() -> postRepository.deleteById(id)));
     }
 
     @Override

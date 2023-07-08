@@ -112,7 +112,7 @@ public class DictionaryController {
         try {
             voFlux = dictionaryService.subordinates(id);
         } catch (Exception e) {
-            logger.info("Retrieve dictionary lower occurred an error: ", e);
+            logger.info("Retrieve dictionaries lower occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);

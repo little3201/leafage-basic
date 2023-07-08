@@ -57,7 +57,7 @@ public class RegionController {
         try {
             pageMono = regionService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Retrieve region occurred an error: ", e);
+            logger.error("Retrieve regions occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);
@@ -92,7 +92,7 @@ public class RegionController {
         try {
             voFlux = regionService.subordinates(id);
         } catch (Exception e) {
-            logger.info("Retrieve region lower occurred an error: ", e);
+            logger.info("Retrieve region subordinates occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);

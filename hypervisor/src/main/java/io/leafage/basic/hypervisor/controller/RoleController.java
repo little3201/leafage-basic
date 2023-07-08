@@ -71,7 +71,7 @@ public class RoleController {
         try {
             pageMono = roleService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Retrieve role occurred an error: ", e);
+            logger.error("Retrieve roles occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);
@@ -162,7 +162,7 @@ public class RoleController {
         try {
             listMono = roleMembersService.members(id);
         } catch (Exception e) {
-            logger.error("Retrieve role accounts occurred an error: ", e);
+            logger.error("Retrieve role members occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(listMono);
@@ -180,7 +180,7 @@ public class RoleController {
         try {
             listMono = roleComponentsService.components(id);
         } catch (Exception e) {
-            logger.error("Relation role ah occurred an error: ", e);
+            logger.error("Retrieve role components occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(listMono);
@@ -199,7 +199,7 @@ public class RoleController {
         try {
             voMono = roleComponentsService.relation(id, componentIds);
         } catch (Exception e) {
-            logger.error("Relation role ah occurred an error: ", e);
+            logger.error("Relation role components occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.accepted().body(voMono);

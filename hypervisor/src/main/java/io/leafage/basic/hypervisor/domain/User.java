@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,46 +29,40 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "users")
-public class User {
+public class User extends AbstractModel {
 
     /**
      * 用户名
      */
     @Id
     private String username;
-
     /**
      * 昵称
      */
     private String nickname;
-
     /**
      * 密码
      */
     private String password;
-
     /**
      * 头像
      */
     private String avatar;
-
     /**
-     * 是否可用
+     * 是否启用
      */
+    @Column(value = "is_enabled")
     private boolean enabled = true;
-
     /**
      * 账号有效期
      */
     @Column(value = "account_expires_at")
     private LocalDateTime accountExpiresAt;
-
     /**
      * 是否锁定
      */
     @Column(value = "account_non_locked")
     private boolean accountNonLocked = true;
-
     /**
      * 密码有效期
      */

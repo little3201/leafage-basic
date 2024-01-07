@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.ComponentBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for component
+ * VO class for privilege
  *
  * @author liwenqiang 2020-10-06 22:09
  */

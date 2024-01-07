@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.domain.RoleComponents;
 import io.leafage.basic.hypervisor.domain.RoleMembers;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.service.RoleComponentsService;
 import io.leafage.basic.hypervisor.service.RoleMembersService;
+import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * role接口测试类
  *
- * @author liwenqiang 2021/6/19 10:00
+ * @author liwenqiang 2021-06-19 10:00
  */
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(RoleController.class)
@@ -61,11 +61,11 @@ class RoleControllerTest {
     private RoleService roleService;
 
     @MockBean
-    private RoleComponentsService roleComponentsService;
+    private RolePrivilegesService rolePrivilegesService;
 
     private RoleDTO roleDTO;
     private RoleVO roleVO;
-    private RoleComponents roleComponents;
+    private RolePrivileges rolePrivileges;
     private RoleMembers roleMembers;
 
     @BeforeEach
@@ -76,9 +76,9 @@ class RoleControllerTest {
         roleVO = new RoleVO();
         roleVO.setRoleName("test");
 
-        roleComponents = new RoleComponents();
-        roleComponents.setRoleId(1L);
-        roleComponents.setComponentId(1L);
+        rolePrivileges = new RolePrivileges();
+        rolePrivileges.setRoleId(1L);
+        rolePrivileges.setPrivilegeId(1L);
 
         roleMembers = new RoleMembers();
         roleMembers.setRoleId(1L);
@@ -183,36 +183,36 @@ class RoleControllerTest {
     }
 
     @Test
-    void components() {
-        given(this.roleComponentsService.components(Mockito.anyLong())).willReturn(Mono.just(List.of(roleComponents)));
+    void privileges() {
+        given(this.rolePrivilegesService.privileges(Mockito.anyLong())).willReturn(Mono.just(List.of(rolePrivileges)));
 
-        webTestClient.get().uri("/roles/{id}/components", 1L).exchange()
+        webTestClient.get().uri("/roles/{id}/privileges", 1L).exchange()
                 .expectStatus().isOk()
-                .expectBodyList(RoleComponents.class);
+                .expectBodyList(RolePrivileges.class);
     }
 
     @Test
     void components_error() {
-        given(this.roleComponentsService.components(Mockito.anyLong())).willThrow(new RuntimeException());
+        given(this.rolePrivilegesService.privileges(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/roles/{id}/components", 1L).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/roles/{id}/privileges", 1L).exchange().expectStatus().isNoContent();
     }
 
     @Test
     void relation() {
-        given(this.roleComponentsService.relation(Mockito.anyLong(), Mockito.anySet()))
+        given(this.rolePrivilegesService.relation(Mockito.anyLong(), Mockito.anySet()))
                 .willReturn(Mono.just(true));
 
-        webTestClient.patch().uri("/roles/{id}/components", 1L)
+        webTestClient.patch().uri("/roles/{id}/privileges", 1L)
                 .bodyValue(Collections.singleton(1L))
                 .exchange().expectStatus().isAccepted();
     }
 
     @Test
     void relation_error() {
-        given(this.roleComponentsService.relation(Mockito.anyLong(), Mockito.anySet())).willThrow(new RuntimeException());
+        given(this.rolePrivilegesService.relation(Mockito.anyLong(), Mockito.anySet())).willThrow(new RuntimeException());
 
-        webTestClient.patch().uri("/roles/{id}/components", 1L)
+        webTestClient.patch().uri("/roles/{id}/privileges", 1L)
                 .bodyValue(Collections.singleton(1L))
                 .exchange().expectStatus().is4xxClientError();
     }

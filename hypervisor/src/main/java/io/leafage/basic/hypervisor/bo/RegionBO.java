@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * desc
  *
- * @author wilsonli 2023/3/26 18:16
+ * @author wilsonli 2022-03-26 18:16
  **/
 public abstract class RegionBO {
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.domain.RoleComponents;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -26,10 +26,10 @@ import reactor.core.publisher.Mono;
 /**
  * role authority repository
  *
- * @author liwenqiang 2018/9/26 11:29
+ * @author liwenqiang 2018-09-26 11:29
  **/
 @Repository
-public interface RoleComponentsRepository extends R2dbcRepository<RoleComponents, Long> {
+public interface RoleComponentsRepository extends R2dbcRepository<RolePrivileges, Long> {
 
     /**
      * 统计关联角色
@@ -45,7 +45,7 @@ public interface RoleComponentsRepository extends R2dbcRepository<RoleComponents
      * @param roleId role主键
      * @return 关联数据集
      */
-    Flux<RoleComponents> findByRoleId(Long roleId);
+    Flux<RolePrivileges> findByRoleId(Long roleId);
 
     /**
      * 根据component查询
@@ -53,5 +53,5 @@ public interface RoleComponentsRepository extends R2dbcRepository<RoleComponents
      * @param componentId component主键
      * @return 关联数据集
      */
-    Flux<RoleComponents> findByComponentId(Long componentId);
+    Flux<RolePrivileges> findByComponentId(Long componentId);
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -26,23 +27,40 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2022-03-30 07:24
  **/
 @Table(name = "dictionaries")
-public class Dictionary extends SuperModel {
+public class Dictionary extends AbstractModel {
 
+    /**
+     * 主键
+     */
+    @Id
+    private Long id;
     /**
      * 名称
      */
     @Column(value = "dictionary_name")
     private String dictionaryName;
-
     /**
-     * 是否可用
+     * 上级
      */
+    @Column(value = "superior_id")
+    private Long superiorId;
+    /**
+     * 是否启用
+     */
+    @Column(value = "is_enabled")
     private boolean enabled = true;
-
     /**
      * 描述
      */
     private String description;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getDictionaryName() {
         return dictionaryName;
@@ -50,6 +68,14 @@ public class Dictionary extends SuperModel {
 
     public void setDictionaryName(String dictionaryName) {
         this.dictionaryName = dictionaryName;
+    }
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public boolean isEnabled() {

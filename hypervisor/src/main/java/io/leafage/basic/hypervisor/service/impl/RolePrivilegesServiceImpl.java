@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.RoleComponents;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.repository.ComponentRepository;
 import io.leafage.basic.hypervisor.repository.RoleComponentsRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
-import io.leafage.basic.hypervisor.service.RoleComponentsService;
+import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -33,43 +33,43 @@ import java.util.Set;
 /**
  * role authority service impl
  *
- * @author liwenqiang 2018/7/28 0:29
+ * @author liwenqiang 2018-07-28 0:29
  **/
 @Service
-public class RoleComponentsServiceImpl implements RoleComponentsService {
+public class RolePrivilegesServiceImpl implements RolePrivilegesService {
 
     private final RoleRepository roleRepository;
     private final RoleComponentsRepository roleComponentsRepository;
     private final ComponentRepository componentRepository;
 
-    public RoleComponentsServiceImpl(RoleRepository roleRepository, RoleComponentsRepository roleComponentsRepository, ComponentRepository componentRepository) {
+    public RolePrivilegesServiceImpl(RoleRepository roleRepository, RoleComponentsRepository roleComponentsRepository, ComponentRepository componentRepository) {
         this.roleRepository = roleRepository;
         this.roleComponentsRepository = roleComponentsRepository;
         this.componentRepository = componentRepository;
     }
 
     @Override
-    public Mono<List<RoleComponents>> components(Long roleId) {
+    public Mono<List<RolePrivileges>> privileges(Long roleId) {
         Assert.notNull(roleId, "role id must not be null.");
         return roleComponentsRepository.findByRoleId(roleId).collectList();
     }
 
     @Override
-    public Mono<List<RoleComponents>> roles(Long componentId) {
-        Assert.notNull(componentId, "component id must not be null.");
+    public Mono<List<RolePrivileges>> roles(Long componentId) {
+        Assert.notNull(componentId, "privilege id must not be null.");
         return roleComponentsRepository.findByComponentId(componentId).collectList();
     }
 
     @Override
     public Mono<Boolean> relation(Long roleId, Set<Long> componentIds) {
         Assert.notNull(roleId, "role id must not be null.");
-        Assert.notEmpty(componentIds, "component ids must not be empty.");
+        Assert.notEmpty(componentIds, "privilege ids must not be empty.");
 
         return Flux.fromIterable(componentIds).map(componentId -> {
-            RoleComponents roleComponents = new RoleComponents();
-            roleComponents.setRoleId(roleId);
-            roleComponents.setComponentId(componentId);
-            return roleComponents;
+            RolePrivileges rolePrivileges = new RolePrivileges();
+            rolePrivileges.setRoleId(roleId);
+            rolePrivileges.setComponentId(componentId);
+            return rolePrivileges;
         }).collectList().flatMapMany(roleComponentsRepository::saveAll).hasElements();
     }
 }

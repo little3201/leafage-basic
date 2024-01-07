@@ -10,7 +10,7 @@ create table groups
    principal            varchar(16) ,
    enabled              boolean not null default true,
    owner                varchar(16) not null ,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   last_updated_at      timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -24,7 +24,7 @@ create table group_members
    id                   bigserial not null primary key,
    group_id             bigint not null,
    username             varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP,
+   last_updated_at      timestamp not null default CURRENT_TIMESTAMP,
    constraint fk_group_members_group foreign key(group_id) references groups(id),
    constraint fk_group_members_username foreign key(username) references users(username)
 );
@@ -85,7 +85,7 @@ create table roles
    role_name            varchar(64),
    enabled              boolean not null default true,
    owner                varchar(16) not null ,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   last_updated_at          timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -99,18 +99,18 @@ create table role_members
    id                   bigserial not null primary key,
    role_id              bigint not null,
    username             varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP,
+   last_updated_at          timestamp not null default CURRENT_TIMESTAMP,
    constraint fk_role_members_role foreign key(role_id) references roles(id),
    constraint fk_role_members_username foreign key(username) references users(username)
 );
 
 
-drop table if exists components;
+drop table if exists privileges;
 
 /*==============================================================*/
-/* Table: components                                             */
+/* Table: privileges                                             */
 /*==============================================================*/
-create table components
+create table privileges
 (
    id                   bigserial not null primary key,
    superior_id          bigint,
@@ -120,7 +120,7 @@ create table components
    icon                 varchar(127),
    enabled              boolean not null default true,
    owner                varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   last_updated_at          timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -134,9 +134,9 @@ create table role_components
    id                   bigserial not null primary key,
    role_id              bigint not null,
    component_id         bigint not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP,
+   last_updated_at          timestamp not null default CURRENT_TIMESTAMP,
    constraint fk_role_components_role foreign key(role_id) references roles(id),
-   constraint fk_role_components_comment foreign key(component_id) references components(id)
+   constraint fk_role_components_comment foreign key(component_id) references privileges(id)
 );
 
 
@@ -152,7 +152,7 @@ create table dictionaries
    superior_id          bigint,
    description          varchar(127),
    enabled              boolean not null default true,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   last_updated_at          timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -170,7 +170,7 @@ create table messages
    enabled              boolean not null default true,
    receiver             varchar(16) not null,
    owner                varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   last_updated_at          timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -187,7 +187,7 @@ create table regions
    postal_code          bigint,
    area_code            bigint,
    enabled              boolean not null default true,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   last_updated_at          timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -204,5 +204,5 @@ create table access_logs
    postal_code          bigint,
    context            text,
    owner                varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   last_updated_at          timestamp not null default CURRENT_TIMESTAMP
 );

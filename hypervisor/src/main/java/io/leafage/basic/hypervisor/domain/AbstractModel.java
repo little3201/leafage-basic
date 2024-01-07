@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
@@ -25,33 +24,62 @@ import java.time.LocalDateTime;
 /**
  * base model
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author liwenqiang 2024-01-04 20:27
  */
 public abstract class AbstractModel {
 
     /**
-     * 主键
+     * 创建人
      */
-    @Id
-    private Long id;
+    @Column(value = "created_by")
+    private String createdBy;
+    /**
+     * 创建时间
+     */
+    @Column(value = "created_at")
+    private LocalDateTime createdAt;
+    /**
+     * 最后修改人
+     */
+    @Column(value = "last_updated_by")
+    private String lastUpdatedBy;
 
-    @Column(value = "modify_time")
-    private LocalDateTime modifyTime;
+    /**
+     * 最后修改时间
+     */
+    @Column(value = "last_updated_at")
+    private LocalDateTime lastUpdatedAt;
 
 
-    public Long getId() {
-        return id;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public LocalDateTime getLastUpdatedAt() {
+        return lastUpdatedAt;
+    }
+
+    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 }

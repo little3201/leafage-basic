@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.Component;
-import io.leafage.basic.hypervisor.domain.RoleComponents;
+import io.leafage.basic.hypervisor.domain.Privilege;
 import io.leafage.basic.hypervisor.domain.RoleMembers;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.ComponentDTO;
 import io.leafage.basic.hypervisor.repository.ComponentRepository;
@@ -41,12 +41,12 @@ import reactor.test.StepVerifier;
 import static org.mockito.BDDMockito.given;
 
 /**
- * component service test
+ * privilege service test
  *
- * @author liwenqiang 2019/1/29 17:10
+ * @author liwenqiang 2019-01-29 17:10
  **/
 @ExtendWith(MockitoExtension.class)
-class ComponentServiceImplTest {
+class PrivilegeServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -61,7 +61,7 @@ class ComponentServiceImplTest {
     private RoleComponentsRepository roleComponentsRepository;
 
     @InjectMocks
-    private ComponentServiceImpl authorityService;
+    private PrivilegeServiceImpl authorityService;
 
     private ComponentDTO componentDTO;
     private User user;
@@ -78,7 +78,7 @@ class ComponentServiceImplTest {
 
     @Test
     void retrieve_page() {
-        given(this.componentRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Privilege.class)));
 
         given(this.componentRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
@@ -87,28 +87,28 @@ class ComponentServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.componentRepository.findAll()).willReturn(Flux.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.findAll()).willReturn(Flux.just(Mockito.mock(Privilege.class)));
 
         StepVerifier.create(authorityService.retrieve()).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void fetch() {
-        given(this.componentRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
         StepVerifier.create(authorityService.fetch(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void fetch_no_superior() {
-        given(this.componentRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
         StepVerifier.create(authorityService.fetch(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
-        given(this.componentRepository.save(Mockito.any(Component.class))).willReturn(Mono.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.save(Mockito.any(Privilege.class))).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
         StepVerifier.create(authorityService.create(componentDTO)).expectNextCount(1).verifyComplete();
     }
@@ -116,48 +116,48 @@ class ComponentServiceImplTest {
 
     @Test
     void create_no_superior() {
-        given(this.componentRepository.save(Mockito.any(Component.class))).willReturn(Mono.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.save(Mockito.any(Privilege.class))).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
         StepVerifier.create(authorityService.create(componentDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void modify() {
-        given(this.componentRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        given(this.componentRepository.save(Mockito.any(Component.class))).willReturn(Mono.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.save(Mockito.any(Privilege.class))).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
         StepVerifier.create(authorityService.modify(1L, componentDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void tree() {
-        Component component = new Component();
-        component.setId(1L);
-        component.setComponentName("21612OL34");
-        component.setIcon("test");
+        Privilege privilege = new Privilege();
+        privilege.setId(1L);
+        privilege.setPrivilegeName("21612OL34");
+        privilege.setIcon("test");
 
-        Component child = new Component();
+        Privilege child = new Privilege();
         child.setId(2L);
-        child.setSuperiorId(component.getId());
-        child.setComponentName("21612OL35");
+        child.setSuperiorId(privilege.getId());
+        child.setPrivilegeName("21612OL35");
         child.setType('M');
-        given(this.componentRepository.findAll()).willReturn(Flux.just(component, child));
+        given(this.componentRepository.findAll()).willReturn(Flux.just(privilege, child));
 
         StepVerifier.create(authorityService.tree()).expectNextCount(1).verifyComplete();
     }
 
     @Test
-    void components() {
+    void privileges() {
         given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(user));
 
         given(this.roleMembersRepository.findByUsername(Mockito.anyString())).willReturn(Flux.just(Mockito.mock(RoleMembers.class)));
 
-        given(this.roleComponentsRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RoleComponents.class)));
+        given(this.roleComponentsRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
 
-        given(this.componentRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Component.class)));
+        given(this.componentRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.components("little3201")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(authorityService.privileges("little3201")).expectNextCount(1).verifyComplete();
     }
 
     @Test

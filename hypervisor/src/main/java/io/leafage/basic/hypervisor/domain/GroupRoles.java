@@ -22,12 +22,12 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for group
+ * Model class for group roles
  *
- * @author liwenqiang 2020-10-06 22:09
- */
-@Table(name = "groups")
-public class Group extends AbstractModel {
+ * @author liwenqiang 2024-01-07 21:49
+ **/
+@Table(name = "group_roles")
+public class GroupRoles {
 
     /**
      * 主键
@@ -35,19 +35,15 @@ public class Group extends AbstractModel {
     @Id
     private Long id;
     /**
-     * 名称
+     * 分组主键
      */
-    @Column(value = "group_name")
-    private String groupName;
+    @Column(value = "group_id")
+    private Long groupId;
     /**
-     * 负责人
+     * 角色主键
      */
-    private String principal;
-    /**
-     * 是否启用
-     */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
+    @Column(value = "role_id")
+    private Long roleId;
 
     public Long getId() {
         return id;
@@ -57,27 +53,19 @@ public class Group extends AbstractModel {
         this.id = id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
-    public String getPrincipal() {
-        return principal;
+    public Long getRoleId() {
+        return roleId;
     }
 
-    public void setPrincipal(String principal) {
-        this.principal = principal;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

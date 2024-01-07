@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
@@ -28,24 +29,31 @@ import org.springframework.data.relational.core.mapping.Table;
 public class AccessLog extends AbstractModel {
 
     /**
+     * 主键
+     */
+    @Id
+    private Long id;
+    /**
      * ip
      */
     private String ip;
-
     /**
      * location
      */
     private String location;
-
     /**
      * context
      */
     private String context;
 
-    /**
-     * owner
-     */
-    private String owner;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getIp() {
         return ip;
@@ -71,11 +79,4 @@ public class AccessLog extends AbstractModel {
         this.context = context;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 }

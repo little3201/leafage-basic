@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,35 +17,48 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for role components
+ * Model class for role privileges
  *
  * @author liwenqiang 2023-03-26 11:13
  **/
-@Table(name = "role_components")
-public class RoleComponents extends AbstractModel {
+@Table(name = "role_privileges")
+public class RolePrivileges {
 
     /**
-     * component 主键
+     * 主键
      */
-    @Column(value = "component_id")
-    private Long componentId;
+    @Id
+    private Long id;
+    /**
+     * privilege 主键
+     */
+    @Column(value = "privilege_id")
+    private Long privilegeId;
     /**
      * role 主键
      */
     @Column(value = "role_id")
     private Long roleId;
 
-
-    public Long getComponentId() {
-        return componentId;
+    public Long getId() {
+        return id;
     }
 
-    public void setComponentId(Long componentId) {
-        this.componentId = componentId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getPrivilegeId() {
+        return privilegeId;
+    }
+
+    public void setPrivilegeId(Long privilegeId) {
+        this.privilegeId = privilegeId;
     }
 
     public Long getRoleId() {

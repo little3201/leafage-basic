@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 package io.leafage.basic.hypervisor.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.leafage.basic.hypervisor.bo.UserBO;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ public class UserVO extends UserBO {
     /**
      * 账号有效期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime accountExpiresAt;
 
     /**
@@ -41,7 +43,14 @@ public class UserVO extends UserBO {
     /**
      * 密码有效期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime credentialsExpiresAt;
+
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime modifyTime;
 
 
     public LocalDateTime getAccountExpiresAt() {
@@ -66,5 +75,13 @@ public class UserVO extends UserBO {
 
     public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
         this.credentialsExpiresAt = credentialsExpiresAt;
+    }
+
+    public LocalDateTime getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(LocalDateTime modifyTime) {
+        this.modifyTime = modifyTime;
     }
 }

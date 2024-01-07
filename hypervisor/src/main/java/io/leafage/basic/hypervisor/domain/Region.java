@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -26,31 +27,46 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2020-10-06 22:09
  **/
 @Table(name = "regions")
-public class Region extends SuperModel {
+public class Region extends AbstractModel {
 
+    /**
+     * 主键
+     */
+    @Id
+    private Long id;
     /**
      * 名称
      */
     @Column(value = "region_name")
     private String regionName;
-
+    /**
+     * 上级
+     */
+    @Column(value = "superior_id")
+    private Long superiorId;
     /**
      * 邮编
      */
     @Column(value = "postal_code")
     private Integer postalCode;
-
     /**
      * 区号
      */
     @Column(value = "area_code")
     private String areaCode;
-
     /**
-     * 是否可用
+     * 是否启用
      */
+    @Column(value = "is_enabled")
     private boolean enabled = true;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getRegionName() {
         return regionName;
@@ -58,6 +74,14 @@ public class Region extends SuperModel {
 
     public void setRegionName(String regionName) {
         this.regionName = regionName;
+    }
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public Integer getPostalCode() {

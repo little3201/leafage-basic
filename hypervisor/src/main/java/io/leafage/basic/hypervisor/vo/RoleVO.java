@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 package io.leafage.basic.hypervisor.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.leafage.basic.hypervisor.bo.RoleBO;
 
 import java.time.LocalDateTime;
@@ -34,13 +35,14 @@ public class RoleVO extends RoleBO {
     private Long id;
 
     /**
-     * 上级
+     * 状态
      */
     private boolean enabled;
 
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifyTime;
 
 

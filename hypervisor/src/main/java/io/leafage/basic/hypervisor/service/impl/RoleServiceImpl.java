@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import java.util.NoSuchElementException;
 /**
  * role service impl
  *
- * @author liwenqiang 2018/9/27 14:20
+ * @author liwenqiang 2018-09-27 14:20
  **/
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -81,7 +81,6 @@ public class RoleServiceImpl implements RoleService {
         return Mono.just(roleDTO).map(dto -> {
                     Role role = new Role();
                     BeanUtils.copyProperties(roleDTO, role);
-                    role.setOwner("admin");
                     return role;
                 })
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))

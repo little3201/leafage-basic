@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ import top.leafage.common.reactive.ReactiveBasicService;
 import java.util.List;
 
 /**
- * component service
+ * privilege service
  *
  * @author liwenqiang 2018/12/17 19:36
  **/
-public interface ComponentService extends ReactiveBasicService<ComponentDTO, ComponentVO> {
+public interface PrivilegeService extends ReactiveBasicService<ComponentDTO, ComponentVO> {
 
     /**
      * 查询构造树结构的数据
@@ -46,7 +46,7 @@ public interface ComponentService extends ReactiveBasicService<ComponentDTO, Com
      * @param username 用户名
      * @return 权限树
      */
-    Mono<List<TreeNode>> components(String username);
+    Mono<List<TreeNode>> privileges(String username);
 
     /**
      * 分页查询

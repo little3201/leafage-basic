@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,54 +17,73 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for component
+ * Model class for privileges
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-@Table(name = "components")
-public class Component extends SuperModel {
+@Table(name = "privileges")
+public class Privilege extends AbstractModel {
 
+    /**
+     * 主键
+     */
+    @Id
+    private Long id;
     /**
      * 名称
      */
-    @Column(value = "component_name")
-    private String componentName;
-
+    @Column(value = "privilege_name")
+    private String privilegeName;
+    /**
+     * 上级
+     */
+    @Column(value = "superior_id")
+    private Long superiorId;
     /**
      * 类型
      */
     private Character type;
-
     /**
      * 图标
      */
     private String icon;
-
     /**
      * 路径
      */
     private String path;
-
     /**
-     * 是否可用
+     * 是否启用
      */
+    @Column(value = "is_enabled")
     private boolean enabled = true;
 
-    /**
-     * owner
-     */
-    private String owner;
-
-    public String getComponentName() {
-        return componentName;
+    public Long getId() {
+        return id;
     }
 
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getPrivilegeName() {
+        return privilegeName;
+    }
+
+    public void setPrivilegeName(String privilegeName) {
+        this.privilegeName = privilegeName;
+    }
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public Character getType() {
@@ -99,11 +118,4 @@ public class Component extends SuperModel {
         this.enabled = enabled;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 }

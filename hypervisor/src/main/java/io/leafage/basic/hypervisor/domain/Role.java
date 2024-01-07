@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -29,20 +30,32 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Role extends AbstractModel {
 
     /**
+     * 主键
+     */
+    @Id
+    private Long id;
+    /**
      * 名称
      */
     @Column(value = "role_name")
     private String roleName;
-
     /**
-     * 是否可用
+     * 描述
      */
+    private String description;
+    /**
+     * 是否启用
+     */
+    @Column(value = "is_enabled")
     private boolean enabled = true;
 
-    /**
-     * owner
-     */
-    private String owner;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getRoleName() {
         return roleName;
@@ -50,6 +63,14 @@ public class Role extends AbstractModel {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isEnabled() {
@@ -60,11 +81,4 @@ public class Role extends AbstractModel {
         this.enabled = enabled;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 }

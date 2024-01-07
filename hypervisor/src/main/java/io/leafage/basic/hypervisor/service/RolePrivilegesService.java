@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,18 +17,18 @@
 
 package io.leafage.basic.hypervisor.service;
 
-import io.leafage.basic.hypervisor.domain.RoleComponents;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Set;
 
 /**
- * role components service
+ * role privileges service
  *
- * @author liwenqiang 2018/7/28 0:29
+ * @author liwenqiang 2018-07-28 0:29
  **/
-public interface RoleComponentsService {
+public interface RolePrivilegesService {
 
     /**
      * 关联权限查询
@@ -36,7 +36,7 @@ public interface RoleComponentsService {
      * @param roleId role主键
      * @return 数据集
      */
-    Mono<List<RoleComponents>> components(Long roleId);
+    Mono<List<RolePrivileges>> privileges(Long roleId);
 
     /**
      * 关联role查询
@@ -44,7 +44,7 @@ public interface RoleComponentsService {
      * @param componentId component主键
      * @return 数据集
      */
-    Mono<List<RoleComponents>> roles(Long componentId);
+    Mono<List<RolePrivileges>> roles(Long componentId);
 
     /**
      * 角色-组件关系

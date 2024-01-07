@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.domain.Component;
+import io.leafage.basic.hypervisor.domain.Privilege;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
@@ -25,19 +25,19 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * component repository
+ * privilege repository
  *
- * @author wilsonli 2023/3/25 09:45
+ * @author wilsonli 2023-03-25 09:45
  **/
 @Repository
-public interface ComponentRepository extends R2dbcRepository<Component, Long> {
+public interface ComponentRepository extends R2dbcRepository<Privilege, Long> {
 
     /**
      * 查询
      *
      * @return 有效帖子
      */
-    Flux<Component> findByEnabledTrue(Pageable pageable);
+    Flux<Privilege> findByEnabledTrue(Pageable pageable);
 
     /**
      * 是否已存在

@@ -27,14 +27,14 @@ import jakarta.validation.constraints.Size;
  *
  * @author liwenqiang 2022-12-10 22:09
  */
-public abstract class ComponentBO {
+public abstract class PrivilegeBO {
 
     /**
      * 名称
      */
-    @NotBlank(message = "componentName cannot be blank.")
-    @Size(max = 16, message = "componentName max length is 16.")
-    private String componentName;
+    @NotBlank(message = "privilegeName cannot be blank.")
+    @Size(max = 16, message = "privilegeName max length is 16.")
+    private String privilegeName;
 
     /**
      * 类型
@@ -45,7 +45,7 @@ public abstract class ComponentBO {
     /**
      * 图标
      */
-    @NotBlank(message = "privilege icon is blank.")
+    @NotBlank(message = "icon cannot be blank.")
     private String icon;
 
     /**
@@ -54,12 +54,12 @@ public abstract class ComponentBO {
     private String path;
 
 
-    public String getComponentName() {
-        return componentName;
+    public String getPrivilegeName() {
+        return privilegeName;
     }
 
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
+    public void setPrivilegeName(String privilegeName) {
+        this.privilegeName = privilegeName;
     }
 
     public Character getType() {

@@ -19,10 +19,10 @@ package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.domain.RoleMembers;
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
-import io.leafage.basic.hypervisor.dto.ComponentDTO;
+import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
-import io.leafage.basic.hypervisor.vo.ComponentVO;
+import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,19 +61,19 @@ class PrivilegeControllerTest {
     @MockBean
     private PrivilegeService privilegeService;
 
-    private ComponentDTO componentDTO;
-    private ComponentVO componentVO;
+    private PrivilegeDTO componentDTO;
+    private PrivilegeVO componentVO;
     private RolePrivileges rolePrivileges;
 
     @BeforeEach
     void init() {
-        componentDTO = new ComponentDTO();
-        componentDTO.setComponentName("test");
+        componentDTO = new PrivilegeDTO();
+        componentDTO.setPrivilegeName("test");
         componentDTO.setType('M');
         componentDTO.setIcon("add");
 
-        componentVO = new ComponentVO();
-        componentVO.setComponentName("test");
+        componentVO = new PrivilegeVO();
+        componentVO.setPrivilegeName("test");
         componentVO.setIcon("add");
         componentVO.setPath("/test");
         componentVO.setSuperior("superior");
@@ -82,12 +82,12 @@ class PrivilegeControllerTest {
 
         rolePrivileges = new RolePrivileges();
         rolePrivileges.setRoleId(1L);
-        rolePrivileges.setComponentId(1L);
+        rolePrivileges.setPrivilegeId(1L);
     }
 
     @Test
     void retrieve() {
-        Page<ComponentVO> voPage = new PageImpl<>(List.of(componentVO));
+        Page<PrivilegeVO> voPage = new PageImpl<>(List.of(componentVO));
         given(this.privilegeService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/privileges").queryParam("page", 0)
@@ -152,7 +152,7 @@ class PrivilegeControllerTest {
 
     @Test
     void create() {
-        given(this.privilegeService.create(Mockito.any(ComponentDTO.class))).willReturn(Mono.just(componentVO));
+        given(this.privilegeService.create(Mockito.any(PrivilegeDTO.class))).willReturn(Mono.just(componentVO));
 
         webTestClient.post().uri("/privileges").bodyValue(componentDTO).exchange()
                 .expectStatus().isCreated()
@@ -161,14 +161,14 @@ class PrivilegeControllerTest {
 
     @Test
     void create_error() {
-        given(this.privilegeService.create(Mockito.any(ComponentDTO.class))).willThrow(new RuntimeException());
+        given(this.privilegeService.create(Mockito.any(PrivilegeDTO.class))).willThrow(new RuntimeException());
 
         webTestClient.post().uri("/privileges").bodyValue(componentDTO).exchange().expectStatus().is4xxClientError();
     }
 
     @Test
     void modify() {
-        given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(ComponentDTO.class))).willReturn(Mono.just(componentVO));
+        given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(PrivilegeDTO.class))).willReturn(Mono.just(componentVO));
 
         webTestClient.put().uri("/privileges/{id}", 1L).bodyValue(componentDTO).exchange()
                 .expectStatus().isAccepted()
@@ -177,7 +177,7 @@ class PrivilegeControllerTest {
 
     @Test
     void modify_error() {
-        given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(ComponentDTO.class))).willThrow(new RuntimeException());
+        given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(PrivilegeDTO.class))).willThrow(new RuntimeException());
 
         webTestClient.put().uri("/privileges/{id}", 1L).bodyValue(componentDTO).exchange()
                 .expectStatus().isNotModified();

@@ -30,7 +30,7 @@ import reactor.core.publisher.Mono;
  * @author wilsonli 2023-03-25 09:45
  **/
 @Repository
-public interface ComponentRepository extends R2dbcRepository<Privilege, Long> {
+public interface PrivilegeRepository extends R2dbcRepository<Privilege, Long> {
 
     /**
      * 查询
@@ -42,8 +42,8 @@ public interface ComponentRepository extends R2dbcRepository<Privilege, Long> {
     /**
      * 是否已存在
      *
-     * @param componentName 名称
+     * @param privilegeName 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByComponentName(String componentName);
+    Mono<Boolean> existsByPrivilegeName(String privilegeName);
 }

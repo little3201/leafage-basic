@@ -17,14 +17,14 @@
 
 package io.leafage.basic.hypervisor.dto;
 
-import io.leafage.basic.hypervisor.bo.ComponentBO;
+import io.leafage.basic.hypervisor.bo.PrivilegeBO;
 
 /**
  * DTO class for privilege
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ComponentDTO extends ComponentBO {
+public class PrivilegeDTO extends PrivilegeBO {
 
     /**
      * 上级

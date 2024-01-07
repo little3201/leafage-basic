@@ -17,7 +17,7 @@
 
 package io.leafage.basic.hypervisor.vo;
 
-import io.leafage.basic.hypervisor.bo.ComponentBO;
+import io.leafage.basic.hypervisor.bo.PrivilegeBO;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
  *
  * @author liwenqiang 2020-10-06 22:09
  */
-public class ComponentVO extends ComponentBO {
+public class PrivilegeVO extends PrivilegeBO {
 
     /**
      * 主键

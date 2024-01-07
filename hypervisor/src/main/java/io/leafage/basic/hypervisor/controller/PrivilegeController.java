@@ -18,10 +18,10 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
-import io.leafage.basic.hypervisor.dto.ComponentDTO;
+import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
-import io.leafage.basic.hypervisor.vo.ComponentVO;
+import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +61,8 @@ public class PrivilegeController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<ComponentVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Mono<Page<ComponentVO>> pageMono;
+    public ResponseEntity<Mono<Page<PrivilegeVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<PrivilegeVO>> pageMono;
         try {
             pageMono = privilegeService.retrieve(page, size);
         } catch (Exception e) {
@@ -96,8 +96,8 @@ public class PrivilegeController {
      * @return 查询的数据，异常时返回204状态码
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Mono<ComponentVO>> fetch(@PathVariable Long id) {
-        Mono<ComponentVO> voMono;
+    public ResponseEntity<Mono<PrivilegeVO>> fetch(@PathVariable Long id) {
+        Mono<PrivilegeVO> voMono;
         try {
             voMono = privilegeService.fetch(id);
         } catch (Exception e) {
@@ -132,8 +132,8 @@ public class PrivilegeController {
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<ComponentVO>> create(@RequestBody @Valid ComponentDTO componentDTO) {
-        Mono<ComponentVO> voMono;
+    public ResponseEntity<Mono<PrivilegeVO>> create(@RequestBody @Valid PrivilegeDTO componentDTO) {
+        Mono<PrivilegeVO> voMono;
         try {
             voMono = privilegeService.create(componentDTO);
         } catch (Exception e) {
@@ -151,8 +151,8 @@ public class PrivilegeController {
      * @return 修改后的信息，异常时返回304状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Mono<ComponentVO>> modify(@PathVariable Long id, @RequestBody @Valid ComponentDTO componentDTO) {
-        Mono<ComponentVO> voMono;
+    public ResponseEntity<Mono<PrivilegeVO>> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO componentDTO) {
+        Mono<PrivilegeVO> voMono;
         try {
             voMono = privilegeService.modify(id, componentDTO);
         } catch (Exception e) {

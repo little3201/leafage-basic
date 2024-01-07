@@ -18,7 +18,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
-import io.leafage.basic.hypervisor.repository.ComponentRepository;
+import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.repository.RoleComponentsRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
@@ -40,12 +40,12 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
 
     private final RoleRepository roleRepository;
     private final RoleComponentsRepository roleComponentsRepository;
-    private final ComponentRepository componentRepository;
+    private final PrivilegeRepository privilegeRepository;
 
-    public RolePrivilegesServiceImpl(RoleRepository roleRepository, RoleComponentsRepository roleComponentsRepository, ComponentRepository componentRepository) {
+    public RolePrivilegesServiceImpl(RoleRepository roleRepository, RoleComponentsRepository roleComponentsRepository, PrivilegeRepository privilegeRepository) {
         this.roleRepository = roleRepository;
         this.roleComponentsRepository = roleComponentsRepository;
-        this.componentRepository = componentRepository;
+        this.privilegeRepository = privilegeRepository;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
         return Flux.fromIterable(componentIds).map(componentId -> {
             RolePrivileges rolePrivileges = new RolePrivileges();
             rolePrivileges.setRoleId(roleId);
-            rolePrivileges.setComponentId(componentId);
+            rolePrivileges.setPrivilegeId(componentId);
             return rolePrivileges;
         }).collectList().flatMapMany(roleComponentsRepository::saveAll).hasElements();
     }

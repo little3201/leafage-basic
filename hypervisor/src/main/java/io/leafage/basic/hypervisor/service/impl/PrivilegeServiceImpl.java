@@ -19,13 +19,13 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Privilege;
 import io.leafage.basic.hypervisor.domain.User;
-import io.leafage.basic.hypervisor.dto.ComponentDTO;
-import io.leafage.basic.hypervisor.repository.ComponentRepository;
+import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
+import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.repository.RoleComponentsRepository;
 import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
-import io.leafage.basic.hypervisor.vo.ComponentVO;
+import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,25 +50,25 @@ import java.util.Set;
 @Service
 public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privilege> implements PrivilegeService {
 
-    private final ComponentRepository componentRepository;
+    private final PrivilegeRepository privilegeRepository;
     private final RoleMembersRepository roleMembersRepository;
     private final UserRepository userRepository;
     private final RoleComponentsRepository roleComponentsRepository;
 
-    public PrivilegeServiceImpl(ComponentRepository componentRepository, RoleMembersRepository roleMembersRepository,
+    public PrivilegeServiceImpl(PrivilegeRepository privilegeRepository, RoleMembersRepository roleMembersRepository,
                                 UserRepository userRepository, RoleComponentsRepository roleComponentsRepository) {
-        this.componentRepository = componentRepository;
+        this.privilegeRepository = privilegeRepository;
         this.roleMembersRepository = roleMembersRepository;
         this.userRepository = userRepository;
         this.roleComponentsRepository = roleComponentsRepository;
     }
 
     @Override
-    public Mono<Page<ComponentVO>> retrieve(int page, int size) {
+    public Mono<Page<PrivilegeVO>> retrieve(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<ComponentVO> voFlux = componentRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Flux<PrivilegeVO> voFlux = privilegeRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
 
-        Mono<Long> count = componentRepository.count();
+        Mono<Long> count = privilegeRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
                 new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
@@ -76,13 +76,13 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
 
     @Override
     public Mono<List<TreeNode>> tree() {
-        Flux<Privilege> componentFlux = componentRepository.findAll();
+        Flux<Privilege> componentFlux = privilegeRepository.findAll();
         return this.expandAndConvert(componentFlux);
     }
 
     @Override
-    public Flux<ComponentVO> retrieve() {
-        return componentRepository.findAll().flatMap(this::convertOuter);
+    public Flux<PrivilegeVO> retrieve() {
+        return privilegeRepository.findAll().flatMap(this::convertOuter);
     }
 
     @Override
@@ -93,40 +93,40 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
 
         return accountMono.map(user -> roleMembersRepository.findByUsername(user.getUsername())
                         .flatMap(userRole -> roleComponentsRepository.findByRoleId(userRole.getRoleId())
-                                .flatMap(roleComponents -> componentRepository.findById(roleComponents.getComponentId()))))
+                                .flatMap(roleComponents -> privilegeRepository.findById(roleComponents.getPrivilegeId()))))
                 .flatMap(this::expandAndConvert);
     }
 
     @Override
     public Mono<Boolean> exist(String componentName) {
         Assert.hasText(componentName, "privilege name must not be blank.");
-        return componentRepository.existsByComponentName(componentName);
+        return privilegeRepository.existsByPrivilegeName(componentName);
     }
 
     @Override
-    public Mono<ComponentVO> fetch(Long id) {
+    public Mono<PrivilegeVO> fetch(Long id) {
         Assert.notNull(id, "privilege id must not be null.");
-        return componentRepository.findById(id).flatMap(this::convertOuter)
+        return privilegeRepository.findById(id).flatMap(this::convertOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
     @Override
-    public Mono<ComponentVO> create(ComponentDTO componentDTO) {
+    public Mono<PrivilegeVO> create(PrivilegeDTO componentDTO) {
         return Mono.just(componentDTO).map(dto -> {
             Privilege privilege = new Privilege();
             BeanUtils.copyProperties(dto, privilege);
             return privilege;
-        }).flatMap(componentRepository::save).flatMap(this::convertOuter);
+        }).flatMap(privilegeRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<ComponentVO> modify(Long id, ComponentDTO componentDTO) {
+    public Mono<PrivilegeVO> modify(Long id, PrivilegeDTO componentDTO) {
         Assert.notNull(id, "privilege id must not be null.");
-        return componentRepository.findById(id)
+        return privilegeRepository.findById(id)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(privilege -> {
                     BeanUtils.copyProperties(componentDTO, privilege);
-                    return componentRepository.save(privilege);
+                    return privilegeRepository.save(privilege);
                 }).flatMap(this::convertOuter);
     }
 
@@ -136,9 +136,9 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
      * @param privilege 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<ComponentVO> convertOuter(Privilege privilege) {
+    private Mono<PrivilegeVO> convertOuter(Privilege privilege) {
         return Mono.just(privilege).map(a -> {
-            ComponentVO componentVO = new ComponentVO();
+            PrivilegeVO componentVO = new PrivilegeVO();
             BeanUtils.copyProperties(privilege, componentVO);
             return componentVO;
         });

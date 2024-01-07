@@ -18,7 +18,6 @@
 package io.leafage.basic.assets.domain;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
@@ -35,13 +34,27 @@ public abstract class AbstractModel {
      */
     @Id
     private Long id;
+    /**
+     * 创建人
+     */
+    @Column(value = "created_by")
+    private String createdBy;
+    /**
+     * 创建时间
+     */
+    @Column(value = "created_at")
+    private LocalDateTime createdAt;
+    /**
+     * 最后修改人
+     */
+    @Column(value = "last_updated_by")
+    private String lastUpdatedBy;
 
     /**
-     * 修改时间
+     * 最后修改时间
      */
-    @Column(value = "modify_time")
-    @LastModifiedDate
-    private LocalDateTime modifyTime;
+    @Column(value = "last_updated_at")
+    private LocalDateTime lastUpdatedAt;
 
     public Long getId() {
         return id;
@@ -51,11 +64,35 @@ public abstract class AbstractModel {
         this.id = id;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public LocalDateTime getLastUpdatedAt() {
+        return lastUpdatedAt;
+    }
+
+    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 }

@@ -34,31 +34,22 @@ public class Comment extends AbstractModel {
      */
     @Column(value = "post_id")
     private Long postId;
-
     /**
      * 内容
      */
     private String context;
-
     /**
      * 国家
      */
     private String country;
-
     /**
      * 位置
      */
     private String location;
-
     /**
      * 回复者
      */
     private Long replier;
-
-    /**
-     * 是否有效
-     */
-    private boolean enabled = true;
 
 
     public Long getPostId() {
@@ -101,11 +92,4 @@ public class Comment extends AbstractModel {
         this.replier = replier;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 }

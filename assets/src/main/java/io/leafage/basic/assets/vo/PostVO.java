@@ -39,14 +39,9 @@ public class PostVO extends PostBO {
     private String category;
 
     /**
-     * owner
-     */
-    private String owner;
-
-    /**
      * 时间
      */
-    private LocalDateTime modifyTime;
+    private LocalDateTime lastUpdatedTime;
 
 
     public Long getId() {
@@ -65,19 +60,11 @@ public class PostVO extends PostBO {
         this.category = category;
     }
 
-    public String getOwner() {
-        return owner;
+    public LocalDateTime getLastUpdatedTime() {
+        return lastUpdatedTime;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setLastUpdatedTime(LocalDateTime lastUpdatedTime) {
+        this.lastUpdatedTime = lastUpdatedTime;
     }
 }

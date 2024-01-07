@@ -26,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -50,13 +51,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<Page<UserVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<UserVO> voFlux = userRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<UserVO> voFlux = userRepository.findByEnabledTrue(pageable).map(this::convertOuter);
 
         Mono<Long> count = userRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override

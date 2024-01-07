@@ -26,24 +26,21 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2023-03-26 14:12
  */
 @Table(name = "post_statistics")
-public class PostStatistics extends AbstractModel {
+public class PostStatistics {
 
     /**
      * 帖子
      */
     @Column(value = "post_id")
     private Long postId;
-
     /**
      * 浏览量
      */
     private int viewed;
-
     /**
      * 点赞量
      */
     private int likes;
-
     /**
      * 评论量
      */

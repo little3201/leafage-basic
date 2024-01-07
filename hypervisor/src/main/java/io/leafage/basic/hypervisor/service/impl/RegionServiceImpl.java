@@ -26,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -49,13 +50,13 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Mono<Page<RegionVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = regionRepository.countByEnabledTrue();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override

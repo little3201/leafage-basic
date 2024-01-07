@@ -32,7 +32,6 @@ public class PostContent extends AbstractModel {
      */
     @Column(value = "post_id")
     private Long postId;
-
     /**
      * 内容
      */

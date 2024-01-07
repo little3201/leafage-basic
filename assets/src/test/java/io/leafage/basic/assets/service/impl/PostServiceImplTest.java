@@ -144,6 +144,10 @@ class PostServiceImplTest {
 
     @Test
     void remove() {
+        given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(PostContent.class)));
+
+        given(this.postContentRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
+
         given(this.postRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
         StepVerifier.create(postsService.remove(1L)).verifyComplete();

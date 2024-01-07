@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -52,13 +53,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<Page<CategoryVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = categoryRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override
@@ -76,7 +77,6 @@ public class CategoryServiceImpl implements CategoryService {
     public Mono<CategoryVO> create(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
-        category.setOwner("admin");
         return categoryRepository.save(category).flatMap(this::convertOuter);
     }
 

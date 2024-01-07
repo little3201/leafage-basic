@@ -32,6 +32,8 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -78,8 +80,9 @@ class GroupControllerTest {
     }
 
     @Test
-    void retrieve_page() {
-        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO));
+    void retrieve() {
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), pageable, 1L);
         given(this.groupService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)

@@ -25,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -54,13 +55,13 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Mono<Page<GroupVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<GroupVO> voFlux = groupRepository.findBy(pageRequest).flatMap(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<GroupVO> voFlux = groupRepository.findBy(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = groupRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override

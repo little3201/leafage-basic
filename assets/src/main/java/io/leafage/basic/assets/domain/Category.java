@@ -32,17 +32,11 @@ public class Category extends AbstractModel {
      */
     @Column(value = "category_name")
     private String categoryName;
-
     /**
-     * 是否有效
+     * 是否启用
      */
+    @Column(value = "is_enabled")
     private boolean enabled = true;
-
-    /**
-     * owner
-     */
-    private String owner;
-
     /**
      * 描述
      */
@@ -63,14 +57,6 @@ public class Category extends AbstractModel {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public String getDescription() {

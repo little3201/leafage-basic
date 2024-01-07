@@ -29,6 +29,8 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -67,17 +69,18 @@ class CategoryControllerTest {
         categoryVO = new CategoryVO();
         categoryVO.setCount(23L);
         categoryVO.setCategoryName(categoryDTO.getCategoryName());
-        categoryVO.setModifyTime(LocalDateTime.now());
+        categoryVO.setLastUpdatedTime(LocalDateTime.now());
     }
 
     @Test
     void retrieve() {
-        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO), pageable, 1L);
         given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories").queryParam("page", 0)
-                        .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(CategoryVO.class);
+                        .queryParam("size", 2).build())
+                .exchange().expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test

@@ -28,6 +28,8 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -64,7 +66,8 @@ class AccessLogControllerTest {
 
     @Test
     void retrieve() {
-        Page<AccessLogVO> page = new PageImpl<>(List.of(accessLogVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<AccessLogVO> page = new PageImpl<>(List.of(accessLogVO), pageable, 1L);
         given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/access-logs").queryParam("page", 0)

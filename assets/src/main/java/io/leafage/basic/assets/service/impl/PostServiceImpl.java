@@ -26,10 +26,7 @@ import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.PostService;
 import io.leafage.basic.assets.vo.PostVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -59,21 +56,21 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Mono<Page<PostVO>> retrieve(int page, int size, String sort, Long categoryId) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
-                StringUtils.hasText(sort) ? sort : "modifyTime"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
+                StringUtils.hasText(sort) ? sort : "lastUpdatedTime"));
         Flux<Post> postFlux;
         Mono<Long> count;
         // if categoryId null, select all, else filter by categoryId
         if (null == categoryId) {
-            postFlux = postRepository.findByEnabledTrue(pageRequest);
+            postFlux = postRepository.findByEnabledTrue(pageable);
             count = postRepository.count();
         } else {
-            postFlux = postRepository.findByCategoryId(categoryId, pageRequest);
+            postFlux = postRepository.findByCategoryId(categoryId, pageable);
             count = postRepository.countByCategoryId(categoryId);
         }
 
         return postFlux.flatMap(this::convertOuter).collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override
@@ -101,7 +98,6 @@ public class PostServiceImpl implements PostService {
             Post post = new Post();
             BeanUtils.copyProperties(postDTO, post);
             post.setCategoryId(dto.getCategoryId());
-            post.setOwner("admin");
             return post;
         }).flatMap(postRepository::save).flatMap(post -> {
             PostContent postContent = new PostContent();

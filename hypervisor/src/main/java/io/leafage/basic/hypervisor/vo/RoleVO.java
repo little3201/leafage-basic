@@ -43,7 +43,7 @@ public class RoleVO extends RoleBO {
      * 更新时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime modifyTime;
+    private LocalDateTime lastUpdatedTime;
 
 
     public Long getId() {
@@ -62,11 +62,11 @@ public class RoleVO extends RoleBO {
         this.enabled = enabled;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public LocalDateTime getLastUpdatedTime() {
+        return lastUpdatedTime;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setLastUpdatedTime(LocalDateTime lastUpdatedTime) {
+        this.lastUpdatedTime = lastUpdatedTime;
     }
 }

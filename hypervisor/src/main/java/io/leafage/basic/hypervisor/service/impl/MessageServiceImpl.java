@@ -28,6 +28,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -54,13 +55,13 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
 
     @Override
     public Mono<Page<MessageVO>> retrieve(int page, int size, String receiver) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<MessageVO> voFlux = messageRepository.findByReceiver(receiver, pageRequest).map(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<MessageVO> voFlux = messageRepository.findByReceiver(receiver, pageable).map(this::convertOuter);
 
         Mono<Long> count = messageRepository.countByReceiver(receiver);
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override

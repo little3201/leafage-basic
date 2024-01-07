@@ -34,31 +34,23 @@ public class Post extends AbstractModel {
      */
     @Column(value = "category_id")
     private Long categoryId;
-
     /**
      * 标题
      */
     private String title;
-
     /**
      * 封面
      */
     private String cover;
-
     /**
      * 标签
      */
     private Set<String> tags;
-
     /**
-     * 是否有效
+     * 是否启用
      */
+    @Column(value = "is_enabled")
     private boolean enabled = true;
-
-    /**
-     * owner
-     */
-    private String owner;
 
     public Long getCategoryId() {
         return categoryId;
@@ -100,11 +92,4 @@ public class Post extends AbstractModel {
         this.enabled = enabled;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 }

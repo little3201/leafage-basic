@@ -33,6 +33,8 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -87,7 +89,8 @@ class RoleControllerTest {
 
     @Test
     void retrieve() {
-        Page<RoleVO> voPage = new PageImpl<>(List.of(roleVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<RoleVO> voPage = new PageImpl<>(List.of(roleVO), pageable, 1L);
         given(this.roleService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles").queryParam("page", 0)

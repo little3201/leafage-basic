@@ -29,6 +29,8 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -64,6 +66,7 @@ class PostControllerTest {
         // 构造请求对象
         postDTO = new PostDTO();
         postDTO.setTitle("test");
+        postDTO.setCategoryId(1L);
         postDTO.setCover("../test.jpg");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setContext("内容信息");
@@ -73,12 +76,13 @@ class PostControllerTest {
         postVO.setTags(postDTO.getTags());
         postVO.setCover(postDTO.getCover());
         postVO.setContext(postDTO.getContext());
-        postVO.setModifyTime(LocalDateTime.now());
+        postVO.setLastUpdatedTime(LocalDateTime.now());
     }
 
     @Test
     void retrieve() {
-        Page<PostVO> page = new PageImpl<>(List.of(postVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<PostVO> page = new PageImpl<>(List.of(postVO), pageable, 1L);
         given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
                 .willReturn(Mono.just(page));
 

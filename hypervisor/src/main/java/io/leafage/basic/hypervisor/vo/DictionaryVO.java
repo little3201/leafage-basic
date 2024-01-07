@@ -39,9 +39,9 @@ public class DictionaryVO extends DictionaryBO {
     private String superior;
 
     /**
-     * 更新时间
+     * 最后更新时间
      */
-    private LocalDateTime modifyTime;
+    private LocalDateTime lastUpdatedTime;
 
 
     public Long getId() {
@@ -60,11 +60,11 @@ public class DictionaryVO extends DictionaryBO {
         this.superior = superior;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public LocalDateTime getLastUpdatedTime() {
+        return lastUpdatedTime;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setLastUpdatedTime(LocalDateTime lastUpdatedTime) {
+        this.lastUpdatedTime = lastUpdatedTime;
     }
 }

@@ -41,17 +41,17 @@ public interface RolePrivilegesService {
     /**
      * 关联role查询
      *
-     * @param componentId component主键
+     * @param privilegeId privilege主键
      * @return 数据集
      */
-    Mono<List<RolePrivileges>> roles(Long componentId);
+    Mono<List<RolePrivileges>> roles(Long privilegeId);
 
     /**
      * 角色-组件关系
      *
      * @param roleId       role主键
-     * @param componentIds 权限信息
+     * @param privilegeIds 权限信息
      * @return 是否成功： true - 是， false - 否
      */
-    Mono<Boolean> relation(Long roleId, Set<Long> componentIds);
+    Mono<Boolean> relation(Long roleId, Set<Long> privilegeIds);
 }

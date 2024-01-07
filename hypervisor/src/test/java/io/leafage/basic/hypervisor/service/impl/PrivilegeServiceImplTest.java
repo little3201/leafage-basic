@@ -63,14 +63,14 @@ class PrivilegeServiceImplTest {
     @InjectMocks
     private PrivilegeServiceImpl authorityService;
 
-    private PrivilegeDTO componentDTO;
+    private PrivilegeDTO privilegeDTO;
     private User user;
 
     @BeforeEach
     void init() {
-        componentDTO = new PrivilegeDTO();
-        componentDTO.setPrivilegeName("test");
-        componentDTO.setType('M');
+        privilegeDTO = new PrivilegeDTO();
+        privilegeDTO.setPrivilegeName("test");
+        privilegeDTO.setType('M');
 
         user = new User();
         user.setUsername("test");
@@ -110,7 +110,7 @@ class PrivilegeServiceImplTest {
     void create() {
         given(this.privilegeRepository.save(Mockito.any(Privilege.class))).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.create(componentDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(authorityService.create(privilegeDTO)).expectNextCount(1).verifyComplete();
     }
 
 
@@ -118,7 +118,7 @@ class PrivilegeServiceImplTest {
     void create_no_superior() {
         given(this.privilegeRepository.save(Mockito.any(Privilege.class))).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.create(componentDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(authorityService.create(privilegeDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -127,7 +127,7 @@ class PrivilegeServiceImplTest {
 
         given(this.privilegeRepository.save(Mockito.any(Privilege.class))).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.modify(1L, componentDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(authorityService.modify(1L, privilegeDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test

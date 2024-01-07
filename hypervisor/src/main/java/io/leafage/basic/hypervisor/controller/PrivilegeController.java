@@ -110,14 +110,14 @@ public class PrivilegeController {
     /**
      * 是否已存在
      *
-     * @param componentName 名称
+     * @param privilegeName 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String componentName) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String privilegeName) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = privilegeService.exist(componentName);
+            existsMono = privilegeService.exist(privilegeName);
         } catch (Exception e) {
             logger.error("Check privilege is exist an error: ", e);
             return ResponseEntity.noContent().build();
@@ -128,14 +128,14 @@ public class PrivilegeController {
     /**
      * 添加
      *
-     * @param componentDTO 要添加的数据
+     * @param privilegeDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<PrivilegeVO>> create(@RequestBody @Valid PrivilegeDTO componentDTO) {
+    public ResponseEntity<Mono<PrivilegeVO>> create(@RequestBody @Valid PrivilegeDTO privilegeDTO) {
         Mono<PrivilegeVO> voMono;
         try {
-            voMono = privilegeService.create(componentDTO);
+            voMono = privilegeService.create(privilegeDTO);
         } catch (Exception e) {
             logger.error("Create privilege occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
@@ -147,14 +147,14 @@ public class PrivilegeController {
      * 修改
      *
      * @param id           主键
-     * @param componentDTO 要修改的数据
+     * @param privilegeDTO 要修改的数据
      * @return 修改后的信息，异常时返回304状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Mono<PrivilegeVO>> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO componentDTO) {
+    public ResponseEntity<Mono<PrivilegeVO>> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO privilegeDTO) {
         Mono<PrivilegeVO> voMono;
         try {
-            voMono = privilegeService.modify(id, componentDTO);
+            voMono = privilegeService.modify(id, privilegeDTO);
         } catch (Exception e) {
             logger.error("Modify privilege occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

@@ -190,14 +190,14 @@ public class RoleController {
      * 关联
      *
      * @param id           role主键
-     * @param componentIds component主键集合
+     * @param privilegeIds privilege主键集合
      * @return 操作结果
      */
     @PatchMapping("/{id}/privileges")
-    public ResponseEntity<Mono<Boolean>> relation(@PathVariable Long id, @RequestBody Set<Long> componentIds) {
+    public ResponseEntity<Mono<Boolean>> relation(@PathVariable Long id, @RequestBody Set<Long> privilegeIds) {
         Mono<Boolean> voMono;
         try {
-            voMono = rolePrivilegesService.relation(id, componentIds);
+            voMono = rolePrivilegesService.relation(id, privilegeIds);
         } catch (Exception e) {
             logger.error("Relation role privileges occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

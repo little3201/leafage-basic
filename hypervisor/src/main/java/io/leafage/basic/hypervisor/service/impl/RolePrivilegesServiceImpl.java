@@ -55,20 +55,20 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
     }
 
     @Override
-    public Mono<List<RolePrivileges>> roles(Long componentId) {
-        Assert.notNull(componentId, "privilege id must not be null.");
-        return roleComponentsRepository.findByComponentId(componentId).collectList();
+    public Mono<List<RolePrivileges>> roles(Long privilegeId) {
+        Assert.notNull(privilegeId, "privilege id must not be null.");
+        return roleComponentsRepository.findByComponentId(privilegeId).collectList();
     }
 
     @Override
-    public Mono<Boolean> relation(Long roleId, Set<Long> componentIds) {
+    public Mono<Boolean> relation(Long roleId, Set<Long> privilegeIds) {
         Assert.notNull(roleId, "role id must not be null.");
-        Assert.notEmpty(componentIds, "privilege ids must not be empty.");
+        Assert.notEmpty(privilegeIds, "privilege ids must not be empty.");
 
-        return Flux.fromIterable(componentIds).map(componentId -> {
+        return Flux.fromIterable(privilegeIds).map(privilegeId -> {
             RolePrivileges rolePrivileges = new RolePrivileges();
             rolePrivileges.setRoleId(roleId);
-            rolePrivileges.setPrivilegeId(componentId);
+            rolePrivileges.setPrivilegeId(privilegeId);
             return rolePrivileges;
         }).collectList().flatMapMany(roleComponentsRepository::saveAll).hasElements();
     }

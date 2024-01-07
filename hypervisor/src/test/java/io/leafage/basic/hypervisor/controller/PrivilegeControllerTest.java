@@ -61,24 +61,24 @@ class PrivilegeControllerTest {
     @MockBean
     private PrivilegeService privilegeService;
 
-    private PrivilegeDTO componentDTO;
-    private PrivilegeVO componentVO;
+    private PrivilegeDTO privilegeDTO;
+    private PrivilegeVO privilegeVO;
     private RolePrivileges rolePrivileges;
 
     @BeforeEach
     void init() {
-        componentDTO = new PrivilegeDTO();
-        componentDTO.setPrivilegeName("test");
-        componentDTO.setType('M');
-        componentDTO.setIcon("add");
+        privilegeDTO = new PrivilegeDTO();
+        privilegeDTO.setPrivilegeName("test");
+        privilegeDTO.setType('M');
+        privilegeDTO.setIcon("add");
 
-        componentVO = new PrivilegeVO();
-        componentVO.setPrivilegeName("test");
-        componentVO.setIcon("add");
-        componentVO.setPath("/test");
-        componentVO.setSuperior("superior");
-        componentVO.setType('M');
-        componentVO.setModifyTime(LocalDateTime.now());
+        privilegeVO = new PrivilegeVO();
+        privilegeVO.setPrivilegeName("test");
+        privilegeVO.setIcon("add");
+        privilegeVO.setPath("/test");
+        privilegeVO.setSuperior("superior");
+        privilegeVO.setType('M');
+        privilegeVO.setModifyTime(LocalDateTime.now());
 
         rolePrivileges = new RolePrivileges();
         rolePrivileges.setRoleId(1L);
@@ -87,7 +87,7 @@ class PrivilegeControllerTest {
 
     @Test
     void retrieve() {
-        Page<PrivilegeVO> voPage = new PageImpl<>(List.of(componentVO));
+        Page<PrivilegeVO> voPage = new PageImpl<>(List.of(privilegeVO));
         given(this.privilegeService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/privileges").queryParam("page", 0)
@@ -120,10 +120,10 @@ class PrivilegeControllerTest {
 
     @Test
     void fetch() {
-        given(this.privilegeService.fetch(Mockito.anyLong())).willReturn(Mono.just(componentVO));
+        given(this.privilegeService.fetch(Mockito.anyLong())).willReturn(Mono.just(privilegeVO));
 
         webTestClient.get().uri("/privileges/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.componentName").isEqualTo("test");
+                .expectStatus().isOk().expectBody().jsonPath("$.privilegeName").isEqualTo("test");
     }
 
     @Test
@@ -139,7 +139,7 @@ class PrivilegeControllerTest {
         given(this.privilegeService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/privileges/exist")
-                .queryParam("componentName", "test").build()).exchange().expectStatus().isOk();
+                .queryParam("privilegeName", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test
@@ -147,39 +147,39 @@ class PrivilegeControllerTest {
         given(this.privilegeService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/privileges/exist")
-                .queryParam("componentName", "test").build()).exchange().expectStatus().isNoContent();
+                .queryParam("privilegeName", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
     void create() {
-        given(this.privilegeService.create(Mockito.any(PrivilegeDTO.class))).willReturn(Mono.just(componentVO));
+        given(this.privilegeService.create(Mockito.any(PrivilegeDTO.class))).willReturn(Mono.just(privilegeVO));
 
-        webTestClient.post().uri("/privileges").bodyValue(componentDTO).exchange()
+        webTestClient.post().uri("/privileges").bodyValue(privilegeDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.componentName").isEqualTo("test");
+                .expectBody().jsonPath("$.privilegeName").isEqualTo("test");
     }
 
     @Test
     void create_error() {
         given(this.privilegeService.create(Mockito.any(PrivilegeDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/privileges").bodyValue(componentDTO).exchange().expectStatus().is4xxClientError();
+        webTestClient.post().uri("/privileges").bodyValue(privilegeDTO).exchange().expectStatus().is4xxClientError();
     }
 
     @Test
     void modify() {
-        given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(PrivilegeDTO.class))).willReturn(Mono.just(componentVO));
+        given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(PrivilegeDTO.class))).willReturn(Mono.just(privilegeVO));
 
-        webTestClient.put().uri("/privileges/{id}", 1L).bodyValue(componentDTO).exchange()
+        webTestClient.put().uri("/privileges/{id}", 1L).bodyValue(privilegeDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.componentName").isEqualTo("test");
+                .expectBody().jsonPath("$.privilegeName").isEqualTo("test");
     }
 
     @Test
     void modify_error() {
         given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(PrivilegeDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/privileges/{id}", 1L).bodyValue(componentDTO).exchange()
+        webTestClient.put().uri("/privileges/{id}", 1L).bodyValue(privilegeDTO).exchange()
                 .expectStatus().isNotModified();
     }
 

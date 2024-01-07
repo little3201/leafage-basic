@@ -192,7 +192,7 @@ class RoleControllerTest {
     }
 
     @Test
-    void components_error() {
+    void privileges_error() {
         given(this.rolePrivilegesService.privileges(Mockito.anyLong())).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/roles/{id}/privileges", 1L).exchange().expectStatus().isNoContent();

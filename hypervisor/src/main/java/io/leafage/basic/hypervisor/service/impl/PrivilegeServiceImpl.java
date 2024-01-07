@@ -76,8 +76,8 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
 
     @Override
     public Mono<List<TreeNode>> tree() {
-        Flux<Privilege> componentFlux = privilegeRepository.findAll();
-        return this.expandAndConvert(componentFlux);
+        Flux<Privilege> privilegeFlux = privilegeRepository.findAll();
+        return this.expandAndConvert(privilegeFlux);
     }
 
     @Override
@@ -98,9 +98,9 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     }
 
     @Override
-    public Mono<Boolean> exist(String componentName) {
-        Assert.hasText(componentName, "privilege name must not be blank.");
-        return privilegeRepository.existsByPrivilegeName(componentName);
+    public Mono<Boolean> exist(String privilegeName) {
+        Assert.hasText(privilegeName, "privilege name must not be blank.");
+        return privilegeRepository.existsByPrivilegeName(privilegeName);
     }
 
     @Override
@@ -111,8 +111,8 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     }
 
     @Override
-    public Mono<PrivilegeVO> create(PrivilegeDTO componentDTO) {
-        return Mono.just(componentDTO).map(dto -> {
+    public Mono<PrivilegeVO> create(PrivilegeDTO privilegeDTO) {
+        return Mono.just(privilegeDTO).map(dto -> {
             Privilege privilege = new Privilege();
             BeanUtils.copyProperties(dto, privilege);
             return privilege;
@@ -120,12 +120,12 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     }
 
     @Override
-    public Mono<PrivilegeVO> modify(Long id, PrivilegeDTO componentDTO) {
+    public Mono<PrivilegeVO> modify(Long id, PrivilegeDTO privilegeDTO) {
         Assert.notNull(id, "privilege id must not be null.");
         return privilegeRepository.findById(id)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(privilege -> {
-                    BeanUtils.copyProperties(componentDTO, privilege);
+                    BeanUtils.copyProperties(privilegeDTO, privilege);
                     return privilegeRepository.save(privilege);
                 }).flatMap(this::convertOuter);
     }
@@ -138,16 +138,16 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
      */
     private Mono<PrivilegeVO> convertOuter(Privilege privilege) {
         return Mono.just(privilege).map(a -> {
-            PrivilegeVO componentVO = new PrivilegeVO();
-            BeanUtils.copyProperties(privilege, componentVO);
-            return componentVO;
+            PrivilegeVO privilegeVO = new PrivilegeVO();
+            BeanUtils.copyProperties(privilege, privilegeVO);
+            return privilegeVO;
         });
     }
 
     /**
      * convert to TreeNode
      *
-     * @param privileges component集合
+     * @param privileges privilege集合
      * @return TreeNode of Flux
      */
     private Mono<List<TreeNode>> expandAndConvert(Flux<Privilege> privileges) {

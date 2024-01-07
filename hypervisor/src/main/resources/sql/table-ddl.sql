@@ -114,7 +114,7 @@ create table privileges
 (
    id                   bigserial not null primary key,
    superior_id          bigint,
-   component_name       varchar(64),
+   privilege_name       varchar(64),
    type                 character(1),
    path                 varchar(127),
    icon                 varchar(127),
@@ -124,19 +124,19 @@ create table privileges
 );
 
 
-drop table if exists role_components;
+drop table if exists role_privileges;
 
 /*==============================================================*/
-/* Table: role_components                                       */
+/* Table: role_privileges                                       */
 /*==============================================================*/
-create table role_components
+create table role_privileges
 (
    id                   bigserial not null primary key,
    role_id              bigint not null,
-   component_id         bigint not null,
+   privilege_id         bigint not null,
    last_updated_at          timestamp not null default CURRENT_TIMESTAMP,
-   constraint fk_role_components_role foreign key(role_id) references roles(id),
-   constraint fk_role_components_comment foreign key(component_id) references privileges(id)
+   constraint fk_role_privileges_role foreign key(role_id) references roles(id),
+   constraint fk_role_privileges_comment foreign key(privilege_id) references privileges(id)
 );
 
 

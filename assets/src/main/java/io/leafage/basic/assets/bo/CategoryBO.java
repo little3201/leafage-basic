@@ -29,20 +29,20 @@ public abstract class CategoryBO {
     /**
      * 名称
      */
-    @NotBlank(message = "categoryName is blank.")
-    private String categoryName;
+    @NotBlank(message = "category name is blank.")
+    private String name;
 
     /**
      * 描述
      */
     private String description;
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

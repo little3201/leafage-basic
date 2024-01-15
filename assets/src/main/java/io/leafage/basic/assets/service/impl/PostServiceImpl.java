@@ -81,7 +81,7 @@ public class PostServiceImpl implements PostService {
                 categoryRepository.findById(post.getCategoryId()).map(category -> {
                     PostVO postVO = new PostVO();
                     BeanUtils.copyProperties(post, postVO);
-                    postVO.setCategory(category.getCategoryName());
+                    postVO.setCategory(category.getName());
                     return postVO;
                 }).flatMap(vo -> postContentRepository.getByPostId(post.getId()) // 查询帖子内容
                         .map(postsContent -> {
@@ -157,7 +157,7 @@ public class PostServiceImpl implements PostService {
             BeanUtils.copyProperties(p, postVO);
             // 查询关联分类信息
             return categoryRepository.findById(post.getCategoryId()).map(category -> {
-                postVO.setCategory(category.getCategoryName());
+                postVO.setCategory(category.getName());
                 return postVO;
             });
         });

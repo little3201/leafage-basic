@@ -39,9 +39,9 @@ public class CategoryVO extends CategoryBO {
     private long count;
 
     /**
-     * 时间
+     * 最后更新时间
      */
-    private LocalDateTime lastUpdatedTime;
+    private LocalDateTime lastUpdatedAt;
 
 
     public Long getId() {
@@ -60,11 +60,11 @@ public class CategoryVO extends CategoryBO {
         this.count = count;
     }
 
-    public LocalDateTime getLastUpdatedTime() {
-        return lastUpdatedTime;
+    public LocalDateTime getLastUpdatedAt() {
+        return lastUpdatedAt;
     }
 
-    public void setLastUpdatedTime(LocalDateTime lastUpdatedTime) {
-        this.lastUpdatedTime = lastUpdatedTime;
+    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 }

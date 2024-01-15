@@ -39,7 +39,7 @@ public class RoleVO extends RoleBO {
     private boolean enabled;
 
     /**
-     * 更新时间
+     * 最后更新时间
      */
     private LocalDateTime lastUpdatedAt;
 

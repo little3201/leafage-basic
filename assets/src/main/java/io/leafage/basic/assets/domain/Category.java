@@ -31,32 +31,20 @@ public class Category extends AbstractModel {
      * 名称
      */
     @Column(value = "category_name")
-    private String categoryName;
-    /**
-     * 是否启用
-     */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
+    private String name;
+
     /**
      * 描述
      */
     private String description;
 
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

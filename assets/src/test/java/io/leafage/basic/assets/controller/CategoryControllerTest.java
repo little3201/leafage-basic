@@ -63,13 +63,13 @@ class CategoryControllerTest {
     void init() {
         // 构造请求对象
         categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("test");
+        categoryDTO.setName("test");
         categoryDTO.setDescription("描述信息");
 
         categoryVO = new CategoryVO();
         categoryVO.setCount(23L);
-        categoryVO.setCategoryName(categoryDTO.getCategoryName());
-        categoryVO.setLastUpdatedTime(LocalDateTime.now());
+        categoryVO.setName(categoryDTO.getName());
+        categoryVO.setLastUpdatedAt(LocalDateTime.now());
     }
 
     @Test
@@ -160,7 +160,7 @@ class CategoryControllerTest {
 
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("test");
+        categoryDTO.setName("test");
         webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isNotModified();

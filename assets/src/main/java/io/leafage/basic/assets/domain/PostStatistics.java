@@ -33,14 +33,17 @@ public class PostStatistics {
      */
     @Column(value = "post_id")
     private Long postId;
+
     /**
      * 浏览量
      */
     private int viewed;
+
     /**
      * 点赞量
      */
     private int likes;
+
     /**
      * 评论量
      */

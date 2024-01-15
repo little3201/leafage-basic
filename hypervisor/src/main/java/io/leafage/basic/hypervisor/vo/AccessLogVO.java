@@ -34,7 +34,7 @@ public class AccessLogVO extends AccessLogBO {
     private Long id;
 
     /**
-     * 更新时间
+     * 最后更新时间
      */
     private LocalDateTime lastUpdatedAt;
 

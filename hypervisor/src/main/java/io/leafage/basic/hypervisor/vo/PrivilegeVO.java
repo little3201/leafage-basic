@@ -39,7 +39,7 @@ public class PrivilegeVO extends PrivilegeBO {
     private String superior;
 
     /**
-     * 更新时间
+     * 最后更新时间
      */
     private LocalDateTime lastUpdatedAt;
 

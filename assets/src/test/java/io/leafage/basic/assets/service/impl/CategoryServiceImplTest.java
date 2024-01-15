@@ -58,7 +58,7 @@ class CategoryServiceImplTest {
     void init() {
         category = new Category();
         category.setId(1L);
-        category.setCategoryName("test");
+        category.setName("test");
     }
 
     @Test
@@ -94,7 +94,7 @@ class CategoryServiceImplTest {
         given(this.postRepository.countByCategoryId(category.getId())).willReturn(Mono.just(2L));
 
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("test");
+        categoryDTO.setName("test");
         StepVerifier.create(categoryService.create(categoryDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -107,7 +107,7 @@ class CategoryServiceImplTest {
         given(this.postRepository.countByCategoryId(category.getId())).willReturn(Mono.just(2L));
 
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("test");
+        categoryDTO.setName("test");
         StepVerifier.create(categoryService.modify(1L, categoryDTO)).expectNextCount(1).verifyComplete();
     }
 

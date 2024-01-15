@@ -17,8 +17,11 @@
 
 package io.leafage.basic.assets.domain;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.InsertOnlyProperty;
 
 import java.time.LocalDateTime;
 
@@ -34,16 +37,28 @@ public abstract class AbstractModel {
      */
     @Id
     private Long id;
+
+    /**
+     * 是否启用
+     */
+    @Column(value = "is_enabled")
+    private boolean enabled = true;
+
     /**
      * 创建人
      */
+    @InsertOnlyProperty
     @Column(value = "created_by")
     private String createdBy;
+
     /**
      * 创建时间
      */
+    @InsertOnlyProperty
+    @CreatedDate
     @Column(value = "created_at")
     private LocalDateTime createdAt;
+
     /**
      * 最后修改人
      */
@@ -53,8 +68,10 @@ public abstract class AbstractModel {
     /**
      * 最后修改时间
      */
+    @LastModifiedDate
     @Column(value = "last_updated_at")
     private LocalDateTime lastUpdatedAt;
+
 
     public Long getId() {
         return id;
@@ -62,6 +79,14 @@ public abstract class AbstractModel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getCreatedBy() {

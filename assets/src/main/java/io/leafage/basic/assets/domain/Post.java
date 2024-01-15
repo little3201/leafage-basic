@@ -46,11 +46,7 @@ public class Post extends AbstractModel {
      * 标签
      */
     private Set<String> tags;
-    /**
-     * 是否启用
-     */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
+
 
     public Long getCategoryId() {
         return categoryId;
@@ -82,14 +78,6 @@ public class Post extends AbstractModel {
 
     public void setTags(Set<String> tags) {
         this.tags = tags;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
 }

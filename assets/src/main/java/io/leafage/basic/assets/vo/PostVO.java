@@ -22,7 +22,7 @@ import io.leafage.basic.assets.bo.PostBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for post
+ * vo class for post
  *
  * @author liwenqiang 2020-10-06 22:09
  */

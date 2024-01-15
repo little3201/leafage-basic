@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.dto;
 import io.leafage.basic.hypervisor.bo.MessageBO;
 
 /**
- * DTO class for message
+ * dto class for message
  *
  * @author liwenqiang 2022-02-10 13:49
  */

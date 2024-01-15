@@ -18,7 +18,7 @@
 package io.leafage.basic.hypervisor.bo;
 
 /**
- * BO class for access log
+ * bo class for access log
  *
  * @author liwenqiang 2022-03-18 21:09
  */

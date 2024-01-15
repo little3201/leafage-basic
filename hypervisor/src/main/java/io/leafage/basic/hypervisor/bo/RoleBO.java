@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.bo;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * BO class for role
+ * bo class for role
  *
  * @author wilsonli 2022-03-26 15:21
  **/

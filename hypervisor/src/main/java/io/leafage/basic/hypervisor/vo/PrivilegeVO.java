@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.PrivilegeBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for privilege
+ * vo class for privilege
  *
  * @author liwenqiang 2020-10-06 22:09
  */

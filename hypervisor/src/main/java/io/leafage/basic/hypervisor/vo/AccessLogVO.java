@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.AccessLogBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for access log
+ * vo class for access log
  *
  * @author liwenqiang 2022-03-18 21:09
  */

@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.domain;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for access log
+ * model class for access log
  *
  * @author liwenqiang 2022-03-18 21:09
  */

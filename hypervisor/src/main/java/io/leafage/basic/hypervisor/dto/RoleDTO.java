@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.dto;
 import io.leafage.basic.hypervisor.bo.RoleBO;
 
 /**
- * DTO class for role
+ * dto class for role
  *
  * @author liwenqiang 2020-10-06 22:09
  */

@@ -21,7 +21,7 @@ package io.leafage.basic.hypervisor.bo;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * DTO class for Notification
+ * dto class for Notification
  *
  * @author liwenqiang 2022-12-10 13:49
  */

@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.dto;
 import io.leafage.basic.hypervisor.bo.DictionaryBO;
 
 /**
- * DTO class for dictionary
+ * dto class for dictionary
  *
  * @author liwenqiang 2022-03-30 07:26
  **/

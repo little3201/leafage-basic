@@ -20,7 +20,7 @@ package io.leafage.basic.assets.dto;
 import io.leafage.basic.assets.bo.CommentBO;
 
 /**
- * DTO class for comment
+ * dto class for comment
  *
  * @author liwenqiang 2021-07-15 22:12
  */

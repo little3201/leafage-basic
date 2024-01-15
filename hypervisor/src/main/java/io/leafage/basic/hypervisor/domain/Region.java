@@ -21,7 +21,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for region
+ * model class for region
  *
  * @author liwenqiang 2020-10-06 22:09
  **/

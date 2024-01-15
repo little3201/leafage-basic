@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.RoleBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for Role
+ * vo class for Role
  *
  * @author liwenqiang 2020-10-06 22:09
  */

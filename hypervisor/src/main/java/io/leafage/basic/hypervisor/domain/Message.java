@@ -21,7 +21,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for message
+ * model class for message
  *
  * @author liwenqiang 2022-02-10 13:49
  */

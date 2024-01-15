@@ -22,7 +22,7 @@ import io.leafage.basic.assets.bo.CategoryBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for category
+ * vo class for category
  *
  * @author liwenqiang 2020-10-06 22:09
  */

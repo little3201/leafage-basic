@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.bo;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * BO class for dictionary
+ * bo class for dictionary
  *
  * @author wilsonli 2022-03-26 12:21
  **/

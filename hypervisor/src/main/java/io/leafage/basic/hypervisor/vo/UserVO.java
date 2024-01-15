@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.UserBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for user
+ * vo class for user
  *
  * @author liwenqiang 2020-10-06 22:09
  */

@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.dto;
 import io.leafage.basic.hypervisor.bo.RegionBO;
 
 /**
- * DTO class for region
+ * dto class for region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/

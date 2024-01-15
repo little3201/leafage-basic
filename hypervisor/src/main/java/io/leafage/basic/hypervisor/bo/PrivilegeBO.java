@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
- * BO class for privilege
+ * bo class for privilege
  *
  * @author liwenqiang 2022-12-10 22:09
  */

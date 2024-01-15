@@ -22,7 +22,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 
 /**
- * Model class for comment
+ * model class for comment
  *
  * @author liwenqiang 2021-07-15 22:12
  */

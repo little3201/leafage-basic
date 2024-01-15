@@ -21,7 +21,7 @@ import io.leafage.basic.assets.bo.PostBO;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * DTO class for post
+ * dto class for post
  *
  * @author liwenqiang 2020-10-06 22:09
  */

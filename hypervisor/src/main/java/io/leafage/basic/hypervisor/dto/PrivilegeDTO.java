@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.dto;
 import io.leafage.basic.hypervisor.bo.PrivilegeBO;
 
 /**
- * DTO class for privilege
+ * dto class for privilege
  *
  * @author liwenqiang 2020-10-06 22:09
  */

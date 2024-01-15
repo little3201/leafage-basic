@@ -20,7 +20,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for post content
+ * model class for post content
  *
  * @author liwenqiang 2020-10-06 22:09
  */

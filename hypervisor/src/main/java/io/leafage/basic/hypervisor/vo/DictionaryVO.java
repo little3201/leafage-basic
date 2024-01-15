@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.DictionaryBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for dictionary
+ * vo class for dictionary
  *
  * @author liwenqiang 2022-03-30 07:27
  **/

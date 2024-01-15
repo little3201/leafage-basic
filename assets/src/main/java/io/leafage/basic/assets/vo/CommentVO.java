@@ -20,7 +20,7 @@ package io.leafage.basic.assets.vo;
 import java.time.LocalDateTime;
 
 /**
- * VO class for comment
+ * vo class for comment
  *
  * @author liwenqiang 2021-07-15 22:12
  */

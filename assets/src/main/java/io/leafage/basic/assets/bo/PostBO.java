@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 
 /**
- * BO class for post
+ * bo class for post
  *
  * @author liwenqiang 2022-12-10 22:09
  */

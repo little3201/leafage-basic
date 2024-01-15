@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.RegionBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for Region
+ * vo class for Region
  *
  * @author liwenqiang 2021-08-20 16:59
  **/

@@ -22,7 +22,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for role privileges
+ * model class for role privileges
  *
  * @author liwenqiang 2023-03-26 11:13
  **/

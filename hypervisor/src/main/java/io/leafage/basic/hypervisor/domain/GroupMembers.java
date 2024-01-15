@@ -22,7 +22,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for group members
+ * model class for group members
  *
  * @author liwenqiang 2019-09-16 10:09
  **/

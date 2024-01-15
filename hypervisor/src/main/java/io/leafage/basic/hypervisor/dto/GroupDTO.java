@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.dto;
 import io.leafage.basic.hypervisor.bo.GroupBO;
 
 /**
- * DTO class for group
+ * dto class for group
  *
  * @author liwenqiang 2020-10-06 22:09
  */

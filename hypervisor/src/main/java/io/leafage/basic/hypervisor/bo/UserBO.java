@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 /**
- * BO class for User
+ * bo class for User
  *
  * @author liwenqiang 2022-12-10 22:27
  */

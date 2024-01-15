@@ -21,7 +21,7 @@ package io.leafage.basic.assets.dto;
 import io.leafage.basic.assets.bo.CategoryBO;
 
 /**
- * DTO class for category
+ * dto class for category
  *
  * @author liwenqiang 2020-10-06 22:09
  */

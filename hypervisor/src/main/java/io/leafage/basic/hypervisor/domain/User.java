@@ -24,7 +24,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDateTime;
 
 /**
- * Model class for User
+ * model class for User
  *
  * @author liwenqiang 2020-10-06 22:09
  */

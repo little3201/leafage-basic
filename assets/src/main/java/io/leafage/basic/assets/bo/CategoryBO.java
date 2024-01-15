@@ -20,7 +20,7 @@ package io.leafage.basic.assets.bo;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * BO class for category
+ * bo class for category
  *
  * @author wilsonli 2022-12-10 22:28
  **/

@@ -21,7 +21,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for dictionary
+ * model class for dictionary
  *
  * @author liwenqiang 2022-03-30 07:24
  **/

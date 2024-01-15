@@ -21,7 +21,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * BO class for comment
+ * bo class for comment
  *
  * @author liwenqiang 2023-03-26 14:30
  */

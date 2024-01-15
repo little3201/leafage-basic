@@ -57,11 +57,18 @@ class UserControllerTest {
     void init() {
         userDTO = new UserDTO();
         userDTO.setUsername("test");
+        userDTO.setAvatar("avatar.jpg");
+        userDTO.setFirstname("john");
+        userDTO.setLastname("steven");
+        userDTO.setAccountExpiresAt(LocalDateTime.now());
+        userDTO.setCredentialsExpiresAt(LocalDateTime.now());
 
         userVO = new UserVO();
         userVO.setUsername("test");
         userVO.setAccountExpiresAt(LocalDateTime.now());
-        userVO.setNickname("admin");
+        userVO.setFirstname("john");
+        userVO.setLastname("steven");
+        userVO.setLastUpdatedAt(LocalDateTime.now());
     }
 
     @Test

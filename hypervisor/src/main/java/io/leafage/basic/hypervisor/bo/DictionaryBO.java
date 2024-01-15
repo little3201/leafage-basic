@@ -30,7 +30,7 @@ public abstract class DictionaryBO {
      * 名称
      */
     @NotBlank(message = "dictionaryName cannot be blank.")
-    private String dictionaryName;
+    private String name;
 
     /**
      * 描述
@@ -38,12 +38,12 @@ public abstract class DictionaryBO {
     private String description;
 
 
-    public String getDictionaryName() {
-        return dictionaryName;
+    public String getName() {
+        return name;
     }
 
-    public void setDictionaryName(String dictionaryName) {
-        this.dictionaryName = dictionaryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

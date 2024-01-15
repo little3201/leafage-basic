@@ -41,7 +41,7 @@ public interface PrivilegeService extends ReactiveBasicService<PrivilegeDTO, Pri
     Mono<List<TreeNode>> tree();
 
     /**
-     * 查询用户权限
+     * 查询权限
      *
      * @param username 用户名
      * @return 权限树

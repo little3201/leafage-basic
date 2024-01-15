@@ -98,14 +98,14 @@ public class RoleController {
     /**
      * 是否已存在
      *
-     * @param roleName 用户名
+     * @param name 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String roleName) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = roleService.exist(roleName);
+            existsMono = roleService.exist(name);
         } catch (Exception e) {
             logger.error("Check role is exist an error: ", e);
             return ResponseEntity.noContent().build();
@@ -151,9 +151,9 @@ public class RoleController {
     }
 
     /**
-     * 查询关联用户
+     * 查询关联user
      *
-     * @param id 角色id
+     * @param id roleid
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{id}/members")
@@ -171,7 +171,7 @@ public class RoleController {
     /**
      * 查询关联组件
      *
-     * @param id 角色主键
+     * @param id role主键
      * @return 操作结果
      */
     @GetMapping("/{id}/privileges")

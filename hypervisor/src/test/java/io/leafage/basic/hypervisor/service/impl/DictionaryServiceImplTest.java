@@ -83,7 +83,7 @@ class DictionaryServiceImplTest {
         given(this.dictionaryRepository.save(Mockito.any(Dictionary.class))).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
 
         DictionaryDTO dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setDictionaryName("Gender");
+        dictionaryDTO.setName("Gender");
         dictionaryDTO.setDescription("描述");
         StepVerifier.create(dictionaryService.create(dictionaryDTO)).expectNextCount(1).verifyComplete();
     }

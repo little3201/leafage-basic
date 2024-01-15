@@ -61,7 +61,7 @@ public class UserController {
     /**
      * 根据 username 查询
      *
-     * @param username 用户账号
+     * @param username 用户名
      * @return 查询的数据，异常时返回204状态码
      */
     @GetMapping("/{username}")

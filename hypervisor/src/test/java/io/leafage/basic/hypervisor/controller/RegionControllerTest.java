@@ -36,6 +36,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -60,7 +61,12 @@ class RegionControllerTest {
     @BeforeEach
     void init() {
         regionVO = new RegionVO();
-        regionVO.setRegionName("test");
+        regionVO.setName("test");
+        regionVO.setLastUpdatedAt(LocalDateTime.now());
+        regionVO.setSuperior("super");
+        regionVO.setAreaCode("023333");
+        regionVO.setPostalCode(232);
+        regionVO.setDescription("region");
     }
 
     @Test
@@ -87,7 +93,7 @@ class RegionControllerTest {
         given(this.regionService.fetch(Mockito.anyLong())).willReturn(Mono.just(regionVO));
 
         webTestClient.get().uri("/regions/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.regionName").isEqualTo("test");
+                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test

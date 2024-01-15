@@ -23,8 +23,8 @@ import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
-import io.leafage.basic.hypervisor.repository.RoleComponentsRepository;
 import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
+import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,10 +58,10 @@ class PrivilegeServiceImplTest {
     private PrivilegeRepository privilegeRepository;
 
     @Mock
-    private RoleComponentsRepository roleComponentsRepository;
+    private RolePrivilegesRepository rolePrivilegesRepository;
 
     @InjectMocks
-    private PrivilegeServiceImpl authorityService;
+    private PrivilegeServiceImpl privilegeService;
 
     private PrivilegeDTO privilegeDTO;
     private User user;
@@ -69,7 +69,7 @@ class PrivilegeServiceImplTest {
     @BeforeEach
     void init() {
         privilegeDTO = new PrivilegeDTO();
-        privilegeDTO.setPrivilegeName("test");
+        privilegeDTO.setName("test");
         privilegeDTO.setType('M');
 
         user = new User();
@@ -82,35 +82,35 @@ class PrivilegeServiceImplTest {
 
         given(this.privilegeRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
-        StepVerifier.create(authorityService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void retrieve() {
         given(this.privilegeRepository.findAll()).willReturn(Flux.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.retrieve()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.retrieve()).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void fetch() {
         given(this.privilegeRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.fetch(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.fetch(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void fetch_no_superior() {
         given(this.privilegeRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.fetch(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.fetch(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
         given(this.privilegeRepository.save(Mockito.any(Privilege.class))).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.create(privilegeDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.create(privilegeDTO)).expectNextCount(1).verifyComplete();
     }
 
 
@@ -118,7 +118,7 @@ class PrivilegeServiceImplTest {
     void create_no_superior() {
         given(this.privilegeRepository.save(Mockito.any(Privilege.class))).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.create(privilegeDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.create(privilegeDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -127,24 +127,24 @@ class PrivilegeServiceImplTest {
 
         given(this.privilegeRepository.save(Mockito.any(Privilege.class))).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.modify(1L, privilegeDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.modify(1L, privilegeDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void tree() {
         Privilege privilege = new Privilege();
         privilege.setId(1L);
-        privilege.setPrivilegeName("21612OL34");
+        privilege.setName("21612OL34");
         privilege.setIcon("test");
 
         Privilege child = new Privilege();
         child.setId(2L);
         child.setSuperiorId(privilege.getId());
-        child.setPrivilegeName("21612OL35");
+        child.setName("21612OL35");
         child.setType('M');
         given(this.privilegeRepository.findAll()).willReturn(Flux.just(privilege, child));
 
-        StepVerifier.create(authorityService.tree()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.tree()).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -153,17 +153,17 @@ class PrivilegeServiceImplTest {
 
         given(this.roleMembersRepository.findByUsername(Mockito.anyString())).willReturn(Flux.just(Mockito.mock(RoleMembers.class)));
 
-        given(this.roleComponentsRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
+        given(this.rolePrivilegesRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
 
         given(this.privilegeRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(authorityService.privileges("little3201")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.privileges("little3201")).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void exist() {
         given(this.privilegeRepository.existsByPrivilegeName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(authorityService.exist("little3201")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(privilegeService.exist("little3201")).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

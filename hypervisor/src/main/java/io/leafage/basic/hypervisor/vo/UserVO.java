@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.leafage.basic.hypervisor.bo.UserBO;
 
 import java.time.LocalDateTime;
@@ -32,7 +31,6 @@ public class UserVO extends UserBO {
     /**
      * 账号有效期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime accountExpiresAt;
 
     /**
@@ -43,14 +41,12 @@ public class UserVO extends UserBO {
     /**
      * 密码有效期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime credentialsExpiresAt;
 
     /**
      * 更新时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime lastUpdatedTime;
+    private LocalDateTime lastUpdatedAt;
 
 
     public LocalDateTime getAccountExpiresAt() {
@@ -77,11 +73,11 @@ public class UserVO extends UserBO {
         this.credentialsExpiresAt = credentialsExpiresAt;
     }
 
-    public LocalDateTime getLastUpdatedTime() {
-        return lastUpdatedTime;
+    public LocalDateTime getLastUpdatedAt() {
+        return lastUpdatedAt;
     }
 
-    public void setLastUpdatedTime(LocalDateTime lastUpdatedTime) {
-        this.lastUpdatedTime = lastUpdatedTime;
+    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 }

@@ -19,7 +19,7 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
-import io.leafage.basic.hypervisor.repository.RoleComponentsRepository;
+import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * role authority service impl
+ * role privilege service impl
  *
  * @author liwenqiang 2018-07-28 0:29
  **/
@@ -39,25 +39,25 @@ import java.util.Set;
 public class RolePrivilegesServiceImpl implements RolePrivilegesService {
 
     private final RoleRepository roleRepository;
-    private final RoleComponentsRepository roleComponentsRepository;
+    private final RolePrivilegesRepository rolePrivilegesRepository;
     private final PrivilegeRepository privilegeRepository;
 
-    public RolePrivilegesServiceImpl(RoleRepository roleRepository, RoleComponentsRepository roleComponentsRepository, PrivilegeRepository privilegeRepository) {
+    public RolePrivilegesServiceImpl(RoleRepository roleRepository, RolePrivilegesRepository rolePrivilegesRepository, PrivilegeRepository privilegeRepository) {
         this.roleRepository = roleRepository;
-        this.roleComponentsRepository = roleComponentsRepository;
+        this.rolePrivilegesRepository = rolePrivilegesRepository;
         this.privilegeRepository = privilegeRepository;
     }
 
     @Override
     public Mono<List<RolePrivileges>> privileges(Long roleId) {
         Assert.notNull(roleId, "role id must not be null.");
-        return roleComponentsRepository.findByRoleId(roleId).collectList();
+        return rolePrivilegesRepository.findByRoleId(roleId).collectList();
     }
 
     @Override
     public Mono<List<RolePrivileges>> roles(Long privilegeId) {
         Assert.notNull(privilegeId, "privilege id must not be null.");
-        return roleComponentsRepository.findByComponentId(privilegeId).collectList();
+        return rolePrivilegesRepository.findByComponentId(privilegeId).collectList();
     }
 
     @Override
@@ -70,6 +70,6 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
             rolePrivileges.setRoleId(roleId);
             rolePrivileges.setPrivilegeId(privilegeId);
             return rolePrivileges;
-        }).collectList().flatMapMany(roleComponentsRepository::saveAll).hasElements();
+        }).collectList().flatMapMany(rolePrivilegesRepository::saveAll).hasElements();
     }
 }

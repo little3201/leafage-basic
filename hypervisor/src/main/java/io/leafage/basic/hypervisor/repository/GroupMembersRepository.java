@@ -24,7 +24,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * account group repository
+ * group members repository
  *
  * @author liwenqiang 2018-12-06 22:09
  **/
@@ -32,23 +32,23 @@ import reactor.core.publisher.Mono;
 public interface GroupMembersRepository extends R2dbcRepository<GroupMembers, Long> {
 
     /**
-     * 统计关联用户
+     * 统计关联member
      *
      * @param groupId 组ID
-     * @return 用户数
+     * @return result
      */
     Mono<Long> countByGroupId(Long groupId);
 
     /**
-     * 根据分组查用户
+     * 根据group查member
      *
-     * @param groupId 分组主键
+     * @param groupId group主键
      * @return 关联数据集
      */
     Flux<GroupMembers> findByGroupId(Long groupId);
 
     /**
-     * 根据用户查分组
+     * 根据username查group
      *
      * @param username 账号
      * @return 关联数据集

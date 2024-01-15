@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -30,39 +29,23 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Role extends AbstractModel {
 
     /**
-     * 主键
-     */
-    @Id
-    private Long id;
-    /**
      * 名称
      */
-    @Column(value = "role_name")
-    private String roleName;
+    @Column(value = "name")
+    private String name;
+
     /**
      * 描述
      */
     private String description;
-    /**
-     * 是否启用
-     */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
 
-    public Long getId() {
-        return id;
+
+    public String getName() {
+        return name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -71,14 +54,6 @@ public class Role extends AbstractModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
 }

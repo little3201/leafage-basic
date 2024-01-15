@@ -58,12 +58,12 @@ public class AccessLogServiceImpl implements AccessLogService {
     /**
      * 对象转换
      *
-     * @param info 数据对象
+     * @param accessLog 数据对象
      * @return 输出对象
      */
-    private AccessLogVO convertOuter(AccessLog info) {
+    private AccessLogVO convertOuter(AccessLog accessLog) {
         AccessLogVO outer = new AccessLogVO();
-        BeanUtils.copyProperties(info, outer);
+        BeanUtils.copyProperties(accessLog, outer);
         return outer;
     }
 }

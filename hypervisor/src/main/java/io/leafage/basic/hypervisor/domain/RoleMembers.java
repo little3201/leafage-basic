@@ -39,7 +39,7 @@ public class RoleMembers {
      */
     private String username;
     /**
-     * 角色主键
+     * role主键
      */
     @Column(value = "role_id")
     private Long roleId;

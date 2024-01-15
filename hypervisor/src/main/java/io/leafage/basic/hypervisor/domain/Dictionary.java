@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -30,44 +29,29 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Dictionary extends AbstractModel {
 
     /**
-     * 主键
-     */
-    @Id
-    private Long id;
-    /**
      * 名称
      */
-    @Column(value = "dictionary_name")
-    private String dictionaryName;
+    @Column(value = "name")
+    private String name;
+
     /**
      * 上级
      */
     @Column(value = "superior_id")
     private Long superiorId;
-    /**
-     * 是否启用
-     */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
+
     /**
      * 描述
      */
     private String description;
 
-    public Long getId() {
-        return id;
+
+    public String getName() {
+        return name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDictionaryName() {
-        return dictionaryName;
-    }
-
-    public void setDictionaryName(String dictionaryName) {
-        this.dictionaryName = dictionaryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getSuperiorId() {
@@ -76,14 +60,6 @@ public class Dictionary extends AbstractModel {
 
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public String getDescription() {

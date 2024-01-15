@@ -53,7 +53,7 @@ class GroupServiceImplTest {
     @BeforeEach
     void init() {
         groupDTO = new GroupDTO();
-        groupDTO.setGroupName("test");
+        groupDTO.setName("test");
         groupDTO.setPrincipal("Test");
     }
 

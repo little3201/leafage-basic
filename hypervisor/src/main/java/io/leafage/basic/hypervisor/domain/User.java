@@ -36,33 +36,39 @@ public class User extends AbstractModel {
      */
     @Id
     private String username;
+
     /**
-     * 昵称
+     * 名
      */
-    private String nickname;
+    private String firstname;
+
+    /**
+     * 姓
+     */
+    private String lastname;
+
     /**
      * 密码
      */
     private String password;
+
     /**
      * 头像
      */
     private String avatar;
-    /**
-     * 是否启用
-     */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
+
     /**
      * 账号有效期
      */
     @Column(value = "account_expires_at")
     private LocalDateTime accountExpiresAt;
+
     /**
      * 是否锁定
      */
     @Column(value = "account_non_locked")
     private boolean accountNonLocked = true;
+
     /**
      * 密码有效期
      */
@@ -77,12 +83,20 @@ public class User extends AbstractModel {
         this.username = username;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getPassword() {
@@ -99,14 +113,6 @@ public class User extends AbstractModel {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public LocalDateTime getAccountExpiresAt() {

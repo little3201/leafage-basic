@@ -24,18 +24,18 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * role authority repository
+ * role privilege repository
  *
  * @author liwenqiang 2018-09-26 11:29
  **/
 @Repository
-public interface RoleComponentsRepository extends R2dbcRepository<RolePrivileges, Long> {
+public interface RolePrivilegesRepository extends R2dbcRepository<RolePrivileges, Long> {
 
     /**
-     * 统计关联角色
+     * 统计关联role
      *
      * @param roleId role主键
-     * @return 用户数
+     * @return count
      */
     Mono<Long> countByRoleId(Long roleId);
 

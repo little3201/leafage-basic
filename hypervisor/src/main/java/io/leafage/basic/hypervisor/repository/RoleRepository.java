@@ -33,7 +33,7 @@ import reactor.core.publisher.Mono;
 public interface RoleRepository extends R2dbcRepository<Role, Long> {
 
     /**
-     * 分页查询有效角色
+     * 分页查询有效role
      *
      * @param pageable 分页参数
      * @return 数据集

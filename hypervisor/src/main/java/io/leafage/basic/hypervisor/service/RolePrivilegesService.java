@@ -47,7 +47,7 @@ public interface RolePrivilegesService {
     Mono<List<RolePrivileges>> roles(Long privilegeId);
 
     /**
-     * 角色-组件关系
+     * role-组件关系
      *
      * @param roleId       role主键
      * @param privilegeIds 权限信息

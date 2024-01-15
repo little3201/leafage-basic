@@ -24,7 +24,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * account authority repository
+ * account privilege repository
  *
  * @author liwenqiang 2018-12-06 22:09
  **/
@@ -32,25 +32,25 @@ import reactor.core.publisher.Mono;
 public interface RoleMembersRepository extends R2dbcRepository<RoleMembers, Long> {
 
     /**
-     * 根据账号查询关联角色
+     * 根据账号查询关联role
      *
      * @param username 账号
-     * @return 关联的角色
+     * @return 关联的role
      */
     Flux<RoleMembers> findByUsername(String username);
 
     /**
-     * 统计关联用户
+     * 统计关联role
      *
-     * @param roleId 角色ID
-     * @return 用户数
+     * @param roleId roleID
+     * @return count
      */
     Mono<Long> countByRoleId(Long roleId);
 
     /**
-     * 根据角色查用户
+     * 根据role查member
      *
-     * @param roleId 角色主键
+     * @param roleId role主键
      * @return 关联数据集
      */
     Flux<RoleMembers> findByRoleId(Long roleId);

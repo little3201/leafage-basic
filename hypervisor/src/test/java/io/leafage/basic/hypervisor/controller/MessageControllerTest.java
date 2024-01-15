@@ -64,7 +64,7 @@ class MessageControllerTest {
         messageVO.setTitle("标题");
         messageVO.setContext("内容");
         messageVO.setReceiver("test");
-        messageVO.setLastUpdatedTime(LocalDateTime.now());
+        messageVO.setLastUpdatedAt(LocalDateTime.now());
 
         messageDTO = new MessageDTO();
         messageDTO.setTitle("标题");

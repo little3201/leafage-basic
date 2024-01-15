@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -30,39 +29,27 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Group extends AbstractModel {
 
     /**
-     * 主键
-     */
-    @Id
-    private Long id;
-    /**
      * 名称
      */
-    @Column(value = "group_name")
-    private String groupName;
+    @Column(value = "name")
+    private String name;
+
     /**
      * 负责人
      */
     private String principal;
+
     /**
-     * 是否启用
+     * 描述
      */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
+    private String description;
 
-    public Long getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPrincipal() {
@@ -73,11 +60,11 @@ public class Group extends AbstractModel {
         this.principal = principal;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

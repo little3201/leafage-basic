@@ -38,6 +38,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -67,12 +68,15 @@ class GroupControllerTest {
     @BeforeEach
     void init() {
         groupVO = new GroupVO();
-        groupVO.setGroupName("test");
+        groupVO.setName("test");
         groupVO.setPrincipal("test");
+        groupVO.setSuperior("test");
+        groupVO.setLastUpdatedAt(LocalDateTime.now());
 
         groupDTO = new GroupDTO();
-        groupDTO.setGroupName("test");
+        groupDTO.setName("test");
         groupDTO.setPrincipal("Test");
+        groupDTO.setDescription("group");
 
         groupMembers = new GroupMembers();
         groupMembers.setGroupId(1L);
@@ -103,7 +107,7 @@ class GroupControllerTest {
         given(this.groupService.fetch(Mockito.anyLong())).willReturn(Mono.just(groupVO));
 
         webTestClient.get().uri("/groups/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.groupName").isEqualTo("test");
+                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -118,7 +122,7 @@ class GroupControllerTest {
         given(this.groupService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
-                .queryParam("groupName", "test").build()).exchange().expectStatus().isOk();
+                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test
@@ -126,7 +130,7 @@ class GroupControllerTest {
         given(this.groupService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
-                .queryParam("groupName", "test").build()).exchange().expectStatus().isNoContent();
+                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -135,7 +139,7 @@ class GroupControllerTest {
 
         webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.groupName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -152,7 +156,7 @@ class GroupControllerTest {
 
         webTestClient.put().uri("/groups/{id}", 1L).bodyValue(groupDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.groupName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test

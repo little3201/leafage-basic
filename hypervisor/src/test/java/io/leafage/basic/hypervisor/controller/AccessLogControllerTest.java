@@ -34,6 +34,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -62,6 +63,7 @@ class AccessLogControllerTest {
         accessLogVO.setIp("12.1.2.1");
         accessLogVO.setLocation("某国某城市");
         accessLogVO.setDescription("更新个人资料");
+        accessLogVO.setLastUpdatedAt(LocalDateTime.now());
     }
 
     @Test

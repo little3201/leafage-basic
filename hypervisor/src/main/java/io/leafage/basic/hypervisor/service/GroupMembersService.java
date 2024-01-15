@@ -39,7 +39,7 @@ public interface GroupMembersService {
     Mono<List<GroupMembers>> members(Long groupId);
 
     /**
-     * 查询关联分组
+     * 查询关联group
      *
      * @param code 代码
      * @return 数据集
@@ -47,10 +47,10 @@ public interface GroupMembersService {
     Mono<List<GroupMembers>> groups(String code);
 
     /**
-     * 分组-账号关系
+     * group-账号关系
      *
      * @param username 账号
-     * @param groupIds 分组主键集合
+     * @param groupIds group主键集合
      * @return 是否成功： true - 是， false - 否
      */
     Mono<Boolean> relation(String username, Set<Long> groupIds);

@@ -92,14 +92,14 @@ public class GroupController {
     /**
      * 是否已存在
      *
-     * @param groupName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String groupName) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = groupService.exist(groupName);
+            existsMono = groupService.exist(name);
         } catch (Exception e) {
             logger.error("Check group is exist an error: ", e);
             return ResponseEntity.noContent().build();

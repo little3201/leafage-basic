@@ -39,7 +39,7 @@ public interface RoleMembersService {
     Mono<List<RoleMembers>> members(Long roleId);
 
     /**
-     * 查询关联角色
+     * 查询关联role
      *
      * @param username 账号
      * @return 数据集
@@ -47,10 +47,10 @@ public interface RoleMembersService {
     Mono<List<RoleMembers>> roles(String username);
 
     /**
-     * 角色-账号关系
+     * role-账号关系
      *
-     * @param username 用户
-     * @param roleIds  角色主键集合
+     * @param username 用户名
+     * @param roleIds  role主键集合
      * @return 是否成功： true - 是， false - 否
      */
     Mono<Boolean> relation(String username, Set<Long> roleIds);

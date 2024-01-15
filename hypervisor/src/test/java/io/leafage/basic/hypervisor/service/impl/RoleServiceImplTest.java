@@ -53,7 +53,8 @@ class RoleServiceImplTest {
     @BeforeEach
     void init() {
         roleDTO = new RoleDTO();
-        roleDTO.setRoleName("test");
+        roleDTO.setName("test");
+        roleDTO.setSuperiorId(1L);
     }
 
     @Test

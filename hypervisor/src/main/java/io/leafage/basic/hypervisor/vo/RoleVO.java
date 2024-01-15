@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.vo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.leafage.basic.hypervisor.bo.RoleBO;
 
 import java.time.LocalDateTime;
@@ -42,8 +41,7 @@ public class RoleVO extends RoleBO {
     /**
      * 更新时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime lastUpdatedTime;
+    private LocalDateTime lastUpdatedAt;
 
 
     public Long getId() {
@@ -62,11 +60,11 @@ public class RoleVO extends RoleBO {
         this.enabled = enabled;
     }
 
-    public LocalDateTime getLastUpdatedTime() {
-        return lastUpdatedTime;
+    public LocalDateTime getLastUpdatedAt() {
+        return lastUpdatedAt;
     }
 
-    public void setLastUpdatedTime(LocalDateTime lastUpdatedTime) {
-        this.lastUpdatedTime = lastUpdatedTime;
+    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 }

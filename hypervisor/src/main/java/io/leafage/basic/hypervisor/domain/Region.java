@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -30,15 +29,10 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Region extends AbstractModel {
 
     /**
-     * 主键
-     */
-    @Id
-    private Long id;
-    /**
      * 名称
      */
-    @Column(value = "region_name")
-    private String regionName;
+    @Column(value = "name")
+    private String name;
     /**
      * 上级
      */
@@ -54,26 +48,18 @@ public class Region extends AbstractModel {
      */
     @Column(value = "area_code")
     private String areaCode;
+
     /**
-     * 是否启用
+     * 描述
      */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
+    private String description;
 
-    public Long getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRegionName() {
-        return regionName;
-    }
-
-    public void setRegionName(String regionName) {
-        this.regionName = regionName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getSuperiorId() {
@@ -100,11 +86,11 @@ public class Region extends AbstractModel {
         this.areaCode = areaCode;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

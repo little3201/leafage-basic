@@ -26,6 +26,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -46,13 +48,22 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
 
     @Test
+    void retrieve() {
+        given(this.userRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(User.class)));
+
+        given(this.userRepository.count()).willReturn(Mono.just(2L));
+
+        StepVerifier.create(userService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
     void fetch() {
         given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
         StepVerifier.create(userService.fetch("little3201")).expectNextCount(1).verifyComplete();
     }
 
     /**
-     * 测试新增用户信息
+     * 测试新增user
      */
     @Test
     void create() {

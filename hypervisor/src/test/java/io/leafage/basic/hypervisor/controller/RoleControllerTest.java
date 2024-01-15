@@ -39,6 +39,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -73,10 +74,14 @@ class RoleControllerTest {
     @BeforeEach
     void init() {
         roleDTO = new RoleDTO();
-        roleDTO.setRoleName("test");
+        roleDTO.setName("test");
+        roleDTO.setSuperiorId(1L);
+        roleDTO.setName("role");
 
         roleVO = new RoleVO();
-        roleVO.setRoleName("test");
+        roleVO.setName("test");
+        roleVO.setLastUpdatedAt(LocalDateTime.now());
+        roleVO.setDescription("role");
 
         rolePrivileges = new RolePrivileges();
         rolePrivileges.setRoleId(1L);
@@ -111,7 +116,7 @@ class RoleControllerTest {
         given(this.roleService.fetch(Mockito.anyLong())).willReturn(Mono.just(roleVO));
 
         webTestClient.get().uri("/roles/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.roleName").isEqualTo("test");
+                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -126,7 +131,7 @@ class RoleControllerTest {
         given(this.roleService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles/exist")
-                .queryParam("roleName", "test").build()).exchange().expectStatus().isOk();
+                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test
@@ -134,7 +139,7 @@ class RoleControllerTest {
         given(this.roleService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles/exist")
-                .queryParam("roleName", "test").build()).exchange().expectStatus().isNoContent();
+                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -142,7 +147,7 @@ class RoleControllerTest {
         given(this.roleService.create(Mockito.any(RoleDTO.class))).willReturn(Mono.just(roleVO));
 
         webTestClient.post().uri("/roles").bodyValue(roleDTO).exchange().expectStatus().isCreated()
-                .expectBody().jsonPath("$.roleName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -158,7 +163,7 @@ class RoleControllerTest {
 
         webTestClient.put().uri("/roles/{id}", 1L).bodyValue(roleDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.roleName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test

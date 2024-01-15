@@ -19,6 +19,8 @@ package io.leafage.basic.hypervisor.bo;
 
 import jakarta.validation.constraints.NotBlank;
 
+import java.time.LocalDateTime;
+
 /**
  * BO class for User
  *
@@ -33,14 +35,29 @@ public abstract class UserBO {
     private String username;
 
     /**
-     * 昵称
+     * 名
      */
-    private String nickname;
+    private String firstname;
+
+    /**
+     * 姓
+     */
+    private String lastname;
 
     /**
      * 头像
      */
     private String avatar;
+
+    /**
+     * 账号有效期
+     */
+    private LocalDateTime accountExpiresAt;
+
+    /**
+     * 密码有效期
+     */
+    private LocalDateTime credentialsExpiresAt;
 
 
     public String getUsername() {
@@ -51,12 +68,20 @@ public abstract class UserBO {
         this.username = username;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getAvatar() {
@@ -65,5 +90,21 @@ public abstract class UserBO {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public LocalDateTime getAccountExpiresAt() {
+        return accountExpiresAt;
+    }
+
+    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
+        this.accountExpiresAt = accountExpiresAt;
+    }
+
+    public LocalDateTime getCredentialsExpiresAt() {
+        return credentialsExpiresAt;
+    }
+
+    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
+        this.credentialsExpiresAt = credentialsExpiresAt;
     }
 }

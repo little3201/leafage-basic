@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -30,15 +29,10 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Privilege extends AbstractModel {
 
     /**
-     * 主键
-     */
-    @Id
-    private Long id;
-    /**
      * 名称
      */
-    @Column(value = "privilege_name")
-    private String privilegeName;
+    @Column(value = "name")
+    private String name;
     /**
      * 上级
      */
@@ -56,26 +50,18 @@ public class Privilege extends AbstractModel {
      * 路径
      */
     private String path;
+
     /**
-     * 是否启用
+     * 描述
      */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
+    private String description;
 
-    public Long getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPrivilegeName() {
-        return privilegeName;
-    }
-
-    public void setPrivilegeName(String privilegeName) {
-        this.privilegeName = privilegeName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getSuperiorId() {
@@ -110,12 +96,11 @@ public class Privilege extends AbstractModel {
         this.path = path;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setDescription(String description) {
+        this.description = description;
     }
-
 }

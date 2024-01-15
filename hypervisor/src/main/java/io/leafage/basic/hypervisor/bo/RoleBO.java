@@ -29,15 +29,27 @@ public abstract class RoleBO {
     /**
      * 名称
      */
-    @NotBlank(message = "roleName cannot be blank.")
-    private String roleName;
+    @NotBlank(message = "role name cannot be blank.")
+    private String name;
 
+    /**
+     * 描述
+     */
+    private String description;
 
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -35,12 +35,12 @@ public class GroupRoles {
     @Id
     private Long id;
     /**
-     * 分组主键
+     * group主键
      */
     @Column(value = "group_id")
     private Long groupId;
     /**
-     * 角色主键
+     * role主键
      */
     @Column(value = "role_id")
     private Long roleId;

@@ -36,7 +36,7 @@ public class MessageVO extends MessageBO {
     /**
      * 更新时间
      */
-    private LocalDateTime lastUpdatedTime;
+    private LocalDateTime lastUpdatedAt;
 
 
     public Long getId() {
@@ -47,11 +47,11 @@ public class MessageVO extends MessageBO {
         this.id = id;
     }
 
-    public LocalDateTime getLastUpdatedTime() {
-        return lastUpdatedTime;
+    public LocalDateTime getLastUpdatedAt() {
+        return lastUpdatedAt;
     }
 
-    public void setLastUpdatedTime(LocalDateTime lastUpdatedTime) {
-        this.lastUpdatedTime = lastUpdatedTime;
+    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 }

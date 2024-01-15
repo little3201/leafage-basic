@@ -110,14 +110,14 @@ public class PrivilegeController {
     /**
      * 是否已存在
      *
-     * @param privilegeName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String privilegeName) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = privilegeService.exist(privilegeName);
+            existsMono = privilegeService.exist(name);
         } catch (Exception e) {
             logger.error("Check privilege is exist an error: ", e);
             return ResponseEntity.noContent().build();
@@ -163,7 +163,7 @@ public class PrivilegeController {
     }
 
     /**
-     * 查询关联角色
+     * 查询关联role
      *
      * @param id 主键
      * @return 查询到的数据集，异常时返回204状态码

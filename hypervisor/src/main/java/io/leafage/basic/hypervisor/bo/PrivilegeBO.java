@@ -32,9 +32,9 @@ public abstract class PrivilegeBO {
     /**
      * 名称
      */
-    @NotBlank(message = "privilegeName cannot be blank.")
-    @Size(max = 16, message = "privilegeName max length is 16.")
-    private String privilegeName;
+    @NotBlank(message = "privilege name cannot be blank.")
+    @Size(max = 32, message = "privilege name max length is 32.")
+    private String name;
 
     /**
      * 类型
@@ -53,13 +53,17 @@ public abstract class PrivilegeBO {
      */
     private String path;
 
+    /**
+     * 描述
+     */
+    private String description;
 
-    public String getPrivilegeName() {
-        return privilegeName;
+    public String getName() {
+        return name;
     }
 
-    public void setPrivilegeName(String privilegeName) {
-        this.privilegeName = privilegeName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Character getType() {
@@ -84,5 +88,13 @@ public abstract class PrivilegeBO {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

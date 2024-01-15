@@ -29,8 +29,8 @@ public abstract class RegionBO {
     /**
      * 名称
      */
-    @NotBlank(message = "regionName cannot be blank.")
-    private String regionName;
+    @NotBlank(message = "region name cannot be blank.")
+    private String name;
 
     /**
      * 邮编
@@ -42,12 +42,18 @@ public abstract class RegionBO {
      */
     private String areaCode;
 
-    public String getRegionName() {
-        return regionName;
+    /**
+     * 描述
+     */
+    private String description;
+
+
+    public String getName() {
+        return name;
     }
 
-    public void setRegionName(String regionName) {
-        this.regionName = regionName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getPostalCode() {
@@ -64,5 +70,13 @@ public abstract class RegionBO {
 
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

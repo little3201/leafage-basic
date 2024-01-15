@@ -39,7 +39,7 @@ public class GroupMembers {
      */
     private String username;
     /**
-     * 分组主键
+     * group主键
      */
     @Column(value = "group_id")
     private Long groupId;

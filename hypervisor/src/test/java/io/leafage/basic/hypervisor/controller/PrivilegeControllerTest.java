@@ -70,17 +70,19 @@ class PrivilegeControllerTest {
     @BeforeEach
     void init() {
         privilegeDTO = new PrivilegeDTO();
-        privilegeDTO.setPrivilegeName("test");
+        privilegeDTO.setName("test");
         privilegeDTO.setType('M');
         privilegeDTO.setIcon("add");
+        privilegeDTO.setSuperiorId(1L);
+        privilegeDTO.setDescription("privilege");
 
         privilegeVO = new PrivilegeVO();
-        privilegeVO.setPrivilegeName("test");
+        privilegeVO.setName("test");
         privilegeVO.setIcon("add");
         privilegeVO.setPath("/test");
         privilegeVO.setSuperior("superior");
         privilegeVO.setType('M');
-        privilegeVO.setLastUpdatedTime(LocalDateTime.now());
+        privilegeVO.setLastUpdatedAt(LocalDateTime.now());
 
         rolePrivileges = new RolePrivileges();
         rolePrivileges.setRoleId(1L);
@@ -126,7 +128,7 @@ class PrivilegeControllerTest {
         given(this.privilegeService.fetch(Mockito.anyLong())).willReturn(Mono.just(privilegeVO));
 
         webTestClient.get().uri("/privileges/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.privilegeName").isEqualTo("test");
+                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -142,7 +144,7 @@ class PrivilegeControllerTest {
         given(this.privilegeService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/privileges/exist")
-                .queryParam("privilegeName", "test").build()).exchange().expectStatus().isOk();
+                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test
@@ -150,7 +152,7 @@ class PrivilegeControllerTest {
         given(this.privilegeService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/privileges/exist")
-                .queryParam("privilegeName", "test").build()).exchange().expectStatus().isNoContent();
+                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -159,7 +161,7 @@ class PrivilegeControllerTest {
 
         webTestClient.post().uri("/privileges").bodyValue(privilegeDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.privilegeName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -175,7 +177,7 @@ class PrivilegeControllerTest {
 
         webTestClient.put().uri("/privileges/{id}", 1L).bodyValue(privilegeDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.privilegeName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test

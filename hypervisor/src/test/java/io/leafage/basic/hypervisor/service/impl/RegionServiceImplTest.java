@@ -53,9 +53,10 @@ class RegionServiceImplTest {
     @BeforeEach
     void init() {
         regionDTO = new RegionDTO();
-        regionDTO.setRegionName("西安市");
+        regionDTO.setName("西安市");
         regionDTO.setAreaCode("029");
         regionDTO.setPostalCode(710000);
+        regionDTO.setSuperiorId(1L);
     }
 
     @Test

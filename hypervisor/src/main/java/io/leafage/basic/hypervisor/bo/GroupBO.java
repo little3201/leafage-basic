@@ -29,21 +29,25 @@ public abstract class GroupBO {
     /**
      * 名称
      */
-    @NotBlank(message = "groupName cannot be blank.")
-    private String groupName;
+    @NotBlank(message = "group name cannot be blank.")
+    private String name;
 
     /**
      * 负责人
      */
     private String principal;
 
+    /**
+     * 描述
+     */
+    private String description;
 
-    public String getGroupName() {
-        return groupName;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPrincipal() {
@@ -52,5 +56,13 @@ public abstract class GroupBO {
 
     public void setPrincipal(String principal) {
         this.principal = principal;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

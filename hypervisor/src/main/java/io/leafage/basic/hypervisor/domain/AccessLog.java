@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
@@ -28,11 +27,6 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table(name = "access_logs")
 public class AccessLog extends AbstractModel {
 
-    /**
-     * 主键
-     */
-    @Id
-    private Long id;
     /**
      * ip
      */
@@ -46,14 +40,6 @@ public class AccessLog extends AbstractModel {
      */
     private String context;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getIp() {
         return ip;

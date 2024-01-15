@@ -38,6 +38,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -63,12 +64,14 @@ class DictionaryControllerTest {
     @BeforeEach
     void init() {
         dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setDictionaryName("Gender");
+        dictionaryDTO.setName("Gender");
         dictionaryDTO.setDescription("描述");
 
         dictionaryVO = new DictionaryVO();
-        dictionaryVO.setDictionaryName("test");
+        dictionaryVO.setName("test");
+        dictionaryVO.setSuperior("性别");
         dictionaryVO.setDescription("性别-男");
+        dictionaryVO.setLastUpdatedAt(LocalDateTime.now());
     }
 
     @Test
@@ -95,7 +98,7 @@ class DictionaryControllerTest {
         given(this.dictionaryService.fetch(Mockito.anyLong())).willReturn(Mono.just(dictionaryVO));
 
         webTestClient.get().uri("/dictionaries/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.dictionaryName").isEqualTo("test");
+                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -141,7 +144,7 @@ class DictionaryControllerTest {
 
         webTestClient.post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.dictionaryName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test

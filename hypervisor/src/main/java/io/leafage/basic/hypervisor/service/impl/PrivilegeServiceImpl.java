@@ -21,8 +21,8 @@ import io.leafage.basic.hypervisor.domain.Privilege;
 import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
-import io.leafage.basic.hypervisor.repository.RoleComponentsRepository;
 import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
+import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
@@ -54,14 +54,14 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     private final PrivilegeRepository privilegeRepository;
     private final RoleMembersRepository roleMembersRepository;
     private final UserRepository userRepository;
-    private final RoleComponentsRepository roleComponentsRepository;
+    private final RolePrivilegesRepository rolePrivilegesRepository;
 
     public PrivilegeServiceImpl(PrivilegeRepository privilegeRepository, RoleMembersRepository roleMembersRepository,
-                                UserRepository userRepository, RoleComponentsRepository roleComponentsRepository) {
+                                UserRepository userRepository, RolePrivilegesRepository rolePrivilegesRepository) {
         this.privilegeRepository = privilegeRepository;
         this.roleMembersRepository = roleMembersRepository;
         this.userRepository = userRepository;
-        this.roleComponentsRepository = roleComponentsRepository;
+        this.rolePrivilegesRepository = rolePrivilegesRepository;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
 
         return accountMono.map(user -> roleMembersRepository.findByUsername(user.getUsername())
-                        .flatMap(userRole -> roleComponentsRepository.findByRoleId(userRole.getRoleId())
+                        .flatMap(userRole -> rolePrivilegesRepository.findByRoleId(userRole.getRoleId())
                                 .flatMap(roleComponents -> privilegeRepository.findById(roleComponents.getPrivilegeId()))))
                 .flatMap(this::expandAndConvert);
     }

@@ -17,50 +17,41 @@
 
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.domain.User;
-import org.springframework.data.domain.Pageable;
+import io.leafage.basic.hypervisor.domain.GroupRoles;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * user repository
+ * group roles repository
  *
- * @author liwenqiang 2018-07-27 17:50
+ * @author liwenqiang 2024-01-15 21:09
  **/
 @Repository
-public interface UserRepository extends R2dbcRepository<User, Long> {
+public interface GroupRolesRepository extends R2dbcRepository<GroupRoles, Long> {
 
     /**
-     * 分页查询
+     * 统计关联role
      *
-     * @param pageable 分页参数
-     * @return 有效数据集
+     * @param groupId 组ID
+     * @return result
      */
-    Flux<User> findByEnabledTrue(Pageable pageable);
+    Mono<Long> countByGroupId(Long groupId);
 
     /**
-     * 根据账号查
+     * 根据group查role
      *
-     * @param username 账号
-     * @return user
+     * @param groupId group主键
+     * @return 关联数据集
      */
-    Mono<User> getByUsername(String username);
+    Flux<GroupRoles> findByGroupId(Long groupId);
 
     /**
-     * 是否已存在
+     * 根据role查group
      *
-     * @param username 账号
-     * @return true-是，false-否
+     * @param roleId 账号
+     * @return 关联数据集
      */
-    Mono<Boolean> existsByUsername(String username);
-
-    /**
-     * 删除
-     *
-     * @param username 账号
-     * @return user
-     */
-    Mono<Void> deleteByUsername(String username);
+    Flux<GroupRoles> findByRoleId(Long roleId);
 }

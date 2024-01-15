@@ -18,7 +18,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
-import io.leafage.basic.hypervisor.repository.RoleComponentsRepository;
+import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,28 +41,28 @@ import static org.mockito.BDDMockito.given;
 class RolePrivilegeServiceImplTest {
 
     @Mock
-    private RoleComponentsRepository roleComponentsRepository;
+    private RolePrivilegesRepository rolePrivilegesRepository;
 
     @InjectMocks
     private RolePrivilegesServiceImpl roleComponentsService;
 
     @Test
     void privileges() {
-        given(this.roleComponentsRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
+        given(this.rolePrivilegesRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
 
         StepVerifier.create(roleComponentsService.privileges(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void roles() {
-        given(this.roleComponentsRepository.findByComponentId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
+        given(this.rolePrivilegesRepository.findByComponentId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
 
         StepVerifier.create(roleComponentsService.roles(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void relation() {
-        given(this.roleComponentsRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
+        given(this.rolePrivilegesRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
 
         StepVerifier.create(roleComponentsService.relation(1L, Collections.singleton(2L)))
                 .expectNextCount(1).verifyComplete();

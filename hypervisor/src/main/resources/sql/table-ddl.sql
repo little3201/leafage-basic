@@ -49,7 +49,8 @@ drop table if exists users;
 /*==============================================================*/
 create table users
 (
-   username             varchar(16) not null primary key,
+   id                   bigserial not null primary key,
+   username             varchar(16) not null,
    password             varchar(255) not null ,
    firstname             varchar(16) not null,
    lastname             varchar(16) not null,

@@ -78,7 +78,7 @@ create table comments
 drop table if exists post_statistics;
 
 /*==============================================================*/
-/* Table: post_statistics                                            */
+/* Table: post_statistics                                       */
 /*==============================================================*/
 create table post_statistics
 (

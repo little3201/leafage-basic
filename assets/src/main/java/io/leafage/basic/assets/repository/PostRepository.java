@@ -62,14 +62,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     long countByCategoryId(long categoryId);
 
     /**
-     * 根据id查询
-     *
-     * @param id 主键
-     * @return 帖子信息
-     */
-    Post getByCodeAndEnabledTrue(Long id);
-
-    /**
      * 是否已存在
      *
      * @param title 名称

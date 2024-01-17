@@ -17,11 +17,6 @@ import jakarta.persistence.Table;
 public class Group extends AbstractModel {
 
     /**
-     * 主键
-     */
-    @Column(unique = true)
-    private String id;
-    /**
      * 名称
      */
     private String name;
@@ -38,13 +33,6 @@ public class Group extends AbstractModel {
      */
     private String description;
 
-    public String getCode() {
-        return id;
-    }
-
-    public void setCode(Long id) {
-        this.id = id;
-    }
 
     public Long getPrincipal() {
         return principal;

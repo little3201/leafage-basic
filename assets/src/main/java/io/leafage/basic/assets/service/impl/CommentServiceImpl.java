@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentVO> relation(Long id) {
         Assert.notNull(id, "id cannot be null.");
-        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        Post post = postRepository.findById(id).orElse(null);
         if (null == post) {
             return Collections.emptyList();
         }
@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentVO> replies(String replier) {
+    public List<CommentVO> replies(Long replier) {
         return commentRepository.findByReplierAndEnabledTrue(replier)
                 .stream().map(this::convertOuter).toList();
     }
@@ -77,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
         CommentVO vo = new CommentVO();
         BeanUtils.copyProperties(comment, vo);
 
-        Long count = commentRepository.countByReplierAndEnabledTrue(comment.getCode());
+        Long count = commentRepository.countByReplierAndEnabledTrue(comment.getId());
         vo.setCount(count);
         return vo;
     }

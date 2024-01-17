@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean exist(String username) {
         Assert.hasText(username, "username cannot be blank.");
-        return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
+        return userRepository.exists(username);
     }
 
     @Override

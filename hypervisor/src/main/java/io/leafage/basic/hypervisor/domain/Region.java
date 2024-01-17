@@ -14,11 +14,6 @@ import jakarta.persistence.Table;
 public class Region extends AbstractModel {
 
     /**
-     * 主键
-     */
-    @Column(unique = true)
-    private Long id;
-    /**
      * 名称
      */
     private String name;
@@ -45,13 +40,7 @@ public class Region extends AbstractModel {
      */
     private String description;
 
-    public Long getCode() {
-        return id;
-    }
 
-    public void setCode(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

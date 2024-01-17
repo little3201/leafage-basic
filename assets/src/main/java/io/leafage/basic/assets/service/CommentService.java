@@ -4,6 +4,7 @@ import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
+
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @author liwenqiang 2021/09/29 14:34
  **/
-public interface CommentService extends ServletBasicService<CommentDTO, CommentVO, String> {
+public interface CommentService extends ServletBasicService<CommentDTO, CommentVO> {
 
     /**
      * 分页查询
@@ -33,8 +34,8 @@ public interface CommentService extends ServletBasicService<CommentDTO, CommentV
     /**
      * 根据replier查询
      *
-     * @param replier 回复代码
+     * @param id 主键
      * @return 回复的评论
      */
-    List<CommentVO> replies(String replier);
+    List<CommentVO> replies(Long id);
 }

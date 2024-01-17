@@ -36,7 +36,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public List<RegionVO> lower(Long id) {
         Assert.notNull(id, "id cannot be null.");
-        return regionRepository.findBySuperiorAndEnabledTrue(id)
+        return regionRepository.findBySuperiorIdAndEnabledTrue(id)
                 .stream().map(this::convertOuter).toList();
     }
 

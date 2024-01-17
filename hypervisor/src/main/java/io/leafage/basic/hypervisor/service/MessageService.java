@@ -10,7 +10,7 @@ import top.leafage.common.servlet.ServletBasicService;
  *
  * @author liwenqiang 2022/1/29 17:34
  **/
-public interface MessageService extends ServletBasicService<MessageDTO, MessageVO, String> {
+public interface MessageService extends ServletBasicService<MessageDTO, MessageVO> {
 
     /**
      * 分页查询

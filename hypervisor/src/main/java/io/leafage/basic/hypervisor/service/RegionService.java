@@ -4,6 +4,7 @@ import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
+
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @author liwenqiang 2021/11/27 14:18
  **/
-public interface RegionService extends ServletBasicService<RegionDTO, RegionVO, Long> {
+public interface RegionService extends ServletBasicService<RegionDTO, RegionVO> {
 
     /**
      * 分页查询

@@ -34,7 +34,7 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
     public List<RolePrivileges> roles(Long privilegeId) {
         Assert.notNull(privilegeId, "privilege id must not be null.");
 
-        return rolePrivilegesRepository.findByAuthorityId(privilegeId);
+        return rolePrivilegesRepository.findByPrivilegeId(privilegeId);
     }
 
     @Override

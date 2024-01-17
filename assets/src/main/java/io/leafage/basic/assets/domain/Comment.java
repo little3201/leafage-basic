@@ -38,16 +38,8 @@ public class Comment extends AbstractEntity {
     /**
      * 回复人
      */
-    private String replier;
+    private Long replier;
 
-
-    public String getCode() {
-        return id;
-    }
-
-    public void setCode(Long id) {
-        this.id = id;
-    }
 
     public Long getPostsId() {
         return postsId;
@@ -81,11 +73,11 @@ public class Comment extends AbstractEntity {
         this.content = content;
     }
 
-    public String getReplier() {
+    public Long getReplier() {
         return replier;
     }
 
-    public void setReplier(String replier) {
+    public void setReplier(Long replier) {
         this.replier = replier;
     }
 }

@@ -17,11 +17,6 @@ import jakarta.persistence.Table;
 public class Role extends AbstractModel {
 
     /**
-     * 主键
-     */
-    @Column(unique = true)
-    private String id;
-    /**
      * 名称
      */
     private String name;
@@ -34,13 +29,7 @@ public class Role extends AbstractModel {
      */
     private String description;
 
-    public String getCode() {
-        return id;
-    }
 
-    public void setCode(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

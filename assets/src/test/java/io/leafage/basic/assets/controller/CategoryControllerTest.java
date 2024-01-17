@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -47,11 +48,22 @@ class CategoryControllerTest {
     @MockBean
     private CategoryService categoryService;
 
-    @Test
-    void retrieve() throws Exception {
-        CategoryVO categoryVO = new CategoryVO();
+    private CategoryVO categoryVO;
+
+    private CategoryDTO categoryDTO;
+
+    @BeforeEach
+    void init() {
+        categoryVO = new CategoryVO();
         categoryVO.setName("test");
         categoryVO.setCount(21L);
+
+        categoryDTO = new CategoryDTO();
+        categoryDTO.setName("test");
+    }
+
+    @Test
+    void retrieve() throws Exception {
         Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
         given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
@@ -71,11 +83,9 @@ class CategoryControllerTest {
 
     @Test
     void fetch() throws Exception {
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
         given(this.categoryService.fetch(Mockito.anyLong())).willReturn(categoryVO);
 
-        mvc.perform(get("/category/{id}", "21389KO6")).andExpect(status().isOk())
+        mvc.perform(get("/category/{id}", 1L)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
@@ -83,18 +93,14 @@ class CategoryControllerTest {
     void fetch_error() throws Exception {
         given(this.categoryService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/category/{id}", "21389KO6")).andExpect(status().isNoContent())
+        mvc.perform(get("/category/{id}", 1L)).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void create() throws Exception {
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
         mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
@@ -104,8 +110,6 @@ class CategoryControllerTest {
     void create_error() throws Exception {
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
         mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
@@ -113,15 +117,9 @@ class CategoryControllerTest {
 
     @Test
     void modify() throws Exception {
-        // 构造结果对象
-        CategoryVO categoryVO = new CategoryVO();
-        categoryVO.setName("test");
         given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
 
-        // 构造请求对象
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        mvc.perform(put("/category/{id}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/category/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
@@ -131,10 +129,7 @@ class CategoryControllerTest {
     void modify_error() throws Exception {
         given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        // 构造请求对象
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        mvc.perform(put("/category/{id}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/category/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
@@ -144,7 +139,7 @@ class CategoryControllerTest {
     void remove() throws Exception {
         this.categoryService.remove(Mockito.anyLong());
 
-        mvc.perform(delete("/category/{id}", "21389KO6").with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/category/{id}", 1L).with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -152,7 +147,7 @@ class CategoryControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.categoryService).remove(Mockito.anyLong());
 
-        mvc.perform(delete("/category/{id}", "21389KO6").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/category/{id}", 1L).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 }

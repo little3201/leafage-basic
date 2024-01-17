@@ -17,11 +17,6 @@ import jakarta.persistence.Table;
 public class Privilege extends AbstractModel {
 
     /**
-     * 主键
-     */
-    @Column(unique = true)
-    private String id;
-    /**
      * 上级主键
      */
     private Long superior;
@@ -46,13 +41,7 @@ public class Privilege extends AbstractModel {
      */
     private String description;
 
-    public String getCode() {
-        return id;
-    }
 
-    public void setCode(Long id) {
-        this.id = id;
-    }
 
     public Long getSuperior() {
         return superior;

@@ -26,14 +26,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Page<Category> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据id查询
-     *
-     * @param id 唯一标识
-     * @return 查询结果
-     */
-    Category getByCodeAndEnabledTrue(Long id);
-
-    /**
      * 是否已存在
      *
      * @param name 名称

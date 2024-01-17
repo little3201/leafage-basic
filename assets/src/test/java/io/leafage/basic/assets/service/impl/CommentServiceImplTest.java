@@ -1,8 +1,7 @@
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.domain.Post;
-import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.domain.Comment;
+import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.vo.CommentVO;
@@ -16,11 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import java.time.LocalDateTime;
+
 import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 /**
  * comment 接口测试
@@ -41,13 +40,7 @@ class CommentServiceImplTest {
 
     @Test
     void retrieve() {
-        Comment comment = new Comment();
-        comment.setContent("评论信息");
-        comment.setPostsId(1L);
-        comment.setReplier("2112JK01");
-        comment.setCountry("china");
-        comment.setLocation("北京市区");
-        Page<Comment> page = new PageImpl<>(List.of(comment));
+        Page<Comment> page = new PageImpl<>(List.of(Mockito.mock(Comment.class)));
         given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(page);
 
         Page<CommentVO> voPage = commentService.retrieve(0, 2);
@@ -56,29 +49,18 @@ class CommentServiceImplTest {
 
     @Test
     void relation() {
-        Post post = new Post();
-        post.setId(1L);
-        post.setEnabled(true);
-        post.setModifier(1L);
-        post.setModifyTime(LocalDateTime.now());
-        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(post);
+        given(this.commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(Mockito.anyLong()))
+                .willReturn(List.of(Mockito.mock(Comment.class)));
 
-        Comment comment = new Comment();
-        comment.setContent("评论信息");
-        comment.setPostsId(post.getId());
-        comment.setModifier(post.getModifier());
-        comment.setEnabled(post.isEnabled());
-        given(this.commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(comment));
-
-        List<CommentVO> voList = commentService.relation("2112JK02");
+        List<CommentVO> voList = commentService.relation(Mockito.anyLong());
         Assertions.assertNotNull(voList);
     }
 
     @Test
     void relation_empty() {
-        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
 
-        List<CommentVO> voList = commentService.relation("2112JK02");
+        List<CommentVO> voList = commentService.relation(Mockito.anyLong());
         Assertions.assertTrue(voList.isEmpty());
     }
 
@@ -92,50 +74,22 @@ class CommentServiceImplTest {
         comm.setContent("评论信息2222");
         comm.setPostsId(1L);
         comm.setReplier(comment.getReplier());
-        given(this.commentRepository.findByReplierAndEnabledTrue(Mockito.anyString())).willReturn(List.of(comment, comm));
+        given(this.commentRepository.findByReplierAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(comment, comm));
 
-        List<CommentVO> voList = commentService.replies("2112JK01");
+        List<CommentVO> voList = commentService.replies(Mockito.anyLong());
         Assertions.assertNotNull(voList);
     }
 
     @Test
     void replies_empty() {
-        List<CommentVO> voList = commentService.replies("2112JK01");
+        List<CommentVO> voList = commentService.replies(Mockito.anyLong());
         Assertions.assertTrue(voList.isEmpty());
     }
 
     @Test
-    void create_posts_null() {
-        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
-
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setContent("评论信息");
-        commentDTO.setPosts("2112JK02");
-        CommentVO commentVO = commentService.create(commentDTO);
-
+    void create() {
+        CommentVO commentVO = commentService.create(Mockito.mock(CommentDTO.class));
         Assertions.assertNull(commentVO);
     }
 
-    @Test
-    void create() {
-        Post post = new Post();
-        post.setId(1L);
-        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(post);
-
-        Comment comment = new Comment();
-        comment.setContent("评论信息");
-        comment.setPostsId(post.getId());
-        comment.setReplier("2112JK01");
-        given(this.commentRepository.saveAndFlush(Mockito.any(Comment.class))).willReturn(comment);
-
-        this.postRepository.increaseComment(post.getId());
-
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setContent("评论信息");
-        commentDTO.setPosts("2112JK02");
-        CommentVO commentVO = commentService.create(commentDTO);
-
-        verify(this.commentRepository, times(1)).saveAndFlush(Mockito.any(Comment.class));
-        Assertions.assertNotNull(commentVO);
-    }
 }

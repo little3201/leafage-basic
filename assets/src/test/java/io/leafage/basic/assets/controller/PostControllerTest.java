@@ -100,14 +100,14 @@ class PostControllerTest {
     void fetch() throws Exception {
         given(this.postsService.fetch(Mockito.anyLong())).willReturn(postVO);
 
-        mvc.perform(get("/posts/{id}", "21389KO6")).andExpect(status().isOk())
+        mvc.perform(get("/posts/{id}", 1L)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
         given(this.postsService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
-        mvc.perform(get("/posts/{id}", "21389KO6")).andExpect(status().isNoContent())
+        mvc.perform(get("/posts/{id}", 1L)).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -116,14 +116,14 @@ class PostControllerTest {
     void next() throws Exception {
         given(this.postsService.next(Mockito.anyLong())).willReturn(postVO);
 
-        mvc.perform(get("/posts/{id}/next", "21389KO6")).andExpect(status().isOk())
+        mvc.perform(get("/posts/{id}/next", 1L)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void next_error() throws Exception {
         given(this.postsService.next(Mockito.anyLong())).willThrow(new RuntimeException());
-        mvc.perform(get("/posts/{id}/next", "21389KO6")).andExpect(status().isNoContent())
+        mvc.perform(get("/posts/{id}/next", 1L)).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -132,14 +132,14 @@ class PostControllerTest {
     void previous() throws Exception {
         given(this.postsService.previous(Mockito.anyLong())).willReturn(postVO);
 
-        mvc.perform(get("/posts/{id}/previous", "21389KO6")).andExpect(status().isOk())
+        mvc.perform(get("/posts/{id}/previous", 1L)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void previous_error() throws Exception {
         given(this.postsService.previous(Mockito.anyLong())).willThrow(new RuntimeException());
-        mvc.perform(get("/posts/{id}/previous", "21389KO6")).andExpect(status().isNoContent())
+        mvc.perform(get("/posts/{id}/previous", 1L)).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -147,7 +147,7 @@ class PostControllerTest {
     void details() throws Exception {
         given(this.postsService.details(Mockito.anyLong())).willReturn(contentVO);
 
-        mvc.perform(get("/posts/{id}/details", "21389KO6")).andExpect(status().isOk())
+        mvc.perform(get("/posts/{id}/details", 1L)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
 
@@ -155,7 +155,7 @@ class PostControllerTest {
     void details_error() throws Exception {
         given(this.postsService.details(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/posts/{id}/details", "21389KO6")).andExpect(status().isNoContent())
+        mvc.perform(get("/posts/{id}/details", 1L)).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -198,7 +198,7 @@ class PostControllerTest {
     void modify() throws Exception {
         given(this.postsService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willReturn(postVO);
 
-        mvc.perform(put("/posts/{id}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/posts/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
@@ -208,7 +208,7 @@ class PostControllerTest {
     void modify_error() throws Exception {
         given(this.postsService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
-        mvc.perform(put("/posts/{id}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/posts/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
@@ -217,14 +217,14 @@ class PostControllerTest {
     @Test
     void remove() throws Exception {
         this.postsService.remove(Mockito.anyLong());
-        mvc.perform(delete("/posts/{id}", "21389KO6").with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/posts/{id}", 1L).with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.postsService).remove(Mockito.anyLong());
-        mvc.perform(delete("/posts/{id}", "21389KO6").with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/posts/{id}", 1L).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

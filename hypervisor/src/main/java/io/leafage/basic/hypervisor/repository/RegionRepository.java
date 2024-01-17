@@ -24,14 +24,6 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
     Page<Region> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据id查询enabled信息
-     *
-     * @param id 主键
-     * @return 查询结果信息
-     */
-    Region getByCodeAndEnabledTrue(Long id);
-
-    /**
      * 是否存在
      *
      * @param name 名称
@@ -44,5 +36,5 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
      *
      * @return 结果信息
      */
-    List<Region> findBySuperiorAndEnabledTrue(Long id);
+    List<Region> findBySuperiorIdAndEnabledTrue(Long id);
 }

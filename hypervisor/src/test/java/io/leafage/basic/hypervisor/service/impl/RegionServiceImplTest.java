@@ -71,7 +71,7 @@ class RegionServiceImplTest {
         region.setName("广东省");
         region.setAlias("粤");
         region.setSuperior(1L);
-        given(this.regionRepository.findBySuperiorAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(region));
+        given(this.regionRepository.findBySuperiorIdAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(region));
 
         List<RegionVO> regionVOS = regionService.lower(11L);
 

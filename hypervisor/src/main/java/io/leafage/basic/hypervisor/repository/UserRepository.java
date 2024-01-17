@@ -31,15 +31,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username 用户名
      * @return user
      */
-    User getByUsernameAndEnabledTrue(String username);
+    User getByUsername(String username);
 
     /**
      * 是否存在
      *
      * @param username 用户名
-     * @param phone    电话
-     * @param email    邮箱
      * @return true-存在，false-否
      */
-    boolean existsByUsernameOrPhoneOrEmail(String username, String phone, String email);
+    boolean exists(String username);
 }

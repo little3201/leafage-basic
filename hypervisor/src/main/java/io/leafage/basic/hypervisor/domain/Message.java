@@ -16,10 +16,6 @@ public class Message extends AbstractModel {
     /**
      * 主键
      */
-    private String id;
-    /**
-     * 主键
-     */
     private String title;
     /**
      * 内容
@@ -36,13 +32,6 @@ public class Message extends AbstractModel {
     private String receiver;
 
 
-    public String getCode() {
-        return id;
-    }
-
-    public void setCode(Long id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

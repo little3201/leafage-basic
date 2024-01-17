@@ -4,6 +4,7 @@ import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
+
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @author liwenqiang 2022-04-06 17:38
  **/
-public interface DictionaryService extends ServletBasicService<DictionaryDTO, DictionaryVO, String> {
+public interface DictionaryService extends ServletBasicService<DictionaryDTO, DictionaryVO> {
 
 
     /**

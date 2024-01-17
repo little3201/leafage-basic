@@ -3,8 +3,8 @@
  */
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.domain.Category;
+import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.vo.CategoryVO;
@@ -18,7 +18,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+
 import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -56,9 +59,9 @@ class CategoryServiceImplTest {
 
     @Test
     void fetch() {
-        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
+        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
 
-        CategoryVO categoryVO = categoryService.fetch("21319IDJ0");
+        CategoryVO categoryVO = categoryService.fetch(Mockito.anyLong());
 
         Assertions.assertNotNull(categoryVO);
     }
@@ -82,17 +85,13 @@ class CategoryServiceImplTest {
 
     @Test
     void modify() {
-        Category category = new Category();
-        category.setId(1L);
-        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(category);
+        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
 
-        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(category);
+        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
 
         given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        CategoryVO categoryVO = categoryService.modify("2112JK02", categoryDTO);
+        CategoryVO categoryVO = categoryService.modify(Mockito.anyLong(), Mockito.mock(CategoryDTO.class));
 
         verify(this.categoryRepository, times(1)).save(Mockito.any(Category.class));
         Assertions.assertNotNull(categoryVO);
@@ -100,9 +99,7 @@ class CategoryServiceImplTest {
 
     @Test
     void remove() {
-        given(this.categoryRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Category.class));
-
-        categoryService.remove("2112JK02");
+        categoryService.remove(Mockito.anyLong());
 
         verify(this.categoryRepository, times(1)).deleteById(Mockito.anyLong());
     }

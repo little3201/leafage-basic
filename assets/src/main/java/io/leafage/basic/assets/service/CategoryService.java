@@ -13,7 +13,7 @@ import top.leafage.common.servlet.ServletBasicService;
  *
  * @author liwenqiang  2020-12-03 22:59
  **/
-public interface CategoryService extends ServletBasicService<CategoryDTO, CategoryVO, String> {
+public interface CategoryService extends ServletBasicService<CategoryDTO, CategoryVO> {
 
     /**
      * 分页查询

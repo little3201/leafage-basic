@@ -3,7 +3,6 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.domain.Privilege;
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
-import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,9 +32,6 @@ import static org.mockito.Mockito.verify;
  **/
 @ExtendWith(MockitoExtension.class)
 class PrivilegeServiceImplTest {
-
-    @Mock
-    private RolePrivilegesRepository rolePrivilegesRepository;
 
     @Mock
     private PrivilegeRepository privilegeRepository;

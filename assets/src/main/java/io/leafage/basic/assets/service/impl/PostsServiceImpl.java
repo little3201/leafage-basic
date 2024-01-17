@@ -54,7 +54,7 @@ public class PostsServiceImpl implements PostsService {
     public PostVO fetch(Long id) {
         Assert.notNull(id, "id cannot be null.");
         //查询基本信息
-        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        Post post = postRepository.findById(id).orElse(null);
         if (post == null) {
             return null;
         }
@@ -65,19 +65,19 @@ public class PostsServiceImpl implements PostsService {
     @Override
     public PostContentVO details(Long id) {
         Assert.notNull(id, "id cannot be null.");
-        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        Post post = postRepository.findById(id).orElse(null);
         if (post == null) {
             return null;
         }
         // viewed自增一，异步执行
-        this.increaseViewed(post.getId());
+        this.increaseViewed(id);
 
         PostVO vo = this.convertOuter(post);
         PostContentVO postsContentVO = new PostContentVO();
         BeanUtils.copyProperties(vo, postsContentVO);
         postsContentVO.setPostsId(post.getId());
         // 获取内容详情
-        PostContent postContent = postContentRepository.getByPostsIdAndEnabledTrue(post.getId());
+        PostContent postContent = postContentRepository.getByPostsIdAndEnabledTrue(id);
         if (postContent != null) {
             postsContentVO.setContent(postContent.getContent());
             postsContentVO.setCatalog(postContent.getCatalog());
@@ -88,16 +88,14 @@ public class PostsServiceImpl implements PostsService {
     @Override
     public PostVO next(Long id) {
         Assert.notNull(id, "id cannot be null.");
-        Post post = postRepository.getByCodeAndEnabledTrue(id);
-        Post next = postRepository.getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(post.getId());
+        Post next = postRepository.getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(id);
         return this.convertOuter(next);
     }
 
     @Override
     public PostVO previous(Long id) {
         Assert.notNull(id, "id cannot be null.");
-        Post post = postRepository.getByCodeAndEnabledTrue(id);
-        Post previous = postRepository.getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(post.getId());
+        Post previous = postRepository.getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(id);
         return this.convertOuter(previous);
     }
 
@@ -130,7 +128,7 @@ public class PostsServiceImpl implements PostsService {
     public PostVO modify(Long id, PostDTO postDTO) {
         Assert.notNull(id, "id cannot be null.");
         //查询基本信息
-        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        Post post = postRepository.findById(id).orElse(null);
         if (post == null) {
             return null;
         }
@@ -139,7 +137,7 @@ public class PostsServiceImpl implements PostsService {
 
         post = postRepository.save(post);
         //保存文章内容
-        PostContent postContent = postContentRepository.getByPostsIdAndEnabledTrue(post.getId());
+        PostContent postContent = postContentRepository.getByPostsIdAndEnabledTrue(id);
         if (postContent == null) {
             postContent = new PostContent();
         }

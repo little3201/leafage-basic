@@ -36,7 +36,10 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     @Override
     public DictionaryVO fetch(Long id) {
         Assert.notNull(id, "id cannot be null.");
-        Dictionary dictionary = dictionaryRepository.getByCodeAndEnabledTrue(id);
+        Dictionary dictionary = dictionaryRepository.findById(id).orElse(null);
+        if (dictionary == null) {
+            return null;
+        }
         return this.convert(dictionary);
     }
 

@@ -10,7 +10,7 @@ import top.leafage.common.servlet.ServletBasicService;
  *
  * @author wq 2022/4/15 13:43
  **/
-public interface AccessLogService extends ServletBasicService<AccessLogDTO, AccessLogVO, String> {
+public interface AccessLogService extends ServletBasicService<AccessLogDTO, AccessLogVO> {
 
     /**
      * 分页查询

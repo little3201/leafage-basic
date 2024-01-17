@@ -38,11 +38,11 @@ public class GroupMembersServiceImpl implements GroupMembersService {
     }
 
     @Override
-    public List<GroupMembers> relation(Long groupId, Set<String> users) {
+    public List<GroupMembers> relation(Long groupId, Set<String> usernames) {
         Assert.notNull(groupId, "group id must not be null.");
-        Assert.notEmpty(users, "users must not be empty.");
+        Assert.notEmpty(usernames, "usernames must not be empty.");
 
-        List<GroupMembers> groupMembers = users.stream().map(username -> {
+        List<GroupMembers> groupMembers = usernames.stream().map(username -> {
             GroupMembers members = new GroupMembers();
             members.setGroupId(groupId);
             members.setUsername(username);

@@ -19,8 +19,8 @@ public class PostContent extends AbstractEntity {
     /**
      * 帖子ID
      */
-    @Column(name = "posts_id", nullable = false)
-    private Long postsId;
+    @Column(name = "post_id", nullable = false)
+    private Long postId;
     /**
      * 目录
      */
@@ -30,12 +30,12 @@ public class PostContent extends AbstractEntity {
      */
     private String content;
 
-    public Long getPostsId() {
-        return postsId;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPostsId(Long postsId) {
-        this.postsId = postsId;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public String getCatalog() {

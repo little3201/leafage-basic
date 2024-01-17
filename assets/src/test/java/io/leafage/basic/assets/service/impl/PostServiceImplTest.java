@@ -104,7 +104,7 @@ class PostServiceImplTest {
 
         given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Category.class)));
 
-        given(this.postContentRepository.getByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+        given(this.postContentRepository.getByPostIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
 
         PostVO postVO = postsService.details(Mockito.anyLong());
 
@@ -133,7 +133,7 @@ class PostServiceImplTest {
     void create() {
         given(this.postRepository.saveAndFlush(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
-        given(this.postContentRepository.getByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+        given(this.postContentRepository.getByPostIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
 
         given(this.postContentRepository.saveAndFlush(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 
@@ -150,7 +150,7 @@ class PostServiceImplTest {
 
         given(this.postRepository.save(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
-        given(this.postContentRepository.getByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+        given(this.postContentRepository.getByPostIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
 
         given(this.postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 
@@ -167,7 +167,7 @@ class PostServiceImplTest {
 
         given(this.postRepository.save(Mockito.any(Post.class))).willReturn(Mockito.any(Post.class));
 
-        given(this.postContentRepository.getByPostsIdAndEnabledTrue(Mockito.anyLong())).willReturn(null);
+        given(this.postContentRepository.getByPostIdAndEnabledTrue(Mockito.anyLong())).willReturn(null);
 
         given(this.postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 

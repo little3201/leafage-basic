@@ -63,7 +63,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
 
     @Override
     public RoleVO fetch(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "role id must not be null.");
         Role role = roleRepository.findById(id).orElse(null);
         if (role == null) {
             return null;
@@ -81,7 +81,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
 
     @Override
     public RoleVO modify(Long id, RoleDTO roleDTO) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "role id must not be null.");
         Role role = roleRepository.findById(id).orElse(null);
         if (role == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -93,7 +93,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
 
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "role id must not be null.");
         roleRepository.deleteById(id);
     }
 

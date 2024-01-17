@@ -68,7 +68,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
 
     @Override
     public PrivilegeVO modify(Long id, PrivilegeDTO privilegeDTO) {
-        Assert.notNull(id, "id must not be null.");
+        Assert.notNull(id, "privilege id must not be null.");
         Privilege privilege = privilegeRepository.findById(id).orElse(null);
         if (privilege == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -87,12 +87,12 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
     /**
      * 转换对象
      *
-     * @param info 基础对象
+     * @param privilege 基础对象
      * @return 结果对象
      */
-    private PrivilegeVO convertOuter(Privilege info) {
+    private PrivilegeVO convertOuter(Privilege privilege) {
         PrivilegeVO privilegeVO = new PrivilegeVO();
-        BeanUtils.copyProperties(info, privilegeVO);
+        BeanUtils.copyProperties(privilege, privilegeVO);
         return privilegeVO;
     }
 
@@ -124,6 +124,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      * @return tree node
      */
     private TreeNode constructNode(Long superiorId, Privilege privilege) {
+        Assert.notNull(superiorId, "privilege superior id must not be null.");
         TreeNode treeNode = new TreeNode(privilege.getId(), privilege.getName());
         treeNode.setSuperior(superiorId);
 

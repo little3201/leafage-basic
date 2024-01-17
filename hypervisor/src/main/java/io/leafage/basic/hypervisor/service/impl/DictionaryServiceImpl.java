@@ -35,7 +35,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
 
     @Override
     public DictionaryVO fetch(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "dictionary id must not be null.");
         Dictionary dictionary = dictionaryRepository.findById(id).orElse(null);
         if (dictionary == null) {
             return null;
@@ -45,14 +45,14 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
 
     @Override
     public List<DictionaryVO> lower(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "dictionary id must not be null.");
         return dictionaryRepository.findBySuperiorIdAndEnabledTrue(id)
                 .stream().map(this::convert).toList();
     }
 
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, "name cannot be blank.");
+        Assert.hasText(name, "dictionary name must not be blank.");
         return dictionaryRepository.existsByName(name);
     }
 

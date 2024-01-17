@@ -47,12 +47,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryVO fetch(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "category id must not be null.");
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
             return null;
         }
         return this.convertOuter(category);
+    }
+
+    @Override
+    public boolean exist(String name) {
+        Assert.hasText(name, "category name must not be blank.");
+        return categoryRepository.existsByName(name);
     }
 
     @Override
@@ -65,7 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryVO modify(Long id, CategoryDTO categoryDTO) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "category id must not be null.");
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
             return null;
@@ -77,7 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "category id must not be null.");
 
         categoryRepository.deleteById(id);
     }

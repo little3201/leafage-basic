@@ -35,14 +35,14 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public List<RegionVO> lower(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "region id must not be null.");
         return regionRepository.findBySuperiorIdAndEnabledTrue(id)
                 .stream().map(this::convertOuter).toList();
     }
 
     @Override
     public RegionVO fetch(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "region id must not be null.");
         Region region = regionRepository.findById(id).orElse(null);
         if (region == null) {
             return null;
@@ -52,7 +52,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, "name cannot bu blank.");
+        Assert.hasText(name, "region name must not bu blank.");
         return regionRepository.existsByName(name);
     }
 
@@ -66,7 +66,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public RegionVO modify(Long id, RegionDTO regionDTO) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "region id must not be null.");
         Region region = regionRepository.findById(id).orElse(null);
         if (region == null) {
             return null;
@@ -78,7 +78,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "region id must not be null.");
         regionRepository.deleteById(id);
     }
 

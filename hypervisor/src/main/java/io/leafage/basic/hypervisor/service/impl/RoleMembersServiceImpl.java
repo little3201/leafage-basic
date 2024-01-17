@@ -38,11 +38,11 @@ public class RoleMembersServiceImpl implements RoleMembersService {
     }
 
     @Override
-    public List<RoleMembers> relation(Long roleId, Set<String> users) {
+    public List<RoleMembers> relation(Long roleId, Set<String> usernames) {
         Assert.notNull(roleId, "role id must not be null.");
-        Assert.notEmpty(users, "users must not be empty.");
+        Assert.notEmpty(usernames, "usernames must not be empty.");
 
-        List<RoleMembers> roleMembers = users.stream().map(username -> {
+        List<RoleMembers> roleMembers = usernames.stream().map(username -> {
             RoleMembers members = new RoleMembers();
             members.setRoleId(roleId);
             members.setUsername(username);

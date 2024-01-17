@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentVO> relation(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "comment id must not be null.");
         Post post = postRepository.findById(id).orElse(null);
         if (null == post) {
             return Collections.emptyList();
@@ -87,7 +87,9 @@ public class CommentServiceImpl implements CommentService {
      *
      * @param id 主键
      */
-    private void increaseComment(long id) {
+    private void increaseComment(Long id) {
+        Assert.notNull(id, "category id must not be null.");
+
         postRepository.increaseComment(id);
     }
 

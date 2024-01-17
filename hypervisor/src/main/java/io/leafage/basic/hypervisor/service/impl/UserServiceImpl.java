@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO fetch(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "role id must not be null.");
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
             return null;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean exist(String username) {
-        Assert.hasText(username, "username cannot be blank.");
+        Assert.hasText(username, "username must not be blank.");
         return userRepository.exists(username);
     }
 
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO modify(Long id, UserDTO userDTO) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "role id must not be null.");
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
             return null;
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "role id must not be null.");
         userRepository.deleteById(id);
     }
 

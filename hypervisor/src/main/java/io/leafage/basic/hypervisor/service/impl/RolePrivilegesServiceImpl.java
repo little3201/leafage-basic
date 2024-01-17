@@ -38,11 +38,11 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
     }
 
     @Override
-    public List<RolePrivileges> relation(Long roleId, Set<Long> privileges) {
+    public List<RolePrivileges> relation(Long roleId, Set<Long> privilegeIds) {
         Assert.notNull(roleId, "role id must not be null.");
-        Assert.notEmpty(privileges, "privileges must not be empty.");
+        Assert.notEmpty(privilegeIds, "privilege ids must not be empty.");
 
-        List<RolePrivileges> roleAuthorities = privileges.stream().map(privilegeId -> {
+        List<RolePrivileges> roleAuthorities = privilegeIds.stream().map(privilegeId -> {
             RolePrivileges rolePrivileges = new RolePrivileges();
             rolePrivileges.setRoleId(roleId);
             rolePrivileges.setPrivilegeId(privilegeId);

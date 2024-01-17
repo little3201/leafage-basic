@@ -43,7 +43,10 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public RegionVO fetch(Long id) {
         Assert.notNull(id, "id cannot be null.");
-        Region region = regionRepository.getByCodeAndEnabledTrue(id);
+        Region region = regionRepository.findById(id).orElse(null);
+        if (region == null) {
+            return null;
+        }
         return this.convertOuter(region);
     }
 
@@ -64,7 +67,10 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public RegionVO modify(Long id, RegionDTO regionDTO) {
         Assert.notNull(id, "id cannot be null.");
-        Region region = regionRepository.getByCodeAndEnabledTrue(id);
+        Region region = regionRepository.findById(id).orElse(null);
+        if (region == null) {
+            return null;
+        }
         BeanUtils.copyProperties(regionDTO, region);
         regionRepository.save(region);
         return this.convertOuter(region);

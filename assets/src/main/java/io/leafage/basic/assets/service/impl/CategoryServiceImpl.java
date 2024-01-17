@@ -48,7 +48,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryVO fetch(Long id) {
         Assert.notNull(id, "id cannot be null.");
-        Category category = categoryRepository.getByCodeAndEnabledTrue(id);
+        Category category = categoryRepository.findById(id).orElse(null);
+        if (category == null) {
+            return null;
+        }
         return this.convertOuter(category);
     }
 
@@ -63,7 +66,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryVO modify(Long id, CategoryDTO categoryDTO) {
         Assert.notNull(id, "id cannot be null.");
-        Category category = categoryRepository.getByCodeAndEnabledTrue(id);
+        Category category = categoryRepository.findById(id).orElse(null);
+        if (category == null) {
+            return null;
+        }
         BeanUtils.copyProperties(categoryDTO, category);
         category = categoryRepository.save(category);
         return this.convertOuter(category);

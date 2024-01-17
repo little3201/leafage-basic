@@ -1,10 +1,10 @@
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.dto.CommentDTO;
-import io.leafage.basic.assets.entity.Comment;
-import io.leafage.basic.assets.entity.Posts;
+import io.leafage.basic.assets.domain.Comment;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class CommentServiceImplTest {
     private CommentRepository commentRepository;
 
     @Mock
-    private PostsRepository postsRepository;
+    private PostRepository postRepository;
 
     @InjectMocks
     private CommentServiceImpl commentService;
@@ -56,18 +56,18 @@ class CommentServiceImplTest {
 
     @Test
     void relation() {
-        Posts posts = new Posts();
-        posts.setId(1L);
-        posts.setEnabled(true);
-        posts.setModifier(1L);
-        posts.setModifyTime(LocalDateTime.now());
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(posts);
+        Post post = new Post();
+        post.setId(1L);
+        post.setEnabled(true);
+        post.setModifier(1L);
+        post.setModifyTime(LocalDateTime.now());
+        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(post);
 
         Comment comment = new Comment();
         comment.setContent("评论信息");
-        comment.setPostsId(posts.getId());
-        comment.setModifier(posts.getModifier());
-        comment.setEnabled(posts.isEnabled());
+        comment.setPostsId(post.getId());
+        comment.setModifier(post.getModifier());
+        comment.setEnabled(post.isEnabled());
         given(this.commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(comment));
 
         List<CommentVO> voList = commentService.relation("2112JK02");
@@ -76,7 +76,7 @@ class CommentServiceImplTest {
 
     @Test
     void relation_empty() {
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
+        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
 
         List<CommentVO> voList = commentService.relation("2112JK02");
         Assertions.assertTrue(voList.isEmpty());
@@ -106,7 +106,7 @@ class CommentServiceImplTest {
 
     @Test
     void create_posts_null() {
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
+        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(null);
 
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setContent("评论信息");
@@ -118,17 +118,17 @@ class CommentServiceImplTest {
 
     @Test
     void create() {
-        Posts posts = new Posts();
-        posts.setId(1L);
-        given(this.postsRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(posts);
+        Post post = new Post();
+        post.setId(1L);
+        given(this.postRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(post);
 
         Comment comment = new Comment();
         comment.setContent("评论信息");
-        comment.setPostsId(posts.getId());
+        comment.setPostsId(post.getId());
         comment.setReplier("2112JK01");
         given(this.commentRepository.saveAndFlush(Mockito.any(Comment.class))).willReturn(comment);
 
-        this.postsRepository.increaseComment(posts.getId());
+        this.postRepository.increaseComment(post.getId());
 
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setContent("评论信息");

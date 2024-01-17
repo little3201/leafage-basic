@@ -1,9 +1,6 @@
 package io.leafage.basic.assets.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.leafage.basic.assets.dto.ResourceDTO;
-import io.leafage.basic.assets.service.ResourceService;
-import io.leafage.basic.assets.vo.ResourceVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -74,7 +71,7 @@ class ResourceControllerTest {
 
         given(this.resourceService.fetch(Mockito.anyString())).willReturn(resourceVO);
 
-        mvc.perform(get("/resource/{code}", "21389KO6"))
+        mvc.perform(get("/resource/{id}", "21389KO6"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("java")).andDo(print()).andReturn();
     }
@@ -83,7 +80,7 @@ class ResourceControllerTest {
     void fetch_error() throws Exception {
         given(this.resourceService.fetch(Mockito.anyString())).willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/resource/{code}", "21389KO6"))
+        mvc.perform(get("/resource/{id}", "21389KO6"))
                 .andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
@@ -149,7 +146,7 @@ class ResourceControllerTest {
         resourceDTO.setCover("/avatar.jpg");
         resourceDTO.setType('E');
         resourceDTO.setDescription("描述");
-        mvc.perform(put("/resource/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/resource/{id}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(resourceDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.title").value("java")).andDo(print()).andReturn();
@@ -165,7 +162,7 @@ class ResourceControllerTest {
         resourceDTO.setCover("/avatar.jpg");
         resourceDTO.setType('E');
         resourceDTO.setDescription("描述");
-        mvc.perform(put("/resource/{code}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/resource/{id}", "21389KO6").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(resourceDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified()).andDo(print()).andReturn();
     }

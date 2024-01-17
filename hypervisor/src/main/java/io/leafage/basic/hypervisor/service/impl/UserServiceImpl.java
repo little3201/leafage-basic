@@ -3,16 +3,14 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.UserDTO;
-import io.leafage.basic.hypervisor.entity.User;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.basic.ValidMessage;
 
 /**
  * user service impl.
@@ -20,7 +18,7 @@ import top.leafage.common.basic.ValidMessage;
  * @author liwenqiang 2018/7/28 0:30
  **/
 @Service
-public class UserServiceImpl extends AbstractBasicService implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
@@ -29,14 +27,18 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public UserVO fetch(String username) {
-        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
-        User user = userRepository.getByUsernameAndEnabledTrue(username);
+    public UserVO fetch(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return null;
+        }
         return this.convertOuter(user);
     }
 
     @Override
     public boolean exist(String username) {
+        Assert.hasText(username, "username cannot be blank.");
         return userRepository.existsByUsernameOrPhoneOrEmail(username, username, username);
     }
 
@@ -49,19 +51,21 @@ public class UserServiceImpl extends AbstractBasicService implements UserService
     }
 
     @Override
-    public UserVO modify(String username, UserDTO userDTO) {
-        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
-        User user = userRepository.getByUsernameAndEnabledTrue(username);
+    public UserVO modify(Long id, UserDTO userDTO) {
+        Assert.notNull(id, "id cannot be null.");
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return null;
+        }
         BeanUtils.copyProperties(userDTO, user);
         user = userRepository.save(user);
         return this.convertOuter(user);
     }
 
     @Override
-    public void remove(String username) {
-        Assert.hasText(username, ValidMessage.USERNAME_NOT_BLANK);
-        User user = userRepository.getByUsernameAndEnabledTrue(username);
-        userRepository.deleteById(user.getId());
+    public void remove(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        userRepository.deleteById(id);
     }
 
     /**

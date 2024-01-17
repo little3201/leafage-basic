@@ -3,11 +3,11 @@
  */
 package io.leafage.basic.assets.dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * DTO class for category.
+ * dto class for category.
  *
  * @author liwenqiang  2020-12-03 22:59
  */

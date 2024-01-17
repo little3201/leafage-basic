@@ -3,13 +3,15 @@ package io.leafage.basic.hypervisor.controller;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ import java.util.List;
  * @author liwenqiang 2022-04-06 17:44
  **/
 @RestController
-@RequestMapping("/dictionary")
+@RequestMapping("/dictionaries")
 public class DictionaryController {
 
     private final Logger logger = LoggerFactory.getLogger(DictionaryController.class);
@@ -53,11 +55,11 @@ public class DictionaryController {
      *
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/{code}/lower")
-    public ResponseEntity<List<DictionaryVO>> lower(@PathVariable String code) {
+    @GetMapping("/{id}/lower")
+    public ResponseEntity<List<DictionaryVO>> lower(@PathVariable Long id) {
         List<DictionaryVO> child;
         try {
-            child = dictionaryService.lower(code);
+            child = dictionaryService.lower(id);
         } catch (Exception e) {
             logger.info("Retrieve dictionary lower occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -66,16 +68,16 @@ public class DictionaryController {
     }
 
     /**
-     * 根据 code 查询
+     * 根据 id 查询
      *
-     * @param code 业务id
+     * @param id 业务id
      * @return 查询的数据，异常时返回204状态码
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<DictionaryVO> fetch(@PathVariable String code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<DictionaryVO> fetch(@PathVariable Long id) {
         DictionaryVO vo;
         try {
-            vo = dictionaryService.fetch(code);
+            vo = dictionaryService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch dictionary occurred an error: ", e);
             return ResponseEntity.noContent().build();

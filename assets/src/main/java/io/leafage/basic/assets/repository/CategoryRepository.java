@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.entity.Category;
+import io.leafage.basic.assets.domain.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,12 +26,12 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Page<Category> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据code查询
+     * 根据id查询
      *
-     * @param code 唯一标识
+     * @param id 唯一标识
      * @return 查询结果
      */
-    Category getByCodeAndEnabledTrue(String code);
+    Category getByCodeAndEnabledTrue(Long id);
 
     /**
      * 是否已存在

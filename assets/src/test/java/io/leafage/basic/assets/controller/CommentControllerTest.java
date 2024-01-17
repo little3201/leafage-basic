@@ -70,16 +70,16 @@ class CommentControllerTest {
         CommentVO commentVO = new CommentVO();
         commentVO.setContent("评论信息");
         commentVO.setPosts("21389KO6");
-        given(this.commentService.relation(Mockito.anyString())).willReturn(List.of(commentVO));
+        given(this.commentService.relation(Mockito.anyLong())).willReturn(List.of(commentVO));
 
-        mvc.perform(get("/comment/{code}", "21389KO6")).andExpect(status().isOk()).andDo(print()).andReturn();
+        mvc.perform(get("/comment/{id}", "21389KO6")).andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
     void relation_error() throws Exception {
-        given(this.commentService.relation(Mockito.anyString())).willThrow(new NoSuchElementException());
+        given(this.commentService.relation(Mockito.anyLong())).willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/comment/{code}", "21389KO6")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+        mvc.perform(get("/comment/{id}", "21389KO6")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
@@ -89,14 +89,14 @@ class CommentControllerTest {
         commentVO.setPosts("21389KO6");
         given(this.commentService.replies(Mockito.anyString())).willReturn(List.of(commentVO));
 
-        mvc.perform(get("/comment/{code}/replies", "21389KO1")).andExpect(status().isOk()).andDo(print()).andReturn();
+        mvc.perform(get("/comment/{id}/replies", "21389KO1")).andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
     void replies_error() throws Exception {
         given(this.commentService.replies(Mockito.anyString())).willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/comment/{code}/replies", "21389KO1")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+        mvc.perform(get("/comment/{id}/replies", "21389KO1")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test

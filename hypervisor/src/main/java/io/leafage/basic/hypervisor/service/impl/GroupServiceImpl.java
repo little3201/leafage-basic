@@ -3,11 +3,9 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.Group;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
-import io.leafage.basic.hypervisor.entity.Account;
-import io.leafage.basic.hypervisor.entity.Group;
-import io.leafage.basic.hypervisor.repository.AccountGroupRepository;
-import io.leafage.basic.hypervisor.repository.AccountRepository;
+import io.leafage.basic.hypervisor.repository.GroupMembersRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
@@ -20,9 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.leafage.common.basic.TreeNode;
-import top.leafage.common.basic.ValidMessage;
+import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -36,14 +34,11 @@ import java.util.NoSuchElementException;
 public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> implements GroupService {
 
     private final GroupRepository groupRepository;
-    private final AccountGroupRepository accountGroupRepository;
-    private final AccountRepository accountRepository;
+    private final GroupMembersRepository groupMembersRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, AccountGroupRepository accountGroupRepository,
-                            AccountRepository accountRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupMembersRepository groupMembersRepository) {
         this.groupRepository = groupRepository;
-        this.accountGroupRepository = accountGroupRepository;
-        this.accountRepository = accountRepository;
+        this.groupMembersRepository = groupMembersRepository;
     }
 
     @Override
@@ -57,8 +52,8 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         List<Group> groups = groupRepository.findByEnabledTrue();
         if (!CollectionUtils.isEmpty(groups)) {
             return groups.stream().filter(g -> g.getSuperior() == null).map(g -> {
-                TreeNode treeNode = new TreeNode(g.getCode(), g.getName());
-                treeNode.setChildren(this.children(g, groups));
+                TreeNode treeNode = new TreeNode(g.getId(), g.getName());
+                treeNode.setChildren(this.convert(groups));
                 return treeNode;
             }).toList();
         }
@@ -69,53 +64,25 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     public GroupVO create(GroupDTO groupDTO) {
         Group group = new Group();
         BeanUtils.copyProperties(groupDTO, group);
-        group.setCode(this.generateCode());
-        if (StringUtils.hasText(groupDTO.getPrincipal())) {
-            Account account = accountRepository.getByUsernameAndEnabledTrue(groupDTO.getPrincipal());
-            if (account != null) {
-                group.setPrincipal(account.getId());
-            }
-        }
-        if (StringUtils.hasText(groupDTO.getSuperior())) {
-            Group superior = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior());
-            if (null == superior) {
-                throw new NoSuchElementException("Not Found");
-            }
-            group.setSuperior(superior.getId());
-        }
         group = groupRepository.saveAndFlush(group);
         return this.convertOuter(group);
     }
 
     @Override
-    public GroupVO modify(String code, GroupDTO groupDTO) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Group group = groupRepository.getByCodeAndEnabledTrue(code);
+    public GroupVO modify(Long id, GroupDTO groupDTO) {
+        Assert.notNull(id, "id cannot be null.");
+        Group group = groupRepository.findById(id).orElse(null);
         if (group == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
-        }
-        BeanUtils.copyProperties(groupDTO, group);
-        if (StringUtils.hasText(groupDTO.getSuperior())) {
-            Group superior = groupRepository.getByCodeAndEnabledTrue(groupDTO.getSuperior());
-            if (superior != null) {
-                group.setSuperior(superior.getId());
-            }
-        }
-        if (StringUtils.hasText(groupDTO.getPrincipal())) {
-            Account account = accountRepository.getByUsernameAndEnabledTrue(groupDTO.getPrincipal());
-            if (account != null) {
-                group.setPrincipal(account.getId());
-            }
         }
         group = groupRepository.save(group);
         return this.convertOuter(group);
     }
 
     @Override
-    public void remove(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Group group = groupRepository.getByCodeAndEnabledTrue(code);
-        groupRepository.deleteById(group.getId());
+    public void remove(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        groupRepository.deleteById(id);
     }
 
     /**
@@ -127,7 +94,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     private GroupVO convertOuter(Group info) {
         GroupVO groupVO = new GroupVO();
         BeanUtils.copyProperties(info, groupVO);
-        long count = accountGroupRepository.countByGroupIdAndEnabledTrue(info.getId());
+        long count = groupMembersRepository.countByGroupIdAndEnabledTrue(info.getId());
         groupVO.setCount(count);
         return groupVO;
     }

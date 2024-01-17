@@ -3,22 +3,21 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * DTO class for user.
+ * dto class for user.
  *
  * @author liwenqiang 2019/8/31 15:50
  **/
 public class UserDTO implements Serializable {
 
-    private static final long serialVersionUID = -1165865988174734554L;
-
     /**
-     * 账号
+     * user
      */
     @NotBlank
     @Size(min = 4, max = 16)

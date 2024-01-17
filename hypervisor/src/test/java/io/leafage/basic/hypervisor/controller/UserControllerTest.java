@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -17,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,35 +46,40 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
+    private UserVO userVO;
+
+    private UserDTO userDTO;
+
+    @BeforeEach
+    void init() {
+        userVO = new UserVO();
+        userVO.setFirstname("test");
+
+        userDTO = new UserDTO();
+        userDTO.setUsername("test");
+    }
+
     @Test
     void fetch() throws Exception {
-        UserVO userVO = new UserVO();
-        userVO.setFirstname("test");
-        given(this.userService.fetch(Mockito.anyString())).willReturn(userVO);
+        given(this.userService.fetch(Mockito.anyLong())).willReturn(userVO);
 
-        mvc.perform(get("/user/{username}", "test")).andExpect(status().isOk())
+        mvc.perform(get("/users/{username}", "test")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstname").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
-        given(this.userService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.userService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/user/{username}", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/users/{username}", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void modify() throws Exception {
-        // 构造返回对象
-        UserVO userVO = new UserVO();
-        userVO.setFirstname("test");
-        given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willReturn(userVO);
+        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(userVO);
 
-        // 构造请求对象
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername("test");
-        mvc.perform(put("/user/{username}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/users/{username}", "test").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
@@ -80,12 +87,9 @@ class UserControllerTest {
 
     @Test
     void modify_error() throws Exception {
-        given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
+        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
 
-        // 构造请求对象
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername("test");
-        mvc.perform(put("/user/{username}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/users/{username}", "test").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();

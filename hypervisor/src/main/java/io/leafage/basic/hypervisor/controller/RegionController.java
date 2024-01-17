@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ import java.util.List;
  * @author liwenqiang 2021/08/20 17:08
  **/
 @RestController
-@RequestMapping("/region")
+@RequestMapping("/regions")
 public class RegionController {
 
     private final Logger logger = LoggerFactory.getLogger(RegionController.class);
@@ -53,11 +53,11 @@ public class RegionController {
      *
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/{code}/lower")
-    public ResponseEntity<List<RegionVO>> lower(@PathVariable Long code) {
+    @GetMapping("/{id}/lower")
+    public ResponseEntity<List<RegionVO>> lower(@PathVariable Long id) {
         List<RegionVO> child;
         try {
-            child = regionService.lower(code);
+            child = regionService.lower(id);
         } catch (Exception e) {
             logger.info("Retrieve region lower occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -66,16 +66,16 @@ public class RegionController {
     }
 
     /**
-     * 根据 code 查询
+     * 根据 id 查询
      *
-     * @param code 业务id
+     * @param id 业务id
      * @return 查询的数据，异常时返回204状态码
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<RegionVO> fetch(@PathVariable Long code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<RegionVO> fetch(@PathVariable Long id) {
         RegionVO vo;
         try {
-            vo = regionService.fetch(code);
+            vo = regionService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch region occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -122,15 +122,15 @@ public class RegionController {
     /**
      * 修改信息
      *
-     * @param code      代码
+     * @param id      主键
      * @param regionDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{code}")
-    public ResponseEntity<RegionVO> modify(@PathVariable Long code, @RequestBody RegionDTO regionDTO) {
+    @PutMapping("/{id}")
+    public ResponseEntity<RegionVO> modify(@PathVariable Long id, @RequestBody RegionDTO regionDTO) {
         RegionVO regionVO;
         try {
-            regionVO = regionService.modify(code, regionDTO);
+            regionVO = regionService.modify(id, regionDTO);
         } catch (Exception e) {
             logger.error("Modify region occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
@@ -141,13 +141,13 @@ public class RegionController {
     /**
      * 删除信息
      *
-     * @param code 代码
+     * @param id 主键
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Void> remove(@PathVariable Long code) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
         try {
-            regionService.remove(code);
+            regionService.remove(id);
         } catch (Exception e) {
             logger.error("Remove region occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

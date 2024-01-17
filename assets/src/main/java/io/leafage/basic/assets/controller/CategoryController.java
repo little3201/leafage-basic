@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 /**
  * category controller.
@@ -54,14 +54,14 @@ public class CategoryController {
     /**
      * 查询类目信息
      *
-     * @param code 代码
+     * @param id 主键
      * @return 匹配到的类目信息
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<CategoryVO> fetch(@PathVariable String code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryVO> fetch(@PathVariable Long id) {
         CategoryVO categoryVO;
         try {
-            categoryVO = categoryService.fetch(code);
+            categoryVO = categoryService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -90,15 +90,15 @@ public class CategoryController {
     /**
      * 修改类目信息
      *
-     * @param code        代码
+     * @param id        主键
      * @param categoryDTO 类目信息
      * @return 修改后的类目信息
      */
-    @PutMapping("/{code}")
-    public ResponseEntity<CategoryVO> modify(@PathVariable String code, @RequestBody @Valid CategoryDTO categoryDTO) {
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryVO> modify(@PathVariable Long id, @RequestBody @Valid CategoryDTO categoryDTO) {
         CategoryVO categoryVO;
         try {
-            categoryVO = categoryService.modify(code, categoryDTO);
+            categoryVO = categoryService.modify(id, categoryDTO);
         } catch (Exception e) {
             logger.error("Modify category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
@@ -109,13 +109,13 @@ public class CategoryController {
     /**
      * 删除类目信息
      *
-     * @param code 代码
+     * @param id 主键
      * @return 删除结果
      */
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Void> remove(@PathVariable String code) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
         try {
-            categoryService.remove(code);
+            categoryService.remove(id);
         } catch (Exception e) {
             logger.error("Remove category occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

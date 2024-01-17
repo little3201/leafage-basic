@@ -3,17 +3,16 @@
  */
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.dto.PostsDTO;
-import io.leafage.basic.assets.entity.Category;
-import io.leafage.basic.assets.entity.Posts;
-import io.leafage.basic.assets.entity.PostsContent;
+import io.leafage.basic.assets.domain.Category;
+import io.leafage.basic.assets.domain.Post;
+import io.leafage.basic.assets.domain.PostContent;
+import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostsContentRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostContentRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.PostsService;
-import io.leafage.basic.assets.vo.ContentVO;
-import io.leafage.basic.assets.vo.PostsContentVO;
-import io.leafage.basic.assets.vo.PostsVO;
+import io.leafage.basic.assets.vo.PostContentVO;
+import io.leafage.basic.assets.vo.PostVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.basic.ValidMessage;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,182 +32,150 @@ import java.util.Set;
  * @author liwenqiang  2018-12-20 9:54
  **/
 @Service
-public class PostsServiceImpl extends AbstractBasicService implements PostsService {
+public class PostsServiceImpl implements PostsService {
 
-    private final PostsRepository postsRepository;
-    private final PostsContentRepository postsContentRepository;
+    private final PostRepository postRepository;
+    private final PostContentRepository postContentRepository;
     private final CategoryRepository categoryRepository;
 
-    public PostsServiceImpl(PostsRepository postsRepository, PostsContentRepository postsContentRepository, CategoryRepository categoryRepository) {
-        this.postsRepository = postsRepository;
-        this.postsContentRepository = postsContentRepository;
+    public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository, CategoryRepository categoryRepository) {
+        this.postRepository = postRepository;
+        this.postContentRepository = postContentRepository;
         this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public Page<PostsVO> retrieve(int page, int size, String sort) {
+    public Page<PostVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return postsRepository.findByEnabledTrue(pageable).map(this::convertOuter);
+        return postRepository.findByEnabledTrue(pageable).map(this::convertOuter);
     }
 
     @Override
-    public PostsVO fetch(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
+    public PostVO fetch(Long id) {
+        Assert.notNull(id, "id cannot be null.");
         //查询基本信息
-        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
-        if (posts == null) {
+        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        if (post == null) {
             return null;
         }
-        return this.convertOuter(posts);
+        return this.convertOuter(post);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public PostsContentVO details(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
-        if (posts == null) {
+    public PostContentVO details(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        if (post == null) {
             return null;
         }
         // viewed自增一，异步执行
-        this.increaseViewed(posts.getId());
+        this.increaseViewed(post.getId());
 
-        PostsVO vo = this.convertOuter(posts);
-        PostsContentVO postsContentVO = new PostsContentVO();
+        PostVO vo = this.convertOuter(post);
+        PostContentVO postsContentVO = new PostContentVO();
         BeanUtils.copyProperties(vo, postsContentVO);
-        postsContentVO.setPostsId(posts.getId());
+        postsContentVO.setPostsId(post.getId());
         // 获取内容详情
-        PostsContent postsContent = postsContentRepository.getByPostsIdAndEnabledTrue(posts.getId());
-        if (postsContent != null) {
-            postsContentVO.setContent(postsContent.getContent());
-            postsContentVO.setCatalog(postsContent.getCatalog());
+        PostContent postContent = postContentRepository.getByPostsIdAndEnabledTrue(post.getId());
+        if (postContent != null) {
+            postsContentVO.setContent(postContent.getContent());
+            postsContentVO.setCatalog(postContent.getCatalog());
         }
         return postsContentVO;
     }
 
     @Override
-    public ContentVO content(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
-        if (posts == null) {
-            return null;
-        }
-        ContentVO contentVO = new ContentVO();
-        // 获取内容详情
-        PostsContent postsContent = postsContentRepository.getByPostsIdAndEnabledTrue(posts.getId());
-        if (postsContent != null) {
-            contentVO.setContent(postsContent.getContent());
-            contentVO.setCatalog(postsContent.getCatalog());
-        }
-        return contentVO;
-    }
-
-    @Override
-    public PostsVO next(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
-        Posts next = postsRepository.getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(posts.getId());
+    public PostVO next(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        Post next = postRepository.getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(post.getId());
         return this.convertOuter(next);
     }
 
     @Override
-    public PostsVO previous(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
-        Posts previous = postsRepository.getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(posts.getId());
+    public PostVO previous(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        Post previous = postRepository.getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(post.getId());
         return this.convertOuter(previous);
     }
 
     @Override
     public boolean exist(String title) {
-        return postsRepository.existsByTitle(title);
+        return postRepository.existsByTitle(title);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public PostsVO create(PostsDTO postsDTO) {
-        Posts posts = new Posts();
-        BeanUtils.copyProperties(postsDTO, posts);
-        posts.setCode(this.generateCode());
-        posts.setTags(postsDTO.getTags().toString());
-        if (StringUtils.hasText(postsDTO.getCategory())) {
-            Category category = categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory());
-            if (category != null) {
-                posts.setCategoryId(category.getId());
-            }
-        }
+    public PostVO create(PostDTO postDTO) {
+        Post post = new Post();
+        BeanUtils.copyProperties(postDTO, post);
+        post.setTags(postDTO.getTags().toString());
         // 保存并立即刷盘
-        posts = postsRepository.saveAndFlush(posts);
+        post = postRepository.saveAndFlush(post);
         //保存帖子内容
-        PostsContent postsContent = postsContentRepository.getByPostsIdAndEnabledTrue(posts.getId());
-        if (postsContent == null) {
-            postsContent = new PostsContent();
+        PostContent postContent = postContentRepository.getByPostsIdAndEnabledTrue(post.getId());
+        if (postContent == null) {
+            postContent = new PostContent();
         }
-        postsContent.setPostsId(posts.getId());
-        postsContent.setContent(postsDTO.getContent());
-        postsContentRepository.saveAndFlush(postsContent);
+        postContent.setPostsId(post.getId());
+        postContent.setContent(postDTO.getContent());
+        postContentRepository.saveAndFlush(postContent);
         //转换结果
-        return this.convertOuter(posts);
+        return this.convertOuter(post);
     }
 
     @Override
-    public PostsVO modify(String code, PostsDTO postsDTO) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
+    public PostVO modify(Long id, PostDTO postDTO) {
+        Assert.notNull(id, "id cannot be null.");
         //查询基本信息
-        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
-        if (posts == null) {
+        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        if (post == null) {
             return null;
         }
-        BeanUtils.copyProperties(postsDTO, posts);
-        posts.setTags(postsDTO.getTags().toString());
-        if (StringUtils.hasText(postsDTO.getCategory())) {
-            Category category = categoryRepository.getByCodeAndEnabledTrue(postsDTO.getCategory());
-            if (category != null) {
-                posts.setCategoryId(category.getId());
-            }
-        }
-        posts = postsRepository.save(posts);
+        BeanUtils.copyProperties(postDTO, post);
+        post.setTags(postDTO.getTags().toString());
+
+        post = postRepository.save(post);
         //保存文章内容
-        PostsContent postsContent = postsContentRepository.getByPostsIdAndEnabledTrue(posts.getId());
-        if (postsContent == null) {
-            postsContent = new PostsContent();
+        PostContent postContent = postContentRepository.getByPostsIdAndEnabledTrue(post.getId());
+        if (postContent == null) {
+            postContent = new PostContent();
         }
-        postsContent.setContent(postsDTO.getContent());
-        postsContentRepository.save(postsContent);
+        postContent.setContent(postDTO.getContent());
+        postContentRepository.save(postContent);
         //转换结果
-        return this.convertOuter(posts);
+        return this.convertOuter(post);
     }
 
     @Override
-    public void remove(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
-        if (posts != null) {
-            postsRepository.deleteById(posts.getId());
-        }
+    public void remove(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+
+        postRepository.deleteById(id);
     }
 
     private void increaseViewed(Long id) {
         Assert.notNull(id, "id must not be null");
-        postsRepository.increaseViewed(id);
+        postRepository.increaseViewed(id);
     }
 
     /**
      * 对象转换为输出结果对象
      *
-     * @param posts 信息
+     * @param post 信息
      * @return 输出转换后的vo对象
      */
-    private PostsVO convertOuter(Posts posts) {
-        PostsVO vo = new PostsVO();
-        BeanUtils.copyProperties(posts, vo);
+    private PostVO convertOuter(Post post) {
+        PostVO vo = new PostVO();
+        BeanUtils.copyProperties(post, vo);
         // 转换 tags
-        String tags = posts.getTags().substring(1, posts.getTags().length() - 1)
+        String tags = post.getTags().substring(1, post.getTags().length() - 1)
                 .replace(" ", "").replace("\"", "");
         vo.setTags(Set.of(tags.split(",")));
         // 转换分类
-        Optional<Category> optional = categoryRepository.findById(posts.getCategoryId());
+        Optional<Category> optional = categoryRepository.findById(post.getCategoryId());
         optional.ifPresent(category -> vo.setCategory(category.getName()));
         return vo;
     }

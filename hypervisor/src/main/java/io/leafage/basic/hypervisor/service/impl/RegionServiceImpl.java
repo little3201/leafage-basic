@@ -1,7 +1,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.Region;
 import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.entity.Region;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.service.RegionService;
 import io.leafage.basic.hypervisor.vo.RegionVO;
@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import top.leafage.common.basic.ValidMessage;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -34,22 +34,22 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public List<RegionVO> lower(Long code) {
-        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
-        return regionRepository.findBySuperiorAndEnabledTrue(code)
+    public List<RegionVO> lower(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        return regionRepository.findBySuperiorAndEnabledTrue(id)
                 .stream().map(this::convertOuter).toList();
     }
 
     @Override
-    public RegionVO fetch(Long code) {
-        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
-        Region region = regionRepository.getByCodeAndEnabledTrue(code);
+    public RegionVO fetch(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        Region region = regionRepository.getByCodeAndEnabledTrue(id);
         return this.convertOuter(region);
     }
 
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
+        Assert.hasText(name, "name cannot bu blank.");
         return regionRepository.existsByName(name);
     }
 
@@ -62,19 +62,18 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public RegionVO modify(Long code, RegionDTO regionDTO) {
-        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
-        Region region = regionRepository.getByCodeAndEnabledTrue(code);
+    public RegionVO modify(Long id, RegionDTO regionDTO) {
+        Assert.notNull(id, "id cannot be null.");
+        Region region = regionRepository.getByCodeAndEnabledTrue(id);
         BeanUtils.copyProperties(regionDTO, region);
         regionRepository.save(region);
         return this.convertOuter(region);
     }
 
     @Override
-    public void remove(Long code) {
-        Assert.notNull(code, ValidMessage.CODE_NOT_NULL);
-        Region region = regionRepository.getByCodeAndEnabledTrue(code);
-        regionRepository.deleteById(region.getId());
+    public void remove(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        regionRepository.deleteById(id);
     }
 
     /**

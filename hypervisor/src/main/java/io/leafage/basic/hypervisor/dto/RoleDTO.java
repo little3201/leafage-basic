@@ -3,19 +3,18 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.util.Set;
 
 /**
- * DTO class for role.
+ * dto class for role.
  *
  * @author liwenqiang 2019/8/31 15:50
  */
 public class RoleDTO implements Serializable {
-
-    private static final long serialVersionUID = 3695400553311525056L;
 
     /**
      * 名称
@@ -26,7 +25,7 @@ public class RoleDTO implements Serializable {
     /**
      * 上级
      */
-    private String superior;
+    private Long superiorId;
     /**
      * 描述
      */
@@ -37,13 +36,6 @@ public class RoleDTO implements Serializable {
      */
     private Set<String> authorities;
 
-    public String getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(String superior) {
-        this.superior = superior;
-    }
 
     public String getName() {
         return name;
@@ -51,6 +43,14 @@ public class RoleDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public String getDescription() {

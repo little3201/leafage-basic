@@ -1,7 +1,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.entity.Region;
+import io.leafage.basic.hypervisor.domain.Region;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import org.junit.jupiter.api.Assertions;

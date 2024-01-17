@@ -1,16 +1,11 @@
 package io.leafage.basic.hypervisor.vo;
 
-import top.leafage.common.basic.AbstractVO;
-import java.io.Serializable;
-
 /**
- * VO class for dictionary.
+ * vo class for dictionary.
  *
  * @author liwenqiang 2022-04-06 17:33
  */
-public class DictionaryVO extends AbstractVO<String> implements Serializable {
-
-    private static final long serialVersionUID = -7090071767983351672L;
+public class DictionaryVO {
 
     /**
      * 名称

@@ -4,9 +4,9 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.entity.Category;
+import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class CategoryServiceImplTest {
     private CategoryRepository categoryRepository;
 
     @Mock
-    private PostsRepository postsRepository;
+    private PostRepository postRepository;
 
     @InjectMocks
     private CategoryServiceImpl categoryService;
@@ -47,7 +47,7 @@ class CategoryServiceImplTest {
         Page<Category> page = new PageImpl<>(List.of(category));
         given(this.categoryRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(page);
 
-        given(this.postsRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         Page<CategoryVO> voPage = categoryService.retrieve(0, 2, "id");
 
@@ -70,7 +70,7 @@ class CategoryServiceImplTest {
         category.setId(1L);
         given(this.categoryRepository.saveAndFlush(Mockito.any(Category.class))).willReturn(category);
 
-        given(this.postsRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
@@ -88,7 +88,7 @@ class CategoryServiceImplTest {
 
         given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(category);
 
-        given(this.postsRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         CategoryDTO categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");

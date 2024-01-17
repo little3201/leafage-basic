@@ -3,18 +3,17 @@
  */
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.io.Serializable;
 
 /**
- * DTO class for group.
+ * dto class for group.
  *
  * @author liwenqiang 2019/8/31 15:50
  */
 public class GroupDTO implements Serializable {
-
-    private static final long serialVersionUID = 5146594305386328379L;
 
     /**
      * 名称

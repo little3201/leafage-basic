@@ -1,17 +1,17 @@
 # assets
 
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2021.0.1-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-2.6.6-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.0-green.svg" alt="Coverage Status">
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.2.0-green.svg" alt="Downloads">
 </p>
 
 服务相关接口，主要包含：
 
-- 帖子 posts
+- 帖子 post
 - 类目 category
 - 资源 resource
 - 评论 comment
-- 统计 statistics
+- 统计 postStatistics
 
 #### 目标功能：
 

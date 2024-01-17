@@ -4,7 +4,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.UserDTO;
-import io.leafage.basic.hypervisor.entity.User;
+import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
@@ -55,7 +55,7 @@ class UserServiceImplTest {
 
     @Test
     void modify() {
-        // 根据code查询信息
+        // 根据id查询信息
         given(this.userRepository.getByUsernameAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(User.class));
         User user = new User();
         user.setId(1L);

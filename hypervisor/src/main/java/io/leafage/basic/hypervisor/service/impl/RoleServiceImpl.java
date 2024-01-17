@@ -3,9 +3,9 @@
  */
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.entity.Role;
-import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
+import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.leafage.common.basic.TreeNode;
-import top.leafage.common.basic.ValidMessage;
+import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -34,11 +34,11 @@ import java.util.NoSuchElementException;
 public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final AccountRoleRepository accountRoleRepository;
+    private final RoleMembersRepository roleMembersRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository, AccountRoleRepository accountRoleRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleMembersRepository roleMembersRepository) {
         this.roleRepository = roleRepository;
-        this.accountRoleRepository = accountRoleRepository;
+        this.roleMembersRepository = roleMembersRepository;
     }
 
     @Override
@@ -55,16 +55,19 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
             return Collections.emptyList();
         }
         return roles.stream().filter(role -> role.getSuperior() == null).map(r -> {
-            TreeNode treeNode = new TreeNode(r.getCode(), r.getName());
-            treeNode.setChildren(this.children(r, roles));
+            TreeNode treeNode = new TreeNode(r.getId(), r.getName());
+            treeNode.setChildren(this.convert(roles));
             return treeNode;
         }).toList();
     }
 
     @Override
-    public RoleVO fetch(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Role role = roleRepository.getByCodeAndEnabledTrue(code);
+    public RoleVO fetch(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        Role role = roleRepository.findById(id).orElse(null);
+        if (role == null) {
+            return null;
+        }
         return this.convertOuter(role);
     }
 
@@ -72,40 +75,26 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
     public RoleVO create(RoleDTO roleDTO) {
         Role role = new Role();
         BeanUtils.copyProperties(roleDTO, role);
-        role.setCode(this.generateCode());
-        if (StringUtils.hasText(roleDTO.getSuperior())) {
-            Role superior = roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior());
-            if (superior != null) {
-                role.setSuperior(superior.getId());
-            }
-        }
         role = roleRepository.saveAndFlush(role);
         return this.convertOuter(role);
     }
 
     @Override
-    public RoleVO modify(String code, RoleDTO roleDTO) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Role role = roleRepository.getByCodeAndEnabledTrue(code);
+    public RoleVO modify(Long id, RoleDTO roleDTO) {
+        Assert.notNull(id, "id cannot be null.");
+        Role role = roleRepository.findById(id).orElse(null);
         if (role == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
         }
         BeanUtils.copyProperties(roleDTO, role);
-        if (StringUtils.hasText(roleDTO.getSuperior())) {
-            Role superior = roleRepository.getByCodeAndEnabledTrue(roleDTO.getSuperior());
-            if (superior != null) {
-                role.setSuperior(superior.getId());
-            }
-        }
         role = roleRepository.save(role);
         return this.convertOuter(role);
     }
 
     @Override
-    public void remove(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Role role = roleRepository.getByCodeAndEnabledTrue(code);
-        roleRepository.deleteById(role.getId());
+    public void remove(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        roleRepository.deleteById(id);
     }
 
     /**
@@ -117,7 +106,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
     private RoleVO convertOuter(Role info) {
         RoleVO roleVO = new RoleVO();
         BeanUtils.copyProperties(info, roleVO);
-        long count = accountRoleRepository.countByRoleIdAndEnabledTrue(info.getId());
+        long count = roleMembersRepository.countByRoleIdAndEnabledTrue(info.getId());
         roleVO.setCount(count);
         return roleVO;
     }

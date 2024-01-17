@@ -3,9 +3,10 @@
  */
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.entity.Group;
+import io.leafage.basic.hypervisor.domain.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -15,14 +16,6 @@ import java.util.List;
  **/
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
-
-    /**
-     * 根据code查询信息
-     *
-     * @param code 代码
-     * @return 结果信息
-     */
-    Group getByCodeAndEnabledTrue(String code);
 
     /**
      * 查询信息

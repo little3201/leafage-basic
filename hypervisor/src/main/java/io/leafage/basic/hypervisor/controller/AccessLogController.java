@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @author liwenqiang 2022/4/15 13:50
  **/
 @RestController
-@RequestMapping("/access-log")
+@RequestMapping("/access-logs")
 public class AccessLogController {
 
     private final Logger logger = LoggerFactory.getLogger(AccessLogController.class);

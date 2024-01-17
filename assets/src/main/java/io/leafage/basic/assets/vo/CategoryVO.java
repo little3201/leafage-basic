@@ -3,16 +3,12 @@
  */
 package io.leafage.basic.assets.vo;
 
-import top.leafage.common.basic.AbstractVO;
-
 /**
- * VO class for category.
+ * vo class for category.
  *
  * @author liwenqiang  2020-12-03 22:59
  */
-public class CategoryVO extends AbstractVO<String> {
-
-    private static final long serialVersionUID = 6540470230706397453L;
+public class CategoryVO {
 
     /**
      * 名称

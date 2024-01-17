@@ -1,8 +1,8 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.entity.Role;
-import io.leafage.basic.hypervisor.repository.AccountRoleRepository;
+import io.leafage.basic.hypervisor.domain.Role;
+import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.Assertions;
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.verify;
 class RoleServiceImplTest {
 
     @Mock
-    private AccountRoleRepository accountRoleRepository;
+    private RoleMembersRepository roleMembersRepository;
 
     @Mock
     private RoleRepository roleRepository;
@@ -49,7 +49,7 @@ class RoleServiceImplTest {
         Page<Role> page = new PageImpl<>(List.of(role));
         given(this.roleRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
 
-        given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(this.roleMembersRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         Page<RoleVO> voPage = roleService.retrieve(0, 2, "id");
 
@@ -60,7 +60,7 @@ class RoleServiceImplTest {
     void fetch() {
         given(this.roleRepository.getByCodeAndEnabledTrue(Mockito.anyString())).willReturn(Mockito.mock(Role.class));
 
-        given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(this.roleMembersRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         RoleVO roleVO = roleService.fetch("2109JJL8");
 
@@ -79,7 +79,7 @@ class RoleServiceImplTest {
 
         given(this.roleRepository.saveAndFlush(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
 
-        given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(this.roleMembersRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");
@@ -102,7 +102,7 @@ class RoleServiceImplTest {
 
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
 
-        given(this.accountRoleRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(this.roleMembersRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName("test");

@@ -1,6 +1,6 @@
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.entity.Region;
+import io.leafage.basic.hypervisor.domain.Region;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,12 +24,12 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
     Page<Region> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据code查询enabled信息
+     * 根据id查询enabled信息
      *
-     * @param code 代码
+     * @param id 主键
      * @return 查询结果信息
      */
-    Region getByCodeAndEnabledTrue(Long code);
+    Region getByCodeAndEnabledTrue(Long id);
 
     /**
      * 是否存在
@@ -44,5 +44,5 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
      *
      * @return 结果信息
      */
-    List<Region> findBySuperiorAndEnabledTrue(Long code);
+    List<Region> findBySuperiorAndEnabledTrue(Long id);
 }

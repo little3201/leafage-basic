@@ -1,8 +1,9 @@
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.entity.Dictionary;
+import io.leafage.basic.hypervisor.domain.Dictionary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -24,15 +25,9 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long> {
     /**
      * 查询下级信息
      *
+     * @param superiorId 上级主键
      * @return 结果信息
      */
-    List<Dictionary> findBySuperiorAndEnabledTrue(String code);
+    List<Dictionary> findBySuperiorIdAndEnabledTrue(Long superiorId);
 
-    /**
-     * 根据code查询
-     *
-     * @param code 代码
-     * @return 数据信息
-     */
-    Dictionary getByCodeAndEnabledTrue(String code);
 }

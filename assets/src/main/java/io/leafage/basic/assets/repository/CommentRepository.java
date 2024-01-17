@@ -1,6 +1,6 @@
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.entity.Comment;
+import io.leafage.basic.assets.domain.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -42,7 +42,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     /**
      * 查询回复记录数
      *
-     * @param replier 回复code
+     * @param replier 回复id
      * @return 记录数
      */
     Long countByReplierAndEnabledTrue(String replier);

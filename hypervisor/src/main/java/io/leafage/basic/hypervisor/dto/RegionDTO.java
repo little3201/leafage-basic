@@ -1,16 +1,15 @@
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
+
 import java.io.Serializable;
 
 /**
- * DTO class for region.
+ * dto class for region.
  *
  * @author liwenqiang 2021-10-12 10:06
  */
 public class RegionDTO implements Serializable {
-
-    private static final long serialVersionUID = -7556508514406968775L;
 
     /**
      * 名称

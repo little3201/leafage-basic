@@ -1,7 +1,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.AccessLog;
 import io.leafage.basic.hypervisor.dto.AccessLogDTO;
-import io.leafage.basic.hypervisor.entity.AccessLog;
 import io.leafage.basic.hypervisor.repository.AccessLogRepository;
 import io.leafage.basic.hypervisor.service.AccessLogService;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
@@ -9,7 +9,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import top.leafage.common.basic.AbstractBasicService;
 
 /**
  * access log service impl.
@@ -17,7 +16,7 @@ import top.leafage.common.basic.AbstractBasicService;
  * @author liwenqiang 2022/4/15 13:44
  **/
 @Service
-public class AccessLogServiceImpl extends AbstractBasicService implements AccessLogService {
+public class AccessLogServiceImpl implements AccessLogService {
 
     private final AccessLogRepository accessLogRepository;
 
@@ -34,7 +33,6 @@ public class AccessLogServiceImpl extends AbstractBasicService implements Access
     public AccessLogVO create(AccessLogDTO accessLogDTO) {
         AccessLog accessLog = new AccessLog();
         BeanUtils.copyProperties(accessLogDTO, accessLog);
-        accessLog.setCode(this.generateCode());
         accessLogRepository.saveAndFlush(accessLog);
         return this.convert(accessLog);
     }

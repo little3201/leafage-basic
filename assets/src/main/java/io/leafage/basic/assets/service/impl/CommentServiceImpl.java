@@ -1,10 +1,10 @@
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.domain.Comment;
+import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.dto.CommentDTO;
-import io.leafage.basic.assets.entity.Comment;
-import io.leafage.basic.assets.entity.Posts;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.springframework.beans.BeanUtils;
@@ -13,11 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.basic.ValidMessage;
+
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * comment service impl.
@@ -25,14 +23,14 @@ import java.util.Optional;
  * @author liwenqiang 2021/09/29 15:10
  **/
 @Service
-public class CommentServiceImpl extends AbstractBasicService implements CommentService {
+public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostsRepository postsRepository;
+    private final PostRepository postRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, PostsRepository postsRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
         this.commentRepository = commentRepository;
-        this.postsRepository = postsRepository;
+        this.postRepository = postRepository;
     }
 
     @Override
@@ -41,13 +39,13 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     }
 
     @Override
-    public List<CommentVO> relation(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Posts posts = postsRepository.getByCodeAndEnabledTrue(code);
-        if (null == posts) {
+    public List<CommentVO> relation(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        Post post = postRepository.getByCodeAndEnabledTrue(id);
+        if (null == post) {
             return Collections.emptyList();
         }
-        return commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(posts.getId())
+        return commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(post.getId())
                 .stream().map(this::convertOuter).toList();
     }
 
@@ -60,14 +58,9 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
     @Transactional(rollbackFor = Exception.class)
     @Override
     public CommentVO create(CommentDTO commentDTO) {
-        Posts posts = postsRepository.getByCodeAndEnabledTrue(commentDTO.getPosts());
-        if (null == posts) {
-            return null;
-        }
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDTO, comment);
-        comment.setCode(this.generateCode());
-        comment.setPostsId(posts.getId());
+        comment.setPostsId(comment.getPostsId());
         comment = commentRepository.saveAndFlush(comment);
         // 添加关联帖子的评论数
         this.increaseComment(comment.getPostsId());
@@ -84,9 +77,6 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
         CommentVO vo = new CommentVO();
         BeanUtils.copyProperties(comment, vo);
 
-        Optional<Posts> optional = postsRepository.findById(comment.getPostsId());
-        optional.ifPresent(o -> vo.setPosts(o.getCode()));
-
         Long count = commentRepository.countByReplierAndEnabledTrue(comment.getCode());
         vo.setCount(count);
         return vo;
@@ -98,7 +88,7 @@ public class CommentServiceImpl extends AbstractBasicService implements CommentS
      * @param id 主键
      */
     private void increaseComment(long id) {
-        postsRepository.increaseComment(id);
+        postRepository.increaseComment(id);
     }
 
 }

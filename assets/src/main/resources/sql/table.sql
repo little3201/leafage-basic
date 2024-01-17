@@ -6,7 +6,7 @@ drop table if exists posts;
 create table posts
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(9) not null comment '代码',
+   id                 varchar(9) not null comment '主键',
    title                varchar(32) comment '标题',
    tags                 varchar(255) comment '标签',
    cover                varchar(127) comment '封面图',
@@ -18,7 +18,7 @@ create table posts
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   unique key AK_code (code)
+   unique key AK_id (id)
 );
 
 alter table posts comment '帖子';
@@ -55,13 +55,13 @@ drop table if exists category;
 create table category
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(8) not null comment '代码',
+   id                 varchar(8) not null comment '主键',
    name                 varchar(32) comment '名称',
    is_enabled           tinyint(1) not null default 1 comment '是否可用',
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   unique key AK_code (code)
+   unique key AK_id (id)
 );
 
 alter table category comment '分类';
@@ -97,7 +97,7 @@ drop table if exists resource;
 create table resource
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(9) not null comment '代码',
+   id                 varchar(9) not null comment '主键',
    title                varchar(32) comment '标题',
    cover                varchar(127) comment '封面图',
    type                 char(1) comment '类型',
@@ -109,7 +109,7 @@ create table resource
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   unique key AK_code (code)
+   unique key AK_id (id)
 );
 
 alter table resource comment '资源';
@@ -136,7 +136,7 @@ create table statistics
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   unique key AK_code (date)
+   unique key AK_id (date)
 );
 
 alter table statistics comment '统计';

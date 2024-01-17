@@ -27,5 +27,5 @@ public interface RegionService extends ServletBasicService<RegionDTO, RegionVO, 
      *
      * @return 数据集
      */
-    List<RegionVO> lower(Long code);
+    List<RegionVO> lower(Long id);
 }

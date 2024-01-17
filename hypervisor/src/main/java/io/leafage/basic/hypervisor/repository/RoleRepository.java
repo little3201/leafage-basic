@@ -3,9 +3,10 @@
  */
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.entity.Role;
+import io.leafage.basic.hypervisor.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -15,14 +16,6 @@ import java.util.List;
  **/
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-
-    /**
-     * 根据code查询
-     *
-     * @param code 唯一标识
-     * @return 信息
-     */
-    Role getByCodeAndEnabledTrue(String code);
 
     /**
      * 查询

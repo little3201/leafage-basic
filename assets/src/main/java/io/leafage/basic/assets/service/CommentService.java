@@ -25,10 +25,10 @@ public interface CommentService extends ServletBasicService<CommentDTO, CommentV
     /**
      * 根据posts查询
      *
-     * @param code 帖子代码
+     * @param id 帖子代码
      * @return 关联的评论
      */
-    List<CommentVO> relation(String code);
+    List<CommentVO> relation(Long id);
 
     /**
      * 根据replier查询

@@ -3,19 +3,20 @@
  */
 package io.leafage.basic.hypervisor.controller;
 
+import io.leafage.basic.hypervisor.domain.GroupMembers;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
-import io.leafage.basic.hypervisor.service.AccountGroupService;
+import io.leafage.basic.hypervisor.service.GroupMembersService;
 import io.leafage.basic.hypervisor.service.GroupService;
-import io.leafage.basic.hypervisor.vo.AccountVO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.leafage.common.basic.TreeNode;
-import javax.validation.Valid;
+import top.leafage.common.TreeNode;
+
 import java.util.List;
 
 /**
@@ -24,16 +25,16 @@ import java.util.List;
  * @author liwenqiang 2018/12/20 9:54
  **/
 @RestController
-@RequestMapping("/group")
+@RequestMapping("/groups")
 public class GroupController {
 
     private final Logger logger = LoggerFactory.getLogger(GroupController.class);
 
-    private final AccountGroupService accountGroupService;
+    private final GroupMembersService groupMembersService;
     private final GroupService groupService;
 
-    public GroupController(AccountGroupService accountGroupService, GroupService groupService) {
-        this.accountGroupService = accountGroupService;
+    public GroupController(GroupMembersService groupMembersService, GroupService groupService) {
+        this.groupMembersService = groupMembersService;
         this.groupService = groupService;
     }
 
@@ -77,14 +78,14 @@ public class GroupController {
     /**
      * 查询信息
      *
-     * @param code 代码
+     * @param id 主键
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<GroupVO> fetch(@PathVariable String code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<GroupVO> fetch(@PathVariable Long id) {
         GroupVO groupVO;
         try {
-            groupVO = groupService.fetch(code);
+            groupVO = groupService.fetch(id);
         } catch (Exception e) {
             logger.info("Fetch group occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -113,15 +114,15 @@ public class GroupController {
     /**
      * 修改信息
      *
-     * @param code     代码
+     * @param id       主键
      * @param groupDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
-    @PutMapping("/{code}")
-    public ResponseEntity<GroupVO> modify(@PathVariable String code, @RequestBody GroupDTO groupDTO) {
+    @PutMapping("/{id}")
+    public ResponseEntity<GroupVO> modify(@PathVariable Long id, @RequestBody GroupDTO groupDTO) {
         GroupVO groupVO;
         try {
-            groupVO = groupService.modify(code, groupDTO);
+            groupVO = groupService.modify(id, groupDTO);
         } catch (Exception e) {
             logger.error("Modify group occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
@@ -132,13 +133,13 @@ public class GroupController {
     /**
      * 删除信息
      *
-     * @param code 代码
+     * @param id 主键
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
-    @DeleteMapping("/{code}")
-    public ResponseEntity<Void> remove(@PathVariable String code) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
         try {
-            groupService.remove(code);
+            groupService.remove(id);
         } catch (Exception e) {
             logger.error("Remove group occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
@@ -147,16 +148,16 @@ public class GroupController {
     }
 
     /**
-     * 根据分组code查询关联用户信息
+     * 根据group查询关联user
      *
-     * @param code 组code
+     * @param id 组id
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @GetMapping("/{code}/account")
-    public ResponseEntity<List<AccountVO>> accounts(@PathVariable String code) {
-        List<AccountVO> voList;
+    @GetMapping("/{id}/members")
+    public ResponseEntity<List<GroupMembers>> members(@PathVariable Long id) {
+        List<GroupMembers> voList;
         try {
-            voList = accountGroupService.accounts(code);
+            voList = groupMembersService.members(id);
         } catch (Exception e) {
             logger.error("Retrieve group users occurred an error: ", e);
             return ResponseEntity.noContent().build();

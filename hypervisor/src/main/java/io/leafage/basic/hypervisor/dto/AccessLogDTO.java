@@ -3,13 +3,11 @@ package io.leafage.basic.hypervisor.dto;
 import java.io.Serializable;
 
 /**
- * DTO class for access log.
+ * dto class for access log.
  *
  * @author liwenqinag 2022/4/15 13:39
  **/
 public class AccessLogDTO implements Serializable {
-
-    private static final long serialVersionUID = 451126769823410852L;
 
     /**
      * ip

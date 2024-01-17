@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -49,16 +49,16 @@ public class CommentController {
     }
 
     /**
-     * 根据 posts code 查询
+     * 根据 posts id 查询
      *
-     * @param code 帖子代码
+     * @param id 帖子代码
      * @return 关联的评论
      */
-    @GetMapping("/{code}")
-    public ResponseEntity<List<CommentVO>> relation(@PathVariable String code) {
+    @GetMapping("/{id}")
+    public ResponseEntity<List<CommentVO>> relation(@PathVariable Long id) {
         List<CommentVO> voList;
         try {
-            voList = commentService.relation(code);
+            voList = commentService.relation(id);
         } catch (Exception e) {
             logger.error("Retrieve comment by posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -68,16 +68,16 @@ public class CommentController {
 
 
     /**
-     * 根据code查询回复
+     * 根据id查询回复
      *
-     * @param code 帖子代码
+     * @param id 帖子代码
      * @return 关联的评论
      */
-    @GetMapping("/{code}/replies")
-    public ResponseEntity<List<CommentVO>> replies(@PathVariable String code) {
+    @GetMapping("/{id}/replies")
+    public ResponseEntity<List<CommentVO>> replies(@PathVariable Long id) {
         List<CommentVO> voList;
         try {
-            voList = commentService.replies(code);
+            voList = commentService.replies(id);
         } catch (Exception e) {
             logger.error("Retrieve comment replies occurred an error: ", e);
             return ResponseEntity.noContent().build();

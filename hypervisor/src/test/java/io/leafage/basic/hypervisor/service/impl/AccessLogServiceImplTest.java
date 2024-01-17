@@ -1,8 +1,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.AccessLog;
 import io.leafage.basic.hypervisor.dto.AccessLogDTO;
-import io.leafage.basic.hypervisor.entity.AccessLog;
-import io.leafage.basic.hypervisor.entity.Notification;
 import io.leafage.basic.hypervisor.repository.AccessLogRepository;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +14,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -34,15 +35,9 @@ class AccessLogServiceImplTest {
     @InjectMocks
     private AccessLogServiceImpl accessLogService;
 
-
     @Test
     void retrieve() {
-        AccessLog accessLog = new AccessLog();
-        accessLog.setCode("213ADJ09");
-        accessLog.setIp("12.2.1.2");
-        accessLog.setLocation("陕西");
-        accessLog.setDescription("测试内容");
-        Page<AccessLog> page = new PageImpl<>(List.of(accessLog));
+        Page<AccessLog> page = new PageImpl<>(List.of(Mockito.mock(AccessLog.class)));
         given(this.accessLogRepository.findAll(PageRequest.of(0, 2))).willReturn(page);
 
         Page<AccessLogVO> voPage = accessLogService.retrieve(0, 2);
@@ -54,11 +49,7 @@ class AccessLogServiceImplTest {
     void create() {
         given(this.accessLogRepository.saveAndFlush(Mockito.any(AccessLog.class))).willReturn(Mockito.mock(AccessLog.class));
 
-        AccessLogDTO accessLogDTO = new AccessLogDTO();
-        accessLogDTO.setIp("12.2.1.2");
-        accessLogDTO.setLocation("陕西");
-        accessLogDTO.setDescription("测试内容");
-        AccessLogVO accessLogVO = accessLogService.create(accessLogDTO);
+        AccessLogVO accessLogVO = accessLogService.create(Mockito.mock(AccessLogDTO.class));
 
         verify(this.accessLogRepository, times(1)).saveAndFlush(Mockito.any(AccessLog.class));
         Assertions.assertNotNull(accessLogVO);

@@ -1,11 +1,7 @@
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.dto.ResourceDTO;
-import io.leafage.basic.assets.entity.Category;
-import io.leafage.basic.assets.entity.Resource;
+import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.ResourceRepository;
-import io.leafage.basic.assets.vo.ResourceVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

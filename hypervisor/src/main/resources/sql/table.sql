@@ -6,7 +6,7 @@ drop table if exists group_;
 create table group_
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(9) not null comment '代码',
+   id                 varchar(9) not null comment '主键',
    name                 varchar(64) comment '名称',
    principal            bigint comment '负责人',
    superior             bigint comment '上级',
@@ -15,10 +15,10 @@ create table group_
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   unique key AK_code (code)
+   unique key AK_id (id)
 );
 
-alter table group_ comment '分组';
+alter table group_ comment 'group';
 
 
 drop table if exists account_group;
@@ -29,15 +29,15 @@ drop table if exists account_group;
 create table account_group
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   group_id             bigint not null comment '分组主键',
-   account_id           bigint not null comment '账号主键',
+   group_id             bigint not null comment 'group主键',
+   account_id           bigint not null comment 'user主键',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) comment '修改人',
    modify_time          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id)
 );
 
-alter table account_group comment '账号-分组';
+alter table account_group comment 'user-group';
 
 
 drop table if exists user;
@@ -48,7 +48,7 @@ drop table if exists user;
 create table user
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   username             varchar(16) not null comment '账号',
+   username             varchar(16) not null comment 'user',
    mobile               varchar(16) not null comment '电话',
    email                varchar(64) not null comment '邮箱',
    firstname            varchar(64) comment '姓',
@@ -83,14 +83,14 @@ create table account_role
 (
    id                   bigint unsigned not null auto_increment comment '主键',
    account_id           bigint not null comment '帐号主键',
-   role_id              bigint not null comment '角色主键',
+   role_id              bigint not null comment 'role主键',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) comment '修改人',
    modify_time          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id)
 );
 
-alter table account_role comment '帐号-角色';
+alter table account_role comment '帐号-role';
 
 
 drop table if exists role;
@@ -101,47 +101,47 @@ drop table if exists role;
 create table role
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(9) comment '代码',
+   id                 varchar(9) comment '主键',
    name                 varchar(64) comment '名称',
    description          varchar(64) comment '描述',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   key AK_code (code)
+   key AK_id (id)
 );
 
-alter table role comment '角色';
+alter table role comment 'role';
 
 
-drop table if exists role_authority;
+drop table if exists role_privilege;
 
 /*==============================================================*/
-/* Table: role_authority                                        */
+/* Table: role_privilege                                        */
 /*==============================================================*/
-create table role_authority
+create table role_privilege
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   role_id              bigint not null comment '角色主键',
-   authority_id         bigint not null comment '资源主键',
+   role_id              bigint not null comment 'role主键',
+   privilege_id         bigint not null comment '资源主键',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16),
    modify_time          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
    primary key (id)
 );
 
-alter table role_authority comment '角色-权限';
+alter table role_privilege comment 'role-privilege';
 
 
-drop table if exists authority;
+drop table if exists privilege;
 
 /*==============================================================*/
-/* Table: authority                                             */
+/* Table: privilege                                             */
 /*==============================================================*/
-create table authority
+create table privilege
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(9) not null comment '代码',
+   id                 varchar(9) not null comment '主键',
    superior             bigint comment '上级',
    name                 varchar(64) comment '名称',
    type                 tinyint(4) comment '类型',
@@ -151,10 +151,10 @@ create table authority
    modifier             varchar(16) comment '修改人',
    modify_time          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   unique key AK_code (code)
+   unique key AK_id (id)
 );
 
-alter table authority comment '权限';
+alter table privilege comment 'privilege';
 
 
 drop table if exists group_role;
@@ -165,15 +165,15 @@ drop table if exists group_role;
 create table group_role
 (
    id                   bigint unsigned not null comment '主键',
-   dept_id              bigint comment '分组主键',
-   role_id              bigint comment '角色主键',
+   dept_id              bigint comment 'group主键',
+   role_id              bigint comment 'role主键',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) comment '修改人',
    modify_time          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id)
 );
 
-alter table group_role comment '分组-角色';
+alter table group_role comment 'group-role';
 
 
 drop table if exists position_role;
@@ -185,14 +185,14 @@ create table position_role
 (
    id                   bigint unsigned not null auto_increment comment '主键',
    pos_id               bigint comment '职位主键',
-   role_id              bigint comment '角色主键',
+   role_id              bigint comment 'role主键',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) comment '修改人',
    modify_time          datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id)
 );
 
-alter table position_role comment '职位-角色';
+alter table position_role comment '职位-role';
 
 
 drop table if exists position;
@@ -203,7 +203,7 @@ drop table if exists position;
 create table position
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(9) not null comment '代码',
+   id                 varchar(9) not null comment '主键',
    name                 varchar(32) comment '名称',
    description          varchar(127) comment '描述',
    is_enabled           tinyint(1) default 1 comment '是否可用',
@@ -223,7 +223,7 @@ drop table if exists group_position;
 create table group_position
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   group_id             bigint comment '分组主键',
+   group_id             bigint comment 'group主键',
    pos_id               bigint comment '职位主键',
    is_enabled           tinyint(1) default 1 comment '是否可用',
    modifier             varchar(16) comment '修改人',
@@ -231,7 +231,7 @@ create table group_position
    primary key (id)
 );
 
-alter table group_position comment '分组-职位';
+alter table group_position comment 'group-职位';
 
 
 drop table if exists share_row;
@@ -304,7 +304,7 @@ drop table if exists dictionary;
 create table dictionary
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(9) not null comment '代码',
+   id                 varchar(9) not null comment '主键',
    name                 varchar(64) comment '名称',
    alias                varchar(64) comment '别名',
    superior             bigint comment '上级',
@@ -313,7 +313,7 @@ create table dictionary
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   unique key AK_code (code)
+   unique key AK_id (id)
 );
 
 alter table dictionary comment '字典';
@@ -327,7 +327,7 @@ drop table if exists notification;
 create table notification
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(9) not null comment '代码',
+   id                 varchar(9) not null comment '主键',
    title                varchar(255) comment '标题',
    content              longtext comment '内容',
    is_read              tinyint(1) comment '是否已读',
@@ -335,7 +335,7 @@ create table notification
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   unique key AK_code (code)
+   unique key AK_id (id)
 );
 
 alter table notification comment '通知';
@@ -350,17 +350,17 @@ drop table if exists region;
 create table region
 (
    id                   bigint unsigned not null auto_increment comment '主键',
-   code                 varchar(9) not null comment '代码',
+   id                 varchar(9) not null comment '主键',
    name                 varchar(64) comment '名称',
    superior             bigint comment '上级',
-   postal_code          int comment '邮编',
-   area_code            int comment '区号',
+   postal_id          int comment '邮编',
+   area_id            int comment '区号',
    description          varchar(127) comment '描述',
    is_enabled           tinyint(1) not null default 1 comment '是否可用',
    modifier             varchar(16) not null comment '修改人',
    modify_time          datetime not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
    primary key (id),
-   unique key AK_code (code)
+   unique key AK_id (id)
 );
 
 alter table region comment '行政区划';

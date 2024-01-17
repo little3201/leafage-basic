@@ -1,16 +1,11 @@
 package io.leafage.basic.hypervisor.vo;
 
-import top.leafage.common.basic.AbstractVO;
-import java.io.Serializable;
-
 /**
- * VO class for access log.
+ * vo class for access log.
  *
  * @author liwenqinag 2022/4/15 13:39
  **/
-public class AccessLogVO extends AbstractVO<String> implements Serializable {
-
-    private static final long serialVersionUID = -6783030034445738333L;
+public class AccessLogVO {
 
     /**
      * ip

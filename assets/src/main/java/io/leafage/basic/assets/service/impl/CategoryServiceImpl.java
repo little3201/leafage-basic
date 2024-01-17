@@ -3,10 +3,10 @@
  */
 package io.leafage.basic.assets.service.impl;
 
+import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.entity.Category;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostsRepository;
+import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.springframework.beans.BeanUtils;
@@ -17,8 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import top.leafage.common.basic.AbstractBasicService;
-import top.leafage.common.basic.ValidMessage;
 
 /**
  * category service impl.
@@ -26,14 +24,14 @@ import top.leafage.common.basic.ValidMessage;
  * @author liwenqiang  2020-12-03 22:59
  **/
 @Service
-public class CategoryServiceImpl extends AbstractBasicService implements CategoryService {
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final PostsRepository postsRepository;
+    private final PostRepository postRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, PostsRepository postsRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, PostRepository postRepository) {
         this.categoryRepository = categoryRepository;
-        this.postsRepository = postsRepository;
+        this.postRepository = postRepository;
     }
 
     @Override
@@ -41,16 +39,16 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
         return categoryRepository.findByEnabledTrue(pageable).map(category -> {
             CategoryVO categoryVO = this.convertOuter(category);
-            long count = postsRepository.countByCategoryId(category.getId());
+            long count = postRepository.countByCategoryId(category.getId());
             categoryVO.setCount(count);
             return categoryVO;
         });
     }
 
     @Override
-    public CategoryVO fetch(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Category category = categoryRepository.getByCodeAndEnabledTrue(code);
+    public CategoryVO fetch(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        Category category = categoryRepository.getByCodeAndEnabledTrue(id);
         return this.convertOuter(category);
     }
 
@@ -58,27 +56,24 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
     public CategoryVO create(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
-        category.setCode(this.generateCode());
         category = categoryRepository.saveAndFlush(category);
         return this.convertOuter(category);
     }
 
     @Override
-    public CategoryVO modify(String code, CategoryDTO categoryDTO) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Category category = categoryRepository.getByCodeAndEnabledTrue(code);
+    public CategoryVO modify(Long id, CategoryDTO categoryDTO) {
+        Assert.notNull(id, "id cannot be null.");
+        Category category = categoryRepository.getByCodeAndEnabledTrue(id);
         BeanUtils.copyProperties(categoryDTO, category);
         category = categoryRepository.save(category);
         return this.convertOuter(category);
     }
 
     @Override
-    public void remove(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Category category = categoryRepository.getByCodeAndEnabledTrue(code);
-        if (category != null) {
-            categoryRepository.deleteById(category.getId());
-        }
+    public void remove(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+
+        categoryRepository.deleteById(id);
     }
 
     /**
@@ -91,7 +86,7 @@ public class CategoryServiceImpl extends AbstractBasicService implements Categor
         CategoryVO vo = new CategoryVO();
         BeanUtils.copyProperties(info, vo);
 
-        long count = postsRepository.countByCategoryId(info.getId());
+        long count = postRepository.countByCategoryId(info.getId());
         vo.setCount(count);
         return vo;
     }

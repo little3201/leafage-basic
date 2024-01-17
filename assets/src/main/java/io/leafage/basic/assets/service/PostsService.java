@@ -3,10 +3,9 @@
  */
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.dto.PostsDTO;
-import io.leafage.basic.assets.vo.ContentVO;
-import io.leafage.basic.assets.vo.PostsContentVO;
-import io.leafage.basic.assets.vo.PostsVO;
+import io.leafage.basic.assets.dto.PostDTO;
+import io.leafage.basic.assets.vo.PostContentVO;
+import io.leafage.basic.assets.vo.PostVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
@@ -15,7 +14,7 @@ import top.leafage.common.servlet.ServletBasicService;
  *
  * @author liwenqiang 2018/12/17 19:26
  **/
-public interface PostsService extends ServletBasicService<PostsDTO, PostsVO, String> {
+public interface PostsService extends ServletBasicService<PostDTO, PostVO> {
 
     /**
      * 分页查询
@@ -25,37 +24,29 @@ public interface PostsService extends ServletBasicService<PostsDTO, PostsVO, Str
      * @param sort 排序字段
      * @return 查询结果
      */
-    Page<PostsVO> retrieve(int page, int size, String sort);
+    Page<PostVO> retrieve(int page, int size, String sort);
 
     /**
-     * 根据code查询文章详情
+     * 根据id查询文章详情
      *
-     * @param code 代码
+     * @param id 主键
      * @return 查询结果
      */
-    PostsContentVO details(String code);
-
-    /**
-     * 根据代码查询内容
-     *
-     * @param code 代码
-     * @return 详细信息
-     */
-    ContentVO content(String code);
+    PostContentVO details(Long id);
 
     /**
      * 下一篇
      *
-     * @param code 代码
+     * @param id 主键
      * @return 信息
      */
-    PostsVO next(String code);
+    PostVO next(Long id);
 
     /**
      * 上一篇
      *
-     * @param code 代码
+     * @param id 主键
      * @return 信息
      */
-    PostsVO previous(String code);
+    PostVO previous(Long id);
 }

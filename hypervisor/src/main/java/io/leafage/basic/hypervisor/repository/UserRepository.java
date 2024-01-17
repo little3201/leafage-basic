@@ -3,7 +3,7 @@
  */
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.entity.User;
+import io.leafage.basic.hypervisor.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * 查询用户信息
      *
      * @param username 用户名
-     * @return 用户信息
+     * @return user
      */
     User getByUsernameAndEnabledTrue(String username);
 

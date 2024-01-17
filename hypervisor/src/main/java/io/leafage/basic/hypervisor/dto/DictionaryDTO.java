@@ -1,16 +1,15 @@
 package io.leafage.basic.hypervisor.dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
+
 import java.io.Serializable;
 
 /**
- * DTO class for dictionary.
+ * dto class for dictionary.
  *
  * @author liwenqiang 2022-04-06 17:33
  */
 public class DictionaryDTO implements Serializable {
-
-    private static final long serialVersionUID = 7474353752670394489L;
 
     /**
      * 名称

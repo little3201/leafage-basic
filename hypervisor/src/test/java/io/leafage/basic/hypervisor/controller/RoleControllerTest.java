@@ -5,12 +5,13 @@ package io.leafage.basic.hypervisor.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.entity.RoleAuthority;
-import io.leafage.basic.hypervisor.service.RoleAuthorityService;
+import io.leafage.basic.hypervisor.service.RoleMembersService;
+import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import io.leafage.basic.hypervisor.service.RoleService;
-import io.leafage.basic.hypervisor.service.AccountRoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -23,10 +24,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import top.leafage.common.basic.TreeNode;
+import top.leafage.common.TreeNode;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -55,21 +58,32 @@ class RoleControllerTest {
     private RoleService roleService;
 
     @MockBean
-    private AccountRoleService accountRoleService;
+    private RoleMembersService roleMembersService;
 
     @MockBean
-    private RoleAuthorityService roleAuthorityService;
+    private RolePrivilegesService rolePrivilegesService;
+
+    private RoleVO roleVO;
+
+    private RoleDTO roleDTO;
+
+    @BeforeEach
+    void init() {
+        roleVO = new RoleVO();
+        roleVO.setSuperior("superior");
+
+        roleDTO = new RoleDTO();
+        roleDTO.setName("test");
+    }
 
     @Test
     void retrieve() throws Exception {
         List<RoleVO> voList = new ArrayList<>(2);
-        RoleVO roleVO = new RoleVO();
-        roleVO.setSuperior("superior");
         voList.add(roleVO);
         Page<RoleVO> voPage = new PageImpl<>(voList);
         given(this.roleService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
-        mvc.perform(get("/role").queryParam("page", "0").queryParam("size", "2")
+        mvc.perform(get("/roles").queryParam("page", "0").queryParam("size", "2")
                         .queryParam("sort", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
@@ -78,39 +92,31 @@ class RoleControllerTest {
     void retrieve_error() throws Exception {
         given(this.roleService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/role").queryParam("page", "0").queryParam("size", "2")
+        mvc.perform(get("/roles").queryParam("page", "0").queryParam("size", "2")
                 .queryParam("sort", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
     void fetch() throws Exception {
-        RoleVO roleVO = new RoleVO();
-        roleVO.setName("test");
-        given(this.roleService.fetch(Mockito.anyString())).willReturn(roleVO);
+        given(this.roleService.fetch(Mockito.anyLong())).willReturn(roleVO);
 
-        mvc.perform(get("/role/{code}", "test")).andExpect(status().isOk())
+        mvc.perform(get("/roles/{id}", "test")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
-        given(this.roleService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.roleService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/role/{code}", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/roles/{id}", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void create() throws Exception {
-        // 构造返回对象
-        RoleVO roleVO = new RoleVO();
-        roleVO.setName("test");
         given(this.roleService.create(Mockito.any(RoleDTO.class))).willReturn(roleVO);
 
-        // 构造请求对象
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setName("test");
-        mvc.perform(post("/role").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/roles").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(roleDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test"))
                 .andDo(print()).andReturn();
@@ -120,10 +126,7 @@ class RoleControllerTest {
     void create_error() throws Exception {
         given(this.roleService.create(Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
 
-        // 构造请求对象
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setName("test");
-        mvc.perform(post("/role").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/roles").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(roleDTO)).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
@@ -131,15 +134,9 @@ class RoleControllerTest {
 
     @Test
     void modify() throws Exception {
-        // 构造返回对象
-        RoleVO roleVO = new RoleVO();
-        roleVO.setName("test");
-        given(this.roleService.modify(Mockito.anyString(), Mockito.any(RoleDTO.class))).willReturn(roleVO);
+        given(this.roleService.modify(Mockito.anyLong(), Mockito.any(RoleDTO.class))).willReturn(roleVO);
 
-        // 构造请求对象
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setName("test");
-        mvc.perform(put("/role/{code}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/roles/{id}", "test").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(roleDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
@@ -147,12 +144,9 @@ class RoleControllerTest {
 
     @Test
     void modify_error() throws Exception {
-        given(this.roleService.modify(Mockito.anyString(), Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
+        given(this.roleService.modify(Mockito.anyLong(), Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
 
-        // 构造请求对象
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setName("test");
-        mvc.perform(put("/role/{code}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/roles/{id}", "test").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(roleDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
@@ -160,62 +154,59 @@ class RoleControllerTest {
 
     @Test
     void remove() throws Exception {
-        this.roleService.remove(Mockito.anyString());
+        this.roleService.remove(Mockito.anyLong());
 
-        mvc.perform(delete("/role/{code}", "test").with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/roles/{id}", "test").with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void remove_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.roleService).remove(Mockito.anyString());
+        doThrow(new RuntimeException()).when(this.roleService).remove(Mockito.anyLong());
 
-        mvc.perform(delete("/role/{code}", "test").with(csrf().asHeader()))
+        mvc.perform(delete("/roles/{id}", "test").with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void accounts() throws Exception {
-        given(this.accountRoleService.accounts(Mockito.anyString())).willReturn(Mockito.anyList());
+        given(this.roleMembersService.members(Mockito.anyLong())).willReturn(Mockito.anyList());
 
-        mvc.perform(get("/role/{code}/account", "test")).andExpect(status().isOk())
+        mvc.perform(get("/roles/{id}/account", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void accounts_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.accountRoleService).accounts(Mockito.anyString());
+        doThrow(new RuntimeException()).when(this.roleMembersService).members(Mockito.anyLong());
 
-        mvc.perform(get("/role/{code}/account", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/roles/{id}/account", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void authorities() throws Exception {
-        given(this.roleAuthorityService.authorities(Mockito.anyString())).willReturn(Mockito.anyList());
+        given(this.rolePrivilegesService.privileges(Mockito.anyLong())).willReturn(Mockito.anyList());
 
-        mvc.perform(get("/role/{code}/authority", "test")).andExpect(status().isOk())
+        mvc.perform(get("/roles/{id}/privileges", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void authorities_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.roleAuthorityService).authorities(Mockito.anyString());
+        doThrow(new RuntimeException()).when(this.rolePrivilegesService).privileges(Mockito.anyLong());
 
-        mvc.perform(get("/role/{code}/authority", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/roles/{id}/privileges", "test")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void relation() throws Exception {
-        RoleAuthority roleAuthority = new RoleAuthority();
-        roleAuthority.setRoleId(1L);
-        roleAuthority.setAuthorityId(1L);
-        given(this.roleAuthorityService.relation(Mockito.anyString(), Mockito.anySet()))
-                .willReturn(Collections.singletonList(roleAuthority));
+        given(this.rolePrivilegesService.relation(Mockito.anyLong(), Mockito.anySet()))
+                .willReturn(Collections.singletonList(Mockito.mock(RolePrivileges.class)));
 
-        mvc.perform(patch("/role/{code}/authority", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(patch("/roles/{id}/privileges", "test").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
@@ -223,9 +214,9 @@ class RoleControllerTest {
 
     @Test
     void relation_error() throws Exception {
-        doThrow(new RuntimeException()).when(this.roleAuthorityService).relation(Mockito.anyString(), Mockito.anySet());
+        doThrow(new RuntimeException()).when(this.rolePrivilegesService).relation(Mockito.anyLong(), Mockito.anySet());
 
-        mvc.perform(patch("/role/{code}/authority", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(patch("/roles/{id}/privileges", "test").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(Collections.singleton("test"))).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
@@ -234,10 +225,10 @@ class RoleControllerTest {
 
     @Test
     void tree() throws Exception {
-        TreeNode treeNode = new TreeNode("test", "test");
+        TreeNode treeNode = new TreeNode(1L, "test");
         given(this.roleService.tree()).willReturn(Collections.singletonList(treeNode));
 
-        mvc.perform(get("/role/tree")).andExpect(status().isOk())
+        mvc.perform(get("/roles/tree")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -245,7 +236,7 @@ class RoleControllerTest {
     void tree_error() throws Exception {
         given(this.roleService.tree()).willThrow(new RuntimeException());
 
-        mvc.perform(get("/role/tree")).andExpect(status().isNoContent())
+        mvc.perform(get("/roles/tree")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

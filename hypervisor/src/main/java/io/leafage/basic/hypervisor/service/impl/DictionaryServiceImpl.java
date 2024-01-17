@@ -1,7 +1,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.Dictionary;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
-import io.leafage.basic.hypervisor.entity.Dictionary;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
@@ -10,8 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import top.leafage.common.basic.ValidMessage;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
+
 import java.util.List;
 
 /**
@@ -34,22 +34,22 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     }
 
     @Override
-    public DictionaryVO fetch(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        Dictionary dictionary = dictionaryRepository.getByCodeAndEnabledTrue(code);
+    public DictionaryVO fetch(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        Dictionary dictionary = dictionaryRepository.getByCodeAndEnabledTrue(id);
         return this.convert(dictionary);
     }
 
     @Override
-    public List<DictionaryVO> lower(String code) {
-        Assert.hasText(code, ValidMessage.CODE_NOT_BLANK);
-        return dictionaryRepository.findBySuperiorAndEnabledTrue(code)
+    public List<DictionaryVO> lower(Long id) {
+        Assert.notNull(id, "id cannot be null.");
+        return dictionaryRepository.findBySuperiorIdAndEnabledTrue(id)
                 .stream().map(this::convert).toList();
     }
 
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, ValidMessage.NAME_NOT_BLANK);
+        Assert.hasText(name, "name cannot be blank.");
         return dictionaryRepository.existsByName(name);
     }
 
@@ -57,7 +57,6 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     public DictionaryVO create(DictionaryDTO dictionaryDTO) {
         Dictionary dictionary = new Dictionary();
         BeanUtils.copyProperties(dictionaryDTO, dictionary);
-        dictionary.setCode(this.generateCode());
         dictionaryRepository.saveAndFlush(dictionary);
 
         return this.convert(dictionary);

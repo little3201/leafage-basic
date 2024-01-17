@@ -84,7 +84,7 @@ class RegionServiceImplTest {
 
     @Test
     void exist() {
-        given(this.regionRepository.existsByRegionName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.regionRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(regionService.exist("北京市")).expectNext(Boolean.TRUE).verifyComplete();
     }

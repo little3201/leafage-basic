@@ -78,7 +78,7 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "privilege name must not be blank.");
-        return privilegeRepository.existsByPrivilegeName(name);
+        return privilegeRepository.existsByName(name);
     }
 
     @Override

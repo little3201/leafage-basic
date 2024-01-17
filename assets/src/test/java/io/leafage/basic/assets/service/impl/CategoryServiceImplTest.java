@@ -82,7 +82,7 @@ class CategoryServiceImplTest {
 
     @Test
     void exist() {
-        given(this.categoryRepository.existsByCategoryName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.categoryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(categoryService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
     }

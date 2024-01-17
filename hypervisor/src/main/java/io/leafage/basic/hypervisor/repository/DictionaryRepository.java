@@ -43,10 +43,10 @@ public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> 
     /**
      * 是否已存在
      *
-     * @param dictionaryName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByDictionaryName(String dictionaryName);
+    Mono<Boolean> existsByName(String name);
 
     /**
      * 查询下级

@@ -30,7 +30,7 @@ public class Category extends AbstractModel {
     /**
      * 名称
      */
-    @Column(value = "category_name")
+    @Column(value = "name")
     private String name;
 
     /**

@@ -90,7 +90,7 @@ class DictionaryServiceImplTest {
 
     @Test
     void exist() {
-        given(this.dictionaryRepository.existsByDictionaryName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.dictionaryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(dictionaryService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }

@@ -97,7 +97,7 @@ class CategoryControllerTest {
 
         webTestClient.get().uri("/categories/{id}", 1).exchange()
                 .expectStatus().isOk()
-                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -113,7 +113,7 @@ class CategoryControllerTest {
         given(this.categoryService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
-                        .queryParam("categoryName", "test").build()).exchange()
+                        .queryParam("name", "test").build()).exchange()
                 .expectStatus().isOk();
     }
 
@@ -122,7 +122,7 @@ class CategoryControllerTest {
         given(this.categoryService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
-                .queryParam("categoryName", "test").build()).exchange().expectStatus().isNoContent();
+                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -132,7 +132,7 @@ class CategoryControllerTest {
         webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -151,7 +151,7 @@ class CategoryControllerTest {
         webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test

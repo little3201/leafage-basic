@@ -43,8 +43,8 @@ public interface GroupRepository extends R2dbcRepository<Group, Long> {
     /**
      * 是否已存在
      *
-     * @param groupName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByGroupName(String groupName);
+    Mono<Boolean> existsByName(String name);
 }

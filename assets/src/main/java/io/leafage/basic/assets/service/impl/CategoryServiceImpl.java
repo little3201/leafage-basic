@@ -71,7 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "category name cannot be blank.");
-        return categoryRepository.existsByCategoryName(name);
+        return categoryRepository.existsByName(name);
     }
 
     @Override

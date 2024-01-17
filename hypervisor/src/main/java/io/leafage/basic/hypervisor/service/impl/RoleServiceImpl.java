@@ -67,7 +67,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "role name must not be blank.");
-        return roleRepository.existsByRoleName(name);
+        return roleRepository.existsByName(name);
     }
 
     @Override

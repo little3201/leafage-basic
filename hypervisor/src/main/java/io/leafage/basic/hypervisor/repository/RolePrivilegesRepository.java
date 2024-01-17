@@ -53,5 +53,5 @@ public interface RolePrivilegesRepository extends R2dbcRepository<RolePrivileges
      * @param privilegeId privilege主键
      * @return 关联数据集
      */
-    Flux<RolePrivileges> findByComponentId(Long privilegeId);
+    Flux<RolePrivileges> findByPrivilegeId(Long privilegeId);
 }

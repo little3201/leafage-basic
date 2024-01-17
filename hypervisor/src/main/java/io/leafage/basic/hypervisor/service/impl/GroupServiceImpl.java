@@ -67,7 +67,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "group name must not be blank.");
-        return groupRepository.existsByGroupName(name);
+        return groupRepository.existsByName(name);
     }
 
     @Override

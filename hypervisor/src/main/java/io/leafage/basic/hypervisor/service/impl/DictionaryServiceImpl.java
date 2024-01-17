@@ -78,7 +78,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "dictionary name must not be blank.");
-        return dictionaryRepository.existsByDictionaryName(name);
+        return dictionaryRepository.existsByName(name);
     }
 
     @Override

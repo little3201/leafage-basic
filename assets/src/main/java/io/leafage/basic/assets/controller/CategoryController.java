@@ -87,14 +87,14 @@ public class CategoryController {
     /**
      * 是否已存在
      *
-     * @param categoryName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String categoryName) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = categoryService.exist(categoryName);
+            existsMono = categoryService.exist(name);
         } catch (Exception e) {
             logger.error("Check category name is exist an error: ", e);
             return ResponseEntity.noContent().build();

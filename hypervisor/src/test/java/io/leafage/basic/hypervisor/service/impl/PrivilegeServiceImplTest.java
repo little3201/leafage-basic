@@ -137,7 +137,7 @@ class PrivilegeServiceImplTest {
 
     @Test
     void exist() {
-        given(this.privilegeRepository.existsByPrivilegeName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.privilegeRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(privilegeService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
     }

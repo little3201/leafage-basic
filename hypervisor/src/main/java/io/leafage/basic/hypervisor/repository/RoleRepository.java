@@ -43,8 +43,8 @@ public interface RoleRepository extends R2dbcRepository<Role, Long> {
     /**
      * 是否已存在
      *
-     * @param roleName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByRoleName(String roleName);
+    Mono<Boolean> existsByName(String name);
 }

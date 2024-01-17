@@ -17,7 +17,7 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -34,7 +34,7 @@ public class User extends AbstractModel {
     /**
      * 用户名
      */
-    @Id
+    @Unique
     private String username;
 
     /**

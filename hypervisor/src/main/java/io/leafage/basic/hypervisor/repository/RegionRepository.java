@@ -43,10 +43,10 @@ public interface RegionRepository extends R2dbcRepository<Region, Long> {
     /**
      * 是否已存在
      *
-     * @param regionName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByRegionName(String regionName);
+    Mono<Boolean> existsByName(String name);
 
     /**
      * 查询下级

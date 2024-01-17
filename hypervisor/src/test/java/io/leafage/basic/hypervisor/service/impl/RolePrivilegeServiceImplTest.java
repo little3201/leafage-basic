@@ -55,7 +55,7 @@ class RolePrivilegeServiceImplTest {
 
     @Test
     void roles() {
-        given(this.rolePrivilegesRepository.findByComponentId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
+        given(this.rolePrivilegesRepository.findByPrivilegeId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
 
         StepVerifier.create(roleComponentsService.roles(1L)).expectNextCount(1).verifyComplete();
     }

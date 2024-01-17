@@ -51,7 +51,7 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
     @Override
     public Mono<List<RolePrivileges>> roles(Long privilegeId) {
         Assert.notNull(privilegeId, "privilege id must not be null.");
-        return rolePrivilegesRepository.findByComponentId(privilegeId).collectList();
+        return rolePrivilegesRepository.findByPrivilegeId(privilegeId).collectList();
     }
 
     @Override

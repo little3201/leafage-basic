@@ -56,11 +56,4 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
      */
     Mono<Boolean> existsByUsername(String username);
 
-    /**
-     * 删除
-     *
-     * @param username user
-     * @return user
-     */
-    Mono<Void> deleteByUsername(String username);
 }

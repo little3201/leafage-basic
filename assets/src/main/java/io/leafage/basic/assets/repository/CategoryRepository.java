@@ -43,8 +43,8 @@ public interface CategoryRepository extends R2dbcRepository<Category, Long> {
     /**
      * 是否已存在
      *
-     * @param categoryName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByCategoryName(String categoryName);
+    Mono<Boolean> existsByName(String name);
 }

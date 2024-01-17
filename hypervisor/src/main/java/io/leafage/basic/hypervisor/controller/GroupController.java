@@ -163,7 +163,7 @@ public class GroupController {
     }
 
     /**
-     * 查询关联账号
+     * 查询关联user
      *
      * @param id 组id
      * @return 查询到的数据集，异常时返回204状态码

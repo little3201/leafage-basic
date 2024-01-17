@@ -19,8 +19,6 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.GroupMembers;
 import io.leafage.basic.hypervisor.repository.GroupMembersRepository;
-import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.GroupMembersService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -39,14 +37,10 @@ import java.util.Set;
 @Service
 public class GroupMembersServiceImpl implements GroupMembersService {
 
-    private final GroupRepository groupRepository;
     private final GroupMembersRepository groupMembersRepository;
-    private final UserRepository userRepository;
 
-    public GroupMembersServiceImpl(GroupRepository groupRepository, GroupMembersRepository groupMembersRepository, UserRepository userRepository) {
-        this.groupRepository = groupRepository;
+    public GroupMembersServiceImpl(GroupMembersRepository groupMembersRepository) {
         this.groupMembersRepository = groupMembersRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -63,11 +57,11 @@ public class GroupMembersServiceImpl implements GroupMembersService {
     }
 
     @Override
-    public Mono<Boolean> relation(String username, Set<Long> groupIds) {
-        Assert.hasText(username, "username must not be blank.");
-        Assert.notEmpty(groupIds, "group ids must not be empty.");
+    public Mono<Boolean> relation(Long groupId, Set<String> usernames) {
+        Assert.notNull(groupId, "group id must not be blank.");
+        Assert.notEmpty(usernames, "usernames must not be empty.");
 
-        return Flux.fromIterable(groupIds).map(groupId -> {
+        return Flux.fromIterable(usernames).map(username -> {
             GroupMembers groupMembers = new GroupMembers();
             groupMembers.setUsername(username);
             groupMembers.setGroupId(groupId);

@@ -17,8 +17,8 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.GroupMembers;
-import io.leafage.basic.hypervisor.repository.GroupMembersRepository;
+import io.leafage.basic.hypervisor.domain.GroupRoles;
+import io.leafage.basic.hypervisor.repository.GroupRolesRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,38 +33,38 @@ import java.util.Set;
 import static org.mockito.BDDMockito.given;
 
 /**
- * group members service test
+ * group roles service test
  *
- * @author liwenqiang 2021-06-14 11:10
+ * @author liwenqiang 2024/01/17 21:18
  **/
 @ExtendWith(MockitoExtension.class)
-class GroupMembersServiceImplTest {
+class GroupRolesServiceImplTest {
 
     @Mock
-    private GroupMembersRepository groupMembersRepository;
+    private GroupRolesRepository groupRolesRepository;
 
     @InjectMocks
-    private GroupMembersServiceImpl groupMembersService;
+    private GroupRolesServiceImpl groupRolesService;
 
     @Test
-    void members() {
-        given(this.groupMembersRepository.findByGroupId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(GroupMembers.class)));
+    void roles() {
+        given(this.groupRolesRepository.findByGroupId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(GroupRoles.class)));
 
-        StepVerifier.create(groupMembersService.members(Mockito.anyLong())).expectNextCount(1).verifyComplete();
+        StepVerifier.create(groupRolesService.roles(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void groups() {
-        given(this.groupMembersRepository.findByUsername(Mockito.anyString())).willReturn(Flux.just(Mockito.mock(GroupMembers.class)));
+        given(this.groupRolesRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(GroupRoles.class)));
 
-        StepVerifier.create(groupMembersService.groups("test")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(groupRolesService.groups(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void relation() {
-        given(this.groupMembersRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(GroupMembers.class)));
+        given(this.groupRolesRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(GroupRoles.class)));
 
-        StepVerifier.create(groupMembersService.relation(1L, Set.of("test")))
+        StepVerifier.create(groupRolesService.relation(Mockito.anyLong(), Set.of(1L)))
                 .expectNextCount(1).verifyComplete();
     }
 }

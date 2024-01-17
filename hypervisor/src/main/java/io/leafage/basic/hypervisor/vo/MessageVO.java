@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.MessageBO;
 import java.time.LocalDateTime;
 
 /**
- * vo class for notification
+ * vo class for message
  *
  * @author liwenqiang 2022-02-10 13:53
  */

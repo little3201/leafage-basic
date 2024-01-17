@@ -58,7 +58,7 @@ public class User extends AbstractModel {
     private String avatar;
 
     /**
-     * 账号有效期
+     * user有效期
      */
     @Column(value = "account_expires_at")
     private LocalDateTime accountExpiresAt;

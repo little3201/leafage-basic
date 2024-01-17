@@ -50,7 +50,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Mono<Page<DictionaryVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageable).map(this::convertOuter);
+        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = dictionaryRepository.count();
 
@@ -60,37 +60,39 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
 
     @Override
     public Flux<DictionaryVO> superior() {
-        return dictionaryRepository.findBySuperiorIdIsNull().map(this::convertOuter);
+        return dictionaryRepository.findBySuperiorIdIsNull().flatMap(this::convertOuter);
     }
 
     @Override
     public Flux<DictionaryVO> subordinates(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findBySuperiorId(id).map(this::convertOuter);
+        return dictionaryRepository.findBySuperiorId(id).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<DictionaryVO> fetch(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findById(id).map(this::convertOuter);
+        return dictionaryRepository.findById(id).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<Boolean> exist(String dictionaryName) {
-        Assert.hasText(dictionaryName, "dictionary name must not be blank.");
-        return dictionaryRepository.existsByDictionaryName(dictionaryName);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "dictionary name must not be blank.");
+        return dictionaryRepository.existsByDictionaryName(name);
     }
 
     @Override
     public Mono<DictionaryVO> create(DictionaryDTO dictionaryDTO) {
         Dictionary dictionary = new Dictionary();
         BeanUtils.copyProperties(dictionaryDTO, dictionary);
-        return dictionaryRepository.save(dictionary).map(this::convertOuter);
+        return dictionaryRepository.save(dictionary).flatMap(this::convertOuter);
     }
 
-    private DictionaryVO convertOuter(Dictionary dictionary) {
-        DictionaryVO vo = new DictionaryVO();
-        BeanUtils.copyProperties(dictionary, vo);
-        return vo;
+    private Mono<DictionaryVO> convertOuter(Dictionary dictionary) {
+        return Mono.just(dictionary).map(d -> {
+            DictionaryVO vo = new DictionaryVO();
+            BeanUtils.copyProperties(d, vo);
+            return vo;
+        });
     }
 }

@@ -50,7 +50,7 @@ public interface GroupRolesRepository extends R2dbcRepository<GroupRoles, Long> 
     /**
      * 根据role查group
      *
-     * @param roleId 账号
+     * @param roleId user
      * @return 关联数据集
      */
     Flux<GroupRoles> findByRoleId(Long roleId);

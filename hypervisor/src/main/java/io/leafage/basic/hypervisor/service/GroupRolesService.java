@@ -17,18 +17,18 @@
 
 package io.leafage.basic.hypervisor.service;
 
-import io.leafage.basic.hypervisor.domain.GroupMembers;
+import io.leafage.basic.hypervisor.domain.GroupRoles;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Set;
 
 /**
- * group members service
+ * group roles service
  *
- * @author liwenqiang 2018/12/17 19:26
+ * @author liwenqiang 2024/01/17 21:18
  **/
-public interface GroupMembersService {
+public interface GroupRolesService {
 
     /**
      * 查询关联user
@@ -36,22 +36,22 @@ public interface GroupMembersService {
      * @param groupId group主键
      * @return 数据集
      */
-    Mono<List<GroupMembers>> members(Long groupId);
+    Mono<List<GroupRoles>> roles(Long groupId);
 
     /**
      * 查询关联group
      *
-     * @param username 用户名
+     * @param roleId role主键
      * @return 数据集
      */
-    Mono<List<GroupMembers>> groups(String username);
+    Mono<List<GroupRoles>> groups(Long roleId);
 
     /**
      * group-user关系
      *
-     * @param groupId   group 主键
-     * @param usernames username集合
+     * @param groupId group 主键
+     * @param roleIds roleId集合
      * @return 是否成功： true - 是， false - 否
      */
-    Mono<Boolean> relation(Long groupId, Set<String> usernames);
+    Mono<Boolean> relation(Long groupId, Set<Long> roleIds);
 }

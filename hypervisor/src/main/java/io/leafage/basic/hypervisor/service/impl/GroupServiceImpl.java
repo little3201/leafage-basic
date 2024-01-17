@@ -65,9 +65,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Mono<Boolean> exist(String groupName) {
-        Assert.hasText(groupName, "group name must not be blank.");
-        return groupRepository.existsByGroupName(groupName);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "group name must not be blank.");
+        return groupRepository.existsByGroupName(name);
     }
 
     @Override
@@ -110,9 +110,9 @@ public class GroupServiceImpl implements GroupService {
      */
     private Mono<GroupVO> convertOuter(Group group) {
         return Mono.just(group).map(g -> {
-            GroupVO groupVO = new GroupVO();
-            BeanUtils.copyProperties(g, groupVO);
-            return groupVO;
+            GroupVO vo = new GroupVO();
+            BeanUtils.copyProperties(g, vo);
+            return vo;
         });
     }
 }

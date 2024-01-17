@@ -18,9 +18,7 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
-import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
-import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -38,14 +36,10 @@ import java.util.Set;
 @Service
 public class RolePrivilegesServiceImpl implements RolePrivilegesService {
 
-    private final RoleRepository roleRepository;
     private final RolePrivilegesRepository rolePrivilegesRepository;
-    private final PrivilegeRepository privilegeRepository;
 
-    public RolePrivilegesServiceImpl(RoleRepository roleRepository, RolePrivilegesRepository rolePrivilegesRepository, PrivilegeRepository privilegeRepository) {
-        this.roleRepository = roleRepository;
+    public RolePrivilegesServiceImpl(RolePrivilegesRepository rolePrivilegesRepository) {
         this.rolePrivilegesRepository = rolePrivilegesRepository;
-        this.privilegeRepository = privilegeRepository;
     }
 
     @Override

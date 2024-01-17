@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 public class UserVO extends UserBO {
 
     /**
-     * 账号有效期
+     * user有效期
      */
     private LocalDateTime accountExpiresAt;
 

@@ -35,7 +35,7 @@ public class GroupMembers {
     @Id
     private Long id;
     /**
-     * 账号主键
+     * user主键
      */
     private String username;
     /**

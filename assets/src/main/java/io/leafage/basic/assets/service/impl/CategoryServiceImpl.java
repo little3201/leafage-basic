@@ -64,13 +64,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<CategoryVO> fetch(Long id) {
+        Assert.notNull(id, "id cannot be null.");
         return categoryRepository.findById(id).flatMap(this::fetchOuter);
     }
 
     @Override
-    public Mono<Boolean> exist(String categoryName) {
-        Assert.hasText(categoryName, "categoryName cannot be blank.");
-        return categoryRepository.existsByCategoryName(categoryName);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "category name cannot be blank.");
+        return categoryRepository.existsByCategoryName(name);
     }
 
     @Override

@@ -66,9 +66,9 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Mono<Boolean> exist(String regionName) {
-        Assert.hasText(regionName, "region name must not be blank.");
-        return regionRepository.existsByRegionName(regionName);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "region name must not be blank.");
+        return regionRepository.existsByRegionName(name);
     }
 
     @Override

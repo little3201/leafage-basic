@@ -38,7 +38,7 @@ import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.NoSuchElementException;
 
 /**
- * notification service impl
+ * message service impl
  *
  * @author liwenqiang 2022-02-10 13:49
  */
@@ -56,7 +56,7 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
     @Override
     public Mono<Page<MessageVO>> retrieve(int page, int size, String receiver) {
         Pageable pageable = PageRequest.of(page, size);
-        Flux<MessageVO> voFlux = messageRepository.findByReceiver(receiver, pageable).map(this::convertOuter);
+        Flux<MessageVO> voFlux = messageRepository.findByReceiver(receiver, pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = messageRepository.countByReceiver(receiver);
 
@@ -66,9 +66,9 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
 
     @Override
     public Mono<MessageVO> fetch(Long id) {
-        Assert.notNull(id, "notification id must not be null.");
+        Assert.notNull(id, "message id must not be null.");
         return messageRepository.findById(id).doOnNext(message ->
-                message.setRead(true)).flatMap(messageRepository::save).map(this::convertOuter);
+                message.setRead(true)).flatMap(messageRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
@@ -81,13 +81,13 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
                             message.setReceiver(user.getUsername());
                             return message;
                         })
-                        .flatMap(messageRepository::save).map(this::convertOuter))
+                        .flatMap(messageRepository::save).flatMap(this::convertOuter))
                 .switchIfEmpty(Mono.error(new NoSuchElementException()));
     }
 
     @Override
     public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "notification id must not be null.");
+        Assert.notNull(id, "message id must not be null.");
         return messageRepository.deleteById(id);
     }
 
@@ -97,10 +97,13 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
      * @param message 信息
      * @return NotificationVO 输出对象
      */
-    private MessageVO convertOuter(Message message) {
-        MessageVO outer = new MessageVO();
-        BeanUtils.copyProperties(message, outer);
-        return outer;
+    private Mono<MessageVO> convertOuter(Message message) {
+        return Mono.just(message).map(m -> {
+            MessageVO vo = new MessageVO();
+            BeanUtils.copyProperties(m, vo);
+            return vo;
+        });
+
     }
 
 }

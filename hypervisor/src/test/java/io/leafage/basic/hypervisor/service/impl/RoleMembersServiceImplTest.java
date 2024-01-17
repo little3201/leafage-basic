@@ -19,8 +19,6 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.RoleMembers;
 import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
-import io.leafage.basic.hypervisor.repository.RoleRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-import java.util.Collections;
+import java.util.Set;
 
 import static org.mockito.BDDMockito.given;
 
@@ -43,36 +41,30 @@ import static org.mockito.BDDMockito.given;
 class RoleMembersServiceImplTest {
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
     private RoleMembersRepository roleMembersRepository;
 
-    @Mock
-    private RoleRepository roleRepository;
-
     @InjectMocks
-    private RoleMembersServiceImpl userRoleService;
+    private RoleMembersServiceImpl roleMembersService;
 
     @Test
     void members() {
         given(this.roleMembersRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RoleMembers.class)));
 
-        StepVerifier.create(userRoleService.members(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(roleMembersService.members(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void roles() {
         given(this.roleMembersRepository.findByUsername(Mockito.anyString())).willReturn(Flux.just(Mockito.mock(RoleMembers.class)));
 
-        StepVerifier.create(userRoleService.roles("test")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(roleMembersService.roles("test")).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void relation() {
         given(this.roleMembersRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(RoleMembers.class)));
 
-        StepVerifier.create(userRoleService.relation("test", Collections.singleton(1L)))
+        StepVerifier.create(roleMembersService.relation(Mockito.anyLong(), Set.of("test")))
                 .expectNextCount(1).verifyComplete();
     }
 }

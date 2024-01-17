@@ -65,9 +65,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Mono<Boolean> exist(String roleName) {
-        Assert.hasText(roleName, "role name must not be blank.");
-        return roleRepository.existsByRoleName(roleName);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "role name must not be blank.");
+        return roleRepository.existsByRoleName(name);
     }
 
     @Override
@@ -95,8 +95,14 @@ public class RoleServiceImpl implements RoleService {
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(role -> {
                     BeanUtils.copyProperties(roleDTO, role);
-                    return roleRepository.save(role);
-                }).flatMap(this::convertOuter);
+                    return roleRepository.save(role).flatMap(this::convertOuter);
+                });
+    }
+
+    @Override
+    public Mono<Void> remove(Long id) {
+        Assert.notNull(id, "role id must not be blank.");
+        return roleRepository.deleteById(id);
     }
 
     /**
@@ -106,10 +112,10 @@ public class RoleServiceImpl implements RoleService {
      * @return 输出转换后的vo对象
      */
     private Mono<RoleVO> convertOuter(Role role) {
-        return Mono.just(role).map(a -> {
-            RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(role, roleVO);
-            return roleVO;
+        return Mono.just(role).map(r -> {
+            RoleVO vo = new RoleVO();
+            BeanUtils.copyProperties(r, vo);
+            return vo;
         });
     }
 

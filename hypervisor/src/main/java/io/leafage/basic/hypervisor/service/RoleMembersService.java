@@ -31,7 +31,7 @@ import java.util.Set;
 public interface RoleMembersService {
 
     /**
-     * 查询关联账号
+     * 查询关联user
      *
      * @param roleId role主键
      * @return 数据集
@@ -41,17 +41,17 @@ public interface RoleMembersService {
     /**
      * 查询关联role
      *
-     * @param username 账号
+     * @param username user
      * @return 数据集
      */
     Mono<List<RoleMembers>> roles(String username);
 
     /**
-     * role-账号关系
+     * role-user关系
      *
-     * @param username 用户名
-     * @param roleIds  role主键集合
+     * @param roleId    role 主键
+     * @param usernames username集合
      * @return 是否成功： true - 是， false - 否
      */
-    Mono<Boolean> relation(String username, Set<Long> roleIds);
+    Mono<Boolean> relation(Long roleId, Set<String> usernames);
 }

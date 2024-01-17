@@ -18,12 +18,8 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Privilege;
-import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
-import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
-import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import org.springframework.beans.BeanUtils;
@@ -52,16 +48,9 @@ import java.util.Set;
 public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privilege> implements PrivilegeService {
 
     private final PrivilegeRepository privilegeRepository;
-    private final RoleMembersRepository roleMembersRepository;
-    private final UserRepository userRepository;
-    private final RolePrivilegesRepository rolePrivilegesRepository;
 
-    public PrivilegeServiceImpl(PrivilegeRepository privilegeRepository, RoleMembersRepository roleMembersRepository,
-                                UserRepository userRepository, RolePrivilegesRepository rolePrivilegesRepository) {
+    public PrivilegeServiceImpl(PrivilegeRepository privilegeRepository) {
         this.privilegeRepository = privilegeRepository;
-        this.roleMembersRepository = roleMembersRepository;
-        this.userRepository = userRepository;
-        this.rolePrivilegesRepository = rolePrivilegesRepository;
     }
 
     @Override
@@ -87,21 +76,9 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     }
 
     @Override
-    public Mono<List<TreeNode>> privileges(String username) {
-        Assert.hasText(username, "username must not be blank.");
-        Mono<User> accountMono = userRepository.getByUsername(username)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
-
-        return accountMono.map(user -> roleMembersRepository.findByUsername(user.getUsername())
-                        .flatMap(userRole -> rolePrivilegesRepository.findByRoleId(userRole.getRoleId())
-                                .flatMap(roleComponents -> privilegeRepository.findById(roleComponents.getPrivilegeId()))))
-                .flatMap(this::expandAndConvert);
-    }
-
-    @Override
-    public Mono<Boolean> exist(String privilegeName) {
-        Assert.hasText(privilegeName, "privilege name must not be blank.");
-        return privilegeRepository.existsByPrivilegeName(privilegeName);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "privilege name must not be blank.");
+        return privilegeRepository.existsByPrivilegeName(name);
     }
 
     @Override
@@ -138,10 +115,10 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
      * @return 输出转换后的vo对象
      */
     private Mono<PrivilegeVO> convertOuter(Privilege privilege) {
-        return Mono.just(privilege).map(a -> {
-            PrivilegeVO privilegeVO = new PrivilegeVO();
-            BeanUtils.copyProperties(privilege, privilegeVO);
-            return privilegeVO;
+        return Mono.just(privilege).map(p -> {
+            PrivilegeVO vo = new PrivilegeVO();
+            BeanUtils.copyProperties(p, vo);
+            return vo;
         });
     }
 

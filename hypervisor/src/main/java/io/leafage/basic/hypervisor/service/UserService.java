@@ -39,28 +39,4 @@ public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
      */
     Mono<Page<UserVO>> retrieve(int page, int size);
 
-    /**
-     * 修改
-     *
-     * @param username 账号
-     * @param userDTO  对象信息
-     * @return 操作结果
-     */
-    Mono<UserVO> modify(String username, UserDTO userDTO);
-
-    /**
-     * 查询
-     *
-     * @param username 账号
-     * @return 查询结果
-     */
-    Mono<UserVO> fetch(String username);
-
-    /**
-     * 删除
-     *
-     * @param username 账号
-     * @return 操作结果
-     */
-    Mono<Void> remove(String username);
 }

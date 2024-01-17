@@ -50,7 +50,7 @@ public abstract class UserBO {
     private String avatar;
 
     /**
-     * 账号有效期
+     * user有效期
      */
     private LocalDateTime accountExpiresAt;
 

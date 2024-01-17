@@ -47,7 +47,7 @@ public class AccessLogServiceImpl implements AccessLogService {
     @Override
     public Mono<Page<AccessLogVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Flux<AccessLogVO> voFlux = accessLogRepository.findBy(pageable).map(this::convertOuter);
+        Flux<AccessLogVO> voFlux = accessLogRepository.findBy(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = accessLogRepository.count();
 
@@ -61,9 +61,11 @@ public class AccessLogServiceImpl implements AccessLogService {
      * @param accessLog 数据对象
      * @return 输出对象
      */
-    private AccessLogVO convertOuter(AccessLog accessLog) {
-        AccessLogVO outer = new AccessLogVO();
-        BeanUtils.copyProperties(accessLog, outer);
-        return outer;
+    private Mono<AccessLogVO> convertOuter(AccessLog accessLog) {
+        return Mono.just(accessLog).map(a -> {
+            AccessLogVO vo = new AccessLogVO();
+            BeanUtils.copyProperties(a, vo);
+            return vo;
+        });
     }
 }

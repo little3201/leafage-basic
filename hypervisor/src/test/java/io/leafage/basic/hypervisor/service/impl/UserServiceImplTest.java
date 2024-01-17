@@ -58,8 +58,8 @@ class UserServiceImplTest {
 
     @Test
     void fetch() {
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
-        StepVerifier.create(userService.fetch("little3201")).expectNextCount(1).verifyComplete();
+        given(this.userRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(User.class)));
+        StepVerifier.create(userService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     /**
@@ -75,23 +75,23 @@ class UserServiceImplTest {
     void exist() {
         given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(userService.exist("little3201")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(userService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test
     void modify() {
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
+        given(this.userRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(User.class)));
 
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(Mono.just(Mockito.mock(User.class)));
 
         UserDTO userDTO = new UserDTO();
-        StepVerifier.create(userService.modify("little3201", userDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(userService.modify(Mockito.anyLong(), userDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void remove() {
-        given(this.userRepository.deleteByUsername(Mockito.anyString())).willReturn(Mono.empty());
+        given(this.userRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
-        StepVerifier.create(userService.remove("little3201")).verifyComplete();
+        StepVerifier.create(userService.remove(Mockito.anyLong())).verifyComplete();
     }
 }

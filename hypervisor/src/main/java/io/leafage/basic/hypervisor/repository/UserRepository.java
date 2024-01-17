@@ -41,9 +41,9 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
     Flux<User> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据账号查
+     * 根据user查
      *
-     * @param username 账号
+     * @param username user
      * @return user
      */
     Mono<User> getByUsername(String username);
@@ -51,7 +51,7 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
     /**
      * 是否已存在
      *
-     * @param username 账号
+     * @param username user
      * @return true-是，false-否
      */
     Mono<Boolean> existsByUsername(String username);
@@ -59,7 +59,7 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
     /**
      * 删除
      *
-     * @param username 账号
+     * @param username user
      * @return user
      */
     Mono<Void> deleteByUsername(String username);

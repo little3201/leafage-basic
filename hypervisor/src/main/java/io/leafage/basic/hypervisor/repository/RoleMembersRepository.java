@@ -32,9 +32,9 @@ import reactor.core.publisher.Mono;
 public interface RoleMembersRepository extends R2dbcRepository<RoleMembers, Long> {
 
     /**
-     * 根据账号查询关联role
+     * 根据user查询关联role
      *
-     * @param username 账号
+     * @param username user
      * @return 关联的role
      */
     Flux<RoleMembers> findByUsername(String username);

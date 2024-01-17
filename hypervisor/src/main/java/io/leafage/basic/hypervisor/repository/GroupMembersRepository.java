@@ -50,7 +50,7 @@ public interface GroupMembersRepository extends R2dbcRepository<GroupMembers, Lo
     /**
      * 根据username查group
      *
-     * @param username 账号
+     * @param username user
      * @return 关联数据集
      */
     Flux<GroupMembers> findByUsername(String username);

@@ -73,18 +73,18 @@ class UserControllerTest {
 
     @Test
     void fetch() {
-        given(this.userService.fetch(Mockito.anyString())).willReturn(Mono.just(userVO));
+        given(this.userService.fetch(Mockito.anyLong())).willReturn(Mono.just(userVO));
 
-        webTestClient.get().uri("/users/{username}", "test").exchange()
+        webTestClient.get().uri("/users/{id}", 1L).exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.username").isEqualTo("test");
     }
 
     @Test
     void fetch_error() {
-        given(this.userService.fetch(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.userService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/users/{username}", "test").exchange()
+        webTestClient.get().uri("/users/{id}", 1L).exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -104,34 +104,34 @@ class UserControllerTest {
 
     @Test
     void modify() {
-        given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
+        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
 
-        webTestClient.put().uri("/users/{username}", "test").bodyValue(userDTO).exchange()
+        webTestClient.put().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.username").isEqualTo("test");
     }
 
     @Test
     void modify_error() {
-        given(this.userService.modify(Mockito.anyString(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
+        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/users/{username}", "test").bodyValue(userDTO).exchange()
+        webTestClient.put().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
                 .expectStatus().isNotModified();
     }
 
     @Test
     void remove() {
-        given(this.userService.remove(Mockito.anyString())).willReturn(Mono.empty());
+        given(this.userService.remove(Mockito.anyLong())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/users/{username}", "test").exchange()
+        webTestClient.delete().uri("/users/{id}", 1L).exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void remove_error() {
-        given(this.userService.remove(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.userService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/users/{username}", "test").exchange()
+        webTestClient.delete().uri("/users/{id}", 1L).exchange()
                 .expectStatus().is4xxClientError();
     }
 

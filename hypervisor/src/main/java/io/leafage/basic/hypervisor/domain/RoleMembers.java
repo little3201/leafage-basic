@@ -35,7 +35,7 @@ public class RoleMembers {
     @Id
     private Long id;
     /**
-     * 账号
+     * user
      */
     private String username;
     /**

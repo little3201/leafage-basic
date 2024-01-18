@@ -3,7 +3,6 @@
  */
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.domain.GroupMembers;
 import io.leafage.basic.hypervisor.domain.GroupRoles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

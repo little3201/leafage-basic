@@ -1,6 +1,5 @@
 package io.leafage.basic.hypervisor.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 

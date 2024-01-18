@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +41,8 @@ class CommentServiceImplTest {
 
     @Test
     void retrieve() {
-        Page<Comment> page = new PageImpl<>(List.of(Mockito.mock(Comment.class)));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Comment> page = new PageImpl<>(List.of(Mockito.mock(Comment.class)), pageable, 2L);
         given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(page);
 
         Page<CommentVO> voPage = commentService.retrieve(0, 2);
@@ -49,9 +51,6 @@ class CommentServiceImplTest {
 
     @Test
     void relation() {
-        given(this.commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(Mockito.anyLong()))
-                .willReturn(List.of(Mockito.mock(Comment.class)));
-
         List<CommentVO> voList = commentService.relation(Mockito.anyLong());
         Assertions.assertNotNull(voList);
     }
@@ -68,11 +67,11 @@ class CommentServiceImplTest {
     void replies() {
         Comment comment = new Comment();
         comment.setContent("评论信息");
-        comment.setPostsId(1L);
+        comment.setPostId(1L);
 
         Comment comm = new Comment();
         comm.setContent("评论信息2222");
-        comm.setPostsId(1L);
+        comm.setPostId(1L);
         comm.setReplier(comment.getReplier());
         given(this.commentRepository.findByReplierAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(comment, comm));
 
@@ -88,8 +87,12 @@ class CommentServiceImplTest {
 
     @Test
     void create() {
+        given(this.commentRepository.saveAndFlush(Mockito.any(Comment.class))).willReturn(Mockito.mock(Comment.class));
+
+        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyLong())).willReturn(2L);
+
         CommentVO commentVO = commentService.create(Mockito.mock(CommentDTO.class));
-        Assertions.assertNull(commentVO);
+        Assertions.assertNotNull(commentVO);
     }
 
 }

@@ -5,12 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 /**
- * model class for notification.
+ * model class for message.
  *
  * @author liwenqiang 2022/1/29 17:20
  **/
 @Entity
-@Table(name = "notification")
+@Table(name = "messages")
 public class Message extends AbstractModel {
 
     /**

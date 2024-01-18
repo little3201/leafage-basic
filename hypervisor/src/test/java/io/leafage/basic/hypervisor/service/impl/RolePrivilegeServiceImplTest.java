@@ -29,9 +29,6 @@ import static org.mockito.Mockito.verify;
 class RolePrivilegeServiceImplTest {
 
     @Mock
-    private RoleRepository roleRepository;
-
-    @Mock
     private RolePrivilegesRepository rolePrivilegesRepository;
 
     @InjectMocks
@@ -49,8 +46,6 @@ class RolePrivilegeServiceImplTest {
     void roles() {
         given(this.rolePrivilegesRepository.findByPrivilegeId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RolePrivileges.class)));
 
-        given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Role.class)));
-
         List<RolePrivileges> roles = roleAuthorityService.roles(Mockito.anyLong());
         Assertions.assertNotNull(roles);
     }
@@ -59,7 +54,7 @@ class RolePrivilegeServiceImplTest {
     void relation() {
         given(this.rolePrivilegesRepository.saveAllAndFlush(Mockito.anyCollection())).willReturn(Mockito.anyList());
 
-        List<RolePrivileges> relation = roleAuthorityService.relation(Mockito.anyLong(), Set.of(Mockito.anyLong()));
+        List<RolePrivileges> relation = roleAuthorityService.relation(1L, Set.of(1L));
 
         verify(this.rolePrivilegesRepository, times(1)).saveAllAndFlush(Mockito.anyList());
         Assertions.assertNotNull(relation);

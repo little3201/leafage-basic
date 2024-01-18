@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
- * notification service.
+ * message service.
  *
  * @author liwenqiang 2022/1/29 17:34
  **/

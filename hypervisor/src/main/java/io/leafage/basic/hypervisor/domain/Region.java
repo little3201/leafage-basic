@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
  * @author liwenqiang 2021-10-12 10:06
  */
 @Entity
-@Table(name = "region")
+@Table(name = "regions")
 public class Region extends AbstractModel {
 
     /**

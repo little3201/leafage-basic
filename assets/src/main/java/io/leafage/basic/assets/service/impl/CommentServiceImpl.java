@@ -60,10 +60,9 @@ public class CommentServiceImpl implements CommentService {
     public CommentVO create(CommentDTO commentDTO) {
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDTO, comment);
-        comment.setPostsId(comment.getPostsId());
         comment = commentRepository.saveAndFlush(comment);
         // 添加关联帖子的评论数
-        this.increaseComment(comment.getPostsId());
+        this.increaseComment(comment.getPostId());
         return this.convertOuter(comment);
     }
 

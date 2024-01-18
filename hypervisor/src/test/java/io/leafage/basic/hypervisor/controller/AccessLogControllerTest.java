@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -56,18 +58,19 @@ class AccessLogControllerTest {
         accessLogVO = new AccessLogVO();
         accessLogVO.setIp("12.1.3.2");
         accessLogVO.setLocation("test");
-        accessLogVO.setDescription("描述");
+        accessLogVO.setDescription("description");
 
         // 构造请求对象
         accessLogDTO = new AccessLogDTO();
         accessLogDTO.setIp("12.1.3.2");
         accessLogDTO.setLocation("test");
-        accessLogDTO.setDescription("描述");
+        accessLogDTO.setDescription("description");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<AccessLogVO> voPage = new PageImpl<>(List.of(accessLogVO));
+        Pageable pageable = PageRequest.of(0,2);
+        Page<AccessLogVO> voPage = new PageImpl<>(List.of(accessLogVO), pageable, 2L);
         given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(voPage);
 
         mvc.perform(get("/access-logs").queryParam("page", "0").queryParam("size", "2")

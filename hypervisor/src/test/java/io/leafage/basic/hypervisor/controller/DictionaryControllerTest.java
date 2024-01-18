@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -55,18 +57,22 @@ class DictionaryControllerTest {
     @BeforeEach
     void init() {
         dictionaryVO = new DictionaryVO();
-        dictionaryVO.setName("性别");
+        dictionaryVO.setName("gender");
+        dictionaryVO.setAlias("gender");
+        dictionaryVO.setSuperior("superior");
+        dictionaryVO.setDescription("description");
 
         dictionaryDTO = new DictionaryDTO();
         dictionaryDTO.setName("gender");
-        dictionaryDTO.setAlias("男");
-        dictionaryDTO.setSuperior("23234FJ0");
-        dictionaryDTO.setDescription("描述");
+        dictionaryDTO.setAlias("gender");
+        dictionaryDTO.setSuperiorId(1L);
+        dictionaryDTO.setDescription("description");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO));
+        Pageable pageable = PageRequest.of(0,2);
+        Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO), pageable, 2L);
         given(this.dictionaryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(voPage);
 
         mvc.perform(get("/dictionaries").queryParam("page", "0").queryParam("size", "2")
@@ -86,7 +92,7 @@ class DictionaryControllerTest {
     void fetch() throws Exception {
         given(this.dictionaryService.fetch(Mockito.anyLong())).willReturn(dictionaryVO);
 
-        mvc.perform(get("/dictionaries/{id}", "2247JD0K")).andExpect(status().isOk())
+        mvc.perform(get("/dictionaries/{id}", Mockito.anyLong())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("gender")).andDo(print()).andReturn();
     }
 
@@ -94,7 +100,7 @@ class DictionaryControllerTest {
     void fetch_error() throws Exception {
         given(this.dictionaryService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/dictionaries/{id}", "2247JD0K")).andExpect(status().isNoContent())
+        mvc.perform(get("/dictionaries/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -119,7 +125,7 @@ class DictionaryControllerTest {
     void lower() throws Exception {
         given(this.dictionaryService.lower(Mockito.anyLong())).willReturn(List.of(dictionaryVO));
 
-        mvc.perform(get("/dictionaries/{id}/lower", "2247JD0K")).andExpect(status().isOk())
+        mvc.perform(get("/dictionaries/{id}/lower", Mockito.anyLong())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -127,7 +133,7 @@ class DictionaryControllerTest {
     void lower_error() throws Exception {
         given(this.dictionaryService.lower(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/dictionaries/{id}/lower", "2247JD0K")).andExpect(status().isNoContent())
+        mvc.perform(get("/dictionaries/{id}/lower", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

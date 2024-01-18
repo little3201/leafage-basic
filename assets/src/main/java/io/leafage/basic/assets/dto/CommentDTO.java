@@ -1,22 +1,19 @@
 package io.leafage.basic.assets.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import java.io.Serializable;
 
 /**
  * dto class for comment.
  *
  * @author liwenqiang 2021-09-29 13:51
  */
-public class CommentDTO implements Serializable {
-
-    private static final long serialVersionUID = -9074666319515837124L;
+public class CommentDTO {
 
     /**
      * 帖子
      */
     @NotBlank
-    private String posts;
+    private String post;
     /**
      * 内容
      */
@@ -27,12 +24,12 @@ public class CommentDTO implements Serializable {
      */
     private String replier;
 
-    public String getPosts() {
-        return posts;
+    public String getPost() {
+        return post;
     }
 
-    public void setPosts(String posts) {
-        this.posts = posts;
+    public void setPost(String post) {
+        this.post = post;
     }
 
     public String getContent() {

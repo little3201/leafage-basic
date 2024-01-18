@@ -84,6 +84,13 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         return this.convertOuter(privilege);
     }
 
+    @Override
+    public void remove(Long id) {
+        Assert.notNull(id, "privilege id must not be null.");
+
+        privilegeRepository.deleteById(id);
+    }
+
     /**
      * 转换对象
      *

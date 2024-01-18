@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
- * dto class for notification.
+ * dto class for message.
  *
  * @author liwenqiang 2022/1/29 17:20
  **/

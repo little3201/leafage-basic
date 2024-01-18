@@ -22,7 +22,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * notification service test
+ * message service test
  *
  * @author liwenqiang 2022/3/3 11:25
  **/

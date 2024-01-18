@@ -13,19 +13,18 @@ import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.vo.PostVO;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -51,9 +50,22 @@ class PostServiceImplTest {
     @InjectMocks
     private PostsServiceImpl postsService;
 
+    private PostDTO postDTO;
+
+    @BeforeEach
+    void init() {
+        postDTO = new PostDTO();
+        postDTO.setTitle("title");
+        postDTO.setContent("content");
+        postDTO.setCover("cover");
+        postDTO.setTags(Set.of("tag"));
+        postDTO.setCategoryId(1L);
+    }
+
     @Test
-    void retrieve_page() {
-        Page<Post> postsPage = new PageImpl<>(List.of(Mockito.mock(Post.class)));
+    void retrieve() {
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Post> postsPage = new PageImpl<>(List.of(Mockito.mock(Post.class)), pageable, 2L);
         given(this.postRepository.findByEnabledTrue(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
 
         Page<PostVO> voPage = postsService.retrieve(0, 2, "id");
@@ -124,7 +136,7 @@ class PostServiceImplTest {
     void exist() {
         given(this.postRepository.existsByTitle(Mockito.anyString())).willReturn(true);
 
-        boolean exist = postsService.exist("spring");
+        boolean exist = postsService.exist("test");
 
         Assertions.assertTrue(exist);
     }
@@ -133,11 +145,12 @@ class PostServiceImplTest {
     void create() {
         given(this.postRepository.saveAndFlush(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
+
         given(this.postContentRepository.getByPostIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
 
         given(this.postContentRepository.saveAndFlush(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 
-        PostVO postVO = postsService.create(Mockito.mock(PostDTO.class));
+        PostVO postVO = postsService.create(postDTO);
 
         verify(this.postRepository, times(1)).saveAndFlush(Mockito.any(Post.class));
         verify(this.postContentRepository, times(1)).saveAndFlush(Mockito.any(PostContent.class));
@@ -154,7 +167,7 @@ class PostServiceImplTest {
 
         given(this.postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 
-        PostVO postVO = postsService.modify(Mockito.anyLong(), Mockito.mock(PostDTO.class));
+        PostVO postVO = postsService.modify(1L, postDTO);
 
         verify(this.postRepository, times(1)).save(Mockito.any(Post.class));
         verify(this.postContentRepository, times(1)).save(Mockito.any(PostContent.class));
@@ -165,17 +178,9 @@ class PostServiceImplTest {
     void modify_error() {
         given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
 
-        given(this.postRepository.save(Mockito.any(Post.class))).willReturn(Mockito.any(Post.class));
+        given(this.postRepository.save(Mockito.any(Post.class))).willThrow(new RuntimeException());
 
-        given(this.postContentRepository.getByPostIdAndEnabledTrue(Mockito.anyLong())).willReturn(null);
-
-        given(this.postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
-
-        PostVO postVO = postsService.modify(Mockito.anyLong(), Mockito.mock(PostDTO.class));
-
-        verify(this.postRepository, times(1)).save(Mockito.any(Post.class));
-        verify(this.postContentRepository, times(1)).save(Mockito.any(PostContent.class));
-        Assertions.assertNotNull(postVO);
+        Assertions.assertThrows(RuntimeException.class, () -> postsService.modify(1L, postDTO));
     }
 
     @Test

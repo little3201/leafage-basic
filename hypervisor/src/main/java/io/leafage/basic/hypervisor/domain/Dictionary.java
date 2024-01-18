@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
  * @author liwenqiang 2022-04-06 17:33
  */
 @Entity
-@Table(name = "dictionary")
+@Table(name = "dictionaries")
 public class Dictionary extends AbstractModel {
 
     /**

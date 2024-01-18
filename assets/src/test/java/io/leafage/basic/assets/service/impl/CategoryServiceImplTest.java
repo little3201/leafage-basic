@@ -9,6 +9,7 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,11 +45,19 @@ class CategoryServiceImplTest {
     @InjectMocks
     private CategoryServiceImpl categoryService;
 
+    private CategoryDTO categoryDTO;
+
+    @BeforeEach
+    void init() {
+        categoryDTO = new CategoryDTO();
+        categoryDTO.setName("test");
+        categoryDTO.setDescription("category");
+    }
+
     @Test
     void retrieve() {
-        Category category = new Category();
-        category.setId(1L);
-        Page<Category> page = new PageImpl<>(List.of(category));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Category> page = new PageImpl<>(List.of(Mockito.mock(Category.class)), pageable, 2L);
         given(this.categoryRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(page);
 
         given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
@@ -69,15 +79,11 @@ class CategoryServiceImplTest {
 
     @Test
     void create() {
-        Category category = new Category();
-        category.setId(1L);
-        given(this.categoryRepository.saveAndFlush(Mockito.any(Category.class))).willReturn(category);
+        given(this.categoryRepository.saveAndFlush(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
 
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(2L);
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        CategoryVO categoryVO = categoryService.create(categoryDTO);
+        CategoryVO categoryVO = categoryService.create(Mockito.mock(CategoryDTO.class));
 
         verify(this.categoryRepository, times(1)).saveAndFlush(Mockito.any(Category.class));
         Assertions.assertNotNull(categoryVO);
@@ -91,7 +97,7 @@ class CategoryServiceImplTest {
 
         given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-        CategoryVO categoryVO = categoryService.modify(Mockito.anyLong(), Mockito.mock(CategoryDTO.class));
+        CategoryVO categoryVO = categoryService.modify(1L, categoryDTO);
 
         verify(this.categoryRepository, times(1)).save(Mockito.any(Category.class));
         Assertions.assertNotNull(categoryVO);

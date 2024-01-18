@@ -8,6 +8,7 @@ import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,46 +35,56 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+    private UserDTO userDTO;
+
+    @BeforeEach
+    void init() {
+        userDTO = new UserDTO();
+        userDTO.setUsername("test");
+        userDTO.setFirstname("三");
+        userDTO.setLastname("张");
+        userDTO.setDescription("user");
+    }
+
+
     @Test
     void fetch() {
         given(this.userRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(User.class)));
 
-        UserVO userVO = userService.fetch(Mockito.anyLong());
+        UserVO vo = userService.fetch(Mockito.anyLong());
 
-        Assertions.assertNotNull(userVO);
+        Assertions.assertNotNull(vo);
     }
 
     @Test
     void create() {
-        User user = new User();
-        user.setId(1L);
-        given(this.userRepository.saveAndFlush(Mockito.any(User.class))).willReturn(user);
+        given(this.userRepository.saveAndFlush(Mockito.any(User.class))).willReturn(Mockito.mock(User.class));
 
-        UserDTO userDTO = new UserDTO();
-        userDTO.setFirstname("管理员");
-        userService.create(userDTO);
+        UserVO vo = userService.create(userDTO);
 
         verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any(User.class));
+        Assertions.assertNotNull(vo);
     }
 
     @Test
     void modify() {
         // 根据id查询信息
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mockito.mock(User.class));
+        given(this.userRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(User.class)));
 
         // 保存更新信息
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(Mockito.mock(User.class));
 
-        userService.modify(Mockito.anyLong(), Mockito.mock(UserDTO.class));
+        UserVO vo = userService.modify(1L, userDTO);
 
         verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
+        Assertions.assertNotNull(vo);
     }
 
     @Test
     void exist() {
-        given(this.userRepository.exists(Mockito.anyString())).willReturn(true);
+        given(this.userRepository.exists(Mockito.anyString())).willReturn(Boolean.TRUE);
 
-        boolean exist = userService.exist(Mockito.anyString());
+        boolean exist = userService.exist("test");
 
         Assertions.assertTrue(exist);
     }
@@ -82,17 +93,13 @@ class UserServiceImplTest {
     void exist_false() {
         given(this.userRepository.exists(Mockito.anyString())).willReturn(false);
 
-        boolean exist = userService.exist(Mockito.anyString());
+        boolean exist = userService.exist("test");
 
         Assertions.assertFalse(exist);
     }
 
     @Test
     void remove() {
-        User user = new User();
-        user.setId(1L);
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(user);
-
         userService.remove(Mockito.anyLong());
 
         verify(userRepository, Mockito.times(1)).deleteById(Mockito.anyLong());

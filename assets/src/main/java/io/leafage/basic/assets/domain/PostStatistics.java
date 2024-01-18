@@ -3,6 +3,7 @@ package io.leafage.basic.assets.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+
 import java.time.LocalDate;
 
 /**
@@ -15,36 +16,57 @@ import java.time.LocalDate;
 public class PostStatistics extends AbstractEntity {
 
     /**
+     * 帖子ID
+     */
+    @Column(name = "post_id", nullable = false)
+    private Long postId;
+
+    /**
      * 记录日期
      */
     private LocalDate date;
+
     /**
      * 浏览量
      */
     private int viewed;
+
     /**
      * 浏览量环比
      */
     @Column(name = "over_viewed")
     private double overViewed;
+
     /**
      * 点赞量
      */
     private int likes;
+
     /**
      * 浏览量点赞量
      */
     @Column(name = "over_likes")
     private double overLikes;
+
     /**
      * 评论量
      */
     private int comments;
+
     /**
      * 浏览量评论量
      */
     @Column(name = "over_comments")
     private double overComments;
+
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
 
     public LocalDate getDate() {
         return date;

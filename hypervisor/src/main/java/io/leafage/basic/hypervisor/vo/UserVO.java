@@ -20,6 +20,12 @@ public class UserVO {
      */
     private String lastname;
 
+    /**
+     * 描述
+     */
+    private String description;
+
+
 
     public String getUsername() {
         return username;
@@ -45,4 +51,11 @@ public class UserVO {
         this.lastname = lastname;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

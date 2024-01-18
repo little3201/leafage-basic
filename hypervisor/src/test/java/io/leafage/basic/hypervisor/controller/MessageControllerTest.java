@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -29,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * notification controller test
+ * message controller test
  *
  * @author liwenqiang 2022/3/3 11:18
  **/
@@ -54,19 +56,20 @@ class MessageControllerTest {
     @BeforeEach
     void init() {
         messageVO = new MessageVO();
-        messageVO.setTitle("标题");
-        messageVO.setReceiver("test");
-        messageVO.setContent("测试内容");
+        messageVO.setTitle("test");
+        messageVO.setReceiver("23234");
+        messageVO.setContent("content");
 
         messageDTO = new MessageDTO();
         messageDTO.setTitle("test");
         messageDTO.setReceiver("23234");
-        messageDTO.setContent("描述");
+        messageDTO.setContent("content");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<MessageVO> voPage = new PageImpl<>(List.of(messageVO));
+        Pageable pageable = PageRequest.of(0,2);
+        Page<MessageVO> voPage = new PageImpl<>(List.of(messageVO), pageable, 2L);
         given(this.messageService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(voPage);
 
         mvc.perform(get("/messages").queryParam("page", "0").queryParam("size", "2")
@@ -86,15 +89,15 @@ class MessageControllerTest {
     void fetch() throws Exception {
         given(this.messageService.fetch(Mockito.anyLong())).willReturn(messageVO);
 
-        mvc.perform(get("/messages/{id}", "213ADJ09")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").value("测试内容")).andDo(print()).andReturn();
+        mvc.perform(get("/messages/{id}", Mockito.anyLong())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").value("content")).andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
         given(this.messageService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/messages/{id}", "213ADJ09")).andExpect(status().isNoContent())
+        mvc.perform(get("/messages/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

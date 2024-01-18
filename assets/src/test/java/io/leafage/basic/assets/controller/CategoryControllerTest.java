@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -64,7 +66,8 @@ class CategoryControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
+        Pageable pageable = PageRequest.of(0,2);
+        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO), pageable, 2L);
         given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
         mvc.perform(get("/category").queryParam("page", "0")
@@ -129,7 +132,7 @@ class CategoryControllerTest {
     void modify_error() throws Exception {
         given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        mvc.perform(put("/category/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/category/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
@@ -139,7 +142,7 @@ class CategoryControllerTest {
     void remove() throws Exception {
         this.categoryService.remove(Mockito.anyLong());
 
-        mvc.perform(delete("/category/{id}", 1L).with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/category/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -147,7 +150,7 @@ class CategoryControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.categoryService).remove(Mockito.anyLong());
 
-        mvc.perform(delete("/category/{id}", 1L).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/category/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 }

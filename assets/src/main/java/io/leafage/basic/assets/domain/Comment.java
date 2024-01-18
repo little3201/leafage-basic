@@ -14,15 +14,10 @@ import jakarta.persistence.Table;
 public class Comment extends AbstractEntity {
 
     /**
-     * id
-     */
-    @Column(unique = true)
-    private String id;
-    /**
      * 帖子ID
      */
-    @Column(name = "posts_id")
-    private Long postsId;
+    @Column(name = "post_id")
+    private Long postId;
     /**
      * 国家
      */
@@ -41,12 +36,12 @@ public class Comment extends AbstractEntity {
     private Long replier;
 
 
-    public Long getPostsId() {
-        return postsId;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPostsId(Long postsId) {
-        this.postsId = postsId;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public String getCountry() {

@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -55,18 +57,19 @@ class CommentControllerTest {
     @BeforeEach
     void init() {
         commentVO = new CommentVO();
-        commentVO.setContent("评论信息");
-        commentVO.setPosts("21389KO6");
+        commentVO.setContent("content");
+        commentVO.setPost("post");
 
         commentDTO = new CommentDTO();
-        commentDTO.setPosts("21389KO6");
-        commentDTO.setContent("评论了内容");
-        commentDTO.setReplier("21389KO1");
+        commentDTO.setPost("post");
+        commentDTO.setContent("content");
+        commentDTO.setReplier("test");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<CommentVO> page = new PageImpl<>(List.of(commentVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<CommentVO> page = new PageImpl<>(List.of(commentVO), pageable, 2L);
         given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(page);
 
         mvc.perform(get("/comment").queryParam("page", "0").queryParam("size", "2"))
@@ -85,14 +88,14 @@ class CommentControllerTest {
     void relation() throws Exception {
         given(this.commentService.relation(Mockito.anyLong())).willReturn(List.of(commentVO));
 
-        mvc.perform(get("/comment/{id}", 1L)).andExpect(status().isOk()).andDo(print()).andReturn();
+        mvc.perform(get("/comment/{id}", Mockito.anyLong())).andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
     void relation_error() throws Exception {
         given(this.commentService.relation(Mockito.anyLong())).willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/comment/{id}", 1L)).andExpect(status().isNoContent()).andDo(print()).andReturn();
+        mvc.perform(get("/comment/{id}", Mockito.anyLong())).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
@@ -115,7 +118,7 @@ class CommentControllerTest {
 
         mvc.perform(post("/comment").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(commentDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.content").value("评论信息")).andDo(print()).andReturn();
+                .andExpect(jsonPath("$.content").value("content")).andDo(print()).andReturn();
     }
 
     @Test

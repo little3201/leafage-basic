@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
  * @author liwenqiang 2022/1/26 15:20
  **/
 @Entity
-@Table(name = "access_log")
+@Table(name = "access_logs")
 public class AccessLog extends AbstractModel {
 
     /**

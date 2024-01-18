@@ -19,11 +19,11 @@ public class RegionDTO implements Serializable {
     /**
      * 上级
      */
-    private Long superior;
+    private Long superiorId;
     /**
      * 邮编
      */
-    private String postalCode;
+    private Integer postalCode;
     /**
      * 区号
      */
@@ -42,19 +42,19 @@ public class RegionDTO implements Serializable {
         this.name = name;
     }
 
-    public Long getSuperior() {
-        return superior;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setSuperior(Long superior) {
-        this.superior = superior;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
-    public String getPostalCode() {
+    public Integer getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(String postalCode) {
+    public void setPostalCode(Integer postalCode) {
         this.postalCode = postalCode;
     }
 

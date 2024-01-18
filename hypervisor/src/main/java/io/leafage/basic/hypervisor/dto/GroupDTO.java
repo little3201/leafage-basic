@@ -21,14 +21,17 @@ public class GroupDTO implements Serializable {
     @NotBlank
     @Size(max = 16)
     private String name;
+
     /**
      * 负责人
      */
     private String principal;
+
     /**
      * 上级
      */
-    private String superior;
+    private Long superiorId;
+
     /**
      * 描述
      */
@@ -43,12 +46,12 @@ public class GroupDTO implements Serializable {
         this.principal = principal;
     }
 
-    public String getSuperior() {
-        return superior;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setSuperior(String superior) {
-        this.superior = superior;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public String getName() {

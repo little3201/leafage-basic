@@ -1,19 +1,22 @@
 package io.leafage.basic.hypervisor.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+@Configuration
 @EnableWebSecurity
 public class AuthorizationServerConfiguration {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests().mvcMatchers(HttpMethod.GET).permitAll()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests((authorize) -> authorize
                 .anyRequest().authenticated()
-                .and().oauth2ResourceServer().jwt();
+        ).oauth2ResourceServer(Customizer.withDefaults());
         return http.build();
     }
 }

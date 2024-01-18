@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-12-20 9:54
  */
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User extends AbstractModel {
 
     /**

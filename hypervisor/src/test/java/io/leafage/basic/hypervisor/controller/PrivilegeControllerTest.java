@@ -14,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -60,17 +62,24 @@ class PrivilegeControllerTest {
     @BeforeEach
     void init() {
         privilegeVO = new PrivilegeVO();
+        privilegeVO.setName("test");
+        privilegeVO.setIcon("icon");
+        privilegeVO.setPath("path");
+        privilegeVO.setType('M');
         privilegeVO.setSuperior("superior");
 
         privilegeDTO = new PrivilegeDTO();
         privilegeDTO.setName("test");
         privilegeDTO.setType('M');
         privilegeDTO.setPath("/test");
+        privilegeDTO.setIcon("icon");
+        privilegeDTO.setSuperiorId(1L);
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<PrivilegeVO> voPage = new PageImpl<>(List.of(privilegeVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<PrivilegeVO> voPage = new PageImpl<>(List.of(privilegeVO), pageable, 2L);
         given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/privileges").queryParam("page", "0").queryParam("size", "2")
@@ -90,7 +99,7 @@ class PrivilegeControllerTest {
     void fetch() throws Exception {
         given(this.privilegeService.fetch(Mockito.anyLong())).willReturn(privilegeVO);
 
-        mvc.perform(get("/privileges/{id}", "213ADJ09")).andExpect(status().isOk())
+        mvc.perform(get("/privileges/{id}", Mockito.anyLong())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
@@ -98,7 +107,7 @@ class PrivilegeControllerTest {
     void fetch_error() throws Exception {
         given(this.privilegeService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/privileges/{id}", "213ADJ09")).andExpect(status().isNoContent())
+        mvc.perform(get("/privileges/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -126,7 +135,7 @@ class PrivilegeControllerTest {
     void modify() throws Exception {
         given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(PrivilegeDTO.class))).willReturn(privilegeVO);
 
-        mvc.perform(put("/privileges/{id}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/privileges/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(privilegeDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
@@ -136,7 +145,7 @@ class PrivilegeControllerTest {
     void modify_error() throws Exception {
         given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(PrivilegeDTO.class))).willThrow(new RuntimeException());
 
-        mvc.perform(put("/privileges/{id}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/privileges/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(privilegeDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
@@ -146,7 +155,7 @@ class PrivilegeControllerTest {
     void remove() throws Exception {
         this.privilegeService.remove(Mockito.anyLong());
 
-        mvc.perform(delete("/privileges/{id}", "test").with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/privileges/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -154,7 +163,7 @@ class PrivilegeControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.privilegeService).remove(Mockito.anyLong());
 
-        mvc.perform(delete("/privileges/{id}", "test").with(csrf().asHeader()))
+        mvc.perform(delete("/privileges/{id}", Mockito.anyLong()).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
@@ -180,7 +189,7 @@ class PrivilegeControllerTest {
     void roles() throws Exception {
         given(this.rolePrivilegesService.roles(Mockito.anyLong())).willReturn(Mockito.anyList());
 
-        mvc.perform(get("/privileges/{id}/roles", "test")).andExpect(status().isOk())
+        mvc.perform(get("/privileges/{id}/roles", 1L)).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -188,7 +197,7 @@ class PrivilegeControllerTest {
     void roles_error() throws Exception {
         given(this.rolePrivilegesService.roles(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/privileges/{id}/roles", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/privileges/{id}/roles", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 }

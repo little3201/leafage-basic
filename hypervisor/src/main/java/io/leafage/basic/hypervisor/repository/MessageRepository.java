@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * notification repository.
+ * message repository.
  *
  * @author liwenqiang 2022/1/29 17:34
  **/

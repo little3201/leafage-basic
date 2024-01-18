@@ -319,12 +319,12 @@ create table dictionary
 alter table dictionary comment '字典';
 
 
-drop table if exists notification;
+drop table if exists message;
 
 /*==============================================================*/
-/* Table: notification                                          */
+/* Table: message                                          */
 /*==============================================================*/
-create table notification
+create table message
 (
    id                   bigint unsigned not null auto_increment comment '主键',
    id                 varchar(9) not null comment '主键',
@@ -338,7 +338,7 @@ create table notification
    unique key AK_id (id)
 );
 
-alter table notification comment '通知';
+alter table message comment '通知';
 
 
 

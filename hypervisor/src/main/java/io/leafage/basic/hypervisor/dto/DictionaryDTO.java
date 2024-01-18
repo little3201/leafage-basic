@@ -24,7 +24,7 @@ public class DictionaryDTO implements Serializable {
     /**
      * 上级
      */
-    private String superior;
+    private Long superiorId;
     /**
      * 描述
      */
@@ -47,12 +47,12 @@ public class DictionaryDTO implements Serializable {
         this.alias = alias;
     }
 
-    public String getSuperior() {
-        return superior;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setSuperior(String superior) {
-        this.superior = superior;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public String getDescription() {

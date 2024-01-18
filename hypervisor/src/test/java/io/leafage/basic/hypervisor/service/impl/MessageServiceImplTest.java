@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * notification service test
+ * message service test
  *
  * @author liwenqiang 2022/3/3 11:25
  **/
@@ -34,7 +34,7 @@ class MessageServiceImplTest {
     private MessageRepository messageRepository;
 
     @InjectMocks
-    private MessageServiceImpl notificationService;
+    private MessageServiceImpl messageService;
 
 
     @Test
@@ -42,7 +42,7 @@ class MessageServiceImplTest {
         Page<Message> page = new PageImpl<>(List.of(Mockito.mock(Message.class)));
         given(this.messageRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(page);
 
-        Page<MessageVO> voPage = notificationService.retrieve(0, 2);
+        Page<MessageVO> voPage = messageService.retrieve(0, 2);
 
         Assertions.assertNotNull(voPage.getContent());
     }
@@ -51,7 +51,7 @@ class MessageServiceImplTest {
     void fetch() {
         given(this.messageRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Message.class)));
 
-        MessageVO messageVO = notificationService.fetch(1L);
+        MessageVO messageVO = messageService.fetch(Mockito.anyLong());
 
         Assertions.assertNotNull(messageVO);
     }
@@ -61,7 +61,7 @@ class MessageServiceImplTest {
     void create() {
         given(this.messageRepository.saveAndFlush(Mockito.any(Message.class))).willReturn(Mockito.mock(Message.class));
 
-        MessageVO messageVO = notificationService.create(Mockito.mock(MessageDTO.class));
+        MessageVO messageVO = messageService.create(Mockito.mock(MessageDTO.class));
 
         verify(this.messageRepository, times(1)).saveAndFlush(Mockito.any(Message.class));
         Assertions.assertNotNull(messageVO);

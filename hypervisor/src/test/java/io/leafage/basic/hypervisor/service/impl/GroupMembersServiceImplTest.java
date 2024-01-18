@@ -35,8 +35,8 @@ class GroupMembersServiceImplTest {
     void members() {
         given(this.groupMembersRepository.findByGroupId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(GroupMembers.class)));
 
-        List<GroupMembers> accounts = groupMembersService.members(1L);
-        Assertions.assertNotNull(accounts);
+        List<GroupMembers> members = groupMembersService.members(1L);
+        Assertions.assertNotNull(members);
     }
 
     @Test

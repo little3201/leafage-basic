@@ -53,25 +53,31 @@ class UserControllerTest {
     @BeforeEach
     void init() {
         userVO = new UserVO();
-        userVO.setFirstname("test");
+        userVO.setUsername("test");
+        userVO.setFirstname("john");
+        userVO.setLastname("steven");
+        userVO.setDescription("description");
 
         userDTO = new UserDTO();
         userDTO.setUsername("test");
+        userDTO.setFirstname("john");
+        userDTO.setLastname("steven");
+        userDTO.setDescription("description");
     }
 
     @Test
     void fetch() throws Exception {
         given(this.userService.fetch(Mockito.anyLong())).willReturn(userVO);
 
-        mvc.perform(get("/users/{username}", "test")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstname").value("test")).andDo(print()).andReturn();
+        mvc.perform(get("/users/{id}", Mockito.anyLong())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstname").value("john")).andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
         given(this.userService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/users/{username}", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/users/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -79,7 +85,7 @@ class UserControllerTest {
     void modify() throws Exception {
         given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(userVO);
 
-        mvc.perform(put("/users/{username}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/users/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
@@ -89,7 +95,7 @@ class UserControllerTest {
     void modify_error() throws Exception {
         given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
 
-        mvc.perform(put("/users/{username}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/users/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();

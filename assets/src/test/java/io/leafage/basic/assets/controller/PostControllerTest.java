@@ -17,6 +17,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -65,7 +67,7 @@ class PostControllerTest {
         postDTO.setCategoryId(1L);
         postDTO.setCover("../test.jpg");
         postDTO.setTags(Collections.singleton("java"));
-        postDTO.setContent("内容信息");
+        postDTO.setContent("content");
 
         postVO = new PostVO();
         postVO.setTitle(postDTO.getTitle());
@@ -74,12 +76,13 @@ class PostControllerTest {
 
         contentVO = new PostContentVO();
         contentVO.setTitle("test");
-        contentVO.setCatalog("目录");
+        contentVO.setCatalog("category");
     }
 
     @Test
-    void retrieve_page() throws Exception {
-        Page<PostVO> page = new PageImpl<>(List.of(postVO));
+    void retrieve() throws Exception {
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<PostVO> page = new PageImpl<>(List.of(postVO), pageable, 2L);
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
         mvc.perform(get("/posts").queryParam("page", "0")
@@ -88,7 +91,7 @@ class PostControllerTest {
     }
 
     @Test
-    void retrieve_page_error() throws Exception {
+    void retrieve_error() throws Exception {
         given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new NoSuchElementException());
 
         mvc.perform(get("/posts").queryParam("page", "0")
@@ -100,14 +103,14 @@ class PostControllerTest {
     void fetch() throws Exception {
         given(this.postsService.fetch(Mockito.anyLong())).willReturn(postVO);
 
-        mvc.perform(get("/posts/{id}", 1L)).andExpect(status().isOk())
+        mvc.perform(get("/posts/{id}", Mockito.anyLong())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
         given(this.postsService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
-        mvc.perform(get("/posts/{id}", 1L)).andExpect(status().isNoContent())
+        mvc.perform(get("/posts/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -163,7 +166,7 @@ class PostControllerTest {
     void exist() throws Exception {
         given(this.postsService.exist(Mockito.anyString())).willReturn(true);
 
-        mvc.perform(get("/posts/exist").queryParam("title", "spring")).andExpect(status().isOk())
+        mvc.perform(get("/posts/exist").queryParam("title", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -171,7 +174,7 @@ class PostControllerTest {
     void exist_error() throws Exception {
         given(this.postsService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/posts/exist").queryParam("title", "spring")).andExpect(status().isExpectationFailed())
+        mvc.perform(get("/posts/exist").queryParam("title", "test")).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

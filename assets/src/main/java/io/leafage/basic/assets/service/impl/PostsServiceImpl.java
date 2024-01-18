@@ -169,9 +169,11 @@ public class PostsServiceImpl implements PostsService {
         PostVO vo = new PostVO();
         BeanUtils.copyProperties(post, vo);
         // 转换 tags
-        String tags = post.getTags().substring(1, post.getTags().length() - 1)
-                .replace(" ", "").replace("\"", "");
-        vo.setTags(Set.of(tags.split(",")));
+        if (StringUtils.hasText(post.getTags())) {
+            String tags = post.getTags().substring(1, post.getTags().length() - 1)
+                    .replace(" ", "").replace("\"", "");
+            vo.setTags(Set.of(tags.split(",")));
+        }
         // 转换分类
         Optional<Category> optional = categoryRepository.findById(post.getCategoryId());
         optional.ifPresent(category -> vo.setCategory(category.getName()));

@@ -14,6 +14,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -60,23 +62,27 @@ class GroupControllerTest {
     @BeforeEach
     void init() {
         groupVO = new GroupVO();
-        groupVO.setAlias("IT");
-        groupVO.setPrincipal("admin");
+        groupVO.setName("test");
+        groupVO.setAlias("alias");
+        groupVO.setPrincipal("test");
         groupVO.setSuperior("superior");
         groupVO.setCount(2L);
 
         groupDTO = new GroupDTO();
         groupDTO.setName("test");
+        groupDTO.setSuperiorId(1L);
+        groupDTO.setPrincipal("test");
         groupDTO.setDescription("描述");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO));
+        Pageable pageable = PageRequest.of(0,2);
+        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), pageable, 2L);
         given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/groups").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sort", "")).andExpect(status().isOk())
+                        .queryParam("sort", "id")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -92,7 +98,7 @@ class GroupControllerTest {
     void fetch() throws Exception {
         given(this.groupService.fetch(Mockito.anyLong())).willReturn(groupVO);
 
-        mvc.perform(get("/groups/{id}", "test")).andExpect(status().isOk())
+        mvc.perform(get("/groups/{id}", Mockito.anyLong())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
@@ -100,7 +106,7 @@ class GroupControllerTest {
     void fetch_error() throws Exception {
         given(this.groupService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/groups/{id}", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/groups/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -129,7 +135,7 @@ class GroupControllerTest {
     void modify() throws Exception {
         given(this.groupService.modify(Mockito.anyLong(), Mockito.any(GroupDTO.class))).willReturn(groupVO);
 
-        mvc.perform(put("/groups/{id}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/groups/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
@@ -139,7 +145,7 @@ class GroupControllerTest {
     void modify_error() throws Exception {
         given(this.groupService.modify(Mockito.anyLong(), Mockito.any(GroupDTO.class))).willThrow(new RuntimeException());
 
-        mvc.perform(put("/groups/{id}", "test").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/groups/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
@@ -149,7 +155,7 @@ class GroupControllerTest {
     void remove() throws Exception {
         this.groupService.remove(Mockito.anyLong());
 
-        mvc.perform(delete("/groups/{id}", "test").with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/groups/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -157,24 +163,24 @@ class GroupControllerTest {
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(this.groupService).remove(Mockito.anyLong());
 
-        mvc.perform(delete("/groups/{id}", "test").with(csrf().asHeader()))
+        mvc.perform(delete("/groups/{id}", Mockito.anyLong()).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
-    void accounts() throws Exception {
+    void members() throws Exception {
         given(this.groupMembersService.members(Mockito.anyLong())).willReturn(Mockito.anyList());
 
-        mvc.perform(get("/groups/{id}/account", "test")).andExpect(status().isOk())
+        mvc.perform(get("/groups/{id}/members", 1L)).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
-    void accounts_error() throws Exception {
+    void members_error() throws Exception {
         doThrow(new RuntimeException()).when(this.groupMembersService).members(Mockito.anyLong());
 
-        mvc.perform(get("/groups/{id}/account", "test")).andExpect(status().isNoContent())
+        mvc.perform(get("/groups/{id}/members", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

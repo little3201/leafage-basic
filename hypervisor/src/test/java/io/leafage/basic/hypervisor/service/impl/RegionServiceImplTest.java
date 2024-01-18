@@ -5,6 +5,7 @@ import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.vo.RegionVO;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,6 +38,17 @@ class RegionServiceImplTest {
     @InjectMocks
     private RegionServiceImpl regionService;
 
+    private RegionDTO regionDTO;
+
+    @BeforeEach
+    void init() {
+        regionDTO = new RegionDTO();
+        regionDTO.setName("西安市");
+        regionDTO.setAreaCode("029");
+        regionDTO.setPostalCode(71000);
+        regionDTO.setSuperiorId(1L);
+    }
+
     @Test
     void retrieve() {
         Page<Region> regions = new PageImpl<>(List.of(Mockito.mock(Region.class)));
@@ -53,7 +65,7 @@ class RegionServiceImplTest {
     void fetch() {
         given(this.regionRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Region.class)));
 
-        RegionVO regionVO = regionService.fetch(11L);
+        RegionVO regionVO = regionService.fetch(Mockito.anyLong());
 
         Assertions.assertNotNull(regionVO);
     }
@@ -62,14 +74,14 @@ class RegionServiceImplTest {
     void lower() {
         given(this.regionRepository.findBySuperiorIdAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Region.class)));
 
-        List<RegionVO> regionVOS = regionService.lower(11L);
+        List<RegionVO> regionVOS = regionService.lower(Mockito.anyLong());
 
         Assertions.assertNotNull(regionVOS);
     }
 
     @Test
     void lower_empty() {
-        List<RegionVO> regionVOS = regionService.lower(110101001001L);
+        List<RegionVO> regionVOS = regionService.lower(Mockito.anyLong());
 
         Assertions.assertEquals(Collections.emptyList(), regionVOS);
     }
@@ -99,7 +111,7 @@ class RegionServiceImplTest {
 
         given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mockito.mock(Region.class));
 
-        RegionVO regionVO = regionService.modify(Mockito.anyLong(), Mockito.mock(RegionDTO.class));
+        RegionVO regionVO = regionService.modify(Mockito.anyLong(), regionDTO);
 
         verify(this.regionRepository, times(1)).save(Mockito.any(Region.class));
         Assertions.assertNotNull(regionVO);

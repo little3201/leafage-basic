@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
  * @author liwenqiang 2022/1/26 15:20
  */
 @Entity
-@Table(name = "account_group")
+@Table(name = "group_roles")
 public class GroupRoles extends AbstractModel {
 
     /**

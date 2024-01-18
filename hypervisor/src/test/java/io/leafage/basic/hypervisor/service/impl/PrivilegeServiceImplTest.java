@@ -5,6 +5,7 @@ import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,8 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * privilege service test
@@ -38,6 +38,18 @@ class PrivilegeServiceImplTest {
 
     @InjectMocks
     private PrivilegeServiceImpl privilegeService;
+
+    private PrivilegeDTO privilegeDTO;
+
+    @BeforeEach
+    void init() {
+        privilegeDTO = new PrivilegeDTO();
+        privilegeDTO.setName("西安市");
+        privilegeDTO.setType('M');
+        privilegeDTO.setIcon("user");
+        privilegeDTO.setPath("/user");
+        privilegeDTO.setSuperiorId(1L);
+    }
 
     @Test
     void retrieve() {
@@ -66,7 +78,7 @@ class PrivilegeServiceImplTest {
 
         given(this.privilegeRepository.save(Mockito.any(Privilege.class))).willReturn(Mockito.mock(Privilege.class));
 
-        PrivilegeVO privilegeVO = privilegeService.modify(Mockito.anyLong(), Mockito.mock(PrivilegeDTO.class));
+        PrivilegeVO privilegeVO = privilegeService.modify(Mockito.anyLong(), privilegeDTO);
 
         verify(this.privilegeRepository, times(1)).save(Mockito.any(Privilege.class));
         Assertions.assertNotNull(privilegeVO);

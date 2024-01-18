@@ -22,7 +22,7 @@ public class RegionVO {
     /**
      * 邮编
      */
-    private String postalCode;
+    private Integer postalCode;
     /**
      * 区号
      */
@@ -57,11 +57,11 @@ public class RegionVO {
         this.superior = superior;
     }
 
-    public String getPostalCode() {
+    public Integer getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(String postalCode) {
+    public void setPostalCode(Integer postalCode) {
         this.postalCode = postalCode;
     }
 

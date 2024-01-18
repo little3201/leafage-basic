@@ -164,7 +164,7 @@ public class RoleController {
         try {
             voList = roleMembersService.members(id);
         } catch (Exception e) {
-            logger.error("Retrieve role users occurred an error: ", e);
+            logger.error("Retrieve role members occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voList);
@@ -182,7 +182,7 @@ public class RoleController {
         try {
             voList = rolePrivilegesService.privileges(id);
         } catch (Exception e) {
-            logger.error("Relation role ah occurred an error: ", e);
+            logger.error("Relation role privileges occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voList);
@@ -196,12 +196,12 @@ public class RoleController {
      * @return 操作结果
      */
     @PatchMapping("/{id}/privileges")
-    public ResponseEntity<List<RolePrivileges>> users(@PathVariable Long id, @RequestBody Set<Long> privileges) {
+    public ResponseEntity<List<RolePrivileges>> relation(@PathVariable Long id, @RequestBody Set<Long> privileges) {
         List<RolePrivileges> voList;
         try {
             voList = rolePrivilegesService.relation(id, privileges);
         } catch (Exception e) {
-            logger.error("Relation role ah occurred an error: ", e);
+            logger.error("Relation role privileges occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
         return ResponseEntity.accepted().body(voList);

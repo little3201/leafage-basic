@@ -10,7 +10,7 @@ public class CommentVO {
     /**
      * 帖子
      */
-    private String posts;
+    private String post;
     /**
      * 内容
      */
@@ -28,12 +28,12 @@ public class CommentVO {
      */
     private Long count;
 
-    public String getPosts() {
-        return posts;
+    public String getPost() {
+        return post;
     }
 
-    public void setPosts(String posts) {
-        this.posts = posts;
+    public void setPost(String post) {
+        this.post = post;
     }
 
     public String getContent() {

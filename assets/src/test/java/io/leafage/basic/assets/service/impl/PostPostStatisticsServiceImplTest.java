@@ -4,7 +4,6 @@ import io.leafage.basic.assets.domain.PostStatistics;
 import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.vo.PostStatisticsVO;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,19 +36,10 @@ class PostPostStatisticsServiceImplTest {
     @InjectMocks
     private PostStatisticsServiceImpl statisticsService;
 
-    PostStatistics postStatistics = new PostStatistics();
-
-    @BeforeEach
-    void init() {
-        postStatistics = new PostStatistics();
-        postStatistics.setComments(12);
-        postStatistics.setLikes(23);
-        postStatistics.setViewed(121);
-    }
-
     @Test
     void retrieve() {
-        Page<PostStatistics> page = new PageImpl<>(List.of(postStatistics));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<PostStatistics> page = new PageImpl<>(List.of(Mockito.mock(PostStatistics.class)), pageable, 2L);
         given(this.postStatisticsRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(page);
 
         Page<PostStatisticsVO> voPage = statisticsService.retrieve(0, 2);
@@ -57,11 +48,11 @@ class PostPostStatisticsServiceImplTest {
 
     @Test
     void create() {
-        given(this.postStatisticsRepository.getByDate(LocalDate.now().minusDays(2))).willReturn(postStatistics);
+        given(this.postStatisticsRepository.getByDate(LocalDate.now().minusDays(2))).willReturn(Mockito.mock(PostStatistics.class));
 
-        given(this.postStatisticsRepository.getByDate(LocalDate.now().minusDays(3))).willReturn(postStatistics);
+        given(this.postStatisticsRepository.getByDate(LocalDate.now().minusDays(3))).willReturn(Mockito.mock(PostStatistics.class));
 
-        given(this.postStatisticsRepository.saveAndFlush(Mockito.any(PostStatistics.class))).willReturn(postStatistics);
+        given(this.postStatisticsRepository.saveAndFlush(Mockito.any(PostStatistics.class))).willReturn(Mockito.mock(PostStatistics.class));
 
         PostStatistics st = statisticsService.create();
 
@@ -71,11 +62,11 @@ class PostPostStatisticsServiceImplTest {
 
     @Test
     void create_zero() {
-        given(this.postStatisticsRepository.getByDate(LocalDate.now().minusDays(2))).willReturn(postStatistics);
+        given(this.postStatisticsRepository.getByDate(LocalDate.now().minusDays(2))).willReturn(Mockito.mock(PostStatistics.class));
 
-        given(this.postStatisticsRepository.getByDate(LocalDate.now().minusDays(3))).willReturn(postStatistics);
+        given(this.postStatisticsRepository.getByDate(LocalDate.now().minusDays(3))).willReturn(Mockito.mock(PostStatistics.class));
 
-        given(this.postStatisticsRepository.saveAndFlush(Mockito.any(PostStatistics.class))).willReturn(postStatistics);
+        given(this.postStatisticsRepository.saveAndFlush(Mockito.any(PostStatistics.class))).willReturn(Mockito.mock(PostStatistics.class));
 
         PostStatistics st = statisticsService.create();
         Assertions.assertNotNull(st);

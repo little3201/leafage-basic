@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
  * @author liwenqiang 2020-12-20 9:54
  */
 @Entity
-@Table(name = "role")
+@Table(name = "roles")
 public class Role extends AbstractModel {
 
     /**

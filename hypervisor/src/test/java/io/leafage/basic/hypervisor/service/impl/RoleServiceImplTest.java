@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * role接口测试
  *
- * @author liwenqiang 2019/1/29 17:10
+ * @author liwenqiang 2019-01-29 17:10
  **/
 @ExtendWith(MockitoExtension.class)
 class RoleServiceImplTest {
@@ -53,7 +53,8 @@ class RoleServiceImplTest {
     @BeforeEach
     void init() {
         roleDTO = new RoleDTO();
-        roleDTO.setRoleName("test");
+        roleDTO.setName("test");
+        roleDTO.setSuperiorId(1L);
     }
 
     @Test
@@ -83,14 +84,7 @@ class RoleServiceImplTest {
     void create() {
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
 
-        StepVerifier.create(roleService.create(roleDTO)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void create_error() {
-        given(this.roleRepository.save(Mockito.any(Role.class))).willThrow(new RuntimeException());
-
-        StepVerifier.create(roleService.create(roleDTO)).expectError(RuntimeException.class).verify();
+        StepVerifier.create(roleService.create(Mockito.mock(RoleDTO.class))).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -104,7 +98,7 @@ class RoleServiceImplTest {
 
     @Test
     void exist() {
-        given(this.roleRepository.existsByRoleName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.roleRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(roleService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -41,7 +43,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * message controller test
  *
- * @author liwenqiang 2022/2/16 9:03
+ * @author liwenqiang 2022-02-16 9:03
  **/
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(MessageController.class)
@@ -62,7 +64,7 @@ class MessageControllerTest {
         messageVO.setTitle("标题");
         messageVO.setContext("内容");
         messageVO.setReceiver("test");
-        messageVO.setModifyTime(LocalDateTime.now());
+        messageVO.setLastUpdatedAt(LocalDateTime.now());
 
         messageDTO = new MessageDTO();
         messageDTO.setTitle("标题");
@@ -72,7 +74,8 @@ class MessageControllerTest {
 
     @Test
     void retrieve() {
-        Page<MessageVO> voPage = new PageImpl<>(List.of(messageVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<MessageVO> voPage = new PageImpl<>(List.of(messageVO), pageable, 1L);
         given(this.messageService.retrieve(0, 2, "test")).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/messages").queryParam("page", 0)

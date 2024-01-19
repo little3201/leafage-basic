@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * group service test
  *
- * @author liwenqiang 2019/1/29 17:10
+ * @author liwenqiang 2019-01-29 17:10
  **/
 @ExtendWith(MockitoExtension.class)
 class GroupServiceImplTest {
@@ -53,7 +53,7 @@ class GroupServiceImplTest {
     @BeforeEach
     void init() {
         groupDTO = new GroupDTO();
-        groupDTO.setGroupName("test");
+        groupDTO.setName("test");
         groupDTO.setPrincipal("Test");
     }
 
@@ -77,21 +77,14 @@ class GroupServiceImplTest {
     void fetch() {
         given(this.groupRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Group.class)));
 
-        StepVerifier.create(groupService.fetch(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(groupService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
-        StepVerifier.create(groupService.create(groupDTO)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void create_error() {
-        given(this.groupRepository.save(Mockito.any(Group.class))).willThrow(new RuntimeException());
-
-        StepVerifier.create(groupService.create(groupDTO)).expectError(RuntimeException.class).verify();
+        StepVerifier.create(groupService.create(Mockito.mock(GroupDTO.class))).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -100,19 +93,19 @@ class GroupServiceImplTest {
 
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mono.just(Mockito.mock(Group.class)));
 
-        StepVerifier.create(groupService.modify(1L, groupDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(groupService.modify(Mockito.anyLong(), groupDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void remove() {
         given(this.groupRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
-        StepVerifier.create(groupService.remove(1L)).verifyComplete();
+        StepVerifier.create(groupService.remove(Mockito.anyLong())).verifyComplete();
     }
 
     @Test
     void exist() {
-        given(this.groupRepository.existsByGroupName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.groupRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(groupService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }

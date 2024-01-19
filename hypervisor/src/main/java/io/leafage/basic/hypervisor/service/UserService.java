@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * user service
  *
- * @author liwenqiang 2018/7/28 0:29
+ * @author liwenqiang 2018-07-28 0:29
  **/
 public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
 
@@ -39,28 +39,4 @@ public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
      */
     Mono<Page<UserVO>> retrieve(int page, int size);
 
-    /**
-     * 修改
-     *
-     * @param username 账号
-     * @param userDTO  对象信息
-     * @return 操作结果
-     */
-    Mono<UserVO> modify(String username, UserDTO userDTO);
-
-    /**
-     * 查询
-     *
-     * @param username 账号
-     * @return 查询结果
-     */
-    Mono<UserVO> fetch(String username);
-
-    /**
-     * 删除
-     *
-     * @param username 账号
-     * @return 操作结果
-     */
-    Mono<Void> remove(String username);
 }

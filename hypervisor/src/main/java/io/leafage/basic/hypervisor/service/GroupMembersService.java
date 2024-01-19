@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import java.util.Set;
 public interface GroupMembersService {
 
     /**
-     * 查询关联账号
+     * 查询关联user
      *
      * @param groupId group主键
      * @return 数据集
@@ -39,19 +39,19 @@ public interface GroupMembersService {
     Mono<List<GroupMembers>> members(Long groupId);
 
     /**
-     * 查询关联分组
+     * 查询关联group
      *
-     * @param code 代码
+     * @param username 用户名
      * @return 数据集
      */
-    Mono<List<GroupMembers>> groups(String code);
+    Mono<List<GroupMembers>> groups(String username);
 
     /**
-     * 分组-账号关系
+     * group-user关系
      *
-     * @param username 账号
-     * @param groupIds 分组主键集合
+     * @param groupId   group 主键
+     * @param usernames username集合
      * @return 是否成功： true - 是， false - 否
      */
-    Mono<Boolean> relation(String username, Set<Long> groupIds);
+    Mono<Boolean> relation(Long groupId, Set<String> usernames);
 }

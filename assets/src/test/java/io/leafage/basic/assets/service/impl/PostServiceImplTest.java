@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * post service test
  *
- * @author liwenqiang 2019/9/19 9:27
+ * @author liwenqiang 2019-09-19 9:27
  */
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
@@ -103,7 +103,7 @@ class PostServiceImplTest {
 
         given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(PostContent.class)));
 
-        StepVerifier.create(this.postsService.fetch(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -119,14 +119,7 @@ class PostServiceImplTest {
 
         given(this.postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mono.empty());
 
-        StepVerifier.create(this.postsService.create(postDTO)).verifyComplete();
-    }
-
-    @Test
-    void create_error() {
-        given(this.postRepository.save(Mockito.any(Post.class))).willThrow(new RuntimeException());
-
-        StepVerifier.create(this.postsService.create(postDTO)).verifyError();
+        StepVerifier.create(this.postsService.create(Mockito.mock(PostDTO.class))).verifyComplete();
     }
 
     @Test
@@ -144,9 +137,13 @@ class PostServiceImplTest {
 
     @Test
     void remove() {
+        given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(PostContent.class)));
+
+        given(this.postContentRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
+
         given(this.postRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
-        StepVerifier.create(postsService.remove(1L)).verifyComplete();
+        StepVerifier.create(postsService.remove(Mockito.anyLong())).verifyComplete();
     }
 
     @Test

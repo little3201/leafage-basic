@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,33 +15,37 @@
  *
  */
 
-package io.leafage.basic.hypervisor.domain;
+package io.leafage.basic.hypervisor.bo;
 
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
- * Model class for component
+ * bo class for privilege
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author liwenqiang 2022-12-10 22:09
  */
-@Table(name = "components")
-public class Component extends SuperModel {
+public abstract class PrivilegeBO {
 
     /**
      * 名称
      */
-    @Column(value = "component_name")
-    private String componentName;
+    @NotBlank(message = "privilege name must not be blank.")
+    @Size(max = 32, message = "privilege name max length is 32.")
+    private String name;
 
     /**
      * 类型
      */
+    @NotNull(message = "type must not be null.")
     private Character type;
 
     /**
      * 图标
      */
+    @NotBlank(message = "icon must not be blank.")
     private String icon;
 
     /**
@@ -50,21 +54,16 @@ public class Component extends SuperModel {
     private String path;
 
     /**
-     * 是否可用
+     * 描述
      */
-    private boolean enabled = true;
+    private String description;
 
-    /**
-     * owner
-     */
-    private String owner;
-
-    public String getComponentName() {
-        return componentName;
+    public String getName() {
+        return name;
     }
 
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Character getType() {
@@ -91,19 +90,11 @@ public class Component extends SuperModel {
         this.path = path;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

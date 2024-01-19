@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,33 +15,35 @@
  *
  */
 
-package io.leafage.basic.assets.domain;
+package io.leafage.basic.hypervisor.domain;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.relational.core.mapping.Column;
-
-import java.time.LocalDateTime;
+import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * base document
+ * model class for group roles
  *
- * @author liwenqiang 2020-10-06 22:09
- */
-public abstract class AbstractModel {
+ * @author liwenqiang 2024-01-07 21:49
+ **/
+@Table(name = "group_roles")
+public class GroupRoles {
 
     /**
      * 主键
      */
     @Id
     private Long id;
-
     /**
-     * 修改时间
+     * group主键
      */
-    @Column(value = "modify_time")
-    @LastModifiedDate
-    private LocalDateTime modifyTime;
+    @Column(value = "group_id")
+    private Long groupId;
+    /**
+     * role主键
+     */
+    @Column(value = "role_id")
+    private Long roleId;
 
     public Long getId() {
         return id;
@@ -51,11 +53,19 @@ public abstract class AbstractModel {
         this.id = id;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
     }
 }

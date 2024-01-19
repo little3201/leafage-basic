@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,16 +17,17 @@
 
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for post statistics
+ * model class for post statistics
  *
  * @author liwenqiang 2023-03-26 14:12
  */
 @Table(name = "post_statistics")
-public class PostStatistics extends AbstractModel {
+public class PostStatistics extends AuditMetadata {
 
     /**
      * 帖子

@@ -19,4 +19,4 @@ ARG JAR_FILE=target/hypervisor-${VERSION}.jar
 COPY ${JAR_FILE} app.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar","--spring.profiles.active=prod"]

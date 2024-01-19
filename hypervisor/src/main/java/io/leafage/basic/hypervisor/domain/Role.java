@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,54 +17,44 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for role
+ * model class for role
  *
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "roles")
-public class Role extends AbstractModel {
+public class Role extends AuditMetadata {
 
     /**
      * 名称
      */
-    @Column(value = "role_name")
-    private String roleName;
+    @Column(value = "name")
+    private String name;
 
     /**
-     * 是否可用
+     * 描述
      */
-    private boolean enabled = true;
+    private String description;
 
-    /**
-     * owner
-     */
-    private String owner;
 
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 }

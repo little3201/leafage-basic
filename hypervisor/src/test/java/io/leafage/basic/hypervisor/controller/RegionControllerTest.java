@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,11 +29,14 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -41,7 +44,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * region api test
  *
- * @author liwenqiang 2021/8/30 9:38
+ * @author liwenqiang 2021-08-30 9:38
  **/
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(RegionController.class)
@@ -58,12 +61,18 @@ class RegionControllerTest {
     @BeforeEach
     void init() {
         regionVO = new RegionVO();
-        regionVO.setRegionName("test");
+        regionVO.setName("test");
+        regionVO.setLastUpdatedAt(LocalDateTime.now());
+        regionVO.setSuperior("super");
+        regionVO.setAreaCode("023333");
+        regionVO.setPostalCode(232);
+        regionVO.setDescription("region");
     }
 
     @Test
     void retrieve() {
-        Page<RegionVO> voPage = new PageImpl<>(List.of(regionVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<RegionVO> voPage = new PageImpl<>(List.of(regionVO), pageable, 1L);
         given(this.regionService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/regions").queryParam("page", 0)
@@ -84,7 +93,7 @@ class RegionControllerTest {
         given(this.regionService.fetch(Mockito.anyLong())).willReturn(Mono.just(regionVO));
 
         webTestClient.get().uri("/regions/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.regionName").isEqualTo("test");
+                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test

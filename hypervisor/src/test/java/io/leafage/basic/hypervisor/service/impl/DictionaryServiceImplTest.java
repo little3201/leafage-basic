@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.domain.Dictionary;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,7 +37,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * dictionary service test
  *
- * @author liwenqiang 2022/4/8 7:45
+ * @author liwenqiang 2022-04-8 7:45
  **/
 @ExtendWith(MockitoExtension.class)
 class DictionaryServiceImplTest {
@@ -46,6 +47,15 @@ class DictionaryServiceImplTest {
 
     @InjectMocks
     private DictionaryServiceImpl dictionaryService;
+
+    private DictionaryDTO dictionaryDTO;
+
+    @BeforeEach
+    void init() {
+        dictionaryDTO = new DictionaryDTO();
+        dictionaryDTO.setName("Gender");
+        dictionaryDTO.setDescription("描述");
+    }
 
     @Test
     void retrieve() {
@@ -61,7 +71,7 @@ class DictionaryServiceImplTest {
     void fetch() {
         given(this.dictionaryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
 
-        StepVerifier.create(dictionaryService.fetch(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(dictionaryService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -75,22 +85,28 @@ class DictionaryServiceImplTest {
     void subordinates() {
         given(this.dictionaryRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
-        StepVerifier.create(dictionaryService.subordinates(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(dictionaryService.subordinates(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void create() {
         given(this.dictionaryRepository.save(Mockito.any(Dictionary.class))).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
 
-        DictionaryDTO dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setDictionaryName("Gender");
-        dictionaryDTO.setDescription("描述");
         StepVerifier.create(dictionaryService.create(dictionaryDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
+    void modify() {
+        given(this.dictionaryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
+
+        given(this.dictionaryRepository.save(Mockito.any(Dictionary.class))).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
+
+        StepVerifier.create(dictionaryService.modify(Mockito.anyLong(), dictionaryDTO)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
     void exist() {
-        given(this.dictionaryRepository.existsByDictionaryName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.dictionaryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(dictionaryService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
     }

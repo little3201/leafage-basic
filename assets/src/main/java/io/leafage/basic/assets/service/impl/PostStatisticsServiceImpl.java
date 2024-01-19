@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import io.leafage.basic.assets.domain.PostStatistics;
 import io.leafage.basic.assets.repository.StatisticsRepository;
 import io.leafage.basic.assets.service.PostStatisticsService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 /**
@@ -40,6 +41,7 @@ public class PostStatisticsServiceImpl implements PostStatisticsService {
 
     @Override
     public Mono<PostStatistics> increase(Long postId, StatisticsEnum statisticsEnum) {
+        Assert.notNull(postId, "postId must not be null.");
         return statisticsRepository.getByPostId(postId).flatMap(postStatistics -> {
             switch (statisticsEnum) {
                 case LIKES -> postStatistics.setLikes(postStatistics.getLikes() + 1);

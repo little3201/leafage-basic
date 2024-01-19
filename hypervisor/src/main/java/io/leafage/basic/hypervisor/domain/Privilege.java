@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,51 +15,62 @@
  *
  */
 
-package io.leafage.basic.hypervisor.bo;
+package io.leafage.basic.hypervisor.domain;
 
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import io.leafage.basic.hypervisor.config.AuditMetadata;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * BO class for component
+ * model class for privileges
  *
- * @author liwenqiang 2022-12-10 22:09
+ * @author liwenqiang 2020-10-06 22:09
  */
-public abstract class ComponentBO {
+@Table(name = "privileges")
+public class Privilege extends AuditMetadata {
 
     /**
      * 名称
      */
-    @NotBlank(message = "componentName cannot be blank.")
-    @Size(max = 16, message = "componentName max length is 16.")
-    private String componentName;
-
+    @Column(value = "name")
+    private String name;
+    /**
+     * 上级
+     */
+    @Column(value = "superior_id")
+    private Long superiorId;
     /**
      * 类型
      */
-    @NotNull(message = "type cannot be null.")
     private Character type;
-
     /**
      * 图标
      */
-    @NotBlank(message = "component icon is blank.")
     private String icon;
-
     /**
      * 路径
      */
     private String path;
 
+    /**
+     * 描述
+     */
+    private String description;
 
-    public String getComponentName() {
-        return componentName;
+    public String getName() {
+        return name;
     }
 
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public Character getType() {
@@ -84,5 +95,13 @@ public abstract class ComponentBO {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

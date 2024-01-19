@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * comment service test
  *
- * @author liwenqiang 2020/3/1 22:07
+ * @author liwenqiang 2020-03-01 22:07
  */
 @ExtendWith(MockitoExtension.class)
 class CommentServiceImplTest {
@@ -67,7 +67,7 @@ class CommentServiceImplTest {
 
         given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
-        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(9L));
+        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(2L));
 
         StepVerifier.create(commentService.comments(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
@@ -78,7 +78,7 @@ class CommentServiceImplTest {
 
         given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
-        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(9L));
+        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(2L));
 
         StepVerifier.create(commentService.replies(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }

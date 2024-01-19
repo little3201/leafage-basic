@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 
 /**
- * BO class for post
+ * bo class for post
  *
  * @author liwenqiang 2022-12-10 22:09
  */
@@ -31,7 +31,7 @@ public abstract class PostBO {
     /**
      * 标题
      */
-    @NotBlank(message = "title cannot be blank.")
+    @NotBlank(message = "title must not be blank.")
     private String title;
 
     /**
@@ -42,13 +42,13 @@ public abstract class PostBO {
     /**
      * 内容
      */
-    @NotBlank(message = "context cannot be blank.")
+    @NotBlank(message = "context must not be blank.")
     private String context;
 
     /**
      * 标签
      */
-    @NotEmpty(message = "tags cannot be empty.")
+    @NotEmpty(message = "tags must not be empty.")
     private Set<String> tags;
 
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.GroupMembers;
 import io.leafage.basic.hypervisor.repository.GroupMembersRepository;
-import io.leafage.basic.hypervisor.repository.GroupRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.GroupMembersService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -28,7 +26,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -39,14 +36,10 @@ import java.util.Set;
 @Service
 public class GroupMembersServiceImpl implements GroupMembersService {
 
-    private final GroupRepository groupRepository;
     private final GroupMembersRepository groupMembersRepository;
-    private final UserRepository userRepository;
 
-    public GroupMembersServiceImpl(GroupRepository groupRepository, GroupMembersRepository groupMembersRepository, UserRepository userRepository) {
-        this.groupRepository = groupRepository;
+    public GroupMembersServiceImpl(GroupMembersRepository groupMembersRepository) {
         this.groupMembersRepository = groupMembersRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -58,20 +51,20 @@ public class GroupMembersServiceImpl implements GroupMembersService {
     @Override
     public Mono<List<GroupMembers>> groups(String username) {
         Assert.hasText(username, "username must not be blank.");
-        return groupMembersRepository.findByUsername(username)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new)).collectList();
+        return groupMembersRepository.findByUsername(username).collectList();
     }
 
     @Override
-    public Mono<Boolean> relation(String username, Set<Long> groupIds) {
-        Assert.hasText(username, "username must not be blank.");
-        Assert.notEmpty(groupIds, "group ids must not be empty.");
+    public Mono<Boolean> relation(Long groupId, Set<String> usernames) {
+        Assert.notNull(groupId, "group id must not be blank.");
+        Assert.notEmpty(usernames, "usernames must not be empty.");
 
-        return Flux.fromIterable(groupIds).map(groupId -> {
-            GroupMembers groupMembers = new GroupMembers();
-            groupMembers.setUsername(username);
-            groupMembers.setGroupId(groupId);
-            return groupMembers;
-        }).collectList().flatMapMany(groupMembersRepository::saveAll).hasElements();
+        return Flux.fromIterable(usernames).map(username -> {
+                    GroupMembers groupMembers = new GroupMembers();
+                    groupMembers.setUsername(username);
+                    groupMembers.setGroupId(groupId);
+                    return groupMembers;
+                }).collectList()
+                .flatMapMany(groupMembersRepository::saveAll).hasElements();
     }
 }

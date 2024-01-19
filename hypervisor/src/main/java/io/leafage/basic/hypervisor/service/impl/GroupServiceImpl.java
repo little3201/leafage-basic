@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -54,45 +55,41 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Mono<Page<GroupVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<GroupVO> voFlux = groupRepository.findBy(pageRequest).flatMap(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<GroupVO> voFlux = groupRepository.findBy(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = groupRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
-    }
-
-    @Override
-    public Mono<Boolean> exist(String groupName) {
-        Assert.hasText(groupName, "group name must not be blank.");
-        return groupRepository.existsByGroupName(groupName);
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override
     public Mono<GroupVO> fetch(Long id) {
         Assert.notNull(id, "group id must not be null.");
-        return groupRepository.findById(id).flatMap(this::convertOuter)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+        return groupRepository.findById(id).flatMap(this::convertOuter);
+    }
+
+    @Override
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "group name must not be blank.");
+        return groupRepository.existsByName(name);
     }
 
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
-        return Mono.just(groupDTO).map(dto -> {
-                    Group group = new Group();
-                    BeanUtils.copyProperties(groupDTO, group);
-                    return group;
-                })
-                .flatMap(groupRepository::save).flatMap(this::convertOuter);
+        Group group = new Group();
+        BeanUtils.copyProperties(groupDTO, group);
+        return groupRepository.save(group).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<GroupVO> modify(Long id, GroupDTO groupDTO) {
         Assert.notNull(id, "group id must not be null.");
-        return groupRepository.findById(id)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+        return groupRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
-                .flatMap(groupRepository::save).flatMap(this::convertOuter);
+                .flatMap(groupRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     @Override
@@ -109,9 +106,9 @@ public class GroupServiceImpl implements GroupService {
      */
     private Mono<GroupVO> convertOuter(Group group) {
         return Mono.just(group).map(g -> {
-            GroupVO groupVO = new GroupVO();
-            BeanUtils.copyProperties(g, groupVO);
-            return groupVO;
+            GroupVO vo = new GroupVO();
+            BeanUtils.copyProperties(g, vo);
+            return vo;
         });
     }
 }

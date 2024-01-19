@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -37,7 +38,7 @@ import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 import java.util.NoSuchElementException;
 
 /**
- * notification service impl
+ * message service impl
  *
  * @author liwenqiang 2022-02-10 13:49
  */
@@ -54,39 +55,38 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
 
     @Override
     public Mono<Page<MessageVO>> retrieve(int page, int size, String receiver) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<MessageVO> voFlux = messageRepository.findByReceiver(receiver, pageRequest).map(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<MessageVO> voFlux = messageRepository.findByReceiver(receiver, pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = messageRepository.countByReceiver(receiver);
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override
     public Mono<MessageVO> fetch(Long id) {
-        Assert.notNull(id, "notification id must not be null.");
-        return messageRepository.findById(id).doOnNext(message ->
-                message.setRead(true)).flatMap(messageRepository::save).map(this::convertOuter);
+        Assert.notNull(id, "message id must not be null.");
+        return messageRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(message -> message.setRead(Boolean.TRUE))
+                .flatMap(messageRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<MessageVO> create(MessageDTO messageDTO) {
-        return userRepository.getByUsername(messageDTO.getReceiver())
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(user -> Mono.just(messageDTO).map(dto -> {
-                            Message message = new Message();
-                            BeanUtils.copyProperties(messageDTO, message);
-                            message.setReceiver(user.getUsername());
-                            return message;
-                        })
-                        .flatMap(messageRepository::save).map(this::convertOuter))
-                .switchIfEmpty(Mono.error(new NoSuchElementException()));
+        Message message = new Message();
+        BeanUtils.copyProperties(messageDTO, message);
+        return Mono.just(message).map(m -> {
+            userRepository.getByUsername(messageDTO.getReceiver()).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                    .doOnNext(user -> message.setReceiver(user.getUsername()));
+            return m;
+        }).flatMap(messageRepository::save).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "notification id must not be null.");
+        Assert.notNull(id, "message id must not be null.");
         return messageRepository.deleteById(id);
     }
 
@@ -96,10 +96,13 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
      * @param message 信息
      * @return NotificationVO 输出对象
      */
-    private MessageVO convertOuter(Message message) {
-        MessageVO outer = new MessageVO();
-        BeanUtils.copyProperties(message, outer);
-        return outer;
+    private Mono<MessageVO> convertOuter(Message message) {
+        return Mono.just(message).map(m -> {
+            MessageVO vo = new MessageVO();
+            BeanUtils.copyProperties(m, vo);
+            return vo;
+        });
+
     }
 
 }

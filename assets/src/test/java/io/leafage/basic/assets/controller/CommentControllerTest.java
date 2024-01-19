@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -34,14 +34,14 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import static org.mockito.BDDMockito.given;
 
 /**
  * comment controller test
  *
- * @author liwenqiang 2021/7/17 21:04
+ * @author liwenqiang 2021-07-17 21:04
  */
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(CommentController.class)
@@ -68,7 +68,7 @@ class CommentControllerTest {
         commentVO.setCount(23L);
         commentVO.setLocation("中国上海");
         commentVO.setCountry("China");
-        commentVO.setModifyTime(LocalDateTime.now());
+        commentVO.setLastUpdatedAt(Instant.now());
     }
 
     @Test

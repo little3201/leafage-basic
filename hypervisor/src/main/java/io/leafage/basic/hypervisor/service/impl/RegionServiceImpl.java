@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -49,13 +50,13 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Mono<Page<RegionVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = regionRepository.countByEnabledTrue();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override
@@ -65,9 +66,9 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Mono<Boolean> exist(String regionName) {
-        Assert.hasText(regionName, "region name must not be blank.");
-        return regionRepository.existsByRegionName(regionName);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "region name must not be blank.");
+        return regionRepository.existsByName(name);
     }
 
     @Override
@@ -78,19 +79,15 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Mono<RegionVO> create(RegionDTO regionDTO) {
-        return Mono.just(regionDTO).map(dto -> {
-                    Region region = new Region();
-                    BeanUtils.copyProperties(regionDTO, region);
-                    return region;
-                })
-                .flatMap(regionRepository::save).flatMap(this::convertOuter);
+        Region region = new Region();
+        BeanUtils.copyProperties(regionDTO, region);
+        return regionRepository.save(region).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<RegionVO> modify(Long id, RegionDTO regionDTO) {
         Assert.notNull(id, "region id must not be null.");
-        return regionRepository.findById(id)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+        return regionRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(region -> BeanUtils.copyProperties(regionDTO, region))
                 .flatMap(regionRepository::save).flatMap(this::convertOuter);
     }

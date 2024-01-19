@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,30 +17,36 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.annotation.Id;
+import io.leafage.basic.hypervisor.config.AuditMetadata;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDateTime;
 
 /**
- * Model class for User
+ * model class for User
  *
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "users")
-public class User {
+public class User extends AuditMetadata {
 
     /**
      * 用户名
      */
-    @Id
+    @Unique
     private String username;
 
     /**
-     * 昵称
+     * 名
      */
-    private String nickname;
+    private String firstname;
+
+    /**
+     * 姓
+     */
+    private String lastname;
 
     /**
      * 密码
@@ -53,12 +59,7 @@ public class User {
     private String avatar;
 
     /**
-     * 是否可用
-     */
-    private boolean enabled = true;
-
-    /**
-     * 账号有效期
+     * user有效期
      */
     @Column(value = "account_expires_at")
     private LocalDateTime accountExpiresAt;
@@ -83,12 +84,20 @@ public class User {
         this.username = username;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getPassword() {
@@ -105,14 +114,6 @@ public class User {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public LocalDateTime getAccountExpiresAt() {

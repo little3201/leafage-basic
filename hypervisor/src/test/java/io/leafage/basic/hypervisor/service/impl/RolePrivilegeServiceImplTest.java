@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.RoleComponents;
-import io.leafage.basic.hypervisor.repository.RoleComponentsRepository;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
+import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,36 +33,36 @@ import java.util.Collections;
 import static org.mockito.BDDMockito.given;
 
 /**
- * role component service test
+ * role privilege service test
  *
- * @author liwenqiang 2021/6/14 11:10
+ * @author liwenqiang 2021-06-14 11:10
  **/
 @ExtendWith(MockitoExtension.class)
-class RoleComponentServiceImplTest {
+class RolePrivilegeServiceImplTest {
 
     @Mock
-    private RoleComponentsRepository roleComponentsRepository;
+    private RolePrivilegesRepository rolePrivilegesRepository;
 
     @InjectMocks
-    private RoleComponentsServiceImpl roleComponentsService;
+    private RolePrivilegesServiceImpl roleComponentsService;
 
     @Test
-    void components() {
-        given(this.roleComponentsRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RoleComponents.class)));
+    void privileges() {
+        given(this.rolePrivilegesRepository.findByRoleId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
 
-        StepVerifier.create(roleComponentsService.components(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(roleComponentsService.privileges(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void roles() {
-        given(this.roleComponentsRepository.findByComponentId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RoleComponents.class)));
+        given(this.rolePrivilegesRepository.findByPrivilegeId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
 
         StepVerifier.create(roleComponentsService.roles(1L)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void relation() {
-        given(this.roleComponentsRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(RoleComponents.class)));
+        given(this.rolePrivilegesRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
 
         StepVerifier.create(roleComponentsService.relation(1L, Collections.singleton(2L)))
                 .expectNextCount(1).verifyComplete();

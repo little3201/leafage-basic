@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package io.leafage.basic.hypervisor.bo;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * DTO class for Notification
+ * dto class for Notification
  *
  * @author liwenqiang 2022-12-10 13:49
  */
@@ -30,19 +30,19 @@ public abstract class MessageBO {
     /**
      * 标题
      */
-    @NotBlank(message = "title cannot be blank.")
+    @NotBlank(message = "title must not be blank.")
     private String title;
 
     /**
      * 内容
      */
-    @NotBlank(message = "context cannot be blank.")
+    @NotBlank(message = "context must not be blank.")
     private String context;
 
     /**
      * 接收人
      */
-    @NotBlank(message = "receiver cannot be blank.")
+    @NotBlank(message = "receiver must not be blank.")
     private String receiver;
 
 

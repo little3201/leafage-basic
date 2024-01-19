@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@ public interface CategoryRepository extends R2dbcRepository<Category, Long> {
     /**
      * 是否已存在
      *
-     * @param categoryName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByCategoryName(String categoryName);
+    Mono<Boolean> existsByName(String name);
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import java.util.Set;
 public interface RoleMembersService {
 
     /**
-     * 查询关联账号
+     * 查询关联user
      *
      * @param roleId role主键
      * @return 数据集
@@ -39,19 +39,19 @@ public interface RoleMembersService {
     Mono<List<RoleMembers>> members(Long roleId);
 
     /**
-     * 查询关联角色
+     * 查询关联role
      *
-     * @param username 账号
+     * @param username user
      * @return 数据集
      */
     Mono<List<RoleMembers>> roles(String username);
 
     /**
-     * 角色-账号关系
+     * role-user关系
      *
-     * @param username 用户
-     * @param roleIds  角色主键集合
+     * @param roleId    role 主键
+     * @param usernames username集合
      * @return 是否成功： true - 是， false - 否
      */
-    Mono<Boolean> relation(String username, Set<Long> roleIds);
+    Mono<Boolean> relation(Long roleId, Set<String> usernames);
 }

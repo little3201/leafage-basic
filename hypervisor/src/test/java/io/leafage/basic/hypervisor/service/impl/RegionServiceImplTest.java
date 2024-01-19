@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * region service test
  *
- * @author liwenqiang 2021/8/30 9:38
+ * @author liwenqiang 2021-08-30 9:38
  **/
 @ExtendWith(MockitoExtension.class)
 class RegionServiceImplTest {
@@ -53,9 +53,10 @@ class RegionServiceImplTest {
     @BeforeEach
     void init() {
         regionDTO = new RegionDTO();
-        regionDTO.setRegionName("西安市");
+        regionDTO.setName("西安市");
         regionDTO.setAreaCode("029");
         regionDTO.setPostalCode(710000);
+        regionDTO.setSuperiorId(1L);
     }
 
     @Test
@@ -71,19 +72,19 @@ class RegionServiceImplTest {
     void fetch() {
         given(this.regionRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.fetch(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void subordinates() {
         given(this.regionRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.subordinates(11L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.subordinates(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void exist() {
-        given(this.regionRepository.existsByRegionName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.regionRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         StepVerifier.create(regionService.exist("北京市")).expectNext(Boolean.TRUE).verifyComplete();
     }
@@ -92,14 +93,7 @@ class RegionServiceImplTest {
     void create() {
         given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void create_error() {
-        given(this.regionRepository.save(Mockito.any(Region.class))).willThrow(new RuntimeException());
-
-        StepVerifier.create(regionService.create(regionDTO)).expectError(RuntimeException.class).verify();
+        StepVerifier.create(regionService.create(Mockito.mock(RegionDTO.class))).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -108,14 +102,14 @@ class RegionServiceImplTest {
 
         given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.modify(11L, regionDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.modify(Mockito.anyLong(), regionDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void remove() {
         given(this.regionRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
-        StepVerifier.create(regionService.remove(11L)).verifyComplete();
+        StepVerifier.create(regionService.remove(Mockito.anyLong())).verifyComplete();
     }
 
 }

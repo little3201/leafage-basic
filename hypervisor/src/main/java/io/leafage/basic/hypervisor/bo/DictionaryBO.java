@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,17 +20,17 @@ package io.leafage.basic.hypervisor.bo;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * BO class for dictionary
+ * bo class for dictionary
  *
- * @author wilsonli 2023/3/26 12:21
+ * @author wilsonli 2022-03-26 12:21
  **/
 public abstract class DictionaryBO {
 
     /**
      * 名称
      */
-    @NotBlank(message = "dictionaryName cannot be blank.")
-    private String dictionaryName;
+    @NotBlank(message = "dictionaryName must not be blank.")
+    private String name;
 
     /**
      * 描述
@@ -38,12 +38,12 @@ public abstract class DictionaryBO {
     private String description;
 
 
-    public String getDictionaryName() {
-        return dictionaryName;
+    public String getName() {
+        return name;
     }
 
-    public void setDictionaryName(String dictionaryName) {
-        this.dictionaryName = dictionaryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

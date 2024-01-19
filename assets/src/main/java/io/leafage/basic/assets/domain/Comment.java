@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,48 +17,40 @@
 
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 
 /**
- * Model class for comment
+ * model class for comment
  *
  * @author liwenqiang 2021-07-15 22:12
  */
 @Table(name = "comments")
-public class Comment extends AbstractModel {
+public class Comment extends AuditMetadata {
 
     /**
      * 帖子ID
      */
     @Column(value = "post_id")
     private Long postId;
-
     /**
      * 内容
      */
     private String context;
-
     /**
      * 国家
      */
     private String country;
-
     /**
      * 位置
      */
     private String location;
-
     /**
      * 回复者
      */
     private Long replier;
-
-    /**
-     * 是否有效
-     */
-    private boolean enabled = true;
 
 
     public Long getPostId() {
@@ -101,11 +93,4 @@ public class Comment extends AbstractModel {
         this.replier = replier;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 }

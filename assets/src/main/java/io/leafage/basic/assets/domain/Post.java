@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,21 +16,22 @@
  */
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.util.Set;
 
 /**
- * Model class for post
+ * model class for post
  *
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "posts")
-public class Post extends AbstractModel {
+public class Post extends AuditMetadata {
 
     /**
-     * 分类ID
+     * category 主键
      */
     @Column(value = "category_id")
     private Long categoryId;
@@ -51,14 +52,10 @@ public class Post extends AbstractModel {
     private Set<String> tags;
 
     /**
-     * 是否有效
+     * 是否启用
      */
+    @Column(value = "is_enabled")
     private boolean enabled = true;
-
-    /**
-     * owner
-     */
-    private String owner;
 
     public Long getCategoryId() {
         return categoryId;
@@ -100,11 +97,4 @@ public class Post extends AbstractModel {
         this.enabled = enabled;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 }

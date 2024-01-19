@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -36,7 +37,7 @@ import java.util.NoSuchElementException;
 /**
  * role service impl
  *
- * @author liwenqiang 2018/9/27 14:20
+ * @author liwenqiang 2018-09-27 14:20
  **/
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -54,49 +55,47 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Mono<Page<RoleVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<RoleVO> voFlux = roleRepository.findBy(pageRequest).flatMap(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<RoleVO> voFlux = roleRepository.findBy(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = roleRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
-    }
-
-    @Override
-    public Mono<Boolean> exist(String roleName) {
-        Assert.hasText(roleName, "role name must not be blank.");
-        return roleRepository.existsByRoleName(roleName);
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override
     public Mono<RoleVO> fetch(Long id) {
         Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.findById(id).flatMap(this::convertOuter)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+        return roleRepository.findById(id).flatMap(this::convertOuter);
+    }
+
+    @Override
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "role name must not be blank.");
+        return roleRepository.existsByName(name);
     }
 
     @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
-        return Mono.just(roleDTO).map(dto -> {
-                    Role role = new Role();
-                    BeanUtils.copyProperties(roleDTO, role);
-                    role.setOwner("admin");
-                    return role;
-                })
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(roleRepository::save).flatMap(this::convertOuter);
+        Role role = new Role();
+        BeanUtils.copyProperties(roleDTO, role);
+        return roleRepository.save(role).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> modify(Long id, RoleDTO roleDTO) {
         Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.findById(id)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(role -> {
-                    BeanUtils.copyProperties(roleDTO, role);
-                    return roleRepository.save(role);
-                }).flatMap(this::convertOuter);
+        return roleRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(role -> BeanUtils.copyProperties(roleDTO, role))
+                .flatMap(roleRepository::save)
+                .flatMap(this::convertOuter);
+    }
+
+    @Override
+    public Mono<Void> remove(Long id) {
+        Assert.notNull(id, "role id must not be blank.");
+        return roleRepository.deleteById(id);
     }
 
     /**
@@ -106,10 +105,10 @@ public class RoleServiceImpl implements RoleService {
      * @return 输出转换后的vo对象
      */
     private Mono<RoleVO> convertOuter(Role role) {
-        return Mono.just(role).map(a -> {
-            RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(role, roleVO);
-            return roleVO;
+        return Mono.just(role).map(r -> {
+            RoleVO vo = new RoleVO();
+            BeanUtils.copyProperties(r, vo);
+            return vo;
         });
     }
 

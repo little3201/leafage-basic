@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,28 +15,13 @@
  *
  */
 
-package io.leafage.basic.hypervisor.dto;
+package io.leafage.basic.hypervisor.handler;
 
-import io.leafage.basic.hypervisor.bo.ComponentBO;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * DTO class for component
- *
- * @author liwenqiang 2020-10-06 22:09
+ * rest controller advice
  */
-public class ComponentDTO extends ComponentBO {
-
-    /**
-     * 上级
-     */
-    private Long superiorId;
-
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
-    }
-
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 }

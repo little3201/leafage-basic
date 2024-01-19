@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package io.leafage.basic.assets.vo;
 
 import io.leafage.basic.assets.bo.PostBO;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
- * VO class for post
+ * vo class for post
  *
  * @author liwenqiang 2020-10-06 22:09
  */
@@ -39,14 +39,9 @@ public class PostVO extends PostBO {
     private String category;
 
     /**
-     * owner
+     * 最后更新时间
      */
-    private String owner;
-
-    /**
-     * 时间
-     */
-    private LocalDateTime modifyTime;
+    private Instant lastModifiedDate;
 
 
     public Long getId() {
@@ -65,19 +60,11 @@ public class PostVO extends PostBO {
         this.category = category;
     }
 
-    public String getOwner() {
-        return owner;
+    public Instant getLastUpdatedAt() {
+        return lastModifiedDate;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setLastUpdatedAt(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

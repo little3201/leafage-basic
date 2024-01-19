@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,29 +15,20 @@
  *
  */
 
-package io.leafage.basic.hypervisor.domain;
+package io.leafage.basic.hypervisor.config;
 
-import org.springframework.data.relational.core.mapping.Column;
+import jakarta.annotation.Nonnull;
+import org.springframework.data.domain.ReactiveAuditorAware;
+import reactor.core.publisher.Mono;
 
 /**
- * Model class
- *
- * @author liwenqiang 2020-10-06 22:09
+ * auditor impl
  */
-public abstract class SuperModel extends AbstractModel {
+public class AuditorAwareImpl implements ReactiveAuditorAware<String> {
 
-    /**
-     * 上级
-     */
-    @Column(value = "superior_id")
-    private Long superiorId;
-
-
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
+    @Nonnull
+    @Override
+    public Mono<String> getCurrentAuditor() {
+        return Mono.just("admin");
     }
 }

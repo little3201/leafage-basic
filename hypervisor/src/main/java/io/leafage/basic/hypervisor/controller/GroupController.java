@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -38,6 +39,7 @@ import java.util.List;
  *
  * @author liwenqiang 2018/12/20 9:54
  **/
+@Validated
 @RestController
 @RequestMapping("/groups")
 public class GroupController {
@@ -92,14 +94,14 @@ public class GroupController {
     /**
      * 是否已存在
      *
-     * @param groupName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String groupName) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = groupService.exist(groupName);
+            existsMono = groupService.exist(name);
         } catch (Exception e) {
             logger.error("Check group is exist an error: ", e);
             return ResponseEntity.noContent().build();
@@ -163,7 +165,7 @@ public class GroupController {
     }
 
     /**
-     * 查询关联账号
+     * 查询关联user
      *
      * @param id 组id
      * @return 查询到的数据集，异常时返回204状态码

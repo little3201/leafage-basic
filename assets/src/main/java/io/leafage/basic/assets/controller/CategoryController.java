@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -35,6 +36,7 @@ import reactor.core.publisher.Mono;
  *
  * @author liwenqiang 2020-02-16 14:26
  **/
+@Validated
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
@@ -87,14 +89,14 @@ public class CategoryController {
     /**
      * 是否已存在
      *
-     * @param categoryName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String categoryName) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = categoryService.exist(categoryName);
+            existsMono = categoryService.exist(name);
         } catch (Exception e) {
             logger.error("Check category name is exist an error: ", e);
             return ResponseEntity.noContent().build();

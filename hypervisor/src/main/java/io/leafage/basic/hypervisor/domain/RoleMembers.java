@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,26 +17,40 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for Role Members
+ * model class for role members
  *
  * @author liwenqiang 2023-03-25 09:07
  **/
 @Table(name = "role_members")
-public class RoleMembers extends AbstractModel {
+public class RoleMembers {
 
     /**
-     * 账号
+     * 主键
+     */
+    @Id
+    private Long id;
+    /**
+     * user
      */
     private String username;
     /**
-     * 角色主键
+     * role主键
      */
     @Column(value = "role_id")
     private Long roleId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

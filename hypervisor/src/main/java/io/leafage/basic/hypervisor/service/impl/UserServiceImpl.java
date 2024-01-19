@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -37,7 +38,7 @@ import java.util.NoSuchElementException;
 /**
  * user service impl
  *
- * @author liwenqiang 2018/7/28 0:30
+ * @author liwenqiang 2018-07-28 0:30
  **/
 @Service
 public class UserServiceImpl implements UserService {
@@ -50,13 +51,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<Page<UserVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<UserVO> voFlux = userRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<UserVO> voFlux = userRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = userRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
+    }
+
+    @Override
+    public Mono<UserVO> fetch(Long id) {
+        Assert.notNull(id, "user id must not be blank.");
+        return userRepository.findById(id).flatMap(this::convertOuter);
     }
 
     @Override
@@ -69,42 +76,38 @@ public class UserServiceImpl implements UserService {
     public Mono<UserVO> create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
-        return userRepository.save(user).map(this::convertOuter);
+        user.setPassword("123456");
+        return userRepository.save(user).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<UserVO> modify(String username, UserDTO userDTO) {
-        Assert.hasText(username, "username must not be blank.");
-        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(user -> {
-                    BeanUtils.copyProperties(userDTO, user);
-                    return userRepository.save(user).map(this::convertOuter);
-                });
+    public Mono<UserVO> modify(Long id, UserDTO userDTO) {
+        Assert.notNull(id, "user id must not be blank.");
+        return userRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(user -> BeanUtils.copyProperties(userDTO, user))
+                .flatMap(userRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<Void> remove(String username) {
-        Assert.hasText(username, "username must not be blank.");
-        return userRepository.deleteByUsername(username);
+    public Mono<Void> remove(Long id) {
+        Assert.notNull(id, "user id must not be blank.");
+        return userRepository.deleteById(id);
     }
 
-    @Override
-    public Mono<UserVO> fetch(String username) {
-        Assert.hasText(username, "username must not be blank.");
-        return userRepository.getByUsername(username).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .map(this::convertOuter);
-    }
 
     /**
      * 数据转换
      *
-     * @param info 信息
+     * @param user 信息
      * @return UserVO 输出对象
      */
-    private UserVO convertOuter(User info) {
-        UserVO outer = new UserVO();
-        BeanUtils.copyProperties(info, outer);
-        return outer;
+    private Mono<UserVO> convertOuter(User user) {
+        return Mono.just(user).map(u -> {
+            UserVO vo = new UserVO();
+            BeanUtils.copyProperties(u, vo);
+            return vo;
+        });
     }
 
 }

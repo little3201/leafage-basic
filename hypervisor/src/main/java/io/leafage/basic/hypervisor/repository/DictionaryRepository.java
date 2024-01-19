@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,10 +43,10 @@ public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> 
     /**
      * 是否已存在
      *
-     * @param dictionaryName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByDictionaryName(String dictionaryName);
+    Mono<Boolean> existsByName(String name);
 
     /**
      * 查询下级

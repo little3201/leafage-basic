@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -34,7 +36,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * user接口测试
  *
- * @author liwenqiang 2019/1/29 17:10
+ * @author liwenqiang 2019-01-29 17:10
  **/
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -46,13 +48,22 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
 
     @Test
+    void retrieve() {
+        given(this.userRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(User.class)));
+
+        given(this.userRepository.count()).willReturn(Mono.just(2L));
+
+        StepVerifier.create(userService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
     void fetch() {
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
-        StepVerifier.create(userService.fetch("little3201")).expectNextCount(1).verifyComplete();
+        given(this.userRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(User.class)));
+        StepVerifier.create(userService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     /**
-     * 测试新增用户信息
+     * 测试新增user
      */
     @Test
     void create() {
@@ -64,23 +75,23 @@ class UserServiceImplTest {
     void exist() {
         given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(userService.exist("little3201")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(userService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test
     void modify() {
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
+        given(this.userRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(User.class)));
 
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(Mono.just(Mockito.mock(User.class)));
 
         UserDTO userDTO = new UserDTO();
-        StepVerifier.create(userService.modify("little3201", userDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(userService.modify(Mockito.anyLong(), userDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void remove() {
-        given(this.userRepository.deleteByUsername(Mockito.anyString())).willReturn(Mono.empty());
+        given(this.userRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
-        StepVerifier.create(userService.remove("little3201")).verifyComplete();
+        StepVerifier.create(userService.remove(Mockito.anyLong())).verifyComplete();
     }
 }

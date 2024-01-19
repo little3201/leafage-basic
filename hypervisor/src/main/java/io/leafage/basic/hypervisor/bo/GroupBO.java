@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,30 +20,34 @@ package io.leafage.basic.hypervisor.bo;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * BO class for group
+ * bo class for group
  *
- * @author wilsonli 2023/3/26 15:21
+ * @author wilsonli 2022-03-26 15:21
  **/
 public abstract class GroupBO {
 
     /**
      * 名称
      */
-    @NotBlank(message = "groupName cannot be blank.")
-    private String groupName;
+    @NotBlank(message = "group name must not be blank.")
+    private String name;
 
     /**
      * 负责人
      */
     private String principal;
 
+    /**
+     * 描述
+     */
+    private String description;
 
-    public String getGroupName() {
-        return groupName;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPrincipal() {
@@ -52,5 +56,13 @@ public abstract class GroupBO {
 
     public void setPrincipal(String principal) {
         this.principal = principal;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

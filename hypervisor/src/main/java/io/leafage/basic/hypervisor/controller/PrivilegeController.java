@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,17 +17,18 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.domain.RoleComponents;
-import io.leafage.basic.hypervisor.dto.ComponentDTO;
-import io.leafage.basic.hypervisor.service.ComponentService;
-import io.leafage.basic.hypervisor.service.RoleComponentsService;
-import io.leafage.basic.hypervisor.vo.ComponentVO;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
+import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
+import io.leafage.basic.hypervisor.service.PrivilegeService;
+import io.leafage.basic.hypervisor.service.RolePrivilegesService;
+import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import top.leafage.common.TreeNode;
@@ -35,22 +36,23 @@ import top.leafage.common.TreeNode;
 import java.util.List;
 
 /**
- * component controller
+ * privilege controller
  *
  * @author liwenqiang 2023-03-26 15:01
  **/
+@Validated
 @RestController
-@RequestMapping("/components")
-public class ComponentController {
+@RequestMapping("/privileges")
+public class PrivilegeController {
 
-    private final Logger logger = LoggerFactory.getLogger(ComponentController.class);
+    private final Logger logger = LoggerFactory.getLogger(PrivilegeController.class);
 
-    private final ComponentService componentService;
-    private final RoleComponentsService roleComponentsService;
+    private final PrivilegeService privilegeService;
+    private final RolePrivilegesService rolePrivilegesService;
 
-    public ComponentController(ComponentService componentService, RoleComponentsService roleComponentsService) {
-        this.componentService = componentService;
-        this.roleComponentsService = roleComponentsService;
+    public PrivilegeController(PrivilegeService privilegeService, RolePrivilegesService rolePrivilegesService) {
+        this.privilegeService = privilegeService;
+        this.rolePrivilegesService = rolePrivilegesService;
     }
 
     /**
@@ -61,12 +63,12 @@ public class ComponentController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<ComponentVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Mono<Page<ComponentVO>> pageMono;
+    public ResponseEntity<Mono<Page<PrivilegeVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Mono<Page<PrivilegeVO>> pageMono;
         try {
-            pageMono = componentService.retrieve(page, size);
+            pageMono = privilegeService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Retrieve component occurred an error: ", e);
+            logger.error("Retrieve privilege occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);
@@ -81,9 +83,9 @@ public class ComponentController {
     public ResponseEntity<Mono<List<TreeNode>>> tree() {
         Mono<List<TreeNode>> authorities;
         try {
-            authorities = componentService.tree();
+            authorities = privilegeService.tree();
         } catch (Exception e) {
-            logger.info("Retrieve components occurred an error: ", e);
+            logger.info("Retrieve privileges occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(authorities);
@@ -96,12 +98,12 @@ public class ComponentController {
      * @return 查询的数据，异常时返回204状态码
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Mono<ComponentVO>> fetch(@PathVariable Long id) {
-        Mono<ComponentVO> voMono;
+    public ResponseEntity<Mono<PrivilegeVO>> fetch(@PathVariable Long id) {
+        Mono<PrivilegeVO> voMono;
         try {
-            voMono = componentService.fetch(id);
+            voMono = privilegeService.fetch(id);
         } catch (Exception e) {
-            logger.error("Fetch component occurred an error: ", e);
+            logger.error("Fetch privilege occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voMono);
@@ -110,16 +112,16 @@ public class ComponentController {
     /**
      * 是否已存在
      *
-     * @param componentName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String componentName) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = componentService.exist(componentName);
+            existsMono = privilegeService.exist(name);
         } catch (Exception e) {
-            logger.error("Check component is exist an error: ", e);
+            logger.error("Check privilege is exist an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
@@ -128,16 +130,16 @@ public class ComponentController {
     /**
      * 添加
      *
-     * @param componentDTO 要添加的数据
+     * @param privilegeDTO 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<ComponentVO>> create(@RequestBody @Valid ComponentDTO componentDTO) {
-        Mono<ComponentVO> voMono;
+    public ResponseEntity<Mono<PrivilegeVO>> create(@RequestBody @Valid PrivilegeDTO privilegeDTO) {
+        Mono<PrivilegeVO> voMono;
         try {
-            voMono = componentService.create(componentDTO);
+            voMono = privilegeService.create(privilegeDTO);
         } catch (Exception e) {
-            logger.error("Create component occurred an error: ", e);
+            logger.error("Create privilege occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
@@ -147,32 +149,32 @@ public class ComponentController {
      * 修改
      *
      * @param id           主键
-     * @param componentDTO 要修改的数据
+     * @param privilegeDTO 要修改的数据
      * @return 修改后的信息，异常时返回304状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Mono<ComponentVO>> modify(@PathVariable Long id, @RequestBody @Valid ComponentDTO componentDTO) {
-        Mono<ComponentVO> voMono;
+    public ResponseEntity<Mono<PrivilegeVO>> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO privilegeDTO) {
+        Mono<PrivilegeVO> voMono;
         try {
-            voMono = componentService.modify(id, componentDTO);
+            voMono = privilegeService.modify(id, privilegeDTO);
         } catch (Exception e) {
-            logger.error("Modify component occurred an error: ", e);
+            logger.error("Modify privilege occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.accepted().body(voMono);
     }
 
     /**
-     * 查询关联角色
+     * 查询关联role
      *
      * @param id 主键
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{id}/roles")
-    public ResponseEntity<Mono<List<RoleComponents>>> roles(@PathVariable Long id) {
-        Mono<List<RoleComponents>> listMono;
+    public ResponseEntity<Mono<List<RolePrivileges>>> roles(@PathVariable Long id) {
+        Mono<List<RolePrivileges>> listMono;
         try {
-            listMono = roleComponentsService.roles(id);
+            listMono = rolePrivilegesService.roles(id);
         } catch (Exception e) {
             logger.error("Retrieve group users occurred an error: ", e);
             return ResponseEntity.noContent().build();

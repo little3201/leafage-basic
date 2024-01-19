@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.DictionaryBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for dictionary
+ * vo class for dictionary
  *
  * @author liwenqiang 2022-03-30 07:27
  **/
@@ -39,9 +39,9 @@ public class DictionaryVO extends DictionaryBO {
     private String superior;
 
     /**
-     * 更新时间
+     * 最后更新时间
      */
-    private LocalDateTime modifyTime;
+    private LocalDateTime lastModifiedDate;
 
 
     public Long getId() {
@@ -60,11 +60,11 @@ public class DictionaryVO extends DictionaryBO {
         this.superior = superior;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public LocalDateTime getLastUpdatedAt() {
+        return lastModifiedDate;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setLastUpdatedAt(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

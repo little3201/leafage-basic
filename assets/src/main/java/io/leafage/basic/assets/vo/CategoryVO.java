@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package io.leafage.basic.assets.vo;
 
 import io.leafage.basic.assets.bo.CategoryBO;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
- * VO class for category
+ * vo class for category
  *
  * @author liwenqiang 2020-10-06 22:09
  */
@@ -39,9 +39,9 @@ public class CategoryVO extends CategoryBO {
     private long count;
 
     /**
-     * 时间
+     * 最后更新时间
      */
-    private LocalDateTime modifyTime;
+    private Instant lastModifiedDate;
 
 
     public Long getId() {
@@ -60,11 +60,11 @@ public class CategoryVO extends CategoryBO {
         this.count = count;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public Instant getLastUpdatedAt() {
+        return lastModifiedDate;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setLastUpdatedAt(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -52,45 +53,46 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<Page<CategoryVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageRequest).flatMap(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = categoryRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override
     public Mono<CategoryVO> fetch(Long id) {
+        Assert.notNull(id, "category id must not be null.");
         return categoryRepository.findById(id).flatMap(this::fetchOuter);
     }
 
     @Override
-    public Mono<Boolean> exist(String categoryName) {
-        Assert.hasText(categoryName, "categoryName cannot be blank.");
-        return categoryRepository.existsByCategoryName(categoryName);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "category name must not be blank.");
+        return categoryRepository.existsByName(name);
     }
 
     @Override
     public Mono<CategoryVO> create(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
-        category.setOwner("admin");
         return categoryRepository.save(category).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<CategoryVO> modify(Long id, CategoryDTO categoryDTO) {
-        Assert.notNull(id, "id cannot be null.");
-        return categoryRepository.findById(id).doOnNext(category ->
-                        BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(categoryRepository::save).flatMap(this::convertOuter);
+        Assert.notNull(id, "category id must not be null.");
+        return categoryRepository.findById(id).switchIfEmpty(Mono.error(NotContextException::new))
+                .doOnNext(category -> BeanUtils.copyProperties(categoryDTO, category))
+                .flatMap(categoryRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "category id must not be null.");
         return categoryRepository.deleteById(id);
     }
 

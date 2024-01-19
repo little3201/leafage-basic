@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,11 +26,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
+
+import java.util.NoSuchElementException;
 
 /**
  * dictionary service impl
@@ -48,48 +51,59 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
 
     @Override
     public Mono<Page<DictionaryVO>> retrieve(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageRequest).map(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size);
+        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
 
         Mono<Long> count = dictionaryRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override
     public Flux<DictionaryVO> superior() {
-        return dictionaryRepository.findBySuperiorIdIsNull().map(this::convertOuter);
+        return dictionaryRepository.findBySuperiorIdIsNull().flatMap(this::convertOuter);
     }
 
     @Override
     public Flux<DictionaryVO> subordinates(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findBySuperiorId(id).map(this::convertOuter);
+        return dictionaryRepository.findBySuperiorId(id).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<DictionaryVO> fetch(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findById(id).map(this::convertOuter);
+        return dictionaryRepository.findById(id).flatMap(this::convertOuter);
     }
 
     @Override
-    public Mono<Boolean> exist(String dictionaryName) {
-        Assert.hasText(dictionaryName, "dictionary name must not be blank.");
-        return dictionaryRepository.existsByDictionaryName(dictionaryName);
+    public Mono<Boolean> exist(String name) {
+        Assert.hasText(name, "dictionary name must not be blank.");
+        return dictionaryRepository.existsByName(name);
     }
 
     @Override
     public Mono<DictionaryVO> create(DictionaryDTO dictionaryDTO) {
         Dictionary dictionary = new Dictionary();
         BeanUtils.copyProperties(dictionaryDTO, dictionary);
-        return dictionaryRepository.save(dictionary).map(this::convertOuter);
+        return dictionaryRepository.save(dictionary).flatMap(this::convertOuter);
     }
 
-    private DictionaryVO convertOuter(Dictionary dictionary) {
-        DictionaryVO vo = new DictionaryVO();
-        BeanUtils.copyProperties(dictionary, vo);
-        return vo;
+    @Override
+    public Mono<DictionaryVO> modify(Long id, DictionaryDTO dictionaryDTO) {
+        Assert.notNull(id, "dictionary id must not be null.");
+        return dictionaryRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(dictionary -> BeanUtils.copyProperties(dictionaryDTO, dictionary))
+                .flatMap(dictionaryRepository::save)
+                .flatMap(this::convertOuter);
+    }
+
+    private Mono<DictionaryVO> convertOuter(Dictionary dictionary) {
+        return Mono.just(dictionary).map(d -> {
+            DictionaryVO vo = new DictionaryVO();
+            BeanUtils.copyProperties(d, vo);
+            return vo;
+        });
     }
 }

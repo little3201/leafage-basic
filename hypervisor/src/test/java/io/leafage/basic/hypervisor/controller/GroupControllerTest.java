@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,10 +32,13 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -43,7 +46,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * group接口测试类
  *
- * @author liwenqiang 2021/6/19 10:00
+ * @author liwenqiang 2021-06-19 10:00
  */
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(GroupController.class)
@@ -65,12 +68,15 @@ class GroupControllerTest {
     @BeforeEach
     void init() {
         groupVO = new GroupVO();
-        groupVO.setGroupName("test");
+        groupVO.setName("test");
         groupVO.setPrincipal("test");
+        groupVO.setSuperior("test");
+        groupVO.setLastUpdatedAt(LocalDateTime.now());
 
         groupDTO = new GroupDTO();
-        groupDTO.setGroupName("test");
+        groupDTO.setName("test");
         groupDTO.setPrincipal("Test");
+        groupDTO.setDescription("group");
 
         groupMembers = new GroupMembers();
         groupMembers.setGroupId(1L);
@@ -78,8 +84,9 @@ class GroupControllerTest {
     }
 
     @Test
-    void retrieve_page() {
-        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO));
+    void retrieve() {
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), pageable, 1L);
         given(this.groupService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)
@@ -100,7 +107,7 @@ class GroupControllerTest {
         given(this.groupService.fetch(Mockito.anyLong())).willReturn(Mono.just(groupVO));
 
         webTestClient.get().uri("/groups/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.groupName").isEqualTo("test");
+                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -115,7 +122,7 @@ class GroupControllerTest {
         given(this.groupService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
-                .queryParam("groupName", "test").build()).exchange().expectStatus().isOk();
+                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
     }
 
     @Test
@@ -123,7 +130,7 @@ class GroupControllerTest {
         given(this.groupService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
-                .queryParam("groupName", "test").build()).exchange().expectStatus().isNoContent();
+                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -132,7 +139,7 @@ class GroupControllerTest {
 
         webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.groupName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -149,7 +156,7 @@ class GroupControllerTest {
 
         webTestClient.put().uri("/groups/{id}", 1L).bodyValue(groupDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.groupName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test

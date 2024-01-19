@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.domain.RoleComponents;
 import io.leafage.basic.hypervisor.domain.RoleMembers;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.service.RoleComponentsService;
 import io.leafage.basic.hypervisor.service.RoleMembersService;
+import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import jakarta.validation.Valid;
@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -41,6 +42,7 @@ import java.util.Set;
  *
  * @author liwenqiang 2018/12/17 19:38
  **/
+@Validated
 @RestController
 @RequestMapping("/roles")
 public class RoleController {
@@ -49,13 +51,13 @@ public class RoleController {
 
     private final RoleMembersService roleMembersService;
     private final RoleService roleService;
-    private final RoleComponentsService roleComponentsService;
+    private final RolePrivilegesService rolePrivilegesService;
 
     public RoleController(RoleMembersService roleMembersService, RoleService roleService,
-                          RoleComponentsService roleComponentsService) {
+                          RolePrivilegesService rolePrivilegesService) {
         this.roleMembersService = roleMembersService;
         this.roleService = roleService;
-        this.roleComponentsService = roleComponentsService;
+        this.rolePrivilegesService = rolePrivilegesService;
     }
 
     /**
@@ -98,14 +100,14 @@ public class RoleController {
     /**
      * 是否已存在
      *
-     * @param roleName 用户名
+     * @param name 名称
      * @return true-是，false-否
      */
     @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String roleName) {
+    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = roleService.exist(roleName);
+            existsMono = roleService.exist(name);
         } catch (Exception e) {
             logger.error("Check role is exist an error: ", e);
             return ResponseEntity.noContent().build();
@@ -151,9 +153,9 @@ public class RoleController {
     }
 
     /**
-     * 查询关联用户
+     * 查询关联user
      *
-     * @param id 角色id
+     * @param id roleid
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{id}/members")
@@ -171,16 +173,16 @@ public class RoleController {
     /**
      * 查询关联组件
      *
-     * @param id 角色主键
+     * @param id role主键
      * @return 操作结果
      */
-    @GetMapping("/{id}/components")
-    public ResponseEntity<Mono<List<RoleComponents>>> components(@PathVariable Long id) {
-        Mono<List<RoleComponents>> listMono;
+    @GetMapping("/{id}/privileges")
+    public ResponseEntity<Mono<List<RolePrivileges>>> privileges(@PathVariable Long id) {
+        Mono<List<RolePrivileges>> listMono;
         try {
-            listMono = roleComponentsService.components(id);
+            listMono = rolePrivilegesService.privileges(id);
         } catch (Exception e) {
-            logger.error("Retrieve role components occurred an error: ", e);
+            logger.error("Retrieve role privileges occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(listMono);
@@ -190,16 +192,16 @@ public class RoleController {
      * 关联
      *
      * @param id           role主键
-     * @param componentIds component主键集合
+     * @param privilegeIds privilege主键集合
      * @return 操作结果
      */
-    @PatchMapping("/{id}/components")
-    public ResponseEntity<Mono<Boolean>> relation(@PathVariable Long id, @RequestBody Set<Long> componentIds) {
+    @PatchMapping("/{id}/privileges")
+    public ResponseEntity<Mono<Boolean>> relation(@PathVariable Long id, @RequestBody Set<Long> privilegeIds) {
         Mono<Boolean> voMono;
         try {
-            voMono = roleComponentsService.relation(id, componentIds);
+            voMono = rolePrivilegesService.relation(id, privilegeIds);
         } catch (Exception e) {
-            logger.error("Relation role components occurred an error: ", e);
+            logger.error("Relation role privileges occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.accepted().body(voMono);

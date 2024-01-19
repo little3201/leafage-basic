@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.MessageBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for notification
+ * vo class for message
  *
  * @author liwenqiang 2022-02-10 13:53
  */
@@ -34,9 +34,9 @@ public class MessageVO extends MessageBO {
     private Long id;
 
     /**
-     * 更新时间
+     * 最后更新时间
      */
-    private LocalDateTime modifyTime;
+    private LocalDateTime lastModifiedDate;
 
 
     public Long getId() {
@@ -47,11 +47,11 @@ public class MessageVO extends MessageBO {
         this.id = id;
     }
 
-    public LocalDateTime getModifyTime() {
-        return modifyTime;
+    public LocalDateTime getLastUpdatedAt() {
+        return lastModifiedDate;
     }
 
-    public void setModifyTime(LocalDateTime modifyTime) {
-        this.modifyTime = modifyTime;
+    public void setLastUpdatedAt(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

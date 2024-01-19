@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,33 +17,41 @@
 
 package io.leafage.basic.hypervisor.repository;
 
-import io.leafage.basic.hypervisor.domain.Component;
-import org.springframework.data.domain.Pageable;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * component repository
+ * role privilege repository
  *
- * @author wilsonli 2023/3/25 09:45
+ * @author liwenqiang 2018-09-26 11:29
  **/
 @Repository
-public interface ComponentRepository extends R2dbcRepository<Component, Long> {
+public interface RolePrivilegesRepository extends R2dbcRepository<RolePrivileges, Long> {
 
     /**
-     * 查询
+     * 统计关联role
      *
-     * @return 有效帖子
+     * @param roleId role主键
+     * @return count
      */
-    Flux<Component> findByEnabledTrue(Pageable pageable);
+    Mono<Long> countByRoleId(Long roleId);
 
     /**
-     * 是否已存在
+     * 根据role查询
      *
-     * @param componentName 名称
-     * @return true-是，false-否
+     * @param roleId role主键
+     * @return 关联数据集
      */
-    Mono<Boolean> existsByComponentName(String componentName);
+    Flux<RolePrivileges> findByRoleId(Long roleId);
+
+    /**
+     * 根据privilege查询
+     *
+     * @param privilegeId privilege主键
+     * @return 关联数据集
+     */
+    Flux<RolePrivileges> findByPrivilegeId(Long privilegeId);
 }

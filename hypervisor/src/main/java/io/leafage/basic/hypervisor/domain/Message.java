@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,45 +17,35 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for message
+ * model class for message
  *
  * @author liwenqiang 2022-02-10 13:49
  */
 @Table(name = "messages")
-public class Message extends AbstractModel {
+public class Message extends AuditMetadata {
 
     /**
      * 标题
      */
     private String title;
-
     /**
      * 内容
      */
     private String context;
-
     /**
      * 是否已读
      */
+    @Column(value = "is_read")
     private boolean read;
-
     /**
      * 接收人
      */
     private String receiver;
-
-    /**
-     * 是否可用
-     */
-    private boolean enabled = true;
-
-    /**
-     * owner
-     */
-    private String owner;
 
 
     public String getTitle() {
@@ -90,19 +80,4 @@ public class Message extends AbstractModel {
         this.receiver = receiver;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
 }

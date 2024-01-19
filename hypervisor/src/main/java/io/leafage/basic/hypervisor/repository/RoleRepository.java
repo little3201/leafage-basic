@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@ import reactor.core.publisher.Mono;
 /**
  * role epository
  *
- * @author liwenqiang 2018/9/26 11:06
+ * @author liwenqiang 2018-09-26 11:06
  **/
 @Repository
 public interface RoleRepository extends R2dbcRepository<Role, Long> {
 
     /**
-     * 分页查询有效角色
+     * 分页查询有效role
      *
      * @param pageable 分页参数
      * @return 数据集
@@ -43,8 +43,8 @@ public interface RoleRepository extends R2dbcRepository<Role, Long> {
     /**
      * 是否已存在
      *
-     * @param roleName 名称
+     * @param name 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByRoleName(String roleName);
+    Mono<Boolean> existsByName(String name);
 }

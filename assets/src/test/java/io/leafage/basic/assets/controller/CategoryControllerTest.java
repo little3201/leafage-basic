@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,12 +29,14 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -42,7 +44,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * category controller test
  *
- * @author liwenqiang 2020/3/1 22:07
+ * @author liwenqiang 2020-03-01 22:07
  */
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(CategoryController.class)
@@ -61,23 +63,24 @@ class CategoryControllerTest {
     void init() {
         // 构造请求对象
         categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("test");
+        categoryDTO.setName("test");
         categoryDTO.setDescription("描述信息");
 
         categoryVO = new CategoryVO();
         categoryVO.setCount(23L);
-        categoryVO.setCategoryName(categoryDTO.getCategoryName());
-        categoryVO.setModifyTime(LocalDateTime.now());
+        categoryVO.setName(categoryDTO.getName());
+        categoryVO.setLastUpdatedAt(Instant.now());
     }
 
     @Test
     void retrieve() {
-        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO), pageable, 1L);
         given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories").queryParam("page", 0)
-                        .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(CategoryVO.class);
+                        .queryParam("size", 2).build())
+                .exchange().expectStatus().isOk().expectBodyList(CategoryVO.class);
     }
 
     @Test
@@ -94,7 +97,7 @@ class CategoryControllerTest {
 
         webTestClient.get().uri("/categories/{id}", 1).exchange()
                 .expectStatus().isOk()
-                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -110,7 +113,7 @@ class CategoryControllerTest {
         given(this.categoryService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
-                        .queryParam("categoryName", "test").build()).exchange()
+                        .queryParam("name", "test").build()).exchange()
                 .expectStatus().isOk();
     }
 
@@ -119,7 +122,7 @@ class CategoryControllerTest {
         given(this.categoryService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
-                .queryParam("categoryName", "test").build()).exchange().expectStatus().isNoContent();
+                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 
     @Test
@@ -129,7 +132,7 @@ class CategoryControllerTest {
         webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -148,7 +151,7 @@ class CategoryControllerTest {
         webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.categoryName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -157,7 +160,7 @@ class CategoryControllerTest {
 
         // 构造请求对象
         CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setCategoryName("test");
+        categoryDTO.setName("test");
         webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isNotModified();

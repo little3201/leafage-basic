@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import reactor.core.publisher.Mono;
 /**
  * user repository
  *
- * @author liwenqiang 2018/7/27 17:50
+ * @author liwenqiang 2018-07-27 17:50
  **/
 @Repository
 public interface UserRepository extends R2dbcRepository<User, Long> {
@@ -41,26 +41,19 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
     Flux<User> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据账号查
+     * 根据user查
      *
-     * @param username 账号
-     * @return 用户信息
+     * @param username user
+     * @return user
      */
     Mono<User> getByUsername(String username);
 
     /**
      * 是否已存在
      *
-     * @param username 账号
+     * @param username user
      * @return true-是，false-否
      */
     Mono<Boolean> existsByUsername(String username);
 
-    /**
-     * 删除
-     *
-     * @param username 账号
-     * @return 用户信息
-     */
-    Mono<Void> deleteByUsername(String username);
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 
 package io.leafage.basic.hypervisor.service;
 
-import io.leafage.basic.hypervisor.dto.ComponentDTO;
-import io.leafage.basic.hypervisor.vo.ComponentVO;
+import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
+import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
 import top.leafage.common.TreeNode;
@@ -27,11 +27,11 @@ import top.leafage.common.reactive.ReactiveBasicService;
 import java.util.List;
 
 /**
- * component service
+ * privilege service
  *
  * @author liwenqiang 2018/12/17 19:36
  **/
-public interface ComponentService extends ReactiveBasicService<ComponentDTO, ComponentVO> {
+public interface PrivilegeService extends ReactiveBasicService<PrivilegeDTO, PrivilegeVO> {
 
     /**
      * 查询构造树结构的数据
@@ -41,19 +41,11 @@ public interface ComponentService extends ReactiveBasicService<ComponentDTO, Com
     Mono<List<TreeNode>> tree();
 
     /**
-     * 查询用户权限
-     *
-     * @param username 用户名
-     * @return 权限树
-     */
-    Mono<List<TreeNode>> components(String username);
-
-    /**
      * 分页查询
      *
      * @param page 页码
      * @param size 大小
      * @return 结果集
      */
-    Mono<Page<ComponentVO>> retrieve(int page, int size);
+    Mono<Page<PrivilegeVO>> retrieve(int page, int size);
 }

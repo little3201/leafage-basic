@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,14 +26,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 /**
  * user controller
  *
- * @author liwenqiang 2018/8/2 21:02
+ * @author liwenqiang 2018-08-2 21:02
  **/
+@Validated
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -59,16 +61,16 @@ public class UserController {
     }
 
     /**
-     * 根据 username 查询
+     * 根据 id 查询
      *
-     * @param username 用户账号
+     * @param id user 主键
      * @return 查询的数据，异常时返回204状态码
      */
-    @GetMapping("/{username}")
-    public ResponseEntity<Mono<UserVO>> fetch(@PathVariable String username) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Mono<UserVO>> fetch(@PathVariable Long id) {
         Mono<UserVO> voMono;
         try {
-            voMono = userService.fetch(username);
+            voMono = userService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch user occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -95,17 +97,35 @@ public class UserController {
     }
 
     /**
-     * 修改信息
+     * 添加信息
      *
-     * @param username 账号
-     * @param userDTO  要修改的数据
+     * @param userDTO 要修改的数据
      * @return 修改后的信息，异常时返回304状态码
      */
-    @PutMapping("/{username}")
-    public ResponseEntity<Mono<UserVO>> modify(@PathVariable String username, @RequestBody @Valid UserDTO userDTO) {
+    @PostMapping
+    public ResponseEntity<Mono<UserVO>> create(@RequestBody @Valid UserDTO userDTO) {
         Mono<UserVO> voMono;
         try {
-            voMono = userService.modify(username, userDTO);
+            voMono = userService.create(userDTO);
+        } catch (Exception e) {
+            logger.error("Create user occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
+    }
+
+    /**
+     * 修改信息
+     *
+     * @param id      user 主键
+     * @param userDTO 要修改的数据
+     * @return 修改后的信息，异常时返回304状态码
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Mono<UserVO>> modify(@PathVariable Long id, @RequestBody @Valid UserDTO userDTO) {
+        Mono<UserVO> voMono;
+        try {
+            voMono = userService.modify(id, userDTO);
         } catch (Exception e) {
             logger.error("Modify user occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
@@ -116,14 +136,14 @@ public class UserController {
     /**
      * 删除信息
      *
-     * @param username 账号
+     * @param id user 主键
      * @return 200状态码，异常时返回417状态码
      */
-    @DeleteMapping("/{username}")
-    public ResponseEntity<Mono<Void>> remove(@PathVariable String username) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Mono<Void>> remove(@PathVariable Long id) {
         Mono<Void> voidMono;
         try {
-            voidMono = userService.remove(username);
+            voidMono = userService.remove(id);
         } catch (Exception e) {
             logger.error("Remove user occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

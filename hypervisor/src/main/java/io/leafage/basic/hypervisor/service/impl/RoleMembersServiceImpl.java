@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.RoleMembers;
 import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
-import io.leafage.basic.hypervisor.repository.RoleRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.RoleMembersService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -38,14 +36,10 @@ import java.util.Set;
 @Service
 public class RoleMembersServiceImpl implements RoleMembersService {
 
-    private final RoleRepository roleRepository;
     private final RoleMembersRepository roleMembersRepository;
-    private final UserRepository userRepository;
 
-    public RoleMembersServiceImpl(RoleRepository roleRepository, RoleMembersRepository roleMembersRepository, UserRepository userRepository) {
-        this.roleRepository = roleRepository;
+    public RoleMembersServiceImpl(RoleMembersRepository roleMembersRepository) {
         this.roleMembersRepository = roleMembersRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -61,15 +55,16 @@ public class RoleMembersServiceImpl implements RoleMembersService {
     }
 
     @Override
-    public Mono<Boolean> relation(String username, Set<Long> roleIds) {
-        Assert.hasText(username, "username must not be blank.");
-        Assert.notEmpty(roleIds, "role ids must not be empty.");
+    public Mono<Boolean> relation(Long roleId, Set<String> usernames) {
+        Assert.notNull(roleId, "role id must not be blank.");
+        Assert.notEmpty(usernames, "usernames must not be empty.");
 
-        return Flux.fromIterable(roleIds).map(roleId -> {
-            RoleMembers roleMembers = new RoleMembers();
-            roleMembers.setUsername(username);
-            roleMembers.setRoleId(roleId);
-            return roleMembers;
-        }).collectList().flatMapMany(roleMembersRepository::saveAll).hasElements();
+        return Flux.fromIterable(usernames).map(username -> {
+                    RoleMembers roleMembers = new RoleMembers();
+                    roleMembers.setUsername(username);
+                    roleMembers.setRoleId(roleId);
+                    return roleMembers;
+                }).collectList()
+                .flatMapMany(roleMembersRepository::saveAll).hasElements();
     }
 }

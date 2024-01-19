@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,32 +16,29 @@
  */
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for category
+ * model class for category
  *
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "categories")
-public class Category extends AbstractModel {
+public class Category extends AuditMetadata {
 
     /**
      * 名称
      */
-    @Column(value = "category_name")
-    private String categoryName;
+    @Column(value = "name")
+    private String name;
 
     /**
-     * 是否有效
+     * 是否启用
      */
+    @Column(value = "is_enabled")
     private boolean enabled = true;
-
-    /**
-     * owner
-     */
-    private String owner;
 
     /**
      * 描述
@@ -49,12 +46,12 @@ public class Category extends AbstractModel {
     private String description;
 
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isEnabled() {
@@ -65,14 +62,6 @@ public class Category extends AbstractModel {
         this.enabled = enabled;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -80,4 +69,5 @@ public class Category extends AbstractModel {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

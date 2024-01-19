@@ -6,11 +6,56 @@ drop table if exists groups;
 create table groups
 (
    id                   bigserial not null primary key,
-   group_name           varchar(64),
-   principal            varchar(16) ,
-   enabled              boolean not null default true,
-   owner                varchar(16) not null ,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   name                 varchar(64) UNIQUE,
+   principal            varchar(16),
+   description          varchar(512),
+   is_enabled           boolean not null default true,
+   created_by           varchar(16) not null ,
+   created_date           timestamp not null default CURRENT_TIMESTAMP,
+   last_modified_by      varchar(16) not null ,
+   last_modified_date      timestamp not null default CURRENT_TIMESTAMP
+);
+
+
+drop table if exists users;
+
+/*==============================================================*/
+/* Table: users                                                 */
+/*==============================================================*/
+create table users
+(
+   id                   bigserial not null primary key,
+   username             varchar(16) not null UNIQUE,
+   password             varchar(255) not null ,
+   firstname             varchar(16),
+   lastname             varchar(16),
+   avatar               varchar(127) not null ,
+   account_expires_at   timestamp,
+   credentials_expires_at timestamp,
+   account_non_locked   boolean not null default true,
+   is_enabled           boolean not null default true,
+   created_by           varchar(16) not null ,
+   created_date           timestamp not null default CURRENT_TIMESTAMP,
+   last_modified_by      varchar(16) not null ,
+   last_modified_date      timestamp not null default CURRENT_TIMESTAMP
+);
+
+
+drop table if exists roles;
+
+/*==============================================================*/
+/* Table: roles                                                 */
+/*==============================================================*/
+create table roles
+(
+   id                   bigserial not null primary key,
+   name                 varchar(64) UNIQUE,
+   description          varchar(512),
+   is_enabled           boolean not null default true,
+   created_by           varchar(16) not null ,
+   created_date           timestamp not null default CURRENT_TIMESTAMP,
+   last_modified_by      varchar(16) not null ,
+   last_modified_date      timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -24,68 +69,27 @@ create table group_members
    id                   bigserial not null primary key,
    group_id             bigint not null,
    username             varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP,
-   constraint fk_group_members_group foreign key(group_id) references groups(id),
-   constraint fk_group_members_username foreign key(username) references users(username)
+   CONSTRAINT fk_group_members_group
+         FOREIGN KEY (group_id) REFERENCES groups(id),
+   CONSTRAINT fk_group_members_username
+         FOREIGN KEY (username) REFERENCES users(username)
 );
 
 
-drop table if exists users;
+drop table if exists group_roles;
 
 /*==============================================================*/
-/* Table: users                                                 */
+/* Table: group_roles                                         */
 /*==============================================================*/
-create table users
+create table group_roles
 (
    id                   bigserial not null primary key,
-   username             varchar(16) not null,
-   password             varchar(255) not null ,
-   nickname             varchar(16) not null,
-   avatar               varchar(127) not null ,
-   enabled              boolean not null default true,
-   account_expires_at   timestamp,
-   credentials_expires_at timestamp,
-   account_non_locked   boolean not null default true
-);
-
-
-drop table if exists authorities;
-
-/*==============================================================*/
-/* Table: authorities                                           */
-/*==============================================================*/
-create table authorities (
-	username varchar(50) not null,
-	authority varchar(50) not null,
-	constraint fk_authorities_users foreign key(username) references users(username)
-);
-create unique index ix_auth_username on authorities (username,authority);
-
-
-drop table if exists group_authorities;
-
-/*==============================================================*/
-/* Table: group_authorities                                     */
-/*==============================================================*/
-create table group_authorities (
-	group_id bigint not null,
-	authority varchar(50) not null,
-	constraint fk_group_authorities_group foreign key(group_id) references groups(id)
-);
-
-
-drop table if exists roles;
-
-/*==============================================================*/
-/* Table: roles                                                 */
-/*==============================================================*/
-create table roles
-(
-   id                   bigserial not null primary key,
-   role_name            varchar(64),
-   enabled              boolean not null default true,
-   owner                varchar(16) not null ,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   group_id             bigint not null,
+   role_id              bigint not null,
+   CONSTRAINT fk_group_roles_group
+        FOREIGN KEY (group_id) REFERENCES groups(id),
+   CONSTRAINT fk_group_roles_role
+        FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
 
@@ -99,44 +103,49 @@ create table role_members
    id                   bigserial not null primary key,
    role_id              bigint not null,
    username             varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP,
-   constraint fk_role_members_role foreign key(role_id) references roles(id),
-   constraint fk_role_members_username foreign key(username) references users(username)
+   CONSTRAINT fk_role_members_role
+        FOREIGN KEY (role_id) REFERENCES roles(id),
+   CONSTRAINT fk_role_members_username
+        FOREIGN KEY (username) REFERENCES users(username)
 );
 
 
-drop table if exists components;
+drop table if exists privileges;
 
 /*==============================================================*/
-/* Table: components                                             */
+/* Table: privileges                                             */
 /*==============================================================*/
-create table components
+create table privileges
 (
    id                   bigserial not null primary key,
    superior_id          bigint,
-   component_name       varchar(64),
+   name                 varchar(64),
    type                 character(1),
    path                 varchar(127),
    icon                 varchar(127),
-   enabled              boolean not null default true,
-   owner                varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   description          varchar(512),
+   is_enabled              boolean not null default true,
+   created_by           varchar(16) not null ,
+   created_date           timestamp not null default CURRENT_TIMESTAMP,
+   last_modified_by      varchar(16) not null ,
+   last_modified_date      timestamp not null default CURRENT_TIMESTAMP
 );
 
 
-drop table if exists role_components;
+drop table if exists role_privileges;
 
 /*==============================================================*/
-/* Table: role_components                                       */
+/* Table: role_privileges                                       */
 /*==============================================================*/
-create table role_components
+create table role_privileges
 (
    id                   bigserial not null primary key,
    role_id              bigint not null,
-   component_id         bigint not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP,
-   constraint fk_role_components_role foreign key(role_id) references roles(id),
-   constraint fk_role_components_comment foreign key(component_id) references components(id)
+   privilege_id         bigint not null,
+   CONSTRAINT fk_role_privileges_role
+       FOREIGN KEY (role_id) REFERENCES roles(id),
+   CONSTRAINT fk_role_privileges_privilege
+       FOREIGN KEY (privilege_id) REFERENCES privileges(id)
 );
 
 
@@ -148,11 +157,14 @@ drop table if exists dictionaries;
 create table dictionaries
 (
    id                   bigserial not null primary key,
-   dictionary_name      varchar(64),
+   name                 varchar(64),
    superior_id          bigint,
-   description          varchar(127),
-   enabled              boolean not null default true,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   description          varchar(512),
+   is_enabled           boolean not null default true,
+   created_by           varchar(16) not null ,
+   created_date           timestamp not null default CURRENT_TIMESTAMP,
+   last_modified_by      varchar(16) not null ,
+   last_modified_date      timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -166,11 +178,14 @@ create table messages
    id                   bigserial not null primary key,
    title                varchar(255),
    context              text,
-   read                 boolean not null default false,
-   enabled              boolean not null default true,
+   is_read              boolean not null default false,
    receiver             varchar(16) not null,
-   owner                varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   description          varchar(512),
+   is_enabled           boolean not null default true,
+   created_by           varchar(16) not null ,
+   created_date           timestamp not null default CURRENT_TIMESTAMP,
+   last_modified_by      varchar(16) not null ,
+   last_modified_date      timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -182,12 +197,16 @@ drop table if exists regions;
 create table regions
 (
    id                   bigserial not null primary key,
-   region_name          varchar(64),
+   name                 varchar(64),
    superior_id          bigint,
    postal_code          bigint,
    area_code            bigint,
-   enabled              boolean not null default true,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   description          varchar(512),
+   is_enabled           boolean not null default true,
+   created_by           varchar(16) not null ,
+   created_date           timestamp not null default CURRENT_TIMESTAMP,
+   last_modified_by      varchar(16) not null ,
+   last_modified_date      timestamp not null default CURRENT_TIMESTAMP
 );
 
 
@@ -200,9 +219,13 @@ create table access_logs
 (
    id                   bigserial not null primary key,
    ip                   inet,
-   location          varchar(127),
+   location             varchar(127),
    postal_code          bigint,
-   context            text,
-   owner                varchar(16) not null,
-   modify_time          timestamp not null default CURRENT_TIMESTAMP
+   context              text,
+   description          varchar(512),
+   is_enabled           boolean not null default true,
+   created_by           varchar(16) not null ,
+   created_date           timestamp not null default CURRENT_TIMESTAMP,
+   last_modified_by      varchar(16) not null ,
+   last_modified_date      timestamp not null default CURRENT_TIMESTAMP
 );

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,11 +31,14 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -43,7 +46,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * dictionary api test
  *
- * @author liwenqiang 2022/4/8 7:39
+ * @author liwenqiang 2022-04-8 7:39
  **/
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(DictionaryController.class)
@@ -61,17 +64,20 @@ class DictionaryControllerTest {
     @BeforeEach
     void init() {
         dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setDictionaryName("Gender");
+        dictionaryDTO.setName("Gender");
         dictionaryDTO.setDescription("描述");
 
         dictionaryVO = new DictionaryVO();
-        dictionaryVO.setDictionaryName("test");
+        dictionaryVO.setName("test");
+        dictionaryVO.setSuperior("性别");
         dictionaryVO.setDescription("性别-男");
+        dictionaryVO.setLastUpdatedAt(LocalDateTime.now());
     }
 
     @Test
     void retrieve() {
-        Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO), pageable, 1L);
         given(this.dictionaryService.retrieve(0, 2)).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/dictionaries").queryParam("page", 0)
@@ -92,7 +98,7 @@ class DictionaryControllerTest {
         given(this.dictionaryService.fetch(Mockito.anyLong())).willReturn(Mono.just(dictionaryVO));
 
         webTestClient.get().uri("/dictionaries/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.dictionaryName").isEqualTo("test");
+                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
@@ -138,7 +144,7 @@ class DictionaryControllerTest {
 
         webTestClient.post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
                 .expectStatus().isCreated()
-                .expectBody().jsonPath("$.dictionaryName").isEqualTo("test");
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test

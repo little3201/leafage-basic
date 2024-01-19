@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,47 +17,50 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for dictionary
+ * model class for dictionary
  *
  * @author liwenqiang 2022-03-30 07:24
  **/
 @Table(name = "dictionaries")
-public class Dictionary extends SuperModel {
+public class Dictionary extends AuditMetadata {
 
     /**
      * 名称
      */
-    @Column(value = "dictionary_name")
-    private String dictionaryName;
+    @Column(value = "name")
+    private String name;
 
     /**
-     * 是否可用
+     * 上级
      */
-    private boolean enabled = true;
+    @Column(value = "superior_id")
+    private Long superiorId;
 
     /**
      * 描述
      */
     private String description;
 
-    public String getDictionaryName() {
-        return dictionaryName;
+
+    public String getName() {
+        return name;
     }
 
-    public void setDictionaryName(String dictionaryName) {
-        this.dictionaryName = dictionaryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public String getDescription() {

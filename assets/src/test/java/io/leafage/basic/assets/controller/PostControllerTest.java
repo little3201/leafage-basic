@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,13 +29,15 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,7 +46,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * posts controller test
  *
- * @author liwenqiang 2020/3/1 22:07
+ * @author liwenqiang 2020-03-01 22:07
  */
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(PostController.class)
@@ -64,6 +66,7 @@ class PostControllerTest {
         // 构造请求对象
         postDTO = new PostDTO();
         postDTO.setTitle("test");
+        postDTO.setCategoryId(1L);
         postDTO.setCover("../test.jpg");
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setContext("内容信息");
@@ -73,12 +76,13 @@ class PostControllerTest {
         postVO.setTags(postDTO.getTags());
         postVO.setCover(postDTO.getCover());
         postVO.setContext(postDTO.getContext());
-        postVO.setModifyTime(LocalDateTime.now());
+        postVO.setLastUpdatedAt(Instant.now());
     }
 
     @Test
     void retrieve() {
-        Page<PostVO> page = new PageImpl<>(List.of(postVO));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<PostVO> page = new PageImpl<>(List.of(postVO), pageable, 1L);
         given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
                 .willReturn(Mono.just(page));
 

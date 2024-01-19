@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,34 +17,40 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 /**
- * Model class for group
+ * model class for group
  *
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "groups")
-public class Group extends AbstractModel {
+public class Group extends AuditMetadata {
 
     /**
      * 名称
      */
-    @Column(value = "group_name")
-    private String groupName;
+    @Column(value = "name")
+    private String name;
 
     /**
      * 负责人
      */
     private String principal;
 
-    public String getGroupName() {
-        return groupName;
+    /**
+     * 描述
+     */
+    private String description;
+
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPrincipal() {
@@ -55,4 +61,11 @@ public class Group extends AbstractModel {
         this.principal = principal;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

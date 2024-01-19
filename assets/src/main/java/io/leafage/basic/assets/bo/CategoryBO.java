@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ package io.leafage.basic.assets.bo;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * BO class for category
+ * bo class for category
  *
  * @author wilsonli 2022-12-10 22:28
  **/
@@ -29,20 +29,20 @@ public abstract class CategoryBO {
     /**
      * 名称
      */
-    @NotBlank(message = "categoryName is blank.")
-    private String categoryName;
+    @NotBlank(message = "category name is blank.")
+    private String name;
 
     /**
      * 描述
      */
     private String description;
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

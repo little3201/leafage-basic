@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,14 +22,14 @@ import io.leafage.basic.hypervisor.bo.UserBO;
 import java.time.LocalDateTime;
 
 /**
- * VO class for user
+ * vo class for user
  *
  * @author liwenqiang 2020-10-06 22:09
  */
 public class UserVO extends UserBO {
 
     /**
-     * 账号有效期
+     * user有效期
      */
     private LocalDateTime accountExpiresAt;
 
@@ -42,6 +42,11 @@ public class UserVO extends UserBO {
      * 密码有效期
      */
     private LocalDateTime credentialsExpiresAt;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime lastModifiedDate;
 
 
     public LocalDateTime getAccountExpiresAt() {
@@ -66,5 +71,13 @@ public class UserVO extends UserBO {
 
     public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
         this.credentialsExpiresAt = credentialsExpiresAt;
+    }
+
+    public LocalDateTime getLastUpdatedAt() {
+        return lastModifiedDate;
+    }
+
+    public void setLastUpdatedAt(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

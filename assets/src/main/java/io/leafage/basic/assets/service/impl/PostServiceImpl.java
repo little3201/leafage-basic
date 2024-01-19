@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,16 +26,15 @@ import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.PostService;
 import io.leafage.basic.assets.vo.PostVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.NoSuchElementException;
 
 /**
  * post service impl
@@ -59,32 +58,32 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Mono<Page<PostVO>> retrieve(int page, int size, String sort, Long categoryId) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
-                StringUtils.hasText(sort) ? sort : "modifyTime"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
+                StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
         Flux<Post> postFlux;
         Mono<Long> count;
         // if categoryId null, select all, else filter by categoryId
         if (null == categoryId) {
-            postFlux = postRepository.findByEnabledTrue(pageRequest);
+            postFlux = postRepository.findByEnabledTrue(pageable);
             count = postRepository.count();
         } else {
-            postFlux = postRepository.findByCategoryId(categoryId, pageRequest);
+            postFlux = postRepository.findByCategoryId(categoryId, pageable);
             count = postRepository.countByCategoryId(categoryId);
         }
 
         return postFlux.flatMap(this::convertOuter).collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageRequest, objects.getT2()));
+                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
     @Override
     public Mono<PostVO> fetch(Long id) {
-        Assert.notNull(id, "id must not be null.");
+        Assert.notNull(id, "post id must not be null.");
         return postRepository.findById(id).flatMap(post ->
                 // 查询关联分类信息
                 categoryRepository.findById(post.getCategoryId()).map(category -> {
                     PostVO postVO = new PostVO();
                     BeanUtils.copyProperties(post, postVO);
-                    postVO.setCategory(category.getCategoryName());
+                    postVO.setCategory(category.getName());
                     return postVO;
                 }).flatMap(vo -> postContentRepository.getByPostId(post.getId()) // 查询帖子内容
                         .map(postsContent -> {
@@ -97,15 +96,11 @@ public class PostServiceImpl implements PostService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostVO> create(PostDTO postDTO) {
-        return Mono.just(postDTO).map(dto -> {
-            Post post = new Post();
-            BeanUtils.copyProperties(postDTO, post);
-            post.setCategoryId(dto.getCategoryId());
-            post.setOwner("admin");
-            return post;
-        }).flatMap(postRepository::save).flatMap(post -> {
+        Post post = new Post();
+        BeanUtils.copyProperties(postDTO, post);
+        return postRepository.save(post).flatMap(p -> {
             PostContent postContent = new PostContent();
-            postContent.setPostId(post.getId());
+            postContent.setPostId(p.getId());
             postContent.setContext(postDTO.getContext());
             return postContentRepository.save(postContent).flatMap(pc -> this.convertOuter(post));
         });
@@ -114,24 +109,23 @@ public class PostServiceImpl implements PostService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostVO> modify(Long id, PostDTO postDTO) {
-        Assert.notNull(id, "id cannot be null.");
-        return postRepository.findById(id).flatMap(post -> Mono.just(postDTO).map(dto -> {
-                    // 将信息复制到info
-                    BeanUtils.copyProperties(postDTO, post);
-                    return post;
-                }).flatMap(entity -> postRepository.save(entity)
-                        .flatMap(p -> postContentRepository.getByPostId(p.getId())
+        Assert.notNull(id, "post id must not be null.");
+        return postRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(post -> BeanUtils.copyProperties(postDTO, post))
+                .flatMap(pos -> postRepository.save(pos)
+                        // 查询并更新
+                        .flatMap(p -> postContentRepository.getByPostId(p.getId()).switchIfEmpty(Mono.just(new PostContent()))
                                 .flatMap(postContent -> {
+                                    postContent.setPostId(p.getId());
                                     postContent.setContext(postDTO.getContext());
                                     return postContentRepository.save(postContent).flatMap(pc -> this.convertOuter(p));
                                 })
-                        ))
-        );
+                        ));
     }
 
     @Override
     public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "id must not be null.");
         return postContentRepository.getByPostId(id).flatMap(postContent ->
                         postContentRepository.deleteById(postContent.getId()))
                 .then(Mono.defer(() -> postRepository.deleteById(id)));
@@ -139,13 +133,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Flux<PostVO> search(String keyword) {
-        Assert.hasText(keyword, "keyword cannot be blank.");
+        Assert.hasText(keyword, "keyword must not be blank.");
         return postRepository.findAllByTitle(keyword).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Boolean> exist(String title) {
-        Assert.hasText(title, "title cannot be blank.");
+        Assert.hasText(title, "title must not be blank.");
         return postRepository.existsByTitle(title);
     }
 
@@ -161,7 +155,7 @@ public class PostServiceImpl implements PostService {
             BeanUtils.copyProperties(p, postVO);
             // 查询关联分类信息
             return categoryRepository.findById(post.getCategoryId()).map(category -> {
-                postVO.setCategory(category.getCategoryName());
+                postVO.setCategory(category.getName());
                 return postVO;
             });
         });

@@ -31,6 +31,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import static org.mockito.BDDMockito.given;
@@ -68,7 +69,7 @@ class UserControllerTest {
         userVO.setAccountExpiresAt(LocalDateTime.now());
         userVO.setFirstname("john");
         userVO.setLastname("steven");
-        userVO.setLastUpdatedAt(LocalDateTime.now());
+        userVO.setLastModifiedDate(Instant.now());
     }
 
     @Test

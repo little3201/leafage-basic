@@ -40,7 +40,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import top.leafage.common.TreeNode;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -82,7 +82,7 @@ class PrivilegeControllerTest {
         privilegeVO.setPath("/test");
         privilegeVO.setSuperior("superior");
         privilegeVO.setType('M');
-        privilegeVO.setLastUpdatedAt(LocalDateTime.now());
+        privilegeVO.setLastModifiedDate(Instant.now());
 
         rolePrivileges = new RolePrivileges();
         rolePrivileges.setRoleId(1L);

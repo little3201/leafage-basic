@@ -36,7 +36,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -62,11 +62,11 @@ class RegionControllerTest {
     void init() {
         regionVO = new RegionVO();
         regionVO.setName("test");
-        regionVO.setLastUpdatedAt(LocalDateTime.now());
         regionVO.setSuperior("super");
         regionVO.setAreaCode("023333");
         regionVO.setPostalCode(232);
         regionVO.setDescription("region");
+        regionVO.setLastModifiedDate(Instant.now());
     }
 
     @Test

@@ -38,7 +38,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -71,7 +71,7 @@ class GroupControllerTest {
         groupVO.setName("test");
         groupVO.setPrincipal("test");
         groupVO.setSuperior("test");
-        groupVO.setLastUpdatedAt(LocalDateTime.now());
+        groupVO.setLastModifiedDate(Instant.now());
 
         groupDTO = new GroupDTO();
         groupDTO.setName("test");

@@ -39,7 +39,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,7 +80,7 @@ class RoleControllerTest {
 
         roleVO = new RoleVO();
         roleVO.setName("test");
-        roleVO.setLastUpdatedAt(LocalDateTime.now());
+        roleVO.setLastModifiedDate(Instant.now());
         roleVO.setDescription("role");
 
         rolePrivileges = new RolePrivileges();

@@ -17,11 +17,32 @@
 
 package io.leafage.basic.hypervisor.handler;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.server.EntityResponse;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * rest controller advice
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public Mono<EntityResponse<String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
+        StringBuilder errorMsg = new StringBuilder();
+        for (ObjectError error : allErrors) {
+            errorMsg.append(error.getDefaultMessage()).append("; ");
+        }
+
+        return EntityResponse.fromObject(errorMsg.toString()).status(HttpStatus.NOT_FOUND).build();
+    }
 }

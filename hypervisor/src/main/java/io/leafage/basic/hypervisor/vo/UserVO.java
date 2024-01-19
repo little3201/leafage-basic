@@ -19,6 +19,7 @@ package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.UserBO;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 /**
@@ -46,7 +47,7 @@ public class UserVO extends UserBO {
     /**
      * 更新时间
      */
-    private LocalDateTime lastModifiedDate;
+    private Instant lastModifiedDate;
 
 
     public LocalDateTime getAccountExpiresAt() {
@@ -73,11 +74,11 @@ public class UserVO extends UserBO {
         this.credentialsExpiresAt = credentialsExpiresAt;
     }
 
-    public LocalDateTime getLastUpdatedAt() {
+    public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastUpdatedAt(LocalDateTime lastModifiedDate) {
+    public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }

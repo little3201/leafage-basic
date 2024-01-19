@@ -18,6 +18,7 @@
 package io.leafage.basic.hypervisor.domain;
 
 import io.leafage.basic.hypervisor.config.AuditMetadata;
+import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -32,6 +33,7 @@ public class Role extends AuditMetadata {
     /**
      * 名称
      */
+    @Unique
     @Column(value = "name")
     private String name;
 

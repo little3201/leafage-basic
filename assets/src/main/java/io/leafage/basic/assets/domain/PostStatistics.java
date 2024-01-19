@@ -17,6 +17,7 @@
 
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -26,7 +27,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2023-03-26 14:12
  */
 @Table(name = "post_statistics")
-public class PostStatistics {
+public class PostStatistics extends AuditMetadata {
 
     /**
      * 帖子

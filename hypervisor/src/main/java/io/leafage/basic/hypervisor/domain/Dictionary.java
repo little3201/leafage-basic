@@ -17,6 +17,7 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -26,7 +27,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2022-03-30 07:24
  **/
 @Table(name = "dictionaries")
-public class Dictionary extends AbstractModel {
+public class Dictionary extends AuditMetadata {
 
     /**
      * 名称

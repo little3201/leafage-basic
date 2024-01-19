@@ -46,7 +46,7 @@ public class UserVO extends UserBO {
     /**
      * 更新时间
      */
-    private LocalDateTime lastUpdatedAt;
+    private LocalDateTime lastModifiedDate;
 
 
     public LocalDateTime getAccountExpiresAt() {
@@ -74,10 +74,10 @@ public class UserVO extends UserBO {
     }
 
     public LocalDateTime getLastUpdatedAt() {
-        return lastUpdatedAt;
+        return lastModifiedDate;
     }
 
-    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
-        this.lastUpdatedAt = lastUpdatedAt;
+    public void setLastUpdatedAt(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

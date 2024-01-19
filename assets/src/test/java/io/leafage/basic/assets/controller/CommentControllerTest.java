@@ -34,7 +34,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import static org.mockito.BDDMockito.given;
 
@@ -68,7 +68,7 @@ class CommentControllerTest {
         commentVO.setCount(23L);
         commentVO.setLocation("中国上海");
         commentVO.setCountry("China");
-        commentVO.setLastUpdatedAt(LocalDateTime.now());
+        commentVO.setLastUpdatedAt(Instant.now());
     }
 
     @Test

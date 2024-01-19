@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import top.leafage.common.TreeNode;
@@ -39,6 +40,7 @@ import java.util.List;
  *
  * @author liwenqiang 2023-03-26 15:01
  **/
+@Validated
 @RestController
 @RequestMapping("/privileges")
 public class PrivilegeController {

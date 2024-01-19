@@ -36,7 +36,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -69,7 +69,7 @@ class CategoryControllerTest {
         categoryVO = new CategoryVO();
         categoryVO.setCount(23L);
         categoryVO.setName(categoryDTO.getName());
-        categoryVO.setLastUpdatedAt(LocalDateTime.now());
+        categoryVO.setLastUpdatedAt(Instant.now());
     }
 
     @Test

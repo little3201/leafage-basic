@@ -37,7 +37,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -76,7 +76,7 @@ class PostControllerTest {
         postVO.setTags(postDTO.getTags());
         postVO.setCover(postDTO.getCover());
         postVO.setContext(postDTO.getContext());
-        postVO.setLastUpdatedAt(LocalDateTime.now());
+        postVO.setLastUpdatedAt(Instant.now());
     }
 
     @Test

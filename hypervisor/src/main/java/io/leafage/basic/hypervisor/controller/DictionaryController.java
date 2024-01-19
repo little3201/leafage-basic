@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -34,6 +35,7 @@ import reactor.core.publisher.Mono;
  *
  * @author liwenqiang 2022/04/02 17:19
  **/
+@Validated
 @RestController
 @RequestMapping("/dictionaries")
 public class DictionaryController {

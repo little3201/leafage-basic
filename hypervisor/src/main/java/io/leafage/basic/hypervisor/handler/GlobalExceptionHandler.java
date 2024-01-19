@@ -15,22 +15,13 @@
  *
  */
 
-package io.leafage.basic.assets;
+package io.leafage.basic.hypervisor.handler;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * assets application
- *
- * @author liwenqiang
+ * rest controller advice
  */
-@SpringBootApplication
-public class AssetsApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(AssetsApplication.class, args);
-    }
-
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 }
-

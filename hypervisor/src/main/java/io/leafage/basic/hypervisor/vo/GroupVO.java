@@ -41,7 +41,7 @@ public class GroupVO extends GroupBO {
     /**
      * 最后更新时间
      */
-    private LocalDateTime lastUpdatedAt;
+    private LocalDateTime lastModifiedDate;
 
 
     public Long getId() {
@@ -61,10 +61,10 @@ public class GroupVO extends GroupBO {
     }
 
     public LocalDateTime getLastUpdatedAt() {
-        return lastUpdatedAt;
+        return lastModifiedDate;
     }
 
-    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
-        this.lastUpdatedAt = lastUpdatedAt;
+    public void setLastUpdatedAt(LocalDateTime lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

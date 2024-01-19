@@ -16,6 +16,7 @@
  */
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -25,7 +26,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "post_content")
-public class PostContent extends AbstractModel {
+public class PostContent extends AuditMetadata {
 
     /**
      * 帖子ID
@@ -54,4 +55,5 @@ public class PostContent extends AbstractModel {
     public void setContext(String context) {
         this.context = context;
     }
+
 }

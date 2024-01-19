@@ -17,7 +17,11 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import org.springframework.data.domain.Auditable;
 import org.springframework.data.relational.core.mapping.Table;
+
+import java.time.Instant;
+import java.util.Optional;
 
 /**
  * model class for access log
@@ -25,7 +29,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author liwenqiang 2022-03-18 21:09
  */
 @Table(name = "access_logs")
-public class AccessLog extends AbstractModel {
+public class AccessLog implements Auditable<String, Long, Instant> {
 
     /**
      * ip
@@ -65,4 +69,53 @@ public class AccessLog extends AbstractModel {
         this.context = context;
     }
 
+    @Override
+    public Optional<String> getCreatedBy() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void setCreatedBy(String createdBy) {
+
+    }
+
+    @Override
+    public Optional<Instant> getCreatedDate() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void setCreatedDate(Instant creationDate) {
+
+    }
+
+    @Override
+    public Optional<String> getLastModifiedBy() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void setLastModifiedBy(String lastModifiedBy) {
+
+    }
+
+    @Override
+    public Optional<Instant> getLastModifiedDate() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+
+    }
+
+    @Override
+    public Long getId() {
+        return null;
+    }
+
+    @Override
+    public boolean isNew() {
+        return false;
+    }
 }

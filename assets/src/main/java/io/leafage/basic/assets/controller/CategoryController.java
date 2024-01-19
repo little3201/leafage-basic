@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -35,6 +36,7 @@ import reactor.core.publisher.Mono;
  *
  * @author liwenqiang 2020-02-16 14:26
  **/
+@Validated
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {

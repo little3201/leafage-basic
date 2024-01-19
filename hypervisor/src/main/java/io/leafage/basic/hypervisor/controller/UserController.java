@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -34,6 +35,7 @@ import reactor.core.publisher.Mono;
  *
  * @author liwenqiang 2018-08-2 21:02
  **/
+@Validated
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -92,6 +94,24 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
+    }
+
+    /**
+     * 添加信息
+     *
+     * @param userDTO 要修改的数据
+     * @return 修改后的信息，异常时返回304状态码
+     */
+    @PostMapping
+    public ResponseEntity<Mono<UserVO>> create(@RequestBody @Valid UserDTO userDTO) {
+        Mono<UserVO> voMono;
+        try {
+            voMono = userService.create(userDTO);
+        } catch (Exception e) {
+            logger.error("Create user occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
     }
 
     /**

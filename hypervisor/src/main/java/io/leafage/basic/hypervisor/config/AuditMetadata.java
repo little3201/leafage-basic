@@ -15,22 +15,26 @@
  *
  */
 
-package io.leafage.basic.hypervisor.domain;
+package io.leafage.basic.hypervisor.config;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Auditable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.InsertOnlyProperty;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
- * base model
+ * audit metadata
  *
  * @author liwenqiang 2024-01-04 20:27
  */
-public abstract class AbstractModel {
+public abstract class AuditMetadata implements Auditable<String, Long, Instant> {
 
     /**
      * 主键
@@ -56,30 +60,22 @@ public abstract class AbstractModel {
      */
     @InsertOnlyProperty
     @CreatedDate
-    @Column(value = "created_at")
-    private LocalDateTime createdAt;
+    @Column(value = "created_date")
+    private Instant createdDate;
 
     /**
      * 最后修改人
      */
-    @Column(value = "last_updated_by")
-    private String lastUpdatedBy;
+    @Column(value = "last_modified_by")
+    private String lastModifiedBy;
 
     /**
      * 最后修改时间
      */
     @LastModifiedDate
-    @Column(value = "last_updated_at")
-    private LocalDateTime lastUpdatedAt;
+    @Column(value = "last_modified_date")
+    private Instant lastModifiedDate;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public boolean isEnabled() {
         return enabled;
@@ -89,35 +85,57 @@ public abstract class AbstractModel {
         this.enabled = enabled;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    @Nonnull
+    @Override
+    public Optional<String> getCreatedBy() {
+        return Optional.ofNullable(this.createdBy);
     }
 
-    public void setCreatedBy(String createdBy) {
+    @Override
+    public void setCreatedBy(@Nonnull String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    @Nonnull
+    @Override
+    public Optional<Instant> getCreatedDate() {
+        return Optional.ofNullable(this.createdDate);
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    @Override
+    public void setCreatedDate(@Nonnull Instant creationDate) {
+        this.createdDate = creationDate;
     }
 
-    public String getLastUpdatedBy() {
-        return lastUpdatedBy;
+    @Nonnull
+    @Override
+    public Optional<String> getLastModifiedBy() {
+        return Optional.ofNullable(this.lastModifiedBy);
     }
 
-    public void setLastUpdatedBy(String lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
+    @Override
+    public void setLastModifiedBy(@Nonnull String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
     }
 
-    public LocalDateTime getLastUpdatedAt() {
-        return lastUpdatedAt;
+    @Nonnull
+    @Override
+    public Optional<Instant> getLastModifiedDate() {
+        return Optional.ofNullable(this.lastModifiedDate);
     }
 
-    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
-        this.lastUpdatedAt = lastUpdatedAt;
+    @Override
+    public void setLastModifiedDate(@Nonnull Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isNew() {
+        return Objects.isNull(getId());
     }
 }

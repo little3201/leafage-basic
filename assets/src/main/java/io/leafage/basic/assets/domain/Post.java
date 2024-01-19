@@ -16,6 +16,7 @@
  */
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -27,26 +28,34 @@ import java.util.Set;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "posts")
-public class Post extends AbstractModel {
+public class Post extends AuditMetadata {
 
     /**
-     * 分类ID
+     * category 主键
      */
     @Column(value = "category_id")
     private Long categoryId;
+
     /**
      * 标题
      */
     private String title;
+
     /**
      * 封面
      */
     private String cover;
+
     /**
      * 标签
      */
     private Set<String> tags;
 
+    /**
+     * 是否启用
+     */
+    @Column(value = "is_enabled")
+    private boolean enabled = true;
 
     public Long getCategoryId() {
         return categoryId;
@@ -78,6 +87,14 @@ public class Post extends AbstractModel {
 
     public void setTags(Set<String> tags) {
         this.tags = tags;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
 }

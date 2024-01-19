@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserService {
     public Mono<UserVO> create(UserDTO userDTO) {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
+        user.setPassword("123456");
         return userRepository.save(user).flatMap(this::convertOuter);
     }
 

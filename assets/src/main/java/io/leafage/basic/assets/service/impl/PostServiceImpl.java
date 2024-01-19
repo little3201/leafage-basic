@@ -59,7 +59,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Mono<Page<PostVO>> retrieve(int page, int size, String sort, Long categoryId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
-                StringUtils.hasText(sort) ? sort : "lastUpdatedAt"));
+                StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
         Flux<Post> postFlux;
         Mono<Long> count;
         // if categoryId null, select all, else filter by categoryId

@@ -17,6 +17,7 @@
 
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
 import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -29,7 +30,7 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-10-06 22:09
  */
 @Table(name = "users")
-public class User extends AbstractModel {
+public class User extends AuditMetadata {
 
     /**
      * 用户名

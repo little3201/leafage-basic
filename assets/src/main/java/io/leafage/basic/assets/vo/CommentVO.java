@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.vo;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * vo class for comment
@@ -59,7 +59,7 @@ public class CommentVO {
     /**
      * 最后更新时间
      */
-    private LocalDateTime lastUpdatedAt;
+    private Instant lastModifiedDate;
 
 
     public Long getId() {
@@ -110,11 +110,11 @@ public class CommentVO {
         this.count = count;
     }
 
-    public LocalDateTime getLastUpdatedAt() {
-        return lastUpdatedAt;
+    public Instant getLastUpdatedAt() {
+        return lastModifiedDate;
     }
 
-    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
-        this.lastUpdatedAt = lastUpdatedAt;
+    public void setLastUpdatedAt(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

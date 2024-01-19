@@ -19,7 +19,7 @@ package io.leafage.basic.assets.vo;
 
 import io.leafage.basic.assets.bo.PostBO;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * vo class for post
@@ -41,7 +41,7 @@ public class PostVO extends PostBO {
     /**
      * 最后更新时间
      */
-    private LocalDateTime lastUpdatedAt;
+    private Instant lastModifiedDate;
 
 
     public Long getId() {
@@ -60,11 +60,11 @@ public class PostVO extends PostBO {
         this.category = category;
     }
 
-    public LocalDateTime getLastUpdatedAt() {
-        return lastUpdatedAt;
+    public Instant getLastUpdatedAt() {
+        return lastModifiedDate;
     }
 
-    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
-        this.lastUpdatedAt = lastUpdatedAt;
+    public void setLastUpdatedAt(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

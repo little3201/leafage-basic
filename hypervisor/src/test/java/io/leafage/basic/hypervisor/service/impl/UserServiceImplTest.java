@@ -15,7 +15,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
@@ -46,6 +51,16 @@ class UserServiceImplTest {
         userDTO.setDescription("user");
     }
 
+
+    @Test
+    void retrieve() {
+        Page<User> page = new PageImpl<>(List.of(Mockito.mock(User.class)));
+        given(this.userRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
+
+        Page<UserVO> voPage = userService.retrieve(0, 2, "id");
+
+        Assertions.assertNotNull(voPage.getContent());
+    }
 
     @Test
     void fetch() {
@@ -82,7 +97,7 @@ class UserServiceImplTest {
 
     @Test
     void exist() {
-        given(this.userRepository.exists(Mockito.anyString())).willReturn(Boolean.TRUE);
+        given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(Boolean.TRUE);
 
         boolean exist = userService.exist("test");
 
@@ -91,7 +106,7 @@ class UserServiceImplTest {
 
     @Test
     void exist_false() {
-        given(this.userRepository.exists(Mockito.anyString())).willReturn(false);
+        given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(false);
 
         boolean exist = userService.exist("test");
 

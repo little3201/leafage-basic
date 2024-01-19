@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -11,7 +12,7 @@ import jakarta.persistence.Table;
  **/
 @Entity
 @Table(name = "messages")
-public class Message extends AbstractModel {
+public class Message extends AuditMetadata {
 
     /**
      * 主键

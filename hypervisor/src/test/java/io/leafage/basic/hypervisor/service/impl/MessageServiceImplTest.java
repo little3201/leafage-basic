@@ -40,7 +40,7 @@ class MessageServiceImplTest {
     @Test
     void retrieve() {
         Page<Message> page = new PageImpl<>(List.of(Mockito.mock(Message.class)));
-        given(this.messageRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(page);
+        given(this.messageRepository.findAll(PageRequest.of(0, 2))).willReturn(page);
 
         Page<MessageVO> voPage = messageService.retrieve(0, 2);
 

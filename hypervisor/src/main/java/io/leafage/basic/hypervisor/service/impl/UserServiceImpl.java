@@ -9,8 +9,13 @@ import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * user service impl.
@@ -27,6 +32,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<UserVO> retrieve(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+        return userRepository.findAll(pageable).map(this::convertOuter);
+    }
+
+    @Override
     public UserVO fetch(Long id) {
         Assert.notNull(id, "role id must not be null.");
         User user = userRepository.findById(id).orElse(null);
@@ -39,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean exist(String username) {
         Assert.hasText(username, "username must not be blank.");
-        return userRepository.exists(username);
+        return userRepository.existsByUsername(username);
     }
 
     @Override

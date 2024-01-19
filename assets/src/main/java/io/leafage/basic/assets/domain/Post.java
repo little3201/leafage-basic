@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,7 +15,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "posts")
-public class Post extends AbstractEntity {
+public class Post extends AuditMetadata {
 
     /**
      * 标题
@@ -36,6 +37,12 @@ public class Post extends AbstractEntity {
      * 标签
      */
     private String tags;
+
+    /**
+     * 是否可用
+     */
+    @Column(name = "is_enabled")
+    private boolean enabled = true;
 
 
     public String getTitle() {
@@ -68,5 +75,13 @@ public class Post extends AbstractEntity {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

@@ -4,6 +4,7 @@ import io.leafage.basic.assets.domain.Comment;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 
 /**
  * comment 接口测试
@@ -36,6 +38,9 @@ class CommentServiceImplTest {
     @Mock
     private PostRepository postRepository;
 
+    @Mock
+    private PostStatisticsRepository postStatisticsRepository;
+
     @InjectMocks
     private CommentServiceImpl commentService;
 
@@ -43,7 +48,7 @@ class CommentServiceImplTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
         Page<Comment> page = new PageImpl<>(List.of(Mockito.mock(Comment.class)), pageable, 2L);
-        given(this.commentRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(page);
+        given(this.commentRepository.findAll(PageRequest.of(0, 2))).willReturn(page);
 
         Page<CommentVO> voPage = commentService.retrieve(0, 2);
         Assertions.assertNotNull(voPage.getContent());
@@ -73,7 +78,7 @@ class CommentServiceImplTest {
         comm.setContent("评论信息2222");
         comm.setPostId(1L);
         comm.setReplier(comment.getReplier());
-        given(this.commentRepository.findByReplierAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(comment, comm));
+        given(this.commentRepository.findByReplier(Mockito.anyLong())).willReturn(List.of(comment, comm));
 
         List<CommentVO> voList = commentService.replies(Mockito.anyLong());
         Assertions.assertNotNull(voList);
@@ -89,7 +94,9 @@ class CommentServiceImplTest {
     void create() {
         given(this.commentRepository.saveAndFlush(Mockito.any(Comment.class))).willReturn(Mockito.mock(Comment.class));
 
-        given(this.commentRepository.countByReplierAndEnabledTrue(Mockito.anyLong())).willReturn(2L);
+        doNothing().when(this.postStatisticsRepository).increaseComment(Mockito.anyLong());
+
+        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(2L);
 
         CommentVO commentVO = commentService.create(Mockito.mock(CommentDTO.class));
         Assertions.assertNotNull(commentVO);

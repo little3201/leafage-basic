@@ -63,8 +63,6 @@ class PrivilegeServiceImplTest {
 
     @Test
     void create() {
-        given(this.privilegeRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Privilege.class)));
-
         given(this.privilegeRepository.saveAndFlush(Mockito.any(Privilege.class))).willReturn(Mockito.mock(Privilege.class));
 
         PrivilegeVO privilegeVO = privilegeService.create(Mockito.mock(PrivilegeDTO.class));

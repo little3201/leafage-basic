@@ -48,14 +48,14 @@ public class PrivilegeController {
      */
     @GetMapping
     public ResponseEntity<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
-        Page<PrivilegeVO> authorities;
+        Page<PrivilegeVO> voPage;
         try {
-            authorities = privilegeService.retrieve(page, size, sort);
+            voPage = privilegeService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.info("Retrieve privilege occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(authorities);
+        return ResponseEntity.ok(voPage);
     }
 
     /**

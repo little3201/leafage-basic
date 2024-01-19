@@ -30,7 +30,7 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Page<RegionVO> retrieve(int page, int size) {
-        return regionRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+        return regionRepository.findAll(PageRequest.of(page, size)).map(this::convertOuter);
     }
 
     @Override
@@ -92,8 +92,8 @@ public class RegionServiceImpl implements RegionService {
         RegionVO vo = new RegionVO();
         BeanUtils.copyProperties(region, vo);
 
-        if (region.getSuperior() != null) {
-            Optional<Region> optional = regionRepository.findById(region.getSuperior());
+        if (region.getSuperiorId() != null) {
+            Optional<Region> optional = regionRepository.findById(region.getSuperiorId());
             optional.ifPresent(superior -> vo.setSuperior(superior.getName()));
         }
         return vo;

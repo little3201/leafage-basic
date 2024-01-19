@@ -1,5 +1,7 @@
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -10,20 +12,24 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "dictionaries")
-public class Dictionary extends AbstractModel {
+public class Dictionary extends AuditMetadata {
 
     /**
      * 名称
      */
     private String name;
+
     /**
      * 简称
      */
     private String alias;
+
     /**
      * 上级
      */
-    private String superior;
+    @Column(name = "superior_id")
+    private Long superiorId;
+
     /**
      * 描述
      */
@@ -46,12 +52,12 @@ public class Dictionary extends AbstractModel {
         this.alias = alias;
     }
 
-    public String getSuperior() {
-        return superior;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setSuperior(String superior) {
-        this.superior = superior;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public String getDescription() {

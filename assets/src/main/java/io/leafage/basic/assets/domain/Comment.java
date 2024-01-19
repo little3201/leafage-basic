@@ -1,5 +1,6 @@
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -10,26 +11,30 @@ import jakarta.persistence.Table;
  * @author liwenqiang  2021-09-29 10:45
  */
 @Entity
-@Table(name = "comment")
-public class Comment extends AbstractEntity {
+@Table(name = "comments")
+public class Comment extends AuditMetadata {
 
     /**
      * 帖子ID
      */
     @Column(name = "post_id")
     private Long postId;
+
     /**
      * 国家
      */
     private String country;
+
     /**
      * 位置
      */
     private String location;
+
     /**
      * 内容
      */
     private String content;
+
     /**
      * 回复人
      */

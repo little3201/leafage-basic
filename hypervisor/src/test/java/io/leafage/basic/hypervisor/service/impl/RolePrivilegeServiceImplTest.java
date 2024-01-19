@@ -35,8 +35,8 @@ class RolePrivilegeServiceImplTest {
     void privileges() {
         given(this.rolePrivilegesRepository.findByRoleId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RolePrivileges.class)));
 
-        List<RolePrivileges> authorities = roleAuthorityService.privileges(Mockito.anyLong());
-        Assertions.assertNotNull(authorities);
+        List<RolePrivileges> privileges = roleAuthorityService.privileges(Mockito.anyLong());
+        Assertions.assertNotNull(privileges);
     }
 
     @Test

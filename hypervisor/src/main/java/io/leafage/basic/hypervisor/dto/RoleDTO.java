@@ -34,7 +34,7 @@ public class RoleDTO implements Serializable {
     /**
      * 资源列表
      */
-    private Set<String> authorities;
+    private Set<String> privileges;
 
 
     public String getName() {
@@ -62,11 +62,11 @@ public class RoleDTO implements Serializable {
     }
 
     public Set<String> getAuthorities() {
-        return authorities;
+        return privileges;
     }
 
-    public void setAuthorities(Set<String> authorities) {
-        this.authorities = authorities;
+    public void setAuthorities(Set<String> privileges) {
+        this.privileges = privileges;
     }
 
 }

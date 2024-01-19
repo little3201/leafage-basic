@@ -30,7 +30,7 @@ public class MessageServiceImpl extends ServletAbstractTreeNodeService<Message> 
     @Override
     public Page<MessageVO> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return messageRepository.findByEnabledTrue(pageable).map(this::convertOuter);
+        return messageRepository.findAll(pageable).map(this::convertOuter);
     }
 
     @Override

@@ -36,8 +36,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<CategoryVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return categoryRepository.findByEnabledTrue(pageable).map(category -> {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+        return categoryRepository.findAll(pageable).map(category -> {
             CategoryVO categoryVO = this.convertOuter(category);
             long count = postRepository.countByCategoryId(category.getId());
             categoryVO.setCount(count);

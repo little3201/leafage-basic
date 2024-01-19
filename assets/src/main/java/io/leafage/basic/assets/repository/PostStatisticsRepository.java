@@ -1,9 +1,9 @@
 package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.domain.PostStatistics;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -25,10 +25,20 @@ public interface PostStatisticsRepository extends JpaRepository<PostStatistics, 
     PostStatistics getByDate(LocalDate date);
 
     /**
-     * 分页查询
+     * 增加viewed
      *
-     * @param pageable 分页参数
-     * @return 有效帖子
+     * @param id 主键
      */
-    Page<PostStatistics> findByEnabledTrue(Pageable pageable);
+    @Modifying
+    @Query("update #{#entityName} set viewed = viewed + 1 where id = ?1")
+    void increaseViewed(Long id);
+
+    /**
+     * 增加comment
+     *
+     * @param id 主键
+     */
+    @Modifying
+    @Query("update #{#entityName} set comments = comments + 1 where id = ?1")
+    void increaseComment(Long id);
 }

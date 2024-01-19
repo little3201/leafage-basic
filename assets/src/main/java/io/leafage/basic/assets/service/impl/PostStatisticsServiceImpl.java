@@ -29,7 +29,7 @@ public class PostStatisticsServiceImpl implements PostStatisticsService {
 
     @Override
     public Page<PostStatisticsVO> retrieve(int page, int size) {
-        return postStatisticsRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+        return postStatisticsRepository.findAll(PageRequest.of(page, size)).map(this::convertOuter);
     }
 
     @Override

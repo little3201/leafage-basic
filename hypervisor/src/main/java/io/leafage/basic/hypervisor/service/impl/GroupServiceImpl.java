@@ -43,7 +43,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
 
     @Override
     public Page<GroupVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
         return groupRepository.findAll(pageable).map(this::convertOuter);
     }
 
@@ -51,7 +51,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     public List<TreeNode> tree() {
         List<Group> groups = groupRepository.findByEnabledTrue();
         if (!CollectionUtils.isEmpty(groups)) {
-            return groups.stream().filter(g -> g.getSuperior() == null).map(g -> {
+            return groups.stream().filter(g -> g.getSuperiorId() == null).map(g -> {
                 TreeNode treeNode = new TreeNode(g.getId(), g.getName());
                 treeNode.setChildren(this.convert(groups));
                 return treeNode;

@@ -52,7 +52,7 @@ class RegionServiceImplTest {
     @Test
     void retrieve() {
         Page<Region> regions = new PageImpl<>(List.of(Mockito.mock(Region.class)));
-        given(this.regionRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(regions);
+        given(this.regionRepository.findAll(PageRequest.of(0, 2))).willReturn(regions);
 
         given(this.regionRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Region.class)));
 

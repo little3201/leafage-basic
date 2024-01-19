@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,7 +15,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "group_members")
-public class GroupMembers extends AbstractModel {
+public class GroupMembers extends AuditMetadata {
 
     /**
      * 组主键

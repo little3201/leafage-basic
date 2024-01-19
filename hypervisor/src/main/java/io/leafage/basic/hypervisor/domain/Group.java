@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -13,20 +15,24 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "groups")
-public class Group extends AbstractModel {
+public class Group extends AuditMetadata {
 
     /**
      * 名称
      */
     private String name;
+
     /**
      * 负责人主键
      */
     private Long principal;
+
     /**
-     * 上级主键
+     * 上级
      */
-    private Long superior;
+    @Column(name = "superior_id")
+    private Long superiorId;
+
     /**
      * 描述
      */
@@ -41,12 +47,12 @@ public class Group extends AbstractModel {
         this.principal = principal;
     }
 
-    public Long getSuperior() {
-        return superior;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setSuperior(Long superior) {
-        this.superior = superior;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public String getName() {

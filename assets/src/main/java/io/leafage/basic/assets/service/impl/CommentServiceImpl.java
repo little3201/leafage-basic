@@ -5,6 +5,7 @@ import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.springframework.beans.BeanUtils;
@@ -27,15 +28,17 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final PostStatisticsRepository postStatisticsRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository, PostStatisticsRepository postStatisticsRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
+        this.postStatisticsRepository = postStatisticsRepository;
     }
 
     @Override
     public Page<CommentVO> retrieve(int page, int size) {
-        return commentRepository.findByEnabledTrue(PageRequest.of(page, size)).map(this::convertOuter);
+        return commentRepository.findAll(PageRequest.of(page, size)).map(this::convertOuter);
     }
 
     @Override
@@ -45,13 +48,13 @@ public class CommentServiceImpl implements CommentService {
         if (null == post) {
             return Collections.emptyList();
         }
-        return commentRepository.findByPostsIdAndReplierIsNullAndEnabledTrue(post.getId())
+        return commentRepository.findByPostsIdAndReplierIsNull(post.getId())
                 .stream().map(this::convertOuter).toList();
     }
 
     @Override
     public List<CommentVO> replies(Long replier) {
-        return commentRepository.findByReplierAndEnabledTrue(replier)
+        return commentRepository.findByReplier(replier)
                 .stream().map(this::convertOuter).toList();
     }
 
@@ -62,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
         BeanUtils.copyProperties(commentDTO, comment);
         comment = commentRepository.saveAndFlush(comment);
         // 添加关联帖子的评论数
-        this.increaseComment(comment.getPostId());
+        this.postStatisticsRepository.increaseComment(comment.getPostId());
         return this.convertOuter(comment);
     }
 
@@ -76,20 +79,9 @@ public class CommentServiceImpl implements CommentService {
         CommentVO vo = new CommentVO();
         BeanUtils.copyProperties(comment, vo);
 
-        Long count = commentRepository.countByReplierAndEnabledTrue(comment.getId());
+        Long count = commentRepository.countByReplier(comment.getId());
         vo.setCount(count);
         return vo;
-    }
-
-    /**
-     * comment 原子更新（自增 1）
-     *
-     * @param id 主键
-     */
-    private void increaseComment(Long id) {
-        Assert.notNull(id, "category id must not be null.");
-
-        postRepository.increaseComment(id);
     }
 
 }

@@ -1,5 +1,6 @@
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -11,25 +12,30 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "regions")
-public class Region extends AbstractModel {
+public class Region extends AuditMetadata {
 
     /**
      * 名称
      */
     private String name;
+
     /**
      * 简称
      */
     private String alias;
+
     /**
      * 上级
      */
-    private Long superior;
+    @Column(name = "superior_id")
+    private Long superiorId;
+
     /**
      * 邮编
      */
     @Column(name = "postal_id")
     private String postalCode;
+
     /**
      * 区号
      */
@@ -58,12 +64,12 @@ public class Region extends AbstractModel {
         this.alias = alias;
     }
 
-    public Long getSuperior() {
-        return superior;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setSuperior(Long superior) {
-        this.superior = superior;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public String getPostalCode() {

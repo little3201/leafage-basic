@@ -3,6 +3,8 @@
  */
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -12,13 +14,19 @@ import jakarta.persistence.Table;
  * @author liwenqiang  2020-12-03 22:59
  */
 @Entity
-@Table(name = "category")
-public class Category extends AbstractEntity {
+@Table(name = "categories")
+public class Category extends AuditMetadata {
 
     /**
      * 名称
      */
     private String name;
+
+    /**
+     * 是否可用
+     */
+    @Column(name = "is_enabled")
+    private boolean enabled = true;
 
     /**
      * 描述
@@ -32,6 +40,14 @@ public class Category extends AbstractEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public String getDescription() {

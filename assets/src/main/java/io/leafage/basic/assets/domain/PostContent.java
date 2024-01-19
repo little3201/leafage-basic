@@ -3,18 +3,19 @@
  */
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 /**
- * document for posts content.
+ * model class for posts content.
  *
  * @author liwenqiang  2020-12-03 22:59
  */
 @Entity
-@Table(name = "posts_content")
-public class PostContent extends AbstractEntity {
+@Table(name = "post_content")
+public class PostContent extends AuditMetadata {
 
     /**
      * 帖子ID

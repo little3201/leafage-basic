@@ -40,7 +40,7 @@ class PostPostStatisticsServiceImplTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
         Page<PostStatistics> page = new PageImpl<>(List.of(Mockito.mock(PostStatistics.class)), pageable, 2L);
-        given(this.postStatisticsRepository.findByEnabledTrue(PageRequest.of(0, 2))).willReturn(page);
+        given(this.postStatisticsRepository.findAll(PageRequest.of(0, 2))).willReturn(page);
 
         Page<PostStatisticsVO> voPage = statisticsService.retrieve(0, 2);
         Assertions.assertNotNull(voPage.getContent());

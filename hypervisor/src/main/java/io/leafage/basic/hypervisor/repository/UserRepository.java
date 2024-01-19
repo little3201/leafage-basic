@@ -4,8 +4,6 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.domain.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,14 +14,6 @@ import org.springframework.stereotype.Repository;
  **/
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    /**
-     * 分页查询
-     *
-     * @param pageable 分页参数
-     * @return 信息
-     */
-    Page<User> findByEnabledTrue(Pageable pageable);
 
     /**
      * 查询用户信息
@@ -39,5 +29,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username 用户名
      * @return true-存在，false-否
      */
-    boolean exists(String username);
+    boolean existsByUsername(String username);
 }

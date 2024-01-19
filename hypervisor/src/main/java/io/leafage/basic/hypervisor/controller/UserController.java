@@ -9,6 +9,7 @@ import io.leafage.basic.hypervisor.vo.UserVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,26 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param page 页码
+     * @param size 大小
+     * @param sort 排序字段
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
+     */
+    @GetMapping
+    public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+        Page<UserVO> voPage;
+        try {
+            voPage = userService.retrieve(page, size, sort);
+        } catch (Exception e) {
+            logger.info("Retrieve user occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voPage);
     }
 
     /**

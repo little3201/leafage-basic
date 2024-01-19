@@ -1,5 +1,6 @@
 package io.leafage.basic.assets.domain;
 
+import io.leafage.basic.assets.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -13,7 +14,7 @@ import java.time.LocalDate;
  */
 @Entity
 @Table(name = "post_statistics")
-public class PostStatistics extends AbstractEntity {
+public class PostStatistics extends AuditMetadata {
 
     /**
      * 帖子ID

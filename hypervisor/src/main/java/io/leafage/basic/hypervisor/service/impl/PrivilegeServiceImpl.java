@@ -42,26 +42,20 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
 
     @Override
     public Page<PrivilegeVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
         return privilegeRepository.findAll(pageable).map(this::convertOuter);
     }
 
     @Override
     public List<TreeNode> tree() {
-        List<Privilege> authorities = privilegeRepository.findByEnabledTrue();
-        return this.convertTree(authorities);
+        List<Privilege> privileges = privilegeRepository.findByEnabledTrue();
+        return this.convertTree(privileges);
     }
 
     @Override
     public PrivilegeVO create(PrivilegeDTO privilegeDTO) {
         Privilege privilege = new Privilege();
         BeanUtils.copyProperties(privilegeDTO, privilege);
-        if (privilegeDTO.getSuperiorId() != null) {
-            Privilege superior = privilegeRepository.findById(privilegeDTO.getSuperiorId()).orElse(null);
-            if (superior != null) {
-                privilege.setSuperior(superior.getId());
-            }
-        }
         privilege = privilegeRepository.saveAndFlush(privilege);
         return this.convertOuter(privilege);
     }
@@ -74,12 +68,6 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
             throw new NoSuchElementException("当前操作数据不存在...");
         }
         BeanUtils.copyProperties(privilegeDTO, privilege);
-        if (privilegeDTO.getSuperiorId() != null) {
-            Privilege superior = privilegeRepository.findById(privilegeDTO.getSuperiorId()).orElse(null);
-            if (superior != null) {
-                privilege.setSuperior(superior.getId());
-            }
-        }
         privilege = privilegeRepository.save(privilege);
         return this.convertOuter(privilege);
     }
@@ -106,19 +94,19 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
     /**
      * 转换为TreeNode
      *
-     * @param authorities 集合数据
+     * @param privileges 集合数据
      * @return 树集合
      */
-    private List<TreeNode> convertTree(List<Privilege> authorities) {
-        if (CollectionUtils.isEmpty(authorities)) {
+    private List<TreeNode> convertTree(List<Privilege> privileges) {
+        if (CollectionUtils.isEmpty(privileges)) {
             return Collections.emptyList();
         }
-        return authorities.stream().filter(a -> a.getSuperior() == null).map(a -> {
+        return privileges.stream().filter(a -> a.getSuperiorId() == null).map(a -> {
             TreeNode treeNode = this.constructNode(a.getId(), a);
             Set<String> expand = new HashSet<>();
             expand.add("icon");
             expand.add("path");
-            treeNode.setChildren(this.convert(authorities, expand));
+            treeNode.setChildren(this.convert(privileges, expand));
             return treeNode;
         }).toList();
     }

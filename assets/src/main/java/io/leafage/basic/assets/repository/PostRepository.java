@@ -4,11 +4,9 @@
 package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.domain.Post;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,7 +25,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param pageable 分页参数
      * @return 查询结果
      */
-    Page<Post> findByEnabledTrue(Pageable pageable);
+    Slice<Post> findByEnabledTrue(Pageable pageable);
 
     /**
      * 查询所有可用
@@ -37,30 +35,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByEnabledTrue();
 
     /**
-     * 增加viewed
-     *
-     * @param id 主键
-     */
-    @Modifying
-    @Query("update #{#entityName} set viewed = viewed + 1 where id = ?1")
-    void increaseViewed(Long id);
-
-    /**
-     * 增加comment
-     *
-     * @param id 主键
-     */
-    @Modifying
-    @Query("update #{#entityName} set comments = comments + 1 where id = ?1")
-    void increaseComment(Long id);
-
-    /**
      * 统计
      *
      * @param categoryId 分类ID
      * @return 数量
      */
-    long countByCategoryId(long categoryId);
+    long countByCategoryId(Long categoryId);
 
     /**
      * 是否已存在

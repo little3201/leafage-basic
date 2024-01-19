@@ -58,7 +58,7 @@ class CategoryServiceImplTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
         Page<Category> page = new PageImpl<>(List.of(Mockito.mock(Category.class)), pageable, 2L);
-        given(this.categoryRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(page);
+        given(this.categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(page);
 
         given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 

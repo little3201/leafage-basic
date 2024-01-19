@@ -3,6 +3,7 @@
  */
 package io.leafage.basic.hypervisor.domain;
 
+import io.leafage.basic.hypervisor.config.AuditMetadata;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -13,7 +14,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "roles")
-public class Role extends AbstractModel {
+public class Role extends AuditMetadata {
 
     /**
      * 名称

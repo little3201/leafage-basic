@@ -10,6 +10,7 @@ import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostContentVO;
 import io.leafage.basic.assets.vo.PostVO;
@@ -37,17 +38,19 @@ public class PostsServiceImpl implements PostsService {
     private final PostRepository postRepository;
     private final PostContentRepository postContentRepository;
     private final CategoryRepository categoryRepository;
+    private final PostStatisticsRepository postStatisticsRepository;
 
-    public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository, CategoryRepository categoryRepository) {
+    public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository, CategoryRepository categoryRepository, PostStatisticsRepository postStatisticsRepository) {
         this.postRepository = postRepository;
         this.postContentRepository = postContentRepository;
         this.categoryRepository = categoryRepository;
+        this.postStatisticsRepository = postStatisticsRepository;
     }
 
     @Override
     public Page<PostVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "modifyTime"));
-        return postRepository.findByEnabledTrue(pageable).map(this::convertOuter);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+        return postRepository.findAll(pageable).map(this::convertOuter);
     }
 
     @Override
@@ -70,14 +73,14 @@ public class PostsServiceImpl implements PostsService {
             return null;
         }
         // viewed自增一，异步执行
-        this.increaseViewed(id);
+        this.postStatisticsRepository.increaseViewed(id);
 
         PostVO vo = this.convertOuter(post);
         PostContentVO postsContentVO = new PostContentVO();
         BeanUtils.copyProperties(vo, postsContentVO);
         postsContentVO.setPostsId(post.getId());
         // 获取内容详情
-        PostContent postContent = postContentRepository.getByPostIdAndEnabledTrue(id);
+        PostContent postContent = postContentRepository.getByPostId(id);
         if (postContent != null) {
             postsContentVO.setContent(postContent.getContent());
             postsContentVO.setCatalog(postContent.getCatalog());
@@ -113,7 +116,7 @@ public class PostsServiceImpl implements PostsService {
         // 保存并立即刷盘
         post = postRepository.saveAndFlush(post);
         //保存帖子内容
-        PostContent postContent = postContentRepository.getByPostIdAndEnabledTrue(post.getId());
+        PostContent postContent = postContentRepository.getByPostId(post.getId());
         if (postContent == null) {
             postContent = new PostContent();
         }
@@ -137,7 +140,7 @@ public class PostsServiceImpl implements PostsService {
 
         post = postRepository.save(post);
         //保存文章内容
-        PostContent postContent = postContentRepository.getByPostIdAndEnabledTrue(id);
+        PostContent postContent = postContentRepository.getByPostId(id);
         if (postContent == null) {
             postContent = new PostContent();
         }
@@ -152,11 +155,6 @@ public class PostsServiceImpl implements PostsService {
         Assert.notNull(id, "post id must not be null.");
 
         postRepository.deleteById(id);
-    }
-
-    private void increaseViewed(Long id) {
-        Assert.notNull(id, "post id must not be null.");
-        postRepository.increaseViewed(id);
     }
 
     /**

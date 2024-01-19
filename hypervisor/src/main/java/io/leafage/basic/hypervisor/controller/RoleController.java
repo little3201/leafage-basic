@@ -53,14 +53,14 @@ public class RoleController {
      */
     @GetMapping
     public ResponseEntity<Page<RoleVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
-        Page<RoleVO> roles;
+        Page<RoleVO> voPage;
         try {
-            roles = roleService.retrieve(page, size, sort);
+            voPage = roleService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.info("Retrieve role occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(roles);
+        return ResponseEntity.ok(voPage);
     }
 
     /**

@@ -48,14 +48,14 @@ public class GroupController {
      */
     @GetMapping
     public ResponseEntity<Page<GroupVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
-        Page<GroupVO> groups;
+        Page<GroupVO> voPage;
         try {
-            groups = groupService.retrieve(page, size, sort);
+            voPage = groupService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.info("Retrieve group occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(groups);
+        return ResponseEntity.ok(voPage);
     }
 
     /**

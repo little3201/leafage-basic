@@ -192,7 +192,7 @@ class RoleControllerTest {
     }
 
     @Test
-    void authorities() throws Exception {
+    void privileges() throws Exception {
         given(this.rolePrivilegesService.privileges(Mockito.anyLong())).willReturn(Mockito.anyList());
 
         mvc.perform(get("/roles/{id}/privileges", 1L)).andExpect(status().isOk())

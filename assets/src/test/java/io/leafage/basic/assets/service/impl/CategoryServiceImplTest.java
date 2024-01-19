@@ -52,20 +52,20 @@ class CategoryServiceImplTest {
     @InjectMocks
     private CategoryServiceImpl categoryService;
 
-    private Category category;
+    private CategoryDTO categoryDTO;
 
     @BeforeEach
     void init() {
-        category = new Category();
-        category.setId(1L);
-        category.setName("test");
+        categoryDTO = new CategoryDTO();
+        categoryDTO.setName("test");
+        categoryDTO.setDescription("category");
     }
 
     @Test
     void retrieve() {
-        given(this.categoryRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(category));
+        given(this.categoryRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Category.class)));
 
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(1L));
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(2L));
 
         given(this.categoryRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
@@ -77,7 +77,7 @@ class CategoryServiceImplTest {
         given(this.categoryRepository.findById(Mockito.anyLong()))
                 .willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        StepVerifier.create(categoryService.fetch(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(categoryService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -89,25 +89,21 @@ class CategoryServiceImplTest {
 
     @Test
     void create() {
-        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(category));
+        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        given(this.postRepository.countByCategoryId(category.getId())).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(2L));
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        StepVerifier.create(categoryService.create(categoryDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(categoryService.create(Mockito.mock(CategoryDTO.class))).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void modify() {
         given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(category));
+        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
 
-        given(this.postRepository.countByCategoryId(category.getId())).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(2L));
 
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
         StepVerifier.create(categoryService.modify(1L, categoryDTO)).expectNextCount(1).verifyComplete();
     }
 
@@ -115,6 +111,6 @@ class CategoryServiceImplTest {
     void remove() {
         given(this.categoryRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
-        StepVerifier.create(categoryService.remove(1L)).verifyComplete();
+        StepVerifier.create(categoryService.remove(Mockito.anyLong())).verifyComplete();
     }
 }

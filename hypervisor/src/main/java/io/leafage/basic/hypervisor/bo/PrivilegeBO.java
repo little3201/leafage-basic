@@ -32,20 +32,20 @@ public abstract class PrivilegeBO {
     /**
      * 名称
      */
-    @NotBlank(message = "privilege name cannot be blank.")
+    @NotBlank(message = "privilege name must not be blank.")
     @Size(max = 32, message = "privilege name max length is 32.")
     private String name;
 
     /**
      * 类型
      */
-    @NotNull(message = "type cannot be null.")
+    @NotNull(message = "type must not be null.")
     private Character type;
 
     /**
      * 图标
      */
-    @NotBlank(message = "icon cannot be blank.")
+    @NotBlank(message = "icon must not be blank.")
     private String icon;
 
     /**

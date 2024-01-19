@@ -61,6 +61,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Mono<UserVO> fetch(Long id) {
+        Assert.notNull(id, "user id must not be blank.");
+        return userRepository.findById(id).flatMap(this::convertOuter);
+    }
+
+    @Override
     public Mono<Boolean> exist(String username) {
         Assert.hasText(username, "username must not be blank.");
         return userRepository.existsByUsername(username);
@@ -76,12 +82,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserVO> modify(Long id, UserDTO userDTO) {
         Assert.notNull(id, "user id must not be blank.");
-        return userRepository.findById(id)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(user -> {
-                    BeanUtils.copyProperties(userDTO, user);
-                    return userRepository.save(user).flatMap(this::convertOuter);
-                });
+        return userRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(user -> BeanUtils.copyProperties(userDTO, user))
+                .flatMap(userRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     @Override
@@ -90,12 +94,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.deleteById(id);
     }
 
-    @Override
-    public Mono<UserVO> fetch(Long id) {
-        Assert.notNull(id, "user id must not be blank.");
-        return userRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(this::convertOuter);
-    }
 
     /**
      * 数据转换

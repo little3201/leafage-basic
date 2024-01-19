@@ -33,6 +33,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
+import java.util.NoSuchElementException;
+
 /**
  * dictionary service impl
  *
@@ -86,6 +88,15 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
         Dictionary dictionary = new Dictionary();
         BeanUtils.copyProperties(dictionaryDTO, dictionary);
         return dictionaryRepository.save(dictionary).flatMap(this::convertOuter);
+    }
+
+    @Override
+    public Mono<DictionaryVO> modify(Long id, DictionaryDTO dictionaryDTO) {
+        Assert.notNull(id, "dictionary id must not be null.");
+        return dictionaryRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(dictionary -> BeanUtils.copyProperties(dictionaryDTO, dictionary))
+                .flatMap(dictionaryRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     private Mono<DictionaryVO> convertOuter(Dictionary dictionary) {

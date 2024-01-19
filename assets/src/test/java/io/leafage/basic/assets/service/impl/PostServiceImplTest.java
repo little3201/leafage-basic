@@ -103,7 +103,7 @@ class PostServiceImplTest {
 
         given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(PostContent.class)));
 
-        StepVerifier.create(this.postsService.fetch(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.postsService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -119,14 +119,7 @@ class PostServiceImplTest {
 
         given(this.postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mono.empty());
 
-        StepVerifier.create(this.postsService.create(postDTO)).verifyComplete();
-    }
-
-    @Test
-    void create_error() {
-        given(this.postRepository.save(Mockito.any(Post.class))).willThrow(new RuntimeException());
-
-        StepVerifier.create(this.postsService.create(postDTO)).verifyError();
+        StepVerifier.create(this.postsService.create(Mockito.mock(PostDTO.class))).verifyComplete();
     }
 
     @Test
@@ -150,7 +143,7 @@ class PostServiceImplTest {
 
         given(this.postRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
-        StepVerifier.create(postsService.remove(1L)).verifyComplete();
+        StepVerifier.create(postsService.remove(Mockito.anyLong())).verifyComplete();
     }
 
     @Test

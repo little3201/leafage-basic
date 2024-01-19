@@ -60,10 +60,11 @@ public class RoleMembersServiceImpl implements RoleMembersService {
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
         return Flux.fromIterable(usernames).map(username -> {
-            RoleMembers roleMembers = new RoleMembers();
-            roleMembers.setUsername(username);
-            roleMembers.setRoleId(roleId);
-            return roleMembers;
-        }).collectList().flatMapMany(roleMembersRepository::saveAll).hasElements();
+                    RoleMembers roleMembers = new RoleMembers();
+                    roleMembers.setUsername(username);
+                    roleMembers.setRoleId(roleId);
+                    return roleMembers;
+                }).collectList()
+                .flatMapMany(roleMembersRepository::saveAll).hasElements();
     }
 }

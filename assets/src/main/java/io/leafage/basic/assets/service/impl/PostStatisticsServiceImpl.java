@@ -41,7 +41,7 @@ public class PostStatisticsServiceImpl implements PostStatisticsService {
 
     @Override
     public Mono<PostStatistics> increase(Long postId, StatisticsEnum statisticsEnum) {
-        Assert.notNull(postId, "postId cannot be null.");
+        Assert.notNull(postId, "postId must not be null.");
         return statisticsRepository.getByPostId(postId).flatMap(postStatistics -> {
             switch (statisticsEnum) {
                 case LIKES -> postStatistics.setLikes(postStatistics.getLikes() + 1);

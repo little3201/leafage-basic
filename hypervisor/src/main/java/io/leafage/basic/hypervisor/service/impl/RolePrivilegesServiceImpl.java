@@ -60,10 +60,11 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
         Assert.notEmpty(privilegeIds, "privilege ids must not be empty.");
 
         return Flux.fromIterable(privilegeIds).map(privilegeId -> {
-            RolePrivileges rolePrivileges = new RolePrivileges();
-            rolePrivileges.setRoleId(roleId);
-            rolePrivileges.setPrivilegeId(privilegeId);
-            return rolePrivileges;
-        }).collectList().flatMapMany(rolePrivilegesRepository::saveAll).hasElements();
+                    RolePrivileges rolePrivileges = new RolePrivileges();
+                    rolePrivileges.setRoleId(roleId);
+                    rolePrivileges.setPrivilegeId(privilegeId);
+                    return rolePrivileges;
+                }).collectList()
+                .flatMapMany(rolePrivilegesRepository::saveAll).hasElements();
     }
 }

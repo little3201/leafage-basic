@@ -76,36 +76,31 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     }
 
     @Override
+    public Mono<PrivilegeVO> fetch(Long id) {
+        Assert.notNull(id, "privilege id must not be null.");
+        return privilegeRepository.findById(id).flatMap(this::convertOuter);
+    }
+
+    @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "privilege name must not be blank.");
         return privilegeRepository.existsByName(name);
     }
 
     @Override
-    public Mono<PrivilegeVO> fetch(Long id) {
-        Assert.notNull(id, "privilege id must not be null.");
-        return privilegeRepository.findById(id).flatMap(this::convertOuter)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
-    }
-
-    @Override
     public Mono<PrivilegeVO> create(PrivilegeDTO privilegeDTO) {
-        return Mono.just(privilegeDTO).map(dto -> {
-            Privilege privilege = new Privilege();
-            BeanUtils.copyProperties(dto, privilege);
-            return privilege;
-        }).flatMap(privilegeRepository::save).flatMap(this::convertOuter);
+        Privilege privilege = new Privilege();
+        BeanUtils.copyProperties(privilegeDTO, privilege);
+        return privilegeRepository.save(privilege).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<PrivilegeVO> modify(Long id, PrivilegeDTO privilegeDTO) {
         Assert.notNull(id, "privilege id must not be null.");
-        return privilegeRepository.findById(id)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(privilege -> {
-                    BeanUtils.copyProperties(privilegeDTO, privilege);
-                    return privilegeRepository.save(privilege);
-                }).flatMap(this::convertOuter);
+        return privilegeRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(privilege -> BeanUtils.copyProperties(privilegeDTO, privilege))
+                .flatMap(privilegeRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     /**

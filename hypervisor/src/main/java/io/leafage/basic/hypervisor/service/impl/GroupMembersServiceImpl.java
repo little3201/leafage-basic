@@ -26,7 +26,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -52,8 +51,7 @@ public class GroupMembersServiceImpl implements GroupMembersService {
     @Override
     public Mono<List<GroupMembers>> groups(String username) {
         Assert.hasText(username, "username must not be blank.");
-        return groupMembersRepository.findByUsername(username)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new)).collectList();
+        return groupMembersRepository.findByUsername(username).collectList();
     }
 
     @Override
@@ -62,10 +60,11 @@ public class GroupMembersServiceImpl implements GroupMembersService {
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
         return Flux.fromIterable(usernames).map(username -> {
-            GroupMembers groupMembers = new GroupMembers();
-            groupMembers.setUsername(username);
-            groupMembers.setGroupId(groupId);
-            return groupMembers;
-        }).collectList().flatMapMany(groupMembersRepository::saveAll).hasElements();
+                    GroupMembers groupMembers = new GroupMembers();
+                    groupMembers.setUsername(username);
+                    groupMembers.setGroupId(groupId);
+                    return groupMembers;
+                }).collectList()
+                .flatMapMany(groupMembersRepository::saveAll).hasElements();
     }
 }

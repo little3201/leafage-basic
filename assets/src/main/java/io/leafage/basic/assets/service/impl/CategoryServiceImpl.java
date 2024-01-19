@@ -64,13 +64,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<CategoryVO> fetch(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "category id must not be null.");
         return categoryRepository.findById(id).flatMap(this::fetchOuter);
     }
 
     @Override
     public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "category name cannot be blank.");
+        Assert.hasText(name, "category name must not be blank.");
         return categoryRepository.existsByName(name);
     }
 
@@ -83,15 +83,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Mono<CategoryVO> modify(Long id, CategoryDTO categoryDTO) {
-        Assert.notNull(id, "id cannot be null.");
-        return categoryRepository.findById(id).doOnNext(category ->
-                        BeanUtils.copyProperties(categoryDTO, category)).switchIfEmpty(Mono.error(NotContextException::new))
-                .flatMap(categoryRepository::save).flatMap(this::convertOuter);
+        Assert.notNull(id, "category id must not be null.");
+        return categoryRepository.findById(id).switchIfEmpty(Mono.error(NotContextException::new))
+                .doOnNext(category -> BeanUtils.copyProperties(categoryDTO, category))
+                .flatMap(categoryRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "category id must not be null.");
         return categoryRepository.deleteById(id);
     }
 

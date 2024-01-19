@@ -67,7 +67,7 @@ class CommentServiceImplTest {
 
         given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
-        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(9L));
+        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(2L));
 
         StepVerifier.create(commentService.comments(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
@@ -78,7 +78,7 @@ class CommentServiceImplTest {
 
         given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
 
-        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(9L));
+        given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(2L));
 
         StepVerifier.create(commentService.replies(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }

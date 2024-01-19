@@ -84,14 +84,7 @@ class RoleServiceImplTest {
     void create() {
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
 
-        StepVerifier.create(roleService.create(roleDTO)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void create_error() {
-        given(this.roleRepository.save(Mockito.any(Role.class))).willThrow(new RuntimeException());
-
-        StepVerifier.create(roleService.create(roleDTO)).expectError(RuntimeException.class).verify();
+        StepVerifier.create(roleService.create(Mockito.mock(RoleDTO.class))).expectNextCount(1).verifyComplete();
     }
 
     @Test

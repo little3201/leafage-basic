@@ -50,26 +50,26 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Flux<CommentVO> comments(Long postId) {
-        Assert.notNull(postId, "postId cannot be null.");
+        Assert.notNull(postId, "postId must not be null.");
         return commentRepository.findByPostIdAndReplierIsNull(postId).flatMap(this::convertOuter);
     }
 
     @Override
     public Flux<CommentVO> replies(Long replier) {
-        Assert.notNull(replier, "replier cannot be null.");
+        Assert.notNull(replier, "replier must not be null.");
         return commentRepository.findByReplier(replier).flatMap(this::convertOuter);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<CommentVO> create(CommentDTO commentDTO) {
-        return postRepository.findById(commentDTO.getPostId()).map(posts -> {
+        return postRepository.findById(commentDTO.getPostId()).switchIfEmpty(Mono.error(new NoSuchElementException()))
+                .map(post -> {
                     Comment comment = new Comment();
                     BeanUtils.copyProperties(commentDTO, comment);
-                    comment.setPostId(posts.getId());
+                    comment.setPostId(post.getId());
                     return comment;
-                }).switchIfEmpty(Mono.error(new NoSuchElementException()))
-                .flatMap(commentRepository::save)
+                }).flatMap(commentRepository::save)
                 .flatMap(this::convertOuter);
     }
 
@@ -80,14 +80,11 @@ public class CommentServiceImpl implements CommentService {
      * @return 输出转换后的vo对象
      */
     private Mono<CommentVO> convertOuter(Comment comment) {
-        return Mono.just(comment).map(c -> {
-            CommentVO commentVO = new CommentVO();
-            BeanUtils.copyProperties(c, commentVO);
-            return commentVO;
-        }).flatMap(commentVO -> postRepository.findById(comment.getPostId())
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(vo -> commentRepository.countByReplier(comment.getReplier())
-                        .switchIfEmpty(Mono.just(0L)).map(count -> {
+        CommentVO commentVO = new CommentVO();
+        BeanUtils.copyProperties(comment, commentVO);
+        return Mono.just(comment).flatMap(c -> postRepository.findById(c.getPostId()).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(vo -> commentRepository.countByReplier(c.getReplier()).switchIfEmpty(Mono.just(0L))
+                        .map(count -> {
                             commentVO.setCount(count);
                             return commentVO;
                         })));

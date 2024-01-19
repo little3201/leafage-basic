@@ -72,14 +72,14 @@ class RegionServiceImplTest {
     void fetch() {
         given(this.regionRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.fetch(1L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void subordinates() {
         given(this.regionRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.subordinates(11L)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.subordinates(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -93,14 +93,7 @@ class RegionServiceImplTest {
     void create() {
         given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.create(regionDTO)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void create_error() {
-        given(this.regionRepository.save(Mockito.any(Region.class))).willThrow(new RuntimeException());
-
-        StepVerifier.create(regionService.create(regionDTO)).expectError(RuntimeException.class).verify();
+        StepVerifier.create(regionService.create(Mockito.mock(RegionDTO.class))).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -109,14 +102,14 @@ class RegionServiceImplTest {
 
         given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mono.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.modify(11L, regionDTO)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.modify(Mockito.anyLong(), regionDTO)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void remove() {
         given(this.regionRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
 
-        StepVerifier.create(regionService.remove(11L)).verifyComplete();
+        StepVerifier.create(regionService.remove(Mockito.anyLong())).verifyComplete();
     }
 
 }

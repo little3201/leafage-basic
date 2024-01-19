@@ -79,19 +79,15 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Mono<RegionVO> create(RegionDTO regionDTO) {
-        return Mono.just(regionDTO).map(dto -> {
-                    Region region = new Region();
-                    BeanUtils.copyProperties(regionDTO, region);
-                    return region;
-                })
-                .flatMap(regionRepository::save).flatMap(this::convertOuter);
+        Region region = new Region();
+        BeanUtils.copyProperties(regionDTO, region);
+        return regionRepository.save(region).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<RegionVO> modify(Long id, RegionDTO regionDTO) {
         Assert.notNull(id, "region id must not be null.");
-        return regionRepository.findById(id)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+        return regionRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(region -> BeanUtils.copyProperties(regionDTO, region))
                 .flatMap(regionRepository::save).flatMap(this::convertOuter);
     }

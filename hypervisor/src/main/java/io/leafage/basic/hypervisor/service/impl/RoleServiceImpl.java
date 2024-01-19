@@ -65,38 +65,31 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Mono<RoleVO> fetch(Long id) {
+        Assert.notNull(id, "role id must not be blank.");
+        return roleRepository.findById(id).flatMap(this::convertOuter);
+    }
+
+    @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "role name must not be blank.");
         return roleRepository.existsByName(name);
     }
 
     @Override
-    public Mono<RoleVO> fetch(Long id) {
-        Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.findById(id).flatMap(this::convertOuter)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
-    }
-
-    @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
-        return Mono.just(roleDTO).map(dto -> {
-                    Role role = new Role();
-                    BeanUtils.copyProperties(roleDTO, role);
-                    return role;
-                })
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(roleRepository::save).flatMap(this::convertOuter);
+        Role role = new Role();
+        BeanUtils.copyProperties(roleDTO, role);
+        return roleRepository.save(role).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<RoleVO> modify(Long id, RoleDTO roleDTO) {
         Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.findById(id)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(role -> {
-                    BeanUtils.copyProperties(roleDTO, role);
-                    return roleRepository.save(role).flatMap(this::convertOuter);
-                });
+        return roleRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(role -> BeanUtils.copyProperties(roleDTO, role))
+                .flatMap(roleRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     @Override

@@ -30,13 +30,13 @@ public abstract class CommentBO {
     /**
      * 帖子
      */
-    @NotNull(message = "postId cannot be null.")
+    @NotNull(message = "postId must not be null.")
     private Long postId;
 
     /**
      * 内容
      */
-    @NotBlank(message = "context cannot be blank.")
+    @NotBlank(message = "context must not be blank.")
     private String context;
 
     /**

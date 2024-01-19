@@ -34,6 +34,8 @@ import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.NoSuchElementException;
+
 /**
  * post service impl
  *
@@ -75,7 +77,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Mono<PostVO> fetch(Long id) {
-        Assert.notNull(id, "id must not be null.");
+        Assert.notNull(id, "post id must not be null.");
         return postRepository.findById(id).flatMap(post ->
                 // 查询关联分类信息
                 categoryRepository.findById(post.getCategoryId()).map(category -> {
@@ -94,14 +96,11 @@ public class PostServiceImpl implements PostService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostVO> create(PostDTO postDTO) {
-        return Mono.just(postDTO).map(dto -> {
-            Post post = new Post();
-            BeanUtils.copyProperties(postDTO, post);
-            post.setCategoryId(dto.getCategoryId());
-            return post;
-        }).flatMap(postRepository::save).flatMap(post -> {
+        Post post = new Post();
+        BeanUtils.copyProperties(postDTO, post);
+        return postRepository.save(post).flatMap(p -> {
             PostContent postContent = new PostContent();
-            postContent.setPostId(post.getId());
+            postContent.setPostId(p.getId());
             postContent.setContext(postDTO.getContext());
             return postContentRepository.save(postContent).flatMap(pc -> this.convertOuter(post));
         });
@@ -110,24 +109,23 @@ public class PostServiceImpl implements PostService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostVO> modify(Long id, PostDTO postDTO) {
-        Assert.notNull(id, "id cannot be null.");
-        return postRepository.findById(id).flatMap(post -> Mono.just(postDTO).map(dto -> {
-                    // 将信息复制到info
-                    BeanUtils.copyProperties(postDTO, post);
-                    return post;
-                }).flatMap(entity -> postRepository.save(entity)
-                        .flatMap(p -> postContentRepository.getByPostId(p.getId())
+        Assert.notNull(id, "post id must not be null.");
+        return postRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(post -> BeanUtils.copyProperties(postDTO, post))
+                .flatMap(pos -> postRepository.save(pos)
+                        // 查询并更新
+                        .flatMap(p -> postContentRepository.getByPostId(p.getId()).switchIfEmpty(Mono.just(new PostContent()))
                                 .flatMap(postContent -> {
+                                    postContent.setPostId(p.getId());
                                     postContent.setContext(postDTO.getContext());
                                     return postContentRepository.save(postContent).flatMap(pc -> this.convertOuter(p));
                                 })
-                        ))
-        );
+                        ));
     }
 
     @Override
     public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "id cannot be null.");
+        Assert.notNull(id, "id must not be null.");
         return postContentRepository.getByPostId(id).flatMap(postContent ->
                         postContentRepository.deleteById(postContent.getId()))
                 .then(Mono.defer(() -> postRepository.deleteById(id)));
@@ -135,13 +133,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Flux<PostVO> search(String keyword) {
-        Assert.hasText(keyword, "keyword cannot be blank.");
+        Assert.hasText(keyword, "keyword must not be blank.");
         return postRepository.findAllByTitle(keyword).flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<Boolean> exist(String title) {
-        Assert.hasText(title, "title cannot be blank.");
+        Assert.hasText(title, "title must not be blank.");
         return postRepository.existsByTitle(title);
     }
 

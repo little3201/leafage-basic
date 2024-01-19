@@ -209,7 +209,7 @@ class RoleControllerTest {
     @Test
     void relation() {
         given(this.rolePrivilegesService.relation(Mockito.anyLong(), Mockito.anySet()))
-                .willReturn(Mono.just(true));
+                .willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.patch().uri("/roles/{id}/privileges", 1L)
                 .bodyValue(Collections.singleton(1L))

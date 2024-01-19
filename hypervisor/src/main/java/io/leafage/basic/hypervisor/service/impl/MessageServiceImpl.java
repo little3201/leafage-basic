@@ -67,22 +67,21 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
     @Override
     public Mono<MessageVO> fetch(Long id) {
         Assert.notNull(id, "message id must not be null.");
-        return messageRepository.findById(id).doOnNext(message ->
-                message.setRead(true)).flatMap(messageRepository::save).flatMap(this::convertOuter);
+        return messageRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .doOnNext(message -> message.setRead(Boolean.TRUE))
+                .flatMap(messageRepository::save)
+                .flatMap(this::convertOuter);
     }
 
     @Override
     public Mono<MessageVO> create(MessageDTO messageDTO) {
-        return userRepository.getByUsername(messageDTO.getReceiver())
-                .switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(user -> Mono.just(messageDTO).map(dto -> {
-                            Message message = new Message();
-                            BeanUtils.copyProperties(messageDTO, message);
-                            message.setReceiver(user.getUsername());
-                            return message;
-                        })
-                        .flatMap(messageRepository::save).flatMap(this::convertOuter))
-                .switchIfEmpty(Mono.error(new NoSuchElementException()));
+        Message message = new Message();
+        BeanUtils.copyProperties(messageDTO, message);
+        return Mono.just(message).map(m -> {
+            userRepository.getByUsername(messageDTO.getReceiver()).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                    .doOnNext(user -> message.setReceiver(user.getUsername()));
+            return m;
+        }).flatMap(messageRepository::save).flatMap(this::convertOuter);
     }
 
     @Override

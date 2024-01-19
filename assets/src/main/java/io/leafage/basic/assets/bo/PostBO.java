@@ -31,7 +31,7 @@ public abstract class PostBO {
     /**
      * 标题
      */
-    @NotBlank(message = "title cannot be blank.")
+    @NotBlank(message = "title must not be blank.")
     private String title;
 
     /**
@@ -42,13 +42,13 @@ public abstract class PostBO {
     /**
      * 内容
      */
-    @NotBlank(message = "context cannot be blank.")
+    @NotBlank(message = "context must not be blank.")
     private String context;
 
     /**
      * 标签
      */
-    @NotEmpty(message = "tags cannot be empty.")
+    @NotEmpty(message = "tags must not be empty.")
     private Set<String> tags;
 
 

@@ -64,7 +64,7 @@ class GroupMembersServiceImplTest {
     void relation() {
         given(this.groupMembersRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(GroupMembers.class)));
 
-        StepVerifier.create(groupMembersService.relation(1L, Set.of("test")))
+        StepVerifier.create(groupMembersService.relation(Mockito.anyLong(), Set.of("test")))
                 .expectNextCount(1).verifyComplete();
     }
 }

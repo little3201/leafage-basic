@@ -26,7 +26,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -52,8 +51,7 @@ public class GroupRolesServiceImpl implements GroupRolesService {
     @Override
     public Mono<List<GroupRoles>> groups(Long roleId) {
         Assert.notNull(roleId, "role id must not be blank.");
-        return groupRolesRepository.findByRoleId(roleId)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new)).collectList();
+        return groupRolesRepository.findByRoleId(roleId).collectList();
     }
 
     @Override
@@ -62,10 +60,11 @@ public class GroupRolesServiceImpl implements GroupRolesService {
         Assert.notEmpty(roleIds, "role ids must not be empty.");
 
         return Flux.fromIterable(roleIds).map(roleId -> {
-            GroupRoles groupRoles = new GroupRoles();
-            groupRoles.setRoleId(roleId);
-            groupRoles.setGroupId(groupId);
-            return groupRoles;
-        }).collectList().flatMapMany(groupRolesRepository::saveAll).hasElements();
+                    GroupRoles groupRoles = new GroupRoles();
+                    groupRoles.setRoleId(roleId);
+                    groupRoles.setGroupId(groupId);
+                    return groupRoles;
+                }).collectList()
+                .flatMapMany(groupRolesRepository::saveAll).hasElements();
     }
 }

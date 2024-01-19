@@ -29,7 +29,7 @@ public abstract class DictionaryBO {
     /**
      * 名称
      */
-    @NotBlank(message = "dictionaryName cannot be blank.")
+    @NotBlank(message = "dictionaryName must not be blank.")
     private String name;
 
     /**

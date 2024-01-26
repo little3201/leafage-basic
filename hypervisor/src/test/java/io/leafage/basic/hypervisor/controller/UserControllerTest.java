@@ -106,7 +106,7 @@ class UserControllerTest {
     void created() {
         given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
 
-        webTestClient.post().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
+        webTestClient.post().uri("/users").bodyValue(userDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.username").isEqualTo("test");
     }

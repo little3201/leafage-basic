@@ -59,11 +59,11 @@ public class GroupMembersServiceImpl implements GroupMembersService {
         Assert.notNull(groupId, "group id must not be blank.");
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
-        return Flux.defer(() -> Flux.fromIterable(usernames).map(username -> {
+        return Flux.fromIterable(usernames).map(username -> {
             GroupMembers groupMembers = new GroupMembers();
             groupMembers.setUsername(username);
             groupMembers.setGroupId(groupId);
             return groupMembers;
-        }).flatMap(groupMembersRepository::save)).hasElements();
+        }).flatMap(groupMembersRepository::save).all(groupMembers -> Boolean.TRUE);
     }
 }

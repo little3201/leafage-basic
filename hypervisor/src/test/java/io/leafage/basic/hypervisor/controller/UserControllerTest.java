@@ -32,7 +32,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 import static org.mockito.BDDMockito.given;
 
@@ -61,12 +60,12 @@ class UserControllerTest {
         userDTO.setAvatar("avatar.jpg");
         userDTO.setFirstname("john");
         userDTO.setLastname("steven");
-        userDTO.setAccountExpiresAt(LocalDateTime.now());
-        userDTO.setCredentialsExpiresAt(LocalDateTime.now());
+        userDTO.setAccountExpiresAt(Instant.now());
+        userDTO.setCredentialsExpiresAt(Instant.now());
 
         userVO = new UserVO();
         userVO.setUsername("test");
-        userVO.setAccountExpiresAt(LocalDateTime.now());
+        userVO.setAccountExpiresAt(Instant.now());
         userVO.setFirstname("john");
         userVO.setLastname("steven");
         userVO.setLastModifiedDate(Instant.now());

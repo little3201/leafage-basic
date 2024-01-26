@@ -20,6 +20,7 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,6 +31,8 @@ import org.springframework.data.domain.PageRequest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.time.Instant;
 
 import static org.mockito.BDDMockito.given;
 
@@ -46,6 +49,17 @@ class UserServiceImplTest {
 
     @InjectMocks
     private UserServiceImpl userService;
+
+    private UserDTO userDTO;
+
+    @BeforeEach
+    void init() {
+        userDTO = new UserDTO();
+        userDTO.setUsername("test");
+        userDTO.setFirstname("john");
+        userDTO.setLastname("steven");
+        userDTO.setCredentialsExpiresAt(Instant.now());
+    }
 
     @Test
     void retrieve() {
@@ -84,7 +98,7 @@ class UserServiceImplTest {
 
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(Mono.just(Mockito.mock(User.class)));
 
-        UserDTO userDTO = new UserDTO();
+
         StepVerifier.create(userService.modify(Mockito.anyLong(), userDTO)).expectNextCount(1).verifyComplete();
     }
 

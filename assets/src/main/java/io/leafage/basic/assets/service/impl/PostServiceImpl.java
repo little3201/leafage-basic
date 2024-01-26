@@ -35,6 +35,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * post service impl
@@ -112,23 +113,28 @@ public class PostServiceImpl implements PostService {
         Assert.notNull(id, "post id must not be null.");
         return postRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(post -> BeanUtils.copyProperties(postDTO, post))
-                .flatMap(pos -> postRepository.save(pos)
-                        // 查询并更新
-                        .flatMap(p -> postContentRepository.getByPostId(p.getId()).switchIfEmpty(Mono.just(new PostContent()))
-                                .flatMap(postContent -> {
-                                    postContent.setPostId(p.getId());
-                                    postContent.setContext(postDTO.getContext());
-                                    return postContentRepository.save(postContent).flatMap(pc -> this.convertOuter(p));
-                                })
-                        ));
+                .flatMap(postRepository::save)
+                .flatMap(p -> postContentRepository.getByPostId(p.getId()).switchIfEmpty(Mono.just(new PostContent()))
+                        .flatMap(postContent -> {
+                            postContent.setPostId(p.getId());
+                            postContent.setContext(postDTO.getContext());
+                            return postContentRepository.save(postContent);
+                        }).flatMap(pc -> this.convertOuter(p))
+                );
     }
 
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return postContentRepository.getByPostId(id).flatMap(postContent ->
-                        postContentRepository.deleteById(postContent.getId()))
-                .then(Mono.defer(() -> postRepository.deleteById(id)));
+        return postContentRepository.getByPostId(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(postContent -> {
+                            if (Objects.nonNull(postContent.getId())) {
+                                return postContentRepository.deleteById(postContent.getId());
+                            }
+                            return Mono.error(NoSuchElementException::new);
+                        }
+                )
+                .then(postRepository.deleteById(id));
     }
 
     @Override
@@ -151,12 +157,13 @@ public class PostServiceImpl implements PostService {
      */
     private Mono<PostVO> convertOuter(Post post) {
         return Mono.just(post).flatMap(p -> {
-            PostVO postVO = new PostVO();
-            BeanUtils.copyProperties(p, postVO);
+            PostVO vo = new PostVO();
+            BeanUtils.copyProperties(p, vo);
+            vo.setLastModifiedDate(p.getLastModifiedDate().orElse(null));
             // 查询关联分类信息
-            return categoryRepository.findById(post.getCategoryId()).map(category -> {
-                postVO.setCategory(category.getName());
-                return postVO;
+            return categoryRepository.findById(p.getCategoryId()).map(category -> {
+                vo.setCategory(category.getName());
+                return vo;
             });
         });
     }

@@ -76,7 +76,7 @@ class PostControllerTest {
         postVO.setTags(postDTO.getTags());
         postVO.setCover(postDTO.getCover());
         postVO.setContext(postDTO.getContext());
-        postVO.setLastUpdatedAt(Instant.now());
+        postVO.setLastModifiedDate(Instant.now());
     }
 
     @Test

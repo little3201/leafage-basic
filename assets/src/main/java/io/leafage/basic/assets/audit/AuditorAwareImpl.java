@@ -15,24 +15,20 @@
  *
  */
 
-package io.leafage.basic.assets.config;
+package io.leafage.basic.assets.audit;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import jakarta.annotation.Nonnull;
 import org.springframework.data.domain.ReactiveAuditorAware;
-import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
+import reactor.core.publisher.Mono;
 
 /**
- * audit configuration
- *
- * @author liwenqiang 2020-10-06 22:09Z
+ * auditor impl
  */
-@Configuration
-@EnableR2dbcAuditing
-public class AuditConfiguration {
+public class AuditorAwareImpl implements ReactiveAuditorAware<String> {
 
-    @Bean
-    public ReactiveAuditorAware<String> auditorProvider() {
-        return new AuditorAwareImpl();
+    @Nonnull
+    @Override
+    public Mono<String> getCurrentAuditor() {
+        return Mono.just("admin");
     }
 }

@@ -108,6 +108,7 @@ public class RegionServiceImpl implements RegionService {
         return Mono.just(region).map(r -> {
             RegionVO vo = new RegionVO();
             BeanUtils.copyProperties(r, vo);
+            vo.setLastModifiedDate(r.getLastModifiedDate().orElse(null));
             return vo;
         });
     }

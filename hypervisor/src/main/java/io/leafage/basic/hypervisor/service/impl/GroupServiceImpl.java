@@ -108,6 +108,7 @@ public class GroupServiceImpl implements GroupService {
         return Mono.just(group).map(g -> {
             GroupVO vo = new GroupVO();
             BeanUtils.copyProperties(g, vo);
+            vo.setLastModifiedDate(g.getLastModifiedDate().orElse(null));
             return vo;
         });
     }

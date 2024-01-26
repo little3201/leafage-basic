@@ -103,6 +103,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
         return Mono.just(dictionary).map(d -> {
             DictionaryVO vo = new DictionaryVO();
             BeanUtils.copyProperties(d, vo);
+            vo.setLastModifiedDate(d.getLastModifiedDate().orElse(null));
             return vo;
         });
     }

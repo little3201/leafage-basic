@@ -60,11 +60,11 @@ public class PostVO extends PostBO {
         this.category = category;
     }
 
-    public Instant getLastUpdatedAt() {
+    public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastUpdatedAt(Instant lastModifiedDate) {
+    public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }

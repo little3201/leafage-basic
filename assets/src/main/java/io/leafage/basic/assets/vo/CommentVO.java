@@ -110,11 +110,11 @@ public class CommentVO {
         this.count = count;
     }
 
-    public Instant getLastUpdatedAt() {
+    public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastUpdatedAt(Instant lastModifiedDate) {
+    public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }

@@ -20,7 +20,6 @@ package io.leafage.basic.hypervisor.vo;
 import io.leafage.basic.hypervisor.bo.UserBO;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 /**
  * vo class for user
@@ -32,7 +31,7 @@ public class UserVO extends UserBO {
     /**
      * user有效期
      */
-    private LocalDateTime accountExpiresAt;
+    private Instant accountExpiresAt;
 
     /**
      * 是否锁定
@@ -42,19 +41,19 @@ public class UserVO extends UserBO {
     /**
      * 密码有效期
      */
-    private LocalDateTime credentialsExpiresAt;
+    private Instant credentialsExpiresAt;
 
     /**
-     * 更新时间
+     * 最后更新时间
      */
     private Instant lastModifiedDate;
 
 
-    public LocalDateTime getAccountExpiresAt() {
+    public Instant getAccountExpiresAt() {
         return accountExpiresAt;
     }
 
-    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
+    public void setAccountExpiresAt(Instant accountExpiresAt) {
         this.accountExpiresAt = accountExpiresAt;
     }
 
@@ -66,11 +65,11 @@ public class UserVO extends UserBO {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public LocalDateTime getCredentialsExpiresAt() {
+    public Instant getCredentialsExpiresAt() {
         return credentialsExpiresAt;
     }
 
-    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
+    public void setCredentialsExpiresAt(Instant credentialsExpiresAt) {
         this.credentialsExpiresAt = credentialsExpiresAt;
     }
 

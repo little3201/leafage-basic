@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Set;
@@ -62,7 +63,7 @@ class GroupMembersServiceImplTest {
 
     @Test
     void relation() {
-        given(this.groupMembersRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(GroupMembers.class)));
+        given(this.groupMembersRepository.save(Mockito.any(GroupMembers.class))).willReturn(Mono.just(Mockito.mock(GroupMembers.class)));
 
         StepVerifier.create(groupMembersService.relation(Mockito.anyLong(), Set.of("test")))
                 .expectNextCount(1).verifyComplete();

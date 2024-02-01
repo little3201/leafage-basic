@@ -69,7 +69,7 @@ class CategoryControllerTest {
         categoryVO = new CategoryVO();
         categoryVO.setCount(23L);
         categoryVO.setName(categoryDTO.getName());
-        categoryVO.setLastUpdatedAt(Instant.now());
+        categoryVO.setLastModifiedDate(Instant.now());
     }
 
     @Test

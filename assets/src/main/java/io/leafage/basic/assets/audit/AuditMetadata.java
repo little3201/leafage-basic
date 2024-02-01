@@ -15,9 +15,8 @@
  *
  */
 
-package io.leafage.basic.hypervisor.config;
+package io.leafage.basic.assets.audit;
 
-import jakarta.annotation.Nonnull;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -32,7 +31,7 @@ import java.util.Optional;
 /**
  * audit metadata
  *
- * @author liwenqiang 2024-01-04 20:27
+ * @author liwenqiang 2020-10-06 22:09
  */
 public abstract class AuditMetadata implements Auditable<String, Long, Instant> {
 
@@ -41,12 +40,6 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
      */
     @Id
     private Long id;
-
-    /**
-     * 是否启用
-     */
-    @Column(value = "is_enabled")
-    private boolean enabled = true;
 
     /**
      * 创建人
@@ -76,56 +69,43 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     @Column(value = "last_modified_date")
     private Instant lastModifiedDate;
 
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    @Nonnull
     @Override
     public Optional<String> getCreatedBy() {
         return Optional.ofNullable(this.createdBy);
     }
 
     @Override
-    public void setCreatedBy(@Nonnull String createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    @Nonnull
     @Override
     public Optional<Instant> getCreatedDate() {
         return Optional.ofNullable(this.createdDate);
     }
 
     @Override
-    public void setCreatedDate(@Nonnull Instant creationDate) {
+    public void setCreatedDate(Instant creationDate) {
         this.createdDate = creationDate;
     }
 
-    @Nonnull
     @Override
     public Optional<String> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
     @Override
-    public void setLastModifiedBy(@Nonnull String lastModifiedBy) {
+    public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    @Nonnull
     @Override
     public Optional<Instant> getLastModifiedDate() {
         return Optional.ofNullable(this.lastModifiedDate);
     }
 
     @Override
-    public void setLastModifiedDate(@Nonnull Instant lastModifiedDate) {
+    public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 

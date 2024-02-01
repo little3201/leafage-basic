@@ -38,7 +38,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -71,7 +71,7 @@ class DictionaryControllerTest {
         dictionaryVO.setName("test");
         dictionaryVO.setSuperior("性别");
         dictionaryVO.setDescription("性别-男");
-        dictionaryVO.setLastUpdatedAt(LocalDateTime.now());
+        dictionaryVO.setLastModifiedDate(Instant.now());
     }
 
     @Test

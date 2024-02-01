@@ -106,6 +106,7 @@ public class UserServiceImpl implements UserService {
         return Mono.just(user).map(u -> {
             UserVO vo = new UserVO();
             BeanUtils.copyProperties(u, vo);
+            vo.setLastModifiedDate(u.getLastModifiedDate().orElse(null));
             return vo;
         });
     }

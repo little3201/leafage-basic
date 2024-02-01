@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.domain;
 
-import io.leafage.basic.assets.config.AuditMetadata;
+import io.leafage.basic.assets.audit.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 

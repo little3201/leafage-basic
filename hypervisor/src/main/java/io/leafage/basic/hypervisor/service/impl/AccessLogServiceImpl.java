@@ -65,6 +65,7 @@ public class AccessLogServiceImpl implements AccessLogService {
         return Mono.just(accessLog).map(a -> {
             AccessLogVO vo = new AccessLogVO();
             BeanUtils.copyProperties(a, vo);
+            vo.setLastModifiedDate(a.getLastModifiedDate().orElse(null));
             return vo;
         });
     }

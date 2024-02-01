@@ -18,10 +18,8 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.domain.Comment;
-import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,9 +44,6 @@ class CommentServiceImplTest {
     @Mock
     private CommentRepository commentRepository;
 
-    @Mock
-    private PostRepository postRepository;
-
     @InjectMocks
     private CommentServiceImpl commentService;
 
@@ -65,8 +60,6 @@ class CommentServiceImplTest {
     void comments() {
         given(this.commentRepository.findByPostIdAndReplierIsNull(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Comment.class)));
 
-        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
-
         given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(2L));
 
         StepVerifier.create(commentService.comments(Mockito.anyLong())).expectNextCount(1).verifyComplete();
@@ -76,8 +69,6 @@ class CommentServiceImplTest {
     void repliers() {
         given(this.commentRepository.findByReplier(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Comment.class)));
 
-        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
-
         given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(2L));
 
         StepVerifier.create(commentService.replies(Mockito.anyLong())).expectNextCount(1).verifyComplete();
@@ -85,8 +76,6 @@ class CommentServiceImplTest {
 
     @Test
     void create() {
-        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
-
         given(this.commentRepository.save(Mockito.any(Comment.class))).willReturn(Mono.just(Mockito.mock(Comment.class)));
 
         given(this.commentRepository.countByReplier(Mockito.anyLong())).willReturn(Mono.just(Mockito.anyLong()));

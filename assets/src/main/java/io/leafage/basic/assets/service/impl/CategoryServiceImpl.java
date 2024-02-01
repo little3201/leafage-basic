@@ -104,9 +104,10 @@ public class CategoryServiceImpl implements CategoryService {
      */
     private Mono<CategoryVO> fetchOuter(Category category) {
         return Mono.just(category).map(c -> {
-            CategoryVO categoryVO = new CategoryVO();
-            BeanUtils.copyProperties(category, categoryVO);
-            return categoryVO;
+            CategoryVO vo = new CategoryVO();
+            BeanUtils.copyProperties(c, vo);
+            vo.setLastModifiedDate(c.getLastModifiedDate().orElse(null));
+            return vo;
         });
     }
 
@@ -117,13 +118,12 @@ public class CategoryServiceImpl implements CategoryService {
      * @return 输出转换后的vo对象
      */
     private Mono<CategoryVO> convertOuter(Category category) {
-        return this.fetchOuter(category)
-                .flatMap(categoryVO -> postRepository.countByCategoryId(category.getId())
-                        .switchIfEmpty(Mono.just(0L))
-                        .map(count -> {
-                            categoryVO.setCount(count);
-                            return categoryVO;
-                        }));
+        return this.fetchOuter(category).flatMap(vo -> postRepository.countByCategoryId(category.getId())
+                .switchIfEmpty(Mono.just(0L))
+                .map(count -> {
+                    vo.setCount(count);
+                    return vo;
+                }));
     }
 
 }

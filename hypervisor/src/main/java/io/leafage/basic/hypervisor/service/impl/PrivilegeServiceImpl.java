@@ -113,6 +113,7 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
         return Mono.just(privilege).map(p -> {
             PrivilegeVO vo = new PrivilegeVO();
             BeanUtils.copyProperties(p, vo);
+            vo.setLastModifiedDate(p.getLastModifiedDate().orElse(null));
             return vo;
         });
     }

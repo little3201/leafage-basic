@@ -31,7 +31,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import static org.mockito.BDDMockito.given;
 
@@ -60,15 +60,15 @@ class UserControllerTest {
         userDTO.setAvatar("avatar.jpg");
         userDTO.setFirstname("john");
         userDTO.setLastname("steven");
-        userDTO.setAccountExpiresAt(LocalDateTime.now());
-        userDTO.setCredentialsExpiresAt(LocalDateTime.now());
+        userDTO.setAccountExpiresAt(Instant.now());
+        userDTO.setCredentialsExpiresAt(Instant.now());
 
         userVO = new UserVO();
         userVO.setUsername("test");
-        userVO.setAccountExpiresAt(LocalDateTime.now());
+        userVO.setAccountExpiresAt(Instant.now());
         userVO.setFirstname("john");
         userVO.setLastname("steven");
-        userVO.setLastUpdatedAt(LocalDateTime.now());
+        userVO.setLastModifiedDate(Instant.now());
     }
 
     @Test
@@ -106,7 +106,7 @@ class UserControllerTest {
     void created() {
         given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
 
-        webTestClient.post().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
+        webTestClient.post().uri("/users").bodyValue(userDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.username").isEqualTo("test");
     }

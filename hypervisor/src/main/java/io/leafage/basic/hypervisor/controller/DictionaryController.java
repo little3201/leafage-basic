@@ -20,6 +20,7 @@ package io.leafage.basic.hypervisor.controller;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -127,7 +128,7 @@ public class DictionaryController {
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<DictionaryVO>> create(@RequestBody DictionaryDTO dictionaryDTO) {
+    public ResponseEntity<Mono<DictionaryVO>> create(@RequestBody @Valid DictionaryDTO dictionaryDTO) {
         Mono<DictionaryVO> voMono;
         try {
             voMono = dictionaryService.create(dictionaryDTO);

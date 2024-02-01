@@ -18,12 +18,8 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Privilege;
-import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
-import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
-import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,31 +43,18 @@ import static org.mockito.BDDMockito.given;
 class PrivilegeServiceImplTest {
 
     @Mock
-    private UserRepository userRepository;
-
-    @Mock
-    private RoleMembersRepository roleMembersRepository;
-
-    @Mock
     private PrivilegeRepository privilegeRepository;
-
-    @Mock
-    private RolePrivilegesRepository rolePrivilegesRepository;
 
     @InjectMocks
     private PrivilegeServiceImpl privilegeService;
 
     private PrivilegeDTO privilegeDTO;
-    private User user;
 
     @BeforeEach
     void init() {
         privilegeDTO = new PrivilegeDTO();
         privilegeDTO.setName("test");
         privilegeDTO.setType('M');
-
-        user = new User();
-        user.setUsername("test");
     }
 
     @Test

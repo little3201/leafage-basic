@@ -100,6 +100,7 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
         return Mono.just(message).map(m -> {
             MessageVO vo = new MessageVO();
             BeanUtils.copyProperties(m, vo);
+            vo.setLastModifiedDate(m.getLastModifiedDate().orElse(null));
             return vo;
         });
 

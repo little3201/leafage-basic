@@ -15,20 +15,8 @@
  *
  */
 
-package io.leafage.basic.hypervisor.config;
-
-import jakarta.annotation.Nonnull;
-import org.springframework.data.domain.ReactiveAuditorAware;
-import reactor.core.publisher.Mono;
-
 /**
- * auditor impl
+ * Audit
  */
-public class AuditorAwareImpl implements ReactiveAuditorAware<String> {
-
-    @Nonnull
-    @Override
-    public Mono<String> getCurrentAuditor() {
-        return Mono.just("admin");
-    }
-}
+@org.springframework.lang.NonNullApi
+package io.leafage.basic.assets.audit;

@@ -19,7 +19,7 @@ package io.leafage.basic.hypervisor.bo;
 
 import jakarta.validation.constraints.NotBlank;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * bo class for User
@@ -52,12 +52,12 @@ public abstract class UserBO {
     /**
      * user有效期
      */
-    private LocalDateTime accountExpiresAt;
+    private Instant accountExpiresAt;
 
     /**
      * 密码有效期
      */
-    private LocalDateTime credentialsExpiresAt;
+    private Instant credentialsExpiresAt;
 
 
     public String getUsername() {
@@ -92,19 +92,19 @@ public abstract class UserBO {
         this.avatar = avatar;
     }
 
-    public LocalDateTime getAccountExpiresAt() {
+    public Instant getAccountExpiresAt() {
         return accountExpiresAt;
     }
 
-    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
+    public void setAccountExpiresAt(Instant accountExpiresAt) {
         this.accountExpiresAt = accountExpiresAt;
     }
 
-    public LocalDateTime getCredentialsExpiresAt() {
+    public Instant getCredentialsExpiresAt() {
         return credentialsExpiresAt;
     }
 
-    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
+    public void setCredentialsExpiresAt(Instant credentialsExpiresAt) {
         this.credentialsExpiresAt = credentialsExpiresAt;
     }
 }

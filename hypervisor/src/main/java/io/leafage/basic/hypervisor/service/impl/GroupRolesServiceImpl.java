@@ -60,11 +60,10 @@ public class GroupRolesServiceImpl implements GroupRolesService {
         Assert.notEmpty(roleIds, "role ids must not be empty.");
 
         return Flux.fromIterable(roleIds).map(roleId -> {
-                    GroupRoles groupRoles = new GroupRoles();
-                    groupRoles.setRoleId(roleId);
-                    groupRoles.setGroupId(groupId);
-                    return groupRoles;
-                }).collectList()
-                .flatMapMany(groupRolesRepository::saveAll).hasElements();
+            GroupRoles groupRoles = new GroupRoles();
+            groupRoles.setRoleId(roleId);
+            groupRoles.setGroupId(groupId);
+            return groupRoles;
+        }).flatMap(groupRolesRepository::save).all(groupRoles -> Boolean.TRUE);
     }
 }

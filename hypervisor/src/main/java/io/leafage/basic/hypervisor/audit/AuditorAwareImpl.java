@@ -15,7 +15,7 @@
  *
  */
 
-package io.leafage.basic.assets.config;
+package io.leafage.basic.hypervisor.audit;
 
 import jakarta.annotation.Nonnull;
 import org.springframework.data.domain.ReactiveAuditorAware;

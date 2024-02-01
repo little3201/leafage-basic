@@ -19,7 +19,7 @@ package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.RoleBO;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * vo class for Role
@@ -41,7 +41,7 @@ public class RoleVO extends RoleBO {
     /**
      * 最后更新时间
      */
-    private LocalDateTime lastModifiedDate;
+    private Instant lastModifiedDate;
 
 
     public Long getId() {
@@ -60,11 +60,11 @@ public class RoleVO extends RoleBO {
         this.enabled = enabled;
     }
 
-    public LocalDateTime getLastUpdatedAt() {
+    public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastUpdatedAt(LocalDateTime lastModifiedDate) {
+    public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }

@@ -35,7 +35,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -64,7 +64,7 @@ class MessageControllerTest {
         messageVO.setTitle("标题");
         messageVO.setContext("内容");
         messageVO.setReceiver("test");
-        messageVO.setLastUpdatedAt(LocalDateTime.now());
+        messageVO.setLastModifiedDate(Instant.now());
 
         messageDTO = new MessageDTO();
         messageDTO.setTitle("标题");

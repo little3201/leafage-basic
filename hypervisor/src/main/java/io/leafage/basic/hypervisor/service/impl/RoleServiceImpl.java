@@ -108,6 +108,7 @@ public class RoleServiceImpl implements RoleService {
         return Mono.just(role).map(r -> {
             RoleVO vo = new RoleVO();
             BeanUtils.copyProperties(r, vo);
+            vo.setLastModifiedDate(r.getLastModifiedDate().orElse(null));
             return vo;
         });
     }

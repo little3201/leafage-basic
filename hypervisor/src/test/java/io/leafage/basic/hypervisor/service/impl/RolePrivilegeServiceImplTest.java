@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Collections;
@@ -62,7 +63,7 @@ class RolePrivilegeServiceImplTest {
 
     @Test
     void relation() {
-        given(this.rolePrivilegesRepository.saveAll(Mockito.anyCollection())).willReturn(Flux.just(Mockito.mock(RolePrivileges.class)));
+        given(this.rolePrivilegesRepository.save(Mockito.any(RolePrivileges.class))).willReturn(Mono.just(Mockito.mock(RolePrivileges.class)));
 
         StepVerifier.create(roleComponentsService.relation(1L, Collections.singleton(2L)))
                 .expectNextCount(1).verifyComplete();

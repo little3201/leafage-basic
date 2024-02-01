@@ -68,7 +68,7 @@ class CommentControllerTest {
         commentVO.setCount(23L);
         commentVO.setLocation("中国上海");
         commentVO.setCountry("China");
-        commentVO.setLastUpdatedAt(Instant.now());
+        commentVO.setLastModifiedDate(Instant.now());
     }
 
     @Test

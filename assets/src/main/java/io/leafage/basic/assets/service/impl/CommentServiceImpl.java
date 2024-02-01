@@ -30,8 +30,6 @@ import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.NoSuchElementException;
-
 /**
  * comment service impl
  *
@@ -63,14 +61,9 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<CommentVO> create(CommentDTO commentDTO) {
-        return postRepository.findById(commentDTO.getPostId()).switchIfEmpty(Mono.error(new NoSuchElementException()))
-                .map(post -> {
-                    Comment comment = new Comment();
-                    BeanUtils.copyProperties(commentDTO, comment);
-                    comment.setPostId(post.getId());
-                    return comment;
-                }).flatMap(commentRepository::save)
-                .flatMap(this::convertOuter);
+        Comment comment = new Comment();
+        BeanUtils.copyProperties(commentDTO, comment);
+        return commentRepository.save(comment).flatMap(this::convertOuter);
     }
 
     /**
@@ -80,14 +73,15 @@ public class CommentServiceImpl implements CommentService {
      * @return 输出转换后的vo对象
      */
     private Mono<CommentVO> convertOuter(Comment comment) {
-        CommentVO commentVO = new CommentVO();
-        BeanUtils.copyProperties(comment, commentVO);
-        return Mono.just(comment).flatMap(c -> postRepository.findById(c.getPostId()).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .flatMap(vo -> commentRepository.countByReplier(c.getReplier()).switchIfEmpty(Mono.just(0L))
-                        .map(count -> {
-                            commentVO.setCount(count);
-                            return commentVO;
-                        })));
+        return Mono.just(comment).flatMap(c -> commentRepository.countByReplier(c.getReplier())
+                .switchIfEmpty(Mono.just(0L))
+                .map(count -> {
+                    CommentVO vo = new CommentVO();
+                    BeanUtils.copyProperties(c, vo);
+                    vo.setLastModifiedDate(c.getLastModifiedDate().orElse(null));
+                    vo.setCount(count);
+                    return vo;
+                }));
     }
 
 }

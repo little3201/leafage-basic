@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * account group service.
+ * group members service.
  *
  * @author liwenqiang 2022/1/26 15:20
  **/

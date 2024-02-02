@@ -21,7 +21,7 @@ public class RoleMembers extends AuditMetadata {
 
 
     /**
-     * 组主键
+     * group主键
      */
     @Column(name = "role_id", nullable = false)
     private Long roleId;

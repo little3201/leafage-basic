@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * account group service impl.
+ * group members service impl.
  *
  * @author liwenqiang 2021/11/27 14:18
  **/

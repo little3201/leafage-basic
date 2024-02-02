@@ -21,7 +21,7 @@ import jakarta.persistence.Table;
 public class GroupRoles extends AuditMetadata {
 
     /**
-     * 组主键
+     * group主键
      */
     @Column(name = "group_id", nullable = false)
     private Long groupId;

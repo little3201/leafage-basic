@@ -150,7 +150,7 @@ public class GroupController {
     /**
      * 根据group查询关联user
      *
-     * @param id 组id
+     * @param id group 主键
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{id}/members")

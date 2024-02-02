@@ -20,7 +20,7 @@ import jakarta.persistence.Table;
 public class GroupMembers extends AuditMetadata {
 
     /**
-     * 组主键
+     * group主键
      */
     @Column(name = "group_id", nullable = false)
     private Long groupId;

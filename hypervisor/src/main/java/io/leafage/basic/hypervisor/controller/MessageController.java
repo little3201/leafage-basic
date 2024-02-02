@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * account controller.
+ * messages controller.
  *
  * @author liwenqiang 2022/1/29 18:05
  */

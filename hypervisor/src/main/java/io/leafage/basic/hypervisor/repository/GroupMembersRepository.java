@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * account group repository.
+ * group members repository.
  *
  * @author liwenqiang 2018/12/17 19:37
  **/

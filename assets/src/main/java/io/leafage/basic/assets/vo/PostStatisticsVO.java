@@ -1,7 +1,5 @@
 package io.leafage.basic.assets.vo;
 
-import java.time.LocalDate;
-
 /**
  * vo class for statistics.
  *
@@ -10,40 +8,47 @@ import java.time.LocalDate;
 public class PostStatisticsVO {
 
     /**
-     * 统计日期
+     * 帖子ID
      */
-    private LocalDate date;
+    private Long postId;
+
     /**
      * 浏览量
      */
     private int viewed;
+
     /**
      * 浏览量环比
      */
     private double overViewed;
+
     /**
      * 点赞量
      */
     private int likes;
+
     /**
      * 浏览量点赞量
      */
     private double overLikes;
+
     /**
      * 评论量
      */
     private int comments;
+
     /**
      * 浏览量评论量
      */
     private double overComments;
 
-    public LocalDate getDate() {
-        return date;
+
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
     public int getViewed() {

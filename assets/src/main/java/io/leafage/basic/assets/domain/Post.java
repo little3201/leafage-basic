@@ -6,6 +6,7 @@ package io.leafage.basic.assets.domain;
 import io.leafage.basic.assets.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -14,12 +15,14 @@ import jakarta.persistence.Table;
  * @author liwenqiang
  */
 @Entity
-@Table(name = "posts")
+@Table(name = "posts", indexes = {@Index(name = "idx_category_id", columnList = "category_id"),
+        @Index(name = "idx_created_by", columnList = "created_by")})
 public class Post extends AuditMetadata {
 
     /**
      * 标题
      */
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
     /**

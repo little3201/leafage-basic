@@ -3,6 +3,7 @@ package io.leafage.basic.assets.domain;
 import io.leafage.basic.assets.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -11,13 +12,13 @@ import jakarta.persistence.Table;
  * @author liwenqiang  2021-09-29 10:45
  */
 @Entity
-@Table(name = "comments")
+@Table(name = "comments", indexes = {@Index(name = "idx_comments_post_id", columnList = "post_id")})
 public class Comment extends AuditMetadata {
 
     /**
      * 帖子ID
      */
-    @Column(name = "post_id")
+    @Column(name = "post_id", nullable = false)
     private Long postId;
 
     /**

@@ -22,7 +22,7 @@ public class ResourceServerConfiguration {
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers(HttpMethod.GET).permitAll()
                 .anyRequest().authenticated()
-        ).oauth2ResourceServer(Customizer.withDefaults());
+        ).oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
         return http.build();
     }
 }

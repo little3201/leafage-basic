@@ -6,6 +6,7 @@ package io.leafage.basic.assets.domain;
 import io.leafage.basic.assets.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -14,18 +15,19 @@ import jakarta.persistence.Table;
  * @author liwenqiang  2020-12-03 22:59
  */
 @Entity
-@Table(name = "categories")
+@Table(name = "categories", indexes = {@Index(name = "idx_unique_name", columnList = "name")})
 public class Category extends AuditMetadata {
 
     /**
      * 名称
      */
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     /**
      * 是否可用
      */
-    @Column(name = "is_enabled")
+    @Column(name = "is_enabled", nullable = false)
     private boolean enabled = true;
 
     /**

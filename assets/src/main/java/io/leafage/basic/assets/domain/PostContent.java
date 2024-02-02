@@ -6,6 +6,7 @@ package io.leafage.basic.assets.domain;
 import io.leafage.basic.assets.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -14,7 +15,7 @@ import jakarta.persistence.Table;
  * @author liwenqiang  2020-12-03 22:59
  */
 @Entity
-@Table(name = "post_content")
+@Table(name = "post_content", indexes = {@Index(name = "idx_unique_post_id", columnList = "post_id")})
 public class PostContent extends AuditMetadata {
 
     /**
@@ -22,10 +23,7 @@ public class PostContent extends AuditMetadata {
      */
     @Column(name = "post_id", nullable = false)
     private Long postId;
-    /**
-     * 目录
-     */
-    private String catalog;
+
     /**
      * 内容
      */
@@ -37,14 +35,6 @@ public class PostContent extends AuditMetadata {
 
     public void setPostId(Long postId) {
         this.postId = postId;
-    }
-
-    public String getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(String catalog) {
-        this.catalog = catalog;
     }
 
     public String getContent() {

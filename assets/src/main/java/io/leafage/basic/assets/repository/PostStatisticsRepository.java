@@ -6,23 +6,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-
 /**
- * statistics repository.
+ * post statistics repository.
  *
  * @author liwenqiang  2021-09-29 14:19
  **/
 @Repository
 public interface PostStatisticsRepository extends JpaRepository<PostStatistics, Long> {
-
-    /**
-     * 根据data查询当日数据
-     *
-     * @param date 日期
-     * @return 统计数据
-     */
-    PostStatistics getByDate(LocalDate date);
 
     /**
      * 增加viewed

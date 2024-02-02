@@ -3,7 +3,6 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.domain.Comment;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.junit.jupiter.api.Assertions;
@@ -18,8 +17,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -34,9 +33,6 @@ class CommentServiceImplTest {
 
     @Mock
     private CommentRepository commentRepository;
-
-    @Mock
-    private PostRepository postRepository;
 
     @Mock
     private PostStatisticsRepository postStatisticsRepository;
@@ -56,13 +52,15 @@ class CommentServiceImplTest {
 
     @Test
     void relation() {
-        List<CommentVO> voList = commentService.relation(Mockito.anyLong());
+        given(this.commentRepository.findByPostIdAndReplierIsNull(Mockito.anyLong())).willReturn(Mockito.anyList());
+
+        List<CommentVO> voList = commentService.relation(1L);
         Assertions.assertNotNull(voList);
     }
 
     @Test
     void relation_empty() {
-        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+        given(this.commentRepository.findByPostIdAndReplierIsNull(Mockito.anyLong())).willReturn(Collections.emptyList());
 
         List<CommentVO> voList = commentService.relation(Mockito.anyLong());
         Assertions.assertTrue(voList.isEmpty());

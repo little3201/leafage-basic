@@ -17,10 +17,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     /**
      * 根据postsId查询
      *
-     * @param postsId 帖子ID
+     * @param postId 帖子ID
      * @return 关联的数据
      */
-    List<Comment> findByPostsIdAndReplierIsNull(Long postsId);
+    List<Comment> findByPostIdAndReplierIsNull(Long postId);
 
     /**
      * 根据replier查询

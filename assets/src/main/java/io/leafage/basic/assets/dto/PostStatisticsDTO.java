@@ -1,23 +1,15 @@
-package io.leafage.basic.assets.domain;
-
-import io.leafage.basic.assets.config.AuditMetadata;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+package io.leafage.basic.assets.dto;
 
 /**
- * model class for post statistics.
+ * dto class for posts statistics.
  *
- * @author liwenqiang  2021-09-29 10:45
- */
-@Entity
-@Table(name = "post_statistics")
-public class PostStatistics extends AuditMetadata {
+ * @author liwenqiang  2024-02-02 14:30
+ **/
+public class PostStatisticsDTO {
 
     /**
      * 帖子ID
      */
-    @Column(name = "post_id", nullable = false)
     private Long postId;
 
     /**
@@ -67,5 +59,4 @@ public class PostStatistics extends AuditMetadata {
     public void setComments(int comments) {
         this.comments = comments;
     }
-
 }

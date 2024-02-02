@@ -1,10 +1,8 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.domain.Comment;
-import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,12 +24,10 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
     private final PostStatisticsRepository postStatisticsRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository, PostStatisticsRepository postStatisticsRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository, PostStatisticsRepository postStatisticsRepository) {
         this.commentRepository = commentRepository;
-        this.postRepository = postRepository;
         this.postStatisticsRepository = postStatisticsRepository;
     }
 
@@ -44,11 +39,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentVO> relation(Long id) {
         Assert.notNull(id, "comment id must not be null.");
-        Post post = postRepository.findById(id).orElse(null);
-        if (null == post) {
-            return Collections.emptyList();
-        }
-        return commentRepository.findByPostsIdAndReplierIsNull(post.getId())
+        return commentRepository.findByPostIdAndReplierIsNull(id)
                 .stream().map(this::convertOuter).toList();
     }
 

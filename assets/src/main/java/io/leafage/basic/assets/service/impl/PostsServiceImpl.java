@@ -83,7 +83,6 @@ public class PostsServiceImpl implements PostsService {
         PostContent postContent = postContentRepository.getByPostId(id);
         if (postContent != null) {
             postsContentVO.setContent(postContent.getContent());
-            postsContentVO.setCatalog(postContent.getCatalog());
         }
         return postsContentVO;
     }

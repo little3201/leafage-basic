@@ -17,7 +17,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -27,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Statistics 接口测试
+ * post statistics 接口测试
  *
  * @author liwenqiang 2021/12/7 17:54
  **/
@@ -47,7 +46,7 @@ class PostPostStatisticsControllerTest {
     @BeforeEach
     void init() {
         postStatisticsVO = new PostStatisticsVO();
-        postStatisticsVO.setDate(LocalDate.now());
+        postStatisticsVO.setPostId(1L);
         postStatisticsVO.setComments(12);
         postStatisticsVO.setOverComments(23.23);
         postStatisticsVO.setLikes(23);

@@ -43,10 +43,10 @@ public class GroupMembersServiceImpl implements GroupMembersService {
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
         List<GroupMembers> groupMembers = usernames.stream().map(username -> {
-            GroupMembers members = new GroupMembers();
-            members.setGroupId(groupId);
-            members.setUsername(username);
-            return members;
+            GroupMembers groupMember = new GroupMembers();
+            groupMember.setGroupId(groupId);
+            groupMember.setUsername(username);
+            return groupMember;
         }).toList();
         return groupMembersRepository.saveAllAndFlush(groupMembers);
     }

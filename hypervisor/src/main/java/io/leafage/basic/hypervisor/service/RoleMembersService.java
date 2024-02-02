@@ -13,7 +13,7 @@ import java.util.Set;
 public interface RoleMembersService {
 
     /**
-     * 查询关联privilege
+     * 查询关联 members
      *
      * @param roleId role主键
      * @return 数据集
@@ -29,7 +29,7 @@ public interface RoleMembersService {
     List<RoleMembers> roles(String username);
 
     /**
-     * 保存role-privilege关系
+     * 保存role-members
      *
      * @param roleId role主键
      * @param users  user集合

@@ -13,7 +13,7 @@ import java.util.Set;
 public interface GroupMembersService {
 
     /**
-     * 查询关联用户
+     * 查询关联 user
      *
      * @param groupId group主键
      * @return 数据集
@@ -21,7 +21,7 @@ public interface GroupMembersService {
     List<GroupMembers> members(Long groupId);
 
     /**
-     * 查询关联group
+     * 查询关联 group
      *
      * @param username 用户名
      * @return 数据集
@@ -29,7 +29,7 @@ public interface GroupMembersService {
     List<GroupMembers> groups(String username);
 
     /**
-     * 保存用户-group关系
+     * 保存group-members
      *
      * @param groupId group主键
      * @param users   user集合

@@ -43,10 +43,10 @@ public class RoleMembersServiceImpl implements RoleMembersService {
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
         List<RoleMembers> roleMembers = usernames.stream().map(username -> {
-            RoleMembers members = new RoleMembers();
-            members.setRoleId(roleId);
-            members.setUsername(username);
-            return members;
+            RoleMembers roleMember = new RoleMembers();
+            roleMember.setRoleId(roleId);
+            roleMember.setUsername(username);
+            return roleMember;
         }).toList();
         return roleMembersRepository.saveAllAndFlush(roleMembers);
     }

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * user group service test
+ * group members service test
  *
  * @author liwenqiang 2021/7/5 17:36
  **/

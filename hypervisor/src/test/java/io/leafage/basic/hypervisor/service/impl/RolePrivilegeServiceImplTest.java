@@ -18,7 +18,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * role privilege service test
+ * role privileges service test
  *
  * @author liwenqiang 2021/7/5 17:36
  **/

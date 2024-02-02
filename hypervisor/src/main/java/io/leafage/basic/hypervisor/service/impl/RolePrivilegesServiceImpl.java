@@ -42,12 +42,12 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
         Assert.notNull(roleId, "role id must not be null.");
         Assert.notEmpty(privilegeIds, "privilege ids must not be empty.");
 
-        List<RolePrivileges> roleAuthorities = privilegeIds.stream().map(privilegeId -> {
-            RolePrivileges rolePrivileges = new RolePrivileges();
-            rolePrivileges.setRoleId(roleId);
-            rolePrivileges.setPrivilegeId(privilegeId);
-            return rolePrivileges;
+        List<RolePrivileges> rolePrivileges = privilegeIds.stream().map(privilegeId -> {
+            RolePrivileges rolePrivilege = new RolePrivileges();
+            rolePrivilege.setRoleId(roleId);
+            rolePrivilege.setPrivilegeId(privilegeId);
+            return rolePrivilege;
         }).toList();
-        return rolePrivilegesRepository.saveAllAndFlush(roleAuthorities);
+        return rolePrivilegesRepository.saveAllAndFlush(rolePrivileges);
     }
 }

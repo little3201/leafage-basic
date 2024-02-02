@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * role privilege service impl.
+ * role privileges service impl.
  *
  * @author liwenqiang 2021/9/27 14:18
  **/

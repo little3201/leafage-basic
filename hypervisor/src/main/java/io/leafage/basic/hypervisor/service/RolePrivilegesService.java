@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * role privilege service.
+ * role privileges service.
  *
  * @author liwenqiang 2021/9/27 14:18
  **/

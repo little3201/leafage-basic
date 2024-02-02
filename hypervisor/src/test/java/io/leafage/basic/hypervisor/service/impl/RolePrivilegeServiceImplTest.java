@@ -29,13 +29,13 @@ class RolePrivilegeServiceImplTest {
     private RolePrivilegesRepository rolePrivilegesRepository;
 
     @InjectMocks
-    private RolePrivilegesServiceImpl roleAuthorityService;
+    private RolePrivilegesServiceImpl rolePrivilegesService;
 
     @Test
     void privileges() {
         given(this.rolePrivilegesRepository.findByRoleId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RolePrivileges.class)));
 
-        List<RolePrivileges> privileges = roleAuthorityService.privileges(Mockito.anyLong());
+        List<RolePrivileges> privileges = rolePrivilegesService.privileges(Mockito.anyLong());
         Assertions.assertNotNull(privileges);
     }
 
@@ -43,7 +43,7 @@ class RolePrivilegeServiceImplTest {
     void roles() {
         given(this.rolePrivilegesRepository.findByPrivilegeId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RolePrivileges.class)));
 
-        List<RolePrivileges> roles = roleAuthorityService.roles(Mockito.anyLong());
+        List<RolePrivileges> roles = rolePrivilegesService.roles(Mockito.anyLong());
         Assertions.assertNotNull(roles);
     }
 
@@ -51,7 +51,7 @@ class RolePrivilegeServiceImplTest {
     void relation() {
         given(this.rolePrivilegesRepository.saveAllAndFlush(Mockito.anyCollection())).willReturn(Mockito.anyList());
 
-        List<RolePrivileges> relation = roleAuthorityService.relation(1L, Set.of(1L));
+        List<RolePrivileges> relation = rolePrivilegesService.relation(1L, Set.of(1L));
 
         verify(this.rolePrivilegesRepository, times(1)).saveAllAndFlush(Mockito.anyList());
         Assertions.assertNotNull(relation);

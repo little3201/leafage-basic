@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * role privilege repository.
+ * role privileges repository.
  *
  * @author liwenqiang 2018/9/26 11:29
  **/

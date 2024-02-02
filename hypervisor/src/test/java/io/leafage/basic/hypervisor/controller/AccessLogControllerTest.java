@@ -55,16 +55,35 @@ class AccessLogControllerTest {
 
     @BeforeEach
     void init() {
-        accessLogVO = new AccessLogVO();
-        accessLogVO.setIp("12.1.3.2");
-        accessLogVO.setLocation("test");
-        accessLogVO.setDescription("description");
-
         // 构造请求对象
         accessLogDTO = new AccessLogDTO();
         accessLogDTO.setIp("12.1.3.2");
         accessLogDTO.setLocation("test");
-        accessLogDTO.setDescription("description");
+        accessLogDTO.setBrowser("Chrome");
+        accessLogDTO.setDeviceType("PC");
+        accessLogDTO.setHttpMethod("POST");
+        accessLogDTO.setOs("Mac OS");
+        accessLogDTO.setReferer("test");
+        accessLogDTO.setResponseTime(232L);
+        accessLogDTO.setSessionId("sessionId");
+        accessLogDTO.setStatusCode(200);
+        accessLogDTO.setUrl("/test");
+        accessLogDTO.setUserAgent("xxx");
+
+        // vo
+        accessLogVO = new AccessLogVO();
+        accessLogVO.setIp("12.1.3.2");
+        accessLogVO.setLocation("test");
+        accessLogVO.setBrowser("Chrome");
+        accessLogVO.setDeviceType("PC");
+        accessLogVO.setHttpMethod("POST");
+        accessLogVO.setOs("Mac OS");
+        accessLogVO.setReferer("test");
+        accessLogVO.setResponseTime(232L);
+        accessLogVO.setSessionId("sessionId");
+        accessLogVO.setStatusCode(200);
+        accessLogVO.setUrl("/test");
+        accessLogVO.setUserAgent("xxx");
     }
 
     @Test

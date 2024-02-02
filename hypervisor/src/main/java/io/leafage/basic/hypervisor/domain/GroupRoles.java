@@ -7,27 +7,29 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
- * model class for account group.
+ * model class for group roles.
  *
  * @author liwenqiang 2022/1/26 15:20
  */
 @Entity
-@Table(name = "group_roles")
+@Table(name = "group_roles", indexes = {@Index(name = "idx_group_roles_group_id", columnList = "group_id"),
+        @Index(name = "idx_group_roles_role_id", columnList = "role_id")})
 public class GroupRoles extends AuditMetadata {
 
     /**
      * 组主键
      */
-    @Column(name = "group_id")
+    @Column(name = "group_id", nullable = false)
     private Long groupId;
 
     /**
      * role主键
      */
-    @Column(name = "role_id")
+    @Column(name = "role_id", nullable = false)
     private Long roleId;
 
 

@@ -15,8 +15,8 @@ import jakarta.persistence.Table;
  * @author liwenqiang
  */
 @Entity
-@Table(name = "posts", indexes = {@Index(name = "idx_category_id", columnList = "category_id"),
-        @Index(name = "idx_created_by", columnList = "created_by")})
+@Table(name = "posts", indexes = {@Index(name = "idx_posts_category_id", columnList = "category_id"),
+        @Index(name = "idx_posts_created_by", columnList = "created_by")})
 public class Post extends AuditMetadata {
 
     /**

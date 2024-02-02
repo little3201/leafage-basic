@@ -15,13 +15,13 @@ import jakarta.persistence.Table;
  * @author liwenqiang  2020-12-03 22:59
  */
 @Entity
-@Table(name = "post_content", indexes = {@Index(name = "idx_unique_post_id", columnList = "post_id")})
+@Table(name = "post_content", indexes = {@Index(name = "uni_post_content_post_id", columnList = "post_id")})
 public class PostContent extends AuditMetadata {
 
     /**
      * 帖子ID
      */
-    @Column(name = "post_id", nullable = false)
+    @Column(name = "post_id", nullable = false, unique = true)
     private Long postId;
 
     /**

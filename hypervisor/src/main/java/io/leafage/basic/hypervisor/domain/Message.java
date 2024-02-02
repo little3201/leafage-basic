@@ -3,6 +3,7 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -11,27 +12,31 @@ import jakarta.persistence.Table;
  * @author liwenqiang 2022/1/29 17:20
  **/
 @Entity
-@Table(name = "messages")
+@Table(name = "messages", indexes = {@Index(name = "idx_messages_receiver", columnList = "receiver")})
 public class Message extends AuditMetadata {
 
     /**
      * 主键
      */
+    @Column(name = "name", nullable = false)
     private String title;
+
     /**
      * 内容
      */
     private String content;
+
     /**
      * 是否已读
      */
-    @Column(name = "is_read")
+    @Column(name = "is_read", nullable = false)
     private boolean read;
+
     /**
      * 接收人
      */
+    @Column(name = "receiver", nullable = false)
     private String receiver;
-
 
 
     public String getTitle() {

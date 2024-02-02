@@ -6,6 +6,7 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -14,12 +15,13 @@ import jakarta.persistence.Table;
  * @author liwenqiang 2020-12-20 9:54
  */
 @Entity
-@Table(name = "groups")
+@Table(name = "groups", indexes = {@Index(name = "uni_groups_name", columnList = "name")})
 public class Group extends AuditMetadata {
 
     /**
      * 名称
      */
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     /**

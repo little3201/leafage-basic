@@ -7,6 +7,7 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
@@ -17,13 +18,13 @@ import java.time.LocalDateTime;
  * @author liwenqiang 2020-12-20 9:54
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = {@Index(name = "uni_users_username", columnList = "username")})
 public class User extends AuditMetadata {
 
     /**
      * user
      */
-    @Column(unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
     /**

@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
  * @author liwenqiang  2020-12-03 22:59
  */
 @Entity
-@Table(name = "categories", indexes = {@Index(name = "idx_unique_name", columnList = "name")})
+@Table(name = "categories", indexes = {@Index(name = "uni_categories_name", columnList = "name")})
 public class Category extends AuditMetadata {
 
     /**

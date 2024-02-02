@@ -17,12 +17,8 @@ public class Region extends AuditMetadata {
     /**
      * 名称
      */
+    @Column(name = "name", nullable = false)
     private String name;
-
-    /**
-     * 简称
-     */
-    private String alias;
 
     /**
      * 上级
@@ -31,21 +27,21 @@ public class Region extends AuditMetadata {
     private Long superiorId;
 
     /**
-     * 邮编
-     */
-    @Column(name = "postal_id")
-    private String postalCode;
-
-    /**
      * 区号
      */
-    @Column(name = "area_id")
+    @Column(name = "area_code")
     private String areaCode;
+
+    /**
+     * 邮编
+     */
+    @Column(name = "postal_code")
+    private String postalCode;
+
     /**
      * 描述
      */
     private String description;
-
 
 
     public String getName() {
@@ -56,14 +52,6 @@ public class Region extends AuditMetadata {
         this.name = name;
     }
 
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
     public Long getSuperiorId() {
         return superiorId;
     }
@@ -72,20 +60,20 @@ public class Region extends AuditMetadata {
         this.superiorId = superiorId;
     }
 
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
     public String getAreaCode() {
         return areaCode;
     }
 
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getDescription() {

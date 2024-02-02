@@ -4,7 +4,9 @@
 package io.leafage.basic.hypervisor.domain;
 
 import io.leafage.basic.hypervisor.config.AuditMetadata;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -13,29 +15,36 @@ import jakarta.persistence.Table;
  * @author liwenqiang 2019/8/31 15:50
  */
 @Entity
-@Table(name = "privileges")
+@Table(name = "privileges", indexes = {@Index(name = "uni_privileges_name", columnList = "name")})
 public class Privilege extends AuditMetadata {
+
+    /**
+     * 名称
+     */
+    @Column(name = "name", nullable = false, unique = true)
+    private String name;
 
     /**
      * 上级主键
      */
     private Long superiorId;
-    /**
-     * 名称
-     */
-    private String name;
+
     /**
      * 类型
      */
+    @Column(name = "type", nullable = false)
     private Character type;
+
     /**
      * 图标
      */
     private String icon;
+
     /**
      * 路径
      */
     private String path;
+
     /**
      * 描述
      */

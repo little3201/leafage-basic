@@ -3,6 +3,7 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.config.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -11,12 +12,13 @@ import jakarta.persistence.Table;
  * @author liwenqiang 2022-04-06 17:33
  */
 @Entity
-@Table(name = "dictionaries")
+@Table(name = "dictionaries", indexes = {@Index(name = "uni_dictionaries_name", columnList = "name")})
 public class Dictionary extends AuditMetadata {
 
     /**
      * 名称
      */
+    @Column(name = "name", nullable = false)
     private String name;
 
     /**

@@ -6,12 +6,12 @@ drop table if exists categories;
 create table categories
 (
    id                   bigserial not null primary key,
-   name                 varchar(32) UNIQUE,
+   name                 varchar(127) not null UNIQUE,
    description          varchar(255),
    is_enabled           boolean not null default true,
-   created_by           varchar(16) not null ,
+   created_by           varchar(32) not null ,
    created_date         timestamp not null default CURRENT_TIMESTAMP,
-   last_modified_by     varchar(16) not null ,
+   last_modified_by     varchar(32) not null ,
    last_modified_date   timestamp not null default CURRENT_TIMESTAMP
 );
 CREATE UNIQUE INDEX idx_unique_name ON categories (name);
@@ -25,14 +25,14 @@ drop table if exists posts;
 CREATE TABLE posts
 (
    id                   bigserial not null primary key,
-   title                varchar(32),
+   title                varchar(127) not null,
    tags                 varchar[],
    cover                varchar(127),
-   category_id          bigint,
+   category_id          bigint not null,
    is_enabled           boolean not null default true,
-   created_by           varchar(16) not null ,
+   created_by           varchar(32) not null ,
    created_date         timestamp not null default CURRENT_TIMESTAMP,
-   last_modified_by     varchar(16) not null ,
+   last_modified_by     varchar(32) not null ,
    last_modified_date   timestamp not null default CURRENT_TIMESTAMP,
    CONSTRAINT fk_category
       FOREIGN KEY (category_id) REFERENCES categories(id)
@@ -51,10 +51,10 @@ CREATE TABLE post_content
 (
    id                   bigserial not null primary key,
    post_id              bigint not null UNIQUE,
-   context              text,
-   created_by           varchar(16) not null,
+   content              text,
+   created_by           varchar(32) not null,
    created_date         timestamp not null default CURRENT_TIMESTAMP,
-   last_modified_by     varchar(16) not null,
+   last_modified_by     varchar(32) not null,
    last_modified_date   timestamp not null default CURRENT_TIMESTAMP,
    CONSTRAINT fk_post_content_post
       FOREIGN KEY (post_id) REFERENCES posts(id)
@@ -75,9 +75,9 @@ CREATE TABLE comments
    country              varchar(255),
    location             varchar(255),
    context              varchar(512),
-   created_by           varchar(16) not null,
+   created_by           varchar(32) not null,
    created_date         timestamp not null default CURRENT_TIMESTAMP,
-   last_modified_by     varchar(16) not null,
+   last_modified_by     varchar(32) not null,
    last_modified_date   timestamp not null default CURRENT_TIMESTAMP,
    CONSTRAINT fk_comments_post
       FOREIGN KEY (post_id) REFERENCES posts(id)
@@ -96,8 +96,8 @@ CREATE TABLE post_statistics
    viewed               bigint,
    likes                bigint,
    comments             bigint,
-   created_by           varchar(16) not null,
+   created_by           varchar(32) not null,
    created_date         timestamp not null default CURRENT_TIMESTAMP,
-   last_modified_by     varchar(16) not null,
+   last_modified_by     varchar(32) not null,
    last_modified_date   timestamp not null default CURRENT_TIMESTAMP
 );

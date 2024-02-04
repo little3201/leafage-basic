@@ -17,9 +17,3 @@ spring:
     username: postgres
     password: zx110119
     name: postgres
-
-  security:
-    oauth2:
-      resource-server:
-        jwt:
-          issuer-uri: http://localhost:8761

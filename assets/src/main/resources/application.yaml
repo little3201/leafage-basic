@@ -12,6 +12,12 @@ spring:
     resources:
       add-mappings: false
 
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8761
+
 management:
   endpoints:
     web:

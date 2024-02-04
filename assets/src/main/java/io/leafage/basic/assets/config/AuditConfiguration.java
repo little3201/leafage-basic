@@ -15,13 +15,19 @@
  *
  */
 
-package io.leafage.basic.hypervisor.audit;
+package io.leafage.basic.assets.config;
 
+import io.leafage.basic.assets.audit.AuditorAwareImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.ReactiveAuditorAware;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 
+/**
+ * audit configuration
+ *
+ * @author liwenqiang 2020-10-06 22:09Z
+ */
 @Configuration
 @EnableR2dbcAuditing
 public class AuditConfiguration {

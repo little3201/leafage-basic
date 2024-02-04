@@ -35,6 +35,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -44,12 +45,14 @@ import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
- * authority接口测试类
+ * privilege 接口测试类
  *
  * @author liwenqiang 2021-06-19 10:00
  */
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(PrivilegeController.class)
 class PrivilegeControllerTest {
@@ -159,7 +162,7 @@ class PrivilegeControllerTest {
     void create() {
         given(this.privilegeService.create(Mockito.any(PrivilegeDTO.class))).willReturn(Mono.just(privilegeVO));
 
-        webTestClient.post().uri("/privileges").bodyValue(privilegeDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/privileges").bodyValue(privilegeDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -168,14 +171,14 @@ class PrivilegeControllerTest {
     void create_error() {
         given(this.privilegeService.create(Mockito.any(PrivilegeDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/privileges").bodyValue(privilegeDTO).exchange().expectStatus().is4xxClientError();
+        webTestClient.mutateWith(csrf()).post().uri("/privileges").bodyValue(privilegeDTO).exchange().expectStatus().is4xxClientError();
     }
 
     @Test
     void modify() {
         given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(PrivilegeDTO.class))).willReturn(Mono.just(privilegeVO));
 
-        webTestClient.put().uri("/privileges/{id}", 1L).bodyValue(privilegeDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/privileges/{id}", 1L).bodyValue(privilegeDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -184,7 +187,7 @@ class PrivilegeControllerTest {
     void modify_error() {
         given(this.privilegeService.modify(Mockito.anyLong(), Mockito.any(PrivilegeDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/privileges/{id}", 1L).bodyValue(privilegeDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/privileges/{id}", 1L).bodyValue(privilegeDTO).exchange()
                 .expectStatus().isNotModified();
     }
 

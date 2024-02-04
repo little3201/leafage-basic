@@ -27,6 +27,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -34,12 +35,14 @@ import reactor.core.publisher.Mono;
 import java.time.Instant;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
  * user接口测试类
  *
  * @author liwenqiang 2020-03-01 22:07
  */
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(UserController.class)
 class UserControllerTest {
@@ -106,7 +109,7 @@ class UserControllerTest {
     void created() {
         given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
 
-        webTestClient.post().uri("/users").bodyValue(userDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/users").bodyValue(userDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.username").isEqualTo("test");
     }
@@ -115,7 +118,7 @@ class UserControllerTest {
     void modify() {
         given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
 
-        webTestClient.put().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.username").isEqualTo("test");
     }
@@ -124,7 +127,7 @@ class UserControllerTest {
     void modify_error() {
         given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
                 .expectStatus().isNotModified();
     }
 
@@ -132,7 +135,7 @@ class UserControllerTest {
     void remove() {
         given(this.userService.remove(Mockito.anyLong())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/users/{id}", 1L).exchange()
+        webTestClient.mutateWith(csrf()).delete().uri("/users/{id}", 1L).exchange()
                 .expectStatus().isOk();
     }
 
@@ -140,7 +143,7 @@ class UserControllerTest {
     void remove_error() {
         given(this.userService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/users/{id}", 1L).exchange()
+        webTestClient.mutateWith(csrf()).delete().uri("/users/{id}", 1L).exchange()
                 .expectStatus().is4xxClientError();
     }
 

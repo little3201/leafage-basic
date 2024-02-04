@@ -34,6 +34,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -42,12 +43,14 @@ import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
  * group接口测试类
  *
  * @author liwenqiang 2021-06-19 10:00
  */
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(GroupController.class)
 class GroupControllerTest {
@@ -137,7 +140,7 @@ class GroupControllerTest {
     void create() {
         given(this.groupService.create(Mockito.any(GroupDTO.class))).willReturn(Mono.just(groupVO));
 
-        webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/groups").bodyValue(groupDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -146,7 +149,7 @@ class GroupControllerTest {
     void create_error() {
         given(this.groupService.create(Mockito.any(GroupDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/groups").bodyValue(groupDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
 
@@ -154,7 +157,7 @@ class GroupControllerTest {
     void modify() {
         given(this.groupService.modify(Mockito.anyLong(), Mockito.any(GroupDTO.class))).willReturn(Mono.just(groupVO));
 
-        webTestClient.put().uri("/groups/{id}", 1L).bodyValue(groupDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/groups/{id}", 1L).bodyValue(groupDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -163,7 +166,7 @@ class GroupControllerTest {
     void modify_error() {
         given(this.groupService.modify(Mockito.anyLong(), Mockito.any(GroupDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/groups/{id}", 1L).bodyValue(groupDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/groups/{id}", 1L).bodyValue(groupDTO).exchange()
                 .expectStatus().isNotModified();
     }
 
@@ -171,7 +174,7 @@ class GroupControllerTest {
     void remove() {
         given(this.groupService.remove(Mockito.anyLong())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/groups/{id}", 1L).exchange()
+        webTestClient.mutateWith(csrf()).delete().uri("/groups/{id}", 1L).exchange()
                 .expectStatus().isOk();
     }
 
@@ -179,7 +182,7 @@ class GroupControllerTest {
     void remove_error() {
         given(this.groupService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/groups/{id}", 1L).exchange()
+        webTestClient.mutateWith(csrf()).delete().uri("/groups/{id}", 1L).exchange()
                 .expectStatus().is4xxClientError();
     }
 

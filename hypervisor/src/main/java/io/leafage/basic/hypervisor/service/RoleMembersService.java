@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * account role service
+ * role members service
  *
  * @author liwenqiang 2018/12/17 19:26
  **/

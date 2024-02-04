@@ -32,6 +32,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -42,12 +43,14 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
  * posts controller test
  *
  * @author liwenqiang 2020-03-01 22:07
  */
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(PostController.class)
 class PostControllerTest {
@@ -169,7 +172,7 @@ class PostControllerTest {
     void create() {
         given(this.postService.create(Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
 
-        webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
@@ -179,7 +182,7 @@ class PostControllerTest {
     void create_error() {
         given(this.postService.create(Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
@@ -188,7 +191,7 @@ class PostControllerTest {
     void modify() {
         given(this.postService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
 
-        webTestClient.put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
@@ -198,7 +201,7 @@ class PostControllerTest {
     void modify_error() {
         given(this.postService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(postDTO).exchange().expectStatus().isNotModified();
     }
 
@@ -206,13 +209,13 @@ class PostControllerTest {
     void remove() {
         given(this.postService.remove(Mockito.anyLong())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/posts/{id}", 1).exchange().expectStatus().isOk();
+        webTestClient.mutateWith(csrf()).delete().uri("/posts/{id}", 1).exchange().expectStatus().isOk();
     }
 
     @Test
     void remove_error() {
         given(this.postService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/posts/{id}", 1).exchange().expectStatus().is4xxClientError();
+        webTestClient.mutateWith(csrf()).delete().uri("/posts/{id}", 1).exchange().expectStatus().is4xxClientError();
     }
 }

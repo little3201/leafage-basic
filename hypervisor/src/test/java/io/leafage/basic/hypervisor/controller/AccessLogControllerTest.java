@@ -30,6 +30,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -45,6 +46,7 @@ import static org.mockito.BDDMockito.given;
  *
  * @author liwenqiang 2022-03-18 22:07
  */
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(AccessLogController.class)
 class AccessLogControllerTest {

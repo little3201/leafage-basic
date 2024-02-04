@@ -32,6 +32,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -40,12 +41,14 @@ import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
  * category controller test
  *
  * @author liwenqiang 2020-03-01 22:07
  */
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(CategoryController.class)
 class CategoryControllerTest {
@@ -129,7 +132,7 @@ class CategoryControllerTest {
     void create() {
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
 
-        webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
@@ -139,7 +142,7 @@ class CategoryControllerTest {
     void create_error() {
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
@@ -148,7 +151,7 @@ class CategoryControllerTest {
     void modify() {
         given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
 
-        webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
@@ -158,10 +161,7 @@ class CategoryControllerTest {
     void modify_error() {
         given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        // 构造请求对象
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(categoryDTO).exchange()
                 .expectStatus().isNotModified();
     }
@@ -170,7 +170,7 @@ class CategoryControllerTest {
     void remove() {
         given(this.categoryService.remove(Mockito.anyLong())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/categories/{id}", 1).exchange()
+        webTestClient.mutateWith(csrf()).delete().uri("/categories/{id}", 1).exchange()
                 .expectStatus().isOk();
     }
 

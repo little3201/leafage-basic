@@ -24,7 +24,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * account privilege repository
+ * role members repository
  *
  * @author liwenqiang 2018-12-06 22:09
  **/

@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -37,12 +38,14 @@ import reactor.core.publisher.Mono;
 import java.time.Instant;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
  * comment controller test
  *
  * @author liwenqiang 2021-07-17 21:04
  */
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(CommentController.class)
 class CommentControllerTest {
@@ -107,7 +110,7 @@ class CommentControllerTest {
     void create() {
         given(this.commentService.create(Mockito.any(CommentDTO.class))).willReturn(Mono.just(commentVO));
 
-        webTestClient.post().uri("/comments").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).post().uri("/comments").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.context").isEqualTo("test");
@@ -117,21 +120,23 @@ class CommentControllerTest {
     void create_error() {
         given(this.commentService.create(Mockito.any(CommentDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/comments").contentType(MediaType.APPLICATION_JSON)
+        webTestClient.mutateWith(csrf()).post().uri("/comments").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(commentDTO).exchange().expectStatus().is4xxClientError();
     }
 
     @Test
     void remove() {
         given(this.commentService.remove(Mockito.anyLong())).willReturn(Mono.empty());
-        webTestClient.delete().uri("/comments/{id}", 1).exchange()
+
+        webTestClient.mutateWith(csrf()).delete().uri("/comments/{id}", 1).exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void remove_error() {
         given(this.commentService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
-        webTestClient.delete().uri("/comments/{id}", 1).exchange()
+
+        webTestClient.mutateWith(csrf()).delete().uri("/comments/{id}", 1).exchange()
                 .expectStatus().is4xxClientError();
     }
 }

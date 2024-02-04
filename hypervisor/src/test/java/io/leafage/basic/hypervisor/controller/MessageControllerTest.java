@@ -31,6 +31,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -39,12 +40,14 @@ import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
  * message controller test
  *
  * @author liwenqiang 2022-02-16 9:03
  **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(MessageController.class)
 class MessageControllerTest {
@@ -112,7 +115,7 @@ class MessageControllerTest {
     void create() {
         given(this.messageService.create(Mockito.any(MessageDTO.class))).willReturn(Mono.just(messageVO));
 
-        webTestClient.post().uri("/messages").bodyValue(messageDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/messages").bodyValue(messageDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isEqualTo("标题");
     }
@@ -121,7 +124,7 @@ class MessageControllerTest {
     void create_error() {
         given(this.messageService.create(Mockito.any(MessageDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/messages").bodyValue(messageDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/messages").bodyValue(messageDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
 
@@ -129,7 +132,7 @@ class MessageControllerTest {
     void remove() {
         given(this.messageService.remove(Mockito.anyLong())).willReturn(Mono.empty());
 
-        webTestClient.delete().uri("/messages/{id}", 1L).exchange()
+        webTestClient.mutateWith(csrf()).delete().uri("/messages/{id}", 1L).exchange()
                 .expectStatus().isOk();
     }
 
@@ -137,7 +140,7 @@ class MessageControllerTest {
     void remove_error() {
         given(this.messageService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/messages/{id}", 1L).exchange()
+        webTestClient.mutateWith(csrf()).delete().uri("/messages/{id}", 1L).exchange()
                 .expectStatus().is4xxClientError();
     }
 }

@@ -33,6 +33,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -42,12 +43,14 @@ import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
  * dictionary api test
  *
  * @author liwenqiang 2022-04-8 7:39
  **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(DictionaryController.class)
 class DictionaryControllerTest {
@@ -142,7 +145,7 @@ class DictionaryControllerTest {
     void create() {
         given(this.dictionaryService.create(Mockito.any(DictionaryDTO.class))).willReturn(Mono.just(dictionaryVO));
 
-        webTestClient.post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -151,7 +154,7 @@ class DictionaryControllerTest {
     void create_error() {
         given(this.dictionaryService.create(Mockito.any(DictionaryDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/dictionaries").bodyValue(dictionaryDTO).exchange()
                 .expectStatus().is4xxClientError();
     }
 }

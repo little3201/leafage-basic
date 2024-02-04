@@ -35,6 +35,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -44,12 +45,14 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf;
 
 /**
  * role接口测试类
  *
  * @author liwenqiang 2021-06-19 10:00
  */
+@WithMockUser
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(RoleController.class)
 class RoleControllerTest {
@@ -146,7 +149,7 @@ class RoleControllerTest {
     void create() {
         given(this.roleService.create(Mockito.any(RoleDTO.class))).willReturn(Mono.just(roleVO));
 
-        webTestClient.post().uri("/roles").bodyValue(roleDTO).exchange().expectStatus().isCreated()
+        webTestClient.mutateWith(csrf()).post().uri("/roles").bodyValue(roleDTO).exchange().expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
@@ -154,14 +157,14 @@ class RoleControllerTest {
     void create_error() {
         given(this.roleService.create(Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/roles").bodyValue(roleDTO).exchange().expectStatus().is4xxClientError();
+        webTestClient.mutateWith(csrf()).post().uri("/roles").bodyValue(roleDTO).exchange().expectStatus().is4xxClientError();
     }
 
     @Test
     void modify() {
         given(this.roleService.modify(Mockito.anyLong(), Mockito.any(RoleDTO.class))).willReturn(Mono.just(roleVO));
 
-        webTestClient.put().uri("/roles/{id}", 1L).bodyValue(roleDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/roles/{id}", 1L).bodyValue(roleDTO).exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -170,7 +173,7 @@ class RoleControllerTest {
     void modify_error() {
         given(this.roleService.modify(Mockito.anyLong(), Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/roles/{id}", 1L).bodyValue(roleDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/roles/{id}", 1L).bodyValue(roleDTO).exchange()
                 .expectStatus().isNotModified();
     }
 
@@ -211,7 +214,7 @@ class RoleControllerTest {
         given(this.rolePrivilegesService.relation(Mockito.anyLong(), Mockito.anySet()))
                 .willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.patch().uri("/roles/{id}/privileges", 1L)
+        webTestClient.mutateWith(csrf()).patch().uri("/roles/{id}/privileges", 1L)
                 .bodyValue(Collections.singleton(1L))
                 .exchange().expectStatus().isAccepted();
     }
@@ -220,7 +223,7 @@ class RoleControllerTest {
     void relation_error() {
         given(this.rolePrivilegesService.relation(Mockito.anyLong(), Mockito.anySet())).willThrow(new RuntimeException());
 
-        webTestClient.patch().uri("/roles/{id}/privileges", 1L)
+        webTestClient.mutateWith(csrf()).patch().uri("/roles/{id}/privileges", 1L)
                 .bodyValue(Collections.singleton(1L))
                 .exchange().expectStatus().is4xxClientError();
     }

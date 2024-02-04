@@ -1,4 +1,4 @@
-package io.leafage.basic.hypervisor.config;
+package io.leafage.basic.assets.audit;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,9 +8,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * resource server config.
+ *
+ * @author liwenqiang  2021-12-20 9:54
+ */
 @Configuration
 @EnableWebSecurity
-public class AuthorizationServerConfiguration {
+public class ResourceServerConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

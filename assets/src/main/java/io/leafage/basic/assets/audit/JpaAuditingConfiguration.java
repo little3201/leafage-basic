@@ -1,4 +1,4 @@
-package io.leafage.basic.assets.config;
+package io.leafage.basic.assets.audit;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

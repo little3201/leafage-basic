@@ -1,7 +1,7 @@
 package io.leafage.basic.hypervisor.domain;
 
 
-import io.leafage.basic.hypervisor.config.AuditMetadata;
+import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;

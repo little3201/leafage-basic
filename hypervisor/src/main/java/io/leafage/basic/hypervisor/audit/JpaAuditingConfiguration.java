@@ -1,4 +1,4 @@
-package io.leafage.basic.hypervisor.config;
+package io.leafage.basic.hypervisor.audit;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,0 +1,24 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: auth
+
+  profiles:
+    active: dev
+
+  cloud:
+    consul:
+      discovery:
+        heartbeat:
+          enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health
+  metrics:
+    tags:
+      application: ${spring.application.name}

@@ -23,6 +23,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <leafage-common.version>0.3.0</leafage-common.version>
+        <authorization-server.version>1.2.1</authorization-server.version>
     </properties>
 
     <developers>
@@ -33,6 +34,7 @@
     </developers>
 
     <modules>
+        <module>auth</module>
         <module>hypervisor</module>
         <module>assets</module>
     </modules>
@@ -43,6 +45,11 @@
                 <groupId>top.leafage</groupId>
                 <artifactId>leafage-common</artifactId>
                 <version>${leafage-common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-oauth2-authorization-server</artifactId>
+                <version>${authorization-server.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

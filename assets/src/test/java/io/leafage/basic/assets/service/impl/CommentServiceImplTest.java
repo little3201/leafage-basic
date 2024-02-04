@@ -26,7 +26,7 @@ import static org.mockito.Mockito.doNothing;
 /**
  * comment 接口测试
  *
- * @author liwenqiang 2021/12/7 17:55
+ * @author wq li 2021/12/7 17:55
  **/
 @ExtendWith(MockitoExtension.class)
 class CommentServiceImplTest {

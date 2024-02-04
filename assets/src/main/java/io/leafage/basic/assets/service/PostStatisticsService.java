@@ -8,7 +8,7 @@ import top.leafage.common.servlet.ServletBasicService;
 /**
  * statistics service.
  *
- * @author liwenqiang 2021/09/29 14:32
+ * @author wq li 2021/09/29 14:32
  **/
 public interface PostStatisticsService extends ServletBasicService<PostStatisticsDTO, PostStatisticsVO> {
 

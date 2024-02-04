@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 /**
  * 类目接口测试
  *
- * @author liwenqiang 2019/3/28 20:22
+ * @author wq li 2019/3/28 20:22
  **/
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceImplTest {

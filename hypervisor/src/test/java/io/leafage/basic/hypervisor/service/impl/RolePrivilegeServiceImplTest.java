@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 /**
  * role privileges service test
  *
- * @author liwenqiang 2021/7/5 17:36
+ * @author wq li 2021/7/5 17:36
  **/
 @ExtendWith(MockitoExtension.class)
 class RolePrivilegeServiceImplTest {

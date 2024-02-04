@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 /**
  * model class for dictionary.
  *
- * @author liwenqiang 2022-04-06 17:33
+ * @author wq li 2022-04-06 17:33
  */
 @Entity
 @Table(name = "dictionaries", indexes = {@Index(name = "uni_dictionaries_name", columnList = "name")})

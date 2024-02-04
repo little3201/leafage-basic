@@ -16,7 +16,7 @@ import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 /**
  * message service impl.
  *
- * @author liwenqiang 2022/1/26 15:20
+ * @author wq li 2022/1/26 15:20
  **/
 @Service
 public class MessageServiceImpl extends ServletAbstractTreeNodeService<Message> implements MessageService {

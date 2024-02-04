@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 /**
  * user service test
  *
- * @author liwenqiang 2019/1/29 17:10
+ * @author wq li 2019/1/29 17:10
  **/
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {

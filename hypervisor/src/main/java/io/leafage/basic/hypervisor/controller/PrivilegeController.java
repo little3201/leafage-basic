@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * privilege controller.
  *
- * @author liwenqiang 2018/12/17 19:39
+ * @author wq li 2018/12/17 19:39
  **/
 @RestController
 @RequestMapping("/privileges")

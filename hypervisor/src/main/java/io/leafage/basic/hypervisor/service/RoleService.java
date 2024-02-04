@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * role service.
  *
- * @author liwenqiang 2018/9/27 14:18
+ * @author wq li 2018/9/27 14:18
  **/
 public interface RoleService extends ServletBasicService<RoleDTO, RoleVO> {
 

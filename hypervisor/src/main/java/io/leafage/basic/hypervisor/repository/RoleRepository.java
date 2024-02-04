@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * role repository.
  *
- * @author liwenqiang 2018/9/26 11:06
+ * @author wq li 2018/9/26 11:06
  **/
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {

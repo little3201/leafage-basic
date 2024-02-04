@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * privilege service impl.
  *
- * @author liwenqiang 2018/12/17 19:36
+ * @author wq li 2018/12/17 19:36
  **/
 @Service
 public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privilege> implements PrivilegeService {

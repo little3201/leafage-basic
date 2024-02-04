@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 /**
  * model class for role.
  *
- * @author liwenqiang 2020-12-20 9:54
+ * @author wq li 2020-12-20 9:54
  */
 @Entity
 @Table(name = "roles", indexes = {@Index(name = "uni_roles_name", columnList = "name")})

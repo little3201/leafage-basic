@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * messages controller.
  *
- * @author liwenqiang 2022/1/29 18:05
+ * @author wq li 2022/1/29 18:05
  */
 @RestController
 @RequestMapping("/messages")

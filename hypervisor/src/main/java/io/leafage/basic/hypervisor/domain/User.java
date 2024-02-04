@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 /**
  * model class for user.
  *
- * @author liwenqiang 2020-12-20 9:54
+ * @author wq li 2020-12-20 9:54
  */
 @Entity
 @Table(name = "users", indexes = {@Index(name = "uni_users_username", columnList = "username")})

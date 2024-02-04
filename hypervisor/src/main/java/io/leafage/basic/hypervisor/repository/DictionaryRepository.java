@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * dictionary repository.
  *
- * @author liwenqiang 2022-04-06 17:38
+ * @author wq li 2022-04-06 17:38
  **/
 @Repository
 public interface DictionaryRepository extends JpaRepository<Dictionary, Long> {

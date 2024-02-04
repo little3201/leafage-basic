@@ -21,7 +21,7 @@ import org.springframework.util.StringUtils;
 /**
  * category service impl.
  *
- * @author liwenqiang  2020-12-03 22:59
+ * @author wq li  2020-12-03 22:59
  **/
 @Service
 public class CategoryServiceImpl implements CategoryService {

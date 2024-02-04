@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * role privileges service impl.
  *
- * @author liwenqiang 2021/9/27 14:18
+ * @author wq li 2021/9/27 14:18
  **/
 @Service
 public class RolePrivilegesServiceImpl implements RolePrivilegesService {

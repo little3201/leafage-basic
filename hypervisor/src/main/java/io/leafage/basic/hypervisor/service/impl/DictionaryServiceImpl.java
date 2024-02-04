@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * dictionary service impl.
  *
- * @author liwenqiang 2022-04-06 17:38
+ * @author wq li 2022-04-06 17:38
  **/
 @Service
 public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictionary> implements DictionaryService {

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * comment repository.
  *
- * @author liwenqiang  2021-09-29 14:19
+ * @author wq li  2021-09-29 14:19
  **/
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {

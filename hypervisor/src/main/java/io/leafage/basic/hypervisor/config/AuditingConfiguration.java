@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 /**
  * jpa 自动填充配置
  *
- * @author liwenqiang  2020-12-20 9:54
+ * @author wq li  2020-12-20 9:54
  */
 @Configuration
 @EnableJpaAuditing

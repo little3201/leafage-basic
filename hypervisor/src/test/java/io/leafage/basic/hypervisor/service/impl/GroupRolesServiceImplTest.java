@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 /**
  * group roles service test.
  *
- * @author liwenqiang 2024/2/2 15:38
+ * @author wq li 2024/2/2 15:38
  **/
 @ExtendWith(MockitoExtension.class)
 class GroupRolesServiceImplTest {

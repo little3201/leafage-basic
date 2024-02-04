@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * group controller test
  *
- * @author liwenqiang 2019/9/14 21:52
+ * @author wq li 2019/9/14 21:52
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

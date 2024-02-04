@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * role privileges service.
  *
- * @author liwenqiang 2021/9/27 14:18
+ * @author wq li 2021/9/27 14:18
  **/
 public interface RolePrivilegesService {
 

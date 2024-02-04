@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * privilege service.
  *
- * @author liwenqiang 2018/12/17 19:36
+ * @author wq li 2018/12/17 19:36
  **/
 public interface PrivilegeService extends ServletBasicService<PrivilegeDTO, PrivilegeVO> {
 

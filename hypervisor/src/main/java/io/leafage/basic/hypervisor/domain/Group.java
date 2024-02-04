@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 /**
  * model class for group.
  *
- * @author liwenqiang 2020-12-20 9:54
+ * @author wq li 2020-12-20 9:54
  */
 @Entity
 @Table(name = "groups", indexes = {@Index(name = "uni_groups_name", columnList = "name")})

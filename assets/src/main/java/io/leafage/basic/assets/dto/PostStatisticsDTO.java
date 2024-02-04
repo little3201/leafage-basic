@@ -3,7 +3,7 @@ package io.leafage.basic.assets.dto;
 /**
  * dto class for posts statistics.
  *
- * @author liwenqiang  2024-02-02 14:30
+ * @author wq li  2024-02-02 14:30
  **/
 public class PostStatisticsDTO {
 

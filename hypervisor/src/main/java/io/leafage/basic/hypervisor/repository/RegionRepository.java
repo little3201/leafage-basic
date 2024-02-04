@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * region repository.
  *
- * @author liwenqiang 2021/11/27 14:18
+ * @author wq li 2021/11/27 14:18
  **/
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Long> {

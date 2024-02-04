@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 /**
  * message repository.
  *
- * @author liwenqiang 2022/1/29 17:34
+ * @author wq li 2022/1/29 17:34
  **/
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {

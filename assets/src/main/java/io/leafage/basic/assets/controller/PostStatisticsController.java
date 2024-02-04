@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * resource controller.
  *
- * @author liwenqiang 2018/12/20 9:54
+ * @author wq li 2018/12/20 9:54
  **/
 @RestController
 @RequestMapping("/statistics")

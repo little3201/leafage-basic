@@ -7,9 +7,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * assets application
+ * assets application.
  *
- * @author liwenqiang  2017-12-03 22:59
+ * @author wq li 2017-12-03 22:59
  */
 @SpringBootApplication
 public class AssetsApplication {

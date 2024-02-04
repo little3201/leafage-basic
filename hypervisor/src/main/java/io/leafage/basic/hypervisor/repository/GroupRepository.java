@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * group repository.
  *
- * @author liwenqiang 2018/12/20 9:52
+ * @author wq li 2018/12/20 9:52
  **/
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {

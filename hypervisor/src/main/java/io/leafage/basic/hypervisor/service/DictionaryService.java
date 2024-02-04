@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * dictionary service.
  *
- * @author liwenqiang 2022-04-06 17:38
+ * @author wq li 2022-04-06 17:38
  **/
 public interface DictionaryService extends ServletBasicService<DictionaryDTO, DictionaryVO> {
 

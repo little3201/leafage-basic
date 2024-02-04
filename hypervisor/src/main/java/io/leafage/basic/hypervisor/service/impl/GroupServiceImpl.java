@@ -28,7 +28,7 @@ import java.util.NoSuchElementException;
 /**
  * group service impl.
  *
- * @author liwenqiang 2018/12/17 19:25
+ * @author wq li 2018/12/17 19:25
  **/
 @Service
 public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> implements GroupService {

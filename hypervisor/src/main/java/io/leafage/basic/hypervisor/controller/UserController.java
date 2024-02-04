@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * user controller.
  *
- * @author liwenqiang 2018/8/2 21:02
+ * @author wq li 2018/8/2 21:02
  **/
 @RestController
 @RequestMapping("/users")

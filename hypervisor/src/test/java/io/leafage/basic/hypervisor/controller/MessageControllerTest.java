@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * message controller test
  *
- * @author liwenqiang 2022/3/3 11:18
+ * @author wq li 2022/3/3 11:18
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

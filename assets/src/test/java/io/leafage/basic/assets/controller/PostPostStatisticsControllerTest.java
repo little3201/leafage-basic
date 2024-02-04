@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * post statistics 接口测试
  *
- * @author liwenqiang 2021/12/7 17:54
+ * @author wq li 2021/12/7 17:54
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

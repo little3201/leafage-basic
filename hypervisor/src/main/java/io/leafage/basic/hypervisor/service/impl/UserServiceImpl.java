@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 /**
  * user service impl.
  *
- * @author liwenqiang 2018/7/28 0:30
+ * @author wq li 2018/7/28 0:30
  **/
 @Service
 public class UserServiceImpl implements UserService {

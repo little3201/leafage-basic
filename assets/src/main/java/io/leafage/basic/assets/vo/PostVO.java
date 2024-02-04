@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * vo class for posts.
  *
- * @author liwenqiang  2019-03-03 22:59
+ * @author wq li  2019-03-03 22:59
  **/
 public class PostVO {
 

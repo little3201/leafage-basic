@@ -11,7 +11,7 @@ import java.io.Serializable;
 /**
  * dto class for group.
  *
- * @author liwenqiang 2019/8/31 15:50
+ * @author wq li 2019/8/31 15:50
  */
 public class GroupDTO implements Serializable {
 

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * group controller.
  *
- * @author liwenqiang 2018/12/20 9:54
+ * @author wq li 2018/12/20 9:54
  **/
 @RestController
 @RequestMapping("/groups")

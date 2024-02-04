@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * dto class for region.
  *
- * @author liwenqiang 2021-10-12 10:06
+ * @author wq li 2021-10-12 10:06
  */
 public class RegionDTO implements Serializable {
 

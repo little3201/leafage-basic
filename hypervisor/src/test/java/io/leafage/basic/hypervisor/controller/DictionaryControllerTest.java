@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * dictionary controller test
  *
- * @author liwenqiang 2022-04-07 9:19
+ * @author wq li 2022-04-07 9:19
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

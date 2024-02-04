@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * dto class for dictionary.
  *
- * @author liwenqiang 2022-04-06 17:33
+ * @author wq li 2022-04-06 17:33
  */
 public class DictionaryDTO implements Serializable {
 

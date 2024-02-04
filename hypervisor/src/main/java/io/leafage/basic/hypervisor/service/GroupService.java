@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * group service.
  *
- * @author liwenqiang 2018/12/17 19:24
+ * @author wq li 2018/12/17 19:24
  **/
 public interface GroupService extends ServletBasicService<GroupDTO, GroupVO> {
 

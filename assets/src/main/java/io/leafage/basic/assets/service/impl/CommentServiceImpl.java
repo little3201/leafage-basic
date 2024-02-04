@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * comment service impl.
  *
- * @author liwenqiang 2021/09/29 15:10
+ * @author wq li 2021/09/29 15:10
  **/
 @Service
 public class CommentServiceImpl implements CommentService {

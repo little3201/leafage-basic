@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 /**
  * model class for posts.
  *
- * @author liwenqiang
+ * @author wq li
  */
 @Entity
 @Table(name = "posts", indexes = {@Index(name = "idx_posts_category_id", columnList = "category_id"),

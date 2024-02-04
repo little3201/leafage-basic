@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 /**
  * access log service impl.
  *
- * @author liwenqiang 2022/4/15 13:44
+ * @author wq li 2022/4/15 13:44
  **/
 @Service
 public class AccessLogServiceImpl implements AccessLogService {

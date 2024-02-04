@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 /**
  * category repository.
  *
- * @author liwenqiang  2020-12-03 22:59
+ * @author wq li  2020-12-03 22:59
  **/
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {

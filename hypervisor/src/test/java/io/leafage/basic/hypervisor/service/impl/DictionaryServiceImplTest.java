@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 /**
  * dictionary controller test
  *
- * @author liwenqiang 2022-04-07 9:19
+ * @author wq li 2022-04-07 9:19
  **/
 @ExtendWith(MockitoExtension.class)
 class DictionaryServiceImplTest {

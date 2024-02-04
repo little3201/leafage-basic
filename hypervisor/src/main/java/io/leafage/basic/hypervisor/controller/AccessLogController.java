@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * access log controller.
  *
- * @author liwenqiang 2022/4/15 13:50
+ * @author wq li 2022/4/15 13:50
  **/
 @RestController
 @RequestMapping("/access-logs")

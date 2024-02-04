@@ -6,7 +6,7 @@ package io.leafage.basic.hypervisor.vo;
 /**
  * vo class for privilege.
  *
- * @author liwenqiang 2019/8/31 15:50
+ * @author wq li 2019/8/31 15:50
  */
 public class PrivilegeVO {
 

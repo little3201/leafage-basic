@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * posts service impl.
  *
- * @author liwenqiang  2018-12-20 9:54
+ * @author wq li  2018-12-20 9:54
  **/
 @Service
 public class PostsServiceImpl implements PostsService {

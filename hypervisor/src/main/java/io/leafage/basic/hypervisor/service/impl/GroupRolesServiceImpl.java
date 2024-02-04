@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * group roles service impl.
  *
- * @author liwenqiang 2024/2/2 15:20
+ * @author wq li 2024/2/2 15:20
  **/
 public class GroupRolesServiceImpl implements GroupRolesService {
 

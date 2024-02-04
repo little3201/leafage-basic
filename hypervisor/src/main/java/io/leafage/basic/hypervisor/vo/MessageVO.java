@@ -3,7 +3,7 @@ package io.leafage.basic.hypervisor.vo;
 /**
  * vo class for message.
  *
- * @author liwenqiang 2022/1/29 17:20
+ * @author wq li 2022/1/29 17:20
  **/
 public class MessageVO {
 

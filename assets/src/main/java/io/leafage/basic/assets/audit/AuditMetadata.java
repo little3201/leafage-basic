@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * audit metadata.
  *
- * @author liwenqiang  2020-12-20 9:54
+ * @author wq li  2020-12-20 9:54
  */
 @MappedSuperclass
 public abstract class AuditMetadata implements Auditable<String, Long, Instant> {

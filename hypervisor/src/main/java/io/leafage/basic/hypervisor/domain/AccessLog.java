@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 /**
  * model class for access log.
  *
- * @author liwenqiang 2022/1/26 15:20
+ * @author wq li 2022/1/26 15:20
  **/
 @Entity
 @Table(name = "access_logs", indexes = {@Index(name = "idx_access_logs_created_by", columnList = "created_by")})

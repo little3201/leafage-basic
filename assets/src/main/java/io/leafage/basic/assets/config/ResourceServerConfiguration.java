@@ -11,7 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 /**
  * resource server config.
  *
- * @author liwenqiang  2021-12-20 9:54
+ * @author wq li  2021-12-20 9:54
  */
 @Configuration
 @EnableWebSecurity

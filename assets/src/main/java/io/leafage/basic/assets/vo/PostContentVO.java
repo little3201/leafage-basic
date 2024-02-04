@@ -6,7 +6,7 @@ package io.leafage.basic.assets.vo;
 /**
  * vo class for posts content.
  *
- * @author liwenqiang  2019-03-03 22:59
+ * @author wq li  2019-03-03 22:59
  **/
 public class PostContentVO extends PostVO {
 

@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 /**
  * model class for privilege.
  *
- * @author liwenqiang 2019/8/31 15:50
+ * @author wq li 2019/8/31 15:50
  */
 @Entity
 @Table(name = "privileges", indexes = {@Index(name = "uni_privileges_name", columnList = "name")})

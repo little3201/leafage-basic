@@ -6,7 +6,7 @@ package io.leafage.basic.assets.vo;
 /**
  * vo class for category.
  *
- * @author liwenqiang  2020-12-03 22:59
+ * @author wq li  2020-12-03 22:59
  */
 public class CategoryVO {
 

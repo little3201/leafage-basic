@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2023 the original author or authors.
+ *  Copyright 2018-2024 the original author or authors.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * auth application.
  *
- * @author liwenqiang 2021-12-21 17:02
+ * @author wq li 2021-12-21 17:02
  */
 @SpringBootApplication
 public class AuthApplication {

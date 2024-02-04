@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * privilege repository.
  *
- * @author liwenqiang 2018/12/17 19:37
+ * @author wq li 2018/12/17 19:37
  **/
 @Repository
 public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {

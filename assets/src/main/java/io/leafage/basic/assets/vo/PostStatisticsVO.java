@@ -3,7 +3,7 @@ package io.leafage.basic.assets.vo;
 /**
  * vo class for statistics.
  *
- * @author liwenqiang  2021-09-03 22:59
+ * @author wq li  2021-09-03 22:59
  **/
 public class PostStatisticsVO {
 

@@ -50,7 +50,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 /**
  * 认证服务配置
  *
- * @author liwenqiang 2021-12-21 17:02
+ * @author wq li 2021-12-21 17:02
  */
 @Configuration
 public class AuthorizationServerConfiguration {
@@ -65,10 +65,8 @@ public class AuthorizationServerConfiguration {
     @Bean
     @Order(2)
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(authorize ->
-                        authorize.anyRequest().authenticated()
-                )
+        http.authorizeHttpRequests(authorize ->
+                        authorize.anyRequest().authenticated())
                 .formLogin(withDefaults());
         return http.build();
     }

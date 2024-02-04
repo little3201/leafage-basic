@@ -28,7 +28,7 @@ import java.util.NoSuchElementException;
 /**
  * role service impl.
  *
- * @author liwenqiang 2018/9/27 14:20
+ * @author wq li 2018/9/27 14:20
  **/
 @Service
 public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implements RoleService {

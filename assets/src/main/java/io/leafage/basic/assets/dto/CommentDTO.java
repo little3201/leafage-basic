@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * dto class for comment.
  *
- * @author liwenqiang 2021-09-29 13:51
+ * @author wq li 2021-09-29 13:51
  */
 public class CommentDTO {
 

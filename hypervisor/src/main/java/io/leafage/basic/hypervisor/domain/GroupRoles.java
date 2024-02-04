@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 /**
  * model class for group roles.
  *
- * @author liwenqiang 2022/1/26 15:20
+ * @author wq li 2022/1/26 15:20
  */
 @Entity
 @Table(name = "group_roles", indexes = {@Index(name = "idx_group_roles_group_id", columnList = "group_id"),

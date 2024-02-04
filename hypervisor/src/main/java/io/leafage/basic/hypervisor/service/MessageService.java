@@ -8,7 +8,7 @@ import top.leafage.common.servlet.ServletBasicService;
 /**
  * message service.
  *
- * @author liwenqiang 2022/1/29 17:34
+ * @author wq li 2022/1/29 17:34
  **/
 public interface MessageService extends ServletBasicService<MessageDTO, MessageVO> {
 

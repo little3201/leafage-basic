@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 /**
  * 帖子接口测试
  *
- * @author liwenqiang 2019-08-20 22:38
+ * @author wq li 2019-08-20 22:38
  **/
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {

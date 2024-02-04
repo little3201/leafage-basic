@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * dto class for posts.
  *
- * @author liwenqiang  2019-03-03 22:59
+ * @author wq li  2019-03-03 22:59
  **/
 public class PostDTO {
 

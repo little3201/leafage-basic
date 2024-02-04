@@ -18,7 +18,7 @@ import java.util.Set;
 /**
  * Exception handler.
  *
- * @author liwenqiang  2020-12-20 9:54
+ * @author wq li  2020-12-20 9:54
  */
 @RestControllerAdvice
 public class CustomExceptionHandler {

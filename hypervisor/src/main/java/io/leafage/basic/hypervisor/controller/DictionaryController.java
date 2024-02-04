@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * dictionary controller.
  *
- * @author liwenqiang 2022-04-06 17:44
+ * @author wq li 2022-04-06 17:44
  **/
 @RestController
 @RequestMapping("/dictionaries")

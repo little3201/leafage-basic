@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * posts repository.
  *
- * @author liwenqiang 2018/12/20 9:51
+ * @author wq li 2018/12/20 9:51
  **/
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {

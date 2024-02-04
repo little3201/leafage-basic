@@ -15,9 +15,9 @@ public class AuthorizationServerConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers(HttpMethod.GET).permitAll()
-                .anyRequest().authenticated()
-        ).oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
+                        .requestMatchers(HttpMethod.GET).permitAll()
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
         return http.build();
     }
 }

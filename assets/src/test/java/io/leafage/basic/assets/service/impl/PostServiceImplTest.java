@@ -1,21 +1,8 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.assets.service.impl;
+
 
 import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.domain.Post;
@@ -24,6 +11,9 @@ import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.repository.PostStatisticsRepository;
+import io.leafage.basic.assets.vo.PostVO;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,20 +21,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+import org.springframework.data.domain.*;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 /**
- * post service test
+ * 帖子接口测试
  *
- * @author liwenqiang 2019-09-19 9:27
- */
+ * @author liwenqiang 2019-08-20 22:38
+ **/
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {
 
@@ -52,107 +42,157 @@ class PostServiceImplTest {
     private PostRepository postRepository;
 
     @Mock
+    private PostContentRepository postContentRepository;
+
+    @Mock
     private CategoryRepository categoryRepository;
 
     @Mock
-    private PostContentRepository postContentRepository;
+    private PostStatisticsRepository postStatisticsRepository;
 
     @InjectMocks
-    private PostServiceImpl postsService;
+    private PostsServiceImpl postsService;
 
     private PostDTO postDTO;
 
     @BeforeEach
     void init() {
         postDTO = new PostDTO();
-        postDTO.setTitle("标题");
-        postDTO.setTags(Set.of("test"));
-        postDTO.setCover("./avatar.jpg");
-        postDTO.setContext("内容信息");
+        postDTO.setTitle("title");
+        postDTO.setContent("content");
+        postDTO.setCover("cover");
+        postDTO.setTags(Set.of("tag"));
+        postDTO.setCategoryId(1L);
     }
 
     @Test
     void retrieve() {
-        given(this.postRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Post.class)));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Post> postsPage = new PageImpl<>(List.of(Mockito.mock(Post.class)), pageable, 2L);
+        given(this.postRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
 
-        given(this.postRepository.count()).willReturn(Mono.just(2L));
+        Page<PostVO> voPage = postsService.retrieve(0, 2, "id");
 
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        StepVerifier.create(this.postsService.retrieve(0, 2, "", null))
-                .expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void retrieve_with_categoryId() {
-        given(this.postRepository.findByCategoryId(Mockito.anyLong(), Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Post.class)));
-
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(1L));
-
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        StepVerifier.create(this.postsService.retrieve(0, 2, null, 1L))
-                .expectNextCount(1).verifyComplete();
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test
     void fetch() {
-        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
 
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
+        PostVO postVO = postsService.fetch(Mockito.anyLong());
 
-        given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(PostContent.class)));
+        Assertions.assertNotNull(postVO);
+    }
 
-        StepVerifier.create(this.postsService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
+    @Test
+    void fetch_posts_null() {
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+        PostVO postVO = postsService.fetch(Mockito.anyLong());
+
+        Assertions.assertNull(postVO);
+    }
+
+    @Test
+    void next() {
+        given(this.postRepository.getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(Mockito.anyLong())).willReturn(Mockito.mock(Post.class));
+
+        PostVO postVO = postsService.next(Mockito.anyLong());
+
+        Assertions.assertNotNull(postVO);
+    }
+
+
+    @Test
+    void previous() {
+        given(this.postRepository.getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(Mockito.anyLong())).willReturn(Mockito.mock(Post.class));
+
+        PostVO postVO = postsService.previous(Mockito.anyLong());
+
+        Assertions.assertNotNull(postVO);
+    }
+
+    @Test
+    void details() {
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
+
+        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Category.class)));
+
+        doNothing().when(this.postStatisticsRepository).increaseViewed(Mockito.anyLong());
+
+        given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+
+        PostVO postVO = postsService.details(Mockito.anyLong());
+
+        Assertions.assertNotNull(postVO);
+    }
+
+    @Test
+    void details_posts_null() {
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+        PostVO postVO = postsService.details(Mockito.anyLong());
+
+        Assertions.assertNull(postVO);
     }
 
     @Test
     void exist() {
-        given(this.postRepository.existsByTitle(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.postRepository.existsByTitle(Mockito.anyString())).willReturn(true);
 
-        StepVerifier.create(postsService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
+        boolean exist = postsService.exist("test");
+
+        Assertions.assertTrue(exist);
     }
 
     @Test
     void create() {
-        given(this.postRepository.save(Mockito.any(Post.class))).willReturn(Mono.just(Mockito.mock(Post.class)));
+        given(this.postRepository.saveAndFlush(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
-        given(this.postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mono.empty());
 
-        StepVerifier.create(this.postsService.create(Mockito.mock(PostDTO.class))).verifyComplete();
+        given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+
+        given(this.postContentRepository.saveAndFlush(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
+
+        PostVO postVO = postsService.create(postDTO);
+
+        verify(this.postRepository, times(1)).saveAndFlush(Mockito.any(Post.class));
+        verify(this.postContentRepository, times(1)).saveAndFlush(Mockito.any(PostContent.class));
+        Assertions.assertNotNull(postVO);
     }
 
     @Test
     void modify() {
-        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
 
-        given(this.postRepository.save(Mockito.any(Post.class))).willReturn(Mono.just(Mockito.mock(Post.class)));
+        given(this.postRepository.save(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
-        given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(PostContent.class)));
+        given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
 
-        given(this.postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mono.empty());
+        given(this.postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 
-        StepVerifier.create(this.postsService.modify(1L, postDTO)).verifyComplete();
+        PostVO postVO = postsService.modify(1L, postDTO);
+
+        verify(this.postRepository, times(1)).save(Mockito.any(Post.class));
+        verify(this.postContentRepository, times(1)).save(Mockito.any(PostContent.class));
+        Assertions.assertNotNull(postVO);
+    }
+
+    @Test
+    void modify_error() {
+        given(this.postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
+
+        given(this.postRepository.save(Mockito.any(Post.class))).willThrow(new RuntimeException());
+
+        Assertions.assertThrows(RuntimeException.class, () -> postsService.modify(1L, postDTO));
     }
 
     @Test
     void remove() {
-        given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(PostContent.class)));
+        postsService.remove(Mockito.anyLong());
 
-        given(this.postContentRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
-
-        given(this.postRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
-
-        StepVerifier.create(postsService.remove(Mockito.anyLong())).verifyComplete();
-    }
-
-    @Test
-    void search() {
-        given(this.postRepository.findAllByTitle(Mockito.anyString())).willReturn(Flux.just(Mockito.mock(Post.class)));
-
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        StepVerifier.create(postsService.search("test")).expectNextCount(1).verifyComplete();
+        verify(this.postRepository, times(1)).deleteById(Mockito.anyLong());
     }
 
 }

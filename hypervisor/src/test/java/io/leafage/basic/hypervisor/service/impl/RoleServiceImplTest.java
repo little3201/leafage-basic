@@ -1,25 +1,11 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
+import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
+import io.leafage.basic.hypervisor.vo.RoleVO;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,20 +13,31 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+import org.springframework.data.domain.Sort;
+import top.leafage.common.TreeNode;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
- * role接口测试
+ * role service test
  *
- * @author liwenqiang 2019-01-29 17:10
+ * @author liwenqiang 2021/5/11 10:10
  **/
 @ExtendWith(MockitoExtension.class)
 class RoleServiceImplTest {
+
+    @Mock
+    private RoleMembersRepository roleMembersRepository;
 
     @Mock
     private RoleRepository roleRepository;
@@ -53,53 +50,73 @@ class RoleServiceImplTest {
     @BeforeEach
     void init() {
         roleDTO = new RoleDTO();
-        roleDTO.setName("test");
+        roleDTO.setName("role");
+        roleDTO.setDescription("role");
+        roleDTO.setAuthorities(Set.of("add"));
         roleDTO.setSuperiorId(1L);
     }
 
     @Test
     void retrieve() {
-        given(this.roleRepository.findAll()).willReturn(Flux.just(Mockito.mock(Role.class)));
+        Page<Role> page = new PageImpl<>(List.of(Mockito.mock(Role.class)));
+        given(this.roleRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
 
-        StepVerifier.create(roleService.retrieve()).expectNextCount(1).verifyComplete();
-    }
+        given(this.roleMembersRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-    @Test
-    void retrieve_page() {
-        given(this.roleRepository.findBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Role.class)));
+        Page<RoleVO> voPage = roleService.retrieve(0, 2, "id");
 
-        given(this.roleRepository.count()).willReturn(Mono.just(2L));
-
-        StepVerifier.create(roleService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test
     void fetch() {
-        given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Role.class)));
+        given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Role.class)));
 
-        StepVerifier.create(roleService.fetch(1L)).expectNextCount(1).verifyComplete();
+        given(this.roleMembersRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(2L);
+
+        RoleVO roleVO = roleService.fetch(Mockito.anyLong());
+
+        Assertions.assertNotNull(roleVO);
     }
 
     @Test
     void create() {
-        given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
+        given(this.roleRepository.saveAndFlush(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
 
-        StepVerifier.create(roleService.create(Mockito.mock(RoleDTO.class))).expectNextCount(1).verifyComplete();
+        given(this.roleMembersRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(2L);
+
+        RoleVO roleVO = roleService.create(Mockito.mock(RoleDTO.class));
+
+        verify(this.roleRepository, times(1)).saveAndFlush(Mockito.any(Role.class));
+        Assertions.assertNotNull(roleVO);
     }
 
     @Test
     void modify() {
-        given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Role.class)));
+        given(this.roleRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Role.class)));
 
-        given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mono.just(Mockito.mock(Role.class)));
+        given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
 
-        StepVerifier.create(roleService.modify(1L, roleDTO)).expectNextCount(1).verifyComplete();
+        given(this.roleMembersRepository.countByRoleIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
+
+        RoleVO roleVO = roleService.modify(1L, roleDTO);
+
+        verify(this.roleRepository, times(1)).save(Mockito.any(Role.class));
+        Assertions.assertNotNull(roleVO);
     }
 
     @Test
-    void exist() {
-        given(this.roleRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void remove() {
+        roleService.remove(Mockito.anyLong());
 
-        StepVerifier.create(roleService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
+        verify(this.roleRepository, times(1)).deleteById(Mockito.anyLong());
+    }
+
+    @Test
+    void tree() {
+        given(this.roleRepository.findByEnabledTrue()).willReturn(Arrays.asList(Mockito.mock(Role.class), Mockito.mock(Role.class)));
+
+        List<TreeNode> nodes = roleService.tree();
+        Assertions.assertNotNull(nodes);
     }
 }

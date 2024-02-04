@@ -1,69 +1,46 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.domain.Post;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
- * posts repository
+ * posts repository.
  *
- * @author liwenqiang 2018-12-20 09:51
+ * @author liwenqiang 2018/12/20 9:51
  **/
 @Repository
-public interface PostRepository extends R2dbcRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> {
 
     /**
      * 分页查询
      *
      * @param pageable 分页参数
-     * @return 有效帖子
+     * @return 查询结果
      */
-    Flux<Post> findByEnabledTrue(Pageable pageable);
+    Slice<Post> findByEnabledTrue(Pageable pageable);
 
     /**
-     * 根据分类分页查询
+     * 查询所有可用
+     *
+     * @return 查询结果
+     */
+    List<Post> findByEnabledTrue();
+
+    /**
+     * 统计
      *
      * @param categoryId 分类ID
-     * @param pageable   分页参数
-     * @return 有效帖子
+     * @return 数量
      */
-    Flux<Post> findByCategoryId(Long categoryId, Pageable pageable);
-
-    /**
-     * 关联统计
-     *
-     * @param categoryId 分类ID
-     * @return 帖子数
-     */
-    Mono<Long> countByCategoryId(Long categoryId);
-
-    /**
-     * 关键词查询
-     *
-     * @param keyword 关键词
-     * @return 匹配结果
-     */
-    Flux<Post> findAllByTitle(String keyword);
+    long countByCategoryId(Long categoryId);
 
     /**
      * 是否已存在
@@ -71,5 +48,21 @@ public interface PostRepository extends R2dbcRepository<Post, Long> {
      * @param title 名称
      * @return true-是，false-否
      */
-    Mono<Boolean> existsByTitle(String title);
+    boolean existsByTitle(String title);
+
+    /**
+     * 下一篇
+     *
+     * @param id 主键
+     * @return 信息
+     */
+    Post getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(Long id);
+
+    /**
+     * 上一篇
+     *
+     * @param id 主键
+     * @return 信息
+     */
+    Post getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(Long id);
 }

@@ -1,48 +1,86 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.hypervisor.domain;
 
-import org.springframework.data.domain.Auditable;
-import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.Instant;
-import java.util.Optional;
+import io.leafage.basic.hypervisor.audit.AuditMetadata;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 /**
- * model class for access log
+ * model class for access log.
  *
- * @author liwenqiang 2022-03-18 21:09
- */
-@Table(name = "access_logs")
-public class AccessLog implements Auditable<String, Long, Instant> {
+ * @author liwenqiang 2022/1/26 15:20
+ **/
+@Entity
+@Table(name = "access_logs", indexes = {@Index(name = "idx_access_logs_created_by", columnList = "created_by")})
+public class AccessLog extends AuditMetadata {
 
     /**
-     * ip
+     * IP地址
      */
     private String ip;
+
     /**
-     * location
+     * 地理位置
      */
     private String location;
+
     /**
-     * context
+     * 用户代理信息
      */
-    private String context;
+    @Column(name = "user_agent")
+    private String userAgent;
+
+    /**
+     * HTTP方法
+     */
+    @Column(name = "http_method")
+    private String httpMethod;
+
+    /**
+     * 请求URL
+     */
+    private String url;
+
+    /**
+     * HTTP状态码
+     */
+    @Column(name = "status_code")
+    private Integer statusCode;
+
+    /**
+     * 响应时间
+     */
+    @Column(name = "response_time")
+    private Long responseTime;
+
+    /**
+     * 来源页面
+     */
+    private String referer;
+
+    /**
+     * 会话标识符
+     */
+    @Column(name = "session_id")
+    private String sessionId;
+
+    /**
+     * 设备类型
+     */
+    @Column(name = "device_type")
+    private String deviceType;
+
+    /**
+     * 操作系统
+     */
+    private String os;
+
+    /**
+     * 浏览器
+     */
+    private String browser;
 
 
     public String getIp() {
@@ -61,61 +99,83 @@ public class AccessLog implements Auditable<String, Long, Instant> {
         this.location = location;
     }
 
-    public String getContext() {
-        return context;
+    public String getUserAgent() {
+        return userAgent;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 
-    @Override
-    public Optional<String> getCreatedBy() {
-        return Optional.empty();
+    public String getHttpMethod() {
+        return httpMethod;
     }
 
-    @Override
-    public void setCreatedBy(String createdBy) {
-
+    public void setHttpMethod(String httpMethod) {
+        this.httpMethod = httpMethod;
     }
 
-    @Override
-    public Optional<Instant> getCreatedDate() {
-        return Optional.empty();
+    public String getUrl() {
+        return url;
     }
 
-    @Override
-    public void setCreatedDate(Instant creationDate) {
-
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    @Override
-    public Optional<String> getLastModifiedBy() {
-        return Optional.empty();
+    public Integer getStatusCode() {
+        return statusCode;
     }
 
-    @Override
-    public void setLastModifiedBy(String lastModifiedBy) {
-
+    public void setStatusCode(Integer statusCode) {
+        this.statusCode = statusCode;
     }
 
-    @Override
-    public Optional<Instant> getLastModifiedDate() {
-        return Optional.empty();
+    public Long getResponseTime() {
+        return responseTime;
     }
 
-    @Override
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-
+    public void setResponseTime(Long responseTime) {
+        this.responseTime = responseTime;
     }
 
-    @Override
-    public Long getId() {
-        return null;
+    public String getReferer() {
+        return referer;
     }
 
-    @Override
-    public boolean isNew() {
-        return false;
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public String getOs() {
+        return os;
+    }
+
+    public void setOs(String os) {
+        this.os = os;
+    }
+
+    public String getBrowser() {
+        return browser;
+    }
+
+    public void setBrowser(String browser) {
+        this.browser = browser;
     }
 }

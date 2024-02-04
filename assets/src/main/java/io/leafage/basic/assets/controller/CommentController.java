@@ -1,20 +1,3 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.CommentDTO;
@@ -23,24 +6,23 @@ import io.leafage.basic.assets.vo.CommentVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
- * comment controller
+ * comment controller.
  *
- * @author liwenqiang 2021-07-17 21:01
+ * @author liwenqiang 2018/12/20 9:54
  **/
-@Validated
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/comment")
 public class CommentController {
 
-    private final Logger logger = LoggerFactory.getLogger(CommentController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
 
     private final CommentService commentService;
 
@@ -49,40 +31,59 @@ public class CommentController {
     }
 
     /**
-     * 根据 postId 查询信息
+     * 列表查询
      *
-     * @param postId 帖子代码
-     * @return 关联的评论
+     * @param page 分页位置
+     * @param size 分页大小
+     * @return 查询到数据集，异常时返回204
      */
-    @GetMapping("/{postId}")
-    public ResponseEntity<Flux<CommentVO>> comments(@PathVariable Long postId) {
-        Flux<CommentVO> voFlux;
+    @GetMapping
+    public ResponseEntity<Page<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size) {
+        Page<CommentVO> voPage;
         try {
-            voFlux = commentService.comments(postId);
+            voPage = commentService.retrieve(page, size);
         } catch (Exception e) {
-            logger.error("Retrieve comments by postId occurred an error: ", e);
+            logger.error("Retrieve comment occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(voPage);
+    }
+
+    /**
+     * 根据 posts id 查询
+     *
+     * @param id 帖子代码
+     * @return 关联的评论
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<List<CommentVO>> relation(@PathVariable Long id) {
+        List<CommentVO> voList;
+        try {
+            voList = commentService.relation(id);
+        } catch (Exception e) {
+            logger.error("Retrieve comment by posts occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voList);
     }
 
 
     /**
-     * 根据 id 查询回复信息
+     * 根据id查询回复
      *
-     * @param id 评论代码
+     * @param id 帖子代码
      * @return 关联的评论
      */
     @GetMapping("/{id}/replies")
-    public ResponseEntity<Flux<CommentVO>> replies(@PathVariable Long id) {
-        Flux<CommentVO> voFlux;
+    public ResponseEntity<List<CommentVO>> replies(@PathVariable Long id) {
+        List<CommentVO> voList;
         try {
-            voFlux = commentService.replies(id);
+            voList = commentService.replies(id);
         } catch (Exception e) {
-            logger.error("Retrieve comment repliers occurred an error: ", e);
+            logger.error("Retrieve comment replies occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voFlux);
+        return ResponseEntity.ok(voList);
     }
 
     /**
@@ -92,33 +93,15 @@ public class CommentController {
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<CommentVO>> create(@RequestBody @Valid CommentDTO commentDTO) {
-        Mono<CommentVO> voMono;
+    public ResponseEntity<CommentVO> create(@RequestBody @Valid CommentDTO commentDTO) {
+        CommentVO vo;
         try {
-            voMono = commentService.create(commentDTO);
+            vo = commentService.create(commentDTO);
         } catch (Exception e) {
             logger.error("Create comment occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
-    }
-
-    /**
-     * 删除信息
-     *
-     * @param id 主键
-     * @return 200状态码，异常时返回417状态码
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Mono<Void>> remove(@PathVariable Long id) {
-        Mono<Void> voidMono;
-        try {
-            voidMono = commentService.remove(id);
-        } catch (Exception e) {
-            logger.error("Remove comment occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
-        }
-        return ResponseEntity.ok(voidMono);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
 
 }

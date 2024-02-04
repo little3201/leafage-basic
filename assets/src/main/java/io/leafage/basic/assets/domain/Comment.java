@@ -1,54 +1,43 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.assets.domain;
 
 import io.leafage.basic.assets.audit.AuditMetadata;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 /**
- * model class for comment
+ * model class for comment.
  *
- * @author liwenqiang 2021-07-15 22:12
+ * @author liwenqiang  2021-09-29 10:45
  */
-@Table(name = "comments")
+@Entity
+@Table(name = "comments", indexes = {@Index(name = "idx_comments_post_id", columnList = "post_id")})
 public class Comment extends AuditMetadata {
 
     /**
      * 帖子ID
      */
-    @Column(value = "post_id")
+    @Column(name = "post_id", nullable = false)
     private Long postId;
-    /**
-     * 内容
-     */
-    private String context;
+
     /**
      * 国家
      */
     private String country;
+
     /**
      * 位置
      */
     private String location;
+
     /**
-     * 回复者
+     * 内容
+     */
+    private String content;
+
+    /**
+     * 回复人
      */
     private Long replier;
 
@@ -59,14 +48,6 @@ public class Comment extends AuditMetadata {
 
     public void setPostId(Long postId) {
         this.postId = postId;
-    }
-
-    public String getContext() {
-        return context;
-    }
-
-    public void setContext(String context) {
-        this.context = context;
     }
 
     public String getCountry() {
@@ -85,6 +66,14 @@ public class Comment extends AuditMetadata {
         this.location = location;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public Long getReplier() {
         return replier;
     }
@@ -92,5 +81,4 @@ public class Comment extends AuditMetadata {
     public void setReplier(Long replier) {
         this.replier = replier;
     }
-
 }

@@ -1,83 +1,61 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.hypervisor.vo;
 
-import io.leafage.basic.hypervisor.bo.UserBO;
-
-import java.time.Instant;
-
 /**
- * vo class for user
+ * vo class for user.
  *
- * @author liwenqiang 2020-10-06 22:09
- */
-public class UserVO extends UserBO {
+ * @author liwenqiang 2019/8/31 15:50
+ **/
+public class UserVO {
 
     /**
-     * user有效期
+     * user
      */
-    private Instant accountExpiresAt;
+    private String username;
+    /**
+     * 姓
+     */
+    private String firstname;
+    /**
+     * 名
+     */
+    private String lastname;
 
     /**
-     * 是否锁定
+     * 描述
      */
-    private boolean accountNonLocked;
-
-    /**
-     * 密码有效期
-     */
-    private Instant credentialsExpiresAt;
-
-    /**
-     * 最后更新时间
-     */
-    private Instant lastModifiedDate;
+    private String description;
 
 
-    public Instant getAccountExpiresAt() {
-        return accountExpiresAt;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setAccountExpiresAt(Instant accountExpiresAt) {
-        this.accountExpiresAt = accountExpiresAt;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
-    public Instant getCredentialsExpiresAt() {
-        return credentialsExpiresAt;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setCredentialsExpiresAt(Instant credentialsExpiresAt) {
-        this.credentialsExpiresAt = credentialsExpiresAt;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

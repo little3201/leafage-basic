@@ -1,22 +1,6 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.assets.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
@@ -25,160 +9,148 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Mono;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Instant;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * category controller test
+ * category 接口测试
  *
- * @author liwenqiang 2020-03-01 22:07
- */
+ * @author liwenqiang 2019/9/14 21:46
+ **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(CategoryController.class)
+@WebMvcTest(CategoryController.class)
 class CategoryControllerTest {
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private CategoryService categoryService;
 
-    @Autowired
-    private WebTestClient webTestClient;
+    private CategoryVO categoryVO;
 
     private CategoryDTO categoryDTO;
-    private CategoryVO categoryVO;
 
     @BeforeEach
     void init() {
-        // 构造请求对象
+        categoryVO = new CategoryVO();
+        categoryVO.setName("test");
+        categoryVO.setCount(21L);
+
         categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
-        categoryDTO.setDescription("描述信息");
-
-        categoryVO = new CategoryVO();
-        categoryVO.setCount(23L);
-        categoryVO.setName(categoryDTO.getName());
-        categoryVO.setLastModifiedDate(Instant.now());
     }
 
     @Test
-    void retrieve() {
-        Pageable pageable = PageRequest.of(0, 2);
-        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO), pageable, 1L);
-        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
+    void retrieve() throws Exception {
+        Pageable pageable = PageRequest.of(0,2);
+        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO), pageable, 2L);
+        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories").queryParam("page", 0)
-                        .queryParam("size", 2).build())
-                .exchange().expectStatus().isOk().expectBodyList(CategoryVO.class);
+        mvc.perform(get("/category").queryParam("page", "0")
+                        .queryParam("size", "2").queryParam("sort", "id"))
+                .andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
-    void retrieve_error() {
-        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new RuntimeException());
+    void retrieve_error() throws Exception {
+        given(this.categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new NoSuchElementException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
+        mvc.perform(get("/category").queryParam("page", "0")
+                        .queryParam("size", "2").queryParam("sort", "id")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void fetch() {
-        given(this.categoryService.fetch(Mockito.anyLong())).willReturn(Mono.just(categoryVO));
+    void fetch() throws Exception {
+        given(this.categoryService.fetch(Mockito.anyLong())).willReturn(categoryVO);
 
-        webTestClient.get().uri("/categories/{id}", 1).exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.name").isEqualTo("test");
+        mvc.perform(get("/category/{id}", 1L)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
-    void fetch_error() {
+    void fetch_error() throws Exception {
         given(this.categoryService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/categories/{id}", 1).exchange()
-                .expectStatus().isNoContent();
+        mvc.perform(get("/category/{id}", 1L)).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void exist() {
-        given(this.categoryService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void create() throws Exception {
+        given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
-                        .queryParam("name", "test").build()).exchange()
-                .expectStatus().isOk();
+        mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
-    void exist_error() {
-        given(this.categoryService.exist(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
-                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void create() {
-        given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
-
-        webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(categoryDTO).exchange()
-                .expectStatus().isCreated()
-                .expectBody().jsonPath("$.name").isEqualTo("test");
-    }
-
-    @Test
-    void create_error() {
+    void create_error() throws Exception {
         given(this.categoryService.create(Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/categories").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(categoryDTO).exchange()
-                .expectStatus().is4xxClientError();
+        mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void modify() {
-        given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(Mono.just(categoryVO));
+    void modify() throws Exception {
+        given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
 
-        webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(categoryDTO).exchange()
-                .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.name").isEqualTo("test");
+        mvc.perform(put("/category/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
+                .andExpect(status().isAccepted())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void modify_error() {
+    void modify_error() throws Exception {
         given(this.categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        // 构造请求对象
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        webTestClient.put().uri("/categories/{id}", 1).contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(categoryDTO).exchange()
-                .expectStatus().isNotModified();
+        mvc.perform(put("/category/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
+                .andExpect(status().isNotModified())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void remove() {
-        given(this.categoryService.remove(Mockito.anyLong())).willReturn(Mono.empty());
+    void remove() throws Exception {
+        this.categoryService.remove(Mockito.anyLong());
 
-        webTestClient.delete().uri("/categories/{id}", 1).exchange()
-                .expectStatus().isOk();
+        mvc.perform(delete("/category/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isOk())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void remove_error() {
-        given(this.categoryService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
+    void remove_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.categoryService).remove(Mockito.anyLong());
 
-        webTestClient.delete().uri("/categories/{id}", 1).exchange()
-                .expectStatus().is4xxClientError();
+        mvc.perform(delete("/category/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
     }
 }

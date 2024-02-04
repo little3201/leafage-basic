@@ -1,50 +1,41 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.hypervisor.domain;
 
 import io.leafage.basic.hypervisor.audit.AuditMetadata;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 /**
- * model class for message
+ * model class for message.
  *
- * @author liwenqiang 2022-02-10 13:49
- */
-@Table(name = "messages")
+ * @author liwenqiang 2022/1/29 17:20
+ **/
+@Entity
+@Table(name = "messages", indexes = {@Index(name = "idx_messages_receiver", columnList = "receiver")})
 public class Message extends AuditMetadata {
 
     /**
-     * 标题
+     * 主键
      */
+    @Column(name = "name", nullable = false)
     private String title;
+
     /**
      * 内容
      */
-    private String context;
+    private String content;
+
     /**
      * 是否已读
      */
-    @Column(value = "is_read")
+    @Column(name = "is_read", nullable = false)
     private boolean read;
+
     /**
      * 接收人
      */
+    @Column(name = "receiver", nullable = false)
     private String receiver;
 
 
@@ -56,12 +47,12 @@ public class Message extends AuditMetadata {
         this.title = title;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public boolean isRead() {
@@ -79,5 +70,4 @@ public class Message extends AuditMetadata {
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }
-
 }

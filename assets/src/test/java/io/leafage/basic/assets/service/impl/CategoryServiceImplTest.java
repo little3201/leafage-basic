@@ -1,26 +1,14 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.vo.CategoryVO;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,18 +16,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
- * category service test
+ * 类目接口测试
  *
- * @author liwenqiang 2020-03-01 22:07
- */
+ * @author liwenqiang 2019/3/28 20:22
+ **/
 @ExtendWith(MockitoExtension.class)
 class CategoryServiceImplTest {
 
@@ -63,54 +56,57 @@ class CategoryServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.categoryRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Category.class)));
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<Category> page = new PageImpl<>(List.of(Mockito.mock(Category.class)), pageable, 2L);
+        given(this.categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(page);
 
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-        given(this.categoryRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
+        Page<CategoryVO> voPage = categoryService.retrieve(0, 2, "id");
 
-        StepVerifier.create(this.categoryService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test
     void fetch() {
-        given(this.categoryRepository.findById(Mockito.anyLong()))
-                .willReturn(Mono.just(Mockito.mock(Category.class)));
+        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
 
-        StepVerifier.create(categoryService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
+        CategoryVO categoryVO = categoryService.fetch(Mockito.anyLong());
+
+        Assertions.assertNotNull(categoryVO);
     }
 
-    @Test
-    void exist() {
-        given(this.categoryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
-
-        StepVerifier.create(categoryService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
-    }
 
     @Test
     void create() {
-        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
+        given(this.categoryRepository.saveAndFlush(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
 
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(2L);
 
-        StepVerifier.create(categoryService.create(Mockito.mock(CategoryDTO.class))).expectNextCount(1).verifyComplete();
+        CategoryVO categoryVO = categoryService.create(Mockito.mock(CategoryDTO.class));
+
+        verify(this.categoryRepository, times(1)).saveAndFlush(Mockito.any(Category.class));
+        Assertions.assertNotNull(categoryVO);
     }
 
     @Test
     void modify() {
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
+        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
 
-        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
+        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
 
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(2L));
+        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-        StepVerifier.create(categoryService.modify(1L, categoryDTO)).expectNextCount(1).verifyComplete();
+        CategoryVO categoryVO = categoryService.modify(1L, categoryDTO);
+
+        verify(this.categoryRepository, times(1)).save(Mockito.any(Category.class));
+        Assertions.assertNotNull(categoryVO);
     }
 
     @Test
     void remove() {
-        given(this.categoryRepository.deleteById(Mockito.anyLong())).willReturn(Mono.empty());
+        categoryService.remove(Mockito.anyLong());
 
-        StepVerifier.create(categoryService.remove(Mockito.anyLong())).verifyComplete();
+        verify(this.categoryRepository, times(1)).deleteById(Mockito.anyLong());
     }
 }

@@ -1,46 +1,36 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Dictionary;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
-import org.junit.jupiter.api.BeforeEach;
+import io.leafage.basic.hypervisor.vo.DictionaryVO;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
- * dictionary service test
+ * dictionary controller test
  *
- * @author liwenqiang 2022-04-8 7:45
+ * @author liwenqiang 2022-04-07 9:19
  **/
 @ExtendWith(MockitoExtension.class)
 class DictionaryServiceImplTest {
+
 
     @Mock
     private DictionaryRepository dictionaryRepository;
@@ -48,66 +38,60 @@ class DictionaryServiceImplTest {
     @InjectMocks
     private DictionaryServiceImpl dictionaryService;
 
-    private DictionaryDTO dictionaryDTO;
-
-    @BeforeEach
-    void init() {
-        dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setName("Gender");
-        dictionaryDTO.setDescription("描述");
-    }
-
     @Test
     void retrieve() {
-        given(this.dictionaryRepository.findByEnabledTrue(Mockito.any(PageRequest.class)))
-                .willReturn(Flux.just(Mockito.mock(Dictionary.class)));
+        Page<Dictionary> regions = new PageImpl<>(List.of(Mockito.mock(Dictionary.class)));
+        given(this.dictionaryRepository.findAll(PageRequest.of(0, 2))).willReturn(regions);
 
-        given(this.dictionaryRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
+        Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2);
 
-        StepVerifier.create(dictionaryService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test
     void fetch() {
-        given(this.dictionaryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
+        given(this.dictionaryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Dictionary.class)));
 
-        StepVerifier.create(dictionaryService.fetch(Mockito.anyLong())).expectNextCount(1).verifyComplete();
+        DictionaryVO dictionaryVO = dictionaryService.fetch(1L);
+
+        Assertions.assertNotNull(dictionaryVO);
     }
 
     @Test
-    void superior() {
-        given(this.dictionaryRepository.findBySuperiorIdIsNull()).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
+    void lower() {
+        given(this.dictionaryRepository.findBySuperiorIdAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Dictionary.class)));
 
-        StepVerifier.create(dictionaryService.superior()).expectNextCount(1).verifyComplete();
+        List<DictionaryVO> dictionaryVOS = dictionaryService.lower(1L);
+
+        Assertions.assertNotNull(dictionaryVOS);
     }
 
     @Test
-    void subordinates() {
-        given(this.dictionaryRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
+    void lower_empty() {
+        given(this.dictionaryRepository.findBySuperiorIdAndEnabledTrue(Mockito.anyLong())).willReturn(Collections.emptyList());
 
-        StepVerifier.create(dictionaryService.subordinates(Mockito.anyLong())).expectNextCount(1).verifyComplete();
-    }
+        List<DictionaryVO> dictionaryVOS = dictionaryService.lower(1L);
 
-    @Test
-    void create() {
-        given(this.dictionaryRepository.save(Mockito.any(Dictionary.class))).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
-
-        StepVerifier.create(dictionaryService.create(dictionaryDTO)).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void modify() {
-        given(this.dictionaryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
-
-        given(this.dictionaryRepository.save(Mockito.any(Dictionary.class))).willReturn(Mono.just(Mockito.mock(Dictionary.class)));
-
-        StepVerifier.create(dictionaryService.modify(Mockito.anyLong(), dictionaryDTO)).expectNextCount(1).verifyComplete();
+        Assertions.assertEquals(Collections.emptyList(), dictionaryVOS);
     }
 
     @Test
     void exist() {
-        given(this.dictionaryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.dictionaryRepository.existsByName(Mockito.anyString())).willReturn(true);
 
-        StepVerifier.create(dictionaryService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
+        boolean exist = dictionaryService.exist("性别");
+
+        Assertions.assertTrue(exist);
     }
+
+    @Test
+    void create() {
+        given(this.dictionaryRepository.saveAndFlush(Mockito.any(Dictionary.class))).willReturn(Mockito.mock(Dictionary.class));
+
+        DictionaryVO dictionaryVO = dictionaryService.create(Mockito.mock(DictionaryDTO.class));
+
+        verify(this.dictionaryRepository, times(1)).saveAndFlush(Mockito.any(Dictionary.class));
+        Assertions.assertNotNull(dictionaryVO);
+    }
+
 }

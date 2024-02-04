@@ -1,116 +1,114 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
+import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import top.leafage.common.TreeNode;
+import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * role service impl
+ * role service impl.
  *
- * @author liwenqiang 2018-09-27 14:20
+ * @author liwenqiang 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implements RoleService {
 
     private final RoleRepository roleRepository;
+    private final RoleMembersRepository roleMembersRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, RoleMembersRepository roleMembersRepository) {
         this.roleRepository = roleRepository;
+        this.roleMembersRepository = roleMembersRepository;
     }
 
     @Override
-    public Flux<RoleVO> retrieve() {
-        return roleRepository.findAll().flatMap(this::convertOuter);
+    public Page<RoleVO> retrieve(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+        return roleRepository.findAll(pageable).map(this::convertOuter);
+    }
+
+
+    @Override
+    public List<TreeNode> tree() {
+        List<Role> roles = roleRepository.findByEnabledTrue();
+        if (CollectionUtils.isEmpty(roles)) {
+            return Collections.emptyList();
+        }
+        return roles.stream().filter(role -> role.getSuperior() == null).map(r -> {
+            TreeNode treeNode = new TreeNode(r.getId(), r.getName());
+            treeNode.setChildren(this.convert(roles));
+            return treeNode;
+        }).toList();
     }
 
     @Override
-    public Mono<Page<RoleVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<RoleVO> voFlux = roleRepository.findBy(pageable).flatMap(this::convertOuter);
-
-        Mono<Long> count = roleRepository.count();
-
-        return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
+    public RoleVO fetch(Long id) {
+        Assert.notNull(id, "role id must not be null.");
+        Role role = roleRepository.findById(id).orElse(null);
+        if (role == null) {
+            return null;
+        }
+        return this.convertOuter(role);
     }
 
     @Override
-    public Mono<RoleVO> fetch(Long id) {
-        Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.findById(id).flatMap(this::convertOuter);
-    }
-
-    @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "role name must not be blank.");
-        return roleRepository.existsByName(name);
-    }
-
-    @Override
-    public Mono<RoleVO> create(RoleDTO roleDTO) {
+    public RoleVO create(RoleDTO roleDTO) {
         Role role = new Role();
         BeanUtils.copyProperties(roleDTO, role);
-        return roleRepository.save(role).flatMap(this::convertOuter);
+        role = roleRepository.saveAndFlush(role);
+        return this.convertOuter(role);
     }
 
     @Override
-    public Mono<RoleVO> modify(Long id, RoleDTO roleDTO) {
-        Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .doOnNext(role -> BeanUtils.copyProperties(roleDTO, role))
-                .flatMap(roleRepository::save)
-                .flatMap(this::convertOuter);
+    public RoleVO modify(Long id, RoleDTO roleDTO) {
+        Assert.notNull(id, "role id must not be null.");
+        Role role = roleRepository.findById(id).orElse(null);
+        if (role == null) {
+            throw new NoSuchElementException("当前操作数据不存在...");
+        }
+        BeanUtils.copyProperties(roleDTO, role);
+        role = roleRepository.save(role);
+        return this.convertOuter(role);
     }
 
     @Override
-    public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.deleteById(id);
+    public void remove(Long id) {
+        Assert.notNull(id, "role id must not be null.");
+        roleRepository.deleteById(id);
     }
 
     /**
-     * 对象转换为输出结果对象
+     * 转换对象
      *
-     * @param role 信息
-     * @return 输出转换后的vo对象
+     * @param info 基础对象
+     * @return 结果对象
      */
-    private Mono<RoleVO> convertOuter(Role role) {
-        return Mono.just(role).map(r -> {
-            RoleVO vo = new RoleVO();
-            BeanUtils.copyProperties(r, vo);
-            vo.setLastModifiedDate(r.getLastModifiedDate().orElse(null));
-            return vo;
-        });
+    private RoleVO convertOuter(Role info) {
+        RoleVO roleVO = new RoleVO();
+        BeanUtils.copyProperties(info, roleVO);
+        long count = roleMembersRepository.countByRoleIdAndEnabledTrue(info.getId());
+        roleVO.setCount(count);
+        return roleVO;
     }
 
 }

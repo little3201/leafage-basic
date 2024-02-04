@@ -8,9 +8,23 @@ spring:
   profiles:
     active: dev
 
-  web:
-    resources:
-      add-mappings: false
+  cloud:
+    consul:
+      discovery:
+        heartbeat:
+          enabled: true
+
+  jpa:
+    open-in-view: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8761
 
 management:
   endpoints:

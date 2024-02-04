@@ -1,55 +1,52 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.constants.StatisticsEnum;
 import io.leafage.basic.assets.domain.PostStatistics;
-import io.leafage.basic.assets.repository.StatisticsRepository;
+import io.leafage.basic.assets.dto.PostStatisticsDTO;
+import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.PostStatisticsService;
+import io.leafage.basic.assets.vo.PostStatisticsVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-import reactor.core.publisher.Mono;
 
 /**
- * statistics service impl
+ * statistics service impl.
  *
- * @author liwenqiang 2021-05-19 10:54
+ * @author liwenqiang 2021/09/29 15:30
  **/
 @Service
 public class PostStatisticsServiceImpl implements PostStatisticsService {
 
-    private final StatisticsRepository statisticsRepository;
+    private final PostStatisticsRepository postStatisticsRepository;
 
-    public PostStatisticsServiceImpl(StatisticsRepository statisticsRepository) {
-        this.statisticsRepository = statisticsRepository;
+    public PostStatisticsServiceImpl(PostStatisticsRepository postStatisticsRepository) {
+        this.postStatisticsRepository = postStatisticsRepository;
     }
 
     @Override
-    public Mono<PostStatistics> increase(Long postId, StatisticsEnum statisticsEnum) {
-        Assert.notNull(postId, "postId must not be null.");
-        return statisticsRepository.getByPostId(postId).flatMap(postStatistics -> {
-            switch (statisticsEnum) {
-                case LIKES -> postStatistics.setLikes(postStatistics.getLikes() + 1);
-                case COMMENTS -> postStatistics.setComments(postStatistics.getComments() + 1);
-                case VIEWED -> postStatistics.setViewed(postStatistics.getViewed() + 1);
-            }
-            return statisticsRepository.save(postStatistics);
-        });
+    public Page<PostStatisticsVO> retrieve(int page, int size) {
+        return postStatisticsRepository.findAll(PageRequest.of(page, size)).map(this::convertOuter);
+    }
+
+    @Override
+    public PostStatisticsVO create(PostStatisticsDTO postStatisticsDTO) {
+        PostStatistics postStatistics = new PostStatistics();
+        BeanUtils.copyProperties(postStatisticsDTO, postStatistics);
+        postStatistics = postStatisticsRepository.saveAndFlush(postStatistics);
+        return this.convertOuter(postStatistics);
+    }
+
+    /**
+     * 对象转换为输出结果对象
+     *
+     * @param postStatistics 信息
+     * @return 输出转换后的vo对象
+     */
+    private PostStatisticsVO convertOuter(PostStatistics postStatistics) {
+        PostStatisticsVO vo = new PostStatisticsVO();
+        BeanUtils.copyProperties(postStatistics, vo);
+        return vo;
     }
 
 }

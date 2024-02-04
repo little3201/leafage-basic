@@ -1,20 +1,3 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Dictionary;
@@ -24,24 +7,20 @@ import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
+import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
-import java.util.NoSuchElementException;
+import java.util.List;
 
 /**
- * dictionary service impl
+ * dictionary service impl.
  *
- * @author liwenqiang 2022-03-30 07:34
+ * @author liwenqiang 2022-04-06 17:38
  **/
 @Service
-public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dictionary> implements DictionaryService {
+public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictionary> implements DictionaryService {
 
     private final DictionaryRepository dictionaryRepository;
 
@@ -50,61 +29,51 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     }
 
     @Override
-    public Mono<Page<DictionaryVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
-
-        Mono<Long> count = dictionaryRepository.count();
-
-        return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
+    public Page<DictionaryVO> retrieve(int page, int size) {
+        return dictionaryRepository.findAll(PageRequest.of(page, size)).map(this::convert);
     }
 
     @Override
-    public Flux<DictionaryVO> superior() {
-        return dictionaryRepository.findBySuperiorIdIsNull().flatMap(this::convertOuter);
-    }
-
-    @Override
-    public Flux<DictionaryVO> subordinates(Long id) {
+    public DictionaryVO fetch(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findBySuperiorId(id).flatMap(this::convertOuter);
+        Dictionary dictionary = dictionaryRepository.findById(id).orElse(null);
+        if (dictionary == null) {
+            return null;
+        }
+        return this.convert(dictionary);
     }
 
     @Override
-    public Mono<DictionaryVO> fetch(Long id) {
+    public List<DictionaryVO> lower(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findById(id).flatMap(this::convertOuter);
+        return dictionaryRepository.findBySuperiorIdAndEnabledTrue(id)
+                .stream().map(this::convert).toList();
     }
 
     @Override
-    public Mono<Boolean> exist(String name) {
+    public boolean exist(String name) {
         Assert.hasText(name, "dictionary name must not be blank.");
         return dictionaryRepository.existsByName(name);
     }
 
     @Override
-    public Mono<DictionaryVO> create(DictionaryDTO dictionaryDTO) {
+    public DictionaryVO create(DictionaryDTO dictionaryDTO) {
         Dictionary dictionary = new Dictionary();
         BeanUtils.copyProperties(dictionaryDTO, dictionary);
-        return dictionaryRepository.save(dictionary).flatMap(this::convertOuter);
+        dictionaryRepository.saveAndFlush(dictionary);
+
+        return this.convert(dictionary);
     }
 
-    @Override
-    public Mono<DictionaryVO> modify(Long id, DictionaryDTO dictionaryDTO) {
-        Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .doOnNext(dictionary -> BeanUtils.copyProperties(dictionaryDTO, dictionary))
-                .flatMap(dictionaryRepository::save)
-                .flatMap(this::convertOuter);
-    }
-
-    private Mono<DictionaryVO> convertOuter(Dictionary dictionary) {
-        return Mono.just(dictionary).map(d -> {
-            DictionaryVO vo = new DictionaryVO();
-            BeanUtils.copyProperties(d, vo);
-            vo.setLastModifiedDate(d.getLastModifiedDate().orElse(null));
-            return vo;
-        });
+    /**
+     * 类型转换
+     *
+     * @param dictionary 信息
+     * @return DictionaryVO 输出对象
+     */
+    private DictionaryVO convert(Dictionary dictionary) {
+        DictionaryVO vo = new DictionaryVO();
+        BeanUtils.copyProperties(dictionary, vo);
+        return vo;
     }
 }

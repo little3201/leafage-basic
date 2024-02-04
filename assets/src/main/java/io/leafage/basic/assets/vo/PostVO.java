@@ -1,55 +1,69 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.assets.vo;
 
-import io.leafage.basic.assets.bo.PostBO;
-
-import java.time.Instant;
+import java.util.Set;
 
 /**
- * vo class for post
+ * vo class for posts.
  *
- * @author liwenqiang 2020-10-06 22:09
- */
-public class PostVO extends PostBO {
+ * @author liwenqiang  2019-03-03 22:59
+ **/
+public class PostVO {
 
     /**
-     * 主键
+     * 标题
      */
-    private Long id;
-
+    private String title;
     /**
-     * category
+     * 封面
+     */
+    private String cover;
+    /**
+     * 标签
+     */
+    private Set<String> tags;
+    /**
+     * 分类
      */
     private String category;
-
     /**
-     * 最后更新时间
+     * 点赞
      */
-    private Instant lastModifiedDate;
+    private int likes;
+    /**
+     * 查看
+     */
+    private int viewed;
+    /**
+     * 评论
+     */
+    private int comments;
 
 
-    public Long getId() {
-        return id;
+    public String getTitle() {
+        return title;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
     }
 
     public String getCategory() {
@@ -60,11 +74,27 @@ public class PostVO extends PostBO {
         this.category = category;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getViewed() {
+        return viewed;
+    }
+
+    public void setViewed(int viewed) {
+        this.viewed = viewed;
+    }
+
+    public int getComments() {
+        return comments;
+    }
+
+    public void setComments(int comments) {
+        this.comments = comments;
     }
 }

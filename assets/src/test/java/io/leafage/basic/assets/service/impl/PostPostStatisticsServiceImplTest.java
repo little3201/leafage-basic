@@ -1,81 +1,79 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.constants.StatisticsEnum;
 import io.leafage.basic.assets.domain.PostStatistics;
-import io.leafage.basic.assets.repository.StatisticsRepository;
+import io.leafage.basic.assets.dto.PostStatisticsDTO;
+import io.leafage.basic.assets.repository.PostStatisticsRepository;
+import io.leafage.basic.assets.vo.PostStatisticsVO;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
- * statistics service test
+ * statistics 接口测试
  *
- * @author liwenqiang 2021-05-22 20:50
- */
+ * @author liwenqiang 2021/12/7 17:55
+ **/
 @ExtendWith(MockitoExtension.class)
 class PostPostStatisticsServiceImplTest {
 
     @Mock
-    private StatisticsRepository statisticsRepository;
+    private PostStatisticsRepository postStatisticsRepository;
 
     @InjectMocks
     private PostStatisticsServiceImpl statisticsService;
 
+    private PostStatisticsDTO postStatisticsDTO;
+
+    @BeforeEach
+    void init() {
+        postStatisticsDTO = new PostStatisticsDTO();
+        postStatisticsDTO.setPostId(1L);
+        postStatisticsDTO.setComments(23);
+        postStatisticsDTO.setLikes(213);
+        postStatisticsDTO.setViewed(2542);
+    }
+
 
     @Test
-    void increase_view() {
-        given(this.statisticsRepository.getByPostId(Mockito.anyLong()))
-                .willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
+    void retrieve() {
+        Pageable pageable = PageRequest.of(0, 2);
+        Page<PostStatistics> page = new PageImpl<>(List.of(Mockito.mock(PostStatistics.class)), pageable, 2L);
+        given(this.postStatisticsRepository.findAll(PageRequest.of(0, 2))).willReturn(page);
 
-        given(this.statisticsRepository.save(Mockito.any(PostStatistics.class))).willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
-
-        StepVerifier.create(statisticsService.increase(Mockito.anyLong(), StatisticsEnum.VIEWED))
-                .expectNextCount(1).verifyComplete();
+        Page<PostStatisticsVO> voPage = statisticsService.retrieve(0, 2);
+        Assertions.assertNotNull(voPage.getContent());
     }
 
     @Test
-    void increase_likes() {
-        given(this.statisticsRepository.getByPostId(Mockito.anyLong()))
-                .willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
+    void create() {
+        given(this.postStatisticsRepository.saveAndFlush(Mockito.any(PostStatistics.class))).willReturn(Mockito.mock(PostStatistics.class));
 
-        given(this.statisticsRepository.save(Mockito.any(PostStatistics.class))).willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
+        PostStatisticsVO vo = statisticsService.create(postStatisticsDTO);
 
-        StepVerifier.create(statisticsService.increase(Mockito.anyLong(), StatisticsEnum.LIKES))
-                .expectNextCount(1).verifyComplete();
+        verify(this.postStatisticsRepository, times(1)).saveAndFlush(Mockito.any(PostStatistics.class));
+        Assertions.assertNotNull(vo);
     }
 
     @Test
-    void increase_comments() {
-        given(this.statisticsRepository.getByPostId(Mockito.anyLong()))
-                .willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
+    void create_zero() {
+        given(this.postStatisticsRepository.saveAndFlush(Mockito.any(PostStatistics.class))).willReturn(Mockito.mock(PostStatistics.class));
 
-        given(this.statisticsRepository.save(Mockito.any(PostStatistics.class))).willReturn(Mono.just(Mockito.mock(PostStatistics.class)));
-
-        StepVerifier.create(statisticsService.increase(Mockito.anyLong(), StatisticsEnum.COMMENTS))
-                .expectNextCount(1).verifyComplete();
+        PostStatisticsVO vo = statisticsService.create(postStatisticsDTO);
+        Assertions.assertNotNull(vo);
     }
 }

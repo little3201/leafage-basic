@@ -1,202 +1,203 @@
-/*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
- */
-
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.domain.GroupMembers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupMembersService;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Mono;
+import org.springframework.test.web.servlet.MockMvc;
+import top.leafage.common.TreeNode;
 
-import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * group接口测试类
+ * group controller test
  *
- * @author liwenqiang 2021-06-19 10:00
- */
+ * @author liwenqiang 2019/9/14 21:52
+ **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(GroupController.class)
+@WebMvcTest(GroupController.class)
 class GroupControllerTest {
 
     @Autowired
-    private WebTestClient webTestClient;
+    private MockMvc mvc;
 
-    @MockBean
-    private GroupMembersService groupMembersService;
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private GroupService groupService;
 
-    private GroupDTO groupDTO;
+    @MockBean
+    private GroupMembersService groupMembersService;
+
     private GroupVO groupVO;
-    private GroupMembers groupMembers;
+
+    private GroupDTO groupDTO;
 
     @BeforeEach
     void init() {
         groupVO = new GroupVO();
         groupVO.setName("test");
+        groupVO.setAlias("alias");
         groupVO.setPrincipal("test");
-        groupVO.setSuperior("test");
-        groupVO.setLastModifiedDate(Instant.now());
+        groupVO.setSuperior("superior");
+        groupVO.setCount(2L);
 
         groupDTO = new GroupDTO();
         groupDTO.setName("test");
-        groupDTO.setPrincipal("Test");
-        groupDTO.setDescription("group");
-
-        groupMembers = new GroupMembers();
-        groupMembers.setGroupId(1L);
-        groupMembers.setUsername("test");
+        groupDTO.setSuperiorId(1L);
+        groupDTO.setPrincipal("test");
+        groupDTO.setDescription("描述");
     }
 
     @Test
-    void retrieve() {
-        Pageable pageable = PageRequest.of(0, 2);
-        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), pageable, 1L);
-        given(this.groupService.retrieve(0, 2)).willReturn(Mono.just(voPage));
+    void retrieve() throws Exception {
+        Pageable pageable = PageRequest.of(0,2);
+        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), pageable, 2L);
+        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)
-                        .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(RoleVO.class);
+        mvc.perform(get("/groups").queryParam("page", "0").queryParam("size", "2")
+                        .queryParam("sort", "id")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
     @Test
-    void retrieve_error() {
-        given(this.groupService.retrieve(0, 2)).willThrow(new RuntimeException());
+    void retrieve_error() throws Exception {
+        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
+        mvc.perform(get("/groups").queryParam("page", "0").queryParam("size", "2")
+                .queryParam("sort", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
-    void fetch() {
-        given(this.groupService.fetch(Mockito.anyLong())).willReturn(Mono.just(groupVO));
+    void fetch() throws Exception {
+        given(this.groupService.fetch(Mockito.anyLong())).willReturn(groupVO);
 
-        webTestClient.get().uri("/groups/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
+        mvc.perform(get("/groups/{id}", Mockito.anyLong())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
-    void fetch_error() {
+    void fetch_error() throws Exception {
         given(this.groupService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/groups/{id}", 1L).exchange().expectStatus().isNoContent();
+        mvc.perform(get("/groups/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void exist() {
-        given(this.groupService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void create() throws Exception {
+        given(this.groupService.create(Mockito.any(GroupDTO.class))).willReturn(groupVO);
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
-                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
+        mvc.perform(post("/groups").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("test"))
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void exist_error() {
-        given(this.groupService.exist(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
-                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void create() {
-        given(this.groupService.create(Mockito.any(GroupDTO.class))).willReturn(Mono.just(groupVO));
-
-        webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
-                .expectStatus().isCreated()
-                .expectBody().jsonPath("$.name").isEqualTo("test");
-    }
-
-    @Test
-    void create_error() {
+    void create_error() throws Exception {
         given(this.groupService.create(Mockito.any(GroupDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/groups").bodyValue(groupDTO).exchange()
-                .expectStatus().is4xxClientError();
+        mvc.perform(post("/groups").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void modify() {
-        given(this.groupService.modify(Mockito.anyLong(), Mockito.any(GroupDTO.class))).willReturn(Mono.just(groupVO));
+    void modify() throws Exception {
+        given(this.groupService.modify(Mockito.anyLong(), Mockito.any(GroupDTO.class))).willReturn(groupVO);
 
-        webTestClient.put().uri("/groups/{id}", 1L).bodyValue(groupDTO).exchange()
-                .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.name").isEqualTo("test");
+        mvc.perform(put("/groups/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
+                .andExpect(status().isAccepted())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void modify_error() {
+    void modify_error() throws Exception {
         given(this.groupService.modify(Mockito.anyLong(), Mockito.any(GroupDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/groups/{id}", 1L).bodyValue(groupDTO).exchange()
-                .expectStatus().isNotModified();
+        mvc.perform(put("/groups/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
+                .andExpect(status().isNotModified())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void remove() {
-        given(this.groupService.remove(Mockito.anyLong())).willReturn(Mono.empty());
+    void remove() throws Exception {
+        this.groupService.remove(Mockito.anyLong());
 
-        webTestClient.delete().uri("/groups/{id}", 1L).exchange()
-                .expectStatus().isOk();
+        mvc.perform(delete("/groups/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isOk())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void remove_error() {
-        given(this.groupService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
+    void remove_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.groupService).remove(Mockito.anyLong());
 
-        webTestClient.delete().uri("/groups/{id}", 1L).exchange()
-                .expectStatus().is4xxClientError();
+        mvc.perform(delete("/groups/{id}", Mockito.anyLong()).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void members() {
-        given(this.groupMembersService.members(Mockito.anyLong())).willReturn(Mono.just(List.of(groupMembers)));
+    void members() throws Exception {
+        given(this.groupMembersService.members(Mockito.anyLong())).willReturn(Mockito.anyList());
 
-        webTestClient.get().uri("/groups/{id}/members", 1L).exchange()
-                .expectStatus().isOk()
-                .expectBodyList(GroupMembers.class);
+        mvc.perform(get("/groups/{id}/members", 1L)).andExpect(status().isOk())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void members_error() {
-        given(this.groupMembersService.members(Mockito.anyLong())).willThrow(new RuntimeException());
+    void members_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.groupMembersService).members(Mockito.anyLong());
 
-        webTestClient.get().uri("/groups/{id}/members", 1L).exchange()
-                .expectStatus().isNoContent();
+        mvc.perform(get("/groups/{id}/members", Mockito.anyLong())).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void tree() throws Exception {
+        TreeNode treeNode = new TreeNode(1L, "test");
+        given(this.groupService.tree()).willReturn(Collections.singletonList(treeNode));
+
+        mvc.perform(get("/groups/tree")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void tree_error() throws Exception {
+        given(this.groupService.tree()).willThrow(new RuntimeException());
+
+        mvc.perform(get("/groups/tree")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
     }
 }

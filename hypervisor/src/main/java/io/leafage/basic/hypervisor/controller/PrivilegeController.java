@@ -1,20 +1,6 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
@@ -28,19 +14,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 import top.leafage.common.TreeNode;
 
 import java.util.List;
 
 /**
- * privilege controller
+ * privilege controller.
  *
- * @author liwenqiang 2023-03-26 15:01
+ * @author liwenqiang 2018/12/17 19:39
  **/
-@Validated
 @RestController
 @RequestMapping("/privileges")
 public class PrivilegeController {
@@ -60,108 +43,108 @@ public class PrivilegeController {
      *
      * @param page 页码
      * @param size 大小
-     * @return 查询的数据集，异常时返回204状态码
+     * @param sort 排序字段
+     * @return 查询到的数据，否则返回空
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<PrivilegeVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Mono<Page<PrivilegeVO>> pageMono;
+    public ResponseEntity<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+        Page<PrivilegeVO> voPage;
         try {
-            pageMono = privilegeService.retrieve(page, size);
+            voPage = privilegeService.retrieve(page, size, sort);
         } catch (Exception e) {
-            logger.error("Retrieve privilege occurred an error: ", e);
+            logger.info("Retrieve privilege occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(pageMono);
+        return ResponseEntity.ok(voPage);
     }
 
     /**
-     * 树形查询
+     * 查询树形数据
      *
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")
-    public ResponseEntity<Mono<List<TreeNode>>> tree() {
-        Mono<List<TreeNode>> authorities;
+    public ResponseEntity<List<TreeNode>> tree() {
+        List<TreeNode> treeNodes;
         try {
-            authorities = privilegeService.tree();
+            treeNodes = privilegeService.tree();
         } catch (Exception e) {
-            logger.info("Retrieve privileges occurred an error: ", e);
+            logger.info("Retrieve privilege tree occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(authorities);
+        return ResponseEntity.ok(treeNodes);
     }
 
     /**
-     * 根据 id 查询信息
+     * 查询信息
      *
      * @param id 主键
-     * @return 查询的数据，异常时返回204状态码
+     * @return 查询到的信息，否则返回204状态码
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Mono<PrivilegeVO>> fetch(@PathVariable Long id) {
-        Mono<PrivilegeVO> voMono;
+    public ResponseEntity<PrivilegeVO> fetch(@PathVariable Long id) {
+        PrivilegeVO privilegeVO;
         try {
-            voMono = privilegeService.fetch(id);
+            privilegeVO = privilegeService.fetch(id);
         } catch (Exception e) {
-            logger.error("Fetch privilege occurred an error: ", e);
+            logger.info("Fetch privilege occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voMono);
+        return ResponseEntity.ok(privilegeVO);
     }
 
     /**
-     * 是否已存在
-     *
-     * @param name 名称
-     * @return true-是，false-否
-     */
-    @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
-        Mono<Boolean> existsMono;
-        try {
-            existsMono = privilegeService.exist(name);
-        } catch (Exception e) {
-            logger.error("Check privilege is exist an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok().body(existsMono);
-    }
-
-    /**
-     * 添加
+     * 添加信息
      *
      * @param privilegeDTO 要添加的数据
-     * @return 添加后的信息，异常时返回417状态码
+     * @return 添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<PrivilegeVO>> create(@RequestBody @Valid PrivilegeDTO privilegeDTO) {
-        Mono<PrivilegeVO> voMono;
+    public ResponseEntity<PrivilegeVO> create(@RequestBody @Valid PrivilegeDTO privilegeDTO) {
+        PrivilegeVO privilegeVO;
         try {
-            voMono = privilegeService.create(privilegeDTO);
+            privilegeVO = privilegeService.create(privilegeDTO);
         } catch (Exception e) {
             logger.error("Create privilege occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
+        return ResponseEntity.status(HttpStatus.CREATED).body(privilegeVO);
     }
 
     /**
-     * 修改
+     * 修改信息
      *
      * @param id           主键
-     * @param privilegeDTO 要修改的数据
-     * @return 修改后的信息，异常时返回304状态码
+     * @param privilegeDTO 要添加的数据
+     * @return 编辑后的信息，否则返回417状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Mono<PrivilegeVO>> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO privilegeDTO) {
-        Mono<PrivilegeVO> voMono;
+    public ResponseEntity<PrivilegeVO> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO privilegeDTO) {
+        PrivilegeVO privilegeVO;
         try {
-            voMono = privilegeService.modify(id, privilegeDTO);
+            privilegeVO = privilegeService.modify(id, privilegeDTO);
         } catch (Exception e) {
             logger.error("Modify privilege occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.accepted().body(voMono);
+        return ResponseEntity.accepted().body(privilegeVO);
+    }
+
+    /**
+     * 删除信息
+     *
+     * @param id 主键
+     * @return 200状态码，否则返回417状态码
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
+        try {
+            privilegeService.remove(id);
+        } catch (Exception e) {
+            logger.error("Remove privilege occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -171,15 +154,16 @@ public class PrivilegeController {
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{id}/roles")
-    public ResponseEntity<Mono<List<RolePrivileges>>> roles(@PathVariable Long id) {
-        Mono<List<RolePrivileges>> listMono;
+    public ResponseEntity<List<RolePrivileges>> roles(@PathVariable Long id) {
+        List<RolePrivileges> voList;
         try {
-            listMono = rolePrivilegesService.roles(id);
+            voList = rolePrivilegesService.roles(id);
         } catch (Exception e) {
-            logger.error("Retrieve group users occurred an error: ", e);
+            logger.error("Retrieve privilege roles occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(listMono);
+        return ResponseEntity.ok(voList);
     }
+
 
 }

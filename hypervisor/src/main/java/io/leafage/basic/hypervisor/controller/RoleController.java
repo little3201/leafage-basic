@@ -1,20 +1,6 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.domain.RoleMembers;
@@ -30,19 +16,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
+import top.leafage.common.TreeNode;
 
 import java.util.List;
 import java.util.Set;
 
 /**
- * role controller
+ * role controller.
  *
  * @author liwenqiang 2018/12/17 19:38
  **/
-@Validated
 @RestController
 @RequestMapping("/roles")
 public class RoleController {
@@ -53,8 +37,7 @@ public class RoleController {
     private final RoleService roleService;
     private final RolePrivilegesService rolePrivilegesService;
 
-    public RoleController(RoleMembersService roleMembersService, RoleService roleService,
-                          RolePrivilegesService rolePrivilegesService) {
+    public RoleController(RoleMembersService roleMembersService, RoleService roleService, RolePrivilegesService rolePrivilegesService) {
         this.roleMembersService = roleMembersService;
         this.roleService = roleService;
         this.rolePrivilegesService = rolePrivilegesService;
@@ -65,72 +48,72 @@ public class RoleController {
      *
      * @param page 页码
      * @param size 大小
-     * @return 查询的数据集，异常时返回204状态码
+     * @param sort 排序字段
+     * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<RoleVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
-        Mono<Page<RoleVO>> pageMono;
+    public ResponseEntity<Page<RoleVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+        Page<RoleVO> voPage;
         try {
-            pageMono = roleService.retrieve(page, size);
+            voPage = roleService.retrieve(page, size, sort);
         } catch (Exception e) {
-            logger.error("Retrieve roles occurred an error: ", e);
+            logger.info("Retrieve role occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(pageMono);
+        return ResponseEntity.ok(voPage);
     }
 
     /**
-     * 根据 id 查询信息
+     * 查询树形数据
+     *
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("/tree")
+    public ResponseEntity<List<TreeNode>> tree() {
+        List<TreeNode> treeNodes;
+        try {
+            treeNodes = roleService.tree();
+        } catch (Exception e) {
+            logger.info("Retrieve role tree occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(treeNodes);
+    }
+
+    /**
+     * 查询信息
      *
      * @param id 主键
-     * @return 查询的数据集，异常时返回204状态码
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Mono<RoleVO>> fetch(@PathVariable Long id) {
-        Mono<RoleVO> voMono;
+    public ResponseEntity<RoleVO> fetch(@PathVariable Long id) {
+        RoleVO roleVO;
         try {
-            voMono = roleService.fetch(id);
+            roleVO = roleService.fetch(id);
         } catch (Exception e) {
-            logger.error("Fetch role occurred an error: ", e);
+            logger.info("Fetch role occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(voMono);
-    }
-
-    /**
-     * 是否已存在
-     *
-     * @param name 名称
-     * @return true-是，false-否
-     */
-    @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
-        Mono<Boolean> existsMono;
-        try {
-            existsMono = roleService.exist(name);
-        } catch (Exception e) {
-            logger.error("Check role is exist an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok().body(existsMono);
+        return ResponseEntity.ok(roleVO);
     }
 
     /**
      * 添加信息
      *
      * @param roleDTO 要添加的数据
-     * @return 添加后的信息，否则返回417状态码
+     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<Mono<RoleVO>> create(@RequestBody @Valid RoleDTO roleDTO) {
-        Mono<RoleVO> voMono;
+    public ResponseEntity<RoleVO> create(@RequestBody @Valid RoleDTO roleDTO) {
+        RoleVO roleVO;
         try {
-            voMono = roleService.create(roleDTO);
+            roleVO = roleService.create(roleDTO);
         } catch (Exception e) {
             logger.error("Create role occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(voMono);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roleVO);
     }
 
     /**
@@ -138,73 +121,90 @@ public class RoleController {
      *
      * @param id      主键
      * @param roleDTO 要修改的数据
-     * @return 修改后的信息，否则返回304状态码
+     * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Mono<RoleVO>> modify(@PathVariable Long id, @RequestBody @Valid RoleDTO roleDTO) {
-        Mono<RoleVO> voMono;
+    public ResponseEntity<RoleVO> modify(@PathVariable Long id, @RequestBody @Valid RoleDTO roleDTO) {
+        RoleVO roleVO;
         try {
-            voMono = roleService.modify(id, roleDTO);
+            roleVO = roleService.modify(id, roleDTO);
         } catch (Exception e) {
             logger.error("Modify role occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
-        return ResponseEntity.accepted().body(voMono);
+        return ResponseEntity.accepted().body(roleVO);
     }
 
     /**
-     * 查询关联user
+     * 删除信息
+     *
+     * @param id 主键
+     * @return 如果删除成功，返回200状态码，否则返回417状态码
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
+        try {
+            roleService.remove(id);
+        } catch (Exception e) {
+            logger.error("Remove role occurred an error: ", e);
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 根据id查询关联用户信息
      *
      * @param id roleid
      * @return 查询到的数据集，异常时返回204状态码
      */
     @GetMapping("/{id}/members")
-    public ResponseEntity<Mono<List<RoleMembers>>> members(@PathVariable Long id) {
-        Mono<List<RoleMembers>> listMono;
+    public ResponseEntity<List<RoleMembers>> members(@PathVariable Long id) {
+        List<RoleMembers> voList;
         try {
-            listMono = roleMembersService.members(id);
+            voList = roleMembersService.members(id);
         } catch (Exception e) {
             logger.error("Retrieve role members occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(listMono);
+        return ResponseEntity.ok(voList);
     }
 
     /**
-     * 查询关联组件
+     * 查询role-privilege关联
      *
-     * @param id role主键
+     * @param id role代码
      * @return 操作结果
      */
     @GetMapping("/{id}/privileges")
-    public ResponseEntity<Mono<List<RolePrivileges>>> privileges(@PathVariable Long id) {
-        Mono<List<RolePrivileges>> listMono;
+    public ResponseEntity<List<RolePrivileges>> privileges(@PathVariable Long id) {
+        List<RolePrivileges> voList;
         try {
-            listMono = rolePrivilegesService.privileges(id);
+            voList = rolePrivilegesService.privileges(id);
         } catch (Exception e) {
-            logger.error("Retrieve role privileges occurred an error: ", e);
+            logger.error("Relation role privileges occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(listMono);
+        return ResponseEntity.ok(voList);
     }
 
     /**
-     * 关联
+     * 保存role-privilege关联
      *
-     * @param id           role主键
-     * @param privilegeIds privilege主键集合
+     * @param id         role主键
+     * @param privileges privilege信息
      * @return 操作结果
      */
     @PatchMapping("/{id}/privileges")
-    public ResponseEntity<Mono<Boolean>> relation(@PathVariable Long id, @RequestBody Set<Long> privilegeIds) {
-        Mono<Boolean> voMono;
+    public ResponseEntity<List<RolePrivileges>> relation(@PathVariable Long id, @RequestBody Set<Long> privileges) {
+        List<RolePrivileges> voList;
         try {
-            voMono = rolePrivilegesService.relation(id, privilegeIds);
+            voList = rolePrivilegesService.relation(id, privileges);
         } catch (Exception e) {
             logger.error("Relation role privileges occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.accepted().body(voMono);
+        return ResponseEntity.accepted().body(voList);
     }
 
 }

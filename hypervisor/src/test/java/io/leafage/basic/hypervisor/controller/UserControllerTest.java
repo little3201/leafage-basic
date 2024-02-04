@@ -1,22 +1,9 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.hypervisor.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
@@ -25,123 +12,93 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Mono;
-
-import java.time.Instant;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * user接口测试类
+ * user controller test
  *
- * @author liwenqiang 2020-03-01 22:07
- */
+ * @author liwenqiang 2019/1/29 17:09
+ **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(UserController.class)
+@WebMvcTest(UserController.class)
 class UserControllerTest {
+
+    @Autowired
+    private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private UserService userService;
 
-    @Autowired
-    private WebTestClient webTestClient;
+    private UserVO userVO;
 
     private UserDTO userDTO;
-    private UserVO userVO;
 
     @BeforeEach
     void init() {
-        userDTO = new UserDTO();
-        userDTO.setUsername("test");
-        userDTO.setAvatar("avatar.jpg");
-        userDTO.setFirstname("john");
-        userDTO.setLastname("steven");
-        userDTO.setAccountExpiresAt(Instant.now());
-        userDTO.setCredentialsExpiresAt(Instant.now());
-
         userVO = new UserVO();
         userVO.setUsername("test");
-        userVO.setAccountExpiresAt(Instant.now());
         userVO.setFirstname("john");
         userVO.setLastname("steven");
-        userVO.setLastModifiedDate(Instant.now());
+        userVO.setDescription("description");
+
+        userDTO = new UserDTO();
+        userDTO.setUsername("test");
+        userDTO.setFirstname("john");
+        userDTO.setLastname("steven");
+        userDTO.setDescription("description");
     }
 
     @Test
-    void fetch() {
-        given(this.userService.fetch(Mockito.anyLong())).willReturn(Mono.just(userVO));
+    void fetch() throws Exception {
+        given(this.userService.fetch(Mockito.anyLong())).willReturn(userVO);
 
-        webTestClient.get().uri("/users/{id}", 1L).exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.username").isEqualTo("test");
+        mvc.perform(get("/users/{id}", Mockito.anyLong())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstname").value("john")).andDo(print()).andReturn();
     }
 
     @Test
-    void fetch_error() {
+    void fetch_error() throws Exception {
         given(this.userService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/users/{id}", 1L).exchange()
-                .expectStatus().isNoContent();
+        mvc.perform(get("/users/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void exist() {
-        given(this.userService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void modify() throws Exception {
+        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(userVO);
 
-        webTestClient.get().uri("/users/{username}/exist", "test").exchange().expectStatus().isOk();
+        mvc.perform(put("/users/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
+                .andExpect(status().isAccepted())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void exist_error() {
-        given(this.userService.exist(Mockito.anyString())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/users/{username}/exist", "test").exchange().expectStatus().isNoContent();
-    }
-
-    @Test
-    void created() {
-        given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
-
-        webTestClient.post().uri("/users").bodyValue(userDTO).exchange()
-                .expectStatus().isCreated()
-                .expectBody().jsonPath("$.username").isEqualTo("test");
-    }
-
-    @Test
-    void modify() {
-        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(Mono.just(userVO));
-
-        webTestClient.put().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
-                .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.username").isEqualTo("test");
-    }
-
-    @Test
-    void modify_error() {
+    void modify_error() throws Exception {
         given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/users/{id}", 1L).bodyValue(userDTO).exchange()
-                .expectStatus().isNotModified();
-    }
-
-    @Test
-    void remove() {
-        given(this.userService.remove(Mockito.anyLong())).willReturn(Mono.empty());
-
-        webTestClient.delete().uri("/users/{id}", 1L).exchange()
-                .expectStatus().isOk();
-    }
-
-    @Test
-    void remove_error() {
-        given(this.userService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
-
-        webTestClient.delete().uri("/users/{id}", 1L).exchange()
-                .expectStatus().is4xxClientError();
+        mvc.perform(put("/users/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
+                .andExpect(status().isNotModified())
+                .andDo(print()).andReturn();
     }
 
 }

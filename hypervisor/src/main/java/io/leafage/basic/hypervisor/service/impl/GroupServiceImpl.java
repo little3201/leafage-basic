@@ -1,115 +1,102 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Group;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
+import io.leafage.basic.hypervisor.repository.GroupMembersRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import top.leafage.common.TreeNode;
+import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * group service impl
+ * group service impl.
  *
  * @author liwenqiang 2018/12/17 19:25
  **/
 @Service
-public class GroupServiceImpl implements GroupService {
+public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> implements GroupService {
 
     private final GroupRepository groupRepository;
+    private final GroupMembersRepository groupMembersRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupMembersRepository groupMembersRepository) {
         this.groupRepository = groupRepository;
+        this.groupMembersRepository = groupMembersRepository;
     }
 
     @Override
-    public Flux<GroupVO> retrieve() {
-        return groupRepository.findAll().flatMap(this::convertOuter)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
+    public Page<GroupVO> retrieve(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+        return groupRepository.findAll(pageable).map(this::convertOuter);
     }
 
     @Override
-    public Mono<Page<GroupVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<GroupVO> voFlux = groupRepository.findBy(pageable).flatMap(this::convertOuter);
-
-        Mono<Long> count = groupRepository.count();
-
-        return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
+    public List<TreeNode> tree() {
+        List<Group> groups = groupRepository.findByEnabledTrue();
+        if (!CollectionUtils.isEmpty(groups)) {
+            return groups.stream().filter(g -> g.getSuperiorId() == null).map(g -> {
+                TreeNode treeNode = new TreeNode(g.getId(), g.getName());
+                treeNode.setChildren(this.convert(groups));
+                return treeNode;
+            }).toList();
+        }
+        return Collections.emptyList();
     }
 
     @Override
-    public Mono<GroupVO> fetch(Long id) {
-        Assert.notNull(id, "group id must not be null.");
-        return groupRepository.findById(id).flatMap(this::convertOuter);
-    }
-
-    @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "group name must not be blank.");
-        return groupRepository.existsByName(name);
-    }
-
-    @Override
-    public Mono<GroupVO> create(GroupDTO groupDTO) {
+    public GroupVO create(GroupDTO groupDTO) {
         Group group = new Group();
         BeanUtils.copyProperties(groupDTO, group);
-        return groupRepository.save(group).flatMap(this::convertOuter);
+        group = groupRepository.saveAndFlush(group);
+        return this.convertOuter(group);
     }
 
     @Override
-    public Mono<GroupVO> modify(Long id, GroupDTO groupDTO) {
+    public GroupVO modify(Long id, GroupDTO groupDTO) {
         Assert.notNull(id, "group id must not be null.");
-        return groupRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
-                .flatMap(groupRepository::save)
-                .flatMap(this::convertOuter);
+        Group group = groupRepository.findById(id).orElse(null);
+        if (group == null) {
+            throw new NoSuchElementException("当前操作数据不存在...");
+        }
+        group = groupRepository.save(group);
+        return this.convertOuter(group);
     }
 
     @Override
-    public Mono<Void> remove(Long id) {
+    public void remove(Long id) {
         Assert.notNull(id, "group id must not be null.");
-        return groupRepository.deleteById(id);
+        groupRepository.deleteById(id);
     }
 
     /**
-     * 对象转换为输出结果对象(单条查询)
+     * 转换对象
      *
-     * @param group 信息
-     * @return 输出转换后的vo对象
+     * @param group 基础对象
+     * @return 结果对象
      */
-    private Mono<GroupVO> convertOuter(Group group) {
-        return Mono.just(group).map(g -> {
-            GroupVO vo = new GroupVO();
-            BeanUtils.copyProperties(g, vo);
-            vo.setLastModifiedDate(g.getLastModifiedDate().orElse(null));
-            return vo;
-        });
+    private GroupVO convertOuter(Group group) {
+        GroupVO groupVO = new GroupVO();
+        BeanUtils.copyProperties(group, groupVO);
+        long count = groupMembersRepository.countByGroupIdAndEnabledTrue(group.getId());
+        groupVO.setCount(count);
+        return groupVO;
     }
+
 }

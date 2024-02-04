@@ -1,65 +1,63 @@
 /*
- *  Copyright 2018-2024 the original author or authors.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *       https://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Copyright (c) 2021. Leafage All Right Reserved.
  */
-
 package io.leafage.basic.assets.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.assets.dto.PostDTO;
-import io.leafage.basic.assets.service.PostService;
+import io.leafage.basic.assets.service.PostsService;
+import io.leafage.basic.assets.vo.PostContentVO;
 import io.leafage.basic.assets.vo.PostVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * posts controller test
+ * 帖子接口测试类
  *
- * @author liwenqiang 2020-03-01 22:07
- */
+ * @author liwenqiang 2019/9/14 21:46
+ **/
+@WithMockUser
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(PostController.class)
+@WebMvcTest(PostController.class)
 class PostControllerTest {
 
-    @MockBean
-    private PostService postService;
+    @Autowired
+    private MockMvc mvc;
 
     @Autowired
-    private WebTestClient webTestClient;
+    private ObjectMapper mapper;
+
+    @MockBean
+    private PostsService postsService;
 
     private PostDTO postDTO;
     private PostVO postVO;
+    PostContentVO contentVO;
 
     @BeforeEach
     void init() {
@@ -69,150 +67,168 @@ class PostControllerTest {
         postDTO.setCategoryId(1L);
         postDTO.setCover("../test.jpg");
         postDTO.setTags(Collections.singleton("java"));
-        postDTO.setContext("内容信息");
+        postDTO.setContent("content");
 
         postVO = new PostVO();
         postVO.setTitle(postDTO.getTitle());
         postVO.setTags(postDTO.getTags());
         postVO.setCover(postDTO.getCover());
-        postVO.setContext(postDTO.getContext());
-        postVO.setLastModifiedDate(Instant.now());
+
+        contentVO = new PostContentVO();
+        contentVO.setTitle("test");
+        contentVO.setCatalog("category");
     }
 
     @Test
-    void retrieve() {
+    void retrieve() throws Exception {
         Pageable pageable = PageRequest.of(0, 2);
-        Page<PostVO> page = new PageImpl<>(List.of(postVO), pageable, 1L);
-        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
-                .willReturn(Mono.just(page));
+        Page<PostVO> page = new PageImpl<>(List.of(postVO), pageable, 2L);
+        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).build())
-                .exchange().expectStatus().isOk().expectBodyList(PostVO.class);
+        mvc.perform(get("/posts").queryParam("page", "0")
+                        .queryParam("size", "2").queryParam("sort", "id")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
     @Test
-    void retrieve_category() {
-        Page<PostVO> page = new PageImpl<>(List.of(postVO));
-        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
-                .willReturn(Mono.just(page));
+    void retrieve_error() throws Exception {
+        given(this.postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new NoSuchElementException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("categoryId", 1L).build())
-                .exchange().expectStatus().isOk().expectBodyList(PostVO.class);
+        mvc.perform(get("/posts").queryParam("page", "0")
+                        .queryParam("size", "2").queryParam("sort", "id")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void retrieve_error() {
-        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
-                .willThrow(new RuntimeException());
+    void fetch() throws Exception {
+        given(this.postsService.fetch(Mockito.anyLong())).willReturn(postVO);
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("categoryId", 1L)
-                        .queryParam("sort", "").build()).exchange()
-                .expectStatus().isNoContent();
+        mvc.perform(get("/posts/{id}", Mockito.anyLong())).andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
 
     @Test
-    void fetch() {
-        given(this.postService.fetch(Mockito.anyLong())).willReturn(Mono.just(postVO));
+    void fetch_error() throws Exception {
+        given(this.postsService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
+        mvc.perform(get("/posts/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
 
-        webTestClient.get().uri("/posts/{id}", 1).exchange()
-                .expectStatus().isOk()
-                .expectBody().jsonPath("$.title").isEqualTo("test");
+
+    @Test
+    void next() throws Exception {
+        given(this.postsService.next(Mockito.anyLong())).willReturn(postVO);
+
+        mvc.perform(get("/posts/{id}/next", 1L)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
 
     @Test
-    void fetch_error() {
-        given(this.postService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
+    void next_error() throws Exception {
+        given(this.postsService.next(Mockito.anyLong())).willThrow(new RuntimeException());
+        mvc.perform(get("/posts/{id}/next", 1L)).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
 
-        webTestClient.get().uri("/posts/{id}", 1).exchange().expectStatus().isNoContent();
+
+    @Test
+    void previous() throws Exception {
+        given(this.postsService.previous(Mockito.anyLong())).willReturn(postVO);
+
+        mvc.perform(get("/posts/{id}/previous", 1L)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
 
     @Test
-    void search() {
-        given(this.postService.search(Mockito.anyString())).willReturn(Flux.just(postVO));
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/search")
-                        .queryParam("keyword", "test").build()).exchange()
-                .expectStatus().isOk()
-                .expectBodyList(PostVO.class);
+    void previous_error() throws Exception {
+        given(this.postsService.previous(Mockito.anyLong())).willThrow(new RuntimeException());
+        mvc.perform(get("/posts/{id}/previous", 1L)).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void search_error() {
-        given(this.postService.search(Mockito.anyString())).willThrow(new RuntimeException());
+    void details() throws Exception {
+        given(this.postsService.details(Mockito.anyLong())).willReturn(contentVO);
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/search")
-                        .queryParam("keyword", "test").build()).exchange()
-                .expectStatus().isNoContent();
+        mvc.perform(get("/posts/{id}/details", 1L)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
     }
 
     @Test
-    void exist() {
-        given(this.postService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void details_error() throws Exception {
+        given(this.postsService.details(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/exist")
-                        .queryParam("title", "test").build()).exchange()
-                .expectStatus().isOk();
+        mvc.perform(get("/posts/{id}/details", 1L)).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void exist_error() {
-        given(this.postService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+    void exist() throws Exception {
+        given(this.postsService.exist(Mockito.anyString())).willReturn(true);
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/exist")
-                .queryParam("title", "test").build()).exchange().expectStatus().isNoContent();
+        mvc.perform(get("/posts/exist").queryParam("title", "test")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void create() {
-        given(this.postService.create(Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
+    void exist_error() throws Exception {
+        given(this.postsService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(postDTO).exchange()
-                .expectStatus().isCreated()
-                .expectBody().jsonPath("$.title").isEqualTo("test");
+        mvc.perform(get("/posts/exist").queryParam("title", "test")).andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void create_error() {
-        given(this.postService.create(Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
+    void create() throws Exception {
+        given(this.postsService.create(Mockito.any(PostDTO.class))).willReturn(postVO);
 
-        webTestClient.post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(postDTO).exchange()
-                .expectStatus().is4xxClientError();
+        mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
+                .andExpect(jsonPath("$.title").value("test"))
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void modify() {
-        given(this.postService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
+    void create_error() throws Exception {
+        given(this.postsService.create(Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(postDTO).exchange()
-                .expectStatus().isAccepted()
-                .expectBody().jsonPath("$.title").isEqualTo("test");
+        mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void modify_error() {
-        given(this.postService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
+    void modify() throws Exception {
+        given(this.postsService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willReturn(postVO);
 
-        webTestClient.put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(postDTO).exchange().expectStatus().isNotModified();
+        mvc.perform(put("/posts/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader()))
+                .andExpect(status().isAccepted())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void remove() {
-        given(this.postService.remove(Mockito.anyLong())).willReturn(Mono.empty());
+    void modify_error() throws Exception {
+        given(this.postsService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.delete().uri("/posts/{id}", 1).exchange().expectStatus().isOk();
+        mvc.perform(put("/posts/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader()))
+                .andExpect(status().isNotModified())
+                .andDo(print()).andReturn();
     }
 
     @Test
-    void remove_error() {
-        given(this.postService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
-
-        webTestClient.delete().uri("/posts/{id}", 1).exchange().expectStatus().is4xxClientError();
+    void remove() throws Exception {
+        this.postsService.remove(Mockito.anyLong());
+        mvc.perform(delete("/posts/{id}", 1L).with(csrf().asHeader())).andExpect(status().isOk())
+                .andDo(print()).andReturn();
     }
+
+    @Test
+    void remove_error() throws Exception {
+        doThrow(new RuntimeException()).when(this.postsService).remove(Mockito.anyLong());
+        mvc.perform(delete("/posts/{id}", 1L).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                .andDo(print()).andReturn();
+    }
+
 }

@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - main
+      - webmvc
   pull_request:
     types: [ opened, synchronize, reopened ]
 jobs:

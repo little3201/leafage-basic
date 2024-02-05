@@ -9,7 +9,7 @@
 
 ### 依赖
 
-> 现在leafage-starter-parent 和 leafage-common 已经可以在maven repository 中存在了（groupId 替换成了top.leafage），可以直接通过maven repository使用
+> 现在leafage-starter-parent 和 leafage-common 已经可以在maven repository 中下载了（groupId 替换成了top.leafage），可以直接通过maven repository使用
 
 #### [leafage-starter-parent](https://github.com/little3201/) —— 不包含任何代码，仅仅作为所有模块依赖的版本控制；
 
@@ -17,7 +17,7 @@
 
 ### 介绍：
 
-<a target="_blank" href="https://console.abeille.top"> 在线体验</a>， 未登录状态仅可访问部分接口
+<a target="_blank" href="https://console.leafage.top"> 在线体验</a>， 未登录状态仅可访问部分接口
 
 #### 概况：
 

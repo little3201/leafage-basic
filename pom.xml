@@ -28,15 +28,15 @@
 
     <developers>
         <developer>
-            <name>wenqiang.li</name>
+            <name>wq li</name>
             <email>little3201@gmail.com</email>
         </developer>
     </developers>
 
     <modules>
+        <module>assets</module>
         <module>auth</module>
         <module>hypervisor</module>
-        <module>assets</module>
     </modules>
 
     <dependencyManagement>

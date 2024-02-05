@@ -22,7 +22,7 @@
 - [x] 点赞
 - [x] 留言
 
-<a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.abeille.top"> 在线体验</a>
+<a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.leafage.top"> 在线体验</a>
 
 #### 核心依赖
 

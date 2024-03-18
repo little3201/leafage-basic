@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.dto.AccessLogDTO;
 import io.leafage.basic.hypervisor.repository.AccessLogRepository;
 import io.leafage.basic.hypervisor.service.AccessLogService;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -47,16 +47,19 @@ public class AccessLogServiceImpl implements AccessLogService {
     }
 
     @Override
-    public AccessLogVO create(AccessLogDTO accessLogDTO) {
+    public AccessLogVO create(AccessLogDTO dto) {
         AccessLog accessLog = new AccessLog();
-        BeanUtils.copyProperties(accessLogDTO, accessLog);
+        BeanCopier copier = BeanCopier.create(AccessLogDTO.class, AccessLog.class, false);
+        copier.copy(dto, accessLog, null);
+
         accessLogRepository.saveAndFlush(accessLog);
         return this.convert(accessLog);
     }
 
     private AccessLogVO convert(AccessLog accessLog) {
         AccessLogVO vo = new AccessLogVO();
-        BeanUtils.copyProperties(accessLog, vo);
+        BeanCopier copier = BeanCopier.create(AccessLog.class, AccessLogVO.class, false);
+        copier.copy(accessLog, vo, null);
         return vo;
     }
 }

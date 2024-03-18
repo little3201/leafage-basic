@@ -23,7 +23,7 @@ import io.leafage.basic.assets.repository.CommentRepository;
 import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -68,9 +68,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public CommentVO create(CommentDTO commentDTO) {
+    public CommentVO create(CommentDTO dto) {
         Comment comment = new Comment();
-        BeanUtils.copyProperties(commentDTO, comment);
+        BeanCopier copier = BeanCopier.create(CommentDTO.class, Comment.class, false);
+        copier.copy(dto, comment, null);
+
         comment = commentRepository.saveAndFlush(comment);
         // 添加关联帖子的评论数
         this.postStatisticsRepository.increaseComment(comment.getPostId());
@@ -85,7 +87,8 @@ public class CommentServiceImpl implements CommentService {
      */
     private CommentVO convertOuter(Comment comment) {
         CommentVO vo = new CommentVO();
-        BeanUtils.copyProperties(comment, vo);
+        BeanCopier copier = BeanCopier.create(Comment.class, CommentVO.class, false);
+        copier.copy(comment, vo, null);
 
         Long count = commentRepository.countByReplier(comment.getId());
         vo.setCount(count);

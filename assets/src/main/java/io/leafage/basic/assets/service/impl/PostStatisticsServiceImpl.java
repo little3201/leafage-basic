@@ -22,7 +22,7 @@ import io.leafage.basic.assets.dto.PostStatisticsDTO;
 import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.PostStatisticsService;
 import io.leafage.basic.assets.vo.PostStatisticsVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -47,9 +47,11 @@ public class PostStatisticsServiceImpl implements PostStatisticsService {
     }
 
     @Override
-    public PostStatisticsVO create(PostStatisticsDTO postStatisticsDTO) {
+    public PostStatisticsVO create(PostStatisticsDTO dto) {
         PostStatistics postStatistics = new PostStatistics();
-        BeanUtils.copyProperties(postStatisticsDTO, postStatistics);
+        BeanCopier copier = BeanCopier.create(PostStatisticsDTO.class, PostStatistics.class, false);
+        copier.copy(dto, postStatistics, null);
+
         postStatistics = postStatisticsRepository.saveAndFlush(postStatistics);
         return this.convertOuter(postStatistics);
     }
@@ -62,7 +64,8 @@ public class PostStatisticsServiceImpl implements PostStatisticsService {
      */
     private PostStatisticsVO convertOuter(PostStatistics postStatistics) {
         PostStatisticsVO vo = new PostStatisticsVO();
-        BeanUtils.copyProperties(postStatistics, vo);
+        BeanCopier copier = BeanCopier.create(PostStatistics.class, PostStatisticsVO.class, false);
+        copier.copy(postStatistics, vo, null);
         return vo;
     }
 

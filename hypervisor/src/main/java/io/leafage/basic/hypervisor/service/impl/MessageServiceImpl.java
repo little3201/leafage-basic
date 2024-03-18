@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.dto.MessageDTO;
 import io.leafage.basic.hypervisor.repository.MessageRepository;
 import io.leafage.basic.hypervisor.service.MessageService;
 import io.leafage.basic.hypervisor.vo.MessageVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,9 +58,11 @@ public class MessageServiceImpl extends ServletAbstractTreeNodeService<Message> 
     }
 
     @Override
-    public MessageVO create(MessageDTO messageDTO) {
+    public MessageVO create(MessageDTO dto) {
         Message message = new Message();
-        BeanUtils.copyProperties(messageDTO, message);
+        BeanCopier copier = BeanCopier.create(MessageDTO.class, Message.class, false);
+        copier.copy(dto, message, null);
+
         messageRepository.saveAndFlush(message);
         return this.convertOuter(message);
     }
@@ -71,8 +73,9 @@ public class MessageServiceImpl extends ServletAbstractTreeNodeService<Message> 
      * @return ExampleMatcher
      */
     private MessageVO convertOuter(Message message) {
-        MessageVO messageVO = new MessageVO();
-        BeanUtils.copyProperties(message, messageVO);
-        return messageVO;
+        MessageVO vo = new MessageVO();
+        BeanCopier copier = BeanCopier.create(Message.class, MessageVO.class, false);
+        copier.copy(message, vo, null);
+        return vo;
     }
 }

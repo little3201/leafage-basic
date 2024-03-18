@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -66,21 +66,25 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
     }
 
     @Override
-    public PrivilegeVO create(PrivilegeDTO privilegeDTO) {
+    public PrivilegeVO create(PrivilegeDTO dto) {
         Privilege privilege = new Privilege();
-        BeanUtils.copyProperties(privilegeDTO, privilege);
+        BeanCopier copier = BeanCopier.create(PrivilegeDTO.class, Privilege.class, false);
+        copier.copy(dto, privilege, null);
+
         privilege = privilegeRepository.saveAndFlush(privilege);
         return this.convertOuter(privilege);
     }
 
     @Override
-    public PrivilegeVO modify(Long id, PrivilegeDTO privilegeDTO) {
+    public PrivilegeVO modify(Long id, PrivilegeDTO dto) {
         Assert.notNull(id, "privilege id must not be null.");
         Privilege privilege = privilegeRepository.findById(id).orElse(null);
         if (privilege == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
         }
-        BeanUtils.copyProperties(privilegeDTO, privilege);
+        BeanCopier copier = BeanCopier.create(PrivilegeDTO.class, Privilege.class, false);
+        copier.copy(dto, privilege, null);
+
         privilege = privilegeRepository.save(privilege);
         return this.convertOuter(privilege);
     }
@@ -99,9 +103,10 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      * @return 结果对象
      */
     private PrivilegeVO convertOuter(Privilege privilege) {
-        PrivilegeVO privilegeVO = new PrivilegeVO();
-        BeanUtils.copyProperties(privilege, privilegeVO);
-        return privilegeVO;
+        PrivilegeVO vo = new PrivilegeVO();
+        BeanCopier copier = BeanCopier.create(Privilege.class, PrivilegeVO.class, false);
+        copier.copy(privilege, vo, null);
+        return vo;
     }
 
     /**

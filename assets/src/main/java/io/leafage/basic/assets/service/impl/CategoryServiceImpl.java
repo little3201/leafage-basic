@@ -22,7 +22,7 @@ import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -75,21 +75,25 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryVO create(CategoryDTO categoryDTO) {
+    public CategoryVO create(CategoryDTO dto) {
         Category category = new Category();
-        BeanUtils.copyProperties(categoryDTO, category);
+        BeanCopier copier = BeanCopier.create(CategoryDTO.class, Category.class, false);
+        copier.copy(dto, category, null);
+
         category = categoryRepository.saveAndFlush(category);
         return this.convertOuter(category);
     }
 
     @Override
-    public CategoryVO modify(Long id, CategoryDTO categoryDTO) {
+    public CategoryVO modify(Long id, CategoryDTO dto) {
         Assert.notNull(id, "category id must not be null.");
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
             return null;
         }
-        BeanUtils.copyProperties(categoryDTO, category);
+        BeanCopier copier = BeanCopier.create(CategoryDTO.class, Category.class, false);
+        copier.copy(dto, category, null);
+
         category = categoryRepository.save(category);
         return this.convertOuter(category);
     }
@@ -104,14 +108,15 @@ public class CategoryServiceImpl implements CategoryService {
     /**
      * 对象转换为输出结果对象
      *
-     * @param info 信息
+     * @param category 信息
      * @return 输出转换后的vo对象
      */
-    private CategoryVO convertOuter(Category info) {
+    private CategoryVO convertOuter(Category category) {
         CategoryVO vo = new CategoryVO();
-        BeanUtils.copyProperties(info, vo);
+        BeanCopier copier = BeanCopier.create(Category.class, CategoryVO.class, false);
+        copier.copy(category, vo, null);
 
-        long count = postRepository.countByCategoryId(info.getId());
+        long count = postRepository.countByCategoryId(category.getId());
         vo.setCount(count);
         return vo;
     }

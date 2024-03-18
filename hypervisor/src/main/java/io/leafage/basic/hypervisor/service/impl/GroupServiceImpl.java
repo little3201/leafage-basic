@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.repository.GroupMembersRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -74,20 +74,25 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     }
 
     @Override
-    public GroupVO create(GroupDTO groupDTO) {
+    public GroupVO create(GroupDTO dto) {
         Group group = new Group();
-        BeanUtils.copyProperties(groupDTO, group);
+        BeanCopier copier = BeanCopier.create(GroupDTO.class, Group.class, false);
+        copier.copy(dto, group, null);
+
         group = groupRepository.saveAndFlush(group);
         return this.convertOuter(group);
     }
 
     @Override
-    public GroupVO modify(Long id, GroupDTO groupDTO) {
+    public GroupVO modify(Long id, GroupDTO dto) {
         Assert.notNull(id, "group id must not be null.");
         Group group = groupRepository.findById(id).orElse(null);
         if (group == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
         }
+        BeanCopier copier = BeanCopier.create(GroupDTO.class, Group.class, false);
+        copier.copy(dto, group, null);
+
         group = groupRepository.save(group);
         return this.convertOuter(group);
     }
@@ -105,11 +110,13 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      * @return 结果对象
      */
     private GroupVO convertOuter(Group group) {
-        GroupVO groupVO = new GroupVO();
-        BeanUtils.copyProperties(group, groupVO);
+        GroupVO vo = new GroupVO();
+        BeanCopier copier = BeanCopier.create(Group.class, GroupVO.class, false);
+        copier.copy(group, vo, null);
+
         long count = groupMembersRepository.countByGroupIdAndEnabledTrue(group.getId());
-        groupVO.setCount(count);
-        return groupVO;
+        vo.setCount(count);
+        return vo;
     }
 
 }

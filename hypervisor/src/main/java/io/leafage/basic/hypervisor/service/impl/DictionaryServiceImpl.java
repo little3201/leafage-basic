@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -74,9 +74,11 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     }
 
     @Override
-    public DictionaryVO create(DictionaryDTO dictionaryDTO) {
+    public DictionaryVO create(DictionaryDTO dto) {
         Dictionary dictionary = new Dictionary();
-        BeanUtils.copyProperties(dictionaryDTO, dictionary);
+        BeanCopier copier = BeanCopier.create(DictionaryDTO.class, Dictionary.class, false);
+        copier.copy(dto, dictionary, null);
+
         dictionaryRepository.saveAndFlush(dictionary);
 
         return this.convert(dictionary);
@@ -90,7 +92,8 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      */
     private DictionaryVO convert(Dictionary dictionary) {
         DictionaryVO vo = new DictionaryVO();
-        BeanUtils.copyProperties(dictionary, vo);
+        BeanCopier copier = BeanCopier.create(Dictionary.class, DictionaryVO.class, false);
+        copier.copy(dictionary, vo, null);
         return vo;
     }
 }

@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.dto.RegionDTO;
 import io.leafage.basic.hypervisor.repository.RegionRepository;
 import io.leafage.basic.hypervisor.service.RegionService;
 import io.leafage.basic.hypervisor.vo.RegionVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -74,21 +74,25 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public RegionVO create(RegionDTO regionDTO) {
+    public RegionVO create(RegionDTO dto) {
         Region region = new Region();
-        BeanUtils.copyProperties(regionDTO, region);
+        BeanCopier copier = BeanCopier.create(RegionDTO.class, Region.class, false);
+        copier.copy(dto, region, null);
+
         regionRepository.saveAndFlush(region);
         return this.convertOuter(region);
     }
 
     @Override
-    public RegionVO modify(Long id, RegionDTO regionDTO) {
+    public RegionVO modify(Long id, RegionDTO dto) {
         Assert.notNull(id, "region id must not be null.");
         Region region = regionRepository.findById(id).orElse(null);
         if (region == null) {
             return null;
         }
-        BeanUtils.copyProperties(regionDTO, region);
+        BeanCopier copier = BeanCopier.create(RegionDTO.class, Region.class, false);
+        copier.copy(dto, region, null);
+
         regionRepository.save(region);
         return this.convertOuter(region);
     }
@@ -107,7 +111,8 @@ public class RegionServiceImpl implements RegionService {
      */
     private RegionVO convertOuter(Region region) {
         RegionVO vo = new RegionVO();
-        BeanUtils.copyProperties(region, vo);
+        BeanCopier copier = BeanCopier.create(Region.class, RegionVO.class, false);
+        copier.copy(region, vo, null);
 
         if (region.getSuperiorId() != null) {
             Optional<Region> optional = regionRepository.findById(region.getSuperiorId());

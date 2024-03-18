@@ -27,7 +27,7 @@ import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostContentVO;
 import io.leafage.basic.assets.vo.PostVO;
-import org.springframework.beans.BeanUtils;
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -90,7 +90,9 @@ public class PostsServiceImpl implements PostsService {
 
         PostVO vo = this.convertOuter(post);
         PostContentVO postsContentVO = new PostContentVO();
-        BeanUtils.copyProperties(vo, postsContentVO);
+        BeanCopier copier = BeanCopier.create(PostVO.class, PostContentVO.class, false);
+        copier.copy(vo, postsContentVO, null);
+
         postsContentVO.setPostsId(post.getId());
         // 获取内容详情
         PostContent postContent = postContentRepository.getByPostId(id);
@@ -121,10 +123,12 @@ public class PostsServiceImpl implements PostsService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public PostVO create(PostDTO postDTO) {
+    public PostVO create(PostDTO dto) {
         Post post = new Post();
-        BeanUtils.copyProperties(postDTO, post);
-        post.setTags(postDTO.getTags().toString());
+        BeanCopier copier = BeanCopier.create(PostDTO.class, Post.class, false);
+        copier.copy(dto, post, null);
+
+        post.setTags(dto.getTags().toString());
         // 保存并立即刷盘
         post = postRepository.saveAndFlush(post);
         //保存帖子内容
@@ -133,22 +137,24 @@ public class PostsServiceImpl implements PostsService {
             postContent = new PostContent();
         }
         postContent.setPostId(post.getId());
-        postContent.setContent(postDTO.getContent());
+        postContent.setContent(dto.getContent());
         postContentRepository.saveAndFlush(postContent);
         //转换结果
         return this.convertOuter(post);
     }
 
     @Override
-    public PostVO modify(Long id, PostDTO postDTO) {
+    public PostVO modify(Long id, PostDTO dto) {
         Assert.notNull(id, "post id must not be null.");
         //查询基本信息
         Post post = postRepository.findById(id).orElse(null);
         if (post == null) {
             return null;
         }
-        BeanUtils.copyProperties(postDTO, post);
-        post.setTags(postDTO.getTags().toString());
+        BeanCopier copier = BeanCopier.create(PostDTO.class, Post.class, false);
+        copier.copy(dto, post, null);
+
+        post.setTags(dto.getTags().toString());
 
         post = postRepository.save(post);
         //保存文章内容
@@ -156,7 +162,7 @@ public class PostsServiceImpl implements PostsService {
         if (postContent == null) {
             postContent = new PostContent();
         }
-        postContent.setContent(postDTO.getContent());
+        postContent.setContent(dto.getContent());
         postContentRepository.save(postContent);
         //转换结果
         return this.convertOuter(post);
@@ -177,7 +183,9 @@ public class PostsServiceImpl implements PostsService {
      */
     private PostVO convertOuter(Post post) {
         PostVO vo = new PostVO();
-        BeanUtils.copyProperties(post, vo);
+        BeanCopier copier = BeanCopier.create(Post.class, PostVO.class, false);
+        copier.copy(post, vo, null);
+
         // 转换 tags
         if (StringUtils.hasText(post.getTags())) {
             String tags = post.getTags().substring(1, post.getTags().length() - 1)

@@ -40,7 +40,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <leafage-common.version>0.3.0</leafage-common.version>
-        <authorization-server.version>1.2.1</authorization-server.version>
+        <authorization-server.version>1.2.3</authorization-server.version>
     </properties>
 
     <developers>

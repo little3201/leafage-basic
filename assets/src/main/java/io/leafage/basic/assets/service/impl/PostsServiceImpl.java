@@ -23,9 +23,7 @@ import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
-import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.PostsService;
-import io.leafage.basic.assets.vo.PostContentVO;
 import io.leafage.basic.assets.vo.PostVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
@@ -51,13 +49,11 @@ public class PostsServiceImpl implements PostsService {
     private final PostRepository postRepository;
     private final PostContentRepository postContentRepository;
     private final CategoryRepository categoryRepository;
-    private final PostStatisticsRepository postStatisticsRepository;
 
-    public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository, CategoryRepository categoryRepository, PostStatisticsRepository postStatisticsRepository) {
+    public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository, CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
         this.postContentRepository = postContentRepository;
         this.categoryRepository = categoryRepository;
-        this.postStatisticsRepository = postStatisticsRepository;
     }
 
     @Override
@@ -79,27 +75,19 @@ public class PostsServiceImpl implements PostsService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public PostContentVO details(Long id) {
+    public PostVO details(Long id) {
         Assert.notNull(id, "post id must not be null.");
         Post post = postRepository.findById(id).orElse(null);
         if (post == null) {
             return null;
         }
-        // viewed自增一，异步执行
-        this.postStatisticsRepository.increaseViewed(id);
-
         PostVO vo = this.convertOuter(post);
-        PostContentVO postsContentVO = new PostContentVO();
-        BeanCopier copier = BeanCopier.create(PostVO.class, PostContentVO.class, false);
-        copier.copy(vo, postsContentVO, null);
-
-        postsContentVO.setPostsId(post.getId());
         // 获取内容详情
         PostContent postContent = postContentRepository.getByPostId(id);
         if (postContent != null) {
-            postsContentVO.setContent(postContent.getContent());
+            vo.setContext(postContent.getContext());
         }
-        return postsContentVO;
+        return vo;
     }
 
     @Override
@@ -137,7 +125,7 @@ public class PostsServiceImpl implements PostsService {
             postContent = new PostContent();
         }
         postContent.setPostId(post.getId());
-        postContent.setContent(dto.getContent());
+        postContent.setContext(dto.getContext());
         postContentRepository.saveAndFlush(postContent);
         //转换结果
         return this.convertOuter(post);
@@ -162,7 +150,7 @@ public class PostsServiceImpl implements PostsService {
         if (postContent == null) {
             postContent = new PostContent();
         }
-        postContent.setContent(dto.getContent());
+        postContent.setContext(dto.getContext());
         postContentRepository.save(postContent);
         //转换结果
         return this.convertOuter(post);

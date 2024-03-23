@@ -17,48 +17,49 @@
 
 package io.leafage.basic.assets.vo;
 
+import io.leafage.basic.assets.bo.CommentBO;
+
+import java.time.Instant;
+
 /**
  * vo class for comment.
  *
  * @author wq li  2021-08-03 22:59
  **/
-public class CommentVO {
+public class CommentVO extends CommentBO {
 
     /**
-     * 帖子
+     * 主键
      */
-    private String post;
-    /**
-     * 内容
-     */
-    private String content;
+    private Long id;
+
     /**
      * 国家
      */
     private String country;
+
     /**
      * 位置
      */
     private String location;
+
     /**
      * 回复数
      */
     private Long count;
 
-    public String getPost() {
-        return post;
+    /**
+     * 最后更新时间
+     */
+    private Instant lastModifiedDate;
+
+
+    public Long getId() {
+        return id;
     }
 
-    public void setPost(String post) {
-        this.post = post;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCountry() {
@@ -83,5 +84,13 @@ public class CommentVO {
 
     public void setCount(Long count) {
         this.count = count;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

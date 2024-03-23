@@ -14,40 +14,43 @@
  *  limitations under the License.
  *
  */
-package io.leafage.basic.assets.domain;
 
-import io.leafage.basic.assets.audit.AuditMetadata;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+package io.leafage.basic.hypervisor.bo;
+
+import jakarta.validation.constraints.NotBlank;
 
 /**
- * model class for posts content.
+ * dto class for Notification
  *
- * @author wq li  2020-12-03 22:59
+ * @author liwenqiang 2022-12-10 13:49
  */
-@Entity
-@Table(name = "post_content", indexes = {@Index(name = "uni_post_content_post_id", columnList = "post_id")})
-public class PostContent extends AuditMetadata {
+public abstract class MessageBO {
 
     /**
-     * 帖子ID
+     * 标题
      */
-    @Column(name = "post_id", nullable = false, unique = true)
-    private Long postId;
+    @NotBlank(message = "title must not be blank.")
+    private String title;
 
     /**
      * 内容
      */
+    @NotBlank(message = "context must not be blank.")
     private String context;
 
-    public Long getPostId() {
-        return postId;
+    /**
+     * 接收人
+     */
+    @NotBlank(message = "receiver must not be blank.")
+    private String receiver;
+
+
+    public String getTitle() {
+        return title;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getContext() {
@@ -56,5 +59,13 @@ public class PostContent extends AuditMetadata {
 
     public void setContext(String context) {
         this.context = context;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 }

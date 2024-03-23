@@ -17,62 +17,41 @@
 
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.UserBO;
+
+import java.time.Instant;
+
 /**
  * vo class for user.
  *
  * @author wq li 2019/8/31 15:50
  **/
-public class UserVO {
+public class UserVO extends UserBO {
 
     /**
-     * user
+     * 是否锁定
      */
-    private String username;
-    /**
-     * 姓
-     */
-    private String firstname;
-    /**
-     * 名
-     */
-    private String lastname;
+    private boolean accountNonLocked;
 
     /**
-     * 描述
+     * 最后更新时间
      */
-    private String description;
+    private Instant lastModifiedDate;
 
 
-
-    public String getUsername() {
-        return username;
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

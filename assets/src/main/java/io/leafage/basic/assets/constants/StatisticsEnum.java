@@ -15,15 +15,24 @@
  *
  */
 
-package io.leafage.basic.hypervisor.dto;
-
-import io.leafage.basic.hypervisor.bo.AccessLogBO;
+package io.leafage.basic.assets.constants;
 
 /**
- * dto class for access log.
+ * statistics type enum
  *
- * @author liwenqinag 2022/4/15 13:39
+ * @author liwenqiang 2022-05-31 09:03
  **/
-public class AccessLogDTO extends AccessLogBO {
+public enum StatisticsEnum {
 
+    VIEWED("viewed"),
+
+    LIKES("likes"),
+
+    COMMENTS("comments");
+
+    public final String value;
+
+    StatisticsEnum(String value) {
+        this.value = value;
+    }
 }

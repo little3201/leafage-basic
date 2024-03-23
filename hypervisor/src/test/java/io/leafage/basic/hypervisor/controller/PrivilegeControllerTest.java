@@ -83,7 +83,6 @@ class PrivilegeControllerTest {
         privilegeVO.setIcon("icon");
         privilegeVO.setPath("path");
         privilegeVO.setType('M');
-        privilegeVO.setSuperior("superior");
 
         privilegeDTO = new PrivilegeDTO();
         privilegeDTO.setName("test");

@@ -18,7 +18,6 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
@@ -47,11 +46,9 @@ import java.util.NoSuchElementException;
 public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final RoleMembersRepository roleMembersRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleMembersRepository roleMembersRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-        this.roleMembersRepository = roleMembersRepository;
     }
 
     @Override
@@ -125,8 +122,6 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
         BeanCopier copier = BeanCopier.create(Role.class, RoleVO.class, false);
         copier.copy(role, vo, null);
 
-        long count = roleMembersRepository.countByRoleIdAndEnabledTrue(role.getId());
-        vo.setCount(count);
         return vo;
     }
 

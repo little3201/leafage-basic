@@ -18,7 +18,6 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Group;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
-import io.leafage.basic.hypervisor.repository.GroupMembersRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
@@ -47,11 +46,9 @@ import java.util.NoSuchElementException;
 public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> implements GroupService {
 
     private final GroupRepository groupRepository;
-    private final GroupMembersRepository groupMembersRepository;
 
-    public GroupServiceImpl(GroupRepository groupRepository, GroupMembersRepository groupMembersRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
-        this.groupMembersRepository = groupMembersRepository;
     }
 
     @Override
@@ -114,8 +111,6 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         BeanCopier copier = BeanCopier.create(Group.class, GroupVO.class, false);
         copier.copy(group, vo, null);
 
-        long count = groupMembersRepository.countByGroupIdAndEnabledTrue(group.getId());
-        vo.setCount(count);
         return vo;
     }
 

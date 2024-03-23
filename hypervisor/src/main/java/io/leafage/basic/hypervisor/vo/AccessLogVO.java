@@ -17,167 +17,41 @@
 
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.AccessLogBO;
+
+import java.time.Instant;
+
 /**
  * vo class for access log.
  *
  * @author liwenqinag 2022/4/15 13:39
  **/
-public class AccessLogVO {
+public class AccessLogVO extends AccessLogBO {
 
     /**
-     * IP地址
+     * 主键
      */
-    private String ip;
+    private Long id;
 
     /**
-     * 地理位置
+     * 最后更新时间
      */
-    private String location;
-
-    /**
-     * 用户代理信息
-     */
-    private String userAgent;
-
-    /**
-     * HTTP方法
-     */
-    private String httpMethod;
-
-    /**
-     * 请求URL
-     */
-    private String url;
-
-    /**
-     * HTTP状态码
-     */
-    private Integer statusCode;
-
-    /**
-     * 响应时间
-     */
-    private Long responseTime;
-
-    /**
-     * 来源页面
-     */
-    private String referer;
-
-    /**
-     * 会话标识符
-     */
-    private String sessionId;
-
-    /**
-     * 设备类型
-     */
-    private String deviceType;
-
-    /**
-     * 操作系统
-     */
-    private String os;
-
-    /**
-     * 浏览器
-     */
-    private String browser;
+    private Instant lastModifiedDate;
 
 
-    public String getIp() {
-        return ip;
+    public Long getId() {
+        return id;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getLocation() {
-        return location;
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getUserAgent() {
-        return userAgent;
-    }
-
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
-
-    public String getHttpMethod() {
-        return httpMethod;
-    }
-
-    public void setHttpMethod(String httpMethod) {
-        this.httpMethod = httpMethod;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Integer getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    public Long getResponseTime() {
-        return responseTime;
-    }
-
-    public void setResponseTime(Long responseTime) {
-        this.responseTime = responseTime;
-    }
-
-    public String getReferer() {
-        return referer;
-    }
-
-    public void setReferer(String referer) {
-        this.referer = referer;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    public String getDeviceType() {
-        return deviceType;
-    }
-
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
-    }
-
-    public String getOs() {
-        return os;
-    }
-
-    public void setOs(String os) {
-        this.os = os;
-    }
-
-    public String getBrowser() {
-        return browser;
-    }
-
-    public void setBrowser(String browser) {
-        this.browser = browser;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

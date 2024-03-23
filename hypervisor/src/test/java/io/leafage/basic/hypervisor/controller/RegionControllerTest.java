@@ -74,7 +74,6 @@ class RegionControllerTest {
     void init() {
         regionVO = new RegionVO();
         regionVO.setName("test");
-        regionVO.setAlias("alias");
         regionVO.setAreaCode("23234");
         regionVO.setPostalCode(1212);
         regionVO.setSuperior("superior");

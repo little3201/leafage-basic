@@ -17,53 +17,39 @@
 
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.RegionBO;
+
+import java.time.Instant;
+
 /**
  * vo class for region.
  *
  * @author wq li 2021/9/19 17:20
  **/
-public class RegionVO {
+public class RegionVO extends RegionBO {
 
     /**
-     * 名称
+     * 主键
      */
-    private String name;
-    /**
-     * 简称
-     */
-    private String alias;
+    private Long id;
+
     /**
      * 上级
      */
     private String superior;
+
     /**
-     * 邮编
+     * 最后更新时间
      */
-    private Integer postalCode;
-    /**
-     * 区号
-     */
-    private String areaCode;
-    /**
-     * 描述
-     */
-    private String description;
+    private Instant lastModifiedDate;
 
 
-    public String getName() {
-        return name;
+    public Long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSuperior() {
@@ -74,27 +60,11 @@ public class RegionVO {
         this.superior = superior;
     }
 
-    public Integer getPostalCode() {
-        return postalCode;
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

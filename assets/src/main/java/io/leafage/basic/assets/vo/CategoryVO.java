@@ -16,33 +16,39 @@
  */
 package io.leafage.basic.assets.vo;
 
+import io.leafage.basic.assets.bo.CategoryBO;
+
+import java.time.Instant;
+
 /**
  * vo class for category.
  *
  * @author wq li  2020-12-03 22:59
  */
-public class CategoryVO {
+public class CategoryVO extends CategoryBO {
 
     /**
-     * 名称
+     * 主键
      */
-    private String name;
+    private Long id;
+
     /**
-     * 统计数
+     * 贴子数
      */
     private long count;
+
     /**
-     * 描述
+     * 最后更新时间
      */
-    private String description;
+    private Instant lastModifiedDate;
 
 
-    public String getName() {
-        return name;
+    public Long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public long getCount() {
@@ -53,11 +59,11 @@ public class CategoryVO {
         this.count = count;
     }
 
-    public String getDescription() {
-        return description;
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

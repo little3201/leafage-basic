@@ -74,20 +74,20 @@ class CommentControllerTest {
     @BeforeEach
     void init() {
         commentVO = new CommentVO();
-        commentVO.setContent("content");
-        commentVO.setPost("post");
+        commentVO.setContext("content");
+        commentVO.setPostId(1L);
 
         commentDTO = new CommentDTO();
-        commentDTO.setPost("post");
-        commentDTO.setContent("content");
-        commentDTO.setReplier("test");
+        commentDTO.setPostId(1L);
+        commentDTO.setContext("content");
+        commentDTO.setReplier(1L);
     }
 
     @Test
     void retrieve() throws Exception {
         Pageable pageable = PageRequest.of(0, 2);
         Page<CommentVO> page = new PageImpl<>(List.of(commentVO), pageable, 2L);
-        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(page);
+        given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(page);
 
         mvc.perform(get("/comment").queryParam("page", "0").queryParam("size", "2"))
                 .andExpect(status().isOk()).andDo(print()).andReturn();
@@ -95,7 +95,7 @@ class CommentControllerTest {
 
     @Test
     void retrieve_error() throws Exception {
-        given(this.commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new NoSuchElementException());
+        given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new NoSuchElementException());
 
         mvc.perform(get("/comment").queryParam("page", "0").queryParam("size", "2"))
                 .andExpect(status().isNoContent()).andDo(print()).andReturn();
@@ -103,44 +103,44 @@ class CommentControllerTest {
 
     @Test
     void relation() throws Exception {
-        given(this.commentService.relation(Mockito.anyLong())).willReturn(List.of(commentVO));
+        given(commentService.relation(Mockito.anyLong())).willReturn(List.of(commentVO));
 
         mvc.perform(get("/comment/{id}", Mockito.anyLong())).andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
     void relation_error() throws Exception {
-        given(this.commentService.relation(Mockito.anyLong())).willThrow(new NoSuchElementException());
+        given(commentService.relation(Mockito.anyLong())).willThrow(new NoSuchElementException());
 
         mvc.perform(get("/comment/{id}", Mockito.anyLong())).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
     void replies() throws Exception {
-        given(this.commentService.replies(Mockito.anyLong())).willReturn(List.of(commentVO));
+        given(commentService.replies(Mockito.anyLong())).willReturn(List.of(commentVO));
 
         mvc.perform(get("/comment/{id}/replies", 1L)).andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
     void replies_error() throws Exception {
-        given(this.commentService.replies(Mockito.anyLong())).willThrow(new NoSuchElementException());
+        given(commentService.replies(Mockito.anyLong())).willThrow(new NoSuchElementException());
 
         mvc.perform(get("/comment/{id}/replies", 1L)).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
     void create() throws Exception {
-        given(this.commentService.create(Mockito.any(CommentDTO.class))).willReturn(commentVO);
+        given(commentService.create(Mockito.any(CommentDTO.class))).willReturn(commentVO);
 
         mvc.perform(post("/comment").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(commentDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.content").value("content")).andDo(print()).andReturn();
+                .andExpect(jsonPath("$.context").value("content")).andDo(print()).andReturn();
     }
 
     @Test
     void create_error() throws Exception {
-        given(this.commentService.create(Mockito.any(CommentDTO.class))).willThrow(new NoSuchElementException());
+        given(commentService.create(Mockito.any(CommentDTO.class))).willThrow(new NoSuchElementException());
 
         mvc.perform(post("/comment").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(commentDTO)).with(csrf().asHeader())).andExpect(status()

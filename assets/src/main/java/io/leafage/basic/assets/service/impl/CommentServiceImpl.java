@@ -20,7 +20,6 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.domain.Comment;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.springframework.cglib.beans.BeanCopier;
@@ -41,11 +40,9 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostStatisticsRepository postStatisticsRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, PostStatisticsRepository postStatisticsRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
-        this.postStatisticsRepository = postStatisticsRepository;
     }
 
     @Override
@@ -74,8 +71,6 @@ public class CommentServiceImpl implements CommentService {
         copier.copy(dto, comment, null);
 
         comment = commentRepository.saveAndFlush(comment);
-        // 添加关联帖子的评论数
-        this.postStatisticsRepository.increaseComment(comment.getPostId());
         return this.convertOuter(comment);
     }
 

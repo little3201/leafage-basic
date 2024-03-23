@@ -86,13 +86,11 @@ class RoleControllerTest {
     void init() {
         roleVO = new RoleVO();
         roleVO.setName("test");
-        roleVO.setSuperior("superior");
         roleVO.setDescription("description");
 
         roleDTO = new RoleDTO();
         roleDTO.setName("test");
         roleDTO.setSuperiorId(1L);
-        roleDTO.setAuthorities(Set.of("test"));
         roleDTO.setDescription("description");
     }
 

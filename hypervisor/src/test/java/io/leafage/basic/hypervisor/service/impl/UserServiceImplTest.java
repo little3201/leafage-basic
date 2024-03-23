@@ -61,7 +61,6 @@ class UserServiceImplTest {
         userDTO.setUsername("test");
         userDTO.setFirstname("三");
         userDTO.setLastname("张");
-        userDTO.setDescription("user");
     }
 
 

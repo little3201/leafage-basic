@@ -16,67 +16,39 @@
  */
 package io.leafage.basic.assets.vo;
 
-import java.util.Set;
+import io.leafage.basic.assets.bo.PostBO;
+
+import java.time.Instant;
 
 /**
  * vo class for posts.
  *
  * @author wq li  2019-03-03 22:59
  **/
-public class PostVO {
+public class PostVO extends PostBO {
 
     /**
-     * 标题
+     * 主键
      */
-    private String title;
+    private Long id;
+
     /**
-     * 封面
-     */
-    private String cover;
-    /**
-     * 标签
-     */
-    private Set<String> tags;
-    /**
-     * 分类
+     * category
      */
     private String category;
+
     /**
-     * 点赞
+     * 最后更新时间
      */
-    private int likes;
-    /**
-     * 查看
-     */
-    private int viewed;
-    /**
-     * 评论
-     */
-    private int comments;
+    private Instant lastModifiedDate;
 
 
-    public String getTitle() {
-        return title;
+    public Long getId() {
+        return id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    public Set<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(Set<String> tags) {
-        this.tags = tags;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCategory() {
@@ -87,27 +59,11 @@ public class PostVO {
         this.category = category;
     }
 
-    public int getLikes() {
-        return likes;
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getViewed() {
-        return viewed;
-    }
-
-    public void setViewed(int viewed) {
-        this.viewed = viewed;
-    }
-
-    public int getComments() {
-        return comments;
-    }
-
-    public void setComments(int comments) {
-        this.comments = comments;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

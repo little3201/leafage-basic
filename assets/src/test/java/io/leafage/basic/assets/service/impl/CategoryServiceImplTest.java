@@ -71,9 +71,9 @@ class CategoryServiceImplTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
         Page<Category> page = new PageImpl<>(List.of(Mockito.mock(Category.class)), pageable, 2L);
-        given(this.categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(page);
+        given(categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(page);
 
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         Page<CategoryVO> voPage = categoryService.retrieve(0, 2, "id");
 
@@ -82,7 +82,7 @@ class CategoryServiceImplTest {
 
     @Test
     void fetch() {
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
+        given(categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
 
         CategoryVO categoryVO = categoryService.fetch(Mockito.anyLong());
 
@@ -92,27 +92,27 @@ class CategoryServiceImplTest {
 
     @Test
     void create() {
-        given(this.categoryRepository.saveAndFlush(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
+        given(categoryRepository.saveAndFlush(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
 
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(2L);
+        given(postRepository.countByCategoryId(Mockito.anyLong())).willReturn(2L);
 
         CategoryVO categoryVO = categoryService.create(Mockito.mock(CategoryDTO.class));
 
-        verify(this.categoryRepository, times(1)).saveAndFlush(Mockito.any(Category.class));
+        verify(categoryRepository, times(1)).saveAndFlush(Mockito.any(Category.class));
         Assertions.assertNotNull(categoryVO);
     }
 
     @Test
     void modify() {
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
+        given(categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
 
-        given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
+        given(categoryRepository.save(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
 
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         CategoryVO categoryVO = categoryService.modify(1L, categoryDTO);
 
-        verify(this.categoryRepository, times(1)).save(Mockito.any(Category.class));
+        verify(categoryRepository, times(1)).save(Mockito.any(Category.class));
         Assertions.assertNotNull(categoryVO);
     }
 
@@ -120,6 +120,6 @@ class CategoryServiceImplTest {
     void remove() {
         categoryService.remove(Mockito.anyLong());
 
-        verify(this.categoryRepository, times(1)).deleteById(Mockito.anyLong());
+        verify(categoryRepository, times(1)).deleteById(Mockito.anyLong());
     }
 }

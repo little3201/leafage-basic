@@ -14,43 +14,42 @@
  *  limitations under the License.
  *
  */
-package io.leafage.basic.hypervisor.vo;
 
-import io.leafage.basic.hypervisor.bo.PrivilegeBO;
+package io.leafage.basic.hypervisor.bo;
 
-import java.time.Instant;
+import jakarta.validation.constraints.NotBlank;
 
 /**
- * vo class for privilege.
+ * bo class for role
  *
- * @author wq li 2019/8/31 15:50
- */
-public class PrivilegeVO extends PrivilegeBO {
+ * @author wilsonli 2022-03-26 15:21
+ **/
+public abstract class RoleBO {
 
     /**
-     * 主键
+     * 名称
      */
-    private Long id;
+    @NotBlank(message = "role name must not be blank.")
+    private String name;
 
     /**
-     * 最后更新时间
+     * 描述
      */
-    private Instant lastModifiedDate;
+    private String description;
 
-
-    public Long getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

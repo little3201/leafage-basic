@@ -24,7 +24,7 @@ import java.time.Instant;
  *
  * @author liwenqiang 2021-07-15 22:12
  */
-public class CommentVO {
+public class CommentVO extends CommentBO {
 
     /**
      * 主键
@@ -32,30 +32,20 @@ public class CommentVO {
     private Long id;
 
     /**
-     * post主键
-     */
-    private Long postId;
-
-    /**
-     * 内容
-     */
-    private String context;
-
-    /**
      * 国家
      */
     private String country;
-
+    
     /**
      * 位置
      */
     private String location;
-
+    
     /**
      * 回复数
      */
-    private long count;
-
+    private Long count;
+    
     /**
      * 最后更新时间
      */
@@ -68,22 +58,6 @@ public class CommentVO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
-    public String getContext() {
-        return context;
-    }
-
-    public void setContext(String context) {
-        this.context = context;
     }
 
     public String getCountry() {
@@ -102,11 +76,11 @@ public class CommentVO {
         this.location = location;
     }
 
-    public long getCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setCount(long count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 

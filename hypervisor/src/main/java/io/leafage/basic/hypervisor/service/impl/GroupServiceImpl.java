@@ -33,9 +33,11 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * group service impl.
@@ -111,6 +113,9 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         BeanCopier copier = BeanCopier.create(Group.class, GroupVO.class, false);
         copier.copy(group, vo, null);
 
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = group.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 

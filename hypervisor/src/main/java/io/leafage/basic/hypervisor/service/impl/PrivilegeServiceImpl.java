@@ -34,6 +34,7 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -106,6 +107,10 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         PrivilegeVO vo = new PrivilegeVO();
         BeanCopier copier = BeanCopier.create(Privilege.class, PrivilegeVO.class, false);
         copier.copy(privilege, vo, null);
+
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = privilege.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 

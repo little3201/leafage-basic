@@ -29,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * comment service impl.
@@ -84,6 +86,10 @@ public class CommentServiceImpl implements CommentService {
         CommentVO vo = new CommentVO();
         BeanCopier copier = BeanCopier.create(Comment.class, CommentVO.class, false);
         copier.copy(comment, vo, null);
+
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = comment.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
 
         Long count = commentRepository.countByReplier(comment.getId());
         vo.setCount(count);

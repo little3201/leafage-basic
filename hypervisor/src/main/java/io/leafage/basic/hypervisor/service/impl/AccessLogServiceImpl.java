@@ -27,6 +27,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Optional;
+
 /**
  * access log service impl.
  *
@@ -60,6 +63,10 @@ public class AccessLogServiceImpl implements AccessLogService {
         AccessLogVO vo = new AccessLogVO();
         BeanCopier copier = BeanCopier.create(AccessLog.class, AccessLogVO.class, false);
         copier.copy(accessLog, vo, null);
+
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = accessLog.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 }

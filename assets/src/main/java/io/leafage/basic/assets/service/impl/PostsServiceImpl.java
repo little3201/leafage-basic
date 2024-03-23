@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
 
@@ -173,6 +174,10 @@ public class PostsServiceImpl implements PostsService {
         PostVO vo = new PostVO();
         BeanCopier copier = BeanCopier.create(Post.class, PostVO.class, false);
         copier.copy(post, vo, null);
+
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = post.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
 
         // 转换 tags
         if (StringUtils.hasText(post.getTags())) {

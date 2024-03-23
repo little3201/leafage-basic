@@ -29,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * dictionary service impl.
@@ -94,6 +96,10 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
         DictionaryVO vo = new DictionaryVO();
         BeanCopier copier = BeanCopier.create(Dictionary.class, DictionaryVO.class, false);
         copier.copy(dictionary, vo, null);
+
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = dictionary.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 }

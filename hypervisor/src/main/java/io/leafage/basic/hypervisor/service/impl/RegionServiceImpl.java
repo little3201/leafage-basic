@@ -28,6 +28,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,6 +119,10 @@ public class RegionServiceImpl implements RegionService {
             Optional<Region> optional = regionRepository.findById(region.getSuperiorId());
             optional.ifPresent(superior -> vo.setSuperior(superior.getName()));
         }
+
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = region.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 }

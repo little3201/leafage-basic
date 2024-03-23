@@ -33,9 +33,11 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * role service impl.
@@ -121,7 +123,9 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
         RoleVO vo = new RoleVO();
         BeanCopier copier = BeanCopier.create(Role.class, RoleVO.class, false);
         copier.copy(role, vo, null);
-
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = role.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 

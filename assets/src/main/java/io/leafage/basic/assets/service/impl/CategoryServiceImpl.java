@@ -31,6 +31,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
+import java.util.Optional;
+
 /**
  * category service impl.
  *
@@ -115,6 +118,10 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryVO vo = new CategoryVO();
         BeanCopier copier = BeanCopier.create(Category.class, CategoryVO.class, false);
         copier.copy(category, vo, null);
+
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = category.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
 
         long count = postRepository.countByCategoryId(category.getId());
         vo.setCount(count);

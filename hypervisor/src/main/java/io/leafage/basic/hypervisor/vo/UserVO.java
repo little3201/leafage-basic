@@ -29,19 +29,9 @@ import java.time.Instant;
 public class UserVO extends UserBO {
 
     /**
-     * user有效期
-     */
-    private Instant accountExpiresAt;
-
-    /**
      * 是否锁定
      */
     private boolean accountNonLocked;
-
-    /**
-     * 密码有效期
-     */
-    private Instant credentialsExpiresAt;
 
     /**
      * 最后更新时间
@@ -49,28 +39,12 @@ public class UserVO extends UserBO {
     private Instant lastModifiedDate;
 
 
-    public Instant getAccountExpiresAt() {
-        return accountExpiresAt;
-    }
-
-    public void setAccountExpiresAt(Instant accountExpiresAt) {
-        this.accountExpiresAt = accountExpiresAt;
-    }
-
     public boolean isAccountNonLocked() {
         return accountNonLocked;
     }
 
     public void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
-    }
-
-    public Instant getCredentialsExpiresAt() {
-        return credentialsExpiresAt;
-    }
-
-    public void setCredentialsExpiresAt(Instant credentialsExpiresAt) {
-        this.credentialsExpiresAt = credentialsExpiresAt;
     }
 
     public Instant getLastModifiedDate() {

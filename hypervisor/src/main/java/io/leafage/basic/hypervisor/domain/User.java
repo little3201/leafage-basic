@@ -23,7 +23,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * model class for user.
@@ -41,6 +41,12 @@ public class User extends AuditMetadata {
     private String username;
 
     /**
+     * password
+     */
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    /**
      * 名
      */
     private String firstname;
@@ -56,22 +62,34 @@ public class User extends AuditMetadata {
     private String avatar;
 
     /**
-     * user有效期
+     * 有效
      */
-    @Column(name = "account_expires_at")
-    private LocalDateTime accountExpiresAt;
+    @Column(name = "account_non_expired")
+    private boolean accountNonExpired = true;
 
     /**
-     * 是否锁定
+     * 有效期
      */
-    @Column(name = "is_account_locked")
-    private boolean accountLocked;
+    @Column(name = "account_expires_at")
+    private Instant accountExpiresAt;
+
+    /**
+     * 未锁定
+     */
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked = true;
+
+    /**
+     * 密码有效
+     */
+    @Column(name = "credentials_non_expired")
+    private boolean credentialsNonExpired = true;
 
     /**
      * 密码有效期
      */
     @Column(name = "credentials_expires_at")
-    private LocalDateTime credentialsExpiresAt;
+    private Instant credentialsExpiresAt;
 
 
     public String getUsername() {
@@ -80,6 +98,14 @@ public class User extends AuditMetadata {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstname() {
@@ -106,27 +132,43 @@ public class User extends AuditMetadata {
         this.avatar = avatar;
     }
 
-    public LocalDateTime getAccountExpiresAt() {
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public Instant getAccountExpiresAt() {
         return accountExpiresAt;
     }
 
-    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
+    public void setAccountExpiresAt(Instant accountExpiresAt) {
         this.accountExpiresAt = accountExpiresAt;
     }
 
-    public boolean isAccountLocked() {
-        return accountLocked;
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
     }
 
-    public void setAccountLocked(boolean accountLocked) {
-        this.accountLocked = accountLocked;
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
-    public LocalDateTime getCredentialsExpiresAt() {
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public Instant getCredentialsExpiresAt() {
         return credentialsExpiresAt;
     }
 
-    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
+    public void setCredentialsExpiresAt(Instant credentialsExpiresAt) {
         this.credentialsExpiresAt = credentialsExpiresAt;
     }
 }

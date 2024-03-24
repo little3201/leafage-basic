@@ -45,7 +45,6 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     /**
      * 是否可用
      */
-    @Column(name = "is_enabled")
     private boolean enabled = true;
 
     /**

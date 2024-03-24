@@ -57,7 +57,6 @@ public class Post extends AuditMetadata {
     /**
      * 是否可用
      */
-    @Column(name = "is_enabled")
     private boolean enabled = true;
 
 

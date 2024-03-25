@@ -29,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -51,6 +52,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -100,7 +102,11 @@ public class AuthorizationServerConfiguration {
     @Bean
     UserDetailsService userDetailsService(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-        jdbcUserDetailsManager.createUser(User.withUsername("admin").password("123456").accountLocked(true).roles("ADMIN").build());
+        if (!jdbcUserDetailsManager.userExists("admin")) {
+            jdbcUserDetailsManager.createUser(User.withUsername("admin").password("123456").roles("ADMIN").build());
+            jdbcUserDetailsManager.addUserToGroup("admin", "manager");
+        }
+
         return jdbcUserDetailsManager;
     }
 

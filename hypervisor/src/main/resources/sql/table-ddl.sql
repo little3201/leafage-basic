@@ -29,7 +29,7 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
    id                   bigserial PRIMARY KEY NOT NULL,
    username             varchar(50) UNIQUE NOT NULL,
-   password             varchar(50) NOT NULL,
+   password             varchar(127) NOT NULL,
    firstname            varchar(16),
    lastname             varchar(16),
    avatar               varchar(127),

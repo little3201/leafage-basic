@@ -17,47 +17,41 @@
 
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.MessageBO;
+
+import java.time.Instant;
+
 /**
  * vo class for message.
  *
  * @author wq li 2022/1/29 17:20
  **/
-public class MessageVO {
+public class MessageVO extends MessageBO {
 
     /**
-     * 标题
+     * 主键
      */
-    private String title;
+    private Long id;
+
     /**
-     * 内容
+     * 最后更新时间
      */
-    private String content;
-    /**
-     * 接收人
-     */
-    private String receiver;
+    private Instant lastModifiedDate;
 
-    public String getTitle() {
-        return title;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

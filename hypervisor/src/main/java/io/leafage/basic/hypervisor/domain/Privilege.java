@@ -19,7 +19,6 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -28,7 +27,7 @@ import jakarta.persistence.Table;
  * @author wq li 2019/8/31 15:50
  */
 @Entity
-@Table(name = "privileges", indexes = {@Index(name = "uni_privileges_name", columnList = "name")})
+@Table(name = "privileges")
 public class Privilege extends AuditMetadata {
 
     /**

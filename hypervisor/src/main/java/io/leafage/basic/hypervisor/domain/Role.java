@@ -19,7 +19,6 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -28,13 +27,13 @@ import jakarta.persistence.Table;
  * @author wq li 2020-12-20 9:54
  */
 @Entity
-@Table(name = "roles", indexes = {@Index(name = "uni_roles_name", columnList = "name")})
+@Table(name = "roles")
 public class Role extends AuditMetadata {
 
     /**
      * 名称
      */
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;
     /**
      * 上级主键
@@ -44,7 +43,6 @@ public class Role extends AuditMetadata {
      * 描述
      */
     private String description;
-
 
 
     public String getName() {

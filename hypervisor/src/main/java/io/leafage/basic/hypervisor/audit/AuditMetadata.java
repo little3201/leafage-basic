@@ -20,6 +20,7 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Auditable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -31,6 +32,7 @@ import java.util.Optional;
  * @author wq li  2020-12-20 9:54
  */
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AuditMetadata implements Auditable<String, Long, Instant> {
 
     /**
@@ -43,7 +45,6 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     /**
      * 是否可用
      */
-    @Column(name = "is_enabled")
     private boolean enabled = true;
 
     /**

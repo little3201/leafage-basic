@@ -20,7 +20,6 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.domain.Comment;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostStatisticsRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.springframework.cglib.beans.BeanCopier;
@@ -30,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * comment service impl.
@@ -41,11 +42,9 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostStatisticsRepository postStatisticsRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, PostStatisticsRepository postStatisticsRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
-        this.postStatisticsRepository = postStatisticsRepository;
     }
 
     @Override
@@ -74,8 +73,6 @@ public class CommentServiceImpl implements CommentService {
         copier.copy(dto, comment, null);
 
         comment = commentRepository.saveAndFlush(comment);
-        // 添加关联帖子的评论数
-        this.postStatisticsRepository.increaseComment(comment.getPostId());
         return this.convertOuter(comment);
     }
 
@@ -89,6 +86,10 @@ public class CommentServiceImpl implements CommentService {
         CommentVO vo = new CommentVO();
         BeanCopier copier = BeanCopier.create(Comment.class, CommentVO.class, false);
         copier.copy(comment, vo, null);
+
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = comment.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
 
         Long count = commentRepository.countByReplier(comment.getId());
         vo.setCount(count);

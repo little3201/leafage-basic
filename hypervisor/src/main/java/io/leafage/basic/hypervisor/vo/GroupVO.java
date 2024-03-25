@@ -16,64 +16,39 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.GroupBO;
+
+import java.time.Instant;
+
 /**
  * vo class for group.
  *
  * @author wq li 2019/8/31 15:50
  */
-public class GroupVO {
+public class GroupVO extends GroupBO {
 
     /**
-     * 名称
+     * 主键
      */
-    private String name;
-    /**
-     * 别民
-     */
-    private String alias;
-    /**
-     * 负责人
-     */
-    private String principal;
+    private Long id;
+
     /**
      * 上级
      */
     private String superior;
+
     /**
-     * 描述
+     * 最后更新时间
      */
-    private String description;
-    /**
-     * 是否可用
-     */
-    private boolean enabled;
-    /**
-     * 用户数
-     */
-    private long count;
+    private Instant lastModifiedDate;
 
-    public String getName() {
-        return name;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
-    public String getPrincipal() {
-        return principal;
-    }
-
-    public void setPrincipal(String principal) {
-        this.principal = principal;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSuperior() {
@@ -84,27 +59,11 @@ public class GroupVO {
         this.superior = superior;
     }
 
-    public String getDescription() {
-        return description;
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public long getCount() {
-        return count;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

@@ -40,7 +40,7 @@ public class Category extends AuditMetadata {
     /**
      * 是否可用
      */
-    @Column(name = "is_enabled", nullable = false)
+    @Column(name = "enabled", nullable = false)
     private boolean enabled = true;
 
     /**

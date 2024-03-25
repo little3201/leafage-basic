@@ -17,11 +17,7 @@
 package io.leafage.basic.hypervisor.domain;
 
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 /**
  * model class for group roles.
@@ -29,9 +25,15 @@ import jakarta.persistence.Table;
  * @author wq li 2022/1/26 15:20
  */
 @Entity
-@Table(name = "group_roles", indexes = {@Index(name = "idx_group_roles_group_id", columnList = "group_id"),
-        @Index(name = "idx_group_roles_role_id", columnList = "role_id")})
-public class GroupRoles extends AuditMetadata {
+@Table(name = "group_authorities")
+public class GroupAuthorities {
+
+    /**
+     * 主键
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     /**
      * group主键
@@ -42,9 +44,17 @@ public class GroupRoles extends AuditMetadata {
     /**
      * role主键
      */
-    @Column(name = "role_id", nullable = false)
-    private Long roleId;
+    @Column(name = "authority", nullable = false, length = 50)
+    private String authority;
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getGroupId() {
         return groupId;
@@ -54,11 +64,12 @@ public class GroupRoles extends AuditMetadata {
         this.groupId = groupId;
     }
 
-    public Long getRoleId() {
-        return roleId;
+
+    public String getAuthority() {
+        return authority;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 }

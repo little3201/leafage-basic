@@ -19,7 +19,6 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -28,62 +27,23 @@ import jakarta.persistence.Table;
  * @author wq li 2020-12-20 9:54
  */
 @Entity
-@Table(name = "groups", indexes = {@Index(name = "uni_groups_name", columnList = "name")})
+@Table(name = "groups")
 public class Group extends AuditMetadata {
 
     /**
      * 名称
      */
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
-
-    /**
-     * 负责人主键
-     */
-    private Long principal;
-
-    /**
-     * 上级
-     */
-    @Column(name = "superior_id")
-    private Long superiorId;
-
-    /**
-     * 描述
-     */
-    private String description;
+    @Column(name = "group_name", nullable = false, length = 50)
+    private String groupName;
 
 
-    public Long getPrincipal() {
-        return principal;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setPrincipal(Long principal) {
-        this.principal = principal;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
 }

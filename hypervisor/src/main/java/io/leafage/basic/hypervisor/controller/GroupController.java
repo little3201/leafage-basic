@@ -28,7 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import top.leafage.common.TreeNode;
 
 import java.util.List;
 
@@ -69,23 +68,6 @@ public class GroupController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voPage);
-    }
-
-    /**
-     * 查询树形数据
-     *
-     * @return 查询到的数据，否则返回空
-     */
-    @GetMapping("/tree")
-    public ResponseEntity<List<TreeNode>> tree() {
-        List<TreeNode> treeNodes;
-        try {
-            treeNodes = groupService.tree();
-        } catch (Exception e) {
-            logger.info("Retrieve group tree occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(treeNodes);
     }
 
     /**

@@ -17,51 +17,13 @@
 
 package io.leafage.basic.assets.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import io.leafage.basic.assets.bo.CommentBO;
 
 /**
  * dto class for comment.
  *
  * @author wq li 2021-09-29 13:51
  */
-public class CommentDTO {
+public class CommentDTO extends CommentBO {
 
-    /**
-     * 帖子
-     */
-    @NotBlank
-    private String post;
-    /**
-     * 内容
-     */
-    @NotBlank
-    private String content;
-    /**
-     * 回复人
-     */
-    private String replier;
-
-    public String getPost() {
-        return post;
-    }
-
-    public void setPost(String post) {
-        this.post = post;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getReplier() {
-        return replier;
-    }
-
-    public void setReplier(String replier) {
-        this.replier = replier;
-    }
 }

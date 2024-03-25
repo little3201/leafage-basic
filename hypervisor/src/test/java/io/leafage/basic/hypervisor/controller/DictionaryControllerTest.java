@@ -75,13 +75,11 @@ class DictionaryControllerTest {
     void init() {
         dictionaryVO = new DictionaryVO();
         dictionaryVO.setName("gender");
-        dictionaryVO.setAlias("gender");
         dictionaryVO.setSuperior("superior");
         dictionaryVO.setDescription("description");
 
         dictionaryDTO = new DictionaryDTO();
         dictionaryDTO.setName("gender");
-        dictionaryDTO.setAlias("gender");
         dictionaryDTO.setSuperiorId(1L);
         dictionaryDTO.setDescription("description");
     }

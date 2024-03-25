@@ -16,11 +16,7 @@
  */
 package io.leafage.basic.hypervisor.domain;
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 /**
  * model class for role privileges.
@@ -28,21 +24,36 @@ import jakarta.persistence.Table;
  * @author wq li 2022/1/26 15:20
  */
 @Entity
-@Table(name = "role_privileges", indexes = {@Index(name = "idx_role_privileges_role_id", columnList = "role_id"),
-        @Index(name = "idx_role_privileges_privilege_id", columnList = "privilege_id")})
-public class RolePrivileges extends AuditMetadata {
+@Table(name = "role_privileges")
+public class RolePrivileges {
+
+    /**
+     * 主键
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     /**
      * role主键
      */
     @Column(name = "role_id", nullable = false)
     private Long roleId;
+
     /**
      * 资源主键
      */
     @Column(name = "privilege_id", nullable = false)
     private Long privilegeId;
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getRoleId() {
         return roleId;

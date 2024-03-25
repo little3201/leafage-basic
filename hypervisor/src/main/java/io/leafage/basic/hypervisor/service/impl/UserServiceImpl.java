@@ -30,6 +30,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.time.Instant;
+import java.util.Optional;
+
 /**
  * user service impl.
  *
@@ -106,6 +109,9 @@ public class UserServiceImpl implements UserService {
         BeanCopier copier = BeanCopier.create(User.class, UserVO.class, false);
         copier.copy(user, vo, null);
 
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = user.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 

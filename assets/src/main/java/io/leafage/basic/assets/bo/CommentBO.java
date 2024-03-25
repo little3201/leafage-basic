@@ -15,34 +15,35 @@
  *
  */
 
-package io.leafage.basic.assets.dto;
+package io.leafage.basic.assets.bo;
+
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
- * dto class for posts statistics.
+ * bo class for comment
  *
- * @author wq li  2024-02-02 14:30
- **/
-public class PostStatisticsDTO {
+ * @author liwenqiang 2023-03-26 14:30
+ */
+public abstract class CommentBO {
 
     /**
-     * 帖子ID
+     * 帖子
      */
+    @NotNull(message = "postId must not be null.")
     private Long postId;
 
     /**
-     * 浏览量
+     * 内容
      */
-    private int viewed;
+    @NotBlank(message = "context must not be blank.")
+    private String context;
 
     /**
-     * 点赞量
+     * 回复者
      */
-    private int likes;
-
-    /**
-     * 评论量
-     */
-    private int comments;
+    private Long replier;
 
 
     public Long getPostId() {
@@ -53,27 +54,19 @@ public class PostStatisticsDTO {
         this.postId = postId;
     }
 
-    public int getViewed() {
-        return viewed;
+    public String getContext() {
+        return context;
     }
 
-    public void setViewed(int viewed) {
-        this.viewed = viewed;
+    public void setContext(String context) {
+        this.context = context;
     }
 
-    public int getLikes() {
-        return likes;
+    public Long getReplier() {
+        return replier;
     }
 
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getComments() {
-        return comments;
-    }
-
-    public void setComments(int comments) {
-        this.comments = comments;
+    public void setReplier(Long replier) {
+        this.replier = replier;
     }
 }

@@ -46,11 +46,4 @@ public interface RoleMembersRepository extends JpaRepository<RoleMembers, Long> 
      */
     List<RoleMembers> findByRoleId(Long roleId);
 
-    /**
-     * 统计关联user
-     *
-     * @param roleId role主键
-     * @return 用户数
-     */
-    long countByRoleIdAndEnabledTrue(Long roleId);
 }

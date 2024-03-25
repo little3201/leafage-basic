@@ -20,10 +20,7 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-
-import java.time.LocalDateTime;
 
 /**
  * model class for user.
@@ -31,14 +28,20 @@ import java.time.LocalDateTime;
  * @author wq li 2020-12-20 9:54
  */
 @Entity
-@Table(name = "users", indexes = {@Index(name = "uni_users_username", columnList = "username")})
+@Table(name = "users")
 public class User extends AuditMetadata {
 
     /**
      * user
      */
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
+
+    /**
+     * password
+     */
+    @Column(name = "password", nullable = false, length = 127)
+    private String password;
 
     /**
      * 名
@@ -55,24 +58,6 @@ public class User extends AuditMetadata {
      */
     private String avatar;
 
-    /**
-     * user有效期
-     */
-    @Column(name = "account_expires_at")
-    private LocalDateTime accountExpiresAt;
-
-    /**
-     * 是否锁定
-     */
-    @Column(name = "is_account_locked")
-    private boolean accountLocked;
-
-    /**
-     * 密码有效期
-     */
-    @Column(name = "credentials_expires_at")
-    private LocalDateTime credentialsExpiresAt;
-
 
     public String getUsername() {
         return username;
@@ -80,6 +65,14 @@ public class User extends AuditMetadata {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstname() {
@@ -106,27 +99,4 @@ public class User extends AuditMetadata {
         this.avatar = avatar;
     }
 
-    public LocalDateTime getAccountExpiresAt() {
-        return accountExpiresAt;
-    }
-
-    public void setAccountExpiresAt(LocalDateTime accountExpiresAt) {
-        this.accountExpiresAt = accountExpiresAt;
-    }
-
-    public boolean isAccountLocked() {
-        return accountLocked;
-    }
-
-    public void setAccountLocked(boolean accountLocked) {
-        this.accountLocked = accountLocked;
-    }
-
-    public LocalDateTime getCredentialsExpiresAt() {
-        return credentialsExpiresAt;
-    }
-
-    public void setCredentialsExpiresAt(LocalDateTime credentialsExpiresAt) {
-        this.credentialsExpiresAt = credentialsExpiresAt;
-    }
 }

@@ -75,12 +75,12 @@ class MessageControllerTest {
         messageVO = new MessageVO();
         messageVO.setTitle("test");
         messageVO.setReceiver("23234");
-        messageVO.setContent("content");
+        messageVO.setContext("content");
 
         messageDTO = new MessageDTO();
         messageDTO.setTitle("test");
         messageDTO.setReceiver("23234");
-        messageDTO.setContent("content");
+        messageDTO.setContext("content");
     }
 
     @Test
@@ -107,7 +107,7 @@ class MessageControllerTest {
         given(this.messageService.fetch(Mockito.anyLong())).willReturn(messageVO);
 
         mvc.perform(get("/messages/{id}", Mockito.anyLong())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").value("content")).andDo(print()).andReturn();
+                .andExpect(jsonPath("$.context").value("content")).andDo(print()).andReturn();
     }
 
     @Test

@@ -17,25 +17,23 @@
 
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.dto.PostStatisticsDTO;
-import io.leafage.basic.assets.vo.PostStatisticsVO;
-import org.springframework.data.domain.Page;
-import top.leafage.common.servlet.ServletBasicService;
+import io.leafage.basic.assets.constants.StatisticsEnum;
+import io.leafage.basic.assets.domain.PostStatistics;
 
 /**
  * statistics service.
  *
  * @author wq li 2021/09/29 14:32
  **/
-public interface PostStatisticsService extends ServletBasicService<PostStatisticsDTO, PostStatisticsVO> {
+public interface PostStatisticsService {
 
     /**
-     * 分页查询
+     * 记录统计量
      *
-     * @param page 分页
-     * @param size 大小
-     * @return 结果集
+     * @param postId         帖子ID
+     * @param statisticsEnum 统计枚举
+     * @return 浏览量
      */
-    Page<PostStatisticsVO> retrieve(int page, int size);
+    PostStatistics increase(Long postId, StatisticsEnum statisticsEnum);
 
 }

@@ -69,13 +69,11 @@ class UserControllerTest {
         userVO.setUsername("test");
         userVO.setFirstname("john");
         userVO.setLastname("steven");
-        userVO.setDescription("description");
 
         userDTO = new UserDTO();
         userDTO.setUsername("test");
         userDTO.setFirstname("john");
         userDTO.setLastname("steven");
-        userDTO.setDescription("description");
     }
 
     @Test

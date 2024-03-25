@@ -16,64 +16,39 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.RoleBO;
+
+import java.time.Instant;
+
 /**
  * vo class for role.
  *
  * @author wq li 2019/8/31 15:50
  */
-public class RoleVO {
+public class RoleVO extends RoleBO {
 
     /**
-     * 名称
+     * 主键
      */
-    private String name;
+    private Long id;
+
     /**
-     * 上级
-     */
-    private String superior;
-    /**
-     * 描述
-     */
-    private String description;
-    /**
-     * user数
-     */
-    private long count;
-    /**
-     * 是否可用
+     * 状态
      */
     private boolean enabled;
 
-    public String getName() {
-        return name;
+    /**
+     * 最后更新时间
+     */
+    private Instant lastModifiedDate;
+
+
+    public Long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSuperior() {
-        return superior;
-    }
-
-    public void setSuperior(String superior) {
-        this.superior = superior;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public long getCount() {
-        return count;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public boolean isEnabled() {
@@ -82,5 +57,13 @@ public class RoleVO {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

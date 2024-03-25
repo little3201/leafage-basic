@@ -16,108 +16,41 @@
  */
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.PrivilegeBO;
+
+import java.time.Instant;
+
 /**
  * vo class for privilege.
  *
  * @author wq li 2019/8/31 15:50
  */
-public class PrivilegeVO {
+public class PrivilegeVO extends PrivilegeBO {
 
     /**
-     * 上级
+     * 主键
      */
-    private String superior;
+    private Long id;
+
     /**
-     * 名称
+     * 最后更新时间
      */
-    private String name;
-    /**
-     * 类型
-     */
-    private Character type;
-    /**
-     * 图标
-     */
-    private String icon;
-    /**
-     * 路径
-     */
-    private String path;
-    /**
-     * role数
-     */
-    private long count;
-    /**
-     * 描述
-     */
-    private String description;
-    /**
-     * 是否可用
-     */
-    private boolean enabled;
+    private Instant lastModifiedDate;
 
 
-    public String getSuperior() {
-        return superior;
+    public Long getId() {
+        return id;
     }
 
-    public void setSuperior(String superior) {
-        this.superior = superior;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Character getType() {
-        return type;
-    }
-
-    public void setType(Character type) {
-        this.type = type;
-    }
-
-    public long getCount() {
-        return count;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

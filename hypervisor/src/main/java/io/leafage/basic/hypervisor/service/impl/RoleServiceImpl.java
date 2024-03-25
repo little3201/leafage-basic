@@ -18,7 +18,6 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Role;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
-import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
@@ -34,9 +33,11 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * role service impl.
@@ -47,11 +48,9 @@ import java.util.NoSuchElementException;
 public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implements RoleService {
 
     private final RoleRepository roleRepository;
-    private final RoleMembersRepository roleMembersRepository;
 
-    public RoleServiceImpl(RoleRepository roleRepository, RoleMembersRepository roleMembersRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-        this.roleMembersRepository = roleMembersRepository;
     }
 
     @Override
@@ -124,9 +123,9 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
         RoleVO vo = new RoleVO();
         BeanCopier copier = BeanCopier.create(Role.class, RoleVO.class, false);
         copier.copy(role, vo, null);
-
-        long count = roleMembersRepository.countByRoleIdAndEnabledTrue(role.getId());
-        vo.setCount(count);
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = role.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 

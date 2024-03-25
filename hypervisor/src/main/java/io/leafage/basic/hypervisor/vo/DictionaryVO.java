@@ -17,49 +17,39 @@
 
 package io.leafage.basic.hypervisor.vo;
 
+import io.leafage.basic.hypervisor.bo.DictionaryBO;
+
+import java.time.Instant;
+
 /**
  * vo class for dictionary.
  *
  * @author wq li 2022-04-06 17:33
  */
-public class DictionaryVO {
+public class DictionaryVO extends DictionaryBO {
 
     /**
-     * 名称
+     * 主键
      */
-    private String name;
-    /**
-     * 简称
-     */
-    private String alias;
+    private Long id;
+
     /**
      * 上级
      */
     private String superior;
+
     /**
-     * 描述
+     * 最后更新时间
      */
-    private String description;
-    /**
-     * 是否可用
-     */
-    private boolean enabled;
+    private Instant lastModifiedDate;
 
 
-    public String getName() {
-        return name;
+    public Long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSuperior() {
@@ -70,19 +60,11 @@ public class DictionaryVO {
         this.superior = superior;
     }
 
-    public String getDescription() {
-        return description;
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 }

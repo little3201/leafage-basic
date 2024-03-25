@@ -28,7 +28,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import top.leafage.common.servlet.ServletAbstractTreeNodeService;
+
+import java.time.Instant;
+import java.util.Optional;
 
 /**
  * message service impl.
@@ -36,7 +38,7 @@ import top.leafage.common.servlet.ServletAbstractTreeNodeService;
  * @author wq li 2022/1/26 15:20
  **/
 @Service
-public class MessageServiceImpl extends ServletAbstractTreeNodeService<Message> implements MessageService {
+public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
 
@@ -76,6 +78,10 @@ public class MessageServiceImpl extends ServletAbstractTreeNodeService<Message> 
         MessageVO vo = new MessageVO();
         BeanCopier copier = BeanCopier.create(Message.class, MessageVO.class, false);
         copier.copy(message, vo, null);
+
+        // get lastModifiedDate
+        Optional<Instant> optionalInstant = message.getLastModifiedDate();
+        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 }

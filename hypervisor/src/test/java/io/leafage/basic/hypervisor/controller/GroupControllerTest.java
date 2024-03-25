@@ -80,10 +80,8 @@ class GroupControllerTest {
     void init() {
         groupVO = new GroupVO();
         groupVO.setName("test");
-        groupVO.setAlias("alias");
         groupVO.setPrincipal("test");
         groupVO.setSuperior("superior");
-        groupVO.setCount(2L);
 
         groupDTO = new GroupDTO();
         groupDTO.setName("test");
@@ -94,7 +92,7 @@ class GroupControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0,2);
+        Pageable pageable = PageRequest.of(0, 2);
         Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), pageable, 2L);
         given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 

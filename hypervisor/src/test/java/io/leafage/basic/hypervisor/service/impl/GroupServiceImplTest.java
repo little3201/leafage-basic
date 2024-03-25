@@ -19,7 +19,6 @@ package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Group;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
-import io.leafage.basic.hypervisor.repository.GroupMembersRepository;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.junit.jupiter.api.Assertions;
@@ -53,9 +52,6 @@ import static org.mockito.Mockito.verify;
 class GroupServiceImplTest {
 
     @Mock
-    private GroupMembersRepository groupMembersRepository;
-
-    @Mock
     private GroupRepository groupRepository;
 
     @InjectMocks
@@ -79,8 +75,6 @@ class GroupServiceImplTest {
         given(this.groupRepository.findAll(PageRequest.of(0, 2, Sort.by("id"))))
                 .willReturn(page);
 
-        given(this.groupMembersRepository.countByGroupIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
-
         Page<GroupVO> voPage = groupService.retrieve(0, 2, "id");
         Assertions.assertNotNull(voPage.getContent());
     }
@@ -88,8 +82,6 @@ class GroupServiceImplTest {
     @Test
     void create() {
         given(this.groupRepository.saveAndFlush(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
-
-        given(this.groupMembersRepository.countByGroupIdAndEnabledTrue(Mockito.anyLong())).willReturn(2L);
 
         GroupVO groupVO = groupService.create(Mockito.mock(GroupDTO.class));
 
@@ -109,8 +101,6 @@ class GroupServiceImplTest {
         given(this.groupRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Group.class)));
 
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
-
-        given(this.groupMembersRepository.countByGroupIdAndEnabledTrue(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         GroupVO groupVO = groupService.modify(1L, groupDTO);
 

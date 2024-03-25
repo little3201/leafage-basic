@@ -46,11 +46,4 @@ public interface RolePrivilegesRepository extends JpaRepository<RolePrivileges, 
      */
     List<RolePrivileges> findByPrivilegeId(Long privilegeId);
 
-    /**
-     * 统计关联privilege
-     *
-     * @param roleId role主键
-     * @return 用户数
-     */
-    long countByRoleIdAndEnabledTrue(Long roleId);
 }

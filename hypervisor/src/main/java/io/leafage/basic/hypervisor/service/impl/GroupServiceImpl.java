@@ -45,7 +45,7 @@ import java.util.Optional;
  * @author wq li 2018/12/17 19:25
  **/
 @Service
-public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> implements GroupService {
+public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
 
@@ -57,19 +57,6 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     public Page<GroupVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
         return groupRepository.findAll(pageable).map(this::convertOuter);
-    }
-
-    @Override
-    public List<TreeNode> tree() {
-        List<Group> groups = groupRepository.findByEnabledTrue();
-        if (!CollectionUtils.isEmpty(groups)) {
-            return groups.stream().filter(g -> g.getSuperiorId() == null).map(g -> {
-                TreeNode treeNode = new TreeNode(g.getId(), g.getName());
-                treeNode.setChildren(this.convert(groups));
-                return treeNode;
-            }).toList();
-        }
-        return Collections.emptyList();
     }
 
     @Override

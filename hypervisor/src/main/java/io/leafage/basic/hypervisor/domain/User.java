@@ -20,10 +20,7 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-
-import java.time.Instant;
 
 /**
  * model class for user.
@@ -31,19 +28,19 @@ import java.time.Instant;
  * @author wq li 2020-12-20 9:54
  */
 @Entity
-@Table(name = "users", indexes = {@Index(name = "uni_users_username", columnList = "username")})
+@Table(name = "users")
 public class User extends AuditMetadata {
 
     /**
      * user
      */
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
 
     /**
      * password
      */
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, length = 50)
     private String password;
 
     /**
@@ -60,36 +57,6 @@ public class User extends AuditMetadata {
      * 头像
      */
     private String avatar;
-
-    /**
-     * 有效
-     */
-    @Column(name = "account_non_expired")
-    private boolean accountNonExpired = true;
-
-    /**
-     * 有效期
-     */
-    @Column(name = "account_expires_at")
-    private Instant accountExpiresAt;
-
-    /**
-     * 未锁定
-     */
-    @Column(name = "account_non_locked")
-    private boolean accountNonLocked = true;
-
-    /**
-     * 密码有效
-     */
-    @Column(name = "credentials_non_expired")
-    private boolean credentialsNonExpired = true;
-
-    /**
-     * 密码有效期
-     */
-    @Column(name = "credentials_expires_at")
-    private Instant credentialsExpiresAt;
 
 
     public String getUsername() {
@@ -132,43 +99,4 @@ public class User extends AuditMetadata {
         this.avatar = avatar;
     }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public Instant getAccountExpiresAt() {
-        return accountExpiresAt;
-    }
-
-    public void setAccountExpiresAt(Instant accountExpiresAt) {
-        this.accountExpiresAt = accountExpiresAt;
-    }
-
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
-    }
-
-    public Instant getCredentialsExpiresAt() {
-        return credentialsExpiresAt;
-    }
-
-    public void setCredentialsExpiresAt(Instant credentialsExpiresAt) {
-        this.credentialsExpiresAt = credentialsExpiresAt;
-    }
 }

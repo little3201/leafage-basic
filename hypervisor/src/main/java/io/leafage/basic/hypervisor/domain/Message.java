@@ -20,7 +20,6 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -29,7 +28,7 @@ import jakarta.persistence.Table;
  * @author wq li 2022/1/29 17:20
  **/
 @Entity
-@Table(name = "messages", indexes = {@Index(name = "idx_messages_receiver", columnList = "receiver")})
+@Table(name = "messages")
 public class Message extends AuditMetadata {
 
     /**

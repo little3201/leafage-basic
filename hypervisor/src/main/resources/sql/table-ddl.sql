@@ -3,231 +3,361 @@ DROP TABLE IF EXISTS groups;
 
 -- Create table groups
 CREATE TABLE groups (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   name                 varchar(64) NOT NULL UNIQUE COMMENT '名称',
-   principal            varchar(16) COMMENT '负责人',
-   description          varchar(512) COMMENT '描述',
-   enabled           boolean NOT NULL DEFAULT true COMMENT '是否启用',
-   created_by           varchar(32) NOT NULL COMMENT '创建者',
-   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   last_modified_by     varchar(32) NOT NULL COMMENT '最后修改者',
-   last_modified_date   timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间'
+   id                   bigserial PRIMARY KEY NOT NULL,
+   group_name           varchar(50) NOT NULL,
+   enabled              boolean NOT NULL DEFAULT true,
+   created_by           varchar(50),
+   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   last_modified_by     varchar(50),
+   last_modified_date   timestamp
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE groups IS '用户组表';
+COMMENT ON COLUMN groups.id IS '主键';
+COMMENT ON COLUMN groups.group_name IS '名称';
+COMMENT ON COLUMN groups.enabled IS '是否启用';
+COMMENT ON COLUMN groups.created_by IS '创建者';
+COMMENT ON COLUMN groups.created_date IS '创建时间';
+COMMENT ON COLUMN groups.last_modified_by IS '最后修改者';
+COMMENT ON COLUMN groups.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists users
 DROP TABLE IF EXISTS users;
 
 -- Create table users
 CREATE TABLE users (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   username             varchar(16) NOT NULL UNIQUE COMMENT '用户名',
-   password             varchar(255) NOT NULL COMMENT '密码',
-   firstname            varchar(16) COMMENT '名字',
-   lastname             varchar(16) COMMENT '姓氏',
-   avatar               varchar(127) COMMENT '头像',
-   account_expires_at   timestamp COMMENT '账号过期时间',
-   credentials_expires_at timestamp COMMENT '凭证过期时间',
-   account_non_locked   boolean NOT NULL DEFAULT true COMMENT '账号是否非锁定',
-   enabled           boolean NOT NULL DEFAULT true COMMENT '是否启用',
-   created_by           varchar(32) NOT NULL COMMENT '创建者',
-   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   last_modified_by     varchar(32) NOT NULL COMMENT '最后修改者',
-   last_modified_date   timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间'
+   id                   bigserial PRIMARY KEY NOT NULL,
+   username             varchar(50) UNIQUE NOT NULL,
+   password             varchar(50) NOT NULL,
+   firstname            varchar(16),
+   lastname             varchar(16),
+   avatar               varchar(127),
+   enabled              boolean NOT NULL DEFAULT true,
+   created_by           varchar(50),
+   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   last_modified_by     varchar(50),
+   last_modified_date   timestamp
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE users IS '用户表';
+COMMENT ON COLUMN users.id IS '主键';
+COMMENT ON COLUMN users.username IS '用户名';
+COMMENT ON COLUMN users.password IS '密码';
+COMMENT ON COLUMN users.firstname IS '名字';
+COMMENT ON COLUMN users.lastname IS '姓氏';
+COMMENT ON COLUMN users.avatar IS '头像';
+COMMENT ON COLUMN users.enabled IS '是否启用';
+COMMENT ON COLUMN users.created_by IS '创建者';
+COMMENT ON COLUMN users.created_date IS '创建时间';
+COMMENT ON COLUMN users.last_modified_by IS '最后修改者';
+COMMENT ON COLUMN users.last_modified_date IS '最后修改时间';
+
+-- Drop table if exists authorities
+DROP TABLE IF EXISTS authorities;
+
+-- Create table authorities
+CREATE TABLE authorities (
+    id                   bigserial PRIMARY KEY NOT NULL,
+    username varchar(50) not null,
+    authority varchar(50) not null,
+    CONSTRAINT fk_authorities_users FOREIGN KEY(username) references users(username)
+);
+
+-- Add comment to the table and columns
+COMMENT ON TABLE authorities IS '用户权限表';
+COMMENT ON COLUMN authorities.id IS '主键';
+COMMENT ON COLUMN authorities.username IS '用户名';
+COMMENT ON COLUMN authorities.authority IS '权限';
+
+-- Create unique index
+CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
 
 -- Drop table if exists roles
 DROP TABLE IF EXISTS roles;
 
 -- Create table roles
 CREATE TABLE roles (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   name                 varchar(64) NOT NULL UNIQUE COMMENT '名称',
-   description          varchar(512) COMMENT '描述',
-   enabled           boolean NOT NULL DEFAULT true COMMENT '是否启用',
-   created_by           varchar(32) NOT NULL COMMENT '创建者',
-   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   last_modified_by     varchar(32) NOT NULL COMMENT '最后修改者',
-   last_modified_date   timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间'
+   id                   bigserial PRIMARY KEY NOT NULL,
+   name                 varchar(50) NOT NULL,
+   description          varchar(512),
+   enabled              boolean NOT NULL DEFAULT true,
+   created_by           varchar(50),
+   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   last_modified_by     varchar(50),
+   last_modified_date   timestamp
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE roles IS '角色表';
+COMMENT ON COLUMN roles.id IS '主键';
+COMMENT ON COLUMN roles.name IS '名称';
+COMMENT ON COLUMN roles.description IS '描述';
+COMMENT ON COLUMN roles.enabled IS '是否启用';
+COMMENT ON COLUMN roles.created_by IS '创建者';
+COMMENT ON COLUMN roles.created_date IS '创建时间';
+COMMENT ON COLUMN roles.last_modified_by IS '最后修改者';
+COMMENT ON COLUMN roles.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists group_members
 DROP TABLE IF EXISTS group_members;
 
 -- Create table group_members
 CREATE TABLE group_members (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   group_id             bigint NOT NULL COMMENT '用户组ID',
-   username             varchar(32) NOT NULL COMMENT '用户名',
-   CONSTRAINT fk_group_members_group FOREIGN KEY (group_id) REFERENCES groups(id),
-   CONSTRAINT fk_group_members_username FOREIGN KEY (username) REFERENCES users(username)
+   id                   bigserial PRIMARY KEY NOT NULL,
+   group_id             bigint NOT NULL,
+   username             varchar(50) NOT NULL,
+   CONSTRAINT fk_group_members_group foreign key(group_id) references groups(id)
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE group_members IS '用户组成员关系表';
+COMMENT ON COLUMN group_members.id IS '主键';
+COMMENT ON COLUMN group_members.group_id IS '用户组ID';
+COMMENT ON COLUMN group_members.username IS '用户名';
 
--- Drop table if exists group_roles
-DROP TABLE IF EXISTS group_roles;
+-- Drop table if exists group_authorities
+DROP TABLE IF EXISTS group_authorities;
 
--- Create table group_roles
-CREATE TABLE group_roles (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   group_id             bigint NOT NULL COMMENT '用户组ID',
-   role_id              bigint NOT NULL COMMENT '角色ID',
-   CONSTRAINT fk_group_roles_group FOREIGN KEY (group_id) REFERENCES groups(id),
-   CONSTRAINT fk_group_roles_role FOREIGN KEY (role_id) REFERENCES roles(id)
+-- Create table group_authorities
+CREATE TABLE group_authorities (
+   id                   bigserial PRIMARY KEY NOT NULL,
+   group_id             bigint NOT NULL,
+   authority            varchar(50) NOT NULL,
+   CONSTRAINT fk_group_authorities_group FOREIGN KEY(group_id) references groups(id)
 );
 
--- Add comment to the table
-COMMENT ON TABLE group_roles IS '用户组角色关系表';
+-- Add comment to the table and columns
+COMMENT ON TABLE group_authorities IS '用户组权限关系表';
+COMMENT ON COLUMN group_authorities.id IS '主键';
+COMMENT ON COLUMN group_authorities.group_id IS '用户组ID';
+COMMENT ON COLUMN group_authorities.authority IS '权限';
+
+-- Drop table if exists persistent_logins
+DROP TABLE IF EXISTS persistent_logins;
+
+-- Create table persistent_logins
+CREATE TABLE persistent_logins (
+	username varchar(64) not null,
+	series varchar(64) primary key,
+	token varchar(64) not null,
+	last_used timestamp not null
+);
+
+-- Add comment to the table and columns
+COMMENT ON TABLE persistent_logins IS '持久化登录表';
+COMMENT ON COLUMN persistent_logins.username IS '用户名';
+COMMENT ON COLUMN persistent_logins.series IS '系列';
+COMMENT ON COLUMN persistent_logins.token IS '令牌';
+COMMENT ON COLUMN persistent_logins.last_used IS '最后使用时间';
 
 -- Drop table if exists role_members
 DROP TABLE IF EXISTS role_members;
 
 -- Create table role_members
 CREATE TABLE role_members (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   role_id              bigint NOT NULL COMMENT '角色ID',
-   username             varchar(32) NOT NULL COMMENT '用户名',
-   CONSTRAINT fk_role_members_role FOREIGN KEY (role_id) REFERENCES roles(id),
-   CONSTRAINT fk_role_members_username FOREIGN KEY (username) REFERENCES users(username)
+   id                   bigserial PRIMARY KEY NOT NULL,
+   role_id              bigint NOT NULL,
+   username             varchar(50) NOT NULL,
+   CONSTRAINT fk_role_members_role FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE role_members IS '角色成员关系表';
+COMMENT ON COLUMN role_members.id IS '主键';
+COMMENT ON COLUMN role_members.role_id IS '角色ID';
+COMMENT ON COLUMN role_members.username IS '用户名';
 
 -- Drop table if exists privileges
 DROP TABLE IF EXISTS privileges;
 
 -- Create table privileges
 CREATE TABLE privileges (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   superior_id          bigint COMMENT '上级ID',
-   name                 varchar(64) NOT NULL COMMENT '名称',
-   type                 character(1) NOT NULL COMMENT '类型',
-   path                 varchar(127) COMMENT '路径',
-   icon                 varchar(127) COMMENT '图标',
-   description          varchar(512) COMMENT '描述',
-   enabled           boolean NOT NULL DEFAULT true COMMENT '是否启用',
-   created_by           varchar(32) NOT NULL COMMENT '创建者',
-   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   last_modified_by     varchar(32) NOT NULL COMMENT '最后修改者',
-   last_modified_date   timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间'
+   id                   bigserial PRIMARY KEY NOT NULL,
+   superior_id          bigint,
+   name                 varchar(50) NOT NULL,
+   type                 character(1) NOT NULL,
+   path                 varchar(127),
+   icon                 varchar(127),
+   description          varchar(512),
+   enabled              boolean NOT NULL DEFAULT true,
+   created_by           varchar(50) NOT NULL,
+   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   last_modified_by     varchar(50) NOT NULL,
+   last_modified_date   timestamp
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE privileges IS '权限表';
+COMMENT ON COLUMN privileges.id IS '主键';
+COMMENT ON COLUMN privileges.superior_id IS '上级ID';
+COMMENT ON COLUMN privileges.name IS '名称';
+COMMENT ON COLUMN privileges.type IS '类型';
+COMMENT ON COLUMN privileges.path IS '路径';
+COMMENT ON COLUMN privileges.icon IS '图标';
+COMMENT ON COLUMN privileges.description IS '描述';
+COMMENT ON COLUMN privileges.enabled IS '是否启用';
+COMMENT ON COLUMN privileges.created_by IS '创建者';
+COMMENT ON COLUMN privileges.created_date IS '创建时间';
+COMMENT ON COLUMN privileges.last_modified_by IS '最后修改者';
+COMMENT ON COLUMN privileges.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists role_privileges
 DROP TABLE IF EXISTS role_privileges;
 
 -- Create table role_privileges
 CREATE TABLE role_privileges (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   role_id              bigint NOT NULL COMMENT '角色ID',
-   privilege_id         bigint NOT NULL COMMENT '权限ID',
+   id                   bigserial PRIMARY KEY NOT NULL,
+   role_id              bigint NOT NULL,
+   privilege_id         bigint NOT NULL,
    CONSTRAINT fk_role_privileges_role FOREIGN KEY (role_id) REFERENCES roles(id),
    CONSTRAINT fk_role_privileges_privilege FOREIGN KEY (privilege_id) REFERENCES privileges(id)
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE role_privileges IS '角色权限关系表';
+COMMENT ON COLUMN role_privileges.id IS '主键';
+COMMENT ON COLUMN role_privileges.role_id IS '角色ID';
+COMMENT ON COLUMN role_privileges.privilege_id IS '权限ID';
 
 -- Drop table if exists dictionaries
 DROP TABLE IF EXISTS dictionaries;
 
 -- Create table dictionaries
 CREATE TABLE dictionaries (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   name                 varchar(64) NOT NULL COMMENT '名称',
-   superior_id          bigint COMMENT '上级ID',
-   description          varchar(512) COMMENT '描述',
-   enabled           boolean NOT NULL DEFAULT true COMMENT '是否启用',
-   created_by           varchar(32) NOT NULL COMMENT '创建者',
-   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   last_modified_by     varchar(32) NOT NULL COMMENT '最后修改者',
-   last_modified_date   timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间'
+   id                   bigserial PRIMARY KEY NOT NULL,
+   name                 varchar(50) NOT NULL,
+   superior_id          bigint,
+   description          varchar(512),
+   enabled              boolean NOT NULL DEFAULT true,
+   created_by           varchar(50) NOT NULL,
+   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   last_modified_by     varchar(50) NOT NULL,
+   last_modified_date   timestamp
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE dictionaries IS '字典表';
+COMMENT ON COLUMN dictionaries.id IS '主键';
+COMMENT ON COLUMN dictionaries.name IS '名称';
+COMMENT ON COLUMN dictionaries.superior_id IS '上级ID';
+COMMENT ON COLUMN dictionaries.description IS '描述';
+COMMENT ON COLUMN dictionaries.enabled IS '是否启用';
+COMMENT ON COLUMN dictionaries.created_by IS '创建者';
+COMMENT ON COLUMN dictionaries.created_date IS '创建时间';
+COMMENT ON COLUMN dictionaries.last_modified_by IS '最后修改者';
+COMMENT ON COLUMN dictionaries.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists messages
 DROP TABLE IF EXISTS messages;
 
 -- Create table messages
 CREATE TABLE messages (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   title                varchar(255) NOT NULL COMMENT '标题',
-   context              text COMMENT '内容',
-   is_read              boolean NOT NULL DEFAULT false COMMENT
-   -- 是否已读
-   receiver             varchar(32) NOT NULL COMMENT '接收者',
-   description          varchar(512) COMMENT '描述',
-   enabled           boolean NOT NULL DEFAULT true COMMENT '是否启用',
-   created_by           varchar(32) NOT NULL COMMENT '创建者',
-   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   last_modified_by     varchar(32) NOT NULL COMMENT '最后修改者',
-   last_modified_date   timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间'
+   id                   bigserial PRIMARY KEY NOT NULL,
+   title                varchar(255) NOT NULL,
+   context              text,
+   is_read              boolean NOT NULL DEFAULT false,
+   receiver             varchar(50) NOT NULL,
+   description          varchar(512),
+   enabled              boolean NOT NULL DEFAULT true,
+   created_by           varchar(50) NOT NULL,
+   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   last_modified_by     varchar(50) NOT NULL,
+   last_modified_date   timestamp
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE messages IS '消息表';
+COMMENT ON COLUMN messages.id IS '主键';
+COMMENT ON COLUMN messages.title IS '标题';
+COMMENT ON COLUMN messages.context IS '内容';
+COMMENT ON COLUMN messages.is_read IS '是否已读';
+COMMENT ON COLUMN messages.receiver IS '接收者';
+COMMENT ON COLUMN messages.description IS '描述';
+COMMENT ON COLUMN messages.enabled IS '是否启用';
+COMMENT ON COLUMN messages.created_by IS '创建者';
+COMMENT ON COLUMN messages.created_date IS '创建时间';
+COMMENT ON COLUMN messages.last_modified_by IS '最后修改者';
+COMMENT ON COLUMN messages.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists regions
 DROP TABLE IF EXISTS regions;
 
 -- Create table regions
 CREATE TABLE regions (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   name                 varchar(64) NOT NULL COMMENT '名称',
-   superior_id          bigint COMMENT '上级ID',
-   postal_code          bigint COMMENT '邮政编码',
-   area_code            bigint COMMENT '区号',
-   description          varchar(512) COMMENT '描述',
-   enabled           boolean NOT NULL DEFAULT true COMMENT '是否启用',
-   created_by           varchar(32) NOT NULL COMMENT '创建者',
-   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   last_modified_by     varchar(32) NOT NULL COMMENT '最后修改者',
-   last_modified_date   timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间'
+   id                   bigserial PRIMARY KEY NOT NULL,
+   name                 varchar(50) NOT NULL,
+   superior_id          bigint,
+   postal_code          bigint,
+   area_code            bigint,
+   description          varchar(512),
+   enabled              boolean NOT NULL DEFAULT true,
+   created_by           varchar(50) NOT NULL,
+   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   last_modified_by     varchar(50) NOT NULL,
+   last_modified_date   timestamp
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE regions IS '地区表';
+COMMENT ON COLUMN regions.id IS '主键';
+COMMENT ON COLUMN regions.name IS '名称';
+COMMENT ON COLUMN regions.superior_id IS '上级ID';
+COMMENT ON COLUMN regions.postal_code IS '邮政编码';
+COMMENT ON COLUMN regions.area_code IS '区号';
+COMMENT ON COLUMN regions.description IS '描述';
+COMMENT ON COLUMN regions.enabled IS '是否启用';
+COMMENT ON COLUMN regions.created_by IS '创建者';
+COMMENT ON COLUMN regions.created_date IS '创建时间';
+COMMENT ON COLUMN regions.last_modified_by IS '最后修改者';
+COMMENT ON COLUMN regions.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists access_logs
 DROP TABLE IF EXISTS access_logs;
 
 -- Create table access_logs
 CREATE TABLE access_logs (
-   id                   bigserial PRIMARY KEY NOT NULL COMMENT '主键',
-   ip                   inet COMMENT 'IP地址',
-   location             varchar(127) COMMENT '位置',
-   context              text COMMENT '内容',
-   user_agent           varchar(255) COMMENT '用户代理信息',
-   http_method          varchar(10) COMMENT 'HTTP方法',
-   url                  text COMMENT '请求URL',
-   status_code          integer COMMENT 'HTTP状态码',
-   response_time        bigint COMMENT '响应时间',
-   referer              varchar(255) COMMENT '来源页面',
-   session_id           varchar(50) COMMENT '会话标识符',
-   device_type          varchar(20) COMMENT '设备类型',
-   os                   varchar(50) COMMENT '操作系统',
-   browser              varchar(50) COMMENT '浏览器',
-   enabled           boolean NOT NULL DEFAULT true COMMENT '是否启用',
-   created_by           varchar(32) NOT NULL COMMENT '创建者',
-   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-   last_modified_by     varchar(32) NOT NULL COMMENT '最后修改者',
-   last_modified_date   timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最后修改时间'
+   id                   bigserial PRIMARY KEY NOT NULL,
+   ip                   inet,
+   location             varchar(127),
+   context              text,
+   user_agent           varchar(255),
+   http_method          varchar(10),
+   url                  text,
+   status_code          integer,
+   response_time        bigint,
+   referer              varchar(255),
+   session_id           varchar(50),
+   device_type          varchar(20),
+   os                   varchar(50),
+   browser              varchar(50),
+   enabled              boolean NOT NULL DEFAULT true,
+   created_by           varchar(50),
+   created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   last_modified_by     varchar(50),
+   last_modified_date   timestamp
 );
 
--- Add comment to the table
+-- Add comment to the table and columns
 COMMENT ON TABLE access_logs IS '访问日志表';
+COMMENT ON COLUMN access_logs.id IS '主键';
+COMMENT ON COLUMN access_logs.ip IS 'IP地址';
+COMMENT ON COLUMN access_logs.location IS '位置';
+COMMENT ON COLUMN access_logs.context IS '内容';
+COMMENT ON COLUMN access_logs.user_agent IS '用户代理信息';
+COMMENT ON COLUMN access_logs.http_method IS 'HTTP方法';
+COMMENT ON COLUMN access_logs.url IS '请求URL';
+COMMENT ON COLUMN access_logs.status_code IS 'HTTP状态码';
+COMMENT ON COLUMN access_logs.response_time IS '响应时间';
+COMMENT ON COLUMN access_logs.referer IS '来源页面';
+COMMENT ON COLUMN access_logs.session_id IS '会话标识符';
+COMMENT ON COLUMN access_logs.device_type IS '设备类型';
+COMMENT ON COLUMN access_logs.os IS '操作系统';
+COMMENT ON COLUMN access_logs.browser IS '浏览器';
+COMMENT ON COLUMN access_logs.enabled IS '是否启用';
+COMMENT ON COLUMN access_logs.created_by IS '创建者';
+COMMENT ON COLUMN access_logs.created_date IS '创建时间';
+COMMENT ON COLUMN access_logs.last_modified_by IS '最后修改者';
+COMMENT ON COLUMN access_logs.last_modified_date IS '最后修改时间';
+

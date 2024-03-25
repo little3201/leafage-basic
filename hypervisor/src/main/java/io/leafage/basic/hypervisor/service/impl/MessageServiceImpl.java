@@ -28,7 +28,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -39,7 +38,7 @@ import java.util.Optional;
  * @author wq li 2022/1/26 15:20
  **/
 @Service
-public class MessageServiceImpl extends ServletAbstractTreeNodeService<Message> implements MessageService {
+public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
 

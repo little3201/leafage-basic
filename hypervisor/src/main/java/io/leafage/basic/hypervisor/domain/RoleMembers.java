@@ -16,11 +16,7 @@
  */
 package io.leafage.basic.hypervisor.domain;
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 /**
  * model class for role members.
@@ -28,10 +24,15 @@ import jakarta.persistence.Table;
  * @author wq li 2022/1/26 15:20
  */
 @Entity
-@Table(name = "role_members", indexes = {@Index(name = "idx_role_members_group_id", columnList = "role_id"),
-        @Index(name = "idx_role_members_username", columnList = "username")})
-public class RoleMembers extends AuditMetadata {
+@Table(name = "role_members")
+public class RoleMembers {
 
+    /**
+     * 主键
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     /**
      * group主键
@@ -45,6 +46,14 @@ public class RoleMembers extends AuditMetadata {
     @Column(name = "username", nullable = false)
     private String username;
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getRoleId() {
         return roleId;

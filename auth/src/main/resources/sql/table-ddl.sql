@@ -1,77 +1,110 @@
-drop table if exists oauth_registered_client;
+-- Drop table if exists oauth_registered_client;
+DROP TABLE IF EXISTS oauth_registered_client;
 
-/*==============================================================*/
-/* Table: oauth_registered_client                               */
-/*==============================================================*/
-create table oauth_registered_client
-(
-   id                   varchar(100) not null comment '主键',
-   client_id            varchar(100) not null comment '客户端ID',
-   client_id_issued_at  timestamp not null comment '生效时间',
-   client_secret        varchar(200) not null comment '密钥',
-   client_secret_expires_at timestamp comment '密钥失效时间',
-   client_name          varchar(200) comment '名称',
-   client_authorization_methods varchar(1000) comment '认证方法',
-   authorization_grant_types varchar(1000) comment '授权方式',
-   redirect_uris        varchar(1000) comment '跳转连接',
-   scopes               varchar(1000) comment '作用域',
-   client_settings      varchar(2000) comment '客户端设置',
-   token_settings       varchar(2000) comment 'token 设置',
-   primary key (id)
+-- Create table oauth_registered_client
+CREATE TABLE oauth_registered_client (
+   id                         VARCHAR(100) NOT NULL,
+   client_id                  VARCHAR(100) NOT NULL,
+   client_id_issued_at        TIMESTAMP NOT NULL,
+   client_secret              VARCHAR(200) NOT NULL,
+   client_secret_expires_at   TIMESTAMP,
+   client_name                VARCHAR(200),
+   client_authorization_methods VARCHAR(1000),
+   authorization_grant_types  VARCHAR(1000),
+   redirect_uris              VARCHAR(1000),
+   scopes                     VARCHAR(1000),
+   client_settings            VARCHAR(2000),
+   token_settings             VARCHAR(2000),
+   PRIMARY KEY (id)
 );
 
-alter table oauth_registered_client comment 'client 信息';
+-- Add comment to the table and columns
+COMMENT ON TABLE oauth_registered_client IS 'client 信息';
+COMMENT ON COLUMN oauth_registered_client.id IS '主键';
+COMMENT ON COLUMN oauth_registered_client.client_id IS '客户端ID';
+COMMENT ON COLUMN oauth_registered_client.client_id_issued_at IS '生效时间';
+COMMENT ON COLUMN oauth_registered_client.client_secret IS '密钥';
+COMMENT ON COLUMN oauth_registered_client.client_secret_expires_at IS '密钥失效时间';
+COMMENT ON COLUMN oauth_registered_client.client_name IS '名称';
+COMMENT ON COLUMN oauth_registered_client.client_authorization_methods IS '认证方法';
+COMMENT ON COLUMN oauth_registered_client.authorization_grant_types IS '授权方式';
+COMMENT ON COLUMN oauth_registered_client.redirect_uris IS '跳转连接';
+COMMENT ON COLUMN oauth_registered_client.scopes IS '作用域';
+COMMENT ON COLUMN oauth_registered_client.client_settings IS '客户端设置';
+COMMENT ON COLUMN oauth_registered_client.token_settings IS 'token 设置';
 
+-- Drop table if exists oauth_authorization
+DROP TABLE IF EXISTS oauth_authorization;
 
-drop table if exists oauth_authorization;
-
-/*==============================================================*/
-/* Table: oauth_authorization                                   */
-/*==============================================================*/
-create table oauth_authorization
-(
-   id                   varchar(100) not null comment '主键',
-   registered_client_id varchar(100) not null comment '客户端ID',
-   principal_name       timestamp not null comment '认证账号',
-   authorization_grant_type varchar(1000) not null comment '授权类型',
-   attributes           varchar(4000) comment '参数',
-   state                varchar(500) comment '状态',
-   authorization_code_value blob comment 'authorization code',
-   authorization_code_issued_at timestamp comment 'authorization code生效时间',
-   authorization_code_expires_at timestamp comment 'authorization code失效时间',
-   authorization_code_metadata varchar(2000) comment 'authorization code 元数据',
-   access_token_value   blob comment 'access token',
-   access_token_issued_at timestamp comment 'access token 生效时间',
-   access_token_expires_at timestamp comment 'access_token 失效时间',
-   access_token_metadata varchar(2000) comment 'access token元数据',
-   access_token_type    varchar(100) comment 'access token 类型',
-   access_token_scopes  varchar(1000) comment 'access token 域',
-   oidc_id_token_value  blob comment 'oidc token',
-   oidc_id_token_issued_at timestamp comment 'oidc token 生效时间',
-   oidc_id_token_expires_at timestamp comment 'oidc token 失效时间',
-   oidc_id_token_metadata varchar(2000) comment 'oidc token 元数据',
-   refresh_token_value  blob comment 'refresh token',
-   refresh_token_issued_at timestamp comment 'refresh token 生效时间',
-   refresh_token_expires_at timestamp comment 'refresh token 失效时间',
-   refresh_token_metadata varchar(2000) comment 'refresh token 元数据',
-   primary key (id)
+-- Create table oauth_authorization
+CREATE TABLE oauth_authorization (
+   id                            VARCHAR(100) NOT NULL,
+   registered_client_id          VARCHAR(100) NOT NULL,
+   principal_name                TIMESTAMP NOT NULL,
+   authorization_grant_type      VARCHAR(1000) NOT NULL,
+   attributes                    VARCHAR(4000),
+   state                         VARCHAR(500),
+   authorization_code_value      BYTEA,
+   authorization_code_issued_at  TIMESTAMP,
+   authorization_code_expires_at TIMESTAMP,
+   authorization_code_metadata   VARCHAR(2000),
+   access_token_value            BYTEA,
+   access_token_issued_at        TIMESTAMP,
+   access_token_expires_at       TIMESTAMP,
+   access_token_metadata         VARCHAR(2000),
+   access_token_type             VARCHAR(100),
+   access_token_scopes           VARCHAR(1000),
+   oidc_id_token_value           BYTEA,
+   oidc_id_token_issued_at       TIMESTAMP,
+   oidc_id_token_expires_at      TIMESTAMP,
+   oidc_id_token_metadata        VARCHAR(2000),
+   refresh_token_value           BYTEA,
+   refresh_token_issued_at       TIMESTAMP,
+   refresh_token_expires_at      TIMESTAMP,
+   refresh_token_metadata        VARCHAR(2000),
+   PRIMARY KEY (id)
 );
 
-alter table oauth_authorization comment '授权信息';
+-- Add comment to the table and columns
+COMMENT ON TABLE oauth_authorization IS '授权信息';
+COMMENT ON COLUMN oauth_authorization.id IS '主键';
+COMMENT ON COLUMN oauth_authorization.registered_client_id IS '客户端ID';
+COMMENT ON COLUMN oauth_authorization.principal_name IS '认证账号';
+COMMENT ON COLUMN oauth_authorization.authorization_grant_type IS '授权类型';
+COMMENT ON COLUMN oauth_authorization.attributes IS '参数';
+COMMENT ON COLUMN oauth_authorization.state IS '状态';
+COMMENT ON COLUMN oauth_authorization.authorization_code_value IS 'authorization code';
+COMMENT ON COLUMN oauth_authorization.authorization_code_issued_at IS 'authorization code生效时间';
+COMMENT ON COLUMN oauth_authorization.authorization_code_expires_at IS 'authorization code失效时间';
+COMMENT ON COLUMN oauth_authorization.authorization_code_metadata IS 'authorization code 元数据';
+COMMENT ON COLUMN oauth_authorization.access_token_value IS 'access token';
+COMMENT ON COLUMN oauth_authorization.access_token_issued_at IS 'access token 生效时间';
+COMMENT ON COLUMN oauth_authorization.access_token_expires_at IS 'access_token 失效时间';
+COMMENT ON COLUMN oauth_authorization.access_token_metadata IS 'access token元数据';
+COMMENT ON COLUMN oauth_authorization.access_token_type IS 'access token 类型';
+COMMENT ON COLUMN oauth_authorization.access_token_scopes IS 'access token 域';
+COMMENT ON COLUMN oauth_authorization.oidc_id_token_value IS 'oidc token';
+COMMENT ON COLUMN oauth_authorization.oidc_id_token_issued_at IS 'oidc token 生效时间';
+COMMENT ON COLUMN oauth_authorization.oidc_id_token_expires_at IS 'oidc token 失效时间';
+COMMENT ON COLUMN oauth_authorization.oidc_id_token_metadata IS 'oidc token 元数据';
+COMMENT ON COLUMN oauth_authorization.refresh_token_value IS 'refresh token';
+COMMENT ON COLUMN oauth_authorization.refresh_token_issued_at IS 'refresh token 生效时间';
+COMMENT ON COLUMN oauth_authorization.refresh_token_expires_at IS 'refresh token 失效时间';
+COMMENT ON COLUMN oauth_authorization.refresh_token_metadata IS 'refresh token 元数据';
 
+-- Drop table if exists oauth_authorization_consent
+DROP TABLE IF EXISTS oauth_authorization_consent;
 
-drop table if exists oauth_authorization_consent;
-
-/*==============================================================*/
-/* Table: oauth_authorization_consent                           */
-/*==============================================================*/
-create table oauth_authorization_consent
-(
-   registered_client_id varchar(100) not null comment '客户端ID',
-   principal_name       varchar(200) not null comment '认证账号',
-   authorities          varchar(1000) not null comment '权限',
-   primary key ()
+-- Create table oauth_authorization_consent
+CREATE TABLE oauth_authorization_consent (
+   registered_client_id VARCHAR(100) NOT NULL,
+   principal_name       VARCHAR(200) NOT NULL,
+   authorities          VARCHAR(1000) NOT NULL,
+   PRIMARY KEY ()
 );
 
-alter table oauth_authorization_consent comment '认证内容';
-
+-- Add comment to the table and columns
+COMMENT ON TABLE oauth_authorization_consent IS '认证内容';
+COMMENT ON COLUMN oauth_authorization_consent.registered_client_id IS '客户端ID';
+COMMENT ON COLUMN oauth_authorization_consent.principal_name IS '认证账号';
+COMMENT ON COLUMN oauth_authorization_consent.authorities IS '权限';

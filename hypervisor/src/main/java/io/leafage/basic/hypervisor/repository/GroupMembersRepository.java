@@ -46,11 +46,4 @@ public interface GroupMembersRepository extends JpaRepository<GroupMembers, Long
      */
     List<GroupMembers> findByUsername(String username);
 
-    /**
-     * 统计关联user
-     *
-     * @param groupId groupID
-     * @return 用户数
-     */
-    long countByGroupIdAndEnabledTrue(Long groupId);
 }

@@ -21,7 +21,6 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -30,7 +29,7 @@ import jakarta.persistence.Table;
  * @author wq li 2022/1/26 15:20
  **/
 @Entity
-@Table(name = "access_logs", indexes = {@Index(name = "idx_access_logs_created_by", columnList = "created_by")})
+@Table(name = "access_logs")
 public class AccessLog extends AuditMetadata {
 
     /**

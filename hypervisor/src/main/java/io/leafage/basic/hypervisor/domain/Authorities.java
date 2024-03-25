@@ -17,18 +17,39 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "authorities", indexes = {@Index(name = "ix_auth_username", columnList = "username")})
-public class Authorities extends AuditMetadata {
+@Table(name = "authorities")
+public class Authorities {
 
+    /**
+     * 主键
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    /**
+     * username
+     */
+    @Column(name = "username", length = 50)
     private String username;
 
+    /**
+     * authority
+     */
+    @Column(name = "authority", length = 50)
     private String authority;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;

@@ -20,7 +20,6 @@ package io.leafage.basic.hypervisor.domain;
 import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
@@ -29,13 +28,13 @@ import jakarta.persistence.Table;
  * @author wq li 2022-04-06 17:33
  */
 @Entity
-@Table(name = "dictionaries", indexes = {@Index(name = "uni_dictionaries_name", columnList = "name")})
+@Table(name = "dictionaries")
 public class Dictionary extends AuditMetadata {
 
     /**
      * 名称
      */
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     /**

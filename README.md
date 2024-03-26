@@ -2,7 +2,7 @@
 
 <p align="center">
  <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.0-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-3.2.0-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Boot-3.2.1-green.svg" alt="Downloads">
  <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=alert_status" alt="Quality Gate Status">
  <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=coverage"/>
 </p>
@@ -21,6 +21,6 @@
 
 #### 概况：
 
-- 本模块分为webmvc和webflux两个版本，分别关联相应的分支，具体请查看对应分支代码；
+- 本模块分为webmvc(develop分支)和webflux(webflux分支)两个版本，具体请查看对应分支代码；
 
 - leafage-basic下分两个模块「assets」和 「hypervisor」，具体每个模块的功能详细信息请查看对应子模块的介绍；

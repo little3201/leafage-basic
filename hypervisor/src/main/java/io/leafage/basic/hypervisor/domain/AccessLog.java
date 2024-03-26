@@ -40,7 +40,14 @@ public class AccessLog extends AuditMetadata {
     /**
      * 地理位置
      */
+    @Column(name = "location", length = 50)
     private String location;
+
+    /**
+     * 内容
+     */
+    @Column(name = "context", length = 1000)
+    private String context;
 
     /**
      * 用户代理信息
@@ -51,7 +58,7 @@ public class AccessLog extends AuditMetadata {
     /**
      * HTTP方法
      */
-    @Column(name = "http_method")
+    @Column(name = "http_method", length = 10)
     private String httpMethod;
 
     /**
@@ -79,23 +86,25 @@ public class AccessLog extends AuditMetadata {
     /**
      * 会话标识符
      */
-    @Column(name = "session_id")
+    @Column(name = "session_id", length = 50)
     private String sessionId;
 
     /**
      * 设备类型
      */
-    @Column(name = "device_type")
+    @Column(name = "device_type", length = 20)
     private String deviceType;
 
     /**
      * 操作系统
      */
+    @Column(name = "os", length = 50)
     private String os;
 
     /**
      * 浏览器
      */
+    @Column(name = "browser", length = 50)
     private String browser;
 
 
@@ -113,6 +122,14 @@ public class AccessLog extends AuditMetadata {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public String getUserAgent() {

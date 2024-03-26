@@ -40,22 +40,25 @@ public class User extends AuditMetadata {
     /**
      * password
      */
-    @Column(name = "password", nullable = false, length = 127)
+    @Column(name = "password", nullable = false, length = 100)
     private String password;
 
     /**
      * 名
      */
+    @Column(name = "firstname", length = 50)
     private String firstname;
 
     /**
      * 姓
      */
+    @Column(name = "lastname", length = 50)
     private String lastname;
 
     /**
      * 头像
      */
+    @Column(name = "avatar", length = 100)
     private String avatar;
 
 

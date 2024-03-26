@@ -40,7 +40,8 @@ public class Message extends AuditMetadata {
     /**
      * 内容
      */
-    private String content;
+    @Column(name = "name", length = 1000)
+    private String context;
 
     /**
      * 是否已读
@@ -51,7 +52,7 @@ public class Message extends AuditMetadata {
     /**
      * 接收人
      */
-    @Column(name = "receiver", nullable = false)
+    @Column(name = "receiver", nullable = false, length = 50)
     private String receiver;
 
 
@@ -63,12 +64,12 @@ public class Message extends AuditMetadata {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getContext() {
+        return context;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public boolean isRead() {

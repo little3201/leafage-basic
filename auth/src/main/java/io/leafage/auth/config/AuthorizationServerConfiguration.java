@@ -104,7 +104,7 @@ public class AuthorizationServerConfiguration {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
         if (!jdbcUserDetailsManager.userExists("admin")) {
             jdbcUserDetailsManager.createUser(User.withUsername("admin")
-                    .password("{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG")
+                    .password("{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/B")
                     .roles("ADMIN")
                     .build()
             );

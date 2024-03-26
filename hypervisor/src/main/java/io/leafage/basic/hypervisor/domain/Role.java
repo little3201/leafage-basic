@@ -35,10 +35,12 @@ public class Role extends AuditMetadata {
      */
     @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;
+
     /**
      * 上级主键
      */
     private Long superior;
+
     /**
      * 描述
      */

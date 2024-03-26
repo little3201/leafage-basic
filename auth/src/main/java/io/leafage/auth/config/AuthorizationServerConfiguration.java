@@ -103,7 +103,15 @@ public class AuthorizationServerConfiguration {
     UserDetailsService userDetailsService(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
         if (!jdbcUserDetailsManager.userExists("admin")) {
-            jdbcUserDetailsManager.createUser(User.withUsername("admin").password("123456").roles("ADMIN").build());
+            jdbcUserDetailsManager.createUser(User.withUsername("admin")
+                    .password("{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/B")
+                    .roles("ADMIN")
+                    .build()
+            );
+        }
+        List<String> allGroups = jdbcUserDetailsManager.findAllGroups();
+        if (!allGroups.contains("manager")) {
+            jdbcUserDetailsManager.createGroup("manager", List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
             jdbcUserDetailsManager.addUserToGroup("admin", "manager");
         }
 

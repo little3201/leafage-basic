@@ -46,13 +46,13 @@ public class Region extends AuditMetadata {
     /**
      * 区号
      */
-    @Column(name = "area_code")
+    @Column(name = "area_code", length = 4)
     private String areaCode;
 
     /**
      * 邮编
      */
-    @Column(name = "postal_code")
+    @Column(name = "postal_code", length = 6)
     private String postalCode;
 
     /**

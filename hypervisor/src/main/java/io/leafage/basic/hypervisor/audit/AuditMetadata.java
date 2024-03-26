@@ -39,7 +39,7 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -50,7 +50,7 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     /**
      * 创建人
      */
-    @Column(name = "created_by", updatable = false)
+    @Column(name = "created_by", updatable = false, length = 50)
     private String createdBy;
 
     /**
@@ -63,7 +63,7 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     /**
      * 最后修改人
      */
-    @Column(name = "last_modified_by", insertable = false)
+    @Column(name = "last_modified_by", insertable = false, length = 50)
     private String lastModifiedBy;
 
     /**

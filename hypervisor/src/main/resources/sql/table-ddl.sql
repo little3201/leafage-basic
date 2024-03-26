@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS groups;
 
 -- Create table groups
 CREATE TABLE groups (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    group_name           varchar(50) NOT NULL,
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50),
@@ -27,12 +27,12 @@ DROP TABLE IF EXISTS users;
 
 -- Create table users
 CREATE TABLE users (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    username             varchar(50) UNIQUE NOT NULL,
-   password             varchar(127) NOT NULL,
-   firstname            varchar(16),
-   lastname             varchar(16),
-   avatar               varchar(127),
+   password             varchar(100) NOT NULL,
+   firstname            varchar(50),
+   lastname             varchar(50),
+   avatar               varchar(100),
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -59,7 +59,7 @@ DROP TABLE IF EXISTS authorities;
 
 -- Create table authorities
 CREATE TABLE authorities (
-    id                   bigserial PRIMARY KEY NOT NULL,
+    id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username varchar(50) not null,
     authority varchar(50) not null,
     CONSTRAINT fk_authorities_users FOREIGN KEY(username) references users(username)
@@ -79,9 +79,9 @@ DROP TABLE IF EXISTS roles;
 
 -- Create table roles
 CREATE TABLE roles (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    name                 varchar(50) NOT NULL,
-   description          varchar(512),
+   description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -105,7 +105,7 @@ DROP TABLE IF EXISTS group_members;
 
 -- Create table group_members
 CREATE TABLE group_members (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    group_id             bigint NOT NULL,
    username             varchar(50) NOT NULL,
    CONSTRAINT fk_group_members_group foreign key(group_id) references groups(id)
@@ -122,7 +122,7 @@ DROP TABLE IF EXISTS group_authorities;
 
 -- Create table group_authorities
 CREATE TABLE group_authorities (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    group_id             bigint NOT NULL,
    authority            varchar(50) NOT NULL,
    CONSTRAINT fk_group_authorities_group FOREIGN KEY(group_id) references groups(id)
@@ -139,8 +139,8 @@ DROP TABLE IF EXISTS persistent_logins;
 
 -- Create table persistent_logins
 CREATE TABLE persistent_logins (
-	username varchar(64) not null,
 	series varchar(64) primary key,
+	username varchar(50) not null,
 	token varchar(64) not null,
 	last_used timestamp not null
 );
@@ -157,7 +157,7 @@ DROP TABLE IF EXISTS role_members;
 
 -- Create table role_members
 CREATE TABLE role_members (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    role_id              bigint NOT NULL,
    username             varchar(50) NOT NULL,
    CONSTRAINT fk_role_members_role FOREIGN KEY (role_id) REFERENCES roles(id)
@@ -174,13 +174,13 @@ DROP TABLE IF EXISTS privileges;
 
 -- Create table privileges
 CREATE TABLE privileges (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    superior_id          bigint,
    name                 varchar(50) NOT NULL,
    type                 character(1) NOT NULL,
    path                 varchar(127),
    icon                 varchar(127),
-   description          varchar(512),
+   description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50) NOT NULL,
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -208,7 +208,7 @@ DROP TABLE IF EXISTS role_privileges;
 
 -- Create table role_privileges
 CREATE TABLE role_privileges (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    role_id              bigint NOT NULL,
    privilege_id         bigint NOT NULL,
    CONSTRAINT fk_role_privileges_role FOREIGN KEY (role_id) REFERENCES roles(id),
@@ -226,10 +226,10 @@ DROP TABLE IF EXISTS dictionaries;
 
 -- Create table dictionaries
 CREATE TABLE dictionaries (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    name                 varchar(50) NOT NULL,
    superior_id          bigint,
-   description          varchar(512),
+   description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50) NOT NULL,
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -254,12 +254,12 @@ DROP TABLE IF EXISTS messages;
 
 -- Create table messages
 CREATE TABLE messages (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    title                varchar(255) NOT NULL,
-   context              text,
+   context              varchar(1000),
    is_read              boolean NOT NULL DEFAULT false,
    receiver             varchar(50) NOT NULL,
-   description          varchar(512),
+   description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50) NOT NULL,
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -286,12 +286,12 @@ DROP TABLE IF EXISTS regions;
 
 -- Create table regions
 CREATE TABLE regions (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    name                 varchar(50) NOT NULL,
    superior_id          bigint,
-   postal_code          bigint,
-   area_code            bigint,
-   description          varchar(512),
+   area_code            varchar(4),
+   postal_code          varchar(6),
+   description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50) NOT NULL,
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -304,8 +304,8 @@ COMMENT ON TABLE regions IS '地区表';
 COMMENT ON COLUMN regions.id IS '主键';
 COMMENT ON COLUMN regions.name IS '名称';
 COMMENT ON COLUMN regions.superior_id IS '上级ID';
-COMMENT ON COLUMN regions.postal_code IS '邮政编码';
 COMMENT ON COLUMN regions.area_code IS '区号';
+COMMENT ON COLUMN regions.postal_code IS '邮政编码';
 COMMENT ON COLUMN regions.description IS '描述';
 COMMENT ON COLUMN regions.enabled IS '是否启用';
 COMMENT ON COLUMN regions.created_by IS '创建者';
@@ -318,13 +318,13 @@ DROP TABLE IF EXISTS access_logs;
 
 -- Create table access_logs
 CREATE TABLE access_logs (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    ip                   inet,
-   location             varchar(127),
-   context              text,
+   location             varchar(50),
+   context              varchar(1000),
    user_agent           varchar(255),
    http_method          varchar(10),
-   url                  text,
+   url                  varchar(255),
    status_code          integer,
    response_time        bigint,
    referer              varchar(255),

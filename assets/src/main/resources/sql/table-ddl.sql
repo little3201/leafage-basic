@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS categories;
 
 -- Create table categories
 CREATE TABLE categories (
-   id                   serial PRIMARY KEY NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
    name                 varchar(127) NOT NULL UNIQUE,
    description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
@@ -33,11 +33,11 @@ DROP TABLE IF EXISTS posts;
 
 -- Create table posts
 CREATE TABLE posts (
-   id                   serial PRIMARY KEY NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
    title                varchar(127) NOT NULL,
    tags                 varchar[],
    cover                varchar(127),
-   category_id          integer NOT NULL,
+   category_id          bigint NOT NULL,
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -72,8 +72,8 @@ DROP TABLE IF EXISTS post_content;
 
 -- Create table post_content
 CREATE TABLE post_content (
-   id                   serial PRIMARY KEY NOT NULL,
-   post_id              integer NOT NULL UNIQUE,
+   id                   bigserial PRIMARY KEY NOT NULL,
+   post_id              bigint NOT NULL UNIQUE,
    content              text,
    created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -101,8 +101,8 @@ DROP TABLE IF EXISTS comments;
 
 -- Create table comments
 CREATE TABLE comments (
-   id                   serial PRIMARY KEY NOT NULL,
-   post_id              integer NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
+   post_id              bigint NOT NULL,
    country              varchar(255),
    location             varchar(255),
    context              varchar(512),
@@ -130,11 +130,11 @@ DROP TABLE IF EXISTS post_statistics;
 
 -- Create table post_statistics
 CREATE TABLE post_statistics (
-   id                   serial PRIMARY KEY NOT NULL,
-   post_id              integer NOT NULL,
-   viewed               integer,
-   likes                integer,
-   comments             integer,
+   id                   bigserial PRIMARY KEY NOT NULL,
+   post_id              bigint NOT NULL,
+   viewed               bigint,
+   likes                bigint,
+   comments             bigint,
    created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
    last_modified_by     varchar(50),

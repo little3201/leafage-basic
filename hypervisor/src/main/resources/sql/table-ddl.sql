@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS groups;
 
 -- Create table groups
 CREATE TABLE groups (
-   id                   serial PRIMARY KEY NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
    group_name           varchar(50) NOT NULL,
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50),
@@ -27,7 +27,7 @@ DROP TABLE IF EXISTS users;
 
 -- Create table users
 CREATE TABLE users (
-   id                   serial PRIMARY KEY NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
    username             varchar(50) UNIQUE NOT NULL,
    password             varchar(100) NOT NULL,
    firstname            varchar(50),
@@ -59,7 +59,7 @@ DROP TABLE IF EXISTS authorities;
 
 -- Create table authorities
 CREATE TABLE authorities (
-    id                   serial PRIMARY KEY NOT NULL,
+    id                   bigserial PRIMARY KEY NOT NULL,
     username varchar(50) not null,
     authority varchar(50) not null,
     CONSTRAINT fk_authorities_users FOREIGN KEY(username) references users(username)
@@ -79,7 +79,7 @@ DROP TABLE IF EXISTS roles;
 
 -- Create table roles
 CREATE TABLE roles (
-   id                   serial PRIMARY KEY NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
    name                 varchar(50) NOT NULL,
    description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
@@ -105,8 +105,8 @@ DROP TABLE IF EXISTS group_members;
 
 -- Create table group_members
 CREATE TABLE group_members (
-   id                   serial PRIMARY KEY NOT NULL,
-   group_id             integer NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
+   group_id             bigint NOT NULL,
    username             varchar(50) NOT NULL,
    CONSTRAINT fk_group_members_group foreign key(group_id) references groups(id)
 );
@@ -122,8 +122,8 @@ DROP TABLE IF EXISTS group_authorities;
 
 -- Create table group_authorities
 CREATE TABLE group_authorities (
-   id                   serial PRIMARY KEY NOT NULL,
-   group_id             integer NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
+   group_id             bigint NOT NULL,
    authority            varchar(50) NOT NULL,
    CONSTRAINT fk_group_authorities_group FOREIGN KEY(group_id) references groups(id)
 );
@@ -157,8 +157,8 @@ DROP TABLE IF EXISTS role_members;
 
 -- Create table role_members
 CREATE TABLE role_members (
-   id                   serial PRIMARY KEY NOT NULL,
-   role_id              integer NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
+   role_id              bigint NOT NULL,
    username             varchar(50) NOT NULL,
    CONSTRAINT fk_role_members_role FOREIGN KEY (role_id) REFERENCES roles(id)
 );
@@ -174,8 +174,8 @@ DROP TABLE IF EXISTS privileges;
 
 -- Create table privileges
 CREATE TABLE privileges (
-   id                   serial PRIMARY KEY NOT NULL,
-   superior_id          integer,
+   id                   bigserial PRIMARY KEY NOT NULL,
+   superior_id          bigint,
    name                 varchar(50) NOT NULL,
    type                 character(1) NOT NULL,
    path                 varchar(127),
@@ -208,9 +208,9 @@ DROP TABLE IF EXISTS role_privileges;
 
 -- Create table role_privileges
 CREATE TABLE role_privileges (
-   id                   serial PRIMARY KEY NOT NULL,
-   role_id              integer NOT NULL,
-   privilege_id         integer NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
+   role_id              bigint NOT NULL,
+   privilege_id         bigint NOT NULL,
    CONSTRAINT fk_role_privileges_role FOREIGN KEY (role_id) REFERENCES roles(id),
    CONSTRAINT fk_role_privileges_privilege FOREIGN KEY (privilege_id) REFERENCES privileges(id)
 );
@@ -226,9 +226,9 @@ DROP TABLE IF EXISTS dictionaries;
 
 -- Create table dictionaries
 CREATE TABLE dictionaries (
-   id                   serial PRIMARY KEY NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
    name                 varchar(50) NOT NULL,
-   superior_id          integer,
+   superior_id          bigint,
    description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50) NOT NULL,
@@ -254,7 +254,7 @@ DROP TABLE IF EXISTS messages;
 
 -- Create table messages
 CREATE TABLE messages (
-   id                   serial PRIMARY KEY NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
    title                varchar(255) NOT NULL,
    context              varchar(1000),
    is_read              boolean NOT NULL DEFAULT false,
@@ -286,9 +286,9 @@ DROP TABLE IF EXISTS regions;
 
 -- Create table regions
 CREATE TABLE regions (
-   id                   serial PRIMARY KEY NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
    name                 varchar(50) NOT NULL,
-   superior_id          integer,
+   superior_id          bigint,
    area_code            varchar(4),
    postal_code          varchar(6),
    description          varchar(255),
@@ -318,7 +318,7 @@ DROP TABLE IF EXISTS access_logs;
 
 -- Create table access_logs
 CREATE TABLE access_logs (
-   id                   serial PRIMARY KEY NOT NULL,
+   id                   bigserial PRIMARY KEY NOT NULL,
    ip                   inet,
    location             varchar(50),
    context              varchar(1000),
@@ -326,7 +326,7 @@ CREATE TABLE access_logs (
    http_method          varchar(10),
    url                  varchar(255),
    status_code          integer,
-   response_time        integer,
+   response_time        bigint,
    referer              varchar(255),
    session_id           varchar(50),
    device_type          varchar(20),

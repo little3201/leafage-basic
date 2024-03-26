@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS categories;
 
 -- Create table categories
 CREATE TABLE categories (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    name                 varchar(127) NOT NULL UNIQUE,
    description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS posts;
 
 -- Create table posts
 CREATE TABLE posts (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    title                varchar(127) NOT NULL,
    tags                 varchar[],
    cover                varchar(127),
@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS post_content;
 
 -- Create table post_content
 CREATE TABLE post_content (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    post_id              bigint NOT NULL UNIQUE,
    content              text,
    created_by           varchar(50),
@@ -101,7 +101,7 @@ DROP TABLE IF EXISTS comments;
 
 -- Create table comments
 CREATE TABLE comments (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    post_id              bigint NOT NULL,
    country              varchar(255),
    location             varchar(255),
@@ -130,7 +130,7 @@ DROP TABLE IF EXISTS post_statistics;
 
 -- Create table post_statistics
 CREATE TABLE post_statistics (
-   id                   bigserial PRIMARY KEY NOT NULL,
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    post_id              bigint NOT NULL,
    viewed               bigint,
    likes                bigint,

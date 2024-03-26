@@ -39,7 +39,7 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
      * 主键
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

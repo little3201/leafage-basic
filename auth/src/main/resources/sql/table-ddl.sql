@@ -19,7 +19,7 @@ CREATE TABLE oauth_registered_client (
 );
 
 -- Add comment to the table and columns
-COMMENT ON TABLE oauth_registered_client IS 'client 信息';
+COMMENT ON TABLE oauth_registered_client IS 'oauth_registered_client表';
 COMMENT ON COLUMN oauth_registered_client.id IS '主键';
 COMMENT ON COLUMN oauth_registered_client.client_id IS '客户端ID';
 COMMENT ON COLUMN oauth_registered_client.client_id_issued_at IS '生效时间';
@@ -66,7 +66,7 @@ CREATE TABLE oauth_authorization (
 );
 
 -- Add comment to the table and columns
-COMMENT ON TABLE oauth_authorization IS '授权信息';
+COMMENT ON TABLE oauth_authorization IS 'oauth_authorization表';
 COMMENT ON COLUMN oauth_authorization.id IS '主键';
 COMMENT ON COLUMN oauth_authorization.registered_client_id IS '客户端ID';
 COMMENT ON COLUMN oauth_authorization.principal_name IS '认证账号';
@@ -104,7 +104,7 @@ CREATE TABLE oauth_authorization_consent (
 );
 
 -- Add comment to the table and columns
-COMMENT ON TABLE oauth_authorization_consent IS '认证内容';
+COMMENT ON TABLE oauth_authorization_consent IS 'oauth_authorization_consent表';
 COMMENT ON COLUMN oauth_authorization_consent.registered_client_id IS '客户端ID';
 COMMENT ON COLUMN oauth_authorization_consent.principal_name IS '认证账号';
 COMMENT ON COLUMN oauth_authorization_consent.authorities IS '权限';

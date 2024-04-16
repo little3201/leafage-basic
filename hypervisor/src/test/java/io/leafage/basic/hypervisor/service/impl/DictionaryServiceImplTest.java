@@ -75,19 +75,19 @@ class DictionaryServiceImplTest {
     }
 
     @Test
-    void lower() {
-        given(this.dictionaryRepository.findBySuperiorIdAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Dictionary.class)));
+    void subset() {
+        given(this.dictionaryRepository.findBySuperiorId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Dictionary.class)));
 
-        List<DictionaryVO> dictionaryVOS = dictionaryService.lower(1L);
+        List<DictionaryVO> dictionaryVOS = dictionaryService.subset(1L);
 
         Assertions.assertNotNull(dictionaryVOS);
     }
 
     @Test
     void lower_empty() {
-        given(this.dictionaryRepository.findBySuperiorIdAndEnabledTrue(Mockito.anyLong())).willReturn(Collections.emptyList());
+        given(this.dictionaryRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Collections.emptyList());
 
-        List<DictionaryVO> dictionaryVOS = dictionaryService.lower(1L);
+        List<DictionaryVO> dictionaryVOS = dictionaryService.subset(1L);
 
         Assertions.assertEquals(Collections.emptyList(), dictionaryVOS);
     }

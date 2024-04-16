@@ -16,10 +16,10 @@
  */
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.domain.Category;
+import io.leafage.basic.assets.domain.Tag;
 import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.repository.TagRepository;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,16 +47,16 @@ import static org.mockito.Mockito.verify;
  * @author wq li 2019/3/28 20:22
  **/
 @ExtendWith(MockitoExtension.class)
-class CategoryServiceImplTest {
+class TagServiceImplTest {
 
     @Mock
-    private CategoryRepository categoryRepository;
+    private TagRepository tagRepository;
 
     @Mock
     private PostRepository postRepository;
 
     @InjectMocks
-    private CategoryServiceImpl categoryService;
+    private TagServiceImpl categoryService;
 
     private CategoryDTO categoryDTO;
 
@@ -64,14 +64,14 @@ class CategoryServiceImplTest {
     void init() {
         categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
-        categoryDTO.setDescription("category");
+        categoryDTO.setDescription("tag");
     }
 
     @Test
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
-        Page<Category> page = new PageImpl<>(List.of(Mockito.mock(Category.class)), pageable, 2L);
-        given(categoryRepository.findAll(Mockito.any(PageRequest.class))).willReturn(page);
+        Page<Tag> page = new PageImpl<>(List.of(Mockito.mock(Tag.class)), pageable, 2L);
+        given(tagRepository.findAll(Mockito.any(PageRequest.class))).willReturn(page);
 
         given(postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
@@ -82,7 +82,7 @@ class CategoryServiceImplTest {
 
     @Test
     void fetch() {
-        given(categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
+        given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Tag.class)));
 
         CategoryVO categoryVO = categoryService.fetch(Mockito.anyLong());
 
@@ -92,27 +92,27 @@ class CategoryServiceImplTest {
 
     @Test
     void create() {
-        given(categoryRepository.saveAndFlush(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
+        given(tagRepository.saveAndFlush(Mockito.any(Tag.class))).willReturn(Mockito.mock(Tag.class));
 
         given(postRepository.countByCategoryId(Mockito.anyLong())).willReturn(2L);
 
         CategoryVO categoryVO = categoryService.create(Mockito.mock(CategoryDTO.class));
 
-        verify(categoryRepository, times(1)).saveAndFlush(Mockito.any(Category.class));
+        verify(tagRepository, times(1)).saveAndFlush(Mockito.any(Tag.class));
         Assertions.assertNotNull(categoryVO);
     }
 
     @Test
     void modify() {
-        given(categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Category.class)));
+        given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Tag.class)));
 
-        given(categoryRepository.save(Mockito.any(Category.class))).willReturn(Mockito.mock(Category.class));
+        given(tagRepository.save(Mockito.any(Tag.class))).willReturn(Mockito.mock(Tag.class));
 
         given(postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
         CategoryVO categoryVO = categoryService.modify(1L, categoryDTO);
 
-        verify(categoryRepository, times(1)).save(Mockito.any(Category.class));
+        verify(tagRepository, times(1)).save(Mockito.any(Tag.class));
         Assertions.assertNotNull(categoryVO);
     }
 
@@ -120,6 +120,6 @@ class CategoryServiceImplTest {
     void remove() {
         categoryService.remove(Mockito.anyLong());
 
-        verify(categoryRepository, times(1)).deleteById(Mockito.anyLong());
+        verify(tagRepository, times(1)).deleteById(Mockito.anyLong());
     }
 }

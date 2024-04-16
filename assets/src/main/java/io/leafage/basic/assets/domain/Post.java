@@ -39,20 +39,14 @@ public class Post extends AuditMetadata {
     private String title;
 
     /**
-     * 分类
-     */
-    @Column(name = "category_id", nullable = false)
-    private Long categoryId;
-
-    /**
-     * 封面
-     */
-    private String cover;
-
-    /**
      * 标签
      */
     private String tags;
+
+    /**
+     * 概述
+     */
+    private String excerpt;
 
     /**
      * 是否可用
@@ -68,28 +62,20 @@ public class Post extends AuditMetadata {
         this.title = title;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
     public String getTags() {
         return tags;
     }
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public String getExcerpt() {
+        return excerpt;
+    }
+
+    public void setExcerpt(String excerpt) {
+        this.excerpt = excerpt;
     }
 
     public boolean isEnabled() {

@@ -44,8 +44,8 @@ public abstract class PostBO {
     /**
      * 内容
      */
-    @NotBlank(message = "context must not be blank.")
-    private String context;
+    @NotBlank(message = "content must not be blank.")
+    private String content;
 
     /**
      * 标签
@@ -70,12 +70,12 @@ public abstract class PostBO {
         this.cover = cover;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Set<String> getTags() {

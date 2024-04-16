@@ -44,5 +44,5 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
      *
      * @return 结果信息
      */
-    List<Region> findBySuperiorIdAndEnabledTrue(Long id);
+    List<Region> findBySuperiorId(Long id);
 }

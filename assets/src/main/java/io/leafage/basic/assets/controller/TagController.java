@@ -17,7 +17,7 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.service.CategoryService;
+import io.leafage.basic.assets.service.TagService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -28,20 +28,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * category controller.
+ * tag controller.
  *
  * @author wq li 2018/12/20 9:54
  **/
 @RestController
-@RequestMapping("/category")
-public class CategoryController {
+@RequestMapping("/tags")
+public class TagController {
 
-    private final Logger logger = LoggerFactory.getLogger(CategoryController.class);
+    private final Logger logger = LoggerFactory.getLogger(TagController.class);
 
-    private final CategoryService categoryService;
+    private final TagService tagService;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
+    public TagController(TagService tagService) {
+        this.tagService = tagService;
     }
 
     /**
@@ -56,7 +56,7 @@ public class CategoryController {
     public ResponseEntity<Page<CategoryVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
         Page<CategoryVO> voPage;
         try {
-            voPage = categoryService.retrieve(page, size, sort);
+            voPage = tagService.retrieve(page, size, sort);
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -74,7 +74,7 @@ public class CategoryController {
     public ResponseEntity<CategoryVO> fetch(@PathVariable Long id) {
         CategoryVO categoryVO;
         try {
-            categoryVO = categoryService.fetch(id);
+            categoryVO = tagService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -92,9 +92,9 @@ public class CategoryController {
     public ResponseEntity<CategoryVO> create(@RequestBody @Valid CategoryDTO categoryDTO) {
         CategoryVO categoryVO;
         try {
-            categoryVO = categoryService.create(categoryDTO);
+            categoryVO = tagService.create(categoryDTO);
         } catch (Exception e) {
-            logger.error("Save category occurred an error: ", e);
+            logger.error("Save tag occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryVO);
@@ -111,9 +111,9 @@ public class CategoryController {
     public ResponseEntity<CategoryVO> modify(@PathVariable Long id, @RequestBody @Valid CategoryDTO categoryDTO) {
         CategoryVO categoryVO;
         try {
-            categoryVO = categoryService.modify(id, categoryDTO);
+            categoryVO = tagService.modify(id, categoryDTO);
         } catch (Exception e) {
-            logger.error("Modify category occurred an error: ", e);
+            logger.error("Modify tag occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.accepted().body(categoryVO);
@@ -128,9 +128,9 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         try {
-            categoryService.remove(id);
+            tagService.remove(id);
         } catch (Exception e) {
-            logger.error("Remove category occurred an error: ", e);
+            logger.error("Remove tag occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();

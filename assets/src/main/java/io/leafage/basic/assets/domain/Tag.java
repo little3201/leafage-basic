@@ -23,13 +23,13 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 /**
- * model class for category.
+ * model class for tag.
  *
  * @author wq li  2020-12-03 22:59
  */
 @Entity
-@Table(name = "categories", indexes = {@Index(name = "uni_categories_name", columnList = "name")})
-public class Category extends AuditMetadata {
+@Table(name = "tags", indexes = {@Index(name = "uni_tags_name", columnList = "name")})
+public class Tag extends AuditMetadata {
 
     /**
      * 名称
@@ -42,11 +42,6 @@ public class Category extends AuditMetadata {
      */
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true;
-
-    /**
-     * 描述
-     */
-    private String description;
 
 
     public String getName() {
@@ -65,11 +60,5 @@ public class Category extends AuditMetadata {
         this.enabled = enabled;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

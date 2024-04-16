@@ -83,42 +83,6 @@ public class PostController {
     }
 
     /**
-     * previous.
-     *
-     * @param id 主键
-     * @return 帖子信息，不包括内容
-     */
-    @GetMapping("/{id}/previous")
-    public ResponseEntity<PostVO> previous(@PathVariable Long id) {
-        PostVO vo;
-        try {
-            vo = postsService.previous(id);
-        } catch (Exception e) {
-            logger.error("Fetch posts previous occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(vo);
-    }
-
-    /**
-     * next.
-     *
-     * @param id 主键
-     * @return 帖子信息，不包括内容
-     */
-    @GetMapping("/{id}/next")
-    public ResponseEntity<PostVO> next(@PathVariable Long id) {
-        PostVO vo;
-        try {
-            vo = postsService.next(id);
-        } catch (Exception e) {
-            logger.error("Fetch posts next occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(vo);
-    }
-
-    /**
      * 查询帖子详细信息，同时viewed自增1
      *
      * @param id 主键

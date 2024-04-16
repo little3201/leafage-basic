@@ -21,7 +21,7 @@ package io.leafage.basic.assets.bo;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * bo class for category
+ * bo class for tag
  *
  * @author wilsonli 2022-12-10 22:28
  **/
@@ -30,7 +30,7 @@ public abstract class CategoryBO {
     /**
      * 名称
      */
-    @NotBlank(message = "category name is blank.")
+    @NotBlank(message = "tag name is blank.")
     private String name;
 
     /**

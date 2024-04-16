@@ -62,7 +62,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
 
     @Override
     public List<TreeNode> tree() {
-        List<Role> roles = roleRepository.findByEnabledTrue();
+        List<Role> roles = roleRepository.findAll();
         if (CollectionUtils.isEmpty(roles)) {
             return Collections.emptyList();
         }

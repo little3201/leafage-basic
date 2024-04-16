@@ -14,27 +14,25 @@
  *  limitations under the License.
  *
  */
-package io.leafage.basic.assets.service;
+package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.vo.CategoryVO;
-import org.springframework.data.domain.Page;
-import top.leafage.common.servlet.ServletBasicService;
+import io.leafage.basic.assets.domain.Tag;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
- * category service.
+ * tag repository.
  *
  * @author wq li  2020-12-03 22:59
  **/
-public interface CategoryService extends ServletBasicService<CategoryDTO, CategoryVO> {
+@Repository
+public interface TagRepository extends JpaRepository<Tag, Long> {
 
     /**
-     * 分页查询
+     * 是否已存在
      *
-     * @param page 页码
-     * @param size 大小
-     * @param sort 排序字段
-     * @return 查询结果
+     * @param name 名称
+     * @return true-是，false-否
      */
-    Page<CategoryVO> retrieve(int page, int size, String sort);
+    boolean existsByName(String name);
 }

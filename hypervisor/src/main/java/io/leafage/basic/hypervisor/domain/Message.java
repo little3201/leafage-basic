@@ -41,7 +41,7 @@ public class Message extends AuditMetadata {
      * 内容
      */
     @Column(name = "name", length = 1000)
-    private String context;
+    private String content;
 
     /**
      * 是否已读
@@ -64,12 +64,12 @@ public class Message extends AuditMetadata {
         this.title = title;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public boolean isRead() {

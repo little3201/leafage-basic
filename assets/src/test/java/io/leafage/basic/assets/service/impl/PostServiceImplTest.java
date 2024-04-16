@@ -17,13 +17,12 @@
 package io.leafage.basic.assets.service.impl;
 
 
-import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.domain.PostContent;
 import io.leafage.basic.assets.dto.PostDTO;
-import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.repository.TagRepository;
 import io.leafage.basic.assets.vo.PostVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +57,7 @@ class PostServiceImplTest {
     private PostContentRepository postContentRepository;
 
     @Mock
-    private CategoryRepository categoryRepository;
+    private TagRepository tagRepository;
 
     @InjectMocks
     private PostsServiceImpl postsService;
@@ -69,7 +68,7 @@ class PostServiceImplTest {
     void init() {
         postDTO = new PostDTO();
         postDTO.setTitle("title");
-        postDTO.setContext("content");
+        postDTO.setContent("content");
         postDTO.setCover("cover");
         postDTO.setTags(Set.of("tag"));
         postDTO.setCategoryId(1L);
@@ -105,29 +104,8 @@ class PostServiceImplTest {
     }
 
     @Test
-    void next() {
-        given(postRepository.getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(Mockito.anyLong())).willReturn(Mockito.mock(Post.class));
-
-        PostVO postVO = postsService.next(Mockito.anyLong());
-
-        Assertions.assertNotNull(postVO);
-    }
-
-
-    @Test
-    void previous() {
-        given(postRepository.getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(Mockito.anyLong())).willReturn(Mockito.mock(Post.class));
-
-        PostVO postVO = postsService.previous(Mockito.anyLong());
-
-        Assertions.assertNotNull(postVO);
-    }
-
-    @Test
     void details() {
         given(postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
-
-        given(categoryRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Category.class)));
 
         given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
 

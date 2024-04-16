@@ -71,13 +71,13 @@ public class RegionController {
      *
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/{id}/lower")
-    public ResponseEntity<List<RegionVO>> lower(@PathVariable Long id) {
+    @GetMapping("/{id}/subset")
+    public ResponseEntity<List<RegionVO>> subset(@PathVariable Long id) {
         List<RegionVO> child;
         try {
-            child = regionService.lower(id);
+            child = regionService.subset(id);
         } catch (Exception e) {
-            logger.info("Retrieve region lower occurred an error: ", e);
+            logger.info("Retrieve region subset occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(child);

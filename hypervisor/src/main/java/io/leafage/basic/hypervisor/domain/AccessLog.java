@@ -46,8 +46,8 @@ public class AccessLog extends AuditMetadata {
     /**
      * 内容
      */
-    @Column(name = "context", length = 1000)
-    private String context;
+    @Column(name = "content", length = 1000)
+    private String content;
 
     /**
      * 用户代理信息
@@ -124,12 +124,12 @@ public class AccessLog extends AuditMetadata {
         this.location = location;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getUserAgent() {

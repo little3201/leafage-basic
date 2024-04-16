@@ -74,12 +74,12 @@ class CommentControllerTest {
     @BeforeEach
     void init() {
         commentVO = new CommentVO();
-        commentVO.setContext("content");
+        commentVO.setContent("content");
         commentVO.setPostId(1L);
 
         commentDTO = new CommentDTO();
         commentDTO.setPostId(1L);
-        commentDTO.setContext("content");
+        commentDTO.setContent("content");
         commentDTO.setReplier(1L);
     }
 
@@ -89,7 +89,7 @@ class CommentControllerTest {
         Page<CommentVO> page = new PageImpl<>(List.of(commentVO), pageable, 2L);
         given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(page);
 
-        mvc.perform(get("/comment").queryParam("page", "0").queryParam("size", "2"))
+        mvc.perform(get("/comments").queryParam("page", "0").queryParam("size", "2"))
                 .andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
@@ -97,7 +97,7 @@ class CommentControllerTest {
     void retrieve_error() throws Exception {
         given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/comment").queryParam("page", "0").queryParam("size", "2"))
+        mvc.perform(get("/comments").queryParam("page", "0").queryParam("size", "2"))
                 .andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
@@ -105,44 +105,44 @@ class CommentControllerTest {
     void relation() throws Exception {
         given(commentService.relation(Mockito.anyLong())).willReturn(List.of(commentVO));
 
-        mvc.perform(get("/comment/{id}", Mockito.anyLong())).andExpect(status().isOk()).andDo(print()).andReturn();
+        mvc.perform(get("/comments/{id}", Mockito.anyLong())).andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
     void relation_error() throws Exception {
         given(commentService.relation(Mockito.anyLong())).willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/comment/{id}", Mockito.anyLong())).andExpect(status().isNoContent()).andDo(print()).andReturn();
+        mvc.perform(get("/comments/{id}", Mockito.anyLong())).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
     void replies() throws Exception {
         given(commentService.replies(Mockito.anyLong())).willReturn(List.of(commentVO));
 
-        mvc.perform(get("/comment/{id}/replies", 1L)).andExpect(status().isOk()).andDo(print()).andReturn();
+        mvc.perform(get("/comments/{id}/replies", 1L)).andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
     void replies_error() throws Exception {
         given(commentService.replies(Mockito.anyLong())).willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/comment/{id}/replies", 1L)).andExpect(status().isNoContent()).andDo(print()).andReturn();
+        mvc.perform(get("/comments/{id}/replies", 1L)).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
     void create() throws Exception {
         given(commentService.create(Mockito.any(CommentDTO.class))).willReturn(commentVO);
 
-        mvc.perform(post("/comment").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/comments").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(commentDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.context").value("content")).andDo(print()).andReturn();
+                .andExpect(jsonPath("$.content").value("content")).andDo(print()).andReturn();
     }
 
     @Test
     void create_error() throws Exception {
         given(commentService.create(Mockito.any(CommentDTO.class))).willThrow(new NoSuchElementException());
 
-        mvc.perform(post("/comment").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/comments").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(commentDTO)).with(csrf().asHeader())).andExpect(status()
                 .isExpectationFailed()).andDo(print()).andReturn();
     }

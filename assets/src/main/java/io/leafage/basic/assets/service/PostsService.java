@@ -45,20 +45,4 @@ public interface PostsService extends ServletBasicService<PostDTO, PostVO> {
      * @return 查询结果
      */
     PostVO details(Long id);
-
-    /**
-     * 下一篇
-     *
-     * @param id 主键
-     * @return 信息
-     */
-    PostVO next(Long id);
-
-    /**
-     * 上一篇
-     *
-     * @param id 主键
-     * @return 信息
-     */
-    PostVO previous(Long id);
 }

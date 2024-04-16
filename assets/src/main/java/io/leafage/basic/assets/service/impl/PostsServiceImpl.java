@@ -16,13 +16,12 @@
  */
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.domain.PostContent;
 import io.leafage.basic.assets.dto.PostDTO;
-import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.repository.TagRepository;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostVO;
 import org.springframework.cglib.beans.BeanCopier;
@@ -49,12 +48,12 @@ public class PostsServiceImpl implements PostsService {
 
     private final PostRepository postRepository;
     private final PostContentRepository postContentRepository;
-    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
 
-    public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository, CategoryRepository categoryRepository) {
+    public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository, TagRepository tagRepository) {
         this.postRepository = postRepository;
         this.postContentRepository = postContentRepository;
-        this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
     }
 
     @Override
@@ -86,23 +85,9 @@ public class PostsServiceImpl implements PostsService {
         // 获取内容详情
         PostContent postContent = postContentRepository.getByPostId(id);
         if (postContent != null) {
-            vo.setContext(postContent.getContext());
+            vo.setContent(postContent.getContent());
         }
         return vo;
-    }
-
-    @Override
-    public PostVO next(Long id) {
-        Assert.notNull(id, "post id must not be null.");
-        Post next = postRepository.getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(id);
-        return this.convertOuter(next);
-    }
-
-    @Override
-    public PostVO previous(Long id) {
-        Assert.notNull(id, "post id must not be null.");
-        Post previous = postRepository.getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(id);
-        return this.convertOuter(previous);
     }
 
     @Override
@@ -126,7 +111,7 @@ public class PostsServiceImpl implements PostsService {
             postContent = new PostContent();
         }
         postContent.setPostId(post.getId());
-        postContent.setContext(dto.getContext());
+        postContent.setContent(dto.getContent());
         postContentRepository.saveAndFlush(postContent);
         //转换结果
         return this.convertOuter(post);
@@ -151,7 +136,7 @@ public class PostsServiceImpl implements PostsService {
         if (postContent == null) {
             postContent = new PostContent();
         }
-        postContent.setContext(dto.getContext());
+        postContent.setContent(dto.getContent());
         postContentRepository.save(postContent);
         //转换结果
         return this.convertOuter(post);
@@ -185,9 +170,6 @@ public class PostsServiceImpl implements PostsService {
                     .replace(" ", "").replace("\"", "");
             vo.setTags(Set.of(tags.split(",")));
         }
-        // 转换分类
-        Optional<Category> optional = categoryRepository.findById(post.getCategoryId());
-        optional.ifPresent(category -> vo.setCategory(category.getName()));
         return vo;
     }
 

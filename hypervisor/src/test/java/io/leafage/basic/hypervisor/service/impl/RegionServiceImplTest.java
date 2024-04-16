@@ -88,17 +88,17 @@ class RegionServiceImplTest {
     }
 
     @Test
-    void lower() {
-        given(this.regionRepository.findBySuperiorIdAndEnabledTrue(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Region.class)));
+    void subset() {
+        given(this.regionRepository.findBySuperiorId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Region.class)));
 
-        List<RegionVO> regionVOS = regionService.lower(Mockito.anyLong());
+        List<RegionVO> regionVOS = regionService.subset(Mockito.anyLong());
 
         Assertions.assertNotNull(regionVOS);
     }
 
     @Test
     void lower_empty() {
-        List<RegionVO> regionVOS = regionService.lower(Mockito.anyLong());
+        List<RegionVO> regionVOS = regionService.subset(Mockito.anyLong());
 
         Assertions.assertEquals(Collections.emptyList(), regionVOS);
     }

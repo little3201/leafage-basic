@@ -46,5 +46,5 @@ public interface DictionaryService extends ServletBasicService<DictionaryDTO, Di
      *
      * @return 数据集
      */
-    List<DictionaryVO> lower(Long id);
+    List<DictionaryVO> subset(Long id);
 }

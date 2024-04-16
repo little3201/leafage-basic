@@ -37,9 +37,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import top.leafage.common.TreeNode;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -199,20 +197,4 @@ class GroupControllerTest {
                 .andDo(print()).andReturn();
     }
 
-    @Test
-    void tree() throws Exception {
-        TreeNode treeNode = new TreeNode(1L, "test");
-        given(this.groupService.tree()).willReturn(Collections.singletonList(treeNode));
-
-        mvc.perform(get("/groups/tree")).andExpect(status().isOk())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void tree_error() throws Exception {
-        given(this.groupService.tree()).willThrow(new RuntimeException());
-
-        mvc.perform(get("/groups/tree")).andExpect(status().isNoContent())
-                .andDo(print()).andReturn();
-    }
 }

@@ -20,8 +20,6 @@ import io.leafage.basic.hypervisor.domain.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * group repository.
  *
@@ -29,12 +27,5 @@ import java.util.List;
  **/
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
-
-    /**
-     * 查询信息
-     *
-     * @return 结果信息
-     */
-    List<Group> findByEnabledTrue();
 
 }

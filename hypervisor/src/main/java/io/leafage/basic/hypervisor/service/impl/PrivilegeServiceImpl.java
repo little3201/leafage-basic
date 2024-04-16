@@ -62,7 +62,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
 
     @Override
     public List<TreeNode> tree() {
-        List<Privilege> privileges = privilegeRepository.findByEnabledTrue();
+        List<Privilege> privileges = privilegeRepository.findAll();
         return this.convertTree(privileges);
     }
 

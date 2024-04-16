@@ -63,9 +63,9 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     }
 
     @Override
-    public List<DictionaryVO> lower(Long id) {
+    public List<DictionaryVO> subset(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findBySuperiorIdAndEnabledTrue(id)
+        return dictionaryRepository.findBySuperiorId(id)
                 .stream().map(this::convert).toList();
     }
 

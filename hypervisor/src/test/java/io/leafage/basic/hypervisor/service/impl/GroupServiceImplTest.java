@@ -33,9 +33,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import top.leafage.common.TreeNode;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,11 +113,4 @@ class GroupServiceImplTest {
         verify(this.groupRepository, times(1)).deleteById(Mockito.anyLong());
     }
 
-    @Test
-    void tree() {
-        given(this.groupRepository.findByEnabledTrue()).willReturn(Arrays.asList(Mockito.mock(Group.class), Mockito.mock(Group.class)));
-
-        List<TreeNode> nodes = groupService.tree();
-        Assertions.assertNotNull(nodes);
-    }
 }

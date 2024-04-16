@@ -35,8 +35,8 @@ public abstract class MessageBO {
     /**
      * 内容
      */
-    @NotBlank(message = "context must not be blank.")
-    private String context;
+    @NotBlank(message = "content must not be blank.")
+    private String content;
 
     /**
      * 接收人
@@ -53,12 +53,12 @@ public abstract class MessageBO {
         this.title = title;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getReceiver() {

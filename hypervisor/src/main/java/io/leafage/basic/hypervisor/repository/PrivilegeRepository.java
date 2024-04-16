@@ -20,8 +20,6 @@ import io.leafage.basic.hypervisor.domain.Privilege;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * privilege repository.
  *
@@ -30,10 +28,4 @@ import java.util.List;
 @Repository
 public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
 
-    /**
-     * 查询所有可用数据
-     *
-     * @return 信息
-     */
-    List<Privilege> findByEnabledTrue();
 }

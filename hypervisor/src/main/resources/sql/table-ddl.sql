@@ -256,7 +256,7 @@ DROP TABLE IF EXISTS messages;
 CREATE TABLE messages (
    id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    title                varchar(255) NOT NULL,
-   context              varchar(1000),
+   content              varchar(1000),
    is_read              boolean NOT NULL DEFAULT false,
    receiver             varchar(50) NOT NULL,
    description          varchar(255),
@@ -271,7 +271,7 @@ CREATE TABLE messages (
 COMMENT ON TABLE messages IS '消息表';
 COMMENT ON COLUMN messages.id IS '主键';
 COMMENT ON COLUMN messages.title IS '标题';
-COMMENT ON COLUMN messages.context IS '内容';
+COMMENT ON COLUMN messages.content IS '内容';
 COMMENT ON COLUMN messages.is_read IS '是否已读';
 COMMENT ON COLUMN messages.receiver IS '接收者';
 COMMENT ON COLUMN messages.description IS '描述';
@@ -321,7 +321,7 @@ CREATE TABLE access_logs (
    id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    ip                   inet,
    location             varchar(50),
-   context              varchar(1000),
+   content              varchar(1000),
    user_agent           varchar(255),
    http_method          varchar(10),
    url                  varchar(255),
@@ -344,7 +344,7 @@ COMMENT ON TABLE access_logs IS '访问日志表';
 COMMENT ON COLUMN access_logs.id IS '主键';
 COMMENT ON COLUMN access_logs.ip IS 'IP地址';
 COMMENT ON COLUMN access_logs.location IS '位置';
-COMMENT ON COLUMN access_logs.context IS '内容';
+COMMENT ON COLUMN access_logs.content IS '内容';
 COMMENT ON COLUMN access_logs.user_agent IS '用户代理信息';
 COMMENT ON COLUMN access_logs.http_method IS 'HTTP方法';
 COMMENT ON COLUMN access_logs.url IS '请求URL';

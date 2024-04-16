@@ -16,11 +16,11 @@
  */
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.domain.Category;
+import io.leafage.basic.assets.domain.Tag;
 import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostRepository;
-import io.leafage.basic.assets.service.CategoryService;
+import io.leafage.basic.assets.repository.TagRepository;
+import io.leafage.basic.assets.service.TagService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
@@ -35,27 +35,27 @@ import java.time.Instant;
 import java.util.Optional;
 
 /**
- * category service impl.
+ * tag service impl.
  *
  * @author wq li  2020-12-03 22:59
  **/
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class TagServiceImpl implements TagService {
 
-    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
     private final PostRepository postRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, PostRepository postRepository) {
-        this.categoryRepository = categoryRepository;
+    public TagServiceImpl(TagRepository tagRepository, PostRepository postRepository) {
+        this.tagRepository = tagRepository;
         this.postRepository = postRepository;
     }
 
     @Override
     public Page<CategoryVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
-        return categoryRepository.findAll(pageable).map(category -> {
-            CategoryVO categoryVO = this.convertOuter(category);
-            long count = postRepository.countByCategoryId(category.getId());
+        return tagRepository.findAll(pageable).map(tag -> {
+            CategoryVO categoryVO = this.convertOuter(tag);
+            long count = postRepository.countByCategoryId(tag.getId());
             categoryVO.setCount(count);
             return categoryVO;
         });
@@ -63,67 +63,67 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryVO fetch(Long id) {
-        Assert.notNull(id, "category id must not be null.");
-        Category category = categoryRepository.findById(id).orElse(null);
-        if (category == null) {
+        Assert.notNull(id, "tag id must not be null.");
+        Tag tag = tagRepository.findById(id).orElse(null);
+        if (tag == null) {
             return null;
         }
-        return this.convertOuter(category);
+        return this.convertOuter(tag);
     }
 
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, "category name must not be blank.");
-        return categoryRepository.existsByName(name);
+        Assert.hasText(name, "tag name must not be blank.");
+        return tagRepository.existsByName(name);
     }
 
     @Override
     public CategoryVO create(CategoryDTO dto) {
-        Category category = new Category();
-        BeanCopier copier = BeanCopier.create(CategoryDTO.class, Category.class, false);
-        copier.copy(dto, category, null);
+        Tag tag = new Tag();
+        BeanCopier copier = BeanCopier.create(CategoryDTO.class, Tag.class, false);
+        copier.copy(dto, tag, null);
 
-        category = categoryRepository.saveAndFlush(category);
-        return this.convertOuter(category);
+        tag = tagRepository.saveAndFlush(tag);
+        return this.convertOuter(tag);
     }
 
     @Override
     public CategoryVO modify(Long id, CategoryDTO dto) {
-        Assert.notNull(id, "category id must not be null.");
-        Category category = categoryRepository.findById(id).orElse(null);
-        if (category == null) {
+        Assert.notNull(id, "tag id must not be null.");
+        Tag tag = tagRepository.findById(id).orElse(null);
+        if (tag == null) {
             return null;
         }
-        BeanCopier copier = BeanCopier.create(CategoryDTO.class, Category.class, false);
-        copier.copy(dto, category, null);
+        BeanCopier copier = BeanCopier.create(CategoryDTO.class, Tag.class, false);
+        copier.copy(dto, tag, null);
 
-        category = categoryRepository.save(category);
-        return this.convertOuter(category);
+        tag = tagRepository.save(tag);
+        return this.convertOuter(tag);
     }
 
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "category id must not be null.");
+        Assert.notNull(id, "tag id must not be null.");
 
-        categoryRepository.deleteById(id);
+        tagRepository.deleteById(id);
     }
 
     /**
      * 对象转换为输出结果对象
      *
-     * @param category 信息
+     * @param tag 信息
      * @return 输出转换后的vo对象
      */
-    private CategoryVO convertOuter(Category category) {
+    private CategoryVO convertOuter(Tag tag) {
         CategoryVO vo = new CategoryVO();
-        BeanCopier copier = BeanCopier.create(Category.class, CategoryVO.class, false);
-        copier.copy(category, vo, null);
+        BeanCopier copier = BeanCopier.create(Tag.class, CategoryVO.class, false);
+        copier.copy(tag, vo, null);
 
         // get lastModifiedDate
-        Optional<Instant> optionalInstant = category.getLastModifiedDate();
+        Optional<Instant> optionalInstant = tag.getLastModifiedDate();
         optionalInstant.ifPresent(vo::setLastModifiedDate);
 
-        long count = postRepository.countByCategoryId(category.getId());
+        long count = postRepository.countByCategoryId(tag.getId());
         vo.setCount(count);
         return vo;
     }

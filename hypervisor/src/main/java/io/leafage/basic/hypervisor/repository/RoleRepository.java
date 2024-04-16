@@ -20,8 +20,6 @@ import io.leafage.basic.hypervisor.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * role repository.
  *
@@ -30,10 +28,4 @@ import java.util.List;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    /**
-     * 查询
-     *
-     * @return 信息
-     */
-    List<Role> findByEnabledTrue();
 }

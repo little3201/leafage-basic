@@ -39,11 +39,6 @@ public class Comment extends AuditMetadata {
     private Long postId;
 
     /**
-     * 国家
-     */
-    private String country;
-
-    /**
      * 位置
      */
     private String location;
@@ -65,14 +60,6 @@ public class Comment extends AuditMetadata {
 
     public void setPostId(Long postId) {
         this.postId = postId;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
     }
 
     public String getLocation() {

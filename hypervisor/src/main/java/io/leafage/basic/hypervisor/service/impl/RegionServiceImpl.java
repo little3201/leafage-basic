@@ -52,9 +52,9 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public List<RegionVO> lower(Long id) {
+    public List<RegionVO> subset(Long id) {
         Assert.notNull(id, "region id must not be null.");
-        return regionRepository.findBySuperiorIdAndEnabledTrue(id)
+        return regionRepository.findBySuperiorId(id)
                 .stream().map(this::convertOuter).toList();
     }
 

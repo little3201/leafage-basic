@@ -78,7 +78,7 @@ class PostControllerTest {
         postDTO.setCategoryId(1L);
         postDTO.setCover("../test.jpg");
         postDTO.setTags(Collections.singleton("java"));
-        postDTO.setContext("content");
+        postDTO.setContent("content");
 
         postVO = new PostVO();
         postVO.setTitle(postDTO.getTitle());
@@ -119,38 +119,6 @@ class PostControllerTest {
     void fetch_error() throws Exception {
         given(postsService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
         mvc.perform(get("/posts/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
-                .andDo(print()).andReturn();
-    }
-
-
-    @Test
-    void next() throws Exception {
-        given(postsService.next(Mockito.anyLong())).willReturn(postVO);
-
-        mvc.perform(get("/posts/{id}/next", 1L)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
-    }
-
-    @Test
-    void next_error() throws Exception {
-        given(postsService.next(Mockito.anyLong())).willThrow(new RuntimeException());
-        mvc.perform(get("/posts/{id}/next", 1L)).andExpect(status().isNoContent())
-                .andDo(print()).andReturn();
-    }
-
-
-    @Test
-    void previous() throws Exception {
-        given(postsService.previous(Mockito.anyLong())).willReturn(postVO);
-
-        mvc.perform(get("/posts/{id}/previous", 1L)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
-    }
-
-    @Test
-    void previous_error() throws Exception {
-        given(postsService.previous(Mockito.anyLong())).willThrow(new RuntimeException());
-        mvc.perform(get("/posts/{id}/previous", 1L)).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

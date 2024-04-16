@@ -140,18 +140,18 @@ class RegionControllerTest {
 
 
     @Test
-    void lower() throws Exception {
-        given(this.regionService.lower(Mockito.anyLong())).willReturn(List.of(regionVO));
+    void subset() throws Exception {
+        given(this.regionService.subset(Mockito.anyLong())).willReturn(List.of(regionVO));
 
-        mvc.perform(get("/regions/{id}/lower", Mockito.anyLong())).andExpect(status().isOk())
+        mvc.perform(get("/regions/{id}/subset", Mockito.anyLong())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void lower_error() throws Exception {
-        given(this.regionService.lower(Mockito.anyLong())).willThrow(new RuntimeException());
+        given(this.regionService.subset(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/regions/{id}/lower", Mockito.anyLong())).andExpect(status().isNoContent())
+        mvc.perform(get("/regions/{id}/subset", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

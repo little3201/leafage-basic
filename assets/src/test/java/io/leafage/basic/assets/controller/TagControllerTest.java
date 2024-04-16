@@ -19,7 +19,7 @@ package io.leafage.basic.assets.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.service.CategoryService;
+import io.leafage.basic.assets.service.TagService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,14 +49,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * category 接口测试
+ * tag 接口测试
  *
  * @author wq li 2019/9/14 21:46
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(CategoryController.class)
-class CategoryControllerTest {
+@WebMvcTest(TagController.class)
+class TagControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -65,7 +65,7 @@ class CategoryControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private CategoryService categoryService;
+    private TagService tagService;
 
     private CategoryVO categoryVO;
 
@@ -85,61 +85,61 @@ class CategoryControllerTest {
     void retrieve() throws Exception {
         Pageable pageable = PageRequest.of(0,2);
         Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO), pageable, 2L);
-        given(categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
+        given(tagService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
-        mvc.perform(get("/category").queryParam("page", "0")
+        mvc.perform(get("/tags").queryParam("page", "0")
                         .queryParam("size", "2").queryParam("sort", "id"))
                 .andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(categoryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new NoSuchElementException());
+        given(tagService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/category").queryParam("page", "0")
+        mvc.perform(get("/tags").queryParam("page", "0")
                         .queryParam("size", "2").queryParam("sort", "id")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void fetch() throws Exception {
-        given(categoryService.fetch(Mockito.anyLong())).willReturn(categoryVO);
+        given(tagService.fetch(Mockito.anyLong())).willReturn(categoryVO);
 
-        mvc.perform(get("/category/{id}", 1L)).andExpect(status().isOk())
+        mvc.perform(get("/tags/{id}", 1L)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
-        given(categoryService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
+        given(tagService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/category/{id}", 1L)).andExpect(status().isNoContent())
+        mvc.perform(get("/tags/{id}", 1L)).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void create() throws Exception {
-        given(categoryService.create(Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
+        given(tagService.create(Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
 
-        mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/tags").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void create_error() throws Exception {
-        given(categoryService.create(Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
+        given(tagService.create(Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        mvc.perform(post("/category").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/tags").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void modify() throws Exception {
-        given(categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
+        given(tagService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
 
-        mvc.perform(put("/category/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/tags/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
@@ -147,9 +147,9 @@ class CategoryControllerTest {
 
     @Test
     void modify_error() throws Exception {
-        given(categoryService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
+        given(tagService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
 
-        mvc.perform(put("/category/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(put("/tags/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
@@ -157,17 +157,17 @@ class CategoryControllerTest {
 
     @Test
     void remove() throws Exception {
-        categoryService.remove(Mockito.anyLong());
+        tagService.remove(Mockito.anyLong());
 
-        mvc.perform(delete("/category/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/tags/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void remove_error() throws Exception {
-        doThrow(new RuntimeException()).when(categoryService).remove(Mockito.anyLong());
+        doThrow(new RuntimeException()).when(tagService).remove(Mockito.anyLong());
 
-        mvc.perform(delete("/category/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/tags/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 }

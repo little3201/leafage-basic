@@ -71,13 +71,13 @@ public class DictionaryController {
      *
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/{id}/lower")
-    public ResponseEntity<List<DictionaryVO>> lower(@PathVariable Long id) {
+    @GetMapping("/{id}/subset")
+    public ResponseEntity<List<DictionaryVO>> subset(@PathVariable Long id) {
         List<DictionaryVO> child;
         try {
-            child = dictionaryService.lower(id);
+            child = dictionaryService.subset(id);
         } catch (Exception e) {
-            logger.info("Retrieve dictionary lower occurred an error: ", e);
+            logger.info("Retrieve dictionary subset occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(child);

@@ -1,11 +1,10 @@
--- Drop table if exists categories
-DROP TABLE IF EXISTS categories;
+-- Drop table if exists tags
+DROP TABLE IF EXISTS tags;
 
--- Create table categories
-CREATE TABLE categories (
+-- Create table tags
+CREATE TABLE tags (
    id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    name                 varchar(127) NOT NULL UNIQUE,
-   description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -14,19 +13,18 @@ CREATE TABLE categories (
 );
 
 -- Add comment to the table and columns
-COMMENT ON TABLE categories IS '类别表';
-COMMENT ON COLUMN categories.id IS '主键';
-COMMENT ON COLUMN categories.name IS '名称';
-COMMENT ON COLUMN categories.description IS '描述';
-COMMENT ON COLUMN categories.enabled IS '是否启用';
-COMMENT ON COLUMN categories.created_by IS '创建者';
-COMMENT ON COLUMN categories.created_date IS '创建时间';
-COMMENT ON COLUMN categories.last_modified_by IS '最后修改者';
-COMMENT ON COLUMN categories.last_modified_date IS '最后修改时间';
+COMMENT ON TABLE tags IS '标签表';
+COMMENT ON COLUMN tags.id IS '主键';
+COMMENT ON COLUMN tags.name IS '名称';
+COMMENT ON COLUMN tags.enabled IS '是否启用';
+COMMENT ON COLUMN tags.created_by IS '创建者';
+COMMENT ON COLUMN tags.created_date IS '创建时间';
+COMMENT ON COLUMN tags.last_modified_by IS '最后修改者';
+COMMENT ON COLUMN tags.last_modified_date IS '最后修改时间';
 
--- Create unique index on categories table
-CREATE UNIQUE INDEX idx_unique_name ON categories (name);
-COMMENT ON INDEX idx_unique_name IS '类别名称唯一索引';
+-- Create unique index on tags table
+CREATE UNIQUE INDEX idx_unique_name ON tags (name);
+COMMENT ON INDEX idx_unique_name IS '标签名称唯一索引';
 
 -- Drop table if exists posts
 DROP TABLE IF EXISTS posts;
@@ -37,7 +35,6 @@ CREATE TABLE posts (
    title                varchar(127) NOT NULL,
    tags                 varchar[],
    cover                varchar(127),
-   category_id          bigint NOT NULL,
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -52,16 +49,11 @@ COMMENT ON COLUMN posts.id IS '主键';
 COMMENT ON COLUMN posts.title IS '标题';
 COMMENT ON COLUMN posts.tags IS '标签';
 COMMENT ON COLUMN posts.cover IS '封面';
-COMMENT ON COLUMN posts.category_id IS '类别ID';
 COMMENT ON COLUMN posts.enabled IS '是否启用';
 COMMENT ON COLUMN posts.created_by IS '创建者';
 COMMENT ON COLUMN posts.created_date IS '创建时间';
 COMMENT ON COLUMN posts.last_modified_by IS '最后修改者';
 COMMENT ON COLUMN posts.last_modified_date IS '最后修改时间';
-
--- Create index on category_id column
-CREATE INDEX idx_category_id ON posts(category_id);
-COMMENT ON INDEX idx_category_id IS '帖子类别ID索引';
 
 -- Create index on created_by column
 CREATE INDEX idx_created_by ON posts(created_by);
@@ -103,9 +95,8 @@ DROP TABLE IF EXISTS comments;
 CREATE TABLE comments (
    id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    post_id              bigint NOT NULL,
-   country              varchar(255),
    location             varchar(255),
-   context              varchar(512),
+   content              varchar(512),
    created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
    last_modified_by     varchar(50),
@@ -117,9 +108,8 @@ CREATE TABLE comments (
 COMMENT ON TABLE comments IS '评论表';
 COMMENT ON COLUMN comments.id IS '主键';
 COMMENT ON COLUMN comments.post_id IS '帖子ID';
-COMMENT ON COLUMN comments.country IS '国家';
 COMMENT ON COLUMN comments.location IS '位置';
-COMMENT ON COLUMN comments.context IS '内容';
+COMMENT ON COLUMN comments.content IS '内容';
 COMMENT ON COLUMN comments.created_by IS '创建者';
 COMMENT ON COLUMN comments.created_date IS '创建时间';
 COMMENT ON COLUMN comments.last_modified_by IS '最后修改者';

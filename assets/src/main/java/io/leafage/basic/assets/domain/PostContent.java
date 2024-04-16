@@ -40,7 +40,7 @@ public class PostContent extends AuditMetadata {
     /**
      * 内容
      */
-    private String context;
+    private String content;
 
     public Long getPostId() {
         return postId;
@@ -50,11 +50,11 @@ public class PostContent extends AuditMetadata {
         this.postId = postId;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 }

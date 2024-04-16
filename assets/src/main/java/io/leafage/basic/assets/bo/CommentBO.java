@@ -37,8 +37,8 @@ public abstract class CommentBO {
     /**
      * 内容
      */
-    @NotBlank(message = "context must not be blank.")
-    private String context;
+    @NotBlank(message = "content must not be blank.")
+    private String content;
 
     /**
      * 回复者
@@ -54,12 +54,12 @@ public abstract class CommentBO {
         this.postId = postId;
     }
 
-    public String getContext() {
-        return context;
+    public String getContent() {
+        return content;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Long getReplier() {

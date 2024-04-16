@@ -108,7 +108,7 @@ class PrivilegeServiceImplTest {
 
     @Test
     void tree() {
-        given(this.privilegeRepository.findByEnabledTrue()).willReturn(Arrays.asList(Mockito.mock(Privilege.class), Mockito.mock(Privilege.class)));
+        given(this.privilegeRepository.findAll()).willReturn(Arrays.asList(Mockito.mock(Privilege.class), Mockito.mock(Privilege.class)));
 
         List<TreeNode> nodes = privilegeService.tree();
         Assertions.assertNotNull(nodes);

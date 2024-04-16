@@ -21,7 +21,7 @@ import io.leafage.basic.assets.bo.CategoryBO;
 import java.time.Instant;
 
 /**
- * vo class for category.
+ * vo class for tag.
  *
  * @author wq li  2020-12-03 22:59
  */

@@ -45,6 +45,6 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long> {
      * @param superiorId 上级主键
      * @return 结果信息
      */
-    List<Dictionary> findBySuperiorIdAndEnabledTrue(Long superiorId);
+    List<Dictionary> findBySuperiorId(Long superiorId);
 
 }

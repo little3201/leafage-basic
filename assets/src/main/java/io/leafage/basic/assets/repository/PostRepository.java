@@ -17,12 +17,8 @@
 package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.domain.Post;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * posts repository.
@@ -31,21 +27,6 @@ import java.util.List;
  **/
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-
-    /**
-     * 分页查询
-     *
-     * @param pageable 分页参数
-     * @return 查询结果
-     */
-    Slice<Post> findByEnabledTrue(Pageable pageable);
-
-    /**
-     * 查询所有可用
-     *
-     * @return 查询结果
-     */
-    List<Post> findByEnabledTrue();
 
     /**
      * 统计

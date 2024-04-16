@@ -36,7 +36,7 @@ import java.util.List;
  * @author wq li 2018/12/20 9:54
  **/
 @RestController
-@RequestMapping("/comment")
+@RequestMapping("/comments")
 public class CommentController {
 
     private static final Logger logger = LoggerFactory.getLogger(CommentController.class);

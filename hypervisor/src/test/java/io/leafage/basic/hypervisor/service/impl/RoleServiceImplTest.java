@@ -117,7 +117,7 @@ class RoleServiceImplTest {
 
     @Test
     void tree() {
-        given(this.roleRepository.findByEnabledTrue()).willReturn(Arrays.asList(Mockito.mock(Role.class), Mockito.mock(Role.class)));
+        given(this.roleRepository.findAll()).willReturn(Arrays.asList(Mockito.mock(Role.class), Mockito.mock(Role.class)));
 
         List<TreeNode> nodes = roleService.tree();
         Assertions.assertNotNull(nodes);

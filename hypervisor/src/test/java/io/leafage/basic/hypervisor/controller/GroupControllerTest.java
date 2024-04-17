@@ -77,15 +77,10 @@ class GroupControllerTest {
     @BeforeEach
     void init() {
         groupVO = new GroupVO();
-        groupVO.setName("test");
-        groupVO.setPrincipal("test");
-        groupVO.setSuperior("superior");
+        groupVO.setGroupName("test");
 
         groupDTO = new GroupDTO();
-        groupDTO.setName("test");
-        groupDTO.setSuperiorId(1L);
-        groupDTO.setPrincipal("test");
-        groupDTO.setDescription("描述");
+        groupDTO.setGroupName("test");
     }
 
     @Test
@@ -112,7 +107,7 @@ class GroupControllerTest {
         given(this.groupService.fetch(Mockito.anyLong())).willReturn(groupVO);
 
         mvc.perform(get("/groups/{id}", Mockito.anyLong())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
+                .andExpect(jsonPath("$.groupName").value("test")).andDo(print()).andReturn();
     }
 
     @Test
@@ -130,7 +125,7 @@ class GroupControllerTest {
         mvc.perform(post("/groups").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("test"))
+                .andExpect(jsonPath("$.groupName").value("test"))
                 .andDo(print()).andReturn();
     }
 

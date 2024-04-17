@@ -14,34 +14,37 @@
  *  limitations under the License.
  *
  */
+package io.leafage.basic.assets.domain;
 
-package io.leafage.basic.hypervisor.vo;
-
-import io.leafage.basic.hypervisor.bo.DictionaryBO;
-
-import java.time.Instant;
+import jakarta.persistence.*;
 
 /**
- * vo class for dictionary.
+ * model class for tag_posts.
  *
- * @author wq li 2022-04-06 17:33
+ * @author wq li  2024-04-17 16:06
  */
-public class DictionaryVO extends DictionaryBO {
+@Entity
+@Table(name = "tag_posts")
+public class TagPosts {
 
     /**
      * 主键
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     /**
-     * 状态
+     * tag id
      */
-    private boolean enabled;
+    @Column(name = "tag_id", nullable = false)
+    private Long tagId;
 
     /**
-     * 最后更新时间
+     * post id
      */
-    private Instant lastModifiedDate;
+    @Column(name = "post_id", nullable = false)
+    private Long postId;
 
 
     public Long getId() {
@@ -52,19 +55,19 @@ public class DictionaryVO extends DictionaryBO {
         this.id = id;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public Long getTagId() {
+        return tagId;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setTagId(Long tagId) {
+        this.tagId = tagId;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 }

@@ -17,10 +17,10 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.domain.Tag;
-import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.dto.TagDTO;
+import io.leafage.basic.assets.repository.TagPostsRepository;
 import io.leafage.basic.assets.repository.TagRepository;
-import io.leafage.basic.assets.vo.CategoryVO;
+import io.leafage.basic.assets.vo.TagVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,18 +53,17 @@ class TagServiceImplTest {
     private TagRepository tagRepository;
 
     @Mock
-    private PostRepository postRepository;
+    private TagPostsRepository tagPostsRepository;
 
     @InjectMocks
-    private TagServiceImpl categoryService;
+    private TagServiceImpl tagService;
 
-    private CategoryDTO categoryDTO;
+    private TagDTO tagDTO;
 
     @BeforeEach
     void init() {
-        categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
-        categoryDTO.setDescription("tag");
+        tagDTO = new TagDTO();
+        tagDTO.setName("test");
     }
 
     @Test
@@ -73,9 +72,9 @@ class TagServiceImplTest {
         Page<Tag> page = new PageImpl<>(List.of(Mockito.mock(Tag.class)), pageable, 2L);
         given(tagRepository.findAll(Mockito.any(PageRequest.class))).willReturn(page);
 
-        given(postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(tagPostsRepository.countByTagId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-        Page<CategoryVO> voPage = categoryService.retrieve(0, 2, "id");
+        Page<TagVO> voPage = tagService.retrieve(0, 2, "id");
 
         Assertions.assertNotNull(voPage.getContent());
     }
@@ -84,7 +83,7 @@ class TagServiceImplTest {
     void fetch() {
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Tag.class)));
 
-        CategoryVO categoryVO = categoryService.fetch(Mockito.anyLong());
+        TagVO categoryVO = tagService.fetch(Mockito.anyLong());
 
         Assertions.assertNotNull(categoryVO);
     }
@@ -94,9 +93,9 @@ class TagServiceImplTest {
     void create() {
         given(tagRepository.saveAndFlush(Mockito.any(Tag.class))).willReturn(Mockito.mock(Tag.class));
 
-        given(postRepository.countByCategoryId(Mockito.anyLong())).willReturn(2L);
+        given(tagPostsRepository.countByTagId(Mockito.anyLong())).willReturn(2L);
 
-        CategoryVO categoryVO = categoryService.create(Mockito.mock(CategoryDTO.class));
+        TagVO categoryVO = tagService.create(Mockito.mock(TagDTO.class));
 
         verify(tagRepository, times(1)).saveAndFlush(Mockito.any(Tag.class));
         Assertions.assertNotNull(categoryVO);
@@ -108,9 +107,9 @@ class TagServiceImplTest {
 
         given(tagRepository.save(Mockito.any(Tag.class))).willReturn(Mockito.mock(Tag.class));
 
-        given(postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mockito.anyLong());
+        given(tagPostsRepository.countByTagId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-        CategoryVO categoryVO = categoryService.modify(1L, categoryDTO);
+        TagVO categoryVO = tagService.modify(1L, tagDTO);
 
         verify(tagRepository, times(1)).save(Mockito.any(Tag.class));
         Assertions.assertNotNull(categoryVO);
@@ -118,7 +117,7 @@ class TagServiceImplTest {
 
     @Test
     void remove() {
-        categoryService.remove(Mockito.anyLong());
+        tagService.remove(Mockito.anyLong());
 
         verify(tagRepository, times(1)).deleteById(Mockito.anyLong());
     }

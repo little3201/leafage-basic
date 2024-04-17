@@ -49,7 +49,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
 
     @Override
     public Page<DictionaryVO> retrieve(int page, int size) {
-        return dictionaryRepository.findAll(PageRequest.of(page, size)).map(this::convert);
+        return dictionaryRepository.findBySuperiorIdIsNull(PageRequest.of(page, size)).map(this::convert);
     }
 
     @Override

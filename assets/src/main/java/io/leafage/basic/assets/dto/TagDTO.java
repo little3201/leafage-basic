@@ -14,14 +14,15 @@
  *  limitations under the License.
  *
  */
-package io.leafage.basic.hypervisor.dto;
+package io.leafage.basic.assets.dto;
 
-import io.leafage.basic.hypervisor.bo.GroupBO;
+import io.leafage.basic.assets.bo.TagBO;
 
 /**
- * dto class for group.
+ * dto class for tag.
  *
- * @author wq li 2019/8/31 15:50
+ * @author wq li  2020-12-03 22:59
  */
-public class GroupDTO extends GroupBO {
+public class TagDTO extends TagBO {
+
 }

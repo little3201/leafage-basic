@@ -17,7 +17,6 @@
 package io.leafage.basic.assets.dto;
 
 import io.leafage.basic.assets.bo.PostBO;
-import jakarta.validation.constraints.NotNull;
 
 /**
  * dto class for posts.
@@ -25,19 +24,4 @@ import jakarta.validation.constraints.NotNull;
  * @author wq li  2019-03-03 22:59
  **/
 public class PostDTO extends PostBO {
-
-    /**
-     * 分类
-     */
-    @NotNull(message = "categoryId must not be null.")
-    private Long categoryId;
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
 }

@@ -28,14 +28,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.leafage.common.TreeNode;
-import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
 import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -56,7 +51,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Page<GroupVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
-        return groupRepository.findAll(pageable).map(this::convertOuter);
+        return groupRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
@@ -66,7 +61,7 @@ public class GroupServiceImpl implements GroupService {
         copier.copy(dto, group, null);
 
         group = groupRepository.saveAndFlush(group);
-        return this.convertOuter(group);
+        return this.convert(group);
     }
 
     @Override
@@ -80,7 +75,7 @@ public class GroupServiceImpl implements GroupService {
         copier.copy(dto, group, null);
 
         group = groupRepository.save(group);
-        return this.convertOuter(group);
+        return this.convert(group);
     }
 
     @Override
@@ -95,7 +90,7 @@ public class GroupServiceImpl implements GroupService {
      * @param group 基础对象
      * @return 结果对象
      */
-    private GroupVO convertOuter(Group group) {
+    private GroupVO convert(Group group) {
         GroupVO vo = new GroupVO();
         BeanCopier copier = BeanCopier.create(Group.class, GroupVO.class, false);
         copier.copy(group, vo, null);

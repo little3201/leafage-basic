@@ -39,9 +39,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import top.leafage.common.TreeNode;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -90,7 +88,6 @@ class RoleControllerTest {
 
         roleDTO = new RoleDTO();
         roleDTO.setName("test");
-        roleDTO.setSuperiorId(1L);
         roleDTO.setDescription("description");
     }
 
@@ -237,24 +234,6 @@ class RoleControllerTest {
         mvc.perform(patch("/roles/{id}/privileges", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(Set.of(1L))).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
-                .andDo(print()).andReturn();
-    }
-
-
-    @Test
-    void tree() throws Exception {
-        TreeNode treeNode = new TreeNode(1L, "test");
-        given(this.roleService.tree()).willReturn(Collections.singletonList(treeNode));
-
-        mvc.perform(get("/roles/tree")).andExpect(status().isOk())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void tree_error() throws Exception {
-        given(this.roleService.tree()).willThrow(new RuntimeException());
-
-        mvc.perform(get("/roles/tree")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

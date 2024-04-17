@@ -53,7 +53,7 @@ public class Region extends AuditMetadata {
      * 邮编
      */
     @Column(name = "postal_code", length = 6)
-    private String postalCode;
+    private Integer postalCode;
 
     /**
      * 描述
@@ -85,11 +85,11 @@ public class Region extends AuditMetadata {
         this.areaCode = areaCode;
     }
 
-    public String getPostalCode() {
+    public Integer getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(String postalCode) {
+    public void setPostalCode(Integer postalCode) {
         this.postalCode = postalCode;
     }
 

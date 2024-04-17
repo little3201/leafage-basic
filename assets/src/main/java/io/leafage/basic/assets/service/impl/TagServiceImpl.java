@@ -17,11 +17,11 @@
 package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.domain.Tag;
-import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.dto.TagDTO;
+import io.leafage.basic.assets.repository.TagPostsRepository;
 import io.leafage.basic.assets.repository.TagRepository;
 import io.leafage.basic.assets.service.TagService;
-import io.leafage.basic.assets.vo.CategoryVO;
+import io.leafage.basic.assets.vo.TagVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,32 +43,27 @@ import java.util.Optional;
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
-    private final PostRepository postRepository;
+    private final TagPostsRepository tagPostsRepository;
 
-    public TagServiceImpl(TagRepository tagRepository, PostRepository postRepository) {
+    public TagServiceImpl(TagRepository tagRepository, TagPostsRepository tagPostsRepository) {
         this.tagRepository = tagRepository;
-        this.postRepository = postRepository;
+        this.tagPostsRepository = tagPostsRepository;
     }
 
     @Override
-    public Page<CategoryVO> retrieve(int page, int size, String sort) {
+    public Page<TagVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
-        return tagRepository.findAll(pageable).map(tag -> {
-            CategoryVO categoryVO = this.convertOuter(tag);
-            long count = postRepository.countByCategoryId(tag.getId());
-            categoryVO.setCount(count);
-            return categoryVO;
-        });
+        return tagRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
-    public CategoryVO fetch(Long id) {
+    public TagVO fetch(Long id) {
         Assert.notNull(id, "tag id must not be null.");
         Tag tag = tagRepository.findById(id).orElse(null);
         if (tag == null) {
             return null;
         }
-        return this.convertOuter(tag);
+        return this.convert(tag);
     }
 
     @Override
@@ -78,27 +73,27 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public CategoryVO create(CategoryDTO dto) {
+    public TagVO create(TagDTO dto) {
         Tag tag = new Tag();
-        BeanCopier copier = BeanCopier.create(CategoryDTO.class, Tag.class, false);
+        BeanCopier copier = BeanCopier.create(TagDTO.class, Tag.class, false);
         copier.copy(dto, tag, null);
 
         tag = tagRepository.saveAndFlush(tag);
-        return this.convertOuter(tag);
+        return this.convert(tag);
     }
 
     @Override
-    public CategoryVO modify(Long id, CategoryDTO dto) {
+    public TagVO modify(Long id, TagDTO dto) {
         Assert.notNull(id, "tag id must not be null.");
         Tag tag = tagRepository.findById(id).orElse(null);
         if (tag == null) {
             return null;
         }
-        BeanCopier copier = BeanCopier.create(CategoryDTO.class, Tag.class, false);
+        BeanCopier copier = BeanCopier.create(TagDTO.class, Tag.class, false);
         copier.copy(dto, tag, null);
 
         tag = tagRepository.save(tag);
-        return this.convertOuter(tag);
+        return this.convert(tag);
     }
 
     @Override
@@ -114,16 +109,16 @@ public class TagServiceImpl implements TagService {
      * @param tag 信息
      * @return 输出转换后的vo对象
      */
-    private CategoryVO convertOuter(Tag tag) {
-        CategoryVO vo = new CategoryVO();
-        BeanCopier copier = BeanCopier.create(Tag.class, CategoryVO.class, false);
+    private TagVO convert(Tag tag) {
+        TagVO vo = new TagVO();
+        BeanCopier copier = BeanCopier.create(Tag.class, TagVO.class, false);
         copier.copy(tag, vo, null);
 
         // get lastModifiedDate
         Optional<Instant> optionalInstant = tag.getLastModifiedDate();
         optionalInstant.ifPresent(vo::setLastModifiedDate);
 
-        long count = postRepository.countByCategoryId(tag.getId());
+        long count = tagPostsRepository.countByTagId(tag.getId());
         vo.setCount(count);
         return vo;
     }

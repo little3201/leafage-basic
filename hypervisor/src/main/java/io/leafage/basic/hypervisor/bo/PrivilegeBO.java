@@ -32,8 +32,8 @@ public abstract class PrivilegeBO {
     /**
      * 名称
      */
-    @NotBlank(message = "privilege name must not be blank.")
-    @Size(max = 32, message = "privilege name max length is 32.")
+    @NotBlank(message = "name must not be blank.")
+    @Size(max = 32, message = "name max length is 32.")
     private String name;
 
     /**

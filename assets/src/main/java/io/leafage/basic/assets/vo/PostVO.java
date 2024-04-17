@@ -33,11 +33,6 @@ public class PostVO extends PostBO {
     private Long id;
 
     /**
-     * tag
-     */
-    private String tag;
-
-    /**
      * 最后更新时间
      */
     private Instant lastModifiedDate;
@@ -49,14 +44,6 @@ public class PostVO extends PostBO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getCategory() {
-        return tag;
-    }
-
-    public void setCategory(String tag) {
-        this.tag = tag;
     }
 
     public Instant getLastModifiedDate() {

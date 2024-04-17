@@ -34,19 +34,19 @@ public class Message extends AuditMetadata {
     /**
      * 主键
      */
-    @Column(name = "name", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
     /**
      * 内容
      */
-    @Column(name = "name", length = 1000)
+    @Column(name = "content", length = 1000)
     private String content;
 
     /**
      * 是否已读
      */
-    @Column(name = "is_read", nullable = false)
+    @Column(name = "read", nullable = false)
     private boolean read;
 
     /**

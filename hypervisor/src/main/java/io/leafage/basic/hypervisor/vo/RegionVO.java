@@ -34,9 +34,9 @@ public class RegionVO extends RegionBO {
     private Long id;
 
     /**
-     * 上级
+     * 状态
      */
-    private String superior;
+    private boolean enabled;
 
     /**
      * 最后更新时间
@@ -52,12 +52,12 @@ public class RegionVO extends RegionBO {
         this.id = id;
     }
 
-    public String getSuperior() {
-        return superior;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setSuperior(String superior) {
-        this.superior = superior;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Instant getLastModifiedDate() {

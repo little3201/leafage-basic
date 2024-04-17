@@ -18,9 +18,12 @@ package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.domain.PostContent;
+import io.leafage.basic.assets.domain.Tag;
+import io.leafage.basic.assets.domain.TagPosts;
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.repository.TagPostsRepository;
 import io.leafage.basic.assets.repository.TagRepository;
 import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostVO;
@@ -32,11 +35,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * posts service impl.
@@ -49,17 +56,20 @@ public class PostsServiceImpl implements PostsService {
     private final PostRepository postRepository;
     private final PostContentRepository postContentRepository;
     private final TagRepository tagRepository;
+    private final TagPostsRepository tagPostsRepository;
 
-    public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository, TagRepository tagRepository) {
+    public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository,
+                            TagRepository tagRepository, TagPostsRepository tagPostsRepository) {
         this.postRepository = postRepository;
         this.postContentRepository = postContentRepository;
         this.tagRepository = tagRepository;
+        this.tagPostsRepository = tagPostsRepository;
     }
 
     @Override
     public Page<PostVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
-        return postRepository.findAll(pageable).map(this::convertOuter);
+        return postRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
@@ -70,7 +80,7 @@ public class PostsServiceImpl implements PostsService {
         if (post == null) {
             return null;
         }
-        return this.convertOuter(post);
+        return this.convert(post);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -81,7 +91,7 @@ public class PostsServiceImpl implements PostsService {
         if (post == null) {
             return null;
         }
-        PostVO vo = this.convertOuter(post);
+        PostVO vo = this.convert(post);
         // 获取内容详情
         PostContent postContent = postContentRepository.getByPostId(id);
         if (postContent != null) {
@@ -102,7 +112,6 @@ public class PostsServiceImpl implements PostsService {
         BeanCopier copier = BeanCopier.create(PostDTO.class, Post.class, false);
         copier.copy(dto, post, null);
 
-        post.setTags(dto.getTags().toString());
         // 保存并立即刷盘
         post = postRepository.saveAndFlush(post);
         //保存帖子内容
@@ -113,8 +122,11 @@ public class PostsServiceImpl implements PostsService {
         postContent.setPostId(post.getId());
         postContent.setContent(dto.getContent());
         postContentRepository.saveAndFlush(postContent);
+
+        // sava tag
+        this.relation(post.getId(), dto.getTags());
         //转换结果
-        return this.convertOuter(post);
+        return this.convert(post);
     }
 
     @Override
@@ -128,9 +140,8 @@ public class PostsServiceImpl implements PostsService {
         BeanCopier copier = BeanCopier.create(PostDTO.class, Post.class, false);
         copier.copy(dto, post, null);
 
-        post.setTags(dto.getTags().toString());
-
         post = postRepository.save(post);
+
         //保存文章内容
         PostContent postContent = postContentRepository.getByPostId(id);
         if (postContent == null) {
@@ -138,8 +149,12 @@ public class PostsServiceImpl implements PostsService {
         }
         postContent.setContent(dto.getContent());
         postContentRepository.save(postContent);
+
+        // sava tag
+        this.relation(post.getId(), dto.getTags());
+
         //转换结果
-        return this.convertOuter(post);
+        return this.convert(post);
     }
 
     @Override
@@ -155,7 +170,7 @@ public class PostsServiceImpl implements PostsService {
      * @param post 信息
      * @return 输出转换后的vo对象
      */
-    private PostVO convertOuter(Post post) {
+    private PostVO convert(Post post) {
         PostVO vo = new PostVO();
         BeanCopier copier = BeanCopier.create(Post.class, PostVO.class, false);
         copier.copy(post, vo, null);
@@ -164,13 +179,39 @@ public class PostsServiceImpl implements PostsService {
         Optional<Instant> optionalInstant = post.getLastModifiedDate();
         optionalInstant.ifPresent(vo::setLastModifiedDate);
 
+        List<TagPosts> tagPostsList = tagPostsRepository.findByPostId(post.getId());
         // 转换 tags
-        if (StringUtils.hasText(post.getTags())) {
-            String tags = post.getTags().substring(1, post.getTags().length() - 1)
-                    .replace(" ", "").replace("\"", "");
-            vo.setTags(Set.of(tags.split(",")));
+        if (!CollectionUtils.isEmpty(tagPostsList)) {
+            Set<String> tags = tagPostsList.stream().map(tagPosts -> {
+                Optional<Tag> optional = tagRepository.findById(tagPosts.getId());
+                return optional.map(Tag::getName).orElse(null);
+            }).collect(Collectors.toSet());
+
+            vo.setTags(tags);
         }
         return vo;
+    }
+
+    private void relation(Long postId, Set<String> tags) {
+        tagPostsRepository.deleteByPostId(postId);
+        // 设置新的关联
+        if (!CollectionUtils.isEmpty(tags)) {
+            List<TagPosts> tagPostsList = new ArrayList<>(tags.size());
+            tags.forEach(t -> {
+                Tag tag = tagRepository.getByName(t);
+                if (tag == null) {
+                    Tag newTag = new Tag();
+                    newTag.setName(t);
+                    tag = tagRepository.saveAndFlush(newTag);
+                }
+
+                TagPosts tagPosts = new TagPosts();
+                tagPosts.setPostId(postId);
+                tagPosts.setTagId(tag.getId());
+                tagPostsList.add(tagPosts);
+            });
+            tagPostsRepository.saveAll(tagPostsList);
+        }
     }
 
 }

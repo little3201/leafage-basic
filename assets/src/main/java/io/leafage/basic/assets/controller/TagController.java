@@ -16,9 +16,9 @@
  */
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.dto.CategoryDTO;
+import io.leafage.basic.assets.dto.TagDTO;
 import io.leafage.basic.assets.service.TagService;
-import io.leafage.basic.assets.vo.CategoryVO;
+import io.leafage.basic.assets.vo.TagVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +53,8 @@ public class TagController {
      * @return 分页结果集
      */
     @GetMapping
-    public ResponseEntity<Page<CategoryVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
-        Page<CategoryVO> voPage;
+    public ResponseEntity<Page<TagVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+        Page<TagVO> voPage;
         try {
             voPage = tagService.retrieve(page, size, sort);
         } catch (Exception e) {
@@ -71,8 +71,8 @@ public class TagController {
      * @return 匹配到的类目信息
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryVO> fetch(@PathVariable Long id) {
-        CategoryVO categoryVO;
+    public ResponseEntity<TagVO> fetch(@PathVariable Long id) {
+        TagVO categoryVO;
         try {
             categoryVO = tagService.fetch(id);
         } catch (Exception e) {
@@ -89,8 +89,8 @@ public class TagController {
      * @return 类目信息
      */
     @PostMapping
-    public ResponseEntity<CategoryVO> create(@RequestBody @Valid CategoryDTO categoryDTO) {
-        CategoryVO categoryVO;
+    public ResponseEntity<TagVO> create(@RequestBody @Valid TagDTO categoryDTO) {
+        TagVO categoryVO;
         try {
             categoryVO = tagService.create(categoryDTO);
         } catch (Exception e) {
@@ -108,8 +108,8 @@ public class TagController {
      * @return 修改后的类目信息
      */
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryVO> modify(@PathVariable Long id, @RequestBody @Valid CategoryDTO categoryDTO) {
-        CategoryVO categoryVO;
+    public ResponseEntity<TagVO> modify(@PathVariable Long id, @RequestBody @Valid TagDTO categoryDTO) {
+        TagVO categoryVO;
         try {
             categoryVO = tagService.modify(id, categoryDTO);
         } catch (Exception e) {

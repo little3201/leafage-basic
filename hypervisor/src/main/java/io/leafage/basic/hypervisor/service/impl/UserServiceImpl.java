@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
-        return userRepository.findAll(pageable).map(this::convertOuter);
+        return userRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             return null;
         }
-        return this.convertOuter(user);
+        return this.convert(user);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         copier.copy(dto, user, null);
 
         user = userRepository.saveAndFlush(user);
-        return this.convertOuter(user);
+        return this.convert(user);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
         copier.copy(dto, user, null);
 
         user = userRepository.save(user);
-        return this.convertOuter(user);
+        return this.convert(user);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
      *
      * @return ExampleMatcher
      */
-    private UserVO convertOuter(User user) {
+    private UserVO convert(User user) {
         UserVO vo = new UserVO();
         BeanCopier copier = BeanCopier.create(User.class, UserVO.class, false);
         copier.copy(user, vo, null);

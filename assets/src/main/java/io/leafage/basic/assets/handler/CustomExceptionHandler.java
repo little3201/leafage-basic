@@ -58,7 +58,7 @@ public class CustomExceptionHandler {
      * @param exception exception of ConstraintViolationException
      * @return a construct of ResponseEntity
      */
-    @ExceptionHandler
+    @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException exception) {
         Set<ConstraintViolation<?>> violations = exception.getConstraintViolations();
         StringBuilder builder = new StringBuilder();

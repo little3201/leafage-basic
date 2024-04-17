@@ -39,11 +39,6 @@ public class Post extends AuditMetadata {
     private String title;
 
     /**
-     * 标签
-     */
-    private String tags;
-
-    /**
      * 概述
      */
     private String excerpt;
@@ -60,14 +55,6 @@ public class Post extends AuditMetadata {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
     }
 
     public String getExcerpt() {

@@ -58,7 +58,7 @@ class DictionaryServiceImplTest {
     @Test
     void retrieve() {
         Page<Dictionary> regions = new PageImpl<>(List.of(Mockito.mock(Dictionary.class)));
-        given(this.dictionaryRepository.findAll(PageRequest.of(0, 2))).willReturn(regions);
+        given(this.dictionaryRepository.findBySuperiorIdIsNull(PageRequest.of(0, 2))).willReturn(regions);
 
         Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2);
 

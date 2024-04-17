@@ -76,7 +76,6 @@ class RegionControllerTest {
         regionVO.setName("test");
         regionVO.setAreaCode("23234");
         regionVO.setPostalCode(1212);
-        regionVO.setSuperior("superior");
         regionVO.setDescription("description");
 
         regionDTO = new RegionDTO();
@@ -89,7 +88,7 @@ class RegionControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0,2);
+        Pageable pageable = PageRequest.of(0, 2);
         Page<RegionVO> voPage = new PageImpl<>(List.of(regionVO), pageable, 2L);
         given(this.regionService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(voPage);
 

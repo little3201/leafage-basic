@@ -48,14 +48,14 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Page<RegionVO> retrieve(int page, int size) {
-        return regionRepository.findAll(PageRequest.of(page, size)).map(this::convertOuter);
+        return regionRepository.findAll(PageRequest.of(page, size)).map(this::convert);
     }
 
     @Override
     public List<RegionVO> subset(Long id) {
         Assert.notNull(id, "region id must not be null.");
         return regionRepository.findBySuperiorId(id)
-                .stream().map(this::convertOuter).toList();
+                .stream().map(this::convert).toList();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class RegionServiceImpl implements RegionService {
         if (region == null) {
             return null;
         }
-        return this.convertOuter(region);
+        return this.convert(region);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class RegionServiceImpl implements RegionService {
         copier.copy(dto, region, null);
 
         regionRepository.saveAndFlush(region);
-        return this.convertOuter(region);
+        return this.convert(region);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class RegionServiceImpl implements RegionService {
         copier.copy(dto, region, null);
 
         regionRepository.save(region);
-        return this.convertOuter(region);
+        return this.convert(region);
     }
 
     @Override
@@ -110,15 +110,10 @@ public class RegionServiceImpl implements RegionService {
      * @param region 信息
      * @return RegionVO 输出对象
      */
-    private RegionVO convertOuter(Region region) {
+    private RegionVO convert(Region region) {
         RegionVO vo = new RegionVO();
         BeanCopier copier = BeanCopier.create(Region.class, RegionVO.class, false);
         copier.copy(region, vo, null);
-
-        if (region.getSuperiorId() != null) {
-            Optional<Region> optional = regionRepository.findById(region.getSuperiorId());
-            optional.ifPresent(superior -> vo.setSuperior(superior.getName()));
-        }
 
         // get lastModifiedDate
         Optional<Instant> optionalInstant = region.getLastModifiedDate();

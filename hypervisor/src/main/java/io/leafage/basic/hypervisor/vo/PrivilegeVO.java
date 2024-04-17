@@ -33,6 +33,19 @@ public class PrivilegeVO extends PrivilegeBO {
     private Long id;
 
     /**
+     * 状态
+     */
+    private boolean enabled;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    /**
      * 最后更新时间
      */
     private Instant lastModifiedDate;

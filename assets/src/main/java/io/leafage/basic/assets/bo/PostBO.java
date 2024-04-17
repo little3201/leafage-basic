@@ -37,9 +37,9 @@ public abstract class PostBO {
     private String title;
 
     /**
-     * 封面
+     * 概述
      */
-    private String cover;
+    private String excerpt;
 
     /**
      * 内容
@@ -62,12 +62,12 @@ public abstract class PostBO {
         this.title = title;
     }
 
-    public String getCover() {
-        return cover;
+    public String getExcerpt() {
+        return excerpt;
     }
 
-    public void setCover(String cover) {
-        this.cover = cover;
+    public void setExcerpt(String excerpt) {
+        this.excerpt = excerpt;
     }
 
     public String getContent() {

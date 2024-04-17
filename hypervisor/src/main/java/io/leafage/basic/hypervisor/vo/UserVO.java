@@ -29,6 +29,11 @@ import java.time.Instant;
 public class UserVO extends UserBO {
 
     /**
+     * 状态
+     */
+    private boolean enabled;
+
+    /**
      * 是否锁定
      */
     private boolean accountNonLocked;
@@ -38,6 +43,14 @@ public class UserVO extends UserBO {
      */
     private Instant lastModifiedDate;
 
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public boolean isAccountNonLocked() {
         return accountNonLocked;

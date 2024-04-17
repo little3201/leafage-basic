@@ -75,7 +75,6 @@ class DictionaryControllerTest {
     void init() {
         dictionaryVO = new DictionaryVO();
         dictionaryVO.setName("gender");
-        dictionaryVO.setSuperior("superior");
         dictionaryVO.setDescription("description");
 
         dictionaryDTO = new DictionaryDTO();

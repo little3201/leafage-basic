@@ -57,6 +57,22 @@ COMMENT ON COLUMN posts.last_modified_date IS '最后修改时间';
 CREATE INDEX idx_created_by ON posts(created_by);
 COMMENT ON INDEX idx_created_by IS '帖子创建者索引';
 
+-- Drop table if exists tags
+DROP TABLE IF EXISTS tag_posts;
+
+-- Create table tags
+CREATE TABLE tag_posts (
+   id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+   tag_id               bigint NOT NULL,
+   post_id              bigint NOT NULL
+);
+
+-- Add comment to the table and columns
+COMMENT ON TABLE tag_posts IS '标签帖子关联表';
+COMMENT ON COLUMN tag_posts.id IS '主键';
+COMMENT ON COLUMN tag_posts.tag_id IS 'tag主键';
+COMMENT ON COLUMN tag_posts.post_id IS 'post主键';
+
 -- Drop table if exists post_content
 DROP TABLE IF EXISTS post_content;
 

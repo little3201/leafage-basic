@@ -38,11 +38,6 @@ public class Dictionary extends AuditMetadata {
     private String name;
 
     /**
-     * 简称
-     */
-    private String alias;
-
-    /**
      * 上级
      */
     @Column(name = "superior_id")
@@ -60,14 +55,6 @@ public class Dictionary extends AuditMetadata {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
     }
 
     public Long getSuperiorId() {

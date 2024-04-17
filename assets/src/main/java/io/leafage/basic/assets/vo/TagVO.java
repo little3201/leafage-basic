@@ -16,7 +16,7 @@
  */
 package io.leafage.basic.assets.vo;
 
-import io.leafage.basic.assets.bo.CategoryBO;
+import io.leafage.basic.assets.bo.TagBO;
 
 import java.time.Instant;
 
@@ -25,7 +25,7 @@ import java.time.Instant;
  *
  * @author wq li  2020-12-03 22:59
  */
-public class CategoryVO extends CategoryBO {
+public class TagVO extends TagBO {
 
     /**
      * 主键

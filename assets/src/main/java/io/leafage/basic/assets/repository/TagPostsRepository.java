@@ -16,31 +16,40 @@
  */
 package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.assets.domain.Tag;
+import io.leafage.basic.assets.domain.TagPosts;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * tag repository.
  *
- * @author wq li  2020-12-03 22:59
+ * @author wq li  2024-04-17 16:10
  **/
 @Repository
-public interface TagRepository extends JpaRepository<Tag, Long> {
+public interface TagPostsRepository extends JpaRepository<TagPosts, Long> {
 
     /**
-     * get
+     * 根据tag查post
      *
-     * @param name 名称
-     * @return 结果
+     * @param tagId tag主键
+     * @return 数据量
      */
-    Tag getByName(String name);
+    Long countByTagId(Long tagId);
 
     /**
-     * 是否已存在
+     * 根据post查tag
      *
-     * @param name 名称
-     * @return true-是，false-否
+     * @param postId post主键
+     * @return 关联数据集
      */
-    boolean existsByName(String name);
+    List<TagPosts> findByPostId(Long postId);
+
+    /**
+     * 根据post删除
+     *
+     * @param postId post主键
+     */
+    void deleteByPostId(Long postId);
 }

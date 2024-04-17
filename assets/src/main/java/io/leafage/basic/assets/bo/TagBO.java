@@ -14,15 +14,31 @@
  *  limitations under the License.
  *
  */
-package io.leafage.basic.assets.dto;
 
-import io.leafage.basic.assets.bo.CategoryBO;
+package io.leafage.basic.assets.bo;
+
+
+import jakarta.validation.constraints.NotBlank;
 
 /**
- * dto class for tag.
+ * bo class for tag
  *
- * @author wq li  2020-12-03 22:59
- */
-public class CategoryDTO extends CategoryBO {
+ * @author wilsonli 2022-12-10 22:28
+ **/
+public abstract class TagBO {
+
+    /**
+     * 名称
+     */
+    @NotBlank(message = "tag name is blank.")
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

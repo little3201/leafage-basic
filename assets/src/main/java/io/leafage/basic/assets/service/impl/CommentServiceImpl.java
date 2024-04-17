@@ -49,20 +49,20 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Page<CommentVO> retrieve(int page, int size) {
-        return commentRepository.findAll(PageRequest.of(page, size)).map(this::convertOuter);
+        return commentRepository.findAll(PageRequest.of(page, size)).map(this::convert);
     }
 
     @Override
     public List<CommentVO> relation(Long id) {
         Assert.notNull(id, "comment id must not be null.");
         return commentRepository.findByPostIdAndReplierIsNull(id)
-                .stream().map(this::convertOuter).toList();
+                .stream().map(this::convert).toList();
     }
 
     @Override
     public List<CommentVO> replies(Long replier) {
         return commentRepository.findByReplier(replier)
-                .stream().map(this::convertOuter).toList();
+                .stream().map(this::convert).toList();
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -73,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
         copier.copy(dto, comment, null);
 
         comment = commentRepository.saveAndFlush(comment);
-        return this.convertOuter(comment);
+        return this.convert(comment);
     }
 
     /**
@@ -82,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
      * @param comment 信息
      * @return 输出转换后的vo对象
      */
-    private CommentVO convertOuter(Comment comment) {
+    private CommentVO convert(Comment comment) {
         CommentVO vo = new CommentVO();
         BeanCopier copier = BeanCopier.create(Comment.class, CommentVO.class, false);
         copier.copy(comment, vo, null);

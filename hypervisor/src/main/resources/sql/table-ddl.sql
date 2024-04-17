@@ -182,9 +182,9 @@ CREATE TABLE privileges (
    icon                 varchar(127),
    description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
-   created_by           varchar(50) NOT NULL,
+   created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   last_modified_by     varchar(50) NOT NULL,
+   last_modified_by     varchar(50),
    last_modified_date   timestamp
 );
 
@@ -231,9 +231,9 @@ CREATE TABLE dictionaries (
    superior_id          bigint,
    description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
-   created_by           varchar(50) NOT NULL,
+   created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   last_modified_by     varchar(50) NOT NULL,
+   last_modified_by     varchar(50),
    last_modified_date   timestamp
 );
 
@@ -261,7 +261,7 @@ CREATE TABLE messages (
    receiver             varchar(50) NOT NULL,
    description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
-   created_by           varchar(50) NOT NULL,
+   created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
    last_modified_by     varchar(50) NOT NULL,
    last_modified_date   timestamp
@@ -290,12 +290,12 @@ CREATE TABLE regions (
    name                 varchar(50) NOT NULL,
    superior_id          bigint,
    area_code            varchar(4),
-   postal_code          varchar(6),
+   postal_code          int4,
    description          varchar(255),
    enabled              boolean NOT NULL DEFAULT true,
-   created_by           varchar(50) NOT NULL,
+   created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   last_modified_by     varchar(50) NOT NULL,
+   last_modified_by     varchar(50),
    last_modified_date   timestamp
 );
 

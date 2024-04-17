@@ -57,7 +57,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
     @Override
     public Page<PrivilegeVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
-        return privilegeRepository.findAll(pageable).map(this::convertOuter);
+        return privilegeRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         copier.copy(dto, privilege, null);
 
         privilege = privilegeRepository.saveAndFlush(privilege);
-        return this.convertOuter(privilege);
+        return this.convert(privilege);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         copier.copy(dto, privilege, null);
 
         privilege = privilegeRepository.save(privilege);
-        return this.convertOuter(privilege);
+        return this.convert(privilege);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      * @param privilege 基础对象
      * @return 结果对象
      */
-    private PrivilegeVO convertOuter(Privilege privilege) {
+    private PrivilegeVO convert(Privilege privilege) {
         PrivilegeVO vo = new PrivilegeVO();
         BeanCopier copier = BeanCopier.create(Privilege.class, PrivilegeVO.class, false);
         copier.copy(privilege, vo, null);

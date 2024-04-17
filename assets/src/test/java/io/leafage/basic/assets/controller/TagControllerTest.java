@@ -18,9 +18,9 @@
 package io.leafage.basic.assets.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.leafage.basic.assets.dto.CategoryDTO;
+import io.leafage.basic.assets.dto.TagDTO;
 import io.leafage.basic.assets.service.TagService;
-import io.leafage.basic.assets.vo.CategoryVO;
+import io.leafage.basic.assets.vo.TagVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,24 +67,24 @@ class TagControllerTest {
     @MockBean
     private TagService tagService;
 
-    private CategoryVO categoryVO;
+    private TagVO tagVO;
 
-    private CategoryDTO categoryDTO;
+    private TagDTO tagDTO;
 
     @BeforeEach
     void init() {
-        categoryVO = new CategoryVO();
-        categoryVO.setName("test");
-        categoryVO.setCount(21L);
+        tagVO = new TagVO();
+        tagVO.setName("test");
+        tagVO.setCount(21L);
 
-        categoryDTO = new CategoryDTO();
-        categoryDTO.setName("test");
+        tagDTO = new TagDTO();
+        tagDTO.setName("test");
     }
 
     @Test
     void retrieve() throws Exception {
         Pageable pageable = PageRequest.of(0,2);
-        Page<CategoryVO> page = new PageImpl<>(List.of(categoryVO), pageable, 2L);
+        Page<TagVO> page = new PageImpl<>(List.of(tagVO), pageable, 2L);
         given(tagService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
         mvc.perform(get("/tags").queryParam("page", "0")
@@ -103,7 +103,7 @@ class TagControllerTest {
 
     @Test
     void fetch() throws Exception {
-        given(tagService.fetch(Mockito.anyLong())).willReturn(categoryVO);
+        given(tagService.fetch(Mockito.anyLong())).willReturn(tagVO);
 
         mvc.perform(get("/tags/{id}", 1L)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
@@ -119,38 +119,38 @@ class TagControllerTest {
 
     @Test
     void create() throws Exception {
-        given(tagService.create(Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
+        given(tagService.create(Mockito.any(TagDTO.class))).willReturn(tagVO);
 
         mvc.perform(post("/tags").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(tagDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void create_error() throws Exception {
-        given(tagService.create(Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
+        given(tagService.create(Mockito.any(TagDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(post("/tags").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(tagDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void modify() throws Exception {
-        given(tagService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willReturn(categoryVO);
+        given(tagService.modify(Mockito.anyLong(), Mockito.any(TagDTO.class))).willReturn(tagVO);
 
         mvc.perform(put("/tags/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(tagDTO)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void modify_error() throws Exception {
-        given(tagService.modify(Mockito.anyLong(), Mockito.any(CategoryDTO.class))).willThrow(new RuntimeException());
+        given(tagService.modify(Mockito.anyLong(), Mockito.any(TagDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(put("/tags/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(categoryDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(tagDTO)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }

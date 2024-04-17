@@ -18,6 +18,8 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.domain.Dictionary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -32,6 +34,14 @@ import java.util.List;
 public interface DictionaryRepository extends JpaRepository<Dictionary, Long> {
 
     /**
+     * 分页查询
+     *
+     * @param pageable 分页
+     * @return 结果
+     */
+    Page<Dictionary> findBySuperiorIdIsNull(Pageable pageable);
+
+    /**
      * 是否存在
      *
      * @param name 名称
@@ -43,7 +53,7 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long> {
      * 查询下级信息
      *
      * @param superiorId 上级主键
-     * @return 结果信息
+     * @return 结果
      */
     List<Dictionary> findBySuperiorId(Long superiorId);
 

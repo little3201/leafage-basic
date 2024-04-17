@@ -33,14 +33,12 @@ DROP TABLE IF EXISTS posts;
 CREATE TABLE posts (
    id                   bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    title                varchar(127) NOT NULL,
-   tags                 varchar[],
-   cover                varchar(127),
+   excerpt              varchar(127),
    enabled              boolean NOT NULL DEFAULT true,
    created_by           varchar(50),
    created_date         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
    last_modified_by     varchar(50),
-   last_modified_date   timestamp,
-   CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories(id)
+   last_modified_date   timestamp
 );
 
 -- Add comment to the table and columns
@@ -48,7 +46,7 @@ COMMENT ON TABLE posts IS '帖子表';
 COMMENT ON COLUMN posts.id IS '主键';
 COMMENT ON COLUMN posts.title IS '标题';
 COMMENT ON COLUMN posts.tags IS '标签';
-COMMENT ON COLUMN posts.cover IS '封面';
+COMMENT ON COLUMN posts.excerpt IS '概述';
 COMMENT ON COLUMN posts.enabled IS '是否启用';
 COMMENT ON COLUMN posts.created_by IS '创建者';
 COMMENT ON COLUMN posts.created_date IS '创建时间';

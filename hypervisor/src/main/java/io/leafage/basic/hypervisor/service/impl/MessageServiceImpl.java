@@ -49,14 +49,14 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Page<MessageVO> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return messageRepository.findAll(pageable).map(this::convertOuter);
+        return messageRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
     public MessageVO fetch(Long id) {
         Assert.notNull(id, "message id must not be null.");
         Message message = messageRepository.findById(id).orElse(null);
-        return this.convertOuter(message);
+        return this.convert(message);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MessageServiceImpl implements MessageService {
         copier.copy(dto, message, null);
 
         messageRepository.saveAndFlush(message);
-        return this.convertOuter(message);
+        return this.convert(message);
     }
 
     /**
@@ -74,7 +74,7 @@ public class MessageServiceImpl implements MessageService {
      *
      * @return ExampleMatcher
      */
-    private MessageVO convertOuter(Message message) {
+    private MessageVO convert(Message message) {
         MessageVO vo = new MessageVO();
         BeanCopier copier = BeanCopier.create(Message.class, MessageVO.class, false);
         copier.copy(message, vo, null);

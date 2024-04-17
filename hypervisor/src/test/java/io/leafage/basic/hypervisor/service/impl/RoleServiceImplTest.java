@@ -33,9 +33,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import top.leafage.common.TreeNode;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +62,6 @@ class RoleServiceImplTest {
         roleDTO = new RoleDTO();
         roleDTO.setName("role");
         roleDTO.setDescription("role");
-        roleDTO.setSuperiorId(1L);
     }
 
     @Test
@@ -115,11 +112,4 @@ class RoleServiceImplTest {
         verify(this.roleRepository, times(1)).deleteById(Mockito.anyLong());
     }
 
-    @Test
-    void tree() {
-        given(this.roleRepository.findAll()).willReturn(Arrays.asList(Mockito.mock(Role.class), Mockito.mock(Role.class)));
-
-        List<TreeNode> nodes = roleService.tree();
-        Assertions.assertNotNull(nodes);
-    }
 }

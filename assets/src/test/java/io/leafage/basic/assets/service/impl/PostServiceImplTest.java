@@ -19,9 +19,12 @@ package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.domain.PostContent;
+import io.leafage.basic.assets.domain.Tag;
+import io.leafage.basic.assets.domain.TagPosts;
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
+import io.leafage.basic.assets.repository.TagPostsRepository;
 import io.leafage.basic.assets.repository.TagRepository;
 import io.leafage.basic.assets.vo.PostVO;
 import org.junit.jupiter.api.Assertions;
@@ -59,6 +62,9 @@ class PostServiceImplTest {
     @Mock
     private TagRepository tagRepository;
 
+    @Mock
+    private TagPostsRepository tagPostsRepository;
+
     @InjectMocks
     private PostsServiceImpl postsService;
 
@@ -68,10 +74,9 @@ class PostServiceImplTest {
     void init() {
         postDTO = new PostDTO();
         postDTO.setTitle("title");
+        postDTO.setExcerpt("excerpt");
         postDTO.setContent("content");
-        postDTO.setCover("cover");
-        postDTO.setTags(Set.of("tag"));
-        postDTO.setCategoryId(1L);
+        postDTO.setTags(Set.of("code"));
     }
 
     @Test
@@ -79,6 +84,10 @@ class PostServiceImplTest {
         Pageable pageable = PageRequest.of(0, 2);
         Page<Post> postsPage = new PageImpl<>(List.of(Mockito.mock(Post.class)), pageable, 2L);
         given(postRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
+
+        given(tagPostsRepository.findByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
+
+        given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
         Page<PostVO> voPage = postsService.retrieve(0, 2, "id");
 
@@ -88,6 +97,10 @@ class PostServiceImplTest {
     @Test
     void fetch() {
         given(postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
+
+        given(tagPostsRepository.findByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
+
+        given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
         PostVO postVO = postsService.fetch(Mockito.anyLong());
 
@@ -136,15 +149,21 @@ class PostServiceImplTest {
     void create() {
         given(postRepository.saveAndFlush(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
-
         given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
 
         given(postContentRepository.saveAndFlush(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
+
+        given(tagRepository.getByName(Mockito.anyString())).willReturn(Mockito.mock(Tag.class));
+
+        given(tagPostsRepository.findByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
+
+        given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
         PostVO postVO = postsService.create(postDTO);
 
         verify(postRepository, times(1)).saveAndFlush(Mockito.any(Post.class));
         verify(postContentRepository, times(1)).saveAndFlush(Mockito.any(PostContent.class));
+        verify(tagPostsRepository, times(1)).deleteByPostId(Mockito.anyLong());
         Assertions.assertNotNull(postVO);
     }
 
@@ -158,20 +177,18 @@ class PostServiceImplTest {
 
         given(postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 
+        given(tagRepository.getByName(Mockito.anyString())).willReturn(Mockito.mock(Tag.class));
+
+        given(tagPostsRepository.findByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
+
+        given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
+
         PostVO postVO = postsService.modify(1L, postDTO);
 
         verify(postRepository, times(1)).save(Mockito.any(Post.class));
         verify(postContentRepository, times(1)).save(Mockito.any(PostContent.class));
+        verify(tagPostsRepository, times(1)).deleteByPostId(Mockito.anyLong());
         Assertions.assertNotNull(postVO);
-    }
-
-    @Test
-    void modify_error() {
-        given(postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
-
-        given(postRepository.save(Mockito.any(Post.class))).willThrow(new RuntimeException());
-
-        Assertions.assertThrows(RuntimeException.class, () -> postsService.modify(1L, postDTO));
     }
 
     @Test

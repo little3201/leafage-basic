@@ -39,6 +39,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
@@ -75,15 +76,13 @@ class PostControllerTest {
         // 构造请求对象
         postDTO = new PostDTO();
         postDTO.setTitle("test");
-        postDTO.setCategoryId(1L);
-        postDTO.setCover("../test.jpg");
+        postDTO.setTags(Set.of("Code"));
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setContent("content");
 
         postVO = new PostVO();
         postVO.setTitle(postDTO.getTitle());
         postVO.setTags(postDTO.getTags());
-        postVO.setCover(postDTO.getCover());
 
     }
 

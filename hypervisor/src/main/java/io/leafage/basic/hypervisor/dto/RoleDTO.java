@@ -25,17 +25,4 @@ import io.leafage.basic.hypervisor.bo.RoleBO;
  */
 public class RoleDTO extends RoleBO {
 
-    /**
-     * superior
-     */
-    private Long superiorId;
-
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
-    }
-
 }

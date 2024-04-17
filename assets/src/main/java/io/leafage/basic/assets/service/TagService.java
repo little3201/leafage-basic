@@ -16,8 +16,8 @@
  */
 package io.leafage.basic.assets.service;
 
-import io.leafage.basic.assets.dto.CategoryDTO;
-import io.leafage.basic.assets.vo.CategoryVO;
+import io.leafage.basic.assets.dto.TagDTO;
+import io.leafage.basic.assets.vo.TagVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
@@ -26,7 +26,7 @@ import top.leafage.common.servlet.ServletBasicService;
  *
  * @author wq li  2020-12-03 22:59
  **/
-public interface TagService extends ServletBasicService<CategoryDTO, CategoryVO> {
+public interface TagService extends ServletBasicService<TagDTO, TagVO> {
 
     /**
      * 分页查询
@@ -36,5 +36,5 @@ public interface TagService extends ServletBasicService<CategoryDTO, CategoryVO>
      * @param sort 排序字段
      * @return 查询结果
      */
-    Page<CategoryVO> retrieve(int page, int size, String sort);
+    Page<TagVO> retrieve(int page, int size, String sort);
 }

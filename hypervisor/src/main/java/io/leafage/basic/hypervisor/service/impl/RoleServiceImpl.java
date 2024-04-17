@@ -28,14 +28,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import top.leafage.common.TreeNode;
-import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
 import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -45,7 +40,7 @@ import java.util.Optional;
  * @author wq li 2018/9/27 14:20
  **/
 @Service
-public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implements RoleService {
+public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
@@ -56,21 +51,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
     @Override
     public Page<RoleVO> retrieve(int page, int size, String sort) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
-        return roleRepository.findAll(pageable).map(this::convertOuter);
-    }
-
-
-    @Override
-    public List<TreeNode> tree() {
-        List<Role> roles = roleRepository.findAll();
-        if (CollectionUtils.isEmpty(roles)) {
-            return Collections.emptyList();
-        }
-        return roles.stream().filter(role -> role.getSuperior() == null).map(r -> {
-            TreeNode treeNode = new TreeNode(r.getId(), r.getName());
-            treeNode.setChildren(this.convert(roles));
-            return treeNode;
-        }).toList();
+        return roleRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
@@ -80,7 +61,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
         if (role == null) {
             return null;
         }
-        return this.convertOuter(role);
+        return this.convert(role);
     }
 
     @Override
@@ -90,7 +71,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
         copier.copy(dto, role, null);
 
         role = roleRepository.saveAndFlush(role);
-        return this.convertOuter(role);
+        return this.convert(role);
     }
 
     @Override
@@ -104,7 +85,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
         copier.copy(dto, role, null);
 
         role = roleRepository.save(role);
-        return this.convertOuter(role);
+        return this.convert(role);
     }
 
     @Override
@@ -119,7 +100,7 @@ public class RoleServiceImpl extends ServletAbstractTreeNodeService<Role> implem
      * @param role {@link Role}
      * @return 结果对象
      */
-    private RoleVO convertOuter(Role role) {
+    private RoleVO convert(Role role) {
         RoleVO vo = new RoleVO();
         BeanCopier copier = BeanCopier.create(Role.class, RoleVO.class, false);
         copier.copy(role, vo, null);

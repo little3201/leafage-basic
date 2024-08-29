@@ -92,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
         BeanCopier copier = BeanCopier.create(Comment.class, CommentVO.class, false);
         copier.copy(comment, vo, null);
 
-        // get lastModifiedDate
+        // get last modified date
         Optional<Instant> optionalInstant = comment.getLastModifiedDate();
         optionalInstant.ifPresent(vo::setLastModifiedDate);
 

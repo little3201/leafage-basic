@@ -115,7 +115,7 @@ public class TagServiceImpl implements TagService {
         BeanCopier copier = BeanCopier.create(Tag.class, TagVO.class, false);
         copier.copy(tag, vo, null);
 
-        // get lastModifiedDate
+        // get last modified date
         Optional<Instant> optionalInstant = tag.getLastModifiedDate();
         optionalInstant.ifPresent(vo::setLastModifiedDate);
 

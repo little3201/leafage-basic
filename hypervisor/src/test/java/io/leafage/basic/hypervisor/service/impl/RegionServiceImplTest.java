@@ -29,9 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -68,13 +66,11 @@ class RegionServiceImplTest {
 
     @Test
     void retrieve() {
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Region> regions = new PageImpl<>(List.of(Mockito.mock(Region.class)));
-        given(this.regionRepository.findAll(PageRequest.of(0, 2))).willReturn(regions);
+        given(this.regionRepository.findAll(pageable)).willReturn(regions);
 
-        given(this.regionRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Region.class)));
-
-        Page<RegionVO> voPage = regionService.retrieve(0, 2);
-
+        Page<RegionVO> voPage = regionService.retrieve(0, 2, "id", true);
         Assertions.assertNotNull(voPage.getContent());
     }
 

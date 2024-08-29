@@ -47,8 +47,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Page<MessageVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, descending ? sort.descending() : sort);
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
         return messageRepository.findAll(pageable).map(this::convert);
     }
 

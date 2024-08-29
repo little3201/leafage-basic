@@ -31,9 +31,10 @@ public interface GroupService extends ServletBasicService<GroupDTO, GroupVO> {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
-     * @param sortBy 排序字段
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序
+     * @param descending 顺序
      * @return 查询结果
      */
     Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending);

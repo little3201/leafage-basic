@@ -67,9 +67,10 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
-    public Page<PostVO> retrieve(int page, int size, String sortBy) {
-        Sort sort = Sort.by(StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort.descending());
+    public Page<PostVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
         return postRepository.findAll(pageable).map(this::convert);
     }
 

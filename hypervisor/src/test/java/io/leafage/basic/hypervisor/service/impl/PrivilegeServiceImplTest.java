@@ -29,10 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import top.leafage.common.TreeNode;
 
 import java.util.Arrays;
@@ -71,10 +68,11 @@ class PrivilegeServiceImplTest {
 
     @Test
     void retrieve() {
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Privilege> page = new PageImpl<>(List.of(Mockito.mock(Privilege.class)));
-        given(this.privilegeRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
+        given(this.privilegeRepository.findAll(pageable)).willReturn(page);
 
-        Page<PrivilegeVO> voPage = privilegeService.retrieve(0, 2, "id");
+        Page<PrivilegeVO> voPage = privilegeService.retrieve(0, 2, "id", true);
         Assertions.assertNotNull(voPage.getContent());
     }
 

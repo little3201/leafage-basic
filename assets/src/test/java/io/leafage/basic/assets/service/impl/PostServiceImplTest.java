@@ -81,16 +81,13 @@ class PostServiceImplTest {
 
     @Test
     void retrieve() {
-        Pageable pageable = PageRequest.of(0, 2);
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Post> postsPage = new PageImpl<>(List.of(Mockito.mock(Post.class)), pageable, 2L);
-        given(postRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(postsPage);
-
+        given(postRepository.findAll(pageable)).willReturn(postsPage);
         given(tagPostsRepository.findByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
-
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
-        Page<PostVO> voPage = postsService.retrieve(0, 2, "id");
-
+        Page<PostVO> voPage = postsService.retrieve(0, 2, "id", true);
         Assertions.assertNotNull(voPage.getContent());
     }
 

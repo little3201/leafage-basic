@@ -46,8 +46,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, descending ? sort.descending() : sort);
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
         return userRepository.findAll(pageable).map(this::convert);
     }
 

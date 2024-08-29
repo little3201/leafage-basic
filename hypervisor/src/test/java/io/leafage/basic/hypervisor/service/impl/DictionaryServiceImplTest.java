@@ -28,9 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,10 +55,11 @@ class DictionaryServiceImplTest {
 
     @Test
     void retrieve() {
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Dictionary> regions = new PageImpl<>(List.of(Mockito.mock(Dictionary.class)));
-        given(this.dictionaryRepository.findBySuperiorIdIsNull(PageRequest.of(0, 2))).willReturn(regions);
+        given(this.dictionaryRepository.findBySuperiorIdIsNull(pageable)).willReturn(regions);
 
-        Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2);
+        Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2, "id", true);
 
         Assertions.assertNotNull(voPage.getContent());
     }

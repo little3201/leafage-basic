@@ -29,10 +29,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -94,21 +91,21 @@ class PrivilegeControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2);
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<PrivilegeVO> voPage = new PageImpl<>(List.of(privilegeVO), pageable, 2L);
-        given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
+        given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(voPage);
 
         mvc.perform(get("/privileges").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sort", "")).andExpect(status().isOk())
+                        .queryParam("sortBy", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
 
         mvc.perform(get("/privileges").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sort", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test

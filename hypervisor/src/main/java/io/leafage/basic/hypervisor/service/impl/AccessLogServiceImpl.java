@@ -25,10 +25,10 @@ import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.util.Optional;
+import org.springframework.util.StringUtils;
 
 /**
  * access log service impl.
@@ -45,8 +45,11 @@ public class AccessLogServiceImpl implements AccessLogService {
     }
 
     @Override
-    public Page<AccessLogVO> retrieve(int page, int size) {
-        return accessLogRepository.findAll(PageRequest.of(page, size)).map(this::convert);
+    public Page<AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return accessLogRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
@@ -63,10 +66,6 @@ public class AccessLogServiceImpl implements AccessLogService {
         AccessLogVO vo = new AccessLogVO();
         BeanCopier copier = BeanCopier.create(AccessLog.class, AccessLogVO.class, false);
         copier.copy(accessLog, vo, null);
-
-        // get lastModifiedDate
-        Optional<Instant> optionalInstant = accessLog.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 }

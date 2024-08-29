@@ -18,8 +18,6 @@ package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.PrivilegeBO;
 
-import java.time.Instant;
-
 /**
  * vo class for privilege.
  *
@@ -37,19 +35,6 @@ public class PrivilegeVO extends PrivilegeBO {
      */
     private boolean enabled;
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    /**
-     * 最后更新时间
-     */
-    private Instant lastModifiedDate;
-
 
     public Long getId() {
         return id;
@@ -59,11 +44,11 @@ public class PrivilegeVO extends PrivilegeBO {
         this.id = id;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

@@ -48,15 +48,18 @@ public class MessageController {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序字段
+     * @param descending 排序方向
      * @return 查询的数据，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Page<MessageVO>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Page<MessageVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                    String sortBy, boolean descending) {
         Page<MessageVO> voPage;
         try {
-            voPage = messageService.retrieve(page, size);
+            voPage = messageService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.info("Retrieve message occurred an error: ", e);
             return ResponseEntity.noContent().build();

@@ -49,7 +49,7 @@ public class CommentVO extends CommentBO {
     private Long count;
 
     /**
-     * 最后更新时间
+     * 最后修改时间
      */
     private Instant lastModifiedDate;
 

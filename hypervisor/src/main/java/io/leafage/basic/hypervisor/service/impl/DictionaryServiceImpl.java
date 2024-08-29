@@ -25,13 +25,14 @@ import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * dictionary service impl.
@@ -48,8 +49,11 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     }
 
     @Override
-    public Page<DictionaryVO> retrieve(int page, int size) {
-        return dictionaryRepository.findBySuperiorIdIsNull(PageRequest.of(page, size)).map(this::convert);
+    public Page<DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return dictionaryRepository.findBySuperiorIdIsNull(pageable).map(this::convert);
     }
 
     @Override
@@ -96,10 +100,6 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
         DictionaryVO vo = new DictionaryVO();
         BeanCopier copier = BeanCopier.create(Dictionary.class, DictionaryVO.class, false);
         copier.copy(dictionary, vo, null);
-
-        // get lastModifiedDate
-        Optional<Instant> optionalInstant = dictionary.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 }

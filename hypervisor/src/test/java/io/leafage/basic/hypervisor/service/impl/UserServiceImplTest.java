@@ -28,10 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,14 +60,13 @@ class UserServiceImplTest {
         userDTO.setLastname("张");
     }
 
-
     @Test
     void retrieve() {
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<User> page = new PageImpl<>(List.of(Mockito.mock(User.class)));
-        given(this.userRepository.findAll(PageRequest.of(0, 2, Sort.by("id")))).willReturn(page);
+        given(this.userRepository.findAll(pageable)).willReturn(page);
 
-        Page<UserVO> voPage = userService.retrieve(0, 2, "id");
-
+        Page<UserVO> voPage = userService.retrieve(0, 2, "id", true);
         Assertions.assertNotNull(voPage.getContent());
     }
 

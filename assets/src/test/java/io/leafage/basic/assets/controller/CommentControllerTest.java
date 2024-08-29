@@ -28,10 +28,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -85,9 +82,9 @@ class CommentControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2);
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<CommentVO> page = new PageImpl<>(List.of(commentVO), pageable, 2L);
-        given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(page);
+        given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(page);
 
         mvc.perform(get("/comments").queryParam("page", "0").queryParam("size", "2"))
                 .andExpect(status().isOk()).andDo(print()).andReturn();
@@ -95,9 +92,11 @@ class CommentControllerTest {
 
     @Test
     void retrieve_error() throws Exception {
-        given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new NoSuchElementException());
+        given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new NoSuchElementException());
 
-        mvc.perform(get("/comments").queryParam("page", "0").queryParam("size", "2"))
+        mvc.perform(get("/comments").queryParam("page", "0")
+                        .queryParam("size", "2").queryParam("sortBy", "id")
+                        .queryParam("descending", "true"))
                 .andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 

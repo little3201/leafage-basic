@@ -51,8 +51,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Page<TagVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+    public Page<TagVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
         return tagRepository.findAll(pageable).map(this::convert);
     }
 
@@ -114,7 +116,7 @@ public class TagServiceImpl implements TagService {
         BeanCopier copier = BeanCopier.create(Tag.class, TagVO.class, false);
         copier.copy(tag, vo, null);
 
-        // get lastModifiedDate
+        // get last modified date
         Optional<Instant> optionalInstant = tag.getLastModifiedDate();
         optionalInstant.ifPresent(vo::setLastModifiedDate);
 

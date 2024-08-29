@@ -38,7 +38,7 @@ public class TagVO extends TagBO {
     private long count;
 
     /**
-     * 最后更新时间
+     * 最后修改时间
      */
     private Instant lastModifiedDate;
 

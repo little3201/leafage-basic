@@ -47,13 +47,18 @@ public class AccessLogController {
     /**
      * 查询
      *
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序字段
+     * @param descending 排序方向
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Page<AccessLogVO>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Page<AccessLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                      String sortBy, boolean descending) {
         Page<AccessLogVO> voPage;
         try {
-            voPage = accessLogService.retrieve(page, size);
+            voPage = accessLogService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve record occurred an error: ", e);
             return ResponseEntity.noContent().build();

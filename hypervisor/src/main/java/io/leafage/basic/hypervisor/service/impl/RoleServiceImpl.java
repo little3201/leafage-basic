@@ -30,9 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.time.Instant;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * role service impl.
@@ -49,8 +47,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Page<RoleVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+    public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
         return roleRepository.findAll(pageable).map(this::convert);
     }
 
@@ -104,9 +104,6 @@ public class RoleServiceImpl implements RoleService {
         RoleVO vo = new RoleVO();
         BeanCopier copier = BeanCopier.create(Role.class, RoleVO.class, false);
         copier.copy(role, vo, null);
-        // get lastModifiedDate
-        Optional<Instant> optionalInstant = role.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 

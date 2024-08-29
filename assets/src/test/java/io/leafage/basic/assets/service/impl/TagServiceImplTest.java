@@ -29,10 +29,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,13 +65,12 @@ class TagServiceImplTest {
 
     @Test
     void retrieve() {
-        Pageable pageable = PageRequest.of(0, 2);
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Tag> page = new PageImpl<>(List.of(Mockito.mock(Tag.class)), pageable, 2L);
         given(tagRepository.findAll(Mockito.any(PageRequest.class))).willReturn(page);
 
         given(tagPostsRepository.countByTagId(Mockito.anyLong())).willReturn(Mockito.anyLong());
-
-        Page<TagVO> voPage = tagService.retrieve(0, 2, "id");
+        Page<TagVO> voPage = tagService.retrieve(0, 2, "id", true);
 
         Assertions.assertNotNull(voPage.getContent());
     }

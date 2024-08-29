@@ -19,8 +19,6 @@ package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.DictionaryBO;
 
-import java.time.Instant;
-
 /**
  * vo class for dictionary.
  *
@@ -37,11 +35,6 @@ public class DictionaryVO extends DictionaryBO {
      * 状态
      */
     private boolean enabled;
-
-    /**
-     * 最后更新时间
-     */
-    private Instant lastModifiedDate;
 
 
     public Long getId() {
@@ -60,11 +53,4 @@ public class DictionaryVO extends DictionaryBO {
         this.enabled = enabled;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
 }

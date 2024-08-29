@@ -19,8 +19,6 @@ package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.UserBO;
 
-import java.time.Instant;
-
 /**
  * vo class for user.
  *
@@ -37,11 +35,6 @@ public class UserVO extends UserBO {
      * 是否锁定
      */
     private boolean accountNonLocked;
-
-    /**
-     * 最后更新时间
-     */
-    private Instant lastModifiedDate;
 
 
     public boolean isEnabled() {
@@ -60,11 +53,4 @@ public class UserVO extends UserBO {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
 }

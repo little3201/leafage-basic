@@ -28,10 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -54,11 +51,11 @@ class CommentServiceImplTest {
 
     @Test
     void retrieve() {
-        Pageable pageable = PageRequest.of(0, 2);
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Comment> page = new PageImpl<>(List.of(Mockito.mock(Comment.class)), pageable, 2L);
-        given(commentRepository.findAll(PageRequest.of(0, 2))).willReturn(page);
+        given(commentRepository.findAll(pageable)).willReturn(page);
 
-        Page<CommentVO> voPage = commentService.retrieve(0, 2);
+        Page<CommentVO> voPage = commentService.retrieve(0, 2, "id", true);
         Assertions.assertNotNull(voPage.getContent());
     }
 

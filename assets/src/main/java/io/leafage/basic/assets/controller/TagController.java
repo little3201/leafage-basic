@@ -47,16 +47,17 @@ public class TagController {
     /**
      * 分页查询类目
      *
-     * @param page 页码
-     * @param size 大小
-     * @param sort 排序字段
+     * @param page   页码
+     * @param size   大小
+     * @param sortBy 排序字段
      * @return 分页结果集
      */
     @GetMapping
-    public ResponseEntity<Page<TagVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+    public ResponseEntity<Page<TagVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                String sortBy, boolean descending) {
         Page<TagVO> voPage;
         try {
-            voPage = tagService.retrieve(page, size, sort);
+            voPage = tagService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -103,7 +104,7 @@ public class TagController {
     /**
      * 修改类目信息
      *
-     * @param id        主键
+     * @param id          主键
      * @param categoryDTO 类目信息
      * @return 修改后的类目信息
      */

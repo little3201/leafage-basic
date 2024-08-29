@@ -28,9 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 
 import java.util.List;
 
@@ -54,10 +52,11 @@ class AccessLogServiceImplTest {
 
     @Test
     void retrieve() {
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<AccessLog> page = new PageImpl<>(List.of(Mockito.mock(AccessLog.class)));
-        given(this.accessLogRepository.findAll(PageRequest.of(0, 2))).willReturn(page);
+        given(this.accessLogRepository.findAll(pageable)).willReturn(page);
 
-        Page<AccessLogVO> voPage = accessLogService.retrieve(0, 2);
+        Page<AccessLogVO> voPage = accessLogService.retrieve(0, 2, "id", true);
 
         Assertions.assertNotNull(voPage.getContent());
     }

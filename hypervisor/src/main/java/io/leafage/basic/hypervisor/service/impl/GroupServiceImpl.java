@@ -30,9 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.time.Instant;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 /**
  * group service impl.
@@ -49,8 +47,10 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Page<GroupVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+    public Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
         return groupRepository.findAll(pageable).map(this::convert);
     }
 
@@ -94,10 +94,6 @@ public class GroupServiceImpl implements GroupService {
         GroupVO vo = new GroupVO();
         BeanCopier copier = BeanCopier.create(Group.class, GroupVO.class, false);
         copier.copy(group, vo, null);
-
-        // get lastModifiedDate
-        Optional<Instant> optionalInstant = group.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 

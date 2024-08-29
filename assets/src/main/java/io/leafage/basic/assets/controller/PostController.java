@@ -47,16 +47,17 @@ public class PostController {
     /**
      * retrieve with page .
      *
-     * @param page 页码
-     * @param size 大小
-     * @param sort 排序字段
+     * @param page   页码
+     * @param size   大小
+     * @param sortBy 排序字段
      * @return 分页结果集
      */
     @GetMapping
-    public ResponseEntity<Page<PostVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+    public ResponseEntity<Page<PostVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                 String sortBy, boolean descending) {
         Page<PostVO> voPage;
         try {
-            voPage = postsService.retrieve(page, size, sort);
+            voPage = postsService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
             return ResponseEntity.noContent().build();

@@ -99,7 +99,7 @@ class PrivilegeControllerTest {
         given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/privileges").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sort", "")).andExpect(status().isOk())
+                        .queryParam("sortBy", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -108,7 +108,7 @@ class PrivilegeControllerTest {
         given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/privileges").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sort", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test

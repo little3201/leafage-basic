@@ -34,7 +34,6 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
-import java.time.Instant;
 import java.util.*;
 
 /**
@@ -55,8 +54,9 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
 
 
     @Override
-    public Page<PrivilegeVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+    public Page<PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, descending ? sort.descending() : sort);
         return privilegeRepository.findAll(pageable).map(this::convert);
     }
 
@@ -107,10 +107,6 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         PrivilegeVO vo = new PrivilegeVO();
         BeanCopier copier = BeanCopier.create(Privilege.class, PrivilegeVO.class, false);
         copier.copy(privilege, vo, null);
-
-        // get lastModifiedDate
-        Optional<Instant> optionalInstant = privilege.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 

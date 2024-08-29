@@ -30,9 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.time.Instant;
-import java.util.Optional;
-
 /**
  * user service impl.
  *
@@ -48,8 +45,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+    public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, descending ? sort.descending() : sort);
         return userRepository.findAll(pageable).map(this::convert);
     }
 
@@ -108,10 +106,6 @@ public class UserServiceImpl implements UserService {
         UserVO vo = new UserVO();
         BeanCopier copier = BeanCopier.create(User.class, UserVO.class, false);
         copier.copy(user, vo, null);
-
-        // get lastModifiedDate
-        Optional<Instant> optionalInstant = user.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 

@@ -38,7 +38,7 @@ public interface RegionService extends ServletBasicService<RegionDTO, RegionVO> 
      * @param size 大小
      * @return 查询结果
      */
-    Page<RegionVO> retrieve(int page, int size);
+    Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending);
 
     /**
      * 获取子节点

@@ -93,7 +93,7 @@ class PostControllerTest {
         given(postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
         mvc.perform(get("/posts").queryParam("page", "0")
-                        .queryParam("size", "2").queryParam("sort", "id")).andExpect(status().isOk())
+                        .queryParam("size", "2").queryParam("sortBy", "id")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -102,7 +102,7 @@ class PostControllerTest {
         given(postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new NoSuchElementException());
 
         mvc.perform(get("/posts").queryParam("page", "0")
-                        .queryParam("size", "2").queryParam("sort", "id")).andExpect(status().isNoContent())
+                        .queryParam("size", "2").queryParam("sortBy", "id")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

@@ -93,7 +93,7 @@ class RegionControllerTest {
         given(this.regionService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(voPage);
 
         mvc.perform(get("/regions").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sort", "")).andExpect(status().isOk())
+                        .queryParam("sortBy", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -102,7 +102,7 @@ class RegionControllerTest {
         given(this.regionService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new RuntimeException());
 
         mvc.perform(get("/regions").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sort", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test

@@ -50,15 +50,18 @@ public class RegionController {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序字段
+     * @param descending 排序方向
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Page<RegionVO>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Page<RegionVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                   String sortBy, boolean descending) {
         Page<RegionVO> voPage;
         try {
-            voPage = regionService.retrieve(page, size);
+            voPage = regionService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve region occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -140,7 +143,7 @@ public class RegionController {
     /**
      * 修改信息
      *
-     * @param id      主键
+     * @param id        主键
      * @param regionDTO 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */

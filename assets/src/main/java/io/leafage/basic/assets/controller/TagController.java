@@ -49,14 +49,14 @@ public class TagController {
      *
      * @param page 页码
      * @param size 大小
-     * @param sort 排序字段
+     * @param sortBy 排序字段
      * @return 分页结果集
      */
     @GetMapping
-    public ResponseEntity<Page<TagVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+    public ResponseEntity<Page<TagVO>> retrieve(@RequestParam int page, @RequestParam int size, String sortBy) {
         Page<TagVO> voPage;
         try {
-            voPage = tagService.retrieve(page, size, sort);
+            voPage = tagService.retrieve(page, size, sortBy);
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
             return ResponseEntity.noContent().build();

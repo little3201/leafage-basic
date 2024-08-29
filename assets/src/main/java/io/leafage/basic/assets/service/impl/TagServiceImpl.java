@@ -51,8 +51,9 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Page<TagVO> retrieve(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
+    public Page<TagVO> retrieve(int page, int size, String sortBy) {
+        Sort sort = Sort.by(StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort.descending());
         return tagRepository.findAll(pageable).map(this::convert);
     }
 

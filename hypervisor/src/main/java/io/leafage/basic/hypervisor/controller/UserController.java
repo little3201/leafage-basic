@@ -47,16 +47,18 @@ public class UserController {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
-     * @param sort 排序字段
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序字段
+     * @param descending 排序方向
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
-    public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+    public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                 String sortBy, boolean descending) {
         Page<UserVO> voPage;
         try {
-            voPage = userService.retrieve(page, size, sort);
+            voPage = userService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.info("Retrieve user occurred an error: ", e);
             return ResponseEntity.noContent().build();

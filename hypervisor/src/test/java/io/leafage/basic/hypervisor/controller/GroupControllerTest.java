@@ -90,7 +90,7 @@ class GroupControllerTest {
         given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/groups").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sort", "id")).andExpect(status().isOk())
+                        .queryParam("sortBy", "id")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
@@ -99,7 +99,7 @@ class GroupControllerTest {
         given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/groups").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sort", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test

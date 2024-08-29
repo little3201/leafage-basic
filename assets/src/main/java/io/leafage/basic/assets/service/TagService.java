@@ -33,8 +33,8 @@ public interface TagService extends ServletBasicService<TagDTO, TagVO> {
      *
      * @param page 页码
      * @param size 大小
-     * @param sort 排序字段
+     * @param sortBy 排序字段
      * @return 查询结果
      */
-    Page<TagVO> retrieve(int page, int size, String sort);
+    Page<TagVO> retrieve(int page, int size, String sortBy);
 }

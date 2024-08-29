@@ -50,15 +50,18 @@ public class DictionaryController {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序字段
+     * @param descending 排序方向
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Page<DictionaryVO>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Page<DictionaryVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                       String sortBy, boolean descending) {
         Page<DictionaryVO> voPage;
         try {
-            voPage = dictionaryService.retrieve(page, size);
+            voPage = dictionaryService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve dictionary occurred an error: ", e);
             return ResponseEntity.noContent().build();

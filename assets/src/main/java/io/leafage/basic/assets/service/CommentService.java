@@ -38,7 +38,7 @@ public interface CommentService extends ServletBasicService<CommentDTO, CommentV
      * @param size 大小
      * @return 查询结果
      */
-    Page<CommentVO> retrieve(int page, int size);
+    Page<CommentVO> retrieve(int page, int size, String sortBy);
 
     /**
      * 根据posts查询

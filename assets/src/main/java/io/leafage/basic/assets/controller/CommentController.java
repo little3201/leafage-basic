@@ -55,10 +55,10 @@ public class CommentController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Page<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Page<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size, String sortBy) {
         Page<CommentVO> voPage;
         try {
-            voPage = commentService.retrieve(page, size);
+            voPage = commentService.retrieve(page, size, sortBy);
         } catch (Exception e) {
             logger.error("Retrieve comment occurred an error: ", e);
             return ResponseEntity.noContent().build();

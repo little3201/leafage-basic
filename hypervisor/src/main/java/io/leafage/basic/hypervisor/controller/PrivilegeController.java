@@ -54,16 +54,18 @@ public class PrivilegeController {
     /**
      * 分页查询
      *
-     * @param page 页码
-     * @param size 大小
-     * @param sort 排序字段
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序字段
+     * @param descending 排序方向
      * @return 查询到的数据，否则返回空
      */
     @GetMapping
-    public ResponseEntity<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size, String sort) {
+    public ResponseEntity<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                      String sortBy, boolean descending) {
         Page<PrivilegeVO> voPage;
         try {
-            voPage = privilegeService.retrieve(page, size, sort);
+            voPage = privilegeService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.info("Retrieve privilege occurred an error: ", e);
             return ResponseEntity.noContent().build();

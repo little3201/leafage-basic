@@ -25,9 +25,12 @@ import io.leafage.basic.assets.vo.CommentVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.List;
@@ -48,8 +51,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Page<CommentVO> retrieve(int page, int size) {
-        return commentRepository.findAll(PageRequest.of(page, size)).map(this::convert);
+    public Page<CommentVO> retrieve(int page, int size, String sortBy) {
+        Sort sort = Sort.by(StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort.descending());
+        return commentRepository.findAll(pageable).map(this::convert);
     }
 
     @Override

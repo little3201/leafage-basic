@@ -26,11 +26,10 @@ import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import java.time.Instant;
-import java.util.Optional;
+import org.springframework.util.StringUtils;
 
 /**
  * message service impl.
@@ -47,8 +46,9 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Page<MessageVO> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<MessageVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, descending ? sort.descending() : sort);
         return messageRepository.findAll(pageable).map(this::convert);
     }
 
@@ -78,10 +78,6 @@ public class MessageServiceImpl implements MessageService {
         MessageVO vo = new MessageVO();
         BeanCopier copier = BeanCopier.create(Message.class, MessageVO.class, false);
         copier.copy(message, vo, null);
-
-        // get lastModifiedDate
-        Optional<Instant> optionalInstant = message.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 }

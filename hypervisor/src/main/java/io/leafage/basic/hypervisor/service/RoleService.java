@@ -33,9 +33,9 @@ public interface RoleService extends ServletBasicService<RoleDTO, RoleVO> {
      *
      * @param page 页码
      * @param size 大小
-     * @param sort 排序字段
+     * @param sortBy 排序字段
      * @return 查询结果
      */
-    Page<RoleVO> retrieve(int page, int size, String sort);
+    Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending);
 
 }

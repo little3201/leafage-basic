@@ -36,5 +36,5 @@ public interface AccessLogService extends ServletBasicService<AccessLogDTO, Acce
      * @param size 大小
      * @return 查询结果
      */
-    Page<AccessLogVO> retrieve(int page, int size);
+    Page<AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending);
 }

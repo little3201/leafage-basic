@@ -25,12 +25,13 @@ import io.leafage.basic.hypervisor.vo.RegionVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * region service impl.
@@ -47,8 +48,10 @@ public class RegionServiceImpl implements RegionService {
     }
 
     @Override
-    public Page<RegionVO> retrieve(int page, int size) {
-        return regionRepository.findAll(PageRequest.of(page, size)).map(this::convert);
+    public Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, descending ? sort.descending() : sort);
+        return regionRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
@@ -114,10 +117,6 @@ public class RegionServiceImpl implements RegionService {
         RegionVO vo = new RegionVO();
         BeanCopier copier = BeanCopier.create(Region.class, RegionVO.class, false);
         copier.copy(region, vo, null);
-
-        // get lastModifiedDate
-        Optional<Instant> optionalInstant = region.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
         return vo;
     }
 }

@@ -49,9 +49,9 @@ public class CommentVO extends CommentBO {
     private Long count;
 
     /**
-     * 最后更新时间
+     * 创建时间
      */
-    private Instant lastModifiedDate;
+    private Instant createdDate;
 
 
     public Long getId() {
@@ -86,11 +86,11 @@ public class CommentVO extends CommentBO {
         this.count = count;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
+    public Instant getCreatedDate() {
+        return createdDate;
     }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
     }
 }

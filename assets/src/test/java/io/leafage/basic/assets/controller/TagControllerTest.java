@@ -88,7 +88,7 @@ class TagControllerTest {
         given(tagService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willReturn(page);
 
         mvc.perform(get("/tags").queryParam("page", "0")
-                        .queryParam("size", "2").queryParam("sort", "id"))
+                        .queryParam("size", "2").queryParam("sortBy", "id"))
                 .andExpect(status().isOk()).andDo(print()).andReturn();
     }
 
@@ -97,7 +97,7 @@ class TagControllerTest {
         given(tagService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString())).willThrow(new NoSuchElementException());
 
         mvc.perform(get("/tags").queryParam("page", "0")
-                        .queryParam("size", "2").queryParam("sort", "id")).andExpect(status().isNoContent())
+                        .queryParam("size", "2").queryParam("sortBy", "id")).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

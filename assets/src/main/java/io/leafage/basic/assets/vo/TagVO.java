@@ -18,8 +18,6 @@ package io.leafage.basic.assets.vo;
 
 import io.leafage.basic.assets.bo.TagBO;
 
-import java.time.Instant;
-
 /**
  * vo class for tag.
  *
@@ -36,11 +34,6 @@ public class TagVO extends TagBO {
      * 贴子数
      */
     private long count;
-
-    /**
-     * 最后更新时间
-     */
-    private Instant lastModifiedDate;
 
 
     public Long getId() {
@@ -59,11 +52,4 @@ public class TagVO extends TagBO {
         this.count = count;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
 }

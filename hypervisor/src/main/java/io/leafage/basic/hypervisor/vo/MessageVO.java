@@ -19,8 +19,6 @@ package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.MessageBO;
 
-import java.time.Instant;
-
 /**
  * vo class for message.
  *
@@ -33,11 +31,6 @@ public class MessageVO extends MessageBO {
      */
     private Long id;
 
-    /**
-     * 最后更新时间
-     */
-    private Instant lastModifiedDate;
-
 
     public Long getId() {
         return id;
@@ -47,11 +40,4 @@ public class MessageVO extends MessageBO {
         this.id = id;
     }
 
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
 }

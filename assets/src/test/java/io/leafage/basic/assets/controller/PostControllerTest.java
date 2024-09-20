@@ -49,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * 帖子接口测试类
  *
- * @author wq li 2019/9/14 21:46
+ * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

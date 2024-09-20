@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * access log controller test
  *
- * @author wq li 2022/3/3 11:18
+ * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

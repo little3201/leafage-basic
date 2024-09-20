@@ -40,17 +40,25 @@ import java.util.NoSuchElementException;
 /**
  * group service impl.
  *
- * @author wq li 2018/12/17 19:25
- **/
+ * @author wq li
+ */
 @Service
 public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> implements GroupService {
 
     private final GroupRepository groupRepository;
 
+    /**
+     * <p>Constructor for GroupServiceImpl.</p>
+     *
+     * @param groupRepository a {@link io.leafage.basic.hypervisor.repository.GroupRepository} object
+     */
     public GroupServiceImpl(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -59,12 +67,18 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         return groupRepository.findAllBySuperiorId(superiorId, pageable).map(this::convert);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TreeNode> tree() {
         List<Group> groups = groupRepository.findAll();
         return this.convertTree(groups);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GroupVO fetch(Long id) {
         Assert.notNull(id, "group id must not be null.");
@@ -75,6 +89,9 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         return this.convert(group);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GroupVO create(GroupDTO dto) {
         Group group = new Group();
@@ -85,6 +102,9 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         return this.convert(group);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GroupVO modify(Long id, GroupDTO dto) {
         Assert.notNull(id, "group id must not be null.");
@@ -100,6 +120,9 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         return this.convert(group);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "group id must not be null.");

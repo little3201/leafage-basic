@@ -24,8 +24,8 @@ import top.leafage.common.servlet.ServletBasicService;
 /**
  * role service.
  *
- * @author wq li 2018/9/27 14:18
- **/
+ * @author wq li
+ */
 public interface RoleService extends ServletBasicService<RoleDTO, RoleVO> {
 
     /**

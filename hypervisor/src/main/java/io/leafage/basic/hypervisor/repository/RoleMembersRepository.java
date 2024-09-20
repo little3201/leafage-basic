@@ -25,8 +25,8 @@ import java.util.List;
 /**
  * role members repository.
  *
- * @author wq li 2018/12/17 19:37
- **/
+ * @author wq li
+ */
 @Repository
 public interface RoleMembersRepository extends JpaRepository<RoleMembers, Long> {
 

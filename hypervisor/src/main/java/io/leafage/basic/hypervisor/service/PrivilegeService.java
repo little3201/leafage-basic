@@ -27,8 +27,8 @@ import java.util.List;
 /**
  * privilege service.
  *
- * @author wq li 2018/12/17 19:36
- **/
+ * @author wq li
+ */
 public interface PrivilegeService extends ServletBasicService<PrivilegeDTO, PrivilegeVO> {
 
     /**
@@ -45,6 +45,7 @@ public interface PrivilegeService extends ServletBasicService<PrivilegeDTO, Priv
     /**
      * 获取树结构数据
      *
+     * @param username a {@link java.lang.String} object
      * @return 树结构数据集
      */
     List<TreeNode> tree(String username);

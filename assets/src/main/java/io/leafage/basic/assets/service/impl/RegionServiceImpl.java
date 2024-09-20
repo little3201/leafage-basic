@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * region service impl.
  *
- * @author wq li 2021/11/27 14:18
+ * @author wq li
  **/
 @Service
 public class RegionServiceImpl implements RegionService {

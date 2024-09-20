@@ -22,7 +22,7 @@ import jakarta.persistence.*;
 /**
  * model class for group roles.
  *
- * @author wq li 2022/1/26 15:20
+ * @author wq li
  */
 @Entity
 @Table(name = "group_authorities")
@@ -46,27 +46,57 @@ public class GroupAuthorities {
     private String authority;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>groupId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getGroupId() {
         return groupId;
     }
 
+    /**
+     * <p>Setter for the field <code>groupId</code>.</p>
+     *
+     * @param groupId a {@link java.lang.Long} object
+     */
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 
 
+    /**
+     * <p>Getter for the field <code>authority</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getAuthority() {
         return authority;
     }
 
+    /**
+     * <p>Setter for the field <code>authority</code>.</p>
+     *
+     * @param authority a {@link java.lang.String} object
+     */
     public void setAuthority(String authority) {
         this.authority = authority;
     }

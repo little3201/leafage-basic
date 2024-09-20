@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verify;
 /**
  * region service test
  *
- * @author wq li 2021/12/7 15:125
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class RegionServiceImplTest {

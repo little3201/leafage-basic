@@ -33,8 +33,8 @@ import java.util.List;
 /**
  * dictionary controller.
  *
- * @author wq li 2022-04-06 17:44
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/dictionaries")
 public class DictionaryController {
@@ -43,6 +43,11 @@ public class DictionaryController {
 
     private final DictionaryService dictionaryService;
 
+    /**
+     * <p>Constructor for DictionaryController.</p>
+     *
+     * @param dictionaryService a {@link io.leafage.basic.hypervisor.service.DictionaryService} object
+     */
     public DictionaryController(DictionaryService dictionaryService) {
         this.dictionaryService = dictionaryService;
     }
@@ -72,6 +77,7 @@ public class DictionaryController {
     /**
      * 查询下级数据
      *
+     * @param id a {@link java.lang.Long} object
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/{id}/subset")
@@ -144,6 +150,7 @@ public class DictionaryController {
      * 修改信息
      *
      * @param dictionaryDTO 要添加的数据
+     * @param id            a {@link java.lang.Long} object
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PutMapping("/{id}")

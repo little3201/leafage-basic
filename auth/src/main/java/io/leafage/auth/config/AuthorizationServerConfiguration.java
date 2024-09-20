@@ -60,7 +60,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 /**
  * 认证服务配置
  *
- * @author wq li 2021-12-21 17:02
+ * @author wq li
  */
 @Configuration
 @EnableWebSecurity

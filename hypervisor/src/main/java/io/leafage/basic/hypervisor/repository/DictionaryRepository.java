@@ -28,8 +28,8 @@ import java.util.List;
 /**
  * dictionary repository.
  *
- * @author wq li 2022-04-06 17:38
- **/
+ * @author wq li
+ */
 @Repository
 public interface DictionaryRepository extends JpaRepository<Dictionary, Long> {
 

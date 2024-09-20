@@ -21,7 +21,7 @@ import jakarta.persistence.*;
 /**
  * model class for tag_posts.
  *
- * @author wq li  2024-04-17 16:06
+ * @author wq li
  */
 @Entity
 @Table(name = "tag_posts")

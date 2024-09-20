@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
 /**
  * post statistics repository.
  *
- * @author wq li  2021-09-29 14:19
+ * @author wq li
  **/
 @Repository
 public interface PostStatisticsRepository extends JpaRepository<PostStatistics, Long> {

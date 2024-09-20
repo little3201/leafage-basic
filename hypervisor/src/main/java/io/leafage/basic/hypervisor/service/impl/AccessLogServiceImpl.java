@@ -33,17 +33,25 @@ import org.springframework.util.StringUtils;
 /**
  * access log service impl.
  *
- * @author wq li 2022/4/15 13:44
- **/
+ * @author wq li
+ */
 @Service
 public class AccessLogServiceImpl implements AccessLogService {
 
     private final AccessLogRepository accessLogRepository;
 
+    /**
+     * <p>Constructor for AccessLogServiceImpl.</p>
+     *
+     * @param accessLogRepository a {@link io.leafage.basic.hypervisor.repository.AccessLogRepository} object
+     */
     public AccessLogServiceImpl(AccessLogRepository accessLogRepository) {
         this.accessLogRepository = accessLogRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -52,6 +60,9 @@ public class AccessLogServiceImpl implements AccessLogService {
         return accessLogRepository.findAll(pageable).map(this::convert);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AccessLogVO create(AccessLogDTO dto) {
         AccessLog accessLog = new AccessLog();

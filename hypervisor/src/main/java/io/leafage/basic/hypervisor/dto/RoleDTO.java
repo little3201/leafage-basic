@@ -21,7 +21,7 @@ import io.leafage.basic.hypervisor.bo.RoleBO;
 /**
  * dto class for role.
  *
- * @author wq li 2019/8/31 15:50
+ * @author wq li
  */
 public class RoleDTO extends RoleBO {
 

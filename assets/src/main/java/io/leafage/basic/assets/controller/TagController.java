@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * tag controller.
  *
- * @author wq li 2018/12/20 9:54
+ * @author wq li
  **/
 @RestController
 @RequestMapping("/tags")

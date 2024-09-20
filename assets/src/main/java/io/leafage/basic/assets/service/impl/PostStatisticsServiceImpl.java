@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 /**
  * statistics service impl.
  *
- * @author wq li 2021/09/29 15:30
+ * @author wq li
  **/
 @Service
 public class PostStatisticsServiceImpl implements PostStatisticsService {

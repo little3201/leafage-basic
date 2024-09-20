@@ -25,8 +25,8 @@ import top.leafage.common.servlet.ServletBasicService;
 /**
  * access log service.
  *
- * @author wq 2022/4/15 13:43
- **/
+ * @author wq li
+ */
 public interface AccessLogService extends ServletBasicService<AccessLogDTO, AccessLogVO> {
 
     /**

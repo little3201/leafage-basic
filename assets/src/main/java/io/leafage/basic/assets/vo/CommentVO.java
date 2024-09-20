@@ -24,7 +24,7 @@ import java.time.Instant;
 /**
  * vo class for comment.
  *
- * @author wq li  2021-08-03 22:59
+ * @author wq li
  **/
 public class CommentVO extends CommentBO {
 

@@ -39,7 +39,7 @@ import static org.mockito.Mockito.verify;
 /**
  * user service test
  *
- * @author wq li 2019/1/29 17:10
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -56,8 +56,8 @@ class UserServiceImplTest {
     void init() {
         userDTO = new UserDTO();
         userDTO.setUsername("test");
-        userDTO.setFirstname("三");
-        userDTO.setLastname("张");
+        userDTO.setAvatar("a.jpg");
+        userDTO.setEmail("zhang@test.com");
     }
 
     @Test

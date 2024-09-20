@@ -22,7 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * assets application.
  *
- * @author wq li 2017-12-03 22:59
+ * @author wq li
  */
 @SpringBootApplication
 public class AssetsApplication {

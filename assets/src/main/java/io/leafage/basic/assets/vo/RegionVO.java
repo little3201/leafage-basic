@@ -22,7 +22,7 @@ import io.leafage.basic.assets.bo.RegionBO;
 /**
  * vo class for region.
  *
- * @author wq li 2021/9/19 17:20
+ * @author wq li
  **/
 public class RegionVO extends RegionBO {
 

@@ -23,8 +23,8 @@ import org.springframework.stereotype.Repository;
 /**
  * role repository.
  *
- * @author wq li 2018/9/26 11:06
- **/
+ * @author wq li
+ */
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
 

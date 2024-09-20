@@ -24,13 +24,13 @@ import jakarta.persistence.Table;
 /**
  * model class for privilege.
  *
- * @author wq li 2019/8/31 15:50
+ * @author wq li
  */
 @Entity
 @Table(name = "privileges")
 public class Privilege extends AuditMetadata {
 
-    
+
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
@@ -64,66 +64,146 @@ public class Privilege extends AuditMetadata {
     private String description;
 
 
+    /**
+     * <p>Getter for the field <code>superiorId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getSuperiorId() {
         return superiorId;
     }
 
+    /**
+     * <p>Setter for the field <code>superiorId</code>.</p>
+     *
+     * @param superiorId a {@link java.lang.Long} object
+     */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
     }
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>path</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * <p>Setter for the field <code>path</code>.</p>
+     *
+     * @param path a {@link java.lang.String} object
+     */
     public void setPath(String path) {
         this.path = path;
     }
 
+    /**
+     * <p>Getter for the field <code>redirect</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getRedirect() {
         return redirect;
     }
 
+    /**
+     * <p>Setter for the field <code>redirect</code>.</p>
+     *
+     * @param redirect a {@link java.lang.String} object
+     */
     public void setRedirect(String redirect) {
         this.redirect = redirect;
     }
 
+    /**
+     * <p>Getter for the field <code>component</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getComponent() {
         return component;
     }
 
+    /**
+     * <p>Setter for the field <code>component</code>.</p>
+     *
+     * @param component a {@link java.lang.String} object
+     */
     public void setComponent(String component) {
         this.component = component;
     }
 
+    /**
+     * <p>Getter for the field <code>icon</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getIcon() {
         return icon;
     }
 
+    /**
+     * <p>Setter for the field <code>icon</code>.</p>
+     *
+     * @param icon a {@link java.lang.String} object
+     */
     public void setIcon(String icon) {
         this.icon = icon;
     }
 
+    /**
+     * <p>isHidden.</p>
+     *
+     * @return a boolean
+     */
     public boolean isHidden() {
         return hidden;
     }
 
+    /**
+     * <p>Setter for the field <code>hidden</code>.</p>
+     *
+     * @param hidden a boolean
+     */
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
     }
 
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
     public void setDescription(String description) {
         this.description = description;
     }

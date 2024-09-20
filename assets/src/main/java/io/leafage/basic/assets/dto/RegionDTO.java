@@ -22,7 +22,7 @@ import io.leafage.basic.assets.bo.RegionBO;
 /**
  * dto class for region.
  *
- * @author wq li 2021-10-12 10:06
+ * @author wq li
  */
 public class RegionDTO extends RegionBO {
 

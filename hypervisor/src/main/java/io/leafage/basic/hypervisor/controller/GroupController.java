@@ -35,8 +35,8 @@ import java.util.List;
 /**
  * group controller.
  *
- * @author wq li 2018/12/20 9:54
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/groups")
 public class GroupController {
@@ -46,6 +46,12 @@ public class GroupController {
     private final GroupMembersService groupMembersService;
     private final GroupService groupService;
 
+    /**
+     * <p>Constructor for GroupController.</p>
+     *
+     * @param groupMembersService a {@link io.leafage.basic.hypervisor.service.GroupMembersService} object
+     * @param groupService        a {@link io.leafage.basic.hypervisor.service.GroupService} object
+     */
     public GroupController(GroupMembersService groupMembersService, GroupService groupService) {
         this.groupMembersService = groupMembersService;
         this.groupService = groupService;

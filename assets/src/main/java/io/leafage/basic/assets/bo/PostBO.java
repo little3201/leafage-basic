@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * bo class for post
  *
- * @author liwenqiang 2022-12-10 22:09
+ * @author wq li
  */
 public abstract class PostBO {
 

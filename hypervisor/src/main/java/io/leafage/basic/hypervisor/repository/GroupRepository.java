@@ -26,9 +26,16 @@ import org.springframework.stereotype.Repository;
  * group repository.
  *
  * @author wq li 2018/12/20 9:52
- **/
+ */
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
+    /**
+     * <p>findAllBySuperiorId.</p>
+     *
+     * @param superiorId a {@link java.lang.Long} object
+     * @param pageable   a {@link org.springframework.data.domain.Pageable} object
+     * @return a {@link org.springframework.data.domain.Page} object
+     */
     Page<Group> findAllBySuperiorId(Long superiorId, Pageable pageable);
 }

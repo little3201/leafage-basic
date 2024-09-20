@@ -33,17 +33,25 @@ import org.springframework.util.StringUtils;
 /**
  * user service impl.
  *
- * @author wq li 2018/7/28 0:30
- **/
+ * @author wq li
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    /**
+     * <p>Constructor for UserServiceImpl.</p>
+     *
+     * @param userRepository a {@link io.leafage.basic.hypervisor.repository.UserRepository} object
+     */
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, Long groupId) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -52,6 +60,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable).map(this::convert);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserVO fetch(Long id) {
         Assert.notNull(id, "role id must not be null.");
@@ -62,12 +73,18 @@ public class UserServiceImpl implements UserService {
         return this.convert(user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean exist(String username) {
         Assert.hasText(username, "username must not be blank.");
         return userRepository.existsByUsername(username);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserVO create(UserDTO dto) {
         User user = new User();
@@ -78,6 +95,9 @@ public class UserServiceImpl implements UserService {
         return this.convert(user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UserVO modify(Long id, UserDTO dto) {
         Assert.notNull(id, "role id must not be null.");
@@ -92,6 +112,9 @@ public class UserServiceImpl implements UserService {
         return this.convert(user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "role id must not be null.");

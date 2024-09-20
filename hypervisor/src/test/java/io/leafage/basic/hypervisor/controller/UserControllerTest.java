@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * user controller test
  *
- * @author wq li 2019/1/29 17:09
+ * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)
@@ -69,13 +69,12 @@ class UserControllerTest {
     void init() {
         userVO = new UserVO();
         userVO.setUsername("test");
-        userVO.setFirstname("john");
-        userVO.setLastname("steven");
+        userVO.setEmail("john@test.com");
 
         userDTO = new UserDTO();
         userDTO.setUsername("test");
-        userDTO.setFirstname("john");
-        userDTO.setLastname("steven");
+        userDTO.setAccountNonLocked(true);
+        userDTO.setAvatar("steven.jpg");
     }
 
     @Test

@@ -26,7 +26,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 /**
  * jpa config.
  *
- * @author wq li  2020-12-20 9:54
+ * @author wq li
  */
 @Configuration
 @EnableJpaAuditing

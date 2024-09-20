@@ -39,20 +39,29 @@ import java.util.*;
 /**
  * privilege service impl.
  *
- * @author wq li 2018/12/17 19:36
- **/
+ * @author wq li
+ */
 @Service
 public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privilege> implements PrivilegeService {
 
     public final RolePrivilegesRepository rolePrivilegesRepository;
     private final PrivilegeRepository privilegeRepository;
 
+    /**
+     * <p>Constructor for PrivilegeServiceImpl.</p>
+     *
+     * @param rolePrivilegesRepository a {@link io.leafage.basic.hypervisor.repository.RolePrivilegesRepository} object
+     * @param privilegeRepository      a {@link io.leafage.basic.hypervisor.repository.PrivilegeRepository} object
+     */
     public PrivilegeServiceImpl(RolePrivilegesRepository rolePrivilegesRepository, PrivilegeRepository privilegeRepository) {
         this.rolePrivilegesRepository = rolePrivilegesRepository;
         this.privilegeRepository = privilegeRepository;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -61,17 +70,26 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         return privilegeRepository.findAllBySuperiorIdIsNull(pageable).map(this::convert);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TreeNode> tree(String username) {
         List<Privilege> privileges = privilegeRepository.findAll();
         return this.convertTree(privileges);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<PrivilegeVO> subset(Long superiorId) {
         return privilegeRepository.findBySuperiorId(superiorId).stream().map(this::convert).toList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PrivilegeVO fetch(Long id) {
         Assert.notNull(id, "group id must not be null.");
@@ -82,6 +100,9 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         return this.convert(privilege);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PrivilegeVO create(PrivilegeDTO dto) {
         Privilege privilege = new Privilege();
@@ -92,6 +113,9 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         return this.convert(privilege);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PrivilegeVO modify(Long id, PrivilegeDTO dto) {
         Assert.notNull(id, "privilege id must not be null.");
@@ -106,6 +130,9 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         return this.convert(privilege);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "privilege id must not be null.");

@@ -25,13 +25,13 @@ import jakarta.persistence.Table;
 /**
  * model class for tag.
  *
- * @author wq li  2020-12-03 22:59
+ * @author wq li
  */
 @Entity
 @Table(name = "tags", indexes = {@Index(name = "uni_tags_name", columnList = "name")})
 public class Tag extends AuditMetadata {
 
-    
+
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 

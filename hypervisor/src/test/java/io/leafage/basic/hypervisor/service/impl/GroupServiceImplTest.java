@@ -45,7 +45,7 @@ import static org.mockito.Mockito.verify;
 /**
  * group service test
  *
- * @author wq li 2021/5/11 10:10
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class GroupServiceImplTest {

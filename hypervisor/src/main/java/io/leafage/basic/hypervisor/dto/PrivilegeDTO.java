@@ -21,7 +21,7 @@ import io.leafage.basic.hypervisor.bo.PrivilegeBO;
 /**
  * dto class for privilege.
  *
- * @author wq li 2019/8/31 15:50
+ * @author wq li
  */
 public class PrivilegeDTO extends PrivilegeBO {
 
@@ -30,10 +30,20 @@ public class PrivilegeDTO extends PrivilegeBO {
      */
     private Long superiorId;
 
+    /**
+     * <p>Getter for the field <code>superiorId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getSuperiorId() {
         return superiorId;
     }
 
+    /**
+     * <p>Setter for the field <code>superiorId</code>.</p>
+     *
+     * @param superiorId a {@link java.lang.Long} object
+     */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
     }

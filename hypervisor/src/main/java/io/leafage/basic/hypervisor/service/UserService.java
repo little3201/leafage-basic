@@ -24,8 +24,8 @@ import top.leafage.common.servlet.ServletBasicService;
 /**
  * user service.
  *
- * @author wq li 2018/7/28 0:29
- **/
+ * @author wq li
+ */
 public interface UserService extends ServletBasicService<UserDTO, UserVO> {
 
     /**

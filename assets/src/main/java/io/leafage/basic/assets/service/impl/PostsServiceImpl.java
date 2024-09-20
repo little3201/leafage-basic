@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 /**
  * posts service impl.
  *
- * @author wq li  2018-12-20 9:54
+ * @author wq li
  **/
 @Service
 public class PostsServiceImpl implements PostsService {

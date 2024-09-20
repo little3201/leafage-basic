@@ -26,7 +26,7 @@ import jakarta.persistence.Table;
 /**
  * model class for comment.
  *
- * @author wq li  2021-09-29 10:45
+ * @author wq li
  */
 @Entity
 @Table(name = "comments", indexes = {@Index(name = "idx_comments_post_id", columnList = "post_id")})

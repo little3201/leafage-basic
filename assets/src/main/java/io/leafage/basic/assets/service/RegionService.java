@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * region service.
  *
- * @author wq li 2021/11/27 14:18
+ * @author wq li
  **/
 public interface RegionService extends ServletBasicService<RegionDTO, RegionVO> {
 

@@ -24,10 +24,13 @@ import java.util.Optional;
 /**
  * auditor aware.
  *
- * @author wq li  2020-12-20 9:54
+ * @author wq li
  */
 public class AuditorAwareImpl implements AuditorAware<String> {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<String> getCurrentAuditor() {
         return Optional.of("admin");

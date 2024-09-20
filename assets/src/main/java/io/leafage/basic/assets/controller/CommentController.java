@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * comment controller.
  *
- * @author wq li 2018/12/20 9:54
+ * @author wq li
  **/
 @RestController
 @RequestMapping("/comments")

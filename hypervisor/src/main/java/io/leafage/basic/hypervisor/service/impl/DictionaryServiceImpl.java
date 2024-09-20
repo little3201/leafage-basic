@@ -38,17 +38,25 @@ import java.util.NoSuchElementException;
 /**
  * dictionary service impl.
  *
- * @author wq li 2022-04-06 17:38
- **/
+ * @author wq li
+ */
 @Service
 public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictionary> implements DictionaryService {
 
     private final DictionaryRepository dictionaryRepository;
 
+    /**
+     * <p>Constructor for DictionaryServiceImpl.</p>
+     *
+     * @param dictionaryRepository a {@link io.leafage.basic.hypervisor.repository.DictionaryRepository} object
+     */
     public DictionaryServiceImpl(DictionaryRepository dictionaryRepository) {
         this.dictionaryRepository = dictionaryRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -57,6 +65,9 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
         return dictionaryRepository.findBySuperiorIdIsNull(pageable).map(this::convert);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DictionaryVO fetch(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
@@ -67,6 +78,9 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
         return this.convert(dictionary);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<DictionaryVO> subset(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
@@ -74,12 +88,18 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
                 .stream().map(this::convert).toList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean exist(String name) {
         Assert.hasText(name, "dictionary name must not be blank.");
         return dictionaryRepository.existsByName(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DictionaryVO create(DictionaryDTO dto) {
         Dictionary dictionary = new Dictionary();
@@ -91,6 +111,9 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
         return this.convert(dictionary);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DictionaryVO modify(Long id, DictionaryDTO dto) {
         Assert.notNull(id, "dictionary id must not be null.");
@@ -106,6 +129,9 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
         return this.convert(dictionary);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");

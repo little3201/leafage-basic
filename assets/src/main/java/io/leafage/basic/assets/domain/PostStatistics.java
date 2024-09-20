@@ -26,7 +26,7 @@ import jakarta.persistence.Table;
 /**
  * model class for post statistics.
  *
- * @author wq li  2021-09-29 10:45
+ * @author wq li
  */
 @Entity
 @Table(name = "post_statistics", indexes = {@Index(name = "idx_post_statistics_post_id", columnList = "post_id")})

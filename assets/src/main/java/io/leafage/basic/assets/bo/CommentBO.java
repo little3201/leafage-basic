@@ -24,7 +24,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * bo class for comment
  *
- * @author liwenqiang 2023-03-26 14:30
+ * @author wq li
  */
 public abstract class CommentBO {
 

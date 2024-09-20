@@ -29,17 +29,25 @@ import java.util.Set;
 /**
  * role members service impl.
  *
- * @author wq li 2021/11/27 14:18
- **/
+ * @author wq li
+ */
 @Service
 public class RoleMembersServiceImpl implements RoleMembersService {
 
     private final RoleMembersRepository roleMembersRepository;
 
+    /**
+     * <p>Constructor for RoleMembersServiceImpl.</p>
+     *
+     * @param roleMembersRepository a {@link io.leafage.basic.hypervisor.repository.RoleMembersRepository} object
+     */
     public RoleMembersServiceImpl(RoleMembersRepository roleMembersRepository) {
         this.roleMembersRepository = roleMembersRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RoleMembers> members(Long roleId) {
         Assert.notNull(roleId, "role id must not be null.");
@@ -47,6 +55,9 @@ public class RoleMembersServiceImpl implements RoleMembersService {
         return roleMembersRepository.findByRoleId(roleId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RoleMembers> roles(String username) {
         Assert.hasText(username, "username must not be blank.");
@@ -54,6 +65,9 @@ public class RoleMembersServiceImpl implements RoleMembersService {
         return roleMembersRepository.findByUsername(username);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RoleMembers> relation(Long roleId, Set<String> usernames) {
         Assert.notNull(roleId, "role id must not be null.");

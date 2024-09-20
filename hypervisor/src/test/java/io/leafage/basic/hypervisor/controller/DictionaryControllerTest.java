@@ -46,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * dictionary controller test
  *
- * @author wq li 2022-04-07 9:19
+ * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

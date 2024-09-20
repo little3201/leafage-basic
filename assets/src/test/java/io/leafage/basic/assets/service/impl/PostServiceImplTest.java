@@ -48,7 +48,7 @@ import static org.mockito.Mockito.verify;
 /**
  * 帖子接口测试
  *
- * @author wq li 2019-08-20 22:38
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {

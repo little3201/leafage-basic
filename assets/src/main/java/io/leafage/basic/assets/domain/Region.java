@@ -25,13 +25,13 @@ import jakarta.persistence.Table;
 /**
  * model class for region.
  *
- * @author wq li 2021-10-12 10:06
+ * @author wq li
  */
 @Entity
 @Table(name = "regions")
 public class Region extends AuditMetadata {
 
-    
+
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 

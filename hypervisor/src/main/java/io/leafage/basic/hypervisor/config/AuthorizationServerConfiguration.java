@@ -27,6 +27,12 @@ package io.leafage.basic.hypervisor.config;
 //
 //@Configuration
 //@EnableWebSecurity
+
+/**
+ * <p>AuthorizationServerConfiguration class.</p>
+ *
+ * @author wq li
+ */
 public class AuthorizationServerConfiguration {
 
 //    @Bean

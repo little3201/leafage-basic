@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * region controller test
  *
- * @author wq li 2021/12/7 15:38
+ * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

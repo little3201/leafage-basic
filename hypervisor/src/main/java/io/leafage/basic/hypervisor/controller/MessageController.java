@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * messages controller.
  *
- * @author wq li 2022/1/29 18:05
+ * @author wq li
  */
 @RestController
 @RequestMapping("/messages")
@@ -41,6 +41,11 @@ public class MessageController {
 
     private final MessageService messageService;
 
+    /**
+     * <p>Constructor for MessageController.</p>
+     *
+     * @param messageService a {@link io.leafage.basic.hypervisor.service.MessageService} object
+     */
     public MessageController(MessageService messageService) {
         this.messageService = messageService;
     }

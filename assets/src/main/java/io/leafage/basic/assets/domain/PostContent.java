@@ -25,7 +25,7 @@ import jakarta.persistence.Table;
 /**
  * model class for posts content.
  *
- * @author wq li  2020-12-03 22:59
+ * @author wq li
  */
 @Entity
 @Table(name = "post_content", indexes = {@Index(name = "uni_post_content_post_id", columnList = "post_id")})

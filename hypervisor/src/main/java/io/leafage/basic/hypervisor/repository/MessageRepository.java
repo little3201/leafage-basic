@@ -24,8 +24,8 @@ import org.springframework.stereotype.Repository;
 /**
  * message repository.
  *
- * @author wq li 2022/1/29 17:34
- **/
+ * @author wq li
+ */
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 }

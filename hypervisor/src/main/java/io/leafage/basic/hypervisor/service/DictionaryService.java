@@ -27,10 +27,9 @@ import java.util.List;
 /**
  * dictionary service.
  *
- * @author wq li 2022-04-06 17:38
- **/
+ * @author wq li
+ */
 public interface DictionaryService extends ServletBasicService<DictionaryDTO, DictionaryVO> {
-
 
     /**
      * 分页查询
@@ -46,6 +45,7 @@ public interface DictionaryService extends ServletBasicService<DictionaryDTO, Di
     /**
      * 获取子节点
      *
+     * @param id a {@link java.lang.Long} object
      * @return 数据集
      */
     List<DictionaryVO> subset(Long id);

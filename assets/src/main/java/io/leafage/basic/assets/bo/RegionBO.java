@@ -22,11 +22,11 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * region bo
  *
- * @author wq li 2022-03-26 18:16
+ * @author wq li
  **/
 public abstract class RegionBO {
 
-    
+
     @NotBlank(message = "name must not be blank.")
     private String name;
 

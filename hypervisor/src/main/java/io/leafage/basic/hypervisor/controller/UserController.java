@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * user controller.
  *
- * @author wq li 2018/8/2 21:02
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -40,6 +40,11 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * <p>Constructor for UserController.</p>
+     *
+     * @param userService a {@link io.leafage.basic.hypervisor.service.UserService} object
+     */
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -51,6 +56,7 @@ public class UserController {
      * @param size       大小
      * @param sortBy     排序字段
      * @param descending 排序方向
+     * @param groupId    a {@link java.lang.Long} object
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping

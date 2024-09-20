@@ -38,8 +38,7 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -100,6 +99,14 @@ class DictionaryControllerTest {
     }
 
     @Test
+    void subset() throws Exception {
+        given(this.dictionaryService.subset(Mockito.anyLong())).willReturn(List.of(dictionaryVO));
+
+        mvc.perform(get("/dictionaries/{id}/subset", Mockito.anyLong())).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
     void fetch() throws Exception {
         given(this.dictionaryService.fetch(Mockito.anyLong())).willReturn(dictionaryVO);
 
@@ -115,6 +122,36 @@ class DictionaryControllerTest {
                 .andDo(print()).andReturn();
     }
 
+
+    @Test
+    void modify() throws Exception {
+        given(this.dictionaryService.modify(Mockito.anyLong(), Mockito.any(DictionaryDTO.class))).willReturn(dictionaryVO);
+
+        mvc.perform(put("/dictionaries/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(dictionaryDTO)).with(csrf().asHeader()))
+                .andExpect(status().isAccepted())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void modify_error() throws Exception {
+        given(this.dictionaryService.modify(Mockito.anyLong(), Mockito.any(DictionaryDTO.class))).willThrow(new RuntimeException());
+
+        mvc.perform(put("/dictionaries/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(dictionaryDTO)).with(csrf().asHeader()))
+                .andExpect(status().isNotModified())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void remove() throws Exception {
+        this.dictionaryService.remove(Mockito.anyLong());
+
+        mvc.perform(delete("/dictionaries/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+
     @Test
     void exist() throws Exception {
         given(this.dictionaryService.exist(Mockito.anyString())).willReturn(true);
@@ -128,15 +165,6 @@ class DictionaryControllerTest {
         given(this.dictionaryService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/dictionaries/{name}/exist", "gender")).andExpect(status().isNoContent())
-                .andDo(print()).andReturn();
-    }
-
-
-    @Test
-    void subset() throws Exception {
-        given(this.dictionaryService.subset(Mockito.anyLong())).willReturn(List.of(dictionaryVO));
-
-        mvc.perform(get("/dictionaries/{id}/subset", Mockito.anyLong())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 

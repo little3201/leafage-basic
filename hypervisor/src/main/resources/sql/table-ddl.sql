@@ -23,6 +23,7 @@ CREATE TABLE groups
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     group_name         varchar(50) NOT NULL,
+    superior_id        bigint,
     enabled            boolean     NOT NULL DEFAULT true,
     created_by         varchar(50),
     created_date       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -99,8 +100,8 @@ DROP TABLE IF EXISTS authorities;
 -- Create table authorities
 CREATE TABLE authorities
 (
-    id       bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    username varchar(50) not null,
+    id        bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username  varchar(50) not null,
     authority varchar(50) not null,
     CONSTRAINT fk_authorities_users FOREIGN KEY (username) references users (username)
 );
@@ -252,14 +253,15 @@ CREATE TABLE privileges
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     superior_id        bigint,
-    name               varchar(50)  NOT NULL,
-    type               character(1) NOT NULL,
+    name               varchar(50) NOT NULL,
     path               varchar(127),
+    redirect           varchar(255),
+    component          varchar(255),
     icon               varchar(127),
     description        varchar(255),
-    enabled            boolean      NOT NULL DEFAULT true,
+    enabled            boolean     NOT NULL DEFAULT true,
     created_by         varchar(50),
-    created_date       timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_date       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_modified_by   varchar(50),
     last_modified_date timestamp
 );
@@ -274,9 +276,11 @@ ON COLUMN privileges.superior_id IS '上级ID';
 COMMENT
 ON COLUMN privileges.name IS '名称';
 COMMENT
-ON COLUMN privileges.type IS '类型';
-COMMENT
 ON COLUMN privileges.path IS '路径';
+COMMENT
+ON COLUMN privileges.redirect IS '跳转路径';
+COMMENT
+ON COLUMN privileges.component IS '组件路径';
 COMMENT
 ON COLUMN privileges.icon IS '图标';
 COMMENT

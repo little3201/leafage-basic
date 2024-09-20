@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * bo class for group
  *
- * @author wilsonli 2022-03-26 15:21
+ * @author wq li 2022-03-26 15:21
  **/
 public abstract class GroupBO {
 
@@ -30,14 +30,34 @@ public abstract class GroupBO {
      * 名称
      */
     @NotBlank(message = "name must not be blank.")
-    private String groupName;
+    private String name;
 
-    public String getGroupName() {
-        return groupName;
+    private Long superiorId;
+
+    private String description;
+
+
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

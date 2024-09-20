@@ -15,32 +15,45 @@
  *
  */
 
-package io.leafage.basic.hypervisor.bo;
+package io.leafage.basic.assets.domain;
 
-import jakarta.validation.constraints.NotBlank;
+import io.leafage.basic.assets.audit.AuditMetadata;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 /**
- * desc
+ * model class for region.
  *
- * @author wilsonli 2022-03-26 18:16
- **/
-public abstract class RegionBO {
+ * @author wq li 2021-10-12 10:06
+ */
+@Entity
+@Table(name = "regions")
+public class Region extends AuditMetadata {
 
     /**
      * 名称
      */
-    @NotBlank(message = "name must not be blank.")
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     /**
-     * 邮编
+     * 上级
      */
-    private Integer postalCode;
+    @Column(name = "superior_id")
+    private Long superiorId;
 
     /**
      * 区号
      */
+    @Column(name = "area_code", length = 4)
     private String areaCode;
+
+    /**
+     * 邮编
+     */
+    @Column(name = "postal_code", length = 6)
+    private Integer postalCode;
 
     /**
      * 描述
@@ -56,12 +69,12 @@ public abstract class RegionBO {
         this.name = name;
     }
 
-    public Integer getPostalCode() {
-        return postalCode;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public String getAreaCode() {
@@ -70,6 +83,14 @@ public abstract class RegionBO {
 
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
+    }
+
+    public Integer getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(Integer postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getDescription() {

@@ -79,11 +79,14 @@ class PrivilegeControllerTest {
         privilegeVO.setName("test");
         privilegeVO.setIcon("icon");
         privilegeVO.setPath("path");
-        privilegeVO.setType('M');
+        privilegeVO.setEnabled(true);
+        privilegeVO.setDescription("description");
+        privilegeVO.setComponent("component");
 
         privilegeDTO = new PrivilegeDTO();
         privilegeDTO.setName("test");
-        privilegeDTO.setType('M');
+        privilegeDTO.setRedirect("redirect");
+        privilegeVO.setDescription("description");
         privilegeDTO.setPath("/test");
         privilegeDTO.setIcon("icon");
         privilegeDTO.setSuperiorId(1L);
@@ -184,17 +187,25 @@ class PrivilegeControllerTest {
     @Test
     void tree() throws Exception {
         TreeNode treeNode = new TreeNode(1L, "test");
-        given(this.privilegeService.tree()).willReturn(Collections.singletonList(treeNode));
+        given(this.privilegeService.tree(Mockito.anyString())).willReturn(Collections.singletonList(treeNode));
 
-        mvc.perform(get("/privileges/tree")).andExpect(status().isOk())
+        mvc.perform(get("/privileges/{username}/tree", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void tree_error() throws Exception {
-        given(this.privilegeService.tree()).willThrow(new RuntimeException());
+        given(this.privilegeService.tree(Mockito.anyString())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/privileges/tree")).andExpect(status().isNoContent())
+        mvc.perform(get("/privileges/{username}/tree", "test")).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void subset() throws Exception {
+        given(this.privilegeService.subset(Mockito.anyLong())).willReturn(List.of(privilegeVO));
+
+        mvc.perform(get("/privileges/{id}/subset", Mockito.anyLong())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 

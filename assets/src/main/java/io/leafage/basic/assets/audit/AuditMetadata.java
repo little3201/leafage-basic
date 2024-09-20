@@ -88,7 +88,6 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
         this.createdDate = creationDate;
     }
 
-
     @Override
     public Optional<String> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
@@ -98,7 +97,6 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
-
 
     @Override
     public Optional<Instant> getLastModifiedDate() {
@@ -113,6 +111,10 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     @Override
     public Long getId() {
         return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override

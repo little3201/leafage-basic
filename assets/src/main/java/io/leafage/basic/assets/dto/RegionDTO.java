@@ -15,42 +15,27 @@
  *
  */
 
-package io.leafage.basic.hypervisor.vo;
+package io.leafage.basic.assets.dto;
 
-import io.leafage.basic.hypervisor.bo.RegionBO;
+import io.leafage.basic.assets.bo.RegionBO;
 
 /**
- * vo class for region.
+ * dto class for region.
  *
- * @author wq li 2021/9/19 17:20
- **/
-public class RegionVO extends RegionBO {
+ * @author wq li 2021-10-12 10:06
+ */
+public class RegionDTO extends RegionBO {
 
     /**
-     * 主键
+     * superior
      */
-    private Long id;
+    private Long superiorId;
 
-    /**
-     * 状态
-     */
-    private boolean enabled;
-
-
-    public Long getId() {
-        return id;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
 }

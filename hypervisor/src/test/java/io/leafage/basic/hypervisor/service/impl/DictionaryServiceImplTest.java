@@ -22,6 +22,7 @@ import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -52,6 +53,14 @@ class DictionaryServiceImplTest {
 
     @InjectMocks
     private DictionaryServiceImpl dictionaryService;
+
+    private DictionaryDTO dictionaryDTO;
+
+    @BeforeEach
+    void init() {
+        dictionaryDTO = new DictionaryDTO();
+        dictionaryDTO.setName("group");
+    }
 
     @Test
     void retrieve() {
@@ -110,4 +119,22 @@ class DictionaryServiceImplTest {
         Assertions.assertNotNull(dictionaryVO);
     }
 
+    @Test
+    void modify() {
+        given(this.dictionaryRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Dictionary.class)));
+
+        given(this.dictionaryRepository.save(Mockito.any(Dictionary.class))).willReturn(Mockito.mock(Dictionary.class));
+
+        DictionaryVO dictionaryVO = dictionaryService.modify(1L, dictionaryDTO);
+
+        verify(this.dictionaryRepository, times(1)).save(Mockito.any(Dictionary.class));
+        Assertions.assertNotNull(dictionaryVO);
+    }
+
+    @Test
+    void remove() {
+        dictionaryService.remove(1L);
+
+        verify(this.dictionaryRepository, times(1)).deleteById(Mockito.anyLong());
+    }
 }

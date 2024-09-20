@@ -15,11 +15,11 @@
  *
  */
 
-package io.leafage.basic.hypervisor.controller;
+package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.service.RegionService;
-import io.leafage.basic.hypervisor.vo.RegionVO;
+import io.leafage.basic.assets.dto.RegionDTO;
+import io.leafage.basic.assets.service.RegionService;
+import io.leafage.basic.assets.vo.RegionVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

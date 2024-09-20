@@ -66,7 +66,7 @@ class UserServiceImplTest {
         Page<User> page = new PageImpl<>(List.of(Mockito.mock(User.class)));
         given(this.userRepository.findAll(pageable)).willReturn(page);
 
-        Page<UserVO> voPage = userService.retrieve(0, 2, "id", true);
+        Page<UserVO> voPage = userService.retrieve(0, 2, "id", true, 2L);
         Assertions.assertNotNull(voPage.getContent());
     }
 

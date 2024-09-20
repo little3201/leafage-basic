@@ -17,8 +17,12 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.domain.Privilege;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * privilege repository.
@@ -28,4 +32,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
 
+    Page<Privilege> findAllBySuperiorIdIsNull(Pageable pageable);
+
+    List<Privilege> findBySuperiorId(Long superiorId);
+
+    long countBySuperiorId(Long superiorId);
 }

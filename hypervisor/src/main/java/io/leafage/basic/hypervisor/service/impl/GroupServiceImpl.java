@@ -28,8 +28,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import top.leafage.common.TreeNode;
+import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -38,7 +43,7 @@ import java.util.NoSuchElementException;
  * @author wq li 2018/12/17 19:25
  **/
 @Service
-public class GroupServiceImpl implements GroupService {
+public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> implements GroupService {
 
     private final GroupRepository groupRepository;
 
@@ -47,11 +52,27 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending) {
+    public Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
                 StringUtils.hasText(sortBy) ? sortBy : "id");
         Pageable pageable = PageRequest.of(page, size, sort);
-        return groupRepository.findAll(pageable).map(this::convert);
+        return groupRepository.findAllBySuperiorId(superiorId, pageable).map(this::convert);
+    }
+
+    @Override
+    public List<TreeNode> tree() {
+        List<Group> groups = groupRepository.findAll();
+        return this.convertTree(groups);
+    }
+
+    @Override
+    public GroupVO fetch(Long id) {
+        Assert.notNull(id, "group id must not be null.");
+        Group group = groupRepository.findById(id).orElse(null);
+        if (group == null) {
+            return null;
+        }
+        return this.convert(group);
     }
 
     @Override
@@ -71,6 +92,7 @@ public class GroupServiceImpl implements GroupService {
         if (group == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
         }
+
         BeanCopier copier = BeanCopier.create(GroupDTO.class, Group.class, false);
         copier.copy(dto, group, null);
 
@@ -95,6 +117,19 @@ public class GroupServiceImpl implements GroupService {
         BeanCopier copier = BeanCopier.create(Group.class, GroupVO.class, false);
         copier.copy(group, vo, null);
         return vo;
+    }
+
+    /**
+     * 转换为TreeNode
+     *
+     * @param groups 集合数据
+     * @return 树集合
+     */
+    private List<TreeNode> convertTree(List<Group> groups) {
+        if (CollectionUtils.isEmpty(groups)) {
+            return Collections.emptyList();
+        }
+        return this.convert(groups, null);
     }
 
 }

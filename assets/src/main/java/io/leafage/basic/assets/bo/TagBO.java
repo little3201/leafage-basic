@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * bo class for tag
  *
- * @author wilsonli 2022-12-10 22:28
+ * @author wq li 2022-12-10 22:28
  **/
 public abstract class TagBO {
 

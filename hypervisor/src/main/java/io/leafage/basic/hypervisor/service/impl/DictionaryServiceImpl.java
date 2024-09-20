@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * dictionary service impl.
@@ -88,6 +89,27 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
         dictionaryRepository.saveAndFlush(dictionary);
 
         return this.convert(dictionary);
+    }
+
+    @Override
+    public DictionaryVO modify(Long id, DictionaryDTO dto) {
+        Assert.notNull(id, "dictionary id must not be null.");
+        Dictionary dictionary = dictionaryRepository.findById(id).orElse(null);
+        if (dictionary == null) {
+            throw new NoSuchElementException("当前操作数据不存在...");
+        }
+
+        BeanCopier copier = BeanCopier.create(DictionaryDTO.class, Dictionary.class, false);
+        copier.copy(dto, dictionary, null);
+
+        dictionaryRepository.save(dictionary);
+        return this.convert(dictionary);
+    }
+
+    @Override
+    public void remove(Long id) {
+        Assert.notNull(id, "dictionary id must not be null.");
+        dictionaryRepository.deleteById(id);
     }
 
     /**

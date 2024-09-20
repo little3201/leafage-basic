@@ -131,6 +131,10 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
         return this.id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public boolean isNew() {
         return Objects.isNull(getId());

@@ -58,13 +58,28 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
                 StringUtils.hasText(sortBy) ? sortBy : "id");
         Pageable pageable = PageRequest.of(page, size, sort);
-        return privilegeRepository.findAll(pageable).map(this::convert);
+        return privilegeRepository.findAllBySuperiorIdIsNull(pageable).map(this::convert);
     }
 
     @Override
-    public List<TreeNode> tree() {
+    public List<TreeNode> tree(String username) {
         List<Privilege> privileges = privilegeRepository.findAll();
         return this.convertTree(privileges);
+    }
+
+    @Override
+    public List<PrivilegeVO> subset(Long superiorId) {
+        return privilegeRepository.findBySuperiorId(superiorId).stream().map(this::convert).toList();
+    }
+
+    @Override
+    public PrivilegeVO fetch(Long id) {
+        Assert.notNull(id, "group id must not be null.");
+        Privilege privilege = privilegeRepository.findById(id).orElse(null);
+        if (privilege == null) {
+            return null;
+        }
+        return this.convert(privilege);
     }
 
     @Override
@@ -108,6 +123,8 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         PrivilegeVO vo = new PrivilegeVO();
         BeanCopier copier = BeanCopier.create(Privilege.class, PrivilegeVO.class, false);
         copier.copy(privilege, vo, null);
+        long count = privilegeRepository.countBySuperiorId(privilege.getId());
+        vo.setCount(count);
         return vo;
     }
 
@@ -121,34 +138,13 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         if (CollectionUtils.isEmpty(privileges)) {
             return Collections.emptyList();
         }
-        return privileges.stream().filter(a -> a.getSuperiorId() == null).map(a -> {
-            TreeNode treeNode = this.constructNode(a.getId(), a);
-            Set<String> expand = new HashSet<>();
-            expand.add("icon");
-            expand.add("path");
-            treeNode.setChildren(this.convert(privileges, expand));
-            return treeNode;
-        }).toList();
-    }
-
-    /**
-     * construct tree node
-     *
-     * @param superiorId superior id
-     * @param privilege  data
-     * @return tree node
-     */
-    private TreeNode constructNode(Long superiorId, Privilege privilege) {
-        Assert.notNull(superiorId, "privilege superior id must not be null.");
-        TreeNode treeNode = new TreeNode(privilege.getId(), privilege.getName());
-        treeNode.setSuperior(superiorId);
-
-        Map<String, Object> expand = new HashMap<>();
-        expand.put("icon", privilege.getIcon());
-        expand.put("path", privilege.getPath());
-
-        treeNode.setExpand(expand);
-        return treeNode;
+        Set<String> expand = new HashSet<>();
+        expand.add("path");
+        expand.add("redirect");
+        expand.add("component");
+        expand.add("icon");
+        expand.add("hidden");
+        return this.convert(privileges, expand);
     }
 
 }

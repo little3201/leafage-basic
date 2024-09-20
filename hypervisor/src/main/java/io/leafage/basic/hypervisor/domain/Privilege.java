@@ -41,21 +41,24 @@ public class Privilege extends AuditMetadata {
      */
     private Long superiorId;
 
+    private String path;
+
     /**
-     * 类型
+     * 跳转路径
      */
-    @Column(name = "type", nullable = false)
-    private Character type;
+    private String redirect;
+
+    /**
+     * 组件路径
+     */
+    private String component;
 
     /**
      * 图标
      */
     private String icon;
 
-    /**
-     * 路径
-     */
-    private String path;
+    private boolean hidden;
 
     /**
      * 描述
@@ -79,12 +82,28 @@ public class Privilege extends AuditMetadata {
         this.name = name;
     }
 
-    public Character getType() {
-        return type;
+    public String getPath() {
+        return path;
     }
 
-    public void setType(Character type) {
-        this.type = type;
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
     }
 
     public String getIcon() {
@@ -95,12 +114,12 @@ public class Privilege extends AuditMetadata {
         this.icon = icon;
     }
 
-    public String getPath() {
-        return path;
+    public boolean isHidden() {
+        return hidden;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 
     public String getDescription() {

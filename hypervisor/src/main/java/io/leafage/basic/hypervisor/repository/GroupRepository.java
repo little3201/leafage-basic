@@ -17,6 +17,8 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.domain.Group;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -28,4 +30,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
+    Page<Group> findAllBySuperiorId(Long superiorId, Pageable pageable);
 }

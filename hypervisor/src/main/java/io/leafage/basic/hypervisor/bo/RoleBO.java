@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * bo class for role
  *
- * @author wilsonli 2022-03-26 15:21
+ * @author wq li 2022-03-26 15:21
  **/
 public abstract class RoleBO {
 

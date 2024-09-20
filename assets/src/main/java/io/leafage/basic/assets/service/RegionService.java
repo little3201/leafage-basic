@@ -15,10 +15,10 @@
  *
  */
 
-package io.leafage.basic.hypervisor.service;
+package io.leafage.basic.assets.service;
 
-import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.vo.RegionVO;
+import io.leafage.basic.assets.dto.RegionDTO;
+import io.leafage.basic.assets.vo.RegionVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 

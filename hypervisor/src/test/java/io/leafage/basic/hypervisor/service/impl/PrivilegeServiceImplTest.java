@@ -59,10 +59,11 @@ class PrivilegeServiceImplTest {
     @BeforeEach
     void init() {
         privilegeDTO = new PrivilegeDTO();
-        privilegeDTO.setName("西安市");
-        privilegeDTO.setType('M');
+        privilegeDTO.setName("system");
+        privilegeDTO.setPath("/system");
+        privilegeDTO.setRedirect("/system/user");
+        privilegeDTO.setComponent("#");
         privilegeDTO.setIcon("user");
-        privilegeDTO.setPath("/user");
         privilegeDTO.setSuperiorId(1L);
     }
 
@@ -70,10 +71,37 @@ class PrivilegeServiceImplTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Privilege> page = new PageImpl<>(List.of(Mockito.mock(Privilege.class)));
-        given(this.privilegeRepository.findAll(pageable)).willReturn(page);
+        given(this.privilegeRepository.findAllBySuperiorIdIsNull(pageable)).willReturn(page);
 
         Page<PrivilegeVO> voPage = privilegeService.retrieve(0, 2, "id", true);
         Assertions.assertNotNull(voPage.getContent());
+    }
+
+    @Test
+    void tree() {
+        given(this.privilegeRepository.findAll()).willReturn(Arrays.asList(Mockito.mock(Privilege.class), Mockito.mock(Privilege.class)));
+
+        List<TreeNode> nodes = privilegeService.tree("test");
+        Assertions.assertNotNull(nodes);
+    }
+
+
+    @Test
+    void subset() {
+        given(this.privilegeRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Arrays.asList(Mockito.mock(Privilege.class), Mockito.mock(Privilege.class)));
+
+        List<PrivilegeVO> voList = privilegeService.subset(Mockito.anyLong());
+
+        Assertions.assertNotNull(voList);
+    }
+
+    @Test
+    void fetch() {
+        given(this.privilegeRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Privilege.class)));
+
+        PrivilegeVO privilegeVO = privilegeService.fetch(Mockito.anyLong());
+
+        Assertions.assertNotNull(privilegeVO);
     }
 
     @Test
@@ -102,14 +130,6 @@ class PrivilegeServiceImplTest {
     void remove() {
         privilegeService.remove(Mockito.anyLong());
         verify(this.privilegeRepository, times(1)).deleteById(Mockito.anyLong());
-    }
-
-    @Test
-    void tree() {
-        given(this.privilegeRepository.findAll()).willReturn(Arrays.asList(Mockito.mock(Privilege.class), Mockito.mock(Privilege.class)));
-
-        List<TreeNode> nodes = privilegeService.tree();
-        Assertions.assertNotNull(nodes);
     }
 
 }

@@ -34,7 +34,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import top.leafage.common.TreeNode;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -74,29 +76,43 @@ class GroupControllerTest {
     @BeforeEach
     void init() {
         groupVO = new GroupVO();
-        groupVO.setGroupName("test");
+        groupVO.setName("test");
 
         groupDTO = new GroupDTO();
-        groupDTO.setGroupName("test");
+        groupDTO.setName("test");
+        groupDTO.setSuperiorId(1L);
+        groupDTO.setDescription("description");
     }
 
     @Test
     void retrieve() throws Exception {
         Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), pageable, 2L);
-        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(voPage);
+        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyLong())).willReturn(voPage);
 
         mvc.perform(get("/groups").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sortBy", "id")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("superiorId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andDo(print()).andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
+        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyLong())).willThrow(new RuntimeException());
 
         mvc.perform(get("/groups").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("superiorId", "1"))
+                .andExpect(status().isNoContent()).andDo(print()).andReturn();
+    }
+
+    @Test
+    void tree() throws Exception {
+        TreeNode treeNode = new TreeNode(1L, "test");
+        given(this.groupService.tree()).willReturn(Collections.singletonList(treeNode));
+
+        mvc.perform(get("/groups/tree")).andExpect(status().isOk())
+                .andDo(print()).andReturn();
     }
 
     @Test
@@ -104,7 +120,7 @@ class GroupControllerTest {
         given(this.groupService.fetch(Mockito.anyLong())).willReturn(groupVO);
 
         mvc.perform(get("/groups/{id}", Mockito.anyLong())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.groupName").value("test")).andDo(print()).andReturn();
+                .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
@@ -122,7 +138,7 @@ class GroupControllerTest {
         mvc.perform(post("/groups").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(groupDTO)).with(csrf().asHeader()))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.groupName").value("test"))
+                .andExpect(jsonPath("$.name").value("test"))
                 .andDo(print()).andReturn();
     }
 

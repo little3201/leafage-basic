@@ -19,7 +19,6 @@ package io.leafage.basic.hypervisor.bo;
 
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
@@ -36,22 +35,23 @@ public abstract class PrivilegeBO {
     @Size(max = 32, message = "name max length is 32.")
     private String name;
 
+    private String path;
+
     /**
-     * 类型
+     * 跳转路径
      */
-    @NotNull(message = "type must not be null.")
-    private Character type;
+    private String redirect;
+
+    /**
+     * 组件路径
+     */
+    private String component;
 
     /**
      * 图标
      */
     @NotBlank(message = "icon must not be blank.")
     private String icon;
-
-    /**
-     * 路径
-     */
-    private String path;
 
     /**
      * 描述
@@ -66,12 +66,28 @@ public abstract class PrivilegeBO {
         this.name = name;
     }
 
-    public Character getType() {
-        return type;
+    public String getPath() {
+        return path;
     }
 
-    public void setType(Character type) {
-        this.type = type;
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
     }
 
     public String getIcon() {
@@ -80,14 +96,6 @@ public abstract class PrivilegeBO {
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public String getDescription() {

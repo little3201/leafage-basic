@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending) {
+    public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, Long groupId) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
                 StringUtils.hasText(sortBy) ? sortBy : "id");
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         BeanCopier copier = BeanCopier.create(UserDTO.class, User.class, false);
         copier.copy(dto, user, null);
-
+        user.setPassword("123456");
         user = userRepository.saveAndFlush(user);
         return this.convert(user);
     }

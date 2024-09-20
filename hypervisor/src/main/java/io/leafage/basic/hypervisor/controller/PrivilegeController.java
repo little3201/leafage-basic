@@ -78,16 +78,34 @@ public class PrivilegeController {
      *
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/tree")
-    public ResponseEntity<List<TreeNode>> tree() {
+    @GetMapping("/{username}/tree")
+    public ResponseEntity<List<TreeNode>> tree(@PathVariable String username) {
         List<TreeNode> treeNodes;
         try {
-            treeNodes = privilegeService.tree();
+            treeNodes = privilegeService.tree(username);
         } catch (Exception e) {
             logger.info("Retrieve privilege tree occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(treeNodes);
+    }
+
+    /**
+     * 查询信息
+     *
+     * @param superiorId 主键
+     * @return 查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/{superiorId}/subset")
+    public ResponseEntity<List<PrivilegeVO>> subset(@PathVariable Long superiorId) {
+        List<PrivilegeVO> voList;
+        try {
+            voList = privilegeService.subset(superiorId);
+        } catch (Exception e) {
+            logger.info("Retrieve privilege subset occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voList);
     }
 
     /**

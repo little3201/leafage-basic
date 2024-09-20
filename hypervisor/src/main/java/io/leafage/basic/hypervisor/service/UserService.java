@@ -35,7 +35,8 @@ public interface UserService extends ServletBasicService<UserDTO, UserVO> {
      * @param size       大小
      * @param sortBy     排序
      * @param descending 顺序
+     * @param groupId    group id
      * @return 查询结果
      */
-    Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending);
+    Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, Long groupId);
 }

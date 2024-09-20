@@ -15,9 +15,9 @@
  *
  */
 
-package io.leafage.basic.hypervisor.repository;
+package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.hypervisor.domain.Region;
+import io.leafage.basic.assets.domain.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

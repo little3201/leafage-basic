@@ -34,16 +34,34 @@ public class Group extends AuditMetadata {
      * 名称
      */
     @Column(name = "group_name", nullable = false, length = 50)
-    private String groupName;
+    private String name;
+
+    private Long superiorId;
+
+    private String description;
 
 
-    public String getGroupName() {
-        return groupName;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public Long getSuperiorId() {
+        return superiorId;
+    }
 
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

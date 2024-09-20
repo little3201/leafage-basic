@@ -55,10 +55,10 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                 String sortBy, boolean descending) {
+                                                 String sortBy, boolean descending, Long groupId) {
         Page<UserVO> voPage;
         try {
-            voPage = userService.retrieve(page, size, sortBy, descending);
+            voPage = userService.retrieve(page, size, sortBy, descending, groupId);
         } catch (Exception e) {
             logger.info("Retrieve user occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -82,6 +82,24 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(userVO);
+    }
+
+    /**
+     * 添加信息.
+     *
+     * @param userDTO 要修改的数据
+     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
+     */
+    @PostMapping
+    public ResponseEntity<UserVO> create(@RequestBody @Valid UserDTO userDTO) {
+        UserVO userVO;
+        try {
+            userVO = userService.create(userDTO);
+        } catch (Exception e) {
+            logger.error("Create user occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(userVO);
     }
 
     /**

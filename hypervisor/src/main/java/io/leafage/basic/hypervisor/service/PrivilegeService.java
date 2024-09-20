@@ -47,6 +47,13 @@ public interface PrivilegeService extends ServletBasicService<PrivilegeDTO, Priv
      *
      * @return 树结构数据集
      */
-    List<TreeNode> tree();
+    List<TreeNode> tree(String username);
 
+    /**
+     * get subset
+     *
+     * @param superiorId superior主键
+     * @return 结果
+     */
+    List<PrivilegeVO> subset(Long superiorId);
 }

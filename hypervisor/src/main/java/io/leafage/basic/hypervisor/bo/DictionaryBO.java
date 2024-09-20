@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * bo class for dictionary
  *
- * @author wilsonli 2022-03-26 12:21
+ * @author wq li 2022-03-26 12:21
  **/
 public abstract class DictionaryBO {
 
@@ -31,6 +31,8 @@ public abstract class DictionaryBO {
      */
     @NotBlank(message = "name must not be blank.")
     private String name;
+
+    private Long superiorId;
 
     /**
      * 描述
@@ -44,6 +46,14 @@ public abstract class DictionaryBO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
     public String getDescription() {

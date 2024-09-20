@@ -30,6 +30,8 @@ public class PrivilegeVO extends PrivilegeBO {
      */
     private Long id;
 
+    private long count;
+
     /**
      * 状态
      */
@@ -42,6 +44,14 @@ public class PrivilegeVO extends PrivilegeBO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
     }
 
     public boolean isEnabled() {

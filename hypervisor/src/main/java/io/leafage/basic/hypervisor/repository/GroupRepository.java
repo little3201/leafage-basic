@@ -25,7 +25,7 @@ import org.springframework.stereotype.Repository;
 /**
  * group repository.
  *
- * @author wq li 2018/12/20 9:52
+ * @author wq li
  */
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {

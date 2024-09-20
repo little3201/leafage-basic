@@ -24,7 +24,7 @@ import jakarta.persistence.Table;
 /**
  * model class for table config.
  *
- * @author wq li 2024-09-20 10:54
+ * @author wq li
  */
 @Entity
 @Table(name = "table_config")

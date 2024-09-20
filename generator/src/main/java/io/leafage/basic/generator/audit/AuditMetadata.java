@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * audit metadata.
  *
- * @author wq li 2024-09-20 10:52
+ * @author wq li
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

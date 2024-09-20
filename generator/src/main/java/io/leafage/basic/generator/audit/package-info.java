@@ -18,7 +18,7 @@
 /**
  * Audit
  *
- * @author wq li 2024-09-20 10:52
+ * @author wq li
  */
 @org.springframework.lang.NonNullApi
 package io.leafage.basic.generator.audit;

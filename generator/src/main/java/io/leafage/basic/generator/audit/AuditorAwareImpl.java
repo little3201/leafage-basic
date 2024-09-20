@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * auditor aware.
  *
- * @author wq li 2024-09-20 10:52
+ * @author wq li
  */
 public class AuditorAwareImpl implements AuditorAware<String> {
 

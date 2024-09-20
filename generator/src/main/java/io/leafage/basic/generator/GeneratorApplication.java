@@ -22,7 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * generator application.
  *
- * @author wq li 2024-09-20 10:52
+ * @author wq li
  */
 @SpringBootApplication
 public class GeneratorApplication {

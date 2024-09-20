@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 /**
  * table config repository.
  *
- * @author wq li 2024-09-20 11:10
+ * @author wq li
  **/
 @Repository
 public interface TableConfigRepository extends JpaRepository<TableConfig, Long> {

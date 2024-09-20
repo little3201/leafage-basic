@@ -1,0 +1,8 @@
+io\leafage\basic\generator\audit\package-info.class
+io\leafage\basic\generator\audit\AuditMetadata.class
+io\leafage\basic\generator\repository\TableConfigRepository.class
+io\leafage\basic\generator\audit\AuditorAwareImpl.class
+io\leafage\basic\generator\domain\ColumnConfig.class
+io\leafage\basic\generator\repository\ColumnConfigRepository.class
+io\leafage\basic\generator\domain\TableConfig.class
+io\leafage\basic\generator\GeneratorApplication.class

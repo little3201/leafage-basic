@@ -27,15 +27,23 @@ import io.leafage.basic.hypervisor.bo.UserBO;
 public class UserVO extends UserBO {
 
     /**
+     * 主键
+     */
+    private Long id;
+
+    /**
      * 状态
      */
     private boolean enabled;
 
-    /**
-     * 是否锁定
-     */
-    private boolean accountNonLocked;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public boolean isEnabled() {
         return enabled;
@@ -43,14 +51,6 @@ public class UserVO extends UserBO {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
     }
 
 }

@@ -55,17 +55,18 @@ DROP TABLE IF EXISTS users;
 -- Create table users
 CREATE TABLE users
 (
-    id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    username           varchar(50) UNIQUE NOT NULL,
-    password           varchar(100)       NOT NULL,
-    firstname          varchar(50),
-    lastname           varchar(50),
-    avatar             varchar(100),
-    enabled            boolean            NOT NULL DEFAULT true,
-    created_by         varchar(50),
-    created_date       timestamp          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_modified_by   varchar(50),
-    last_modified_date timestamp
+    id                     bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username               varchar(50) UNIQUE NOT NULL,
+    password               varchar(100)       NOT NULL,
+    email                  varchar(50),
+    enabled                boolean            NOT NULL DEFAULT true,
+    account_non_locked     boolean,
+    account_expires_at     timestamp,
+    credentials_expires_at timestamp,
+    created_by             varchar(50),
+    created_date           timestamp          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_by       varchar(50),
+    last_modified_date     timestamp
 );
 
 -- Add comment to the table and columns
@@ -78,13 +79,17 @@ ON COLUMN users.username IS '用户名';
 COMMENT
 ON COLUMN users.password IS '密码';
 COMMENT
-ON COLUMN users.firstname IS '名字';
-COMMENT
-ON COLUMN users.lastname IS '姓氏';
+ON COLUMN users.email IS '邮箱';
 COMMENT
 ON COLUMN users.avatar IS '头像';
 COMMENT
 ON COLUMN users.enabled IS '是否启用';
+COMMENT
+ON COLUMN users.account_non_locked IS '是否未锁定';
+COMMENT
+ON COLUMN users.account_expires_at IS '失效时间';
+COMMENT
+ON COLUMN users.credentials_expires_at IS '密码失效时间';
 COMMENT
 ON COLUMN users.created_by IS '创建者';
 COMMENT

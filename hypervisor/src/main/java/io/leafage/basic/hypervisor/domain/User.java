@@ -22,6 +22,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import java.time.Instant;
+
 /**
  * model class for user.
  *
@@ -44,16 +46,10 @@ public class User extends AuditMetadata {
     private String password;
 
     /**
-     * 名
+     * 邮箱
      */
-    @Column(name = "firstname", length = 50)
-    private String firstname;
-
-    /**
-     * 姓
-     */
-    @Column(name = "lastname", length = 50)
-    private String lastname;
+    @Column(name = "email", length = 50)
+    private String email;
 
     /**
      * 头像
@@ -61,6 +57,20 @@ public class User extends AuditMetadata {
     @Column(name = "avatar", length = 100)
     private String avatar;
 
+    /**
+     * 账号有效期
+     */
+    @Column(name = "account_expires_at")
+    private Instant accountExpiresAt;
+
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked;
+
+    /**
+     * 密码有效期
+     */
+    @Column(name = "credentials_expires_at")
+    private Instant credentialsExpiresAt;
 
     public String getUsername() {
         return username;
@@ -78,20 +88,12 @@ public class User extends AuditMetadata {
         this.password = password;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getEmail() {
+        return email;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAvatar() {
@@ -102,4 +104,27 @@ public class User extends AuditMetadata {
         this.avatar = avatar;
     }
 
+    public Instant getAccountExpiresAt() {
+        return accountExpiresAt;
+    }
+
+    public void setAccountExpiresAt(Instant accountExpiresAt) {
+        this.accountExpiresAt = accountExpiresAt;
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public Instant getCredentialsExpiresAt() {
+        return credentialsExpiresAt;
+    }
+
+    public void setCredentialsExpiresAt(Instant credentialsExpiresAt) {
+        this.credentialsExpiresAt = credentialsExpiresAt;
+    }
 }

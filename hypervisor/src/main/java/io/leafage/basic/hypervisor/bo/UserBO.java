@@ -28,31 +28,19 @@ import java.time.Instant;
  */
 public abstract class UserBO {
 
-    /**
-     * 用户名
-     */
     @NotBlank(message = "username is blank.")
     private String username;
 
-    /**
-     * 名
-     */
-    private String firstname;
+    private String email;
 
-    /**
-     * 姓
-     */
-    private String lastname;
-
-    /**
-     * 头像
-     */
     private String avatar;
 
     /**
      * 账号有效期
      */
     private Instant accountExpiresAt;
+
+    private boolean accountNonLocked;
 
     /**
      * 密码有效期
@@ -68,20 +56,12 @@ public abstract class UserBO {
         this.username = username;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getEmail() {
+        return email;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getAvatar() {
@@ -98,6 +78,14 @@ public abstract class UserBO {
 
     public void setAccountExpiresAt(Instant accountExpiresAt) {
         this.accountExpiresAt = accountExpiresAt;
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
     public Instant getCredentialsExpiresAt() {

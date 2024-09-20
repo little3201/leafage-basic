@@ -31,29 +31,43 @@ import java.util.Set;
 /**
  * group roles service impl
  *
- * @author liwenqiang 2024/01/17 21:18
- **/
+ * @author wq li
+ */
 @Service
 public class GroupRolesServiceImpl implements GroupRolesService {
 
     private final GroupRolesRepository groupRolesRepository;
 
+    /**
+     * <p>Constructor for GroupRolesServiceImpl.</p>
+     *
+     * @param groupRolesRepository a {@link io.leafage.basic.hypervisor.repository.GroupRolesRepository} object
+     */
     public GroupRolesServiceImpl(GroupRolesRepository groupRolesRepository) {
         this.groupRolesRepository = groupRolesRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<GroupRoles>> roles(Long groupId) {
         Assert.notNull(groupId, "group id must not be null.");
         return groupRolesRepository.findByGroupId(groupId).collectList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<GroupRoles>> groups(Long roleId) {
         Assert.notNull(roleId, "role id must not be blank.");
         return groupRolesRepository.findByRoleId(roleId).collectList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> relation(Long groupId, Set<Long> roleIds) {
         Assert.notNull(groupId, "group id must not be blank.");

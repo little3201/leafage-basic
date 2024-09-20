@@ -37,7 +37,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * dictionary service test
  *
- * @author liwenqiang 2022-04-8 7:45
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class DictionaryServiceImplTest {

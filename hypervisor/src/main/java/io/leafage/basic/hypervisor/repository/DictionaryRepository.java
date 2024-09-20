@@ -27,8 +27,8 @@ import reactor.core.publisher.Mono;
 /**
  * dictionary repository
  *
- * @author liwenqiang 2022-03-30 07:29
- **/
+ * @author wq li
+ */
 @Repository
 public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> {
 
@@ -51,6 +51,7 @@ public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> 
     /**
      * 查询下级
      *
+     * @param superiorId a {@link java.lang.Long} object
      * @return 结果信息
      */
     Flux<Dictionary> findBySuperiorId(Long superiorId);

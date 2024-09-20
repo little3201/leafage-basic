@@ -39,7 +39,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * message service test
  *
- * @author liwenqiang 2022-02-16 8:54
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class MessageServiceImplTest {

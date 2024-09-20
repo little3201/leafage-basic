@@ -25,8 +25,8 @@ import reactor.core.publisher.Mono;
 /**
  * statistics repository
  *
- * @author liwenqiang 2020-02-13 22:01
- **/
+ * @author wq li
+ */
 @Repository
 public interface StatisticsRepository extends R2dbcRepository<PostStatistics, Long> {
 

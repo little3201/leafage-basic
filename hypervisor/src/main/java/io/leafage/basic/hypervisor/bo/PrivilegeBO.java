@@ -25,7 +25,7 @@ import jakarta.validation.constraints.Size;
 /**
  * bo class for privilege
  *
- * @author liwenqiang 2022-12-10 22:09
+ * @author wq li
  */
 public abstract class PrivilegeBO {
 
@@ -58,42 +58,92 @@ public abstract class PrivilegeBO {
      */
     private String description;
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>type</code>.</p>
+     *
+     * @return a {@link java.lang.Character} object
+     */
     public Character getType() {
         return type;
     }
 
+    /**
+     * <p>Setter for the field <code>type</code>.</p>
+     *
+     * @param type a {@link java.lang.Character} object
+     */
     public void setType(Character type) {
         this.type = type;
     }
 
+    /**
+     * <p>Getter for the field <code>icon</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getIcon() {
         return icon;
     }
 
+    /**
+     * <p>Setter for the field <code>icon</code>.</p>
+     *
+     * @param icon a {@link java.lang.String} object
+     */
     public void setIcon(String icon) {
         this.icon = icon;
     }
 
+    /**
+     * <p>Getter for the field <code>path</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * <p>Setter for the field <code>path</code>.</p>
+     *
+     * @param path a {@link java.lang.String} object
+     */
     public void setPath(String path) {
         this.path = path;
     }
 
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
     public void setDescription(String description) {
         this.description = description;
     }

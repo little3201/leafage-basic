@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.RoleBO;
 /**
  * dto class for role
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author wq li
  */
 public class RoleDTO extends RoleBO {
 
@@ -31,10 +31,20 @@ public class RoleDTO extends RoleBO {
      */
     private Long superiorId;
 
+    /**
+     * <p>Getter for the field <code>superiorId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getSuperiorId() {
         return superiorId;
     }
 
+    /**
+     * <p>Setter for the field <code>superiorId</code>.</p>
+     *
+     * @param superiorId a {@link java.lang.Long} object
+     */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
     }

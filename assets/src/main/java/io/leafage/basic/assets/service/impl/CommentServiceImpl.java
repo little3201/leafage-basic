@@ -33,31 +33,40 @@ import reactor.core.publisher.Mono;
 /**
  * comment service impl
  *
- * @author liwenqiang 2018-12-06 22:09
- **/
+ * @author wq li
+ */
 @Service
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
+    /**
+     * <p>Constructor for CommentServiceImpl.</p>
+     *
+     * @param commentRepository a {@link io.leafage.basic.assets.repository.CommentRepository} object
+     * @param postRepository    a {@link io.leafage.basic.assets.repository.PostRepository} object
+     */
     public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Flux<CommentVO> comments(Long postId) {
         Assert.notNull(postId, "postId must not be null.");
         return commentRepository.findByPostIdAndReplierIsNull(postId).flatMap(this::convertOuter);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Flux<CommentVO> replies(Long replier) {
         Assert.notNull(replier, "replier must not be null.");
         return commentRepository.findByReplier(replier).flatMap(this::convertOuter);
     }
 
+    /** {@inheritDoc} */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<CommentVO> create(CommentDTO commentDTO) {

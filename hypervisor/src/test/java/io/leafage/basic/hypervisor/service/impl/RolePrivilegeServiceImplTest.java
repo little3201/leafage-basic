@@ -36,7 +36,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * role privilege service test
  *
- * @author liwenqiang 2021-06-14 11:10
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class RolePrivilegeServiceImplTest {

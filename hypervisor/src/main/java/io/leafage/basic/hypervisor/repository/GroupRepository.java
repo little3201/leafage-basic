@@ -27,8 +27,8 @@ import reactor.core.publisher.Mono;
 /**
  * group repository
  *
- * @author liwenqiang 2018/12/20 9:52
- **/
+ * @author wq li
+ */
 @Repository
 public interface GroupRepository extends R2dbcRepository<Group, Long> {
 

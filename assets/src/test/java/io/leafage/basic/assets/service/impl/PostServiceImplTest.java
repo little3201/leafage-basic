@@ -43,7 +43,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * post service test
  *
- * @author liwenqiang 2019-09-19 9:27
+ * @author wq li
  */
 @ExtendWith(MockitoExtension.class)
 class PostServiceImplTest {

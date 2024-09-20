@@ -31,7 +31,7 @@ import java.util.Optional;
 /**
  * audit metadata
  *
- * @author liwenqiang 2024-01-04 20:27
+ * @author wq li
  */
 public abstract class AuditMetadata implements Auditable<String, Long, Instant> {
 
@@ -76,63 +76,103 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     private Instant lastModifiedDate;
 
 
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * <p>Setter for the field <code>enabled</code>.</p>
+     *
+     * @param enabled a boolean
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<String> getCreatedBy() {
         return Optional.ofNullable(this.createdBy);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Instant> getCreatedDate() {
         return Optional.ofNullable(this.createdDate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCreatedDate(Instant creationDate) {
         this.createdDate = creationDate;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<String> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Instant> getLastModifiedDate() {
         return Optional.ofNullable(this.lastModifiedDate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long getId() {
         return this.id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isNew() {
         return Objects.isNull(getId());

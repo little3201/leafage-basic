@@ -28,17 +28,25 @@ import reactor.core.publisher.Mono;
 /**
  * statistics service impl
  *
- * @author liwenqiang 2021-05-19 10:54
- **/
+ * @author wq li
+ */
 @Service
 public class PostStatisticsServiceImpl implements PostStatisticsService {
 
     private final StatisticsRepository statisticsRepository;
 
+    /**
+     * <p>Constructor for PostStatisticsServiceImpl.</p>
+     *
+     * @param statisticsRepository a {@link io.leafage.basic.assets.repository.StatisticsRepository} object
+     */
     public PostStatisticsServiceImpl(StatisticsRepository statisticsRepository) {
         this.statisticsRepository = statisticsRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<PostStatistics> increase(Long postId, StatisticsEnum statisticsEnum) {
         Assert.notNull(postId, "postId must not be null.");

@@ -20,7 +20,7 @@ package io.leafage.basic.hypervisor.bo;
 /**
  * bo class for access log
  *
- * @author liwenqiang 2022-03-18 21:09
+ * @author wq li
  */
 public abstract class AccessLogBO {
 
@@ -40,26 +40,56 @@ public abstract class AccessLogBO {
     private String description;
 
 
+    /**
+     * <p>Getter for the field <code>ip</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getIp() {
         return ip;
     }
 
+    /**
+     * <p>Setter for the field <code>ip</code>.</p>
+     *
+     * @param ip a {@link java.lang.String} object
+     */
     public void setIp(String ip) {
         this.ip = ip;
     }
 
+    /**
+     * <p>Getter for the field <code>location</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getLocation() {
         return location;
     }
 
+    /**
+     * <p>Setter for the field <code>location</code>.</p>
+     *
+     * @param location a {@link java.lang.String} object
+     */
     public void setLocation(String location) {
         this.location = location;
     }
 
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
     public void setDescription(String description) {
         this.description = description;
     }

@@ -34,7 +34,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * statistics service test
  *
- * @author liwenqiang 2021-05-22 20:50
+ * @author wq li
  */
 @ExtendWith(MockitoExtension.class)
 class PostPostStatisticsServiceImplTest {

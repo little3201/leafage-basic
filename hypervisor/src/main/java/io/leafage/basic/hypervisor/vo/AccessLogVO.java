@@ -24,7 +24,7 @@ import java.time.Instant;
 /**
  * vo class for access log
  *
- * @author liwenqiang 2022-03-18 21:09
+ * @author wq li
  */
 public class AccessLogVO extends AccessLogBO {
 
@@ -39,18 +39,38 @@ public class AccessLogVO extends AccessLogBO {
     private Instant lastModifiedDate;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>lastModifiedDate</code>.</p>
+     *
+     * @return a {@link java.time.Instant} object
+     */
     public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
+    /**
+     * <p>Setter for the field <code>lastModifiedDate</code>.</p>
+     *
+     * @param lastModifiedDate a {@link java.time.Instant} object
+     */
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }

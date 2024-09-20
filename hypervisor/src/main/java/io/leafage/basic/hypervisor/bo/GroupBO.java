@@ -22,8 +22,8 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * bo class for group
  *
- * @author wilsonli 2022-03-26 15:21
- **/
+ * @author wq li
+ */
 public abstract class GroupBO {
 
     /**
@@ -42,26 +42,56 @@ public abstract class GroupBO {
      */
     private String description;
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>principal</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getPrincipal() {
         return principal;
     }
 
+    /**
+     * <p>Setter for the field <code>principal</code>.</p>
+     *
+     * @param principal a {@link java.lang.String} object
+     */
     public void setPrincipal(String principal) {
         this.principal = principal;
     }
 
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
     public void setDescription(String description) {
         this.description = description;
     }

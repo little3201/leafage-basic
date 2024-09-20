@@ -33,8 +33,8 @@ import reactor.core.publisher.Mono;
 /**
  * access log controller
  *
- * @author liwenqiang 2022-03-18 21:01
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/access-logs")
@@ -44,6 +44,11 @@ public class AccessLogController {
 
     private final AccessLogService accessLogService;
 
+    /**
+     * <p>Constructor for AccessLogController.</p>
+     *
+     * @param accessLogService a {@link io.leafage.basic.hypervisor.service.AccessLogService} object
+     */
     public AccessLogController(AccessLogService accessLogService) {
         this.accessLogService = accessLogService;
     }
@@ -51,6 +56,8 @@ public class AccessLogController {
     /**
      * 查询
      *
+     * @param page a int
+     * @param size a int
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping

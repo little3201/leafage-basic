@@ -26,8 +26,8 @@ import reactor.core.publisher.Mono;
 /**
  * comment repository
  *
- * @author liwenqiang 2020-02-13 22:01
- **/
+ * @author wq li
+ */
 @Repository
 public interface CommentRepository extends R2dbcRepository<Comment, Long> {
 

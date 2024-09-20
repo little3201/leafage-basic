@@ -26,8 +26,8 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * role service
  *
- * @author liwenqiang 2018-09-27 14:18
- **/
+ * @author wq li
+ */
 public interface RoleService extends ReactiveBasicService<RoleDTO, RoleVO> {
 
     /**

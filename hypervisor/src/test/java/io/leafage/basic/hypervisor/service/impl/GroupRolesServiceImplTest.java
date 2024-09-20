@@ -36,7 +36,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * group roles service test
  *
- * @author liwenqiang 2024/01/17 21:18
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class GroupRolesServiceImplTest {

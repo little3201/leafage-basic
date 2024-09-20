@@ -27,8 +27,8 @@ import reactor.core.publisher.Mono;
 /**
  * region repository
  *
- * @author liwenqiang 2021-08-20 16:59
- **/
+ * @author wq li
+ */
 @Repository
 public interface RegionRepository extends R2dbcRepository<Region, Long> {
 

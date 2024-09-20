@@ -29,7 +29,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 /**
  * authorization configuration
  *
- * @author liwenqiang 2020-10-06 22:09Z
+ * @author wq li
  */
 @Configuration
 @EnableWebFluxSecurity

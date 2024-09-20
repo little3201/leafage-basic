@@ -24,7 +24,7 @@ import org.springframework.data.relational.core.mapping.Table;
 /**
  * model class for post statistics
  *
- * @author liwenqiang 2023-03-26 14:12
+ * @author wq li
  */
 @Table(name = "post_statistics")
 public class PostStatistics extends AuditMetadata {
@@ -50,34 +50,74 @@ public class PostStatistics extends AuditMetadata {
      */
     private int comments;
 
+    /**
+     * <p>Getter for the field <code>postId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getPostId() {
         return postId;
     }
 
+    /**
+     * <p>Setter for the field <code>postId</code>.</p>
+     *
+     * @param postId a {@link java.lang.Long} object
+     */
     public void setPostId(Long postId) {
         this.postId = postId;
     }
 
+    /**
+     * <p>Getter for the field <code>viewed</code>.</p>
+     *
+     * @return a int
+     */
     public int getViewed() {
         return viewed;
     }
 
+    /**
+     * <p>Setter for the field <code>viewed</code>.</p>
+     *
+     * @param viewed a int
+     */
     public void setViewed(int viewed) {
         this.viewed = viewed;
     }
 
+    /**
+     * <p>Getter for the field <code>likes</code>.</p>
+     *
+     * @return a int
+     */
     public int getLikes() {
         return likes;
     }
 
+    /**
+     * <p>Setter for the field <code>likes</code>.</p>
+     *
+     * @param likes a int
+     */
     public void setLikes(int likes) {
         this.likes = likes;
     }
 
+    /**
+     * <p>Getter for the field <code>comments</code>.</p>
+     *
+     * @return a int
+     */
     public int getComments() {
         return comments;
     }
 
+    /**
+     * <p>Setter for the field <code>comments</code>.</p>
+     *
+     * @param comments a int
+     */
     public void setComments(int comments) {
         this.comments = comments;
     }

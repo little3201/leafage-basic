@@ -40,7 +40,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 /**
  * user接口测试类
  *
- * @author liwenqiang 2020-03-01 22:07
+ * @author wq li
  */
 @WithMockUser
 @ExtendWith(SpringExtension.class)

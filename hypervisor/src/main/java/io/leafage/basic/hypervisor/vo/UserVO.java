@@ -24,7 +24,7 @@ import java.time.Instant;
 /**
  * vo class for user
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author wq li
  */
 public class UserVO extends UserBO {
 
@@ -39,18 +39,38 @@ public class UserVO extends UserBO {
     private Instant lastModifiedDate;
 
 
+    /**
+     * <p>isAccountNonLocked.</p>
+     *
+     * @return a boolean
+     */
     public boolean isAccountNonLocked() {
         return accountNonLocked;
     }
 
+    /**
+     * <p>Setter for the field <code>accountNonLocked</code>.</p>
+     *
+     * @param accountNonLocked a boolean
+     */
     public void setAccountNonLocked(boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
+    /**
+     * <p>Getter for the field <code>lastModifiedDate</code>.</p>
+     *
+     * @return a {@link java.time.Instant} object
+     */
     public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
+    /**
+     * <p>Setter for the field <code>lastModifiedDate</code>.</p>
+     *
+     * @param lastModifiedDate a {@link java.time.Instant} object
+     */
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }

@@ -22,7 +22,7 @@ import io.leafage.basic.assets.bo.CommentBO;
 /**
  * dto class for comment
  *
- * @author liwenqiang 2021-07-15 22:12
+ * @author wq li
  */
 public class CommentDTO extends CommentBO {
 

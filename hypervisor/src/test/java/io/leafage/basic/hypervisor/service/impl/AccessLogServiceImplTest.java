@@ -35,7 +35,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * access log service test
  *
- * @author liwenqiang 2022-03-18 22:07
+ * @author wq li
  */
 @ExtendWith(MockitoExtension.class)
 class AccessLogServiceImplTest {

@@ -31,29 +31,43 @@ import java.util.Set;
 /**
  * group members service impl
  *
- * @author liwenqiang 2018/12/17 19:26
- **/
+ * @author wq li
+ */
 @Service
 public class GroupMembersServiceImpl implements GroupMembersService {
 
     private final GroupMembersRepository groupMembersRepository;
 
+    /**
+     * <p>Constructor for GroupMembersServiceImpl.</p>
+     *
+     * @param groupMembersRepository a {@link io.leafage.basic.hypervisor.repository.GroupMembersRepository} object
+     */
     public GroupMembersServiceImpl(GroupMembersRepository groupMembersRepository) {
         this.groupMembersRepository = groupMembersRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<GroupMembers>> members(Long groupId) {
         Assert.notNull(groupId, "group id must not be null.");
         return groupMembersRepository.findByGroupId(groupId).collectList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<GroupMembers>> groups(String username) {
         Assert.hasText(username, "username must not be blank.");
         return groupMembersRepository.findByUsername(username).collectList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> relation(Long groupId, Set<String> usernames) {
         Assert.notNull(groupId, "group id must not be blank.");

@@ -34,8 +34,8 @@ import reactor.core.publisher.Mono;
 /**
  * dictionary controller
  *
- * @author liwenqiang 2022/04/02 17:19
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/dictionaries")
@@ -45,6 +45,11 @@ public class DictionaryController {
 
     private final DictionaryService dictionaryService;
 
+    /**
+     * <p>Constructor for DictionaryController.</p>
+     *
+     * @param dictionaryService a {@link io.leafage.basic.hypervisor.service.DictionaryService} object
+     */
     public DictionaryController(DictionaryService dictionaryService) {
         this.dictionaryService = dictionaryService;
     }

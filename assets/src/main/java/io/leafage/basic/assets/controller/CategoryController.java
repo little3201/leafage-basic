@@ -34,8 +34,8 @@ import reactor.core.publisher.Mono;
 /**
  * category controller
  *
- * @author liwenqiang 2020-02-16 14:26
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/categories")
@@ -45,6 +45,11 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
+    /**
+     * <p>Constructor for CategoryController.</p>
+     *
+     * @param categoryService a {@link io.leafage.basic.assets.service.CategoryService} object
+     */
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }

@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * dto class for Notification
  *
- * @author liwenqiang 2022-12-10 13:49
+ * @author wq li
  */
 public abstract class MessageBO {
 
@@ -46,26 +46,56 @@ public abstract class MessageBO {
     private String receiver;
 
 
+    /**
+     * <p>Getter for the field <code>title</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * <p>Setter for the field <code>title</code>.</p>
+     *
+     * @param title a {@link java.lang.String} object
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * <p>Getter for the field <code>context</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getContext() {
         return context;
     }
 
+    /**
+     * <p>Setter for the field <code>context</code>.</p>
+     *
+     * @param context a {@link java.lang.String} object
+     */
     public void setContext(String context) {
         this.context = context;
     }
 
+    /**
+     * <p>Getter for the field <code>receiver</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getReceiver() {
         return receiver;
     }
 
+    /**
+     * <p>Setter for the field <code>receiver</code>.</p>
+     *
+     * @param receiver a {@link java.lang.String} object
+     */
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }

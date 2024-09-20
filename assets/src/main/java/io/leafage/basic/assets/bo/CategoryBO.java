@@ -22,8 +22,8 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * bo class for category
  *
- * @author wilsonli 2022-12-10 22:28
- **/
+ * @author wq li
+ */
 public abstract class CategoryBO {
 
     /**
@@ -37,18 +37,38 @@ public abstract class CategoryBO {
      */
     private String description;
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
     public void setDescription(String description) {
         this.description = description;
     }

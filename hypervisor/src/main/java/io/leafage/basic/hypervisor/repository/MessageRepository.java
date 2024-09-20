@@ -27,7 +27,7 @@ import reactor.core.publisher.Mono;
 /**
  * message repository
  *
- * @author liwenqiang 2022-02-10 13:49
+ * @author wq li
  */
 @Repository
 public interface MessageRepository extends R2dbcRepository<Message, Long> {
@@ -44,6 +44,7 @@ public interface MessageRepository extends R2dbcRepository<Message, Long> {
     /**
      * 查询未读记录数
      *
+     * @param receiver a {@link java.lang.String} object
      * @return 记录数
      */
     Mono<Long> countByReceiver(String receiver);

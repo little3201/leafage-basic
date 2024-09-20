@@ -38,17 +38,25 @@ import java.util.NoSuchElementException;
 /**
  * user service impl
  *
- * @author liwenqiang 2018-07-28 0:30
- **/
+ * @author wq li 2018-07-28 0:30
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    /**
+     * <p>Constructor for UserServiceImpl.</p>
+     *
+     * @param userRepository a {@link io.leafage.basic.hypervisor.repository.UserRepository} object
+     */
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Page<UserVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -60,18 +68,27 @@ public class UserServiceImpl implements UserService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<UserVO> fetch(Long id) {
         Assert.notNull(id, "user id must not be blank.");
         return userRepository.findById(id).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> exist(String username) {
         Assert.hasText(username, "username must not be blank.");
         return userRepository.existsByUsername(username);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<UserVO> create(UserDTO userDTO) {
         User user = new User();
@@ -80,6 +97,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<UserVO> modify(Long id, UserDTO userDTO) {
         Assert.notNull(id, "user id must not be blank.");
@@ -89,6 +109,9 @@ public class UserServiceImpl implements UserService {
                 .flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "user id must not be blank.");

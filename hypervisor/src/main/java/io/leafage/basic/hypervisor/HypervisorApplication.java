@@ -22,11 +22,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * hypervisor application
  *
- * @author liwenqiang
+ * @author wq li
  */
 @SpringBootApplication
 public class HypervisorApplication {
 
+    /**
+     * <p>main.</p>
+     *
+     * @param args an array of {@link java.lang.String} objects
+     */
     public static void main(String[] args) {
         SpringApplication.run(HypervisorApplication.class, args);
     }

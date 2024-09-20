@@ -50,7 +50,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 /**
  * role接口测试类
  *
- * @author liwenqiang 2021-06-19 10:00
+ * @author wq li
  */
 @WithMockUser
 @ExtendWith(SpringExtension.class)

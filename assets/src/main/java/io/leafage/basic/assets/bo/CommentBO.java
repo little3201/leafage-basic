@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * bo class for comment
  *
- * @author liwenqiang 2023-03-26 14:30
+ * @author wq li
  */
 public abstract class CommentBO {
 
@@ -45,26 +45,56 @@ public abstract class CommentBO {
     private Long replier;
 
 
+    /**
+     * <p>Getter for the field <code>postId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getPostId() {
         return postId;
     }
 
+    /**
+     * <p>Setter for the field <code>postId</code>.</p>
+     *
+     * @param postId a {@link java.lang.Long} object
+     */
     public void setPostId(Long postId) {
         this.postId = postId;
     }
 
+    /**
+     * <p>Getter for the field <code>context</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getContext() {
         return context;
     }
 
+    /**
+     * <p>Setter for the field <code>context</code>.</p>
+     *
+     * @param context a {@link java.lang.String} object
+     */
     public void setContext(String context) {
         this.context = context;
     }
 
+    /**
+     * <p>Getter for the field <code>replier</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getReplier() {
         return replier;
     }
 
+    /**
+     * <p>Setter for the field <code>replier</code>.</p>
+     *
+     * @param replier a {@link java.lang.Long} object
+     */
     public void setReplier(Long replier) {
         this.replier = replier;
     }

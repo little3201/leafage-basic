@@ -27,8 +27,8 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * region service
  *
- * @author liwenqiang 2021-08-20 16:59
- **/
+ * @author wq li
+ */
 public interface RegionService extends ReactiveBasicService<RegionDTO, RegionVO> {
 
     /**

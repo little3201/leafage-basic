@@ -27,14 +27,15 @@ import reactor.core.publisher.Mono;
 /**
  * privilege repository
  *
- * @author wilsonli 2023-03-25 09:45
- **/
+ * @author wq li
+ */
 @Repository
 public interface PrivilegeRepository extends R2dbcRepository<Privilege, Long> {
 
     /**
      * 查询
      *
+     * @param pageable a {@link org.springframework.data.domain.Pageable} object
      * @return 有效帖子
      */
     Flux<Privilege> findByEnabledTrue(Pageable pageable);

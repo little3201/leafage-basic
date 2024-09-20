@@ -26,8 +26,8 @@ import java.util.Set;
 /**
  * role privileges service
  *
- * @author liwenqiang 2018-07-28 0:29
- **/
+ * @author wq li
+ */
 public interface RolePrivilegesService {
 
     /**

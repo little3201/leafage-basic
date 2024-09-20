@@ -17,12 +17,14 @@
 
 package io.leafage.basic.assets.vo;
 
+import io.leafage.basic.assets.bo.CommentBO;
+
 import java.time.Instant;
 
 /**
  * vo class for comment
  *
- * @author liwenqiang 2021-07-15 22:12
+ * @author wq li
  */
 public class CommentVO extends CommentBO {
 
@@ -35,59 +37,109 @@ public class CommentVO extends CommentBO {
      * 国家
      */
     private String country;
-    
+
     /**
      * 位置
      */
     private String location;
-    
+
     /**
      * 回复数
      */
     private Long count;
-    
+
     /**
      * 最后更新时间
      */
     private Instant lastModifiedDate;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>country</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getCountry() {
         return country;
     }
 
+    /**
+     * <p>Setter for the field <code>country</code>.</p>
+     *
+     * @param country a {@link java.lang.String} object
+     */
     public void setCountry(String country) {
         this.country = country;
     }
 
+    /**
+     * <p>Getter for the field <code>location</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getLocation() {
         return location;
     }
 
+    /**
+     * <p>Setter for the field <code>location</code>.</p>
+     *
+     * @param location a {@link java.lang.String} object
+     */
     public void setLocation(String location) {
         this.location = location;
     }
 
+    /**
+     * <p>Getter for the field <code>count</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getCount() {
         return count;
     }
 
+    /**
+     * <p>Setter for the field <code>count</code>.</p>
+     *
+     * @param count a {@link java.lang.Long} object
+     */
     public void setCount(Long count) {
         this.count = count;
     }
 
+    /**
+     * <p>Getter for the field <code>lastModifiedDate</code>.</p>
+     *
+     * @return a {@link java.time.Instant} object
+     */
     public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
+    /**
+     * <p>Setter for the field <code>lastModifiedDate</code>.</p>
+     *
+     * @param lastModifiedDate a {@link java.time.Instant} object
+     */
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }

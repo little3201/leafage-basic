@@ -25,8 +25,8 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * comment service
  *
- * @author liwenqiang 2018-12-06 22:09
- **/
+ * @author wq li
+ */
 public interface CommentService extends ReactiveBasicService<CommentDTO, CommentVO> {
 
     /**

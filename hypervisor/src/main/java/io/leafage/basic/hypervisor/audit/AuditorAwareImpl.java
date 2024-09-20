@@ -23,9 +23,14 @@ import reactor.core.publisher.Mono;
 
 /**
  * auditor impl
+ *
+ * @author wq li
  */
 public class AuditorAwareImpl implements ReactiveAuditorAware<String> {
 
+    /**
+     * {@inheritDoc}
+     */
     @Nonnull
     @Override
     public Mono<String> getCurrentAuditor() {

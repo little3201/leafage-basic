@@ -23,7 +23,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * dto class for post
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author wq li
  */
 public class PostDTO extends PostBO {
 
@@ -33,10 +33,20 @@ public class PostDTO extends PostBO {
     @NotNull(message = "categoryId must not be null.")
     private Long categoryId;
 
+    /**
+     * <p>Getter for the field <code>categoryId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getCategoryId() {
         return categoryId;
     }
 
+    /**
+     * <p>Setter for the field <code>categoryId</code>.</p>
+     *
+     * @param categoryId a {@link java.lang.Long} object
+     */
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }

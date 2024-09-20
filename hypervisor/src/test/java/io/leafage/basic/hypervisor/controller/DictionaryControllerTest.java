@@ -48,7 +48,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 /**
  * dictionary api test
  *
- * @author liwenqiang 2022-04-8 7:39
+ * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

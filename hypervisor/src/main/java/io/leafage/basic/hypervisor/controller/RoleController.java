@@ -40,8 +40,8 @@ import java.util.Set;
 /**
  * role controller
  *
- * @author liwenqiang 2018/12/17 19:38
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/roles")
@@ -53,6 +53,13 @@ public class RoleController {
     private final RoleService roleService;
     private final RolePrivilegesService rolePrivilegesService;
 
+    /**
+     * <p>Constructor for RoleController.</p>
+     *
+     * @param roleMembersService    a {@link io.leafage.basic.hypervisor.service.RoleMembersService} object
+     * @param roleService           a {@link io.leafage.basic.hypervisor.service.RoleService} object
+     * @param rolePrivilegesService a {@link io.leafage.basic.hypervisor.service.RolePrivilegesService} object
+     */
     public RoleController(RoleMembersService roleMembersService, RoleService roleService,
                           RolePrivilegesService rolePrivilegesService) {
         this.roleMembersService = roleMembersService;

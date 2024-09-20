@@ -24,8 +24,8 @@ import org.springframework.data.relational.core.mapping.Table;
 /**
  * model class for role privileges
  *
- * @author liwenqiang 2023-03-26 11:13
- **/
+ * @author wq li
+ */
 @Table(name = "role_privileges")
 public class RolePrivileges {
 
@@ -45,26 +45,56 @@ public class RolePrivileges {
     @Column(value = "role_id")
     private Long roleId;
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>privilegeId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getPrivilegeId() {
         return privilegeId;
     }
 
+    /**
+     * <p>Setter for the field <code>privilegeId</code>.</p>
+     *
+     * @param privilegeId a {@link java.lang.Long} object
+     */
     public void setPrivilegeId(Long privilegeId) {
         this.privilegeId = privilegeId;
     }
 
+    /**
+     * <p>Getter for the field <code>roleId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getRoleId() {
         return roleId;
     }
 
+    /**
+     * <p>Setter for the field <code>roleId</code>.</p>
+     *
+     * @param roleId a {@link java.lang.Long} object
+     */
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }

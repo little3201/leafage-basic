@@ -26,8 +26,8 @@ import reactor.core.publisher.Mono;
 /**
  * role members repository
  *
- * @author liwenqiang 2018-12-06 22:09
- **/
+ * @author wq li
+ */
 @Repository
 public interface RoleMembersRepository extends R2dbcRepository<RoleMembers, Long> {
 

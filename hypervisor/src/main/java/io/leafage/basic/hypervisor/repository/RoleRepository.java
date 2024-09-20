@@ -25,10 +25,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
- * role epository
+ * role repository
  *
- * @author liwenqiang 2018-09-26 11:06
- **/
+ * @author wq li
+ */
 @Repository
 public interface RoleRepository extends R2dbcRepository<Role, Long> {
 

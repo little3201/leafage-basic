@@ -33,17 +33,25 @@ import reactor.core.publisher.Mono;
 /**
  * access log service impl
  *
- * @author liwenqiang 2018/12/20 9:54
- **/
+ * @author wq li
+ */
 @Service
 public class AccessLogServiceImpl implements AccessLogService {
 
     private final AccessLogRepository accessLogRepository;
 
+    /**
+     * <p>Constructor for AccessLogServiceImpl.</p>
+     *
+     * @param accessLogRepository a {@link io.leafage.basic.hypervisor.repository.AccessLogRepository} object
+     */
     public AccessLogServiceImpl(AccessLogRepository accessLogRepository) {
         this.accessLogRepository = accessLogRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Page<AccessLogVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

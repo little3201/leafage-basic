@@ -30,10 +30,18 @@ import java.util.List;
 
 /**
  * rest controller advice
+ *
+ * @author wq li
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * <p>handleMethodArgumentNotValidException.</p>
+     *
+     * @param e a {@link org.springframework.web.bind.MethodArgumentNotValidException} object
+     * @return a {@link reactor.core.publisher.Mono} object
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public Mono<EntityResponse<String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {

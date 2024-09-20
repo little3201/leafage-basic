@@ -24,8 +24,8 @@ import org.springframework.data.relational.core.mapping.Table;
 /**
  * model class for group roles
  *
- * @author liwenqiang 2024-01-07 21:49
- **/
+ * @author wq li
+ */
 @Table(name = "group_roles")
 public class GroupRoles {
 
@@ -45,26 +45,56 @@ public class GroupRoles {
     @Column(value = "role_id")
     private Long roleId;
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>groupId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getGroupId() {
         return groupId;
     }
 
+    /**
+     * <p>Setter for the field <code>groupId</code>.</p>
+     *
+     * @param groupId a {@link java.lang.Long} object
+     */
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 
+    /**
+     * <p>Getter for the field <code>roleId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getRoleId() {
         return roleId;
     }
 
+    /**
+     * <p>Setter for the field <code>roleId</code>.</p>
+     *
+     * @param roleId a {@link java.lang.Long} object
+     */
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }

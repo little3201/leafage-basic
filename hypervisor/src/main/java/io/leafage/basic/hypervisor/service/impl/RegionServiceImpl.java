@@ -37,17 +37,25 @@ import java.util.NoSuchElementException;
 /**
  * region service impl
  *
- * @author liwenqiang 2021-08-20 16:59
- **/
+ * @author wq li
+ */
 @Service
 public class RegionServiceImpl implements RegionService {
 
     private final RegionRepository regionRepository;
 
+    /**
+     * <p>Constructor for RegionServiceImpl.</p>
+     *
+     * @param regionRepository a {@link io.leafage.basic.hypervisor.repository.RegionRepository} object
+     */
     public RegionServiceImpl(RegionRepository regionRepository) {
         this.regionRepository = regionRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Page<RegionVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -59,24 +67,36 @@ public class RegionServiceImpl implements RegionService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<RegionVO> fetch(Long id) {
         Assert.notNull(id, "region id must not be null.");
         return regionRepository.findById(id).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "region name must not be blank.");
         return regionRepository.existsByName(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Flux<RegionVO> subordinates(Long superiorId) {
         Assert.notNull(superiorId, "region superior id must not be null.");
         return regionRepository.findBySuperiorId(superiorId).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<RegionVO> create(RegionDTO regionDTO) {
         Region region = new Region();
@@ -84,6 +104,9 @@ public class RegionServiceImpl implements RegionService {
         return regionRepository.save(region).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<RegionVO> modify(Long id, RegionDTO regionDTO) {
         Assert.notNull(id, "region id must not be null.");
@@ -92,6 +115,9 @@ public class RegionServiceImpl implements RegionService {
                 .flatMap(regionRepository::save).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "region id must not be null.");

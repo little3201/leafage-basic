@@ -33,8 +33,8 @@ import reactor.core.publisher.Mono;
 /**
  * message controller
  *
- * @author liwenqiang 2018-08-2 21:02
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/messages")
@@ -44,6 +44,11 @@ public class MessageController {
 
     private final MessageService messageService;
 
+    /**
+     * <p>Constructor for MessageController.</p>
+     *
+     * @param messageService a {@link io.leafage.basic.hypervisor.service.MessageService} object
+     */
     public MessageController(MessageService messageService) {
         this.messageService = messageService;
     }

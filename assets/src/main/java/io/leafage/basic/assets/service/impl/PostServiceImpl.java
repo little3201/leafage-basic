@@ -40,8 +40,8 @@ import java.util.Objects;
 /**
  * post service impl
  *
- * @author liwenqiang 2018-12-20 9:54
- **/
+ * @author wq li
+ */
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -50,6 +50,13 @@ public class PostServiceImpl implements PostService {
     private final CategoryRepository categoryRepository;
 
 
+    /**
+     * <p>Constructor for PostServiceImpl.</p>
+     *
+     * @param postRepository        a {@link io.leafage.basic.assets.repository.PostRepository} object
+     * @param postContentRepository a {@link io.leafage.basic.assets.repository.PostContentRepository} object
+     * @param categoryRepository    a {@link io.leafage.basic.assets.repository.CategoryRepository} object
+     */
     public PostServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository,
                            CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
@@ -57,6 +64,7 @@ public class PostServiceImpl implements PostService {
         this.categoryRepository = categoryRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<Page<PostVO>> retrieve(int page, int size, String sort, Long categoryId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
@@ -76,6 +84,7 @@ public class PostServiceImpl implements PostService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<PostVO> fetch(Long id) {
         Assert.notNull(id, "post id must not be null.");
@@ -94,6 +103,7 @@ public class PostServiceImpl implements PostService {
         );
     }
 
+    /** {@inheritDoc} */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostVO> create(PostDTO postDTO) {
@@ -107,6 +117,7 @@ public class PostServiceImpl implements PostService {
         });
     }
 
+    /** {@inheritDoc} */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostVO> modify(Long id, PostDTO postDTO) {
@@ -123,6 +134,7 @@ public class PostServiceImpl implements PostService {
                 );
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "id must not be null.");
@@ -137,12 +149,14 @@ public class PostServiceImpl implements PostService {
                 .then(postRepository.deleteById(id));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Flux<PostVO> search(String keyword) {
         Assert.hasText(keyword, "keyword must not be blank.");
         return postRepository.findAllByTitle(keyword).flatMap(this::convertOuter);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> exist(String title) {
         Assert.hasText(title, "title must not be blank.");

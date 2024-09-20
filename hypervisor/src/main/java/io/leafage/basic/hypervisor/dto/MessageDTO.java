@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.MessageBO;
 /**
  * dto class for message
  *
- * @author liwenqiang 2022-02-10 13:49
+ * @author wq li
  */
 public class MessageDTO extends MessageBO {
 

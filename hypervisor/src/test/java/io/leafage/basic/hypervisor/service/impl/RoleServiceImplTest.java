@@ -37,7 +37,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * role接口测试
  *
- * @author liwenqiang 2019-01-29 17:10
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class RoleServiceImplTest {

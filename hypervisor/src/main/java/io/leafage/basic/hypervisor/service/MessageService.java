@@ -26,7 +26,7 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * message service
  *
- * @author liwenqiang 2022-02-10 13:49
+ * @author wq li
  */
 public interface MessageService extends ReactiveBasicService<MessageDTO, MessageVO> {
 

@@ -38,17 +38,25 @@ import java.util.NoSuchElementException;
 /**
  * dictionary service impl
  *
- * @author liwenqiang 2022-03-30 07:34
- **/
+ * @author wq li
+ */
 @Service
 public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dictionary> implements DictionaryService {
 
     private final DictionaryRepository dictionaryRepository;
 
+    /**
+     * <p>Constructor for DictionaryServiceImpl.</p>
+     *
+     * @param dictionaryRepository a {@link io.leafage.basic.hypervisor.repository.DictionaryRepository} object
+     */
     public DictionaryServiceImpl(DictionaryRepository dictionaryRepository) {
         this.dictionaryRepository = dictionaryRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Page<DictionaryVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -60,29 +68,44 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Flux<DictionaryVO> superior() {
         return dictionaryRepository.findBySuperiorIdIsNull().flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Flux<DictionaryVO> subordinates(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
         return dictionaryRepository.findBySuperiorId(id).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<DictionaryVO> fetch(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
         return dictionaryRepository.findById(id).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "dictionary name must not be blank.");
         return dictionaryRepository.existsByName(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<DictionaryVO> create(DictionaryDTO dictionaryDTO) {
         Dictionary dictionary = new Dictionary();
@@ -90,6 +113,9 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
         return dictionaryRepository.save(dictionary).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<DictionaryVO> modify(Long id, DictionaryDTO dictionaryDTO) {
         Assert.notNull(id, "dictionary id must not be null.");

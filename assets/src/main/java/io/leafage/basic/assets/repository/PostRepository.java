@@ -27,8 +27,8 @@ import reactor.core.publisher.Mono;
 /**
  * posts repository
  *
- * @author liwenqiang 2018-12-20 09:51
- **/
+ * @author wq li
+ */
 @Repository
 public interface PostRepository extends R2dbcRepository<Post, Long> {
 

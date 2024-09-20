@@ -25,7 +25,7 @@ import org.springframework.data.relational.core.mapping.Table;
 /**
  * model class for comment
  *
- * @author liwenqiang 2021-07-15 22:12
+ * @author wq li
  */
 @Table(name = "comments")
 public class Comment extends AuditMetadata {
@@ -53,42 +53,92 @@ public class Comment extends AuditMetadata {
     private Long replier;
 
 
+    /**
+     * <p>Getter for the field <code>postId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getPostId() {
         return postId;
     }
 
+    /**
+     * <p>Setter for the field <code>postId</code>.</p>
+     *
+     * @param postId a {@link java.lang.Long} object
+     */
     public void setPostId(Long postId) {
         this.postId = postId;
     }
 
+    /**
+     * <p>Getter for the field <code>context</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getContext() {
         return context;
     }
 
+    /**
+     * <p>Setter for the field <code>context</code>.</p>
+     *
+     * @param context a {@link java.lang.String} object
+     */
     public void setContext(String context) {
         this.context = context;
     }
 
+    /**
+     * <p>Getter for the field <code>country</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getCountry() {
         return country;
     }
 
+    /**
+     * <p>Setter for the field <code>country</code>.</p>
+     *
+     * @param country a {@link java.lang.String} object
+     */
     public void setCountry(String country) {
         this.country = country;
     }
 
+    /**
+     * <p>Getter for the field <code>location</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getLocation() {
         return location;
     }
 
+    /**
+     * <p>Setter for the field <code>location</code>.</p>
+     *
+     * @param location a {@link java.lang.String} object
+     */
     public void setLocation(String location) {
         this.location = location;
     }
 
+    /**
+     * <p>Getter for the field <code>replier</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getReplier() {
         return replier;
     }
 
+    /**
+     * <p>Setter for the field <code>replier</code>.</p>
+     *
+     * @param replier a {@link java.lang.Long} object
+     */
     public void setReplier(Long replier) {
         this.replier = replier;
     }

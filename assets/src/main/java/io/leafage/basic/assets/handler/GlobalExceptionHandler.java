@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * rest controller advice
+ *
+ * @author wq li
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

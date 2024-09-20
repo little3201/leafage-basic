@@ -27,8 +27,8 @@ import reactor.core.publisher.Mono;
 /**
  * category repository
  *
- * @author liwenqiang 2020-02-13 22:01
- **/
+ * @author wq li
+ */
 @Repository
 public interface CategoryRepository extends R2dbcRepository<Category, Long> {
 

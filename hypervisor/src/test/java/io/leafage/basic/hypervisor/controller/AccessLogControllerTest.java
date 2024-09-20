@@ -44,7 +44,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * record controller test
  *
- * @author liwenqiang 2022-03-18 22:07
+ * @author wq li
  */
 @WithMockUser
 @ExtendWith(SpringExtension.class)

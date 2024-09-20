@@ -24,7 +24,7 @@ import java.time.Instant;
 /**
  * bo class for User
  *
- * @author liwenqiang 2022-12-10 22:27
+ * @author wq li
  */
 public abstract class UserBO {
 
@@ -60,50 +60,110 @@ public abstract class UserBO {
     private Instant credentialsExpiresAt;
 
 
+    /**
+     * <p>Getter for the field <code>username</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * <p>Setter for the field <code>username</code>.</p>
+     *
+     * @param username a {@link java.lang.String} object
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * <p>Getter for the field <code>firstname</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getFirstname() {
         return firstname;
     }
 
+    /**
+     * <p>Setter for the field <code>firstname</code>.</p>
+     *
+     * @param firstname a {@link java.lang.String} object
+     */
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
+    /**
+     * <p>Getter for the field <code>lastname</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getLastname() {
         return lastname;
     }
 
+    /**
+     * <p>Setter for the field <code>lastname</code>.</p>
+     *
+     * @param lastname a {@link java.lang.String} object
+     */
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
 
+    /**
+     * <p>Getter for the field <code>avatar</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getAvatar() {
         return avatar;
     }
 
+    /**
+     * <p>Setter for the field <code>avatar</code>.</p>
+     *
+     * @param avatar a {@link java.lang.String} object
+     */
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 
+    /**
+     * <p>Getter for the field <code>accountExpiresAt</code>.</p>
+     *
+     * @return a {@link java.time.Instant} object
+     */
     public Instant getAccountExpiresAt() {
         return accountExpiresAt;
     }
 
+    /**
+     * <p>Setter for the field <code>accountExpiresAt</code>.</p>
+     *
+     * @param accountExpiresAt a {@link java.time.Instant} object
+     */
     public void setAccountExpiresAt(Instant accountExpiresAt) {
         this.accountExpiresAt = accountExpiresAt;
     }
 
+    /**
+     * <p>Getter for the field <code>credentialsExpiresAt</code>.</p>
+     *
+     * @return a {@link java.time.Instant} object
+     */
     public Instant getCredentialsExpiresAt() {
         return credentialsExpiresAt;
     }
 
+    /**
+     * <p>Setter for the field <code>credentialsExpiresAt</code>.</p>
+     *
+     * @param credentialsExpiresAt a {@link java.time.Instant} object
+     */
     public void setCredentialsExpiresAt(Instant credentialsExpiresAt) {
         this.credentialsExpiresAt = credentialsExpiresAt;
     }

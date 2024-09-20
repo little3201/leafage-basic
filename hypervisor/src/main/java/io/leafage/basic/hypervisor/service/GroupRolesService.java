@@ -26,8 +26,8 @@ import java.util.Set;
 /**
  * group roles service
  *
- * @author liwenqiang 2024/01/17 21:18
- **/
+ * @author wq li
+ */
 public interface GroupRolesService {
 
     /**

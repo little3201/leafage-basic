@@ -27,8 +27,8 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * dictionary service
  *
- * @author liwenqiang 2022-03-30 07:34
- **/
+ * @author wq li
+ */
 public interface DictionaryService extends ReactiveBasicService<DictionaryDTO, DictionaryVO> {
 
     /**

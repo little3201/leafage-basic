@@ -31,29 +31,43 @@ import java.util.Set;
 /**
  * role members service impl
  *
- * @author liwenqiang 2018/12/17 19:26
- **/
+ * @author wq li
+ */
 @Service
 public class RoleMembersServiceImpl implements RoleMembersService {
 
     private final RoleMembersRepository roleMembersRepository;
 
+    /**
+     * <p>Constructor for RoleMembersServiceImpl.</p>
+     *
+     * @param roleMembersRepository a {@link io.leafage.basic.hypervisor.repository.RoleMembersRepository} object
+     */
     public RoleMembersServiceImpl(RoleMembersRepository roleMembersRepository) {
         this.roleMembersRepository = roleMembersRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<RoleMembers>> members(Long roleId) {
         Assert.notNull(roleId, "role id must not be null.");
         return roleMembersRepository.findByRoleId(roleId).collectList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<RoleMembers>> roles(String username) {
         Assert.hasText(username, "username must not be blank.");
         return roleMembersRepository.findByUsername(username).collectList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> relation(Long roleId, Set<String> usernames) {
         Assert.notNull(roleId, "role id must not be blank.");

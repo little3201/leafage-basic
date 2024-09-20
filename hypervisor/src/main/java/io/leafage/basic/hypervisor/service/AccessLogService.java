@@ -24,8 +24,8 @@ import reactor.core.publisher.Mono;
 /**
  * access log service
  *
- * @author liwenqiang 2018/12/17 19:26
- **/
+ * @author wq li
+ */
 public interface AccessLogService {
 
     /**

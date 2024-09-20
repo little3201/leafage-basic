@@ -36,23 +36,34 @@ import java.util.NoSuchElementException;
 /**
  * group service impl
  *
- * @author liwenqiang 2018/12/17 19:25
- **/
+ * @author wq li 2018/12/17 19:25
+ */
 @Service
 public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
 
+    /**
+     * <p>Constructor for GroupServiceImpl.</p>
+     *
+     * @param groupRepository a {@link io.leafage.basic.hypervisor.repository.GroupRepository} object
+     */
     public GroupServiceImpl(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Flux<GroupVO> retrieve() {
         return groupRepository.findAll().flatMap(this::convertOuter)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Page<GroupVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -64,18 +75,27 @@ public class GroupServiceImpl implements GroupService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<GroupVO> fetch(Long id) {
         Assert.notNull(id, "group id must not be null.");
         return groupRepository.findById(id).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "group name must not be blank.");
         return groupRepository.existsByName(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
         Group group = new Group();
@@ -83,6 +103,9 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.save(group).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<GroupVO> modify(Long id, GroupDTO groupDTO) {
         Assert.notNull(id, "group id must not be null.");
@@ -92,6 +115,9 @@ public class GroupServiceImpl implements GroupService {
                 .flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "group id must not be null.");

@@ -45,7 +45,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 /**
  * message controller test
  *
- * @author liwenqiang 2022-02-16 9:03
+ * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

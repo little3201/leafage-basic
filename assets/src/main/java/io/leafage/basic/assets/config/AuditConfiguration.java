@@ -26,12 +26,17 @@ import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
 /**
  * audit configuration
  *
- * @author liwenqiang 2020-10-06 22:09Z
+ * @author wq li
  */
 @Configuration
 @EnableR2dbcAuditing
 public class AuditConfiguration {
 
+    /**
+     * <p>auditorProvider.</p>
+     *
+     * @return a {@link org.springframework.data.domain.ReactiveAuditorAware} object
+     */
     @Bean
     public ReactiveAuditorAware<String> auditorProvider() {
         return new AuditorAwareImpl();

@@ -23,7 +23,7 @@ import io.leafage.basic.assets.bo.CategoryBO;
 /**
  * dto class for category
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author wq li
  */
 public class CategoryDTO extends CategoryBO {
 

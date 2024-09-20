@@ -29,8 +29,8 @@ import java.util.List;
 /**
  * privilege service
  *
- * @author liwenqiang 2018/12/17 19:36
- **/
+ * @author wq li
+ */
 public interface PrivilegeService extends ReactiveBasicService<PrivilegeDTO, PrivilegeVO> {
 
     /**

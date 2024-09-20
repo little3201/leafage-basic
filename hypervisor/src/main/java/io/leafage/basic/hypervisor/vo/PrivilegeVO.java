@@ -24,7 +24,7 @@ import java.time.Instant;
 /**
  * vo class for privilege
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author wq li
  */
 public class PrivilegeVO extends PrivilegeBO {
 
@@ -44,26 +44,56 @@ public class PrivilegeVO extends PrivilegeBO {
     private Instant lastModifiedDate;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>superior</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getSuperior() {
         return superior;
     }
 
+    /**
+     * <p>Setter for the field <code>superior</code>.</p>
+     *
+     * @param superior a {@link java.lang.String} object
+     */
     public void setSuperior(String superior) {
         this.superior = superior;
     }
 
+    /**
+     * <p>Getter for the field <code>lastModifiedDate</code>.</p>
+     *
+     * @return a {@link java.time.Instant} object
+     */
     public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
+    /**
+     * <p>Setter for the field <code>lastModifiedDate</code>.</p>
+     *
+     * @param lastModifiedDate a {@link java.time.Instant} object
+     */
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }

@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.UserBO;
 /**
  * dto class for user
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author wq li
  */
 public class UserDTO extends UserBO {
 

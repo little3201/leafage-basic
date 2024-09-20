@@ -24,8 +24,8 @@ import reactor.core.publisher.Mono;
 /**
  * statistics service
  *
- * @author liwenqiang 2021-05-19 10:54
- **/
+ * @author wq li
+ */
 public interface PostStatisticsService {
 
     /**

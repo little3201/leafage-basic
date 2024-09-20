@@ -31,29 +31,43 @@ import java.util.Set;
 /**
  * role privileges service impl
  *
- * @author liwenqiang 2018-07-28 0:29
- **/
+ * @author wq li
+ */
 @Service
 public class RolePrivilegesServiceImpl implements RolePrivilegesService {
 
     private final RolePrivilegesRepository rolePrivilegesRepository;
 
+    /**
+     * <p>Constructor for RolePrivilegesServiceImpl.</p>
+     *
+     * @param rolePrivilegesRepository a {@link io.leafage.basic.hypervisor.repository.RolePrivilegesRepository} object
+     */
     public RolePrivilegesServiceImpl(RolePrivilegesRepository rolePrivilegesRepository) {
         this.rolePrivilegesRepository = rolePrivilegesRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<RolePrivileges>> privileges(Long roleId) {
         Assert.notNull(roleId, "role id must not be null.");
         return rolePrivilegesRepository.findByRoleId(roleId).collectList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<RolePrivileges>> roles(Long privilegeId) {
         Assert.notNull(privilegeId, "privilege id must not be null.");
         return rolePrivilegesRepository.findByPrivilegeId(privilegeId).collectList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> relation(Long roleId, Set<Long> privilegeIds) {
         Assert.notNull(roleId, "role id must not be null.");

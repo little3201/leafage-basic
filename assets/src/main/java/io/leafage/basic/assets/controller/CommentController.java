@@ -33,8 +33,8 @@ import reactor.core.publisher.Mono;
 /**
  * comment controller
  *
- * @author liwenqiang 2021-07-17 21:01
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/comments")
@@ -44,6 +44,11 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    /**
+     * <p>Constructor for CommentController.</p>
+     *
+     * @param commentService a {@link io.leafage.basic.assets.service.CommentService} object
+     */
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }

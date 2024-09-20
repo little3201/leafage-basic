@@ -31,8 +31,8 @@ import reactor.core.publisher.Mono;
 /**
  * region controller
  *
- * @author liwenqiang 2021/08/20 17:08
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/regions")
@@ -42,6 +42,11 @@ public class RegionController {
 
     private final RegionService regionService;
 
+    /**
+     * <p>Constructor for RegionController.</p>
+     *
+     * @param regionService a {@link io.leafage.basic.hypervisor.service.RegionService} object
+     */
     public RegionController(RegionService regionService) {
         this.regionService = regionService;
     }
@@ -86,6 +91,7 @@ public class RegionController {
     /**
      * 查询下级数据
      *
+     * @param id a {@link java.lang.Long} object
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/{id}/subordinates")

@@ -26,8 +26,8 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * user service
  *
- * @author liwenqiang 2018-07-28 0:29
- **/
+ * @author wq li
+ */
 public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
 
     /**

@@ -24,8 +24,8 @@ import org.springframework.data.relational.core.mapping.Table;
 /**
  * model class for role members
  *
- * @author liwenqiang 2023-03-25 09:07
- **/
+ * @author wq li
+ */
 @Table(name = "role_members")
 public class RoleMembers {
 
@@ -44,26 +44,56 @@ public class RoleMembers {
     @Column(value = "role_id")
     private Long roleId;
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>username</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * <p>Setter for the field <code>username</code>.</p>
+     *
+     * @param username a {@link java.lang.String} object
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * <p>Getter for the field <code>roleId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getRoleId() {
         return roleId;
     }
 
+    /**
+     * <p>Setter for the field <code>roleId</code>.</p>
+     *
+     * @param roleId a {@link java.lang.Long} object
+     */
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }

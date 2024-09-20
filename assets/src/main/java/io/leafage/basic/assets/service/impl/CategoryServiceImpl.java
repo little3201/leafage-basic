@@ -38,19 +38,26 @@ import javax.naming.NotContextException;
 /**
  * category service impl
  *
- * @author liwenqiang 2020-02-13 20:24
- **/
+ * @author wq li
+ */
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final PostRepository postRepository;
 
+    /**
+     * <p>Constructor for CategoryServiceImpl.</p>
+     *
+     * @param categoryRepository a {@link io.leafage.basic.assets.repository.CategoryRepository} object
+     * @param postRepository     a {@link io.leafage.basic.assets.repository.PostRepository} object
+     */
     public CategoryServiceImpl(CategoryRepository categoryRepository, PostRepository postRepository) {
         this.categoryRepository = categoryRepository;
         this.postRepository = postRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<Page<CategoryVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -62,18 +69,21 @@ public class CategoryServiceImpl implements CategoryService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<CategoryVO> fetch(Long id) {
         Assert.notNull(id, "category id must not be null.");
         return categoryRepository.findById(id).flatMap(this::fetchOuter);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "category name must not be blank.");
         return categoryRepository.existsByName(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<CategoryVO> create(CategoryDTO categoryDTO) {
         Category category = new Category();
@@ -81,6 +91,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category).flatMap(this::convertOuter);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<CategoryVO> modify(Long id, CategoryDTO categoryDTO) {
         Assert.notNull(id, "category id must not be null.");
@@ -90,6 +101,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .flatMap(this::convertOuter);
     }
 
+    /** {@inheritDoc} */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "category id must not be null.");

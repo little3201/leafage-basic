@@ -38,8 +38,8 @@ import java.util.List;
 /**
  * privilege controller
  *
- * @author liwenqiang 2023-03-26 15:01
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/privileges")
@@ -50,6 +50,12 @@ public class PrivilegeController {
     private final PrivilegeService privilegeService;
     private final RolePrivilegesService rolePrivilegesService;
 
+    /**
+     * <p>Constructor for PrivilegeController.</p>
+     *
+     * @param privilegeService      a {@link io.leafage.basic.hypervisor.service.PrivilegeService} object
+     * @param rolePrivilegesService a {@link io.leafage.basic.hypervisor.service.RolePrivilegesService} object
+     */
     public PrivilegeController(PrivilegeService privilegeService, RolePrivilegesService rolePrivilegesService) {
         this.privilegeService = privilegeService;
         this.rolePrivilegesService = rolePrivilegesService;

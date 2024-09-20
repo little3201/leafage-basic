@@ -26,8 +26,8 @@ import top.leafage.common.reactive.ReactiveBasicService;
 /**
  * group service
  *
- * @author liwenqiang 2018/12/17 19:24
- **/
+ * @author wq li
+ */
 public interface GroupService extends ReactiveBasicService<GroupDTO, GroupVO> {
 
     /**

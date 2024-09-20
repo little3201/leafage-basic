@@ -35,8 +35,8 @@ import reactor.core.publisher.Mono;
 /**
  * posts controller
  *
- * @author liwenqiang 2018-12-20 09:54
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/posts")
@@ -46,6 +46,11 @@ public class PostController {
 
     private final PostService postService;
 
+    /**
+     * <p>Constructor for PostController.</p>
+     *
+     * @param postService a {@link io.leafage.basic.assets.service.PostService} object
+     */
     public PostController(PostService postService) {
         this.postService = postService;
     }

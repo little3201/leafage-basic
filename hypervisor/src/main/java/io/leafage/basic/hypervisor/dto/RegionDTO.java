@@ -22,8 +22,8 @@ import io.leafage.basic.hypervisor.bo.RegionBO;
 /**
  * dto class for region
  *
- * @author liwenqiang 2021-08-20 16:59
- **/
+ * @author wq li
+ */
 public class RegionDTO extends RegionBO {
 
     /**
@@ -31,10 +31,20 @@ public class RegionDTO extends RegionBO {
      */
     private Long superiorId;
 
+    /**
+     * <p>Getter for the field <code>superiorId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getSuperiorId() {
         return superiorId;
     }
 
+    /**
+     * <p>Setter for the field <code>superiorId</code>.</p>
+     *
+     * @param superiorId a {@link java.lang.Long} object
+     */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
     }

@@ -40,7 +40,7 @@ import java.util.NoSuchElementException;
 /**
  * message service impl
  *
- * @author liwenqiang 2022-02-10 13:49
+ * @author wq li
  */
 @Service
 public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> implements MessageService {
@@ -48,11 +48,20 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
 
+    /**
+     * <p>Constructor for MessageServiceImpl.</p>
+     *
+     * @param messageRepository a {@link io.leafage.basic.hypervisor.repository.MessageRepository} object
+     * @param userRepository    a {@link io.leafage.basic.hypervisor.repository.UserRepository} object
+     */
     public MessageServiceImpl(MessageRepository messageRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Page<MessageVO>> retrieve(int page, int size, String receiver) {
         Pageable pageable = PageRequest.of(page, size);
@@ -64,6 +73,9 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<MessageVO> fetch(Long id) {
         Assert.notNull(id, "message id must not be null.");
@@ -73,6 +85,9 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
                 .flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<MessageVO> create(MessageDTO messageDTO) {
         Message message = new Message();
@@ -84,6 +99,9 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
         }).flatMap(messageRepository::save).flatMap(this::convertOuter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "message id must not be null.");

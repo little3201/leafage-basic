@@ -33,8 +33,8 @@ import reactor.core.publisher.Mono;
 /**
  * user controller
  *
- * @author liwenqiang 2018-08-2 21:02
- **/
+ * @author wq li
+ */
 @Validated
 @RestController
 @RequestMapping("/users")
@@ -44,10 +44,22 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * <p>Constructor for UserController.</p>
+     *
+     * @param userService a {@link io.leafage.basic.hypervisor.service.UserService} object
+     */
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
+    /**
+     * <p>retrieve.</p>
+     *
+     * @param page a int
+     * @param size a int
+     * @return a {@link org.springframework.http.ResponseEntity} object
+     */
     @GetMapping
     public ResponseEntity<Mono<Page<UserVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
         Mono<Page<UserVO>> pageMono;

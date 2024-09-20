@@ -23,7 +23,7 @@ import org.springframework.data.relational.core.mapping.Table;
 /**
  * model class for post content
  *
- * @author liwenqiang 2020-10-06 22:09
+ * @author wq li
  */
 @Table(name = "post_content")
 public class PostContent extends AuditMetadata {
@@ -40,18 +40,38 @@ public class PostContent extends AuditMetadata {
     private String context;
 
 
+    /**
+     * <p>Getter for the field <code>postId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getPostId() {
         return postId;
     }
 
+    /**
+     * <p>Setter for the field <code>postId</code>.</p>
+     *
+     * @param postId a {@link java.lang.Long} object
+     */
     public void setPostId(Long postId) {
         this.postId = postId;
     }
 
+    /**
+     * <p>Getter for the field <code>context</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getContext() {
         return context;
     }
 
+    /**
+     * <p>Setter for the field <code>context</code>.</p>
+     *
+     * @param context a {@link java.lang.String} object
+     */
     public void setContext(String context) {
         this.context = context;
     }

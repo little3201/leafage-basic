@@ -26,14 +26,15 @@ import reactor.core.publisher.Flux;
 /**
  * record repository
  *
- * @author liwenqiang 2018/12/20 9:51
- **/
+ * @author wq li
+ */
 @Repository
 public interface AccessLogRepository extends R2dbcRepository<AccessLog, Long> {
 
     /**
      * 查询
      *
+     * @param pageable a {@link org.springframework.data.domain.Pageable} object
      * @return 有效帖子
      */
     Flux<AccessLog> findBy(Pageable pageable);

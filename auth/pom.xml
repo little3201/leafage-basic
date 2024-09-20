@@ -27,10 +27,9 @@
     </parent>
 
     <artifactId>auth</artifactId>
-    <version>0.1.0</version>
     <packaging>jar</packaging>
 
-    <name>leafage-auth</name>
+    <name>auth</name>
     <description>auth of leafage</description>
 
     <properties>

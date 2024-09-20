@@ -27,7 +27,6 @@
     </parent>
 
     <artifactId>hypervisor</artifactId>
-    <version>0.1.0</version>
     <packaging>jar</packaging>
 
     <name>hypervisor</name>

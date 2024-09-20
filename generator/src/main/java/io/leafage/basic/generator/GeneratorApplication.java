@@ -14,11 +14,21 @@
  *  limitations under the License.
  *
  */
+package io.leafage.basic.generator;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * Audit
+ * generator application.
  *
- * @author wq li  2020-12-20 9:54
+ * @author wq li 2024-09-20 10:52
  */
-@org.springframework.lang.NonNullApi
-package io.leafage.basic.hypervisor.audit;
+@SpringBootApplication
+public class GeneratorApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(GeneratorApplication.class, args);
+    }
+
+}

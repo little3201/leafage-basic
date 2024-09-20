@@ -21,6 +21,11 @@ import org.springframework.data.domain.AuditorAware;
 
 import java.util.Optional;
 
+/**
+ * auditor aware.
+ *
+ * @author wq li  2020-12-20 9:54
+ */
 public class AuditorAwareImpl implements AuditorAware<String> {
 
     @Override

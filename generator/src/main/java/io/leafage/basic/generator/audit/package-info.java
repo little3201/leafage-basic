@@ -18,7 +18,7 @@
 /**
  * Audit
  *
- * @author wq li  2020-12-20 9:54
+ * @author wq li 2024-09-20 10:52
  */
 @org.springframework.lang.NonNullApi
-package io.leafage.basic.hypervisor.audit;
+package io.leafage.basic.generator.audit;

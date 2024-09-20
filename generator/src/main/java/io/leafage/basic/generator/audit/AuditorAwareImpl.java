@@ -15,10 +15,21 @@
  *
  */
 
+package io.leafage.basic.generator.audit;
+
+import org.springframework.data.domain.AuditorAware;
+
+import java.util.Optional;
+
 /**
- * Audit
+ * auditor aware.
  *
- * @author wq li  2020-12-20 9:54
+ * @author wq li 2024-09-20 10:52
  */
-@org.springframework.lang.NonNullApi
-package io.leafage.basic.hypervisor.audit;
+public class AuditorAwareImpl implements AuditorAware<String> {
+
+    @Override
+    public Optional<String> getCurrentAuditor() {
+        return Optional.of("admin");
+    }
+}

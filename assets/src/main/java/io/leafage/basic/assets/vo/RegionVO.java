@@ -23,28 +23,47 @@ import io.leafage.basic.assets.bo.RegionBO;
  * vo class for region.
  *
  * @author wq li
- **/
+ */
 public class RegionVO extends RegionBO {
 
 
     private Long id;
 
-
     private boolean enabled;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * <p>Setter for the field <code>enabled</code>.</p>
+     *
+     * @param enabled a boolean
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
  * posts content repository.
  *
  * @author wq li
- **/
+ */
 @Repository
 public interface PostContentRepository extends JpaRepository<PostContent, String> {
 

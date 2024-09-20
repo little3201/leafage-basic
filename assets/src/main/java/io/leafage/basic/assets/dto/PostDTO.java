@@ -22,6 +22,6 @@ import io.leafage.basic.assets.bo.PostBO;
  * dto class for posts.
  *
  * @author wq li
- **/
+ */
 public class PostDTO extends PostBO {
 }

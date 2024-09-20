@@ -42,18 +42,38 @@ public class PostContent extends AuditMetadata {
      */
     private String content;
 
+    /**
+     * <p>Getter for the field <code>postId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getPostId() {
         return postId;
     }
 
+    /**
+     * <p>Setter for the field <code>postId</code>.</p>
+     *
+     * @param postId a {@link java.lang.Long} object
+     */
     public void setPostId(Long postId) {
         this.postId = postId;
     }
 
+    /**
+     * <p>Getter for the field <code>content</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getContent() {
         return content;
     }
 
+    /**
+     * <p>Setter for the field <code>content</code>.</p>
+     *
+     * @param content a {@link java.lang.String} object
+     */
     public void setContent(String content) {
         this.content = content;
     }

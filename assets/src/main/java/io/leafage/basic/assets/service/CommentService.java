@@ -28,7 +28,7 @@ import java.util.List;
  * comment service.
  *
  * @author wq li
- **/
+ */
 public interface CommentService extends ServletBasicService<CommentDTO, CommentVO> {
 
     /**

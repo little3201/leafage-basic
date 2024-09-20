@@ -28,7 +28,7 @@ import java.util.List;
  * region service.
  *
  * @author wq li
- **/
+ */
 public interface RegionService extends ServletBasicService<RegionDTO, RegionVO> {
 
     /**
@@ -46,6 +46,7 @@ public interface RegionService extends ServletBasicService<RegionDTO, RegionVO> 
      * 获取子节点
      *
      * @return 数据集
+     * @param id a {@link java.lang.Long} object
      */
     List<RegionVO> subset(Long id);
 }

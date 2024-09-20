@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository;
  * tag repository.
  *
  * @author wq li
- **/
+ */
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
 

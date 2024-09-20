@@ -25,7 +25,7 @@ import top.leafage.common.servlet.ServletBasicService;
  * posts service.
  *
  * @author wq li
- **/
+ */
 public interface PostsService extends ServletBasicService<PostDTO, PostVO> {
 
     /**

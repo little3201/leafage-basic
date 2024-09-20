@@ -82,14 +82,14 @@ public class DictionaryController {
      */
     @GetMapping("/{id}/subset")
     public ResponseEntity<List<DictionaryVO>> subset(@PathVariable Long id) {
-        List<DictionaryVO> child;
+        List<DictionaryVO> voList;
         try {
-            child = dictionaryService.subset(id);
+            voList = dictionaryService.subset(id);
         } catch (Exception e) {
             logger.info("Retrieve dictionary subset occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(child);
+        return ResponseEntity.ok(voList);
     }
 
     /**

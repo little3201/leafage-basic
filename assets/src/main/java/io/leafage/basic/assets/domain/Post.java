@@ -28,8 +28,7 @@ import jakarta.persistence.Table;
  * @author wq li
  */
 @Entity
-@Table(name = "posts", indexes = {@Index(name = "idx_posts_category_id", columnList = "category_id"),
-        @Index(name = "idx_posts_created_by", columnList = "created_by")})
+@Table(name = "posts")
 public class Post extends AuditMetadata {
 
     /**
@@ -47,26 +46,56 @@ public class Post extends AuditMetadata {
     private boolean enabled = true;
 
 
+    /**
+     * <p>Getter for the field <code>title</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * <p>Setter for the field <code>title</code>.</p>
+     *
+     * @param title a {@link java.lang.String} object
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * <p>Getter for the field <code>excerpt</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getExcerpt() {
         return excerpt;
     }
 
+    /**
+     * <p>Setter for the field <code>excerpt</code>.</p>
+     *
+     * @param excerpt a {@link java.lang.String} object
+     */
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
     }
 
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * <p>Setter for the field <code>enabled</code>.</p>
+     *
+     * @param enabled a boolean
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

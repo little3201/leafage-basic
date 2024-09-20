@@ -34,7 +34,7 @@ import java.util.List;
  * comment controller.
  *
  * @author wq li
- **/
+ */
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
@@ -43,6 +43,11 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    /**
+     * <p>Constructor for CommentController.</p>
+     *
+     * @param commentService a {@link io.leafage.basic.assets.service.CommentService} object
+     */
     public CommentController(CommentService commentService) {
         this.commentService = commentService;
     }
@@ -53,6 +58,8 @@ public class CommentController {
      * @param page 分页位置
      * @param size 分页大小
      * @return 查询到数据集，异常时返回204
+     * @param sortBy a {@link java.lang.String} object
+     * @param descending a boolean
      */
     @GetMapping
     public ResponseEntity<Page<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size,

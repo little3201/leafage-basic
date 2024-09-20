@@ -21,7 +21,7 @@ package io.leafage.basic.assets.constants;
  * statistics type enum
  *
  * @author wq li
- **/
+ */
 public enum StatisticsEnum {
 
     VIEWED("viewed"),

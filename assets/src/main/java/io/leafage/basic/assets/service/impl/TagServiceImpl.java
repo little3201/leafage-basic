@@ -38,18 +38,25 @@ import java.util.Optional;
  * tag service impl.
  *
  * @author wq li
- **/
+ */
 @Service
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
     private final TagPostsRepository tagPostsRepository;
 
+    /**
+     * <p>Constructor for TagServiceImpl.</p>
+     *
+     * @param tagRepository a {@link io.leafage.basic.assets.repository.TagRepository} object
+     * @param tagPostsRepository a {@link io.leafage.basic.assets.repository.TagPostsRepository} object
+     */
     public TagServiceImpl(TagRepository tagRepository, TagPostsRepository tagPostsRepository) {
         this.tagRepository = tagRepository;
         this.tagPostsRepository = tagPostsRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Page<TagVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -58,6 +65,7 @@ public class TagServiceImpl implements TagService {
         return tagRepository.findAll(pageable).map(this::convert);
     }
 
+    /** {@inheritDoc} */
     @Override
     public TagVO fetch(Long id) {
         Assert.notNull(id, "tag id must not be null.");
@@ -68,12 +76,14 @@ public class TagServiceImpl implements TagService {
         return this.convert(tag);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exist(String name) {
         Assert.hasText(name, "tag name must not be blank.");
         return tagRepository.existsByName(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public TagVO create(TagDTO dto) {
         Tag tag = new Tag();
@@ -84,6 +94,7 @@ public class TagServiceImpl implements TagService {
         return this.convert(tag);
     }
 
+    /** {@inheritDoc} */
     @Override
     public TagVO modify(Long id, TagDTO dto) {
         Assert.notNull(id, "tag id must not be null.");
@@ -98,6 +109,7 @@ public class TagServiceImpl implements TagService {
         return this.convert(tag);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "tag id must not be null.");

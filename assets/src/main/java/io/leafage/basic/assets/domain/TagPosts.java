@@ -45,26 +45,56 @@ public class TagPosts {
     private Long postId;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>tagId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getTagId() {
         return tagId;
     }
 
+    /**
+     * <p>Setter for the field <code>tagId</code>.</p>
+     *
+     * @param tagId a {@link java.lang.Long} object
+     */
     public void setTagId(Long tagId) {
         this.tagId = tagId;
     }
 
+    /**
+     * <p>Getter for the field <code>postId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getPostId() {
         return postId;
     }
 
+    /**
+     * <p>Setter for the field <code>postId</code>.</p>
+     *
+     * @param postId a {@link java.lang.Long} object
+     */
     public void setPostId(Long postId) {
         this.postId = postId;
     }

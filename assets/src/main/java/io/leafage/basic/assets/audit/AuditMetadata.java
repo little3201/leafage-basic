@@ -20,6 +20,7 @@ import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Auditable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -31,6 +32,7 @@ import java.util.Optional;
  * @author wq li
  */
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AuditMetadata implements Auditable<String, Long, Instant> {
 
 
@@ -65,56 +67,91 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     private Instant lastModifiedDate;
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<String> getCreatedBy() {
         return Optional.ofNullable(this.createdBy);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Instant> getCreatedDate() {
         return Optional.ofNullable(this.createdDate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCreatedDate(Instant creationDate) {
         this.createdDate = creationDate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<String> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Instant> getLastModifiedDate() {
         return Optional.ofNullable(this.lastModifiedDate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long getId() {
         return this.id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isNew() {
         return Objects.isNull(getId());

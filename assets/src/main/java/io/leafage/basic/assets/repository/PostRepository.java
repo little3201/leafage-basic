@@ -24,17 +24,9 @@ import org.springframework.stereotype.Repository;
  * posts repository.
  *
  * @author wq li
- **/
+ */
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-
-    /**
-     * 统计
-     *
-     * @param categoryId 分类ID
-     * @return 数量
-     */
-    long countByCategoryId(Long categoryId);
 
     /**
      * 是否已存在
@@ -44,19 +36,4 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     boolean existsByTitle(String title);
 
-    /**
-     * 下一篇
-     *
-     * @param id 主键
-     * @return 信息
-     */
-    Post getFirstByIdGreaterThanAndEnabledTrueOrderByIdAsc(Long id);
-
-    /**
-     * 上一篇
-     *
-     * @param id 主键
-     * @return 信息
-     */
-    Post getFirstByIdLessThanAndEnabledTrueOrderByIdDesc(Long id);
 }

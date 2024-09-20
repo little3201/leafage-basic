@@ -26,7 +26,7 @@ import java.util.List;
  * tag repository.
  *
  * @author wq li
- **/
+ */
 @Repository
 public interface TagPostsRepository extends JpaRepository<TagPosts, Long> {
 

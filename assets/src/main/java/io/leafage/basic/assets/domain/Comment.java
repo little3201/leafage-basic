@@ -54,34 +54,74 @@ public class Comment extends AuditMetadata {
     private Long replier;
 
 
+    /**
+     * <p>Getter for the field <code>postId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getPostId() {
         return postId;
     }
 
+    /**
+     * <p>Setter for the field <code>postId</code>.</p>
+     *
+     * @param postId a {@link java.lang.Long} object
+     */
     public void setPostId(Long postId) {
         this.postId = postId;
     }
 
+    /**
+     * <p>Getter for the field <code>location</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getLocation() {
         return location;
     }
 
+    /**
+     * <p>Setter for the field <code>location</code>.</p>
+     *
+     * @param location a {@link java.lang.String} object
+     */
     public void setLocation(String location) {
         this.location = location;
     }
 
+    /**
+     * <p>Getter for the field <code>content</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getContent() {
         return content;
     }
 
+    /**
+     * <p>Setter for the field <code>content</code>.</p>
+     *
+     * @param content a {@link java.lang.String} object
+     */
     public void setContent(String content) {
         this.content = content;
     }
 
+    /**
+     * <p>Getter for the field <code>replier</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getReplier() {
         return replier;
     }
 
+    /**
+     * <p>Setter for the field <code>replier</code>.</p>
+     *
+     * @param replier a {@link java.lang.Long} object
+     */
     public void setReplier(Long replier) {
         this.replier = replier;
     }

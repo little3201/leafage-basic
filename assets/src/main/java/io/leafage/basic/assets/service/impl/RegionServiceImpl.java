@@ -37,24 +37,31 @@ import java.util.List;
  * region service impl.
  *
  * @author wq li
- **/
+ */
 @Service
 public class RegionServiceImpl implements RegionService {
 
     private final RegionRepository regionRepository;
 
+    /**
+     * <p>Constructor for RegionServiceImpl.</p>
+     *
+     * @param regionRepository a {@link io.leafage.basic.assets.repository.RegionRepository} object
+     */
     public RegionServiceImpl(RegionRepository regionRepository) {
         this.regionRepository = regionRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
                 StringUtils.hasText(sortBy) ? sortBy : "id");
         Pageable pageable = PageRequest.of(page, size, sort);
-        return regionRepository.findAll(pageable).map(this::convert);
+        return regionRepository.findBySuperiorIdIsNull(pageable).map(this::convert);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<RegionVO> subset(Long id) {
         Assert.notNull(id, "region id must not be null.");
@@ -62,6 +69,7 @@ public class RegionServiceImpl implements RegionService {
                 .stream().map(this::convert).toList();
     }
 
+    /** {@inheritDoc} */
     @Override
     public RegionVO fetch(Long id) {
         Assert.notNull(id, "region id must not be null.");
@@ -72,12 +80,14 @@ public class RegionServiceImpl implements RegionService {
         return this.convert(region);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exist(String name) {
         Assert.hasText(name, "region name must not bu blank.");
         return regionRepository.existsByName(name);
     }
 
+    /** {@inheritDoc} */
     @Override
     public RegionVO create(RegionDTO dto) {
         Region region = new Region();
@@ -88,6 +98,7 @@ public class RegionServiceImpl implements RegionService {
         return this.convert(region);
     }
 
+    /** {@inheritDoc} */
     @Override
     public RegionVO modify(Long id, RegionDTO dto) {
         Assert.notNull(id, "region id must not be null.");
@@ -102,6 +113,7 @@ public class RegionServiceImpl implements RegionService {
         return this.convert(region);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "region id must not be null.");

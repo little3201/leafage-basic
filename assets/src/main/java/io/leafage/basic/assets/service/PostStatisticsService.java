@@ -24,7 +24,7 @@ import io.leafage.basic.assets.domain.PostStatistics;
  * statistics service.
  *
  * @author wq li
- **/
+ */
 public interface PostStatisticsService {
 
     /**

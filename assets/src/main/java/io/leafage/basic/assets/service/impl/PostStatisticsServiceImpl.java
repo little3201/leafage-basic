@@ -27,16 +27,22 @@ import org.springframework.stereotype.Service;
  * statistics service impl.
  *
  * @author wq li
- **/
+ */
 @Service
 public class PostStatisticsServiceImpl implements PostStatisticsService {
 
     private final PostStatisticsRepository postStatisticsRepository;
 
+    /**
+     * <p>Constructor for PostStatisticsServiceImpl.</p>
+     *
+     * @param postStatisticsRepository a {@link io.leafage.basic.assets.repository.PostStatisticsRepository} object
+     */
     public PostStatisticsServiceImpl(PostStatisticsRepository postStatisticsRepository) {
         this.postStatisticsRepository = postStatisticsRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     public PostStatistics increase(Long postId, StatisticsEnum statisticsEnum) {
         PostStatistics postStatistics = postStatisticsRepository.getByPostId(postId);

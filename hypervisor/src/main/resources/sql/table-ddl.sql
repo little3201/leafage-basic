@@ -23,6 +23,7 @@ CREATE TABLE groups
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     group_name         varchar(50) NOT NULL,
+    superior_id        bigint,
     enabled            boolean     NOT NULL DEFAULT true,
     created_by         varchar(50),
     created_date       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -54,17 +55,18 @@ DROP TABLE IF EXISTS users;
 -- Create table users
 CREATE TABLE users
 (
-    id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    username           varchar(50) UNIQUE NOT NULL,
-    password           varchar(100)       NOT NULL,
-    firstname          varchar(50),
-    lastname           varchar(50),
-    avatar             varchar(100),
-    enabled            boolean            NOT NULL DEFAULT true,
-    created_by         varchar(50),
-    created_date       timestamp          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_modified_by   varchar(50),
-    last_modified_date timestamp
+    id                     bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username               varchar(50) UNIQUE NOT NULL,
+    password               varchar(100)       NOT NULL,
+    email                  varchar(50),
+    enabled                boolean            NOT NULL DEFAULT true,
+    account_non_locked     boolean,
+    account_expires_at     timestamp,
+    credentials_expires_at timestamp,
+    created_by             varchar(50),
+    created_date           timestamp          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_by       varchar(50),
+    last_modified_date     timestamp
 );
 
 -- Add comment to the table and columns
@@ -77,13 +79,17 @@ ON COLUMN users.username IS '用户名';
 COMMENT
 ON COLUMN users.password IS '密码';
 COMMENT
-ON COLUMN users.firstname IS '名字';
-COMMENT
-ON COLUMN users.lastname IS '姓氏';
+ON COLUMN users.email IS '邮箱';
 COMMENT
 ON COLUMN users.avatar IS '头像';
 COMMENT
 ON COLUMN users.enabled IS '是否启用';
+COMMENT
+ON COLUMN users.account_non_locked IS '是否未锁定';
+COMMENT
+ON COLUMN users.account_expires_at IS '失效时间';
+COMMENT
+ON COLUMN users.credentials_expires_at IS '密码失效时间';
 COMMENT
 ON COLUMN users.created_by IS '创建者';
 COMMENT
@@ -99,8 +105,8 @@ DROP TABLE IF EXISTS authorities;
 -- Create table authorities
 CREATE TABLE authorities
 (
-    id       bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    username varchar(50) not null,
+    id        bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    username  varchar(50) not null,
     authority varchar(50) not null,
     CONSTRAINT fk_authorities_users FOREIGN KEY (username) references users (username)
 );
@@ -252,14 +258,15 @@ CREATE TABLE privileges
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     superior_id        bigint,
-    name               varchar(50)  NOT NULL,
-    type               character(1) NOT NULL,
+    name               varchar(50) NOT NULL,
     path               varchar(127),
+    redirect           varchar(255),
+    component          varchar(255),
     icon               varchar(127),
     description        varchar(255),
-    enabled            boolean      NOT NULL DEFAULT true,
+    enabled            boolean     NOT NULL DEFAULT true,
     created_by         varchar(50),
-    created_date       timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_date       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_modified_by   varchar(50),
     last_modified_date timestamp
 );
@@ -274,9 +281,11 @@ ON COLUMN privileges.superior_id IS '上级ID';
 COMMENT
 ON COLUMN privileges.name IS '名称';
 COMMENT
-ON COLUMN privileges.type IS '类型';
-COMMENT
 ON COLUMN privileges.path IS '路径';
+COMMENT
+ON COLUMN privileges.redirect IS '跳转路径';
+COMMENT
+ON COLUMN privileges.component IS '组件路径';
 COMMENT
 ON COLUMN privileges.icon IS '图标';
 COMMENT

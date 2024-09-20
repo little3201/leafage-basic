@@ -15,9 +15,11 @@
  *
  */
 
-package io.leafage.basic.hypervisor.repository;
+package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.hypervisor.domain.Region;
+import io.leafage.basic.assets.domain.Region;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,23 +28,27 @@ import java.util.List;
 /**
  * region repository.
  *
- * @author wq li 2021/11/27 14:18
- **/
+ * @author wq li
+ */
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Long> {
 
+    Page<Region> findBySuperiorIdIsNull(Pageable pageable);
+
     /**
-     * 是否存在
+     * <p>existsByName.</p>
      *
-     * @param name 名称
-     * @return true-存在，false-否
+     * @param name a {@link java.lang.String} object
+     * @return a boolean
      */
     boolean existsByName(String name);
 
     /**
-     * 查询下级信息
+     * <p>findBySuperiorId.</p>
      *
-     * @return 结果信息
+     * @param id a {@link java.lang.Long} object
+     * @return a {@link java.util.List} object
      */
     List<Region> findBySuperiorId(Long id);
+
 }

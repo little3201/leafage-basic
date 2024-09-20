@@ -34,17 +34,25 @@ import org.springframework.util.StringUtils;
 /**
  * message service impl.
  *
- * @author wq li 2022/1/26 15:20
- **/
+ * @author wq li
+ */
 @Service
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
 
+    /**
+     * <p>Constructor for MessageServiceImpl.</p>
+     *
+     * @param messageRepository a {@link io.leafage.basic.hypervisor.repository.MessageRepository} object
+     */
     public MessageServiceImpl(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<MessageVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -53,6 +61,9 @@ public class MessageServiceImpl implements MessageService {
         return messageRepository.findAll(pageable).map(this::convert);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MessageVO fetch(Long id) {
         Assert.notNull(id, "message id must not be null.");
@@ -60,6 +71,9 @@ public class MessageServiceImpl implements MessageService {
         return this.convert(message);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MessageVO create(MessageDTO dto) {
         Message message = new Message();

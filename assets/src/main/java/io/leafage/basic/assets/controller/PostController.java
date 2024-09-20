@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * posts controller.
  *
- * @author wq li 2018/12/20 9:54
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/posts")
 public class PostController {
@@ -40,6 +40,11 @@ public class PostController {
 
     private final PostsService postsService;
 
+    /**
+     * <p>Constructor for PostController.</p>
+     *
+     * @param postsService a {@link io.leafage.basic.assets.service.PostsService} object
+     */
     public PostController(PostsService postsService) {
         this.postsService = postsService;
     }
@@ -51,6 +56,7 @@ public class PostController {
      * @param size   大小
      * @param sortBy 排序字段
      * @return 分页结果集
+     * @param descending a boolean
      */
     @GetMapping
     public ResponseEntity<Page<PostVO>> retrieve(@RequestParam int page, @RequestParam int size,

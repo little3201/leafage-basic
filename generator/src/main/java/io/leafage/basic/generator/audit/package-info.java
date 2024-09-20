@@ -15,27 +15,10 @@
  *
  */
 
-package io.leafage.basic.hypervisor.dto;
-
-import io.leafage.basic.hypervisor.bo.RegionBO;
-
 /**
- * dto class for region.
+ * Audit
  *
- * @author wq li 2021-10-12 10:06
+ * @author wq li
  */
-public class RegionDTO extends RegionBO {
-
-    /**
-     * superior
-     */
-    private Long superiorId;
-
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
-    }
-}
+@org.springframework.lang.NonNullApi
+package io.leafage.basic.generator.audit;

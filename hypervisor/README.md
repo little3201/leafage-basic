@@ -1,11 +1,12 @@
 # hypervisor
 
-<p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.0-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-3.2.1-green.svg" alt="Downloads">
-</p>
+### 1. 基础管理：
 
-<a target="_blank" href="https://console.leafage.top"> 在线体验</a>
+提供基础的数据管理、包括人员、角色、权限、分组（组织）、字典；
+
+### 2. 接口安全：
+
+支持oauth2安全认证，接口细粒度的安全保护；
 
 #### 核心依赖
 

@@ -22,20 +22,27 @@ import io.leafage.basic.hypervisor.bo.MessageBO;
 /**
  * vo class for message.
  *
- * @author wq li 2022/1/29 17:20
- **/
+ * @author wq li
+ */
 public class MessageVO extends MessageBO {
 
-    /**
-     * 主键
-     */
     private Long id;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }

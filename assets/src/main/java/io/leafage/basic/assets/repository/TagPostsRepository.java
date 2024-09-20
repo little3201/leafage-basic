@@ -25,8 +25,8 @@ import java.util.List;
 /**
  * tag repository.
  *
- * @author wq li  2024-04-17 16:10
- **/
+ * @author wq li
+ */
 @Repository
 public interface TagPostsRepository extends JpaRepository<TagPosts, Long> {
 

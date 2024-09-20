@@ -24,26 +24,71 @@ import jakarta.persistence.Table;
 /**
  * model class for group.
  *
- * @author wq li 2020-12-20 9:54
+ * @author wq li
  */
 @Entity
 @Table(name = "groups")
 public class Group extends AuditMetadata {
 
-    /**
-     * 名称
-     */
     @Column(name = "group_name", nullable = false, length = 50)
-    private String groupName;
+    private String name;
+
+    private Long superiorId;
+
+    private String description;
 
 
-    public String getGroupName() {
-        return groupName;
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>superiorId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
+    public Long getSuperiorId() {
+        return superiorId;
+    }
 
+    /**
+     * <p>Setter for the field <code>superiorId</code>.</p>
+     *
+     * @param superiorId a {@link java.lang.Long} object
+     */
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
+    }
+
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

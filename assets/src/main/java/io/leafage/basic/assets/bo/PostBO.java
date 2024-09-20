@@ -26,7 +26,7 @@ import java.util.Set;
 /**
  * bo class for post
  *
- * @author liwenqiang 2022-12-10 22:09
+ * @author wq li
  */
 public abstract class PostBO {
 
@@ -54,34 +54,74 @@ public abstract class PostBO {
     private Set<String> tags;
 
 
+    /**
+     * <p>Getter for the field <code>title</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * <p>Setter for the field <code>title</code>.</p>
+     *
+     * @param title a {@link java.lang.String} object
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * <p>Getter for the field <code>excerpt</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getExcerpt() {
         return excerpt;
     }
 
+    /**
+     * <p>Setter for the field <code>excerpt</code>.</p>
+     *
+     * @param excerpt a {@link java.lang.String} object
+     */
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
     }
 
+    /**
+     * <p>Getter for the field <code>content</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getContent() {
         return content;
     }
 
+    /**
+     * <p>Setter for the field <code>content</code>.</p>
+     *
+     * @param content a {@link java.lang.String} object
+     */
     public void setContent(String content) {
         this.content = content;
     }
 
+    /**
+     * <p>Getter for the field <code>tags</code>.</p>
+     *
+     * @return a {@link java.util.Set} object
+     */
     public Set<String> getTags() {
         return tags;
     }
 
+    /**
+     * <p>Setter for the field <code>tags</code>.</p>
+     *
+     * @param tags a {@link java.util.Set} object
+     */
     public void setTags(Set<String> tags) {
         this.tags = tags;
     }

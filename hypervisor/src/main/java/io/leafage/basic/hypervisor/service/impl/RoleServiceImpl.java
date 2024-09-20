@@ -35,17 +35,25 @@ import java.util.NoSuchElementException;
 /**
  * role service impl.
  *
- * @author wq li 2018/9/27 14:20
- **/
+ * @author wq li
+ */
 @Service
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
 
+    /**
+     * <p>Constructor for RoleServiceImpl.</p>
+     *
+     * @param roleRepository a {@link io.leafage.basic.hypervisor.repository.RoleRepository} object
+     */
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -54,6 +62,9 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findAll(pageable).map(this::convert);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RoleVO fetch(Long id) {
         Assert.notNull(id, "role id must not be null.");
@@ -64,6 +75,9 @@ public class RoleServiceImpl implements RoleService {
         return this.convert(role);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RoleVO create(RoleDTO dto) {
         Role role = new Role();
@@ -74,6 +88,9 @@ public class RoleServiceImpl implements RoleService {
         return this.convert(role);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RoleVO modify(Long id, RoleDTO dto) {
         Assert.notNull(id, "role id must not be null.");
@@ -88,6 +105,9 @@ public class RoleServiceImpl implements RoleService {
         return this.convert(role);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "role id must not be null.");

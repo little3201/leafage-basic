@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * access log controller.
  *
- * @author wq li 2022/4/15 13:50
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/access-logs")
 public class AccessLogController {
@@ -40,6 +40,11 @@ public class AccessLogController {
 
     private final AccessLogService accessLogService;
 
+    /**
+     * <p>Constructor for AccessLogController.</p>
+     *
+     * @param accessLogService a {@link io.leafage.basic.hypervisor.service.AccessLogService} object
+     */
     public AccessLogController(AccessLogService accessLogService) {
         this.accessLogService = accessLogService;
     }

@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * user controller.
  *
- * @author wq li 2018/8/2 21:02
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -40,6 +40,11 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * <p>Constructor for UserController.</p>
+     *
+     * @param userService a {@link io.leafage.basic.hypervisor.service.UserService} object
+     */
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -51,14 +56,15 @@ public class UserController {
      * @param size       大小
      * @param sortBy     排序字段
      * @param descending 排序方向
+     * @param groupId    a {@link java.lang.Long} object
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
     public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                 String sortBy, boolean descending) {
+                                                 String sortBy, boolean descending, Long groupId) {
         Page<UserVO> voPage;
         try {
-            voPage = userService.retrieve(page, size, sortBy, descending);
+            voPage = userService.retrieve(page, size, sortBy, descending, groupId);
         } catch (Exception e) {
             logger.info("Retrieve user occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -82,6 +88,24 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(userVO);
+    }
+
+    /**
+     * 添加信息.
+     *
+     * @param userDTO 要修改的数据
+     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
+     */
+    @PostMapping
+    public ResponseEntity<UserVO> create(@RequestBody @Valid UserDTO userDTO) {
+        UserVO userVO;
+        try {
+            userVO = userService.create(userDTO);
+        } catch (Exception e) {
+            logger.error("Create user occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(userVO);
     }
 
     /**

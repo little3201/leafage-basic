@@ -23,7 +23,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * auth application.
  *
- * @author wq li 2021-12-21 17:02
+ * @author wq li
  */
 @SpringBootApplication
 public class AuthApplication {

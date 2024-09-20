@@ -33,8 +33,8 @@ import java.util.List;
 /**
  * dictionary controller.
  *
- * @author wq li 2022-04-06 17:44
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/dictionaries")
 public class DictionaryController {
@@ -43,6 +43,11 @@ public class DictionaryController {
 
     private final DictionaryService dictionaryService;
 
+    /**
+     * <p>Constructor for DictionaryController.</p>
+     *
+     * @param dictionaryService a {@link io.leafage.basic.hypervisor.service.DictionaryService} object
+     */
     public DictionaryController(DictionaryService dictionaryService) {
         this.dictionaryService = dictionaryService;
     }
@@ -72,18 +77,19 @@ public class DictionaryController {
     /**
      * 查询下级数据
      *
+     * @param id a {@link java.lang.Long} object
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/{id}/subset")
     public ResponseEntity<List<DictionaryVO>> subset(@PathVariable Long id) {
-        List<DictionaryVO> child;
+        List<DictionaryVO> voList;
         try {
-            child = dictionaryService.subset(id);
+            voList = dictionaryService.subset(id);
         } catch (Exception e) {
             logger.info("Retrieve dictionary subset occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(child);
+        return ResponseEntity.ok(voList);
     }
 
     /**
@@ -140,4 +146,39 @@ public class DictionaryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
 
+    /**
+     * 修改信息
+     *
+     * @param dictionaryDTO 要添加的数据
+     * @param id            a {@link java.lang.Long} object
+     * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<DictionaryVO> modify(@PathVariable Long id, @RequestBody @Valid DictionaryDTO dictionaryDTO) {
+        DictionaryVO vo;
+        try {
+            vo = dictionaryService.modify(id, dictionaryDTO);
+        } catch (Exception e) {
+            logger.error("Modify dictionary occurred an error: ", e);
+            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+        }
+        return ResponseEntity.accepted().body(vo);
+    }
+
+    /**
+     * 删除信息
+     *
+     * @param id 主键
+     * @return 如果删除成功，返回200状态码，否则返回417状态码
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
+        try {
+            dictionaryService.remove(id);
+        } catch (Exception e) {
+            logger.error("Remove group occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok().build();
+    }
 }

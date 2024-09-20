@@ -48,8 +48,8 @@ import java.util.stream.Collectors;
 /**
  * posts service impl.
  *
- * @author wq li  2018-12-20 9:54
- **/
+ * @author wq li
+ */
 @Service
 public class PostsServiceImpl implements PostsService {
 
@@ -58,6 +58,14 @@ public class PostsServiceImpl implements PostsService {
     private final TagRepository tagRepository;
     private final TagPostsRepository tagPostsRepository;
 
+    /**
+     * <p>Constructor for PostsServiceImpl.</p>
+     *
+     * @param postRepository a {@link io.leafage.basic.assets.repository.PostRepository} object
+     * @param postContentRepository a {@link io.leafage.basic.assets.repository.PostContentRepository} object
+     * @param tagRepository a {@link io.leafage.basic.assets.repository.TagRepository} object
+     * @param tagPostsRepository a {@link io.leafage.basic.assets.repository.TagPostsRepository} object
+     */
     public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository,
                             TagRepository tagRepository, TagPostsRepository tagPostsRepository) {
         this.postRepository = postRepository;
@@ -66,6 +74,7 @@ public class PostsServiceImpl implements PostsService {
         this.tagPostsRepository = tagPostsRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Page<PostVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -74,6 +83,7 @@ public class PostsServiceImpl implements PostsService {
         return postRepository.findAll(pageable).map(this::convert);
     }
 
+    /** {@inheritDoc} */
     @Override
     public PostVO fetch(Long id) {
         Assert.notNull(id, "post id must not be null.");
@@ -85,6 +95,7 @@ public class PostsServiceImpl implements PostsService {
         return this.convert(post);
     }
 
+    /** {@inheritDoc} */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public PostVO details(Long id) {
@@ -102,11 +113,13 @@ public class PostsServiceImpl implements PostsService {
         return vo;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean exist(String title) {
         return postRepository.existsByTitle(title);
     }
 
+    /** {@inheritDoc} */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public PostVO create(PostDTO dto) {
@@ -131,6 +144,7 @@ public class PostsServiceImpl implements PostsService {
         return this.convert(post);
     }
 
+    /** {@inheritDoc} */
     @Override
     public PostVO modify(Long id, PostDTO dto) {
         Assert.notNull(id, "post id must not be null.");
@@ -159,6 +173,7 @@ public class PostsServiceImpl implements PostsService {
         return this.convert(post);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "post id must not be null.");

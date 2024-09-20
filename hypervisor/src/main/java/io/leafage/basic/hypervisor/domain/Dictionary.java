@@ -25,50 +25,71 @@ import jakarta.persistence.Table;
 /**
  * model class for dictionary.
  *
- * @author wq li 2022-04-06 17:33
+ * @author wq li
  */
 @Entity
 @Table(name = "dictionaries")
 public class Dictionary extends AuditMetadata {
 
-    /**
-     * 名称
-     */
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    /**
-     * 上级
-     */
     @Column(name = "superior_id")
     private Long superiorId;
 
-    /**
-     * 描述
-     */
     private String description;
 
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>superiorId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getSuperiorId() {
         return superiorId;
     }
 
+    /**
+     * <p>Setter for the field <code>superiorId</code>.</p>
+     *
+     * @param superiorId a {@link java.lang.Long} object
+     */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
     }
 
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
     public void setDescription(String description) {
         this.description = description;
     }

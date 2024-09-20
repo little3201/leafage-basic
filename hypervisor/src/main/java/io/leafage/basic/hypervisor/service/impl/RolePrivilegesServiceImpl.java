@@ -29,17 +29,25 @@ import java.util.Set;
 /**
  * role privileges service impl.
  *
- * @author wq li 2021/9/27 14:18
- **/
+ * @author wq li
+ */
 @Service
 public class RolePrivilegesServiceImpl implements RolePrivilegesService {
 
     private final RolePrivilegesRepository rolePrivilegesRepository;
 
+    /**
+     * <p>Constructor for RolePrivilegesServiceImpl.</p>
+     *
+     * @param rolePrivilegesRepository a {@link io.leafage.basic.hypervisor.repository.RolePrivilegesRepository} object
+     */
     public RolePrivilegesServiceImpl(RolePrivilegesRepository rolePrivilegesRepository) {
         this.rolePrivilegesRepository = rolePrivilegesRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RolePrivileges> privileges(Long roleId) {
         Assert.notNull(roleId, "role id must not be null.");
@@ -47,6 +55,9 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
         return rolePrivilegesRepository.findByRoleId(roleId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RolePrivileges> roles(Long privilegeId) {
         Assert.notNull(privilegeId, "privilege id must not be null.");
@@ -54,6 +65,9 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
         return rolePrivilegesRepository.findByPrivilegeId(privilegeId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RolePrivileges> relation(Long roleId, Set<Long> privilegeIds) {
         Assert.notNull(roleId, "role id must not be null.");

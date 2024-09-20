@@ -15,12 +15,12 @@
  *
  */
 
-package io.leafage.basic.hypervisor.service.impl;
+package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.hypervisor.domain.Region;
-import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.repository.RegionRepository;
-import io.leafage.basic.hypervisor.vo.RegionVO;
+import io.leafage.basic.assets.domain.Region;
+import io.leafage.basic.assets.dto.RegionDTO;
+import io.leafage.basic.assets.repository.RegionRepository;
+import io.leafage.basic.assets.vo.RegionVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verify;
 /**
  * region service test
  *
- * @author wq li 2021/12/7 15:125
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class RegionServiceImplTest {
@@ -68,7 +68,7 @@ class RegionServiceImplTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Region> regions = new PageImpl<>(List.of(Mockito.mock(Region.class)));
-        given(this.regionRepository.findAll(pageable)).willReturn(regions);
+        given(this.regionRepository.findBySuperiorIdIsNull(pageable)).willReturn(regions);
 
         Page<RegionVO> voPage = regionService.retrieve(0, 2, "id", true);
         Assertions.assertNotNull(voPage.getContent());
@@ -87,13 +87,13 @@ class RegionServiceImplTest {
     void subset() {
         given(this.regionRepository.findBySuperiorId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Region.class)));
 
-        List<RegionVO> regionVOS = regionService.subset(Mockito.anyLong());
+        List<RegionVO> voList = regionService.subset(Mockito.anyLong());
 
-        Assertions.assertNotNull(regionVOS);
+        Assertions.assertNotNull(voList);
     }
 
     @Test
-    void lower_empty() {
+    void subset_empty() {
         List<RegionVO> regionVOS = regionService.subset(Mockito.anyLong());
 
         Assertions.assertEquals(Collections.emptyList(), regionVOS);

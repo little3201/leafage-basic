@@ -15,10 +15,10 @@
  *
  */
 
-package io.leafage.basic.hypervisor.service;
+package io.leafage.basic.assets.service;
 
-import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.vo.RegionVO;
+import io.leafage.basic.assets.dto.RegionDTO;
+import io.leafage.basic.assets.vo.RegionVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
@@ -27,8 +27,8 @@ import java.util.List;
 /**
  * region service.
  *
- * @author wq li 2021/11/27 14:18
- **/
+ * @author wq li
+ */
 public interface RegionService extends ServletBasicService<RegionDTO, RegionVO> {
 
     /**
@@ -46,6 +46,7 @@ public interface RegionService extends ServletBasicService<RegionDTO, RegionVO> 
      * 获取子节点
      *
      * @return 数据集
+     * @param id a {@link java.lang.Long} object
      */
     List<RegionVO> subset(Long id);
 }

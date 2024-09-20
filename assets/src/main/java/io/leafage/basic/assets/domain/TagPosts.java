@@ -21,15 +21,13 @@ import jakarta.persistence.*;
 /**
  * model class for tag_posts.
  *
- * @author wq li  2024-04-17 16:06
+ * @author wq li
  */
 @Entity
 @Table(name = "tag_posts")
 public class TagPosts {
 
-    /**
-     * 主键
-     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -47,26 +45,56 @@ public class TagPosts {
     private Long postId;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>tagId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getTagId() {
         return tagId;
     }
 
+    /**
+     * <p>Setter for the field <code>tagId</code>.</p>
+     *
+     * @param tagId a {@link java.lang.Long} object
+     */
     public void setTagId(Long tagId) {
         this.tagId = tagId;
     }
 
+    /**
+     * <p>Getter for the field <code>postId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getPostId() {
         return postId;
     }
 
+    /**
+     * <p>Setter for the field <code>postId</code>.</p>
+     *
+     * @param postId a {@link java.lang.Long} object
+     */
     public void setPostId(Long postId) {
         this.postId = postId;
     }

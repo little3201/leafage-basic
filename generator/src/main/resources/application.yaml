@@ -1,0 +1,33 @@
+server:
+  port: 8765
+
+spring:
+  application:
+    name: generator
+
+  profiles:
+    active: dev
+
+  cloud:
+    consul:
+      discovery:
+        heartbeat:
+          enabled: true
+
+  jpa:
+    open-in-view: false
+
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8761
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health
+  metrics:
+    tags:
+      application: ${spring.application.name}

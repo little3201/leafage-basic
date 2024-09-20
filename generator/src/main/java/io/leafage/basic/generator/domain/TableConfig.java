@@ -14,39 +14,33 @@
  *  limitations under the License.
  *
  */
+package io.leafage.basic.generator.domain;
 
-package io.leafage.basic.hypervisor.bo;
-
-import jakarta.validation.constraints.NotBlank;
+import io.leafage.basic.generator.audit.AuditMetadata;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 /**
- * desc
+ * model class for table config.
  *
- * @author wilsonli 2022-03-26 18:16
- **/
-public abstract class RegionBO {
+ * @author wq li
+ */
+@Entity
+@Table(name = "table_config")
+public class TableConfig extends AuditMetadata {
 
-    /**
-     * 名称
-     */
-    @NotBlank(message = "name must not be blank.")
+    @Column(nullable = false)
     private String name;
 
-    /**
-     * 邮编
-     */
-    private Integer postalCode;
+    private String comment;
 
     /**
-     * 区号
+     * package reference.
      */
-    private String areaCode;
+    private String reference;
 
-    /**
-     * 描述
-     */
     private String description;
-
 
     public String getName() {
         return name;
@@ -56,20 +50,12 @@ public abstract class RegionBO {
         this.name = name;
     }
 
-    public Integer getPostalCode() {
-        return postalCode;
+    public String getComment() {
+        return comment;
     }
 
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getAreaCode() {
-        return areaCode;
-    }
-
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public String getDescription() {

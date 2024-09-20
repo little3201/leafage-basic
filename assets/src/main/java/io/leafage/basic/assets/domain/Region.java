@@ -15,9 +15,9 @@
  *
  */
 
-package io.leafage.basic.hypervisor.domain;
+package io.leafage.basic.assets.domain;
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
+import io.leafage.basic.assets.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -25,15 +25,13 @@ import jakarta.persistence.Table;
 /**
  * model class for region.
  *
- * @author wq li 2021-10-12 10:06
+ * @author wq li
  */
 @Entity
 @Table(name = "regions")
 public class Region extends AuditMetadata {
 
-    /**
-     * 名称
-     */
+
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
@@ -55,48 +53,118 @@ public class Region extends AuditMetadata {
     @Column(name = "postal_code", length = 6)
     private Integer postalCode;
 
+    private boolean enabled = true;
+
     /**
      * 描述
      */
     private String description;
 
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>superiorId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getSuperiorId() {
         return superiorId;
     }
 
+    /**
+     * <p>Setter for the field <code>superiorId</code>.</p>
+     *
+     * @param superiorId a {@link java.lang.Long} object
+     */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
     }
 
+    /**
+     * <p>Getter for the field <code>areaCode</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getAreaCode() {
         return areaCode;
     }
 
+    /**
+     * <p>Setter for the field <code>areaCode</code>.</p>
+     *
+     * @param areaCode a {@link java.lang.String} object
+     */
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
     }
 
+    /**
+     * <p>Getter for the field <code>postalCode</code>.</p>
+     *
+     * @return a {@link java.lang.Integer} object
+     */
     public Integer getPostalCode() {
         return postalCode;
     }
 
+    /**
+     * <p>Setter for the field <code>postalCode</code>.</p>
+     *
+     * @param postalCode a {@link java.lang.Integer} object
+     */
     public void setPostalCode(Integer postalCode) {
         this.postalCode = postalCode;
     }
 
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * <p>Setter for the field <code>enabled</code>.</p>
+     *
+     * @param enabled a boolean
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
     public void setDescription(String description) {
         this.description = description;
     }

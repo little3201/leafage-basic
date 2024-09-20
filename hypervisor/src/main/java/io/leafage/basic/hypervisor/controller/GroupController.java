@@ -28,14 +28,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import top.leafage.common.TreeNode;
 
 import java.util.List;
 
 /**
  * group controller.
  *
- * @author wq li 2018/12/20 9:54
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/groups")
 public class GroupController {
@@ -45,6 +46,12 @@ public class GroupController {
     private final GroupMembersService groupMembersService;
     private final GroupService groupService;
 
+    /**
+     * <p>Constructor for GroupController.</p>
+     *
+     * @param groupMembersService a {@link io.leafage.basic.hypervisor.service.GroupMembersService} object
+     * @param groupService        a {@link io.leafage.basic.hypervisor.service.GroupService} object
+     */
     public GroupController(GroupMembersService groupMembersService, GroupService groupService) {
         this.groupMembersService = groupMembersService;
         this.groupService = groupService;
@@ -57,19 +64,37 @@ public class GroupController {
      * @param size       大小
      * @param sortBy     排序字段
      * @param descending 排序方向
+     * @param superiorId superior id
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
     public ResponseEntity<Page<GroupVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                  String sortBy, boolean descending) {
+                                                  String sortBy, boolean descending, Long superiorId) {
         Page<GroupVO> voPage;
         try {
-            voPage = groupService.retrieve(page, size, sortBy, descending);
+            voPage = groupService.retrieve(page, size, sortBy, descending, superiorId);
         } catch (Exception e) {
             logger.info("Retrieve group occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voPage);
+    }
+
+    /**
+     * 查询树形数据
+     *
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("/tree")
+    public ResponseEntity<List<TreeNode>> tree() {
+        List<TreeNode> treeNodes;
+        try {
+            treeNodes = groupService.tree();
+        } catch (Exception e) {
+            logger.info("Retrieve privilege tree occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(treeNodes);
     }
 
     /**

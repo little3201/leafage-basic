@@ -22,7 +22,7 @@
     <parent>
         <groupId>top.leafage</groupId>
         <artifactId>leafage-starter-parent</artifactId>
-        <version>0.3.1</version>
+        <version>0.3.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -40,7 +40,6 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <leafage-common.version>0.3.0</leafage-common.version>
-        <authorization-server.version>1.2.3</authorization-server.version>
     </properties>
 
     <developers>
@@ -54,6 +53,7 @@
         <module>assets</module>
         <module>auth</module>
         <module>hypervisor</module>
+        <module>generator</module>
     </modules>
 
     <dependencyManagement>
@@ -62,11 +62,6 @@
                 <groupId>top.leafage</groupId>
                 <artifactId>leafage-common</artifactId>
                 <version>${leafage-common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-oauth2-authorization-server</artifactId>
-                <version>${authorization-server.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -78,8 +73,8 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

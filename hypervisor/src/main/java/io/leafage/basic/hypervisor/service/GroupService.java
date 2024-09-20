@@ -19,13 +19,16 @@ package io.leafage.basic.hypervisor.service;
 import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.data.domain.Page;
+import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletBasicService;
+
+import java.util.List;
 
 /**
  * group service.
  *
- * @author wq li 2018/12/17 19:24
- **/
+ * @author wq li
+ */
 public interface GroupService extends ServletBasicService<GroupDTO, GroupVO> {
 
     /**
@@ -35,8 +38,16 @@ public interface GroupService extends ServletBasicService<GroupDTO, GroupVO> {
      * @param size       大小
      * @param sortBy     排序
      * @param descending 顺序
+     * @param superiorId superior id
      * @return 查询结果
      */
-    Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending);
+    Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId);
+
+    /**
+     * 获取树结构数据
+     *
+     * @return 树结构数据集
+     */
+    List<TreeNode> tree();
 
 }

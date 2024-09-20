@@ -22,8 +22,8 @@ import io.leafage.basic.hypervisor.bo.AccessLogBO;
 /**
  * dto class for access log.
  *
- * @author liwenqinag 2022/4/15 13:39
- **/
+ * @author wq li
+ */
 public class AccessLogDTO extends AccessLogBO {
 
 }

@@ -15,12 +15,12 @@
  *
  */
 
-package io.leafage.basic.hypervisor.controller;
+package io.leafage.basic.assets.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.service.RegionService;
-import io.leafage.basic.hypervisor.vo.RegionVO;
+import io.leafage.basic.assets.dto.RegionDTO;
+import io.leafage.basic.assets.service.RegionService;
+import io.leafage.basic.assets.vo.RegionVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * region controller test
  *
- * @author wq li 2021/12/7 15:38
+ * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)

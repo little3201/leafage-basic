@@ -24,8 +24,8 @@ import top.leafage.common.servlet.ServletBasicService;
 /**
  * tag service.
  *
- * @author wq li  2020-12-03 22:59
- **/
+ * @author wq li
+ */
 public interface TagService extends ServletBasicService<TagDTO, TagVO> {
 
     /**

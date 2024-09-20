@@ -25,8 +25,8 @@ import java.util.Set;
 /**
  * role members service.
  *
- * @author wq li 2022/1/26 15:20
- **/
+ * @author wq li
+ */
 public interface RoleMembersService {
 
     /**

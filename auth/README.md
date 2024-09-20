@@ -1,11 +1,12 @@
 # auth
 
-<p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.0-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-3.2.1-green.svg" alt="Downloads">
-</p>
+### 1. 鉴权：
 
-<a target="_blank" href="https://console.leafage.top"> 在线体验</a>
+通用鉴权：包括账号密码登录、oauth2；
+
+### 2. 授权：
+
+接口授权检查，授权配置；
 
 #### 核心依赖
 

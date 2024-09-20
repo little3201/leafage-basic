@@ -24,11 +24,23 @@ package io.leafage.basic.hypervisor.config;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 //import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 //import org.springframework.security.web.SecurityFilterChain;
-//
+
+/**
+ * <p>AuthorizationServerConfiguration class.</p>
+ *
+ * @author wq li
+ */
 //@Configuration
 //@EnableWebSecurity
 public class AuthorizationServerConfiguration {
 
+    /**
+     * <p>securityFilterChain.</p>
+     *
+     * @param http a {@link org.springframework.security.config.annotation.web.builders.HttpSecurity} object
+     * @return a {@link org.springframework.security.web.SecurityFilterChain} object
+     * @throws java.lang.Exception if any.
+     */
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        http.authorizeHttpRequests((authorize) -> authorize

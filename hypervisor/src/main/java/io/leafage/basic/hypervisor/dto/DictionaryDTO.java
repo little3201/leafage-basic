@@ -22,7 +22,7 @@ import io.leafage.basic.hypervisor.bo.DictionaryBO;
 /**
  * dto class for dictionary.
  *
- * @author wq li 2022-04-06 17:33
+ * @author wq li
  */
 public class DictionaryDTO extends DictionaryBO {
 
@@ -31,10 +31,18 @@ public class DictionaryDTO extends DictionaryBO {
      */
     private Long superiorId;
 
+    /**
+     * <p>Getter for the field <code>superiorId</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getSuperiorId() {
         return superiorId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
     }

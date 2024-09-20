@@ -23,20 +23,28 @@ import jakarta.validation.constraints.NotBlank;
 /**
  * bo class for tag
  *
- * @author wilsonli 2022-12-10 22:28
- **/
+ * @author wq li
+ */
 public abstract class TagBO {
 
-    /**
-     * 名称
-     */
+
     @NotBlank(message = "tag name is blank.")
     private String name;
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }

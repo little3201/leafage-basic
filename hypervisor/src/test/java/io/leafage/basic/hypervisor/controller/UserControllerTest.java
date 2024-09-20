@@ -27,15 +27,17 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * user controller test
  *
- * @author wq li 2019/1/29 17:09
+ * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)
@@ -67,13 +69,23 @@ class UserControllerTest {
     void init() {
         userVO = new UserVO();
         userVO.setUsername("test");
-        userVO.setFirstname("john");
-        userVO.setLastname("steven");
+        userVO.setEmail("john@test.com");
 
         userDTO = new UserDTO();
         userDTO.setUsername("test");
-        userDTO.setFirstname("john");
-        userDTO.setLastname("steven");
+        userDTO.setAccountNonLocked(true);
+        userDTO.setAvatar("steven.jpg");
+    }
+
+    @Test
+    void retrieve() throws Exception {
+        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
+        Page<UserVO> voPage = new PageImpl<>(List.of(userVO), pageable, 2L);
+        given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyLong())).willReturn(voPage);
+
+        mvc.perform(get("/users").queryParam("page", "0").queryParam("size", "2")
+                        .queryParam("sortBy", "").queryParam("groupId", "2")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
     @Test
@@ -89,6 +101,16 @@ class UserControllerTest {
         given(this.userService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
         mvc.perform(get("/users/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void create() throws Exception {
+        given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(userVO);
+
+        mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
+                .andExpect(jsonPath("$.username").value("test"))
                 .andDo(print()).andReturn();
     }
 

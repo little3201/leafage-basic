@@ -25,8 +25,8 @@ import top.leafage.common.servlet.ServletBasicService;
 /**
  * message service.
  *
- * @author wq li 2022/1/29 17:34
- **/
+ * @author wq li
+ */
 public interface MessageService extends ServletBasicService<MessageDTO, MessageVO> {
 
     /**

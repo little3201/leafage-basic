@@ -29,17 +29,25 @@ import java.util.Set;
 /**
  * group members service impl.
  *
- * @author wq li 2021/11/27 14:18
- **/
+ * @author wq li
+ */
 @Service
 public class GroupMembersServiceImpl implements GroupMembersService {
 
     private final GroupMembersRepository groupMembersRepository;
 
+    /**
+     * <p>Constructor for GroupMembersServiceImpl.</p>
+     *
+     * @param groupMembersRepository a {@link io.leafage.basic.hypervisor.repository.GroupMembersRepository} object
+     */
     public GroupMembersServiceImpl(GroupMembersRepository groupMembersRepository) {
         this.groupMembersRepository = groupMembersRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<GroupMembers> members(Long groupId) {
         Assert.notNull(groupId, "group id must not be null.");
@@ -47,6 +55,9 @@ public class GroupMembersServiceImpl implements GroupMembersService {
         return groupMembersRepository.findByGroupId(groupId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<GroupMembers> groups(String username) {
         Assert.hasText(username, "username must not be blank.");
@@ -54,6 +65,9 @@ public class GroupMembersServiceImpl implements GroupMembersService {
         return groupMembersRepository.findByUsername(username);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<GroupMembers> relation(Long groupId, Set<String> usernames) {
         Assert.notNull(groupId, "group id must not be null.");

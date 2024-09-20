@@ -26,12 +26,17 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 /**
  * jpa 自动填充配置
  *
- * @author wq li  2020-12-20 9:54
+ * @author wq li
  */
 @Configuration
 @EnableJpaAuditing
 public class AuditingConfiguration {
 
+    /**
+     * <p>auditorProvider.</p>
+     *
+     * @return a {@link org.springframework.data.domain.AuditorAware} object
+     */
     @Bean
     public AuditorAware<String> auditorProvider() {
         return new AuditorAwareImpl();

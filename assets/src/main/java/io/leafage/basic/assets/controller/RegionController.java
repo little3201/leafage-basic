@@ -15,11 +15,11 @@
  *
  */
 
-package io.leafage.basic.hypervisor.controller;
+package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.service.RegionService;
-import io.leafage.basic.hypervisor.vo.RegionVO;
+import io.leafage.basic.assets.dto.RegionDTO;
+import io.leafage.basic.assets.service.RegionService;
+import io.leafage.basic.assets.vo.RegionVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +33,8 @@ import java.util.List;
 /**
  * region controller.
  *
- * @author wq li 2021/08/20 17:08
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/regions")
 public class RegionController {
@@ -43,6 +43,11 @@ public class RegionController {
 
     private final RegionService regionService;
 
+    /**
+     * <p>Constructor for RegionController.</p>
+     *
+     * @param regionService a {@link io.leafage.basic.assets.service.RegionService} object
+     */
     public RegionController(RegionService regionService) {
         this.regionService = regionService;
     }
@@ -73,17 +78,18 @@ public class RegionController {
      * 查询下级数据
      *
      * @return 查询到的数据，否则返回空
+     * @param id a {@link java.lang.Long} object
      */
     @GetMapping("/{id}/subset")
     public ResponseEntity<List<RegionVO>> subset(@PathVariable Long id) {
-        List<RegionVO> child;
+        List<RegionVO> voList;
         try {
-            child = regionService.subset(id);
+            voList = regionService.subset(id);
         } catch (Exception e) {
             logger.info("Retrieve region subset occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(child);
+        return ResponseEntity.ok(voList);
     }
 
     /**

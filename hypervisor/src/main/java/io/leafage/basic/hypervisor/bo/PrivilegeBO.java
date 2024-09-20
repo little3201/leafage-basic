@@ -19,28 +19,31 @@ package io.leafage.basic.hypervisor.bo;
 
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
  * bo class for privilege
  *
- * @author liwenqiang 2022-12-10 22:09
+ * @author wq li
  */
 public abstract class PrivilegeBO {
 
-    /**
-     * 名称
-     */
+
     @NotBlank(message = "name must not be blank.")
     @Size(max = 32, message = "name max length is 32.")
     private String name;
 
+    private String path;
+
     /**
-     * 类型
+     * 跳转路径
      */
-    @NotNull(message = "type must not be null.")
-    private Character type;
+    private String redirect;
+
+    /**
+     * 组件路径
+     */
+    private String component;
 
     /**
      * 图标
@@ -49,51 +52,114 @@ public abstract class PrivilegeBO {
     private String icon;
 
     /**
-     * 路径
-     */
-    private String path;
-
-    /**
      * 描述
      */
     private String description;
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    public Character getType() {
-        return type;
-    }
-
-    public void setType(Character type) {
-        this.type = type;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
+    /**
+     * <p>Getter for the field <code>path</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getPath() {
         return path;
     }
 
+    /**
+     * <p>Setter for the field <code>path</code>.</p>
+     *
+     * @param path a {@link java.lang.String} object
+     */
     public void setPath(String path) {
         this.path = path;
     }
 
+    /**
+     * <p>Getter for the field <code>redirect</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String getRedirect() {
+        return redirect;
+    }
+
+    /**
+     * <p>Setter for the field <code>redirect</code>.</p>
+     *
+     * @param redirect a {@link java.lang.String} object
+     */
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+
+    /**
+     * <p>Getter for the field <code>component</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String getComponent() {
+        return component;
+    }
+
+    /**
+     * <p>Setter for the field <code>component</code>.</p>
+     *
+     * @param component a {@link java.lang.String} object
+     */
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    /**
+     * <p>Getter for the field <code>icon</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String getIcon() {
+        return icon;
+    }
+
+    /**
+     * <p>Setter for the field <code>icon</code>.</p>
+     *
+     * @param icon a {@link java.lang.String} object
+     */
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
     public void setDescription(String description) {
         this.description = description;
     }

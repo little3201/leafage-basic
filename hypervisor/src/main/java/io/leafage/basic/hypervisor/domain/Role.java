@@ -24,15 +24,13 @@ import jakarta.persistence.Table;
 /**
  * model class for role.
  *
- * @author wq li 2020-12-20 9:54
+ * @author wq li
  */
 @Entity
 @Table(name = "roles")
 public class Role extends AuditMetadata {
 
-    /**
-     * 名称
-     */
+
     @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;
 
@@ -42,18 +40,38 @@ public class Role extends AuditMetadata {
     private String description;
 
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>Getter for the field <code>description</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * <p>Setter for the field <code>description</code>.</p>
+     *
+     * @param description a {@link java.lang.String} object
+     */
     public void setDescription(String description) {
         this.description = description;
     }

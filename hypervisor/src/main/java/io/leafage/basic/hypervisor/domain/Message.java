@@ -25,15 +25,13 @@ import jakarta.persistence.Table;
 /**
  * model class for message.
  *
- * @author wq li 2022/1/29 17:20
- **/
+ * @author wq li
+ */
 @Entity
 @Table(name = "messages")
 public class Message extends AuditMetadata {
 
-    /**
-     * 主键
-     */
+
     @Column(name = "title", nullable = false)
     private String title;
 
@@ -56,34 +54,74 @@ public class Message extends AuditMetadata {
     private String receiver;
 
 
+    /**
+     * <p>Getter for the field <code>title</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * <p>Setter for the field <code>title</code>.</p>
+     *
+     * @param title a {@link java.lang.String} object
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * <p>Getter for the field <code>content</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getContent() {
         return content;
     }
 
+    /**
+     * <p>Setter for the field <code>content</code>.</p>
+     *
+     * @param content a {@link java.lang.String} object
+     */
     public void setContent(String content) {
         this.content = content;
     }
 
+    /**
+     * <p>isRead.</p>
+     *
+     * @return a boolean
+     */
     public boolean isRead() {
         return read;
     }
 
+    /**
+     * <p>Setter for the field <code>read</code>.</p>
+     *
+     * @param read a boolean
+     */
     public void setRead(boolean read) {
         this.read = read;
     }
 
+    /**
+     * <p>Getter for the field <code>receiver</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getReceiver() {
         return receiver;
     }
 
+    /**
+     * <p>Setter for the field <code>receiver</code>.</p>
+     *
+     * @param receiver a {@link java.lang.String} object
+     */
     public void setReceiver(String receiver) {
         this.receiver = receiver;
     }

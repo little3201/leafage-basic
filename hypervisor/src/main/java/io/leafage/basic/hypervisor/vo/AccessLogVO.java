@@ -22,20 +22,28 @@ import io.leafage.basic.hypervisor.bo.AccessLogBO;
 /**
  * vo class for access log.
  *
- * @author liwenqinag 2022/4/15 13:39
- **/
+ * @author wq li
+ */
 public class AccessLogVO extends AccessLogBO {
 
-    /**
-     * 主键
-     */
+
     private Long id;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }

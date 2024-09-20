@@ -25,37 +25,53 @@ import jakarta.persistence.Table;
 /**
  * model class for tag.
  *
- * @author wq li  2020-12-03 22:59
+ * @author wq li
  */
 @Entity
 @Table(name = "tags", indexes = {@Index(name = "uni_tags_name", columnList = "name")})
 public class Tag extends AuditMetadata {
 
-    /**
-     * 名称
-     */
+
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    /**
-     * 是否可用
-     */
+
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true;
 
 
+    /**
+     * <p>Getter for the field <code>name</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * <p>Setter for the field <code>name</code>.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * <p>Setter for the field <code>enabled</code>.</p>
+     *
+     * @param enabled a boolean
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

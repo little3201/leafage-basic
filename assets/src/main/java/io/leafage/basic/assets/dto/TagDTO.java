@@ -21,7 +21,7 @@ import io.leafage.basic.assets.bo.TagBO;
 /**
  * dto class for tag.
  *
- * @author wq li  2020-12-03 22:59
+ * @author wq li
  */
 public class TagDTO extends TagBO {
 

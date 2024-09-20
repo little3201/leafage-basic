@@ -39,17 +39,23 @@ import java.util.Optional;
 /**
  * comment service impl.
  *
- * @author wq li 2021/09/29 15:10
- **/
+ * @author wq li
+ */
 @Service
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
+    /**
+     * <p>Constructor for CommentServiceImpl.</p>
+     *
+     * @param commentRepository a {@link io.leafage.basic.assets.repository.CommentRepository} object
+     */
     public CommentServiceImpl(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Page<CommentVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
@@ -58,6 +64,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAll(pageable).map(this::convert);
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<CommentVO> relation(Long id) {
         Assert.notNull(id, "comment id must not be null.");
@@ -65,12 +72,14 @@ public class CommentServiceImpl implements CommentService {
                 .stream().map(this::convert).toList();
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<CommentVO> replies(Long replier) {
         return commentRepository.findByReplier(replier)
                 .stream().map(this::convert).toList();
     }
 
+    /** {@inheritDoc} */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public CommentVO create(CommentDTO dto) {

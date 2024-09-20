@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * tag controller.
  *
- * @author wq li 2018/12/20 9:54
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/tags")
 public class TagController {
@@ -40,6 +40,11 @@ public class TagController {
 
     private final TagService tagService;
 
+    /**
+     * <p>Constructor for TagController.</p>
+     *
+     * @param tagService a {@link io.leafage.basic.assets.service.TagService} object
+     */
     public TagController(TagService tagService) {
         this.tagService = tagService;
     }
@@ -51,6 +56,7 @@ public class TagController {
      * @param size   大小
      * @param sortBy 排序字段
      * @return 分页结果集
+     * @param descending a boolean
      */
     @GetMapping
     public ResponseEntity<Page<TagVO>> retrieve(@RequestParam int page, @RequestParam int size,

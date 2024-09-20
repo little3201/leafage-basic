@@ -29,22 +29,18 @@ import java.util.Optional;
 /**
  * audit metadata.
  *
- * @author wq li  2020-12-20 9:54
+ * @author wq li
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AuditMetadata implements Auditable<String, Long, Instant> {
 
-    /**
-     * 主键
-     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * 是否可用
-     */
+
     private boolean enabled = true;
 
     /**
@@ -74,63 +70,112 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
     private Instant lastModifiedDate;
 
 
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * <p>Setter for the field <code>enabled</code>.</p>
+     *
+     * @param enabled a boolean
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<String> getCreatedBy() {
         return Optional.ofNullable(this.createdBy);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Instant> getCreatedDate() {
         return Optional.ofNullable(this.createdDate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setCreatedDate(Instant creationDate) {
         this.createdDate = creationDate;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<String> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Instant> getLastModifiedDate() {
         return Optional.ofNullable(this.lastModifiedDate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Long getId() {
         return this.id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isNew() {
         return Objects.isNull(getId());

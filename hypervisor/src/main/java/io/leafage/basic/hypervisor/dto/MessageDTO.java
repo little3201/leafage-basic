@@ -22,8 +22,8 @@ import io.leafage.basic.hypervisor.bo.MessageBO;
 /**
  * dto class for message.
  *
- * @author wq li 2022/1/29 17:20
- **/
+ * @author wq li
+ */
 public class MessageDTO extends MessageBO {
 
 }

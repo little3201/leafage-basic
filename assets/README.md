@@ -1,11 +1,12 @@
 # assets
 
-<p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.0-green.svg" alt="Coverage Status">
-  <img src="https://img.shields.io/badge/Spring%20Boot-3.2.1-green.svg" alt="Downloads">
-</p>
+### 1. 资源管理：
 
- <a target="_blank" href="https://console.leafage.top"> 在线体验</a>
+对通用数据资源提供管理功能，包括行政区划、站点帖子（以及评论等）；
+
+### 2. 接口安全：
+
+支持oauth2安全认证，接口细粒度的安全保护；
 
 #### 核心依赖
 

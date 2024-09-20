@@ -38,7 +38,7 @@ import static org.mockito.BDDMockito.given;
 /**
  * comment 接口测试
  *
- * @author wq li 2021/12/7 17:55
+ * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
 class CommentServiceImplTest {

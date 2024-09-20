@@ -21,33 +21,68 @@ import io.leafage.basic.hypervisor.bo.PrivilegeBO;
 /**
  * vo class for privilege.
  *
- * @author wq li 2019/8/31 15:50
+ * @author wq li
  */
 public class PrivilegeVO extends PrivilegeBO {
 
-    /**
-     * 主键
-     */
     private Long id;
 
-    /**
-     * 状态
-     */
+    private long count;
+
+
     private boolean enabled;
 
 
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * <p>Getter for the field <code>count</code>.</p>
+     *
+     * @return a long
+     */
+    public long getCount() {
+        return count;
+    }
+
+    /**
+     * <p>Setter for the field <code>count</code>.</p>
+     *
+     * @param count a long
+     */
+    public void setCount(long count) {
+        this.count = count;
+    }
+
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * <p>Setter for the field <code>enabled</code>.</p>
+     *
+     * @param enabled a boolean
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

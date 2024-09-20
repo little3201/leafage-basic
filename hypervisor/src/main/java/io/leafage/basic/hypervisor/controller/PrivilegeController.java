@@ -35,8 +35,8 @@ import java.util.List;
 /**
  * privilege controller.
  *
- * @author wq li 2018/12/17 19:39
- **/
+ * @author wq li
+ */
 @RestController
 @RequestMapping("/privileges")
 public class PrivilegeController {
@@ -46,6 +46,12 @@ public class PrivilegeController {
     private final PrivilegeService privilegeService;
     private final RolePrivilegesService rolePrivilegesService;
 
+    /**
+     * <p>Constructor for PrivilegeController.</p>
+     *
+     * @param privilegeService      a {@link io.leafage.basic.hypervisor.service.PrivilegeService} object
+     * @param rolePrivilegesService a {@link io.leafage.basic.hypervisor.service.RolePrivilegesService} object
+     */
     public PrivilegeController(PrivilegeService privilegeService, RolePrivilegesService rolePrivilegesService) {
         this.privilegeService = privilegeService;
         this.rolePrivilegesService = rolePrivilegesService;
@@ -76,18 +82,37 @@ public class PrivilegeController {
     /**
      * 查询树形数据
      *
+     * @param username a {@link java.lang.String} object
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/tree")
-    public ResponseEntity<List<TreeNode>> tree() {
+    @GetMapping("/{username}/tree")
+    public ResponseEntity<List<TreeNode>> tree(@PathVariable String username) {
         List<TreeNode> treeNodes;
         try {
-            treeNodes = privilegeService.tree();
+            treeNodes = privilegeService.tree(username);
         } catch (Exception e) {
             logger.info("Retrieve privilege tree occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(treeNodes);
+    }
+
+    /**
+     * 查询信息
+     *
+     * @param superiorId 主键
+     * @return 查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/{superiorId}/subset")
+    public ResponseEntity<List<PrivilegeVO>> subset(@PathVariable Long superiorId) {
+        List<PrivilegeVO> voList;
+        try {
+            voList = privilegeService.subset(superiorId);
+        } catch (Exception e) {
+            logger.info("Retrieve privilege subset occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voList);
     }
 
     /**

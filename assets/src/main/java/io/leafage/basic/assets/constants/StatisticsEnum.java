@@ -20,8 +20,8 @@ package io.leafage.basic.assets.constants;
 /**
  * statistics type enum
  *
- * @author liwenqiang 2022-05-31 09:03
- **/
+ * @author wq li
+ */
 public enum StatisticsEnum {
 
     VIEWED("viewed"),

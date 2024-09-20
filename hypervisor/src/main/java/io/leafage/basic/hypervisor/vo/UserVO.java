@@ -22,35 +22,49 @@ import io.leafage.basic.hypervisor.bo.UserBO;
 /**
  * vo class for user.
  *
- * @author wq li 2019/8/31 15:50
- **/
+ * @author wq li
+ */
 public class UserVO extends UserBO {
 
-    /**
-     * 状态
-     */
+    private Long id;
+
     private boolean enabled;
 
+
     /**
-     * 是否锁定
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link java.lang.Long} object
      */
-    private boolean accountNonLocked;
+    public Long getId() {
+        return id;
+    }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean
+     */
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * <p>Setter for the field <code>enabled</code>.</p>
+     *
+     * @param enabled a boolean
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
     }
 
 }

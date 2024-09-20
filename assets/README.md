@@ -1,16 +1,22 @@
 # assets
 
-<p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.0-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-3.2.0-green.svg" alt="Downloads">
-</p>
+### 1. 资源管理：
 
-<a href="#" target="_blank">部署文档</a> | <a target="_blank" href="https://console.leafage.top"> 在线体验</a>
+对通用数据资源提供管理功能，包括行政区划、站点帖子（以及评论等）；
+
+### 2. 接口安全：
+
+支持oauth2安全认证，接口细粒度的安全保护；
 
 #### 核心依赖
 
-|         依赖          |  说明   |
-|:-------------------:|:-----:|
-| Spring Boot WebFlux | web框架 |
-|  Spring Data R2DBC  | 数据访问层 |
-|      postgres       | 数据存储  |
+|                     依赖                     |  说明   |
+|:------------------------------------------:|:-----:|
+|            Spring Boot WebFlux             | web框架 |
+|   spring-cloud-starter-consul-discovery    | 服务注册  |
+| spring-boot-starter-oauth2-resource-server | 接口安全  |
+|        spring-boot-starter-actuator        | 健康监控  |
+|       micrometer-registry-prometheus       | 监控接口  |
+|             Spring Data R2DBC              | 数据访问层 |
+|                  postgres                  | 数据存储  |
+|                  caffeine                  | 内存缓存  |

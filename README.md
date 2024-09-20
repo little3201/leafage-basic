@@ -1,15 +1,17 @@
 # Leafage Basic
 
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.0-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-3.2.0-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.3-green.svg" alt="Coverage Status">
+ <img src="https://img.shields.io/badge/Spring%20Boot-3.2.7-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Oauth2%20Authorization%20Server-1.3.2-green.svg" alt="Downloads">
  <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=alert_status" alt="Quality Gate Status">
  <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=coverage"/>
 </p>
 
 ### 依赖
 
-> 现在leafage-starter-parent 和 leafage-common 已经可以在maven repository 中存在了（groupId 替换成了top.leafage），可以直接通过maven repository使用
+> 现在leafage-starter-parent 和 leafage-common 已经可以在maven repository 中下载了（groupId 替换成了top.leafage），可以直接通过maven
+> repository使用
 
 #### [leafage-starter-parent](https://github.com/little3201/) —— 不包含任何代码，仅仅作为所有模块依赖的版本控制；
 
@@ -17,8 +19,10 @@
 
 ### 介绍：
 
-<a target="_blank" href="https://console.abeille.top"> 在线体验</a>， 未登录状态仅可访问部分接口
+<a target="_blank" href="https://console.leafage.top"> 在线体验</a>， 未登录状态仅可访问部分接口
 
-- 本模块分为webmvc和webflux两个版本，分别关联响应的分支，具体请查看对应分支代码；
+#### 概况：
 
-- leafage-basic下分两个模块「assets」和 「hypervisor」，具体每个模块的功能详细信息请查看对应子模块的介绍；
+- 本模块分为webmvc(develop分支)和webflux(webflux分支)两个版本，具体请查看对应分支代码；
+
+- leafage-basic下分:「assets」、[generator] 和 「hypervisor」，具体每个模块的功能详细信息请查看对应子模块的介绍；

@@ -19,6 +19,12 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>top.leafage</groupId>
+        <artifactId>leafage-starter-parent</artifactId>
+        <version>0.3.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
 
     <groupId>io.leafage.basic</groupId>
     <artifactId>leafage-basic</artifactId>
@@ -28,22 +34,47 @@
     <name>leafage-basic</name>
     <description>basic module of leafage</description>
 
-    <developers>
-        <developer>
-            <name>li wen qiang</name>
-            <email>little3201@gmail.com</email>
-        </developer>
-    </developers>
-
     <properties>
         <sonar.projectKey>little3201_leafage-basic</sonar.projectKey>
         <sonar.organization>little3201</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
+        <leafage-common.version>0.3.0</leafage-common.version>
     </properties>
+
+    <developers>
+        <developer>
+            <name>wq li</name>
+            <email>little3201@gmail.com</email>
+        </developer>
+    </developers>
 
     <modules>
         <module>hypervisor</module>
         <module>assets</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>top.leafage</groupId>
+                <artifactId>leafage-common</artifactId>
+                <version>${leafage-common.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

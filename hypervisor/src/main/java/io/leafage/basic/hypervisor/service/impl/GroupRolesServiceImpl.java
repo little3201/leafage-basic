@@ -56,18 +56,14 @@ public class GroupRolesServiceImpl implements GroupRolesService {
         return groupRolesRepository.findByGroupId(groupId).collectList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<List<GroupRoles>> groups(Long roleId) {
         Assert.notNull(roleId, "role id must not be blank.");
         return groupRolesRepository.findByRoleId(roleId).collectList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> relation(Long groupId, Set<Long> roleIds) {
         Assert.notNull(groupId, "group id must not be blank.");

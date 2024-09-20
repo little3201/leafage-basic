@@ -73,9 +73,7 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<MessageVO> fetch(Long id) {
         Assert.notNull(id, "message id must not be null.");
@@ -85,9 +83,7 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
                 .flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<MessageVO> create(MessageDTO messageDTO) {
         Message message = new Message();
@@ -99,9 +95,7 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
         }).flatMap(messageRepository::save).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "message id must not be null.");

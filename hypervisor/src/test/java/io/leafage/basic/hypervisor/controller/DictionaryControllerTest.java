@@ -20,8 +20,6 @@ package io.leafage.basic.hypervisor.controller;
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
-import io.leafage.basic.hypervisor.vo.RegionVO;
-import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -85,7 +83,7 @@ class DictionaryControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/dictionaries").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(RoleVO.class);
+                .expectStatus().isOk().expectBodyList(DictionaryVO.class);
     }
 
     @Test
@@ -116,7 +114,7 @@ class DictionaryControllerTest {
         given(this.dictionaryService.superior()).willReturn(Flux.just(dictionaryVO));
 
         webTestClient.get().uri("/dictionaries/superior").exchange()
-                .expectStatus().isOk().expectBodyList(RegionVO.class);
+                .expectStatus().isOk().expectBodyList(DictionaryVO.class);
     }
 
     @Test
@@ -131,7 +129,7 @@ class DictionaryControllerTest {
         given(this.dictionaryService.subordinates(Mockito.anyLong())).willReturn(Flux.just(dictionaryVO));
 
         webTestClient.get().uri("/dictionaries/{id}/subordinates", 1L).exchange()
-                .expectStatus().isOk().expectBodyList(RegionVO.class);
+                .expectStatus().isOk().expectBodyList(DictionaryVO.class);
     }
 
     @Test

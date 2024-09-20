@@ -56,18 +56,14 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
         return rolePrivilegesRepository.findByRoleId(roleId).collectList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<List<RolePrivileges>> roles(Long privilegeId) {
         Assert.notNull(privilegeId, "privilege id must not be null.");
         return rolePrivilegesRepository.findByPrivilegeId(privilegeId).collectList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> relation(Long roleId, Set<Long> privilegeIds) {
         Assert.notNull(roleId, "role id must not be null.");

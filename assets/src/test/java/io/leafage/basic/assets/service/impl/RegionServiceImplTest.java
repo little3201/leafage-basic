@@ -15,11 +15,11 @@
  *
  */
 
-package io.leafage.basic.hypervisor.service.impl;
+package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.hypervisor.domain.Region;
-import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.repository.RegionRepository;
+import io.leafage.basic.assets.domain.Region;
+import io.leafage.basic.assets.dto.RegionDTO;
+import io.leafage.basic.assets.repository.RegionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

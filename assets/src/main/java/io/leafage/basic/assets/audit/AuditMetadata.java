@@ -125,6 +125,15 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
         return this.id;
     }
 
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     /** {@inheritDoc} */
     @Override
     public boolean isNew() {

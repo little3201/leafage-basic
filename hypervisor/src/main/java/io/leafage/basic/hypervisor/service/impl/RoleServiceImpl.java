@@ -61,9 +61,7 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.findAll().flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Page<RoleVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -75,27 +73,21 @@ public class RoleServiceImpl implements RoleService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<RoleVO> fetch(Long id) {
         Assert.notNull(id, "role id must not be blank.");
         return roleRepository.findById(id).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "role name must not be blank.");
         return roleRepository.existsByName(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<RoleVO> create(RoleDTO roleDTO) {
         Role role = new Role();
@@ -103,9 +95,7 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.save(role).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<RoleVO> modify(Long id, RoleDTO roleDTO) {
         Assert.notNull(id, "role id must not be blank.");
@@ -115,9 +105,7 @@ public class RoleServiceImpl implements RoleService {
                 .flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "role id must not be blank.");

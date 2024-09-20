@@ -22,7 +22,6 @@ import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.service.GroupMembersService;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -94,7 +93,7 @@ class GroupControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(RoleVO.class);
+                .expectStatus().isOk().expectBodyList(GroupVO.class);
     }
 
     @Test

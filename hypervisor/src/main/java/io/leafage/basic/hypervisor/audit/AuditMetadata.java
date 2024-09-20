@@ -103,76 +103,65 @@ public abstract class AuditMetadata implements Auditable<String, Long, Instant> 
         return Optional.ofNullable(this.createdBy);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Optional<Instant> getCreatedDate() {
         return Optional.ofNullable(this.createdDate);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setCreatedDate(Instant creationDate) {
         this.createdDate = creationDate;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Optional<String> getLastModifiedBy() {
         return Optional.ofNullable(this.lastModifiedBy);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setLastModifiedBy(String lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Optional<Instant> getLastModifiedDate() {
         return Optional.ofNullable(this.lastModifiedDate);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Long getId() {
         return this.id;
     }
 
     /**
-     * {@inheritDoc}
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link java.lang.Long} object
      */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /** {@inheritDoc} */
     @Override
     public boolean isNew() {
         return Objects.isNull(getId());

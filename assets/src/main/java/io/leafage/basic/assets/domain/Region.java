@@ -15,9 +15,9 @@
  *
  */
 
-package io.leafage.basic.hypervisor.domain;
+package io.leafage.basic.assets.domain;
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
+import io.leafage.basic.assets.audit.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -49,6 +49,12 @@ public class Region extends AuditMetadata {
      */
     @Column(value = "area_code")
     private String areaCode;
+
+    /**
+     * 是否启用
+     */
+    @Column(value = "is_enabled")
+    private boolean enabled = true;
 
     /**
      * 描述
@@ -125,6 +131,24 @@ public class Region extends AuditMetadata {
      */
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
+    }
+
+    /**
+     * <p>isEnabled.</p>
+     *
+     * @return a boolean
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * <p>Setter for the field <code>enabled</code>.</p>
+     *
+     * @param enabled a boolean
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     /**

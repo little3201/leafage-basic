@@ -15,36 +15,38 @@
  *
  */
 
-package io.leafage.basic.hypervisor.service;
+package io.leafage.basic.assets.dto;
 
-import io.leafage.basic.hypervisor.dto.RegionDTO;
-import io.leafage.basic.hypervisor.vo.RegionVO;
-import org.springframework.data.domain.Page;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import top.leafage.common.reactive.ReactiveBasicService;
+import io.leafage.basic.assets.bo.RegionBO;
 
 /**
- * region service
+ * dto class for region
  *
  * @author wq li
  */
-public interface RegionService extends ReactiveBasicService<RegionDTO, RegionVO> {
+public class RegionDTO extends RegionBO {
 
     /**
-     * 获取下级
-     *
-     * @param id 主键
-     * @return 数据集
+     * superior
      */
-    Flux<RegionVO> subordinates(Long id);
+    private Long superiorId;
 
     /**
-     * 分页查询
+     * <p>Getter for the field <code>superiorId</code>.</p>
      *
-     * @param page 页码
-     * @param size 大小
-     * @return 结果集
+     * @return a {@link java.lang.Long} object
      */
-    Mono<Page<RegionVO>> retrieve(int page, int size);
+    public Long getSuperiorId() {
+        return superiorId;
+    }
+
+    /**
+     * <p>Setter for the field <code>superiorId</code>.</p>
+     *
+     * @param superiorId a {@link java.lang.Long} object
+     */
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
+    }
+
 }

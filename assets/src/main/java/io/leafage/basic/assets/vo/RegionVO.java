@@ -15,9 +15,9 @@
  *
  */
 
-package io.leafage.basic.hypervisor.vo;
+package io.leafage.basic.assets.vo;
 
-import io.leafage.basic.hypervisor.bo.RegionBO;
+import io.leafage.basic.assets.bo.RegionBO;
 
 import java.time.Instant;
 

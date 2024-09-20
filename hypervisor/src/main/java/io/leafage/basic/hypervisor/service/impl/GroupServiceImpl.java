@@ -61,9 +61,7 @@ public class GroupServiceImpl implements GroupService {
                 .switchIfEmpty(Mono.error(NoSuchElementException::new));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Page<GroupVO>> retrieve(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -75,27 +73,21 @@ public class GroupServiceImpl implements GroupService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<GroupVO> fetch(Long id) {
         Assert.notNull(id, "group id must not be null.");
         return groupRepository.findById(id).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "group name must not be blank.");
         return groupRepository.existsByName(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<GroupVO> create(GroupDTO groupDTO) {
         Group group = new Group();
@@ -103,9 +95,7 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.save(group).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<GroupVO> modify(Long id, GroupDTO groupDTO) {
         Assert.notNull(id, "group id must not be null.");
@@ -115,9 +105,7 @@ public class GroupServiceImpl implements GroupService {
                 .flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "group id must not be null.");

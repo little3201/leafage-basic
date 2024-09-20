@@ -68,44 +68,34 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Flux<DictionaryVO> superior() {
         return dictionaryRepository.findBySuperiorIdIsNull().flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Flux<DictionaryVO> subordinates(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
         return dictionaryRepository.findBySuperiorId(id).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<DictionaryVO> fetch(Long id) {
         Assert.notNull(id, "dictionary id must not be null.");
         return dictionaryRepository.findById(id).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "dictionary name must not be blank.");
         return dictionaryRepository.existsByName(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<DictionaryVO> create(DictionaryDTO dictionaryDTO) {
         Dictionary dictionary = new Dictionary();
@@ -113,9 +103,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
         return dictionaryRepository.save(dictionary).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<DictionaryVO> modify(Long id, DictionaryDTO dictionaryDTO) {
         Assert.notNull(id, "dictionary id must not be null.");

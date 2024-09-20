@@ -56,18 +56,14 @@ public class RoleMembersServiceImpl implements RoleMembersService {
         return roleMembersRepository.findByRoleId(roleId).collectList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<List<RoleMembers>> roles(String username) {
         Assert.hasText(username, "username must not be blank.");
         return roleMembersRepository.findByUsername(username).collectList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> relation(Long roleId, Set<String> usernames) {
         Assert.notNull(roleId, "role id must not be blank.");

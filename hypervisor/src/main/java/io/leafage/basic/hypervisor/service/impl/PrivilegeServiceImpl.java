@@ -72,44 +72,34 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<List<TreeNode>> tree() {
         Flux<Privilege> privilegeFlux = privilegeRepository.findAll();
         return this.expandAndConvert(privilegeFlux);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Flux<PrivilegeVO> retrieve() {
         return privilegeRepository.findAll().flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<PrivilegeVO> fetch(Long id) {
         Assert.notNull(id, "privilege id must not be null.");
         return privilegeRepository.findById(id).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> exist(String name) {
         Assert.hasText(name, "privilege name must not be blank.");
         return privilegeRepository.existsByName(name);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<PrivilegeVO> create(PrivilegeDTO privilegeDTO) {
         Privilege privilege = new Privilege();
@@ -117,9 +107,7 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
         return privilegeRepository.save(privilege).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<PrivilegeVO> modify(Long id, PrivilegeDTO privilegeDTO) {
         Assert.notNull(id, "privilege id must not be null.");

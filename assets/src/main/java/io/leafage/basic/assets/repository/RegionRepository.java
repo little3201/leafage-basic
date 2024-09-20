@@ -15,9 +15,9 @@
  *
  */
 
-package io.leafage.basic.hypervisor.repository;
+package io.leafage.basic.assets.repository;
 
-import io.leafage.basic.hypervisor.domain.Region;
+import io.leafage.basic.assets.domain.Region;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;

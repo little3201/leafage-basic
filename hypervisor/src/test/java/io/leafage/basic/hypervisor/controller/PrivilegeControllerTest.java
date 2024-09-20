@@ -23,7 +23,6 @@ import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
-import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -100,7 +99,7 @@ class PrivilegeControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/privileges").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(RoleVO.class);
+                .expectStatus().isOk().expectBodyList(PrivilegeVO.class);
     }
 
     @Test

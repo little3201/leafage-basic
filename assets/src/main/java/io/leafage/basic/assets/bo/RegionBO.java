@@ -15,7 +15,7 @@
  *
  */
 
-package io.leafage.basic.hypervisor.bo;
+package io.leafage.basic.assets.bo;
 
 import jakarta.validation.constraints.NotBlank;
 

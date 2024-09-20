@@ -68,27 +68,21 @@ public class UserServiceImpl implements UserService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<UserVO> fetch(Long id) {
         Assert.notNull(id, "user id must not be blank.");
         return userRepository.findById(id).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> exist(String username) {
         Assert.hasText(username, "username must not be blank.");
         return userRepository.existsByUsername(username);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<UserVO> create(UserDTO userDTO) {
         User user = new User();
@@ -97,9 +91,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user).flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<UserVO> modify(Long id, UserDTO userDTO) {
         Assert.notNull(id, "user id must not be blank.");
@@ -109,9 +101,7 @@ public class UserServiceImpl implements UserService {
                 .flatMap(this::convertOuter);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "user id must not be blank.");

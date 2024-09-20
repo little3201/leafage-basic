@@ -56,18 +56,14 @@ public class GroupMembersServiceImpl implements GroupMembersService {
         return groupMembersRepository.findByGroupId(groupId).collectList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<List<GroupMembers>> groups(String username) {
         Assert.hasText(username, "username must not be blank.");
         return groupMembersRepository.findByUsername(username).collectList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Mono<Boolean> relation(Long groupId, Set<String> usernames) {
         Assert.notNull(groupId, "group id must not be blank.");

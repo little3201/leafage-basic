@@ -25,16 +25,11 @@ import io.leafage.basic.hypervisor.bo.PrivilegeBO;
  */
 public class PrivilegeVO extends PrivilegeBO {
 
-    /**
-     * 主键
-     */
     private Long id;
 
     private long count;
 
-    /**
-     * 状态
-     */
+
     private boolean enabled;
 
 

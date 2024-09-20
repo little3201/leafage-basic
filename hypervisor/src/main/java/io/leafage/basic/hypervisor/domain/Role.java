@@ -30,9 +30,7 @@ import jakarta.persistence.Table;
 @Table(name = "roles")
 public class Role extends AuditMetadata {
 
-    /**
-     * 名称
-     */
+    
     @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;
 

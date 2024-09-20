@@ -26,14 +26,10 @@ import io.leafage.basic.assets.bo.RegionBO;
  **/
 public class RegionVO extends RegionBO {
 
-    /**
-     * 主键
-     */
+
     private Long id;
 
-    /**
-     * 状态
-     */
+
     private boolean enabled;
 
 

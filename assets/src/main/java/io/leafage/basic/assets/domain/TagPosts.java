@@ -27,9 +27,7 @@ import jakarta.persistence.*;
 @Table(name = "tag_posts")
 public class TagPosts {
 
-    /**
-     * 主键
-     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

@@ -26,9 +26,7 @@ import io.leafage.basic.hypervisor.bo.AccessLogBO;
  **/
 public class AccessLogVO extends AccessLogBO {
 
-    /**
-     * 主键
-     */
+
     private Long id;
 
 

@@ -43,9 +43,7 @@ public class Post extends AuditMetadata {
      */
     private String excerpt;
 
-    /**
-     * 是否可用
-     */
+
     private boolean enabled = true;
 
 

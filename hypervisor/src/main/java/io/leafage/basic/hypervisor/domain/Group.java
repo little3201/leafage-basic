@@ -30,9 +30,6 @@ import jakarta.persistence.Table;
 @Table(name = "groups")
 public class Group extends AuditMetadata {
 
-    /**
-     * 名称
-     */
     @Column(name = "group_name", nullable = false, length = 50)
     private String name;
 

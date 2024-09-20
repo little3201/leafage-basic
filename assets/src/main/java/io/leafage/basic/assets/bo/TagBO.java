@@ -27,9 +27,7 @@ import jakarta.validation.constraints.NotBlank;
  **/
 public abstract class TagBO {
 
-    /**
-     * 名称
-     */
+    
     @NotBlank(message = "tag name is blank.")
     private String name;
 

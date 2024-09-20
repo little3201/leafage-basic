@@ -26,9 +26,6 @@ import io.leafage.basic.hypervisor.bo.MessageBO;
  **/
 public class MessageVO extends MessageBO {
 
-    /**
-     * 主键
-     */
     private Long id;
 
 

@@ -33,42 +33,24 @@ import java.time.Instant;
 @Table(name = "users")
 public class User extends AuditMetadata {
 
-    /**
-     * user
-     */
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
 
-    /**
-     * password
-     */
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
-    /**
-     * 邮箱
-     */
     @Column(name = "email", length = 50)
     private String email;
 
-    /**
-     * 头像
-     */
     @Column(name = "avatar", length = 100)
     private String avatar;
 
-    /**
-     * 账号有效期
-     */
     @Column(name = "account_expires_at")
     private Instant accountExpiresAt;
 
     @Column(name = "account_non_locked")
     private boolean accountNonLocked;
 
-    /**
-     * 密码有效期
-     */
     @Column(name = "credentials_expires_at")
     private Instant credentialsExpiresAt;
 

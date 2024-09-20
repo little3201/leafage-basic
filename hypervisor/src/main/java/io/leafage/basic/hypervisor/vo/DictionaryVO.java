@@ -26,14 +26,8 @@ import io.leafage.basic.hypervisor.bo.DictionaryBO;
  */
 public class DictionaryVO extends DictionaryBO {
 
-    /**
-     * 主键
-     */
     private Long id;
 
-    /**
-     * 状态
-     */
     private boolean enabled;
 
 

@@ -32,78 +32,39 @@ import jakarta.persistence.Table;
 @Table(name = "access_logs")
 public class AccessLog extends AuditMetadata {
 
-    /**
-     * IP地址
-     */
     private String ip;
 
-    /**
-     * 地理位置
-     */
     @Column(name = "location", length = 50)
     private String location;
 
-    /**
-     * 内容
-     */
     @Column(name = "content", length = 1000)
     private String content;
 
-    /**
-     * 用户代理信息
-     */
     @Column(name = "user_agent")
     private String userAgent;
 
-    /**
-     * HTTP方法
-     */
     @Column(name = "http_method", length = 10)
     private String httpMethod;
 
-    /**
-     * 请求URL
-     */
     private String url;
 
-    /**
-     * HTTP状态码
-     */
     @Column(name = "status_code")
     private Integer statusCode;
 
-    /**
-     * 响应时间
-     */
     @Column(name = "response_time")
     private Long responseTime;
 
-    /**
-     * 来源页面
-     */
     private String referer;
 
-    /**
-     * 会话标识符
-     */
     @Column(name = "session_id", length = 50)
     private String sessionId;
 
-    /**
-     * 设备类型
-     */
     @Column(name = "device_type", length = 20)
     private String deviceType;
 
-    /**
-     * 操作系统
-     */
     @Column(name = "os", length = 50)
     private String os;
 
-    /**
-     * 浏览器
-     */
     @Column(name = "browser", length = 50)
     private String browser;
 

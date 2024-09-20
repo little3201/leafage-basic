@@ -27,9 +27,7 @@ import java.time.Instant;
  **/
 public class PostVO extends PostBO {
 
-    /**
-     * 主键
-     */
+
     private Long id;
 
     /**

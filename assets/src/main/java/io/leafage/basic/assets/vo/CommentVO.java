@@ -28,9 +28,7 @@ import java.time.Instant;
  **/
 public class CommentVO extends CommentBO {
 
-    /**
-     * 主键
-     */
+
     private Long id;
 
     /**

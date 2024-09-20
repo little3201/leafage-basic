@@ -25,14 +25,8 @@ import io.leafage.basic.hypervisor.bo.GroupBO;
  */
 public class GroupVO extends GroupBO {
 
-    /**
-     * 主键
-     */
     private Long id;
 
-    /**
-     * 状态
-     */
     private boolean enabled;
 
 

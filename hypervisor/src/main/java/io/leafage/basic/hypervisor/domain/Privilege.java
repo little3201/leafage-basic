@@ -30,9 +30,7 @@ import jakarta.persistence.Table;
 @Table(name = "privileges")
 public class Privilege extends AuditMetadata {
 
-    /**
-     * 名称
-     */
+    
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 

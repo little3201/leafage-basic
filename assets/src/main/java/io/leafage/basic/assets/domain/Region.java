@@ -31,9 +31,7 @@ import jakarta.persistence.Table;
 @Table(name = "regions")
 public class Region extends AuditMetadata {
 
-    /**
-     * 名称
-     */
+    
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 

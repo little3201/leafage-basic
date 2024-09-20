@@ -27,9 +27,7 @@ import jakarta.persistence.*;
 @Table(name = "role_members")
 public class RoleMembers {
 
-    /**
-     * 主键
-     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

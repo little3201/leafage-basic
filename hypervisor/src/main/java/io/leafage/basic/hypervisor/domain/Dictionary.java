@@ -31,21 +31,12 @@ import jakarta.persistence.Table;
 @Table(name = "dictionaries")
 public class Dictionary extends AuditMetadata {
 
-    /**
-     * 名称
-     */
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    /**
-     * 上级
-     */
     @Column(name = "superior_id")
     private Long superiorId;
 
-    /**
-     * 描述
-     */
     private String description;
 
 

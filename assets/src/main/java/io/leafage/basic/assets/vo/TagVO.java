@@ -27,9 +27,7 @@ import java.time.Instant;
  */
 public class TagVO extends TagBO {
 
-    /**
-     * 主键
-     */
+
     private Long id;
 
     /**

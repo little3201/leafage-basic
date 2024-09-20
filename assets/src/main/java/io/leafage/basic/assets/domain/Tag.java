@@ -31,15 +31,11 @@ import jakarta.persistence.Table;
 @Table(name = "tags", indexes = {@Index(name = "uni_tags_name", columnList = "name")})
 public class Tag extends AuditMetadata {
 
-    /**
-     * 名称
-     */
+    
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    /**
-     * 是否可用
-     */
+
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true;
 

@@ -31,9 +31,7 @@ import jakarta.persistence.Table;
 @Table(name = "messages")
 public class Message extends AuditMetadata {
 
-    /**
-     * 主键
-     */
+
     @Column(name = "title", nullable = false)
     private String title;
 

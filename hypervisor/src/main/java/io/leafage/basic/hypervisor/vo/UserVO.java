@@ -26,14 +26,8 @@ import io.leafage.basic.hypervisor.bo.UserBO;
  **/
 public class UserVO extends UserBO {
 
-    /**
-     * 主键
-     */
     private Long id;
 
-    /**
-     * 状态
-     */
     private boolean enabled;
 
 

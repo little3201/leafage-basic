@@ -15,21 +15,37 @@
  *
  */
 
-package io.leafage.basic.generator.audit;
+package io.leafage.basic.hypervisor.vo;
 
-import org.springframework.data.domain.AuditorAware;
-
-import java.util.Optional;
+import io.leafage.basic.hypervisor.bo.OperationLogBO;
 
 /**
- * auditor aware.
+ * vo class for operation log.
  *
  * @author wq li
  */
-public class AuditorAwareImpl implements AuditorAware<String> {
+public class OperationLogVO extends OperationLogBO {
 
-    @Override
-    public Optional<String> getCurrentAuditor() {
-        return Optional.of("admin");
+
+    private Long id;
+
+
+    /**
+     * <p>Getter for the field <code>id</code>.</p>
+     *
+     * @return a {@link Long} object
+     */
+    public Long getId() {
+        return id;
     }
+
+    /**
+     * <p>Setter for the field <code>id</code>.</p>
+     *
+     * @param id a {@link Long} object
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

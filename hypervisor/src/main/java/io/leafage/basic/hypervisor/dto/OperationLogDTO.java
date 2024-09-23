@@ -15,10 +15,15 @@
  *
  */
 
+package io.leafage.basic.hypervisor.dto;
+
+import io.leafage.basic.hypervisor.bo.OperationLogBO;
+
 /**
- * Audit
+ * dto class for operation log.
  *
  * @author wq li
  */
-@org.springframework.lang.NonNullApi
-package io.leafage.basic.generator.audit;
+public class OperationLogDTO extends OperationLogBO {
+
+}

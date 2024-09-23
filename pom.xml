@@ -53,7 +53,7 @@
         <module>assets</module>
         <module>auth</module>
         <module>hypervisor</module>
-        <module>generator</module>
+        <module>exploiter</module>
     </modules>
 
     <dependencyManagement>

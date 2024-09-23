@@ -17,11 +17,11 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.AccessLog;
-import io.leafage.basic.hypervisor.dto.AccessLogDTO;
-import io.leafage.basic.hypervisor.repository.AccessLogRepository;
-import io.leafage.basic.hypervisor.service.AccessLogService;
-import io.leafage.basic.hypervisor.vo.AccessLogVO;
+import io.leafage.basic.hypervisor.domain.OperationLog;
+import io.leafage.basic.hypervisor.dto.OperationLogDTO;
+import io.leafage.basic.hypervisor.repository.OperationLogRepository;
+import io.leafage.basic.hypervisor.service.OperationLogService;
+import io.leafage.basic.hypervisor.vo.OperationLogVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,68 +32,68 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
- * access log service impl.
+ * operation log service impl.
  *
  * @author wq li
  */
 @Service
-public class AccessLogServiceImpl implements AccessLogService {
+public class OperationLogServiceImpl implements OperationLogService {
 
-    private final AccessLogRepository accessLogRepository;
+    private final OperationLogRepository operationLogRepository;
 
     /**
      * <p>Constructor for AccessLogServiceImpl.</p>
      *
-     * @param accessLogRepository a {@link io.leafage.basic.hypervisor.repository.AccessLogRepository} object
+     * @param operationLogRepository a {@link OperationLogRepository} object
      */
-    public AccessLogServiceImpl(AccessLogRepository accessLogRepository) {
-        this.accessLogRepository = accessLogRepository;
+    public OperationLogServiceImpl(OperationLogRepository operationLogRepository) {
+        this.operationLogRepository = operationLogRepository;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Page<AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending) {
+    public Page<OperationLogVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
                 StringUtils.hasText(sortBy) ? sortBy : "id");
         Pageable pageable = PageRequest.of(page, size, sort);
-        return accessLogRepository.findAll(pageable).map(this::convert);
+        return operationLogRepository.findAll(pageable).map(this::convert);
     }
 
     @Override
-    public AccessLogVO fetch(Long id) {
+    public OperationLogVO fetch(Long id) {
         Assert.notNull(id, "access log id must not be null.");
-        AccessLog accessLog = accessLogRepository.findById(id).orElse(null);
-        if (accessLog == null) {
+        OperationLog operationLog = operationLogRepository.findById(id).orElse(null);
+        if (operationLog == null) {
             return null;
         }
-        return this.convert(accessLog);
+        return this.convert(operationLog);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public AccessLogVO create(AccessLogDTO dto) {
-        AccessLog accessLog = new AccessLog();
-        BeanCopier copier = BeanCopier.create(AccessLogDTO.class, AccessLog.class, false);
-        copier.copy(dto, accessLog, null);
+    public OperationLogVO create(OperationLogDTO dto) {
+        OperationLog operationLog = new OperationLog();
+        BeanCopier copier = BeanCopier.create(OperationLogDTO.class, OperationLog.class, false);
+        copier.copy(dto, operationLog, null);
 
-        accessLogRepository.saveAndFlush(accessLog);
-        return this.convert(accessLog);
+        operationLogRepository.saveAndFlush(operationLog);
+        return this.convert(operationLog);
     }
 
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "access log id must not be null.");
-        accessLogRepository.deleteById(id);
+        operationLogRepository.deleteById(id);
     }
 
-    private AccessLogVO convert(AccessLog accessLog) {
-        AccessLogVO vo = new AccessLogVO();
-        BeanCopier copier = BeanCopier.create(AccessLog.class, AccessLogVO.class, false);
-        copier.copy(accessLog, vo, null);
+    private OperationLogVO convert(OperationLog operationLog) {
+        OperationLogVO vo = new OperationLogVO();
+        BeanCopier copier = BeanCopier.create(OperationLog.class, OperationLogVO.class, false);
+        copier.copy(operationLog, vo, null);
         return vo;
     }
 }

@@ -123,51 +123,51 @@ public class PrivilegeController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<PrivilegeVO> fetch(@PathVariable Long id) {
-        PrivilegeVO privilegeVO;
+        PrivilegeVO vo;
         try {
-            privilegeVO = privilegeService.fetch(id);
+            vo = privilegeService.fetch(id);
         } catch (Exception e) {
             logger.info("Fetch privilege occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(privilegeVO);
+        return ResponseEntity.ok(vo);
     }
 
     /**
      * 添加信息
      *
-     * @param privilegeDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<PrivilegeVO> create(@RequestBody @Valid PrivilegeDTO privilegeDTO) {
-        PrivilegeVO privilegeVO;
+    public ResponseEntity<PrivilegeVO> create(@RequestBody @Valid PrivilegeDTO dto) {
+        PrivilegeVO vo;
         try {
-            privilegeVO = privilegeService.create(privilegeDTO);
+            vo = privilegeService.create(dto);
         } catch (Exception e) {
             logger.error("Create privilege occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(privilegeVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
 
     /**
      * 修改信息
      *
      * @param id           主键
-     * @param privilegeDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 编辑后的信息，否则返回417状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<PrivilegeVO> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO privilegeDTO) {
-        PrivilegeVO privilegeVO;
+    public ResponseEntity<PrivilegeVO> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO dto) {
+        PrivilegeVO vo;
         try {
-            privilegeVO = privilegeService.modify(id, privilegeDTO);
+            vo = privilegeService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify privilege occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.accepted().body(privilegeVO);
+        return ResponseEntity.accepted().body(vo);
     }
 
     /**

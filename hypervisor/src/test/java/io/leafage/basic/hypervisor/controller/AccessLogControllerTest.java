@@ -78,7 +78,7 @@ class AccessLogControllerTest {
         accessLogDTO.setHttpMethod("POST");
         accessLogDTO.setOs("Mac OS");
         accessLogDTO.setReferer("test");
-        accessLogDTO.setResponseTime(232L);
+        accessLogDTO.setResponseTimes(232L);
         accessLogDTO.setSessionId("sessionId");
         accessLogDTO.setStatusCode(200);
         accessLogDTO.setUrl("/test");
@@ -93,7 +93,7 @@ class AccessLogControllerTest {
         accessLogVO.setHttpMethod("POST");
         accessLogVO.setOs("Mac OS");
         accessLogVO.setReferer("test");
-        accessLogVO.setResponseTime(232L);
+        accessLogVO.setResponseTimes(232L);
         accessLogVO.setSessionId("sessionId");
         accessLogVO.setStatusCode(200);
         accessLogVO.setUrl("/test");

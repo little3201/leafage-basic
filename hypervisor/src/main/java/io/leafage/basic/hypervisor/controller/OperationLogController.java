@@ -17,8 +17,8 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.service.AccessLogService;
-import io.leafage.basic.hypervisor.vo.AccessLogVO;
+import io.leafage.basic.hypervisor.service.OperationLogService;
+import io.leafage.basic.hypervisor.vo.OperationLogVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -27,25 +27,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * access log controller.
+ * operation log controller.
  *
  * @author wq li
  */
 @RestController
-@RequestMapping("/access-logs")
-public class AccessLogController {
+@RequestMapping("/operation-logs")
+public class OperationLogController {
 
-    private final Logger logger = LoggerFactory.getLogger(AccessLogController.class);
+    private final Logger logger = LoggerFactory.getLogger(OperationLogController.class);
 
-    private final AccessLogService accessLogService;
+    private final OperationLogService operationLogService;
 
     /**
-     * <p>Constructor for AccessLogController.</p>
+     * <p>Constructor for OperationLogController.</p>
      *
-     * @param accessLogService a {@link io.leafage.basic.hypervisor.service.AccessLogService} object
+     * @param operationLogService a {@link OperationLogService} object
      */
-    public AccessLogController(AccessLogService accessLogService) {
-        this.accessLogService = accessLogService;
+    public OperationLogController(OperationLogService operationLogService) {
+        this.operationLogService = operationLogService;
     }
 
     /**
@@ -58,11 +58,11 @@ public class AccessLogController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Page<AccessLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                      String sortBy, boolean descending) {
-        Page<AccessLogVO> voPage;
+    public ResponseEntity<Page<OperationLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                         String sortBy, boolean descending) {
+        Page<OperationLogVO> voPage;
         try {
-            voPage = accessLogService.retrieve(page, size, sortBy, descending);
+            voPage = operationLogService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve record occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -77,10 +77,10 @@ public class AccessLogController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{id}")
-    public ResponseEntity<AccessLogVO> fetch(@PathVariable Long id) {
-        AccessLogVO vo;
+    public ResponseEntity<OperationLogVO> fetch(@PathVariable Long id) {
+        OperationLogVO vo;
         try {
-            vo = accessLogService.fetch(id);
+            vo = operationLogService.fetch(id);
         } catch (Exception e) {
             logger.info("Fetch access log occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -97,7 +97,7 @@ public class AccessLogController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         try {
-            accessLogService.remove(id);
+            operationLogService.remove(id);
         } catch (Exception e) {
             logger.error("Remove group occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

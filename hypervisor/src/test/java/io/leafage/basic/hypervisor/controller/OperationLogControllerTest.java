@@ -18,9 +18,9 @@
 package io.leafage.basic.hypervisor.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.leafage.basic.hypervisor.dto.AccessLogDTO;
-import io.leafage.basic.hypervisor.service.AccessLogService;
-import io.leafage.basic.hypervisor.vo.AccessLogVO;
+import io.leafage.basic.hypervisor.dto.OperationLogDTO;
+import io.leafage.basic.hypervisor.service.OperationLogService;
+import io.leafage.basic.hypervisor.vo.OperationLogVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,14 +45,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * access log controller test
+ * operation log controller test
  *
  * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(AccessLogController.class)
-class AccessLogControllerTest {
+@WebMvcTest(OperationLogController.class)
+class OperationLogControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -61,61 +61,70 @@ class AccessLogControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private AccessLogService accessLogService;
+    private OperationLogService operationLogService;
 
-    private AccessLogVO accessLogVO;
+    private OperationLogVO operationLogVO;
 
-    private AccessLogDTO accessLogDTO;
+    private OperationLogDTO operationLogDTO;
 
     @BeforeEach
     void init() {
         // 构造请求对象
-        accessLogDTO = new AccessLogDTO();
-        accessLogDTO.setIp("12.1.3.2");
-        accessLogDTO.setLocation("test");
-        accessLogDTO.setHttpMethod("POST");
-        accessLogDTO.setResponseTimes(232L);
-        accessLogDTO.setStatusCode(200);
-        accessLogDTO.setUrl("/test");
-        accessLogDTO.setBody("xxx");
+        operationLogDTO = new OperationLogDTO();
+        operationLogDTO.setIp("12.1.3.2");
+        operationLogDTO.setLocation("test");
+        operationLogDTO.setBrowser("Chrome");
+        operationLogDTO.setDeviceType("PC");
+        operationLogDTO.setContent("Content");
+        operationLogDTO.setOs("Mac OS");
+        operationLogDTO.setReferer("test");
+        operationLogDTO.setBrowser("edge");
+        operationLogDTO.setSessionId("sessionId");
+        operationLogDTO.setStatusCode(200);
+        operationLogDTO.setOperation("Change password");
+        operationLogDTO.setUserAgent("xxx");
 
         // vo
-        accessLogVO = new AccessLogVO();
-        accessLogVO.setIp("12.1.3.2");
-        accessLogVO.setLocation("test");
-        accessLogVO.setHttpMethod("POST");
-        accessLogVO.setResponseTimes(232L);
-        accessLogVO.setResponseMessage("sessionId");
-        accessLogVO.setStatusCode(200);
-        accessLogVO.setUrl("/test");
-        accessLogVO.setParams("xxx");
+        operationLogVO = new OperationLogVO();
+        operationLogVO.setIp("12.1.3.2");
+        operationLogVO.setLocation("test");
+        operationLogVO.setBrowser("Chrome");
+        operationLogVO.setDeviceType("PC");
+        operationLogVO.setBrowser("Edge");
+        operationLogVO.setOs("Mac OS");
+        operationLogVO.setReferer("test");
+        operationLogVO.setContent("content");
+        operationLogVO.setSessionId("sessionId");
+        operationLogVO.setStatusCode(200);
+        operationLogVO.setOperation("test");
+        operationLogVO.setUserAgent("xxx");
     }
 
     @Test
     void retrieve() throws Exception {
         Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<AccessLogVO> voPage = new PageImpl<>(List.of(accessLogVO), pageable, 2L);
-        given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(voPage);
+        Page<OperationLogVO> voPage = new PageImpl<>(List.of(operationLogVO), pageable, 2L);
+        given(this.operationLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(voPage);
 
-        mvc.perform(get("/access-logs").queryParam("page", "0").queryParam("size", "2")
+        mvc.perform(get("/operation-logs").queryParam("page", "0").queryParam("size", "2")
                         .queryParam("sortBy", "")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
+        given(this.operationLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/access-logs").queryParam("page", "0").queryParam("size", "2")
+        mvc.perform(get("/operation-logs").queryParam("page", "0").queryParam("size", "2")
                 .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
     }
 
     @Test
     void create() throws Exception {
-        given(this.accessLogService.create(Mockito.any(AccessLogDTO.class))).willReturn(accessLogVO);
+        given(this.operationLogService.create(Mockito.any(OperationLogDTO.class))).willReturn(operationLogVO);
 
-        mvc.perform(post("/access-logs").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(accessLogDTO)).with(csrf().asHeader()))
+        mvc.perform(post("/operation-logs").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(operationLogDTO)).with(csrf().asHeader()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.location").value("test"))
                 .andDo(print()).andReturn();
@@ -123,10 +132,10 @@ class AccessLogControllerTest {
 
     @Test
     void create_error() throws Exception {
-        given(this.accessLogService.create(Mockito.any(AccessLogDTO.class))).willThrow(new RuntimeException());
+        given(this.operationLogService.create(Mockito.any(OperationLogDTO.class))).willThrow(new RuntimeException());
 
-        mvc.perform(post("/access-logs").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(accessLogDTO)).with(csrf().asHeader()))
+        mvc.perform(post("/operation-logs").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(operationLogDTO)).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }

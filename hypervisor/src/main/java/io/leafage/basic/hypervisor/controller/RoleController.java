@@ -92,51 +92,51 @@ public class RoleController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<RoleVO> fetch(@PathVariable Long id) {
-        RoleVO roleVO;
+        RoleVO vo;
         try {
-            roleVO = roleService.fetch(id);
+            vo = roleService.fetch(id);
         } catch (Exception e) {
             logger.info("Fetch role occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(roleVO);
+        return ResponseEntity.ok(vo);
     }
 
     /**
      * 添加信息
      *
-     * @param roleDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<RoleVO> create(@RequestBody @Valid RoleDTO roleDTO) {
-        RoleVO roleVO;
+    public ResponseEntity<RoleVO> create(@RequestBody @Valid RoleDTO dto) {
+        RoleVO vo;
         try {
-            roleVO = roleService.create(roleDTO);
+            vo = roleService.create(dto);
         } catch (Exception e) {
             logger.error("Create role occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(roleVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
 
     /**
      * 修改信息
      *
      * @param id      主键
-     * @param roleDTO 要修改的数据
+     * @param dto 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<RoleVO> modify(@PathVariable Long id, @RequestBody @Valid RoleDTO roleDTO) {
-        RoleVO roleVO;
+    public ResponseEntity<RoleVO> modify(@PathVariable Long id, @RequestBody @Valid RoleDTO dto) {
+        RoleVO vo;
         try {
-            roleVO = roleService.modify(id, roleDTO);
+            vo = roleService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify role occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
         }
-        return ResponseEntity.accepted().body(roleVO);
+        return ResponseEntity.accepted().body(vo);
     }
 
     /**

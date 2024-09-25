@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.dto.AccessLogDTO;
 import io.leafage.basic.hypervisor.service.AccessLogService;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import org.slf4j.Logger;
@@ -72,20 +71,38 @@ public class AccessLogController {
     }
 
     /**
-     * 新增信息
+     * 查询信息
      *
-     * @param accessLogDTO 帖子代码
-     * @return 添加后的信息，异常时返回417状态码
+     * @param id 主键
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @PostMapping
-    public ResponseEntity<AccessLogVO> create(@RequestBody AccessLogDTO accessLogDTO) {
+    @GetMapping("/{id}")
+    public ResponseEntity<AccessLogVO> fetch(@PathVariable Long id) {
         AccessLogVO vo;
         try {
-            vo = accessLogService.create(accessLogDTO);
+            vo = accessLogService.fetch(id);
         } catch (Exception e) {
-            logger.error("Create record occurred an error: ", e);
+            logger.info("Fetch access log occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * 删除信息
+     *
+     * @param id 主键
+     * @return 如果删除成功，返回200状态码，否则返回417状态码
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
+        try {
+            accessLogService.remove(id);
+        } catch (Exception e) {
+            logger.error("Remove group occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(vo);
+        return ResponseEntity.ok().build();
     }
+
 }

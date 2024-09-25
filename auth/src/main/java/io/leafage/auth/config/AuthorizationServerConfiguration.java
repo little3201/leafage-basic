@@ -66,18 +66,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class AuthorizationServerConfiguration {
 
-    public static KeyPair generateRsaKey() {
-        KeyPair keyPair;
-        try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
-            keyPair = keyPairGenerator.generateKeyPair();
-        } catch (Exception ex) {
-            throw new IllegalStateException(ex);
-        }
-        return keyPair;
-    }
-
     @Bean
     @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -94,8 +82,16 @@ public class AuthorizationServerConfiguration {
                         )
                 )
                 // Accept access tokens for User Info and/or Client Registration
-                .oauth2ResourceServer((resourceServer) -> resourceServer
-                        .jwt(withDefaults()));
+                .oauth2ResourceServer((resourceServer) -> resourceServer.jwt(withDefaults()));
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+                .httpBasic(withDefaults());
         return http.build();
     }
 
@@ -103,8 +99,9 @@ public class AuthorizationServerConfiguration {
     UserDetailsService userDetailsService(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
         if (!jdbcUserDetailsManager.userExists("admin")) {
+            // initial username/password: admin/123456
             jdbcUserDetailsManager.createUser(User.withUsername("admin")
-                    .password("{bcrypt}$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/B")
+                    .password("{noop}123456")
                     .roles("ADMIN")
                     .build()
             );
@@ -120,7 +117,70 @@ public class AuthorizationServerConfiguration {
 
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
-        return new JdbcRegisteredClientRepository(jdbcTemplate);
+//        RegisteredClient messagingClient = RegisteredClient.withId(UUID.randomUUID().toString())
+//                .clientId("messaging-client")
+//                .clientSecret("{noop}secret")
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+//                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+//                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+//                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc")
+//                .redirectUri("http://127.0.0.1:8080/authorized")
+//                .postLogoutRedirectUri("http://127.0.0.1:8080/logged-out")
+//                .scope(OidcScopes.OPENID)
+//                .scope(OidcScopes.PROFILE)
+//                .scope("message.read")
+//                .scope("message.write")
+//                .scope("user.read")
+//                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+//                .build();
+//
+//        RegisteredClient deviceClient = RegisteredClient.withId(UUID.randomUUID().toString())
+//                .clientId("device-messaging-client")
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
+//                .authorizationGrantType(AuthorizationGrantType.DEVICE_CODE)
+//                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+//                .scope("message.read")
+//                .scope("message.write")
+//                .build();
+//
+//        RegisteredClient tokenExchangeClient = RegisteredClient.withId(UUID.randomUUID().toString())
+//                .clientId("token-client")
+//                .clientSecret("{noop}token")
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+//                .authorizationGrantType(new AuthorizationGrantType("urn:ietf:params:oauth:grant-type:token-exchange"))
+//                .scope("message.read")
+//                .scope("message.write")
+//                .build();
+//
+//        RegisteredClient mtlsDemoClient = RegisteredClient.withId(UUID.randomUUID().toString())
+//                .clientId("mtls-demo-client")
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.TLS_CLIENT_AUTH)
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.SELF_SIGNED_TLS_CLIENT_AUTH)
+//                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+//                .scope("message.read")
+//                .scope("message.write")
+//                .clientSettings(
+//                        ClientSettings.builder()
+//                                .x509CertificateSubjectDN("CN=demo-client-sample,OU=Spring Samples,O=Spring,C=US")
+//                                .jwkSetUrl("http://127.0.0.1:8080/jwks")
+//                                .build()
+//                )
+//                .tokenSettings(
+//                        TokenSettings.builder()
+//                                .x509CertificateBoundAccessTokens(true)
+//                                .build()
+//                )
+//                .build();
+
+        // Save registered client's in db as if in-memory
+        JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
+//        registeredClientRepository.save(messagingClient);
+//        registeredClientRepository.save(deviceClient);
+//        registeredClientRepository.save(tokenExchangeClient);
+//        registeredClientRepository.save(mtlsDemoClient);
+
+        return registeredClientRepository;
     }
 
     @Bean
@@ -133,20 +193,6 @@ public class AuthorizationServerConfiguration {
     public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate,
                                                                          RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
-    }
-
-    @Bean
-    @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().authenticated()
-                )
-                .passwordManagement(withDefaults())
-                // Form login handles the redirect to the login page from the
-                // authorization server filter chain
-                .formLogin(withDefaults());
-        return http.build();
     }
 
     @Bean
@@ -170,6 +216,18 @@ public class AuthorizationServerConfiguration {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
+    }
+
+    public static KeyPair generateRsaKey() {
+        KeyPair keyPair;
+        try {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(2048);
+            keyPair = keyPairGenerator.generateKeyPair();
+        } catch (Exception ex) {
+            throw new IllegalStateException(ex);
+        }
+        return keyPair;
     }
 
 }

@@ -1,136 +1,148 @@
--- Drop table if exists oauth_registered_client;
-DROP TABLE IF EXISTS oauth_registered_client;
+-- Drop table if exists oauth2_registered_client;
+DROP TABLE IF EXISTS oauth2_registered_client;
 
--- Create table oauth_registered_client
-CREATE TABLE oauth_registered_client
+-- Create table oauth2_registered_client
+CREATE TABLE oauth2_registered_client
 (
-    id                           VARCHAR(100) NOT NULL,
-    client_id                    VARCHAR(100) NOT NULL,
-    client_id_issued_at          TIMESTAMP    NOT NULL,
-    client_secret                VARCHAR(200) NOT NULL,
-    client_secret_expires_at     TIMESTAMP,
-    client_name                  VARCHAR(200),
-    client_authorization_methods VARCHAR(1000),
-    authorization_grant_types    VARCHAR(1000),
-    redirect_uris                VARCHAR(1000),
-    scopes                       VARCHAR(1000),
-    client_settings              VARCHAR(2000),
-    token_settings               VARCHAR(2000),
+    id                            varchar(100)                            NOT NULL,
+    client_id                     varchar(100)                            NOT NULL,
+    client_id_issued_at           timestamp     DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    client_secret                 varchar(200)  DEFAULT NULL,
+    client_secret_expires_at      timestamp     DEFAULT NULL,
+    client_name                   varchar(200)                            NOT NULL,
+    client_authentication_methods varchar(1000)                           NOT NULL,
+    authorization_grant_types     varchar(1000)                           NOT NULL,
+    redirect_uris                 varchar(1000) DEFAULT NULL,
+    post_logout_redirect_uris     varchar(1000) DEFAULT NULL,
+    scopes                        varchar(1000)                           NOT NULL,
+    client_settings               varchar(2000)                           NOT NULL,
+    token_settings                varchar(2000)                           NOT NULL,
     PRIMARY KEY (id)
 );
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE oauth_registered_client IS 'oauth_registered_client表';
+ON TABLE oauth2_registered_client IS 'client 表';
 COMMENT
-ON COLUMN oauth_registered_client.id IS '主键';
+ON COLUMN oauth2_registered_client.id IS '主键';
 COMMENT
-ON COLUMN oauth_registered_client.client_id IS '客户端ID';
+ON COLUMN oauth2_registered_client.client_id IS '客户端ID';
 COMMENT
-ON COLUMN oauth_registered_client.client_id_issued_at IS '生效时间';
+ON COLUMN oauth2_registered_client.client_id_issued_at IS '生效时间';
 COMMENT
-ON COLUMN oauth_registered_client.client_secret IS '密钥';
+ON COLUMN oauth2_registered_client.client_secret IS '密钥';
 COMMENT
-ON COLUMN oauth_registered_client.client_secret_expires_at IS '密钥失效时间';
+ON COLUMN oauth2_registered_client.client_secret_expires_at IS '密钥失效时间';
 COMMENT
-ON COLUMN oauth_registered_client.client_name IS '名称';
+ON COLUMN oauth2_registered_client.client_name IS '名称';
 COMMENT
-ON COLUMN oauth_registered_client.client_authorization_methods IS '认证方法';
+ON COLUMN oauth2_registered_client.client_authentication_methods IS '认证方法';
 COMMENT
-ON COLUMN oauth_registered_client.authorization_grant_types IS '授权方式';
+ON COLUMN oauth2_registered_client.authorization_grant_types IS '授权方式';
 COMMENT
-ON COLUMN oauth_registered_client.redirect_uris IS '跳转连接';
+ON COLUMN oauth2_registered_client.redirect_uris IS '跳转连接';
 COMMENT
-ON COLUMN oauth_registered_client.scopes IS '作用域';
+ON COLUMN oauth2_registered_client.post_logout_redirect_uris IS '后置退出跳转连接';
 COMMENT
-ON COLUMN oauth_registered_client.client_settings IS '客户端设置';
+ON COLUMN oauth2_registered_client.scopes IS '作用域';
 COMMENT
-ON COLUMN oauth_registered_client.token_settings IS 'token 设置';
+ON COLUMN oauth2_registered_client.client_settings IS '客户端设置';
+COMMENT
+ON COLUMN oauth2_registered_client.token_settings IS 'token 设置';
 
--- Drop table if exists oauth_authorization
-DROP TABLE IF EXISTS oauth_authorization;
+-- Drop table if exists oauth2_authorization
+DROP TABLE IF EXISTS oauth2_authorization;
 
--- Create table oauth_authorization
-CREATE TABLE oauth_authorization
+-- Create table oauth2_authorization
+CREATE TABLE oauth2_authorization
 (
-    id                            VARCHAR(100)  NOT NULL,
-    registered_client_id          VARCHAR(100)  NOT NULL,
-    principal_name                TIMESTAMP     NOT NULL,
-    authorization_grant_type      VARCHAR(1000) NOT NULL,
-    attributes                    VARCHAR(4000),
-    state                         VARCHAR(500),
-    authorization_code_value      BYTEA,
-    authorization_code_issued_at  TIMESTAMP,
-    authorization_code_expires_at TIMESTAMP,
-    authorization_code_metadata   VARCHAR(2000),
-    access_token_value            BYTEA,
-    access_token_issued_at        TIMESTAMP,
-    access_token_expires_at       TIMESTAMP,
-    access_token_metadata         VARCHAR(2000),
-    access_token_type             VARCHAR(100),
-    access_token_scopes           VARCHAR(1000),
-    oidc_id_token_value           BYTEA,
-    oidc_id_token_issued_at       TIMESTAMP,
-    oidc_id_token_expires_at      TIMESTAMP,
-    oidc_id_token_metadata        VARCHAR(2000),
-    refresh_token_value           BYTEA,
-    refresh_token_issued_at       TIMESTAMP,
-    refresh_token_expires_at      TIMESTAMP,
-    refresh_token_metadata        VARCHAR(2000),
+    id                            varchar(100) NOT NULL,
+    registered_client_id          varchar(100) NOT NULL,
+    principal_name                varchar(200) NOT NULL,
+    authorization_grant_type      varchar(100) NOT NULL,
+    authorized_scopes             varchar(1000) DEFAULT NULL,
+    attributes                    bytea          DEFAULT NULL,
+    state                         varchar(500)  DEFAULT NULL,
+    authorization_code_value      bytea          DEFAULT NULL,
+    authorization_code_issued_at  timestamp     DEFAULT NULL,
+    authorization_code_expires_at timestamp     DEFAULT NULL,
+    authorization_code_metadata   bytea          DEFAULT NULL,
+    access_token_value            bytea          DEFAULT NULL,
+    access_token_issued_at        timestamp     DEFAULT NULL,
+    access_token_expires_at       timestamp     DEFAULT NULL,
+    access_token_metadata         bytea          DEFAULT NULL,
+    access_token_type             varchar(100)  DEFAULT NULL,
+    access_token_scopes           varchar(1000) DEFAULT NULL,
+    oidc_id_token_value           bytea          DEFAULT NULL,
+    oidc_id_token_issued_at       timestamp     DEFAULT NULL,
+    oidc_id_token_expires_at      timestamp     DEFAULT NULL,
+    oidc_id_token_metadata        bytea          DEFAULT NULL,
+    refresh_token_value           bytea          DEFAULT NULL,
+    refresh_token_issued_at       timestamp     DEFAULT NULL,
+    refresh_token_expires_at      timestamp     DEFAULT NULL,
+    refresh_token_metadata        bytea          DEFAULT NULL,
+    user_code_value               bytea          DEFAULT NULL,
+    user_code_issued_at           timestamp     DEFAULT NULL,
+    user_code_expires_at          timestamp     DEFAULT NULL,
+    user_code_metadata            bytea          DEFAULT NULL,
+    device_code_value             bytea          DEFAULT NULL,
+    device_code_issued_at         timestamp     DEFAULT NULL,
+    device_code_expires_at        timestamp     DEFAULT NULL,
+    device_code_metadata          bytea          DEFAULT NULL,
     PRIMARY KEY (id)
 );
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE oauth_authorization IS 'oauth_authorization表';
+ON TABLE oauth2_authorization IS 'authorization 表';
 COMMENT
-ON COLUMN oauth_authorization.id IS '主键';
+ON COLUMN oauth2_authorization.id IS '主键';
 COMMENT
-ON COLUMN oauth_authorization.registered_client_id IS '客户端ID';
+ON COLUMN oauth2_authorization.registered_client_id IS '客户端ID';
 COMMENT
-ON COLUMN oauth_authorization.principal_name IS '认证账号';
+ON COLUMN oauth2_authorization.principal_name IS '认证账号';
 COMMENT
-ON COLUMN oauth_authorization.authorization_grant_type IS '授权类型';
+ON COLUMN oauth2_authorization.authorization_grant_type IS '授权类型';
 COMMENT
-ON COLUMN oauth_authorization.attributes IS '参数';
+ON COLUMN oauth2_authorization.attributes IS '参数';
 COMMENT
-ON COLUMN oauth_authorization.state IS '状态';
+ON COLUMN oauth2_authorization.state IS '状态';
 COMMENT
-ON COLUMN oauth_authorization.authorization_code_value IS 'authorization code';
+ON COLUMN oauth2_authorization.authorization_code_value IS 'authorization code';
 COMMENT
-ON COLUMN oauth_authorization.authorization_code_issued_at IS 'authorization code生效时间';
+ON COLUMN oauth2_authorization.authorization_code_issued_at IS 'authorization code生效时间';
 COMMENT
-ON COLUMN oauth_authorization.authorization_code_expires_at IS 'authorization code失效时间';
+ON COLUMN oauth2_authorization.authorization_code_expires_at IS 'authorization code失效时间';
 COMMENT
-ON COLUMN oauth_authorization.authorization_code_metadata IS 'authorization code 元数据';
+ON COLUMN oauth2_authorization.authorization_code_metadata IS 'authorization code 元数据';
 COMMENT
-ON COLUMN oauth_authorization.access_token_value IS 'access token';
+ON COLUMN oauth2_authorization.access_token_value IS 'access token';
 COMMENT
-ON COLUMN oauth_authorization.access_token_issued_at IS 'access token 生效时间';
+ON COLUMN oauth2_authorization.access_token_issued_at IS 'access token 生效时间';
 COMMENT
-ON COLUMN oauth_authorization.access_token_expires_at IS 'access_token 失效时间';
+ON COLUMN oauth2_authorization.access_token_expires_at IS 'access_token 失效时间';
 COMMENT
-ON COLUMN oauth_authorization.access_token_metadata IS 'access token元数据';
+ON COLUMN oauth2_authorization.access_token_metadata IS 'access token元数据';
 COMMENT
-ON COLUMN oauth_authorization.access_token_type IS 'access token 类型';
+ON COLUMN oauth2_authorization.access_token_type IS 'access token 类型';
 COMMENT
-ON COLUMN oauth_authorization.access_token_scopes IS 'access token 域';
+ON COLUMN oauth2_authorization.access_token_scopes IS 'access token 域';
 COMMENT
-ON COLUMN oauth_authorization.oidc_id_token_value IS 'oidc token';
+ON COLUMN oauth2_authorization.oidc_id_token_value IS 'oidc token';
 COMMENT
-ON COLUMN oauth_authorization.oidc_id_token_issued_at IS 'oidc token 生效时间';
+ON COLUMN oauth2_authorization.oidc_id_token_issued_at IS 'oidc token 生效时间';
 COMMENT
-ON COLUMN oauth_authorization.oidc_id_token_expires_at IS 'oidc token 失效时间';
+ON COLUMN oauth2_authorization.oidc_id_token_expires_at IS 'oidc token 失效时间';
 COMMENT
-ON COLUMN oauth_authorization.oidc_id_token_metadata IS 'oidc token 元数据';
+ON COLUMN oauth2_authorization.oidc_id_token_metadata IS 'oidc token 元数据';
 COMMENT
-ON COLUMN oauth_authorization.refresh_token_value IS 'refresh token';
+ON COLUMN oauth2_authorization.refresh_token_value IS 'refresh token';
 COMMENT
-ON COLUMN oauth_authorization.refresh_token_issued_at IS 'refresh token 生效时间';
+ON COLUMN oauth2_authorization.refresh_token_issued_at IS 'refresh token 生效时间';
 COMMENT
-ON COLUMN oauth_authorization.refresh_token_expires_at IS 'refresh token 失效时间';
+ON COLUMN oauth2_authorization.refresh_token_expires_at IS 'refresh token 失效时间';
 COMMENT
-ON COLUMN oauth_authorization.refresh_token_metadata IS 'refresh token 元数据';
+ON COLUMN oauth2_authorization.refresh_token_metadata IS 'refresh token 元数据';
 
 /*
  *  Copyright 2018-2024 little3201.
@@ -149,24 +161,24 @@ ON COLUMN oauth_authorization.refresh_token_metadata IS 'refresh token 元数据
  *
  */
 
--- Drop table if exists oauth_authorization_consent
-DROP TABLE IF EXISTS oauth_authorization_consent;
+-- Drop table if exists oauth2_authorization_consent
+DROP TABLE IF EXISTS oauth2_authorization_consent;
 
--- Create table oauth_authorization_consent
-CREATE TABLE oauth_authorization_consent
+-- Create table oauth2_authorization_consent
+CREATE TABLE oauth2_authorization_consent
 (
     registered_client_id VARCHAR(100)  NOT NULL,
     principal_name       VARCHAR(200)  NOT NULL,
     authorities          VARCHAR(1000) NOT NULL,
-    PRIMARY KEY ()
+    PRIMARY KEY (registered_client_id, principal_name)
 );
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE oauth_authorization_consent IS 'oauth_authorization_consent表';
+ON TABLE oauth2_authorization_consent IS 'consent 表';
 COMMENT
-ON COLUMN oauth_authorization_consent.registered_client_id IS '客户端ID';
+ON COLUMN oauth2_authorization_consent.registered_client_id IS '客户端ID';
 COMMENT
-ON COLUMN oauth_authorization_consent.principal_name IS '认证账号';
+ON COLUMN oauth2_authorization_consent.principal_name IS '认证账号';
 COMMENT
-ON COLUMN oauth_authorization_consent.authorities IS '权限';
+ON COLUMN oauth2_authorization_consent.authorities IS '权限';

@@ -13,7 +13,6 @@
 |                     依赖                     |  说明   |
 |:------------------------------------------:|:-----:|
 |              Spring Boot Web               | web框架 |
-|   spring-cloud-starter-consul-discovery    | 服务注册  |
 | spring-boot-starter-oauth2-resource-server | 接口安全  |
 |        spring-boot-starter-actuator        | 健康监控  |
 |       micrometer-registry-prometheus       | 监控接口  |

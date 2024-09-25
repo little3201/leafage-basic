@@ -80,52 +80,52 @@ public class UserController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<UserVO> fetch(@PathVariable Long id) {
-        UserVO userVO;
+        UserVO vo;
         try {
-            userVO = userService.fetch(id);
+            vo = userService.fetch(id);
         } catch (Exception e) {
             logger.info("Fetch user occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(userVO);
+        return ResponseEntity.ok(vo);
     }
 
     /**
      * 添加信息.
      *
-     * @param userDTO 要修改的数据
+     * @param dto 要修改的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<UserVO> create(@RequestBody @Valid UserDTO userDTO) {
-        UserVO userVO;
+    public ResponseEntity<UserVO> create(@RequestBody @Valid UserDTO dto) {
+        UserVO vo;
         try {
-            userVO = userService.create(userDTO);
+            vo = userService.create(dto);
         } catch (Exception e) {
             logger.error("Create user occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(userVO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
 
     /**
      * 修改信息.
      *
      * @param id      主键
-     * @param userDTO 要修改的数据
+     * @param dto 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{id}")
     public ResponseEntity<UserVO> modify(@PathVariable Long id,
-                                         @RequestBody @Valid UserDTO userDTO) {
-        UserVO userVO;
+                                         @RequestBody @Valid UserDTO dto) {
+        UserVO vo;
         try {
-            userVO = userService.modify(id, userDTO);
+            vo = userService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify user occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.accepted().body(userVO);
+        return ResponseEntity.accepted().body(vo);
     }
 
 }

@@ -118,14 +118,14 @@ public class GroupController {
     /**
      * 添加信息
      *
-     * @param groupDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<GroupVO> create(@RequestBody @Valid GroupDTO groupDTO) {
+    public ResponseEntity<GroupVO> create(@RequestBody @Valid GroupDTO dto) {
         GroupVO groupVO;
         try {
-            groupVO = groupService.create(groupDTO);
+            groupVO = groupService.create(dto);
         } catch (Exception e) {
             logger.error("Create group occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
@@ -137,14 +137,14 @@ public class GroupController {
      * 修改信息
      *
      * @param id       主键
-     * @param groupDTO 要修改的数据
+     * @param dto 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<GroupVO> modify(@PathVariable Long id, @RequestBody GroupDTO groupDTO) {
+    public ResponseEntity<GroupVO> modify(@PathVariable Long id, @RequestBody GroupDTO dto) {
         GroupVO groupVO;
         try {
-            groupVO = groupService.modify(id, groupDTO);
+            groupVO = groupService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify group occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

@@ -80,27 +80,27 @@ public class MessageController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<MessageVO> fetch(@PathVariable Long id) {
-        MessageVO messageVO;
+        MessageVO vo;
         try {
-            messageVO = messageService.fetch(id);
+            vo = messageService.fetch(id);
         } catch (Exception e) {
             logger.info("Fetch message occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(messageVO);
+        return ResponseEntity.ok(vo);
     }
 
     /**
      * 新增信息
      *
-     * @param messageDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<MessageVO> create(@RequestBody @Valid MessageDTO messageDTO) {
+    public ResponseEntity<MessageVO> create(@RequestBody @Valid MessageDTO dto) {
         MessageVO vo;
         try {
-            vo = messageService.create(messageDTO);
+            vo = messageService.create(dto);
         } catch (Exception e) {
             logger.info("Create message occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

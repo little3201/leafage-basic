@@ -408,56 +408,70 @@ ON COLUMN messages.last_modified_by IS '最后修改者';
 COMMENT
 ON COLUMN messages.last_modified_date IS '最后修改时间';
 
--- Drop table if exists regions
-DROP TABLE IF EXISTS regions;
-
--- Create table regions
-CREATE TABLE regions
-(
-    id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name               varchar(50) NOT NULL,
-    superior_id        bigint,
-    area_code          varchar(4),
-    postal_code        int4,
-    description        varchar(255),
-    enabled            boolean     NOT NULL DEFAULT true,
-    created_by         varchar(50),
-    created_date       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_modified_by   varchar(50),
-    last_modified_date timestamp
-);
-
--- Add comment to the table and columns
-COMMENT
-ON TABLE regions IS '地区表';
-COMMENT
-ON COLUMN regions.id IS '主键';
-COMMENT
-ON COLUMN regions.name IS '名称';
-COMMENT
-ON COLUMN regions.superior_id IS '上级ID';
-COMMENT
-ON COLUMN regions.area_code IS '区号';
-COMMENT
-ON COLUMN regions.postal_code IS '邮政编码';
-COMMENT
-ON COLUMN regions.description IS '描述';
-COMMENT
-ON COLUMN regions.enabled IS '是否启用';
-COMMENT
-ON COLUMN regions.created_by IS '创建者';
-COMMENT
-ON COLUMN regions.created_date IS '创建时间';
-COMMENT
-ON COLUMN regions.last_modified_by IS '最后修改者';
-COMMENT
-ON COLUMN regions.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists access_logs
 DROP TABLE IF EXISTS access_logs;
 
 -- Create table access_logs
 CREATE TABLE access_logs
+(
+    id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    api                varchar(10),
+    method             varchar(10),
+    params             varchar(255),
+    body               json,
+    ip                 inet,
+    location           varchar(50),
+    status_code        integer,
+    response_times     bigint,
+    response_message   varchar(255),
+    enabled            boolean   NOT NULL DEFAULT true,
+    created_by         varchar(50),
+    created_date       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_by   varchar(50),
+    last_modified_date timestamp
+);
+
+-- Add comment to the table and columns
+COMMENT
+ON TABLE access_logs IS '访问日志表';
+COMMENT
+ON COLUMN access_logs.id IS '主键';
+COMMENT
+ON COLUMN access_logs.api IS '内容';
+COMMENT
+ON COLUMN access_logs.http_method IS '内容';
+COMMENT
+ON COLUMN access_logs.params IS '内容';
+COMMENT
+ON COLUMN access_logs.body IS '内容';
+COMMENT
+ON COLUMN access_logs.ip IS 'IP地址';
+COMMENT
+ON COLUMN access_logs.location IS '位置';
+COMMENT
+ON COLUMN access_logs.status_code IS 'HTTP状态码';
+COMMENT
+ON COLUMN access_logs.response_times IS '响应时间';
+COMMENT
+ON COLUMN access_logs.response_message IS '响应消息';
+COMMENT
+ON COLUMN access_logs.enabled IS '是否启用';
+COMMENT
+ON COLUMN access_logs.created_by IS '创建者';
+COMMENT
+ON COLUMN access_logs.created_date IS '创建时间';
+COMMENT
+ON COLUMN access_logs.last_modified_by IS '最后修改者';
+COMMENT
+ON COLUMN access_logs.last_modified_date IS '最后修改时间';
+
+
+-- Drop table if exists operation_logs
+DROP TABLE IF EXISTS operation_logs;
+
+-- Create table operation_logs
+CREATE TABLE operation_logs
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     ip                 inet,
@@ -467,7 +481,8 @@ CREATE TABLE access_logs
     http_method        varchar(10),
     url                varchar(255),
     status_code        integer,
-    response_time      bigint,
+    operated_times     bigint,
+    response_message   varchar(255),
     referer            varchar(255),
     session_id         varchar(50),
     device_type        varchar(20),
@@ -482,43 +497,42 @@ CREATE TABLE access_logs
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE access_logs IS '访问日志表';
+ON TABLE operation_logs IS '访问日志表';
 COMMENT
-ON COLUMN access_logs.id IS '主键';
+ON COLUMN operation_logs.id IS '主键';
 COMMENT
-ON COLUMN access_logs.ip IS 'IP地址';
+ON COLUMN operation_logs.ip IS 'IP地址';
 COMMENT
-ON COLUMN access_logs.location IS '位置';
+ON COLUMN operation_logs.location IS '位置';
 COMMENT
-ON COLUMN access_logs.content IS '内容';
+ON COLUMN operation_logs.content IS '内容';
 COMMENT
-ON COLUMN access_logs.user_agent IS '用户代理信息';
+ON COLUMN operation_logs.user_agent IS '用户代理信息';
 COMMENT
-ON COLUMN access_logs.http_method IS 'HTTP方法';
+ON COLUMN operation_logs.http_method IS 'HTTP方法';
 COMMENT
-ON COLUMN access_logs.url IS '请求URL';
+ON COLUMN operation_logs.url IS '请求URL';
 COMMENT
-ON COLUMN access_logs.status_code IS 'HTTP状态码';
+ON COLUMN operation_logs.status_code IS 'HTTP状态码';
 COMMENT
-ON COLUMN access_logs.response_time IS '响应时间';
+ON COLUMN operation_logs.operated_time IS '操作时间';
 COMMENT
-ON COLUMN access_logs.referer IS '来源页面';
+ON COLUMN operation_logs.referer IS '来源页面';
 COMMENT
-ON COLUMN access_logs.session_id IS '会话标识符';
+ON COLUMN operation_logs.session_id IS '会话标识符';
 COMMENT
-ON COLUMN access_logs.device_type IS '设备类型';
+ON COLUMN operation_logs.device_type IS '设备类型';
 COMMENT
-ON COLUMN access_logs.os IS '操作系统';
+ON COLUMN operation_logs.os IS '操作系统';
 COMMENT
-ON COLUMN access_logs.browser IS '浏览器';
+ON COLUMN operation_logs.browser IS '浏览器';
 COMMENT
-ON COLUMN access_logs.enabled IS '是否启用';
+ON COLUMN operation_logs.enabled IS '是否启用';
 COMMENT
-ON COLUMN access_logs.created_by IS '创建者';
+ON COLUMN operation_logs.created_by IS '创建者';
 COMMENT
-ON COLUMN access_logs.created_date IS '创建时间';
+ON COLUMN operation_logs.created_date IS '创建时间';
 COMMENT
-ON COLUMN access_logs.last_modified_by IS '最后修改者';
+ON COLUMN operation_logs.last_modified_by IS '最后修改者';
 COMMENT
-ON COLUMN access_logs.last_modified_date IS '最后修改时间';
-
+ON COLUMN operation_logs.last_modified_date IS '最后修改时间';

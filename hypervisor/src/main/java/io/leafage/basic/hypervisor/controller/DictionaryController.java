@@ -131,14 +131,14 @@ public class DictionaryController {
     /**
      * 添加信息
      *
-     * @param dictionaryDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<DictionaryVO> create(@RequestBody @Valid DictionaryDTO dictionaryDTO) {
+    public ResponseEntity<DictionaryVO> create(@RequestBody @Valid DictionaryDTO dto) {
         DictionaryVO vo;
         try {
-            vo = dictionaryService.create(dictionaryDTO);
+            vo = dictionaryService.create(dto);
         } catch (Exception e) {
             logger.error("Create dictionary occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
@@ -149,15 +149,15 @@ public class DictionaryController {
     /**
      * 修改信息
      *
-     * @param dictionaryDTO 要添加的数据
-     * @param id            a {@link java.lang.Long} object
+     * @param dto 要添加的数据
+     * @param id  a {@link java.lang.Long} object
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<DictionaryVO> modify(@PathVariable Long id, @RequestBody @Valid DictionaryDTO dictionaryDTO) {
+    public ResponseEntity<DictionaryVO> modify(@PathVariable Long id, @RequestBody @Valid DictionaryDTO dto) {
         DictionaryVO vo;
         try {
-            vo = dictionaryService.modify(id, dictionaryDTO);
+            vo = dictionaryService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify dictionary occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);

@@ -28,6 +28,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -60,6 +61,16 @@ public class AccessLogServiceImpl implements AccessLogService {
         return accessLogRepository.findAll(pageable).map(this::convert);
     }
 
+    @Override
+    public AccessLogVO fetch(Long id) {
+        Assert.notNull(id, "access log id must not be null.");
+        AccessLog accessLog = accessLogRepository.findById(id).orElse(null);
+        if (accessLog == null) {
+            return null;
+        }
+        return this.convert(accessLog);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -71,6 +82,12 @@ public class AccessLogServiceImpl implements AccessLogService {
 
         accessLogRepository.saveAndFlush(accessLog);
         return this.convert(accessLog);
+    }
+
+    @Override
+    public void remove(Long id) {
+        Assert.notNull(id, "access log id must not be null.");
+        accessLogRepository.deleteById(id);
     }
 
     private AccessLogVO convert(AccessLog accessLog) {

@@ -77,8 +77,6 @@ ON COLUMN posts.id IS '主键';
 COMMENT
 ON COLUMN posts.title IS '标题';
 COMMENT
-ON COLUMN posts.tags IS '标签';
-COMMENT
 ON COLUMN posts.excerpt IS '概述';
 COMMENT
 ON COLUMN posts.enabled IS '是否启用';
@@ -231,3 +229,49 @@ COMMENT
 ON COLUMN post_statistics.last_modified_by IS '最后修改者';
 COMMENT
 ON COLUMN post_statistics.last_modified_date IS '最后修改时间';
+
+
+-- Drop table if exists regions
+DROP TABLE IF EXISTS regions;
+
+-- Create table regions
+CREATE TABLE regions
+(
+    id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name               varchar(50) NOT NULL,
+    superior_id        bigint,
+    area_code          varchar(4),
+    postal_code        int4,
+    description        varchar(255),
+    enabled            boolean     NOT NULL DEFAULT true,
+    created_by         varchar(50),
+    created_date       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_by   varchar(50),
+    last_modified_date timestamp
+);
+
+-- Add comment to the table and columns
+COMMENT
+ON TABLE regions IS '地区表';
+COMMENT
+ON COLUMN regions.id IS '主键';
+COMMENT
+ON COLUMN regions.name IS '名称';
+COMMENT
+ON COLUMN regions.superior_id IS '上级ID';
+COMMENT
+ON COLUMN regions.area_code IS '区号';
+COMMENT
+ON COLUMN regions.postal_code IS '邮政编码';
+COMMENT
+ON COLUMN regions.description IS '描述';
+COMMENT
+ON COLUMN regions.enabled IS '是否启用';
+COMMENT
+ON COLUMN regions.created_by IS '创建者';
+COMMENT
+ON COLUMN regions.created_date IS '创建时间';
+COMMENT
+ON COLUMN regions.last_modified_by IS '最后修改者';
+COMMENT
+ON COLUMN regions.last_modified_date IS '最后修改时间';

@@ -1,15 +1,11 @@
 logging:
   level:
     root: INFO
-    org:
-      springframework: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO
 
 spring:
-  cloud:
-    consul:
-      host: 127.0.0.1
-      port: 8500
-
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres

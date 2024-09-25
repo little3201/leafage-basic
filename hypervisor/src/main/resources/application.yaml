@@ -8,12 +8,6 @@ spring:
   profiles:
     active: dev
 
-  cloud:
-    consul:
-      discovery:
-        heartbeat:
-          enabled: true
-
   jpa:
     open-in-view: false
 

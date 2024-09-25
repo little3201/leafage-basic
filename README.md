@@ -1,9 +1,7 @@
 # Leafage Basic
 
 <p align="center">
- <img src="https://img.shields.io/badge/Spring%20Cloud-2023.0.3-green.svg" alt="Coverage Status">
- <img src="https://img.shields.io/badge/Spring%20Boot-3.2.7-green.svg" alt="Downloads">
- <img src="https://img.shields.io/badge/Spring%20Oauth2%20Authorization%20Server-1.3.2-green.svg" alt="Downloads">
+ <img src="https://img.shields.io/badge/Spring%20Boot-3.3.4-green.svg" alt="Downloads">
  <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=alert_status" alt="Quality Gate Status">
  <img src="https://sonarcloud.io/api/project_badges/measure?project=little3201_leafage-basic&metric=coverage"/>
 </p>

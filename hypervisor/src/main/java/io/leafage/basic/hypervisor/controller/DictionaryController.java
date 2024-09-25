@@ -150,7 +150,7 @@ public class DictionaryController {
      * 修改信息
      *
      * @param dto 要添加的数据
-     * @param id            a {@link java.lang.Long} object
+     * @param id  a {@link java.lang.Long} object
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PutMapping("/{id}")

@@ -17,22 +17,21 @@
 
 package io.leafage.basic.hypervisor.config;
 
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.http.HttpMethod;
-//import org.springframework.security.config.Customizer;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * <p>AuthorizationServerConfiguration class.</p>
  *
  * @author wq li
  */
-//@Configuration
-//@EnableWebSecurity
-public class AuthorizationServerConfiguration {
+@Configuration
+@EnableWebSecurity
+public class OAuth2ResourceServerSecurityConfiguration {
 
     /**
      * <p>securityFilterChain.</p>
@@ -41,11 +40,10 @@ public class AuthorizationServerConfiguration {
      * @return a {@link org.springframework.security.web.SecurityFilterChain} object
      * @throws java.lang.Exception if any.
      */
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.authorizeHttpRequests((authorize) -> authorize
-//                        .anyRequest().permitAll())
-//                .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
-//        return http.build();
-//    }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+                .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
+        return http.build();
+    }
 }

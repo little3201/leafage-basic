@@ -19,7 +19,6 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
-import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 import java.util.List;
@@ -30,17 +29,6 @@ import java.util.List;
  * @author wq li
  */
 public interface DictionaryService extends ServletBasicService<DictionaryDTO, DictionaryVO> {
-
-    /**
-     * 分页查询
-     *
-     * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序
-     * @param descending 顺序
-     * @return 查询结果
-     */
-    Page<DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending);
 
     /**
      * 获取子节点

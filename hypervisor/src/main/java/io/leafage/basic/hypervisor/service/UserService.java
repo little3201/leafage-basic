@@ -18,7 +18,6 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.vo.UserVO;
-import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
@@ -27,16 +26,4 @@ import top.leafage.common.servlet.ServletBasicService;
  * @author wq li
  */
 public interface UserService extends ServletBasicService<UserDTO, UserVO> {
-
-    /**
-     * 分页查询
-     *
-     * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序
-     * @param descending 顺序
-     * @param groupId    group id
-     * @return 查询结果
-     */
-    Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, Long groupId);
 }

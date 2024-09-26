@@ -86,7 +86,7 @@ public class PostsServiceImpl implements PostsService {
     /** {@inheritDoc} */
     @Override
     public PostVO fetch(Long id) {
-        Assert.notNull(id, "post id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         //查询基本信息
         Post post = postRepository.findById(id).orElse(null);
         if (post == null) {
@@ -99,7 +99,7 @@ public class PostsServiceImpl implements PostsService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public PostVO details(Long id) {
-        Assert.notNull(id, "post id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Post post = postRepository.findById(id).orElse(null);
         if (post == null) {
             return null;
@@ -147,7 +147,7 @@ public class PostsServiceImpl implements PostsService {
     /** {@inheritDoc} */
     @Override
     public PostVO modify(Long id, PostDTO dto) {
-        Assert.notNull(id, "post id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         //查询基本信息
         Post post = postRepository.findById(id).orElse(null);
         if (post == null) {
@@ -176,7 +176,7 @@ public class PostsServiceImpl implements PostsService {
     /** {@inheritDoc} */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "post id must not be null.");
+        Assert.notNull(id, "id must not be null.");
 
         postRepository.deleteById(id);
     }
@@ -209,8 +209,8 @@ public class PostsServiceImpl implements PostsService {
         return vo;
     }
 
-    private void relation(Long postId, Set<String> tags) {
-        tagPostsRepository.deleteByPostId(postId);
+    private void relation(Long id, Set<String> tags) {
+        tagPostsRepository.deleteByPostId(id);
         // 设置新的关联
         if (!CollectionUtils.isEmpty(tags)) {
             List<TagPosts> tagPostsList = new ArrayList<>(tags.size());
@@ -223,7 +223,7 @@ public class PostsServiceImpl implements PostsService {
                 }
 
                 TagPosts tagPosts = new TagPosts();
-                tagPosts.setPostId(postId);
+                tagPosts.setPostId(id);
                 tagPosts.setTagId(tag.getId());
                 tagPostsList.add(tagPosts);
             });

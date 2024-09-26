@@ -63,7 +63,7 @@ public class AccessLogServiceImpl implements AccessLogService {
 
     @Override
     public AccessLogVO fetch(Long id) {
-        Assert.notNull(id, "access log id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         AccessLog accessLog = accessLogRepository.findById(id).orElse(null);
         if (accessLog == null) {
             return null;
@@ -86,7 +86,7 @@ public class AccessLogServiceImpl implements AccessLogService {
 
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "access log id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         accessLogRepository.deleteById(id);
     }
 

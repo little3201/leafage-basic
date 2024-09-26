@@ -64,7 +64,7 @@ public class RegionServiceImpl implements RegionService {
     /** {@inheritDoc} */
     @Override
     public List<RegionVO> subset(Long id) {
-        Assert.notNull(id, "region id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return regionRepository.findBySuperiorId(id)
                 .stream().map(this::convert).toList();
     }
@@ -72,7 +72,7 @@ public class RegionServiceImpl implements RegionService {
     /** {@inheritDoc} */
     @Override
     public RegionVO fetch(Long id) {
-        Assert.notNull(id, "region id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Region region = regionRepository.findById(id).orElse(null);
         if (region == null) {
             return null;
@@ -83,7 +83,7 @@ public class RegionServiceImpl implements RegionService {
     /** {@inheritDoc} */
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, "region name must not bu blank.");
+        Assert.hasText(name, "name must not bu blank.");
         return regionRepository.existsByName(name);
     }
 
@@ -101,7 +101,7 @@ public class RegionServiceImpl implements RegionService {
     /** {@inheritDoc} */
     @Override
     public RegionVO modify(Long id, RegionDTO dto) {
-        Assert.notNull(id, "region id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Region region = regionRepository.findById(id).orElse(null);
         if (region == null) {
             return null;
@@ -116,7 +116,7 @@ public class RegionServiceImpl implements RegionService {
     /** {@inheritDoc} */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "region id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         regionRepository.deleteById(id);
     }
 

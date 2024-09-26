@@ -67,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
     /** {@inheritDoc} */
     @Override
     public List<CommentVO> relation(Long id) {
-        Assert.notNull(id, "comment id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return commentRepository.findByPostIdAndReplierIsNull(id)
                 .stream().map(this::convert).toList();
     }

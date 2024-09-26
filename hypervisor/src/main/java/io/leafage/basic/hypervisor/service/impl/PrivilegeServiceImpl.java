@@ -92,7 +92,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      */
     @Override
     public PrivilegeVO fetch(Long id) {
-        Assert.notNull(id, "group id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Privilege privilege = privilegeRepository.findById(id).orElse(null);
         if (privilege == null) {
             return null;
@@ -118,7 +118,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      */
     @Override
     public PrivilegeVO modify(Long id, PrivilegeDTO dto) {
-        Assert.notNull(id, "privilege id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Privilege privilege = privilegeRepository.findById(id).orElse(null);
         if (privilege == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -135,7 +135,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "privilege id must not be null.");
+        Assert.notNull(id, "id must not be null.");
 
         privilegeRepository.deleteById(id);
     }

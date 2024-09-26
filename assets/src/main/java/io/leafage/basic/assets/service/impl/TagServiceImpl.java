@@ -68,7 +68,7 @@ public class TagServiceImpl implements TagService {
     /** {@inheritDoc} */
     @Override
     public TagVO fetch(Long id) {
-        Assert.notNull(id, "tag id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Tag tag = tagRepository.findById(id).orElse(null);
         if (tag == null) {
             return null;
@@ -79,7 +79,7 @@ public class TagServiceImpl implements TagService {
     /** {@inheritDoc} */
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, "tag name must not be blank.");
+        Assert.hasText(name, "name must not be blank.");
         return tagRepository.existsByName(name);
     }
 
@@ -97,7 +97,7 @@ public class TagServiceImpl implements TagService {
     /** {@inheritDoc} */
     @Override
     public TagVO modify(Long id, TagDTO dto) {
-        Assert.notNull(id, "tag id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Tag tag = tagRepository.findById(id).orElse(null);
         if (tag == null) {
             return null;
@@ -112,7 +112,7 @@ public class TagServiceImpl implements TagService {
     /** {@inheritDoc} */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "tag id must not be null.");
+        Assert.notNull(id, "id must not be null.");
 
         tagRepository.deleteById(id);
     }

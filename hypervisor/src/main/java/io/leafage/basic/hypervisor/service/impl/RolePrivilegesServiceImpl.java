@@ -50,7 +50,7 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
      */
     @Override
     public List<RolePrivileges> privileges(Long roleId) {
-        Assert.notNull(roleId, "role id must not be null.");
+        Assert.notNull(roleId, "roleId must not be null.");
 
         return rolePrivilegesRepository.findByRoleId(roleId);
     }
@@ -60,7 +60,7 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
      */
     @Override
     public List<RolePrivileges> roles(Long privilegeId) {
-        Assert.notNull(privilegeId, "privilege id must not be null.");
+        Assert.notNull(privilegeId, "privilegeId must not be null.");
 
         return rolePrivilegesRepository.findByPrivilegeId(privilegeId);
     }
@@ -70,8 +70,8 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
      */
     @Override
     public List<RolePrivileges> relation(Long roleId, Set<Long> privilegeIds) {
-        Assert.notNull(roleId, "role id must not be null.");
-        Assert.notEmpty(privilegeIds, "privilege ids must not be empty.");
+        Assert.notNull(roleId, "roleId must not be null.");
+        Assert.notEmpty(privilegeIds, "privilegeIds must not be empty.");
 
         List<RolePrivileges> rolePrivileges = privilegeIds.stream().map(privilegeId -> {
             RolePrivileges rolePrivilege = new RolePrivileges();

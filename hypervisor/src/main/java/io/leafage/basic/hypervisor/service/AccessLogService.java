@@ -19,7 +19,6 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.AccessLogDTO;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
-import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
@@ -28,15 +27,4 @@ import top.leafage.common.servlet.ServletBasicService;
  * @author wq li
  */
 public interface AccessLogService extends ServletBasicService<AccessLogDTO, AccessLogVO> {
-
-    /**
-     * 分页查询
-     *
-     * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序
-     * @param descending 顺序
-     * @return 查询结果
-     */
-    Page<AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending);
 }

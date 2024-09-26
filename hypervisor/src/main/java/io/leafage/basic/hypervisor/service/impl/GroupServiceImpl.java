@@ -81,7 +81,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      */
     @Override
     public GroupVO fetch(Long id) {
-        Assert.notNull(id, "group id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Group group = groupRepository.findById(id).orElse(null);
         if (group == null) {
             return null;
@@ -107,7 +107,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      */
     @Override
     public GroupVO modify(Long id, GroupDTO dto) {
-        Assert.notNull(id, "group id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Group group = groupRepository.findById(id).orElse(null);
         if (group == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -125,7 +125,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "group id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         groupRepository.deleteById(id);
     }
 

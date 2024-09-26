@@ -67,7 +67,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public RoleVO fetch(Long id) {
-        Assert.notNull(id, "role id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Role role = roleRepository.findById(id).orElse(null);
         if (role == null) {
             return null;
@@ -93,7 +93,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public RoleVO modify(Long id, RoleDTO dto) {
-        Assert.notNull(id, "role id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Role role = roleRepository.findById(id).orElse(null);
         if (role == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -110,7 +110,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "role id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         roleRepository.deleteById(id);
     }
 

@@ -70,7 +70,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      */
     @Override
     public DictionaryVO fetch(Long id) {
-        Assert.notNull(id, "dictionary id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Dictionary dictionary = dictionaryRepository.findById(id).orElse(null);
         if (dictionary == null) {
             return null;
@@ -83,7 +83,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      */
     @Override
     public List<DictionaryVO> subset(Long id) {
-        Assert.notNull(id, "dictionary id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return dictionaryRepository.findBySuperiorId(id)
                 .stream().map(this::convert).toList();
     }
@@ -93,7 +93,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      */
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, "dictionary name must not be blank.");
+        Assert.hasText(name, "name must not be blank.");
         return dictionaryRepository.existsByName(name);
     }
 
@@ -116,7 +116,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      */
     @Override
     public DictionaryVO modify(Long id, DictionaryDTO dto) {
-        Assert.notNull(id, "dictionary id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Dictionary dictionary = dictionaryRepository.findById(id).orElse(null);
         if (dictionary == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -134,7 +134,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "dictionary id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         dictionaryRepository.deleteById(id);
     }
 

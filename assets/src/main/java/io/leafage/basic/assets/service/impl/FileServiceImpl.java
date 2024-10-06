@@ -4,12 +4,17 @@ import io.leafage.basic.assets.domain.FileRecord;
 import io.leafage.basic.assets.repository.FileRecordRepository;
 import io.leafage.basic.assets.service.FileService;
 import io.leafage.basic.assets.vo.FileRecordVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * file service impl.
@@ -29,7 +34,13 @@ public class FileServiceImpl implements FileService {
     public Page<FileRecordVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<FileRecord> spec = (root, query, cb) -> cb.like(root.get("name"), "%" + name + "%");
+        Specification<FileRecord> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasText(name)) {
+                predicates.add(cb.like(root.get("name"), "%" + name + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
 
         return fileRecordRepository.findAll(spec, pageable).map(this::convert);
     }

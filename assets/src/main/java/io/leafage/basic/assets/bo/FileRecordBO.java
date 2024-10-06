@@ -13,7 +13,7 @@ public abstract class FileRecordBO {
 
     private String type;
 
-    private long size;
+    private float size;
 
 
     public String getName() {
@@ -40,11 +40,11 @@ public abstract class FileRecordBO {
         this.type = type;
     }
 
-    public long getSize() {
+    public float getSize() {
         return size;
     }
 
-    public void setSize(long size) {
+    public void setSize(float size) {
         this.size = size;
     }
 }

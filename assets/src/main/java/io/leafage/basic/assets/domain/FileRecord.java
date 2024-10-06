@@ -1,5 +1,6 @@
 package io.leafage.basic.assets.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import top.leafage.common.servlet.audit.AuditMetadata;
@@ -10,16 +11,17 @@ import top.leafage.common.servlet.audit.AuditMetadata;
  * @author wq li
  */
 @Entity
-@Table(name = "file_record")
+@Table(name = "file_records")
 public class FileRecord extends AuditMetadata {
 
+    @Column(name = "name", nullable = false, unique = true, length = 50)
     private String name;
 
     private String path;
 
     private String type;
 
-    private long size;
+    private float size;
 
     public String getName() {
         return name;
@@ -45,11 +47,11 @@ public class FileRecord extends AuditMetadata {
         this.type = type;
     }
 
-    public long getSize() {
+    public float getSize() {
         return size;
     }
 
-    public void setSize(long size) {
+    public void setSize(float size) {
         this.size = size;
     }
 }

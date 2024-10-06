@@ -275,3 +275,49 @@ COMMENT
 ON COLUMN regions.last_modified_by IS '最后修改者';
 COMMENT
 ON COLUMN regions.last_modified_date IS '最后修改时间';
+
+
+
+-- ----------------------------
+-- Table structure for file_records
+-- ----------------------------
+DROP TABLE IF EXISTS file_records;
+CREATE TABLE file_records
+(
+    id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name               varchar(50) NOT NULL,
+    type               varchar(255),
+    path               varchar(255),
+    size               float4,
+    description        varchar(255),
+    enabled            bool               NOT NULL DEFAULT true,
+    created_by         varchar(50),
+    created_date       timestamp(6)       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_by   varchar(50),
+    last_modified_date timestamp(6)
+)
+;
+COMMENT
+ON COLUMN "public"."file_records"."id" IS '主键';
+COMMENT
+ON COLUMN "public"."file_records"."name" IS '名称';
+COMMENT
+ON COLUMN "public"."file_records"."type" IS '类型';
+COMMENT
+ON COLUMN "public"."file_records"."path" IS '路径';
+COMMENT
+ON COLUMN "public"."file_records"."size" IS '大小';
+COMMENT
+ON COLUMN "public"."file_records"."description" IS '描述';
+COMMENT
+ON COLUMN "public"."file_records"."enabled" IS '是否启用';
+COMMENT
+ON COLUMN "public"."file_records"."created_by" IS '创建者';
+COMMENT
+ON COLUMN "public"."file_records"."created_date" IS '创建时间';
+COMMENT
+ON COLUMN "public"."file_records"."last_modified_by" IS '最后修改者';
+COMMENT
+ON COLUMN "public"."file_records"."last_modified_date" IS '最后修改时间';
+COMMENT
+ON TABLE "public"."file_records" IS '文件记录表';

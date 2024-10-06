@@ -39,6 +39,7 @@ import top.leafage.common.TreeNode;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -74,7 +75,7 @@ class PrivilegeControllerTest {
     private PrivilegeDTO privilegeDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         privilegeVO = new PrivilegeVO();
         privilegeVO.setName("test");
         privilegeVO.setIcon("icon");
@@ -94,21 +95,29 @@ class PrivilegeControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<PrivilegeVO> voPage = new PageImpl<>(List.of(privilegeVO), pageable, 2L);
-        given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(voPage);
+        Page<PrivilegeVO> voPage = new PageImpl<>(List.of(privilegeVO), Mockito.mock(PageRequest.class), 2L);
+
+        given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
+                Mockito.anyBoolean(), eq("test"))).willReturn(voPage);
 
         mvc.perform(get("/privileges").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sortBy", "")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("name", "test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
+        given(this.privilegeService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyBoolean(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/privileges").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("name", "test"))
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
@@ -186,7 +195,7 @@ class PrivilegeControllerTest {
 
     @Test
     void tree() throws Exception {
-        TreeNode treeNode = new TreeNode(1L, "test");
+        TreeNode treeNode = TreeNode.withId(1L).name("test").build();
         given(this.privilegeService.tree(Mockito.anyString())).willReturn(Collections.singletonList(treeNode));
 
         mvc.perform(get("/privileges/{username}/tree", "test")).andExpect(status().isOk())

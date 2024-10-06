@@ -24,12 +24,10 @@ import io.leafage.basic.hypervisor.service.AccessLogService;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * access log service impl.
@@ -44,7 +42,7 @@ public class AccessLogServiceImpl implements AccessLogService {
     /**
      * <p>Constructor for AccessLogServiceImpl.</p>
      *
-     * @param accessLogRepository a {@link io.leafage.basic.hypervisor.repository.AccessLogRepository} object
+     * @param accessLogRepository a {@link AccessLogRepository} object
      */
     public AccessLogServiceImpl(AccessLogRepository accessLogRepository) {
         this.accessLogRepository = accessLogRepository;
@@ -54,11 +52,12 @@ public class AccessLogServiceImpl implements AccessLogService {
      * {@inheritDoc}
      */
     @Override
-    public Page<AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return accessLogRepository.findAll(pageable).map(this::convert);
+    public Page<AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending, String url) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<AccessLog> spec = (root, query, cb) -> cb.like(root.get("url"), "%" + url + "%");
+
+        return accessLogRepository.findAll(spec, pageable).map(this::convert);
     }
 
     @Override

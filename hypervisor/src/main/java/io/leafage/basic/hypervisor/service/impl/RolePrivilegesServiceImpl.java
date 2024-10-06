@@ -52,7 +52,7 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
     public List<RolePrivileges> privileges(Long roleId) {
         Assert.notNull(roleId, "roleId must not be null.");
 
-        return rolePrivilegesRepository.findByRoleId(roleId);
+        return rolePrivilegesRepository.findAllByRoleId(roleId);
     }
 
     /**
@@ -62,7 +62,7 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
     public List<RolePrivileges> roles(Long privilegeId) {
         Assert.notNull(privilegeId, "privilegeId must not be null.");
 
-        return rolePrivilegesRepository.findByPrivilegeId(privilegeId);
+        return rolePrivilegesRepository.findAllByPrivilegeId(privilegeId);
     }
 
     /**

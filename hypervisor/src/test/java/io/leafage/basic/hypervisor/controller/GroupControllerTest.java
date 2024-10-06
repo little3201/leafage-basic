@@ -39,6 +39,7 @@ import top.leafage.common.TreeNode;
 import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -74,7 +75,7 @@ class GroupControllerTest {
     private GroupDTO groupDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         groupVO = new GroupVO();
         groupVO.setName("test");
 
@@ -86,12 +87,14 @@ class GroupControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), pageable, 2L);
-        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyLong())).willReturn(voPage);
+        Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), Mockito.mock(PageRequest.class), 2L);
+
+        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
+                Mockito.anyBoolean(), Mockito.anyLong(), eq("test"))).willReturn(voPage);
 
         mvc.perform(get("/groups").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sortBy", "id").queryParam("superiorId", "1"))
+                        .queryParam("sortBy", "id").queryParam("superiorId", "1")
+                        .queryParam("name", "test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isNotEmpty())
                 .andDo(print()).andReturn();
@@ -99,16 +102,20 @@ class GroupControllerTest {
 
     @Test
     void retrieve_error() throws Exception {
-        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyLong())).willThrow(new RuntimeException());
+        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"), Mockito.anyBoolean(),
+                Mockito.anyLong(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/groups").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sortBy", "id").queryParam("superiorId", "1"))
-                .andExpect(status().isNoContent()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("superiorId", "1")
+                        .queryParam("name", "test"))
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
     void tree() throws Exception {
-        TreeNode treeNode = new TreeNode(1L, "test");
+        TreeNode treeNode = TreeNode.withId(1L).name("test").build();
         given(this.groupService.tree()).willReturn(Collections.singletonList(treeNode));
 
         mvc.perform(get("/groups/tree")).andExpect(status().isOk())

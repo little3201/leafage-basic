@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -85,9 +86,9 @@ class PostControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<PostVO> page = new PageImpl<>(List.of(postVO), pageable, 2L);
-        given(postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(page);
+        Page<PostVO> page = new PageImpl<>(List.of(postVO), Mockito.mock(PageRequest.class), 2L);
+
+        given(postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"), Mockito.anyBoolean())).willReturn(page);
 
         mvc.perform(get("/posts").queryParam("page", "0")
                         .queryParam("size", "2").queryParam("sortBy", "id")).andExpect(status().isOk())

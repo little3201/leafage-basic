@@ -25,11 +25,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import top.leafage.common.TreeNode;
 
 import java.util.Arrays;
@@ -57,7 +61,7 @@ class PrivilegeServiceImplTest {
     private PrivilegeDTO privilegeDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         privilegeDTO = new PrivilegeDTO();
         privilegeDTO.setName("system");
         privilegeDTO.setPath("/system");
@@ -69,11 +73,12 @@ class PrivilegeServiceImplTest {
 
     @Test
     void retrieve() {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Privilege> page = new PageImpl<>(List.of(Mockito.mock(Privilege.class)));
-        given(this.privilegeRepository.findAllBySuperiorIdIsNull(pageable)).willReturn(page);
 
-        Page<PrivilegeVO> voPage = privilegeService.retrieve(0, 2, "id", true);
+        given(this.privilegeRepository.findAll(ArgumentMatchers.<Specification<Privilege>>any(),
+                Mockito.any(Pageable.class))).willReturn(page);
+
+        Page<PrivilegeVO> voPage = privilegeService.retrieve(0, 2, "id", true, "test");
         Assertions.assertNotNull(voPage.getContent());
     }
 
@@ -88,7 +93,7 @@ class PrivilegeServiceImplTest {
 
     @Test
     void subset() {
-        given(this.privilegeRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Arrays.asList(Mockito.mock(Privilege.class), Mockito.mock(Privilege.class)));
+        given(this.privilegeRepository.findAllBySuperiorId(Mockito.anyLong())).willReturn(Arrays.asList(Mockito.mock(Privilege.class), Mockito.mock(Privilege.class)));
 
         List<PrivilegeVO> voList = privilegeService.subset(Mockito.anyLong());
 

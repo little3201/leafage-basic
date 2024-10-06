@@ -50,7 +50,7 @@ class GroupMembersServiceImplTest {
 
     @Test
     void members() {
-        given(this.groupMembersRepository.findByGroupId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(GroupMembers.class)));
+        given(this.groupMembersRepository.findAllByGroupId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(GroupMembers.class)));
 
         List<GroupMembers> members = groupMembersService.members(1L);
         Assertions.assertNotNull(members);
@@ -58,7 +58,7 @@ class GroupMembersServiceImplTest {
 
     @Test
     void groups() {
-        given(this.groupMembersRepository.findByUsername(Mockito.anyString())).willReturn(List.of(Mockito.mock(GroupMembers.class)));
+        given(this.groupMembersRepository.findAllByUsername(Mockito.anyString())).willReturn(List.of(Mockito.mock(GroupMembers.class)));
 
         List<GroupMembers> groups = groupMembersService.groups("test");
         Assertions.assertNotNull(groups);

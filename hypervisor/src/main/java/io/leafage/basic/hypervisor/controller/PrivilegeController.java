@@ -68,10 +68,10 @@ public class PrivilegeController {
      */
     @GetMapping
     public ResponseEntity<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                      String sortBy, boolean descending) {
+                                                      String sortBy, boolean descending, String name) {
         Page<PrivilegeVO> voPage;
         try {
-            voPage = privilegeService.retrieve(page, size, sortBy, descending);
+            voPage = privilegeService.retrieve(page, size, sortBy, descending, name);
         } catch (Exception e) {
             logger.info("Retrieve privilege occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -154,7 +154,7 @@ public class PrivilegeController {
     /**
      * 修改信息
      *
-     * @param id           主键
+     * @param id  主键
      * @param dto 要添加的数据
      * @return 编辑后的信息，否则返回417状态码
      */

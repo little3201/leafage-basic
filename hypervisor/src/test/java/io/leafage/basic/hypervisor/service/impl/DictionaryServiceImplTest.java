@@ -25,11 +25,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collections;
 import java.util.List;
@@ -57,18 +61,19 @@ class DictionaryServiceImplTest {
     private DictionaryDTO dictionaryDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         dictionaryDTO = new DictionaryDTO();
         dictionaryDTO.setName("group");
     }
 
     @Test
     void retrieve() {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<Dictionary> regions = new PageImpl<>(List.of(Mockito.mock(Dictionary.class)));
-        given(this.dictionaryRepository.findBySuperiorIdIsNull(pageable)).willReturn(regions);
+        Page<Dictionary> page = new PageImpl<>(List.of(Mockito.mock(Dictionary.class)));
 
-        Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2, "id", true);
+        given(this.dictionaryRepository.findAll(ArgumentMatchers.<Specification<Dictionary>>any(),
+                Mockito.any(Pageable.class))).willReturn(page);
+
+        Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2, "id", true, "test");
 
         Assertions.assertNotNull(voPage.getContent());
     }
@@ -84,7 +89,7 @@ class DictionaryServiceImplTest {
 
     @Test
     void subset() {
-        given(this.dictionaryRepository.findBySuperiorId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Dictionary.class)));
+        given(this.dictionaryRepository.findAllBySuperiorId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Dictionary.class)));
 
         List<DictionaryVO> dictionaryVOS = dictionaryService.subset(1L);
 
@@ -93,7 +98,7 @@ class DictionaryServiceImplTest {
 
     @Test
     void lower_empty() {
-        given(this.dictionaryRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Collections.emptyList());
+        given(this.dictionaryRepository.findAllBySuperiorId(Mockito.anyLong())).willReturn(Collections.emptyList());
 
         List<DictionaryVO> dictionaryVOS = dictionaryService.subset(1L);
 

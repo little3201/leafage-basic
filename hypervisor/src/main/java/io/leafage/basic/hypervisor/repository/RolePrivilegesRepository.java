@@ -36,7 +36,7 @@ public interface RolePrivilegesRepository extends JpaRepository<RolePrivileges, 
      * @param roleId privilege主键
      * @return 关联数据集
      */
-    List<RolePrivileges> findByRoleId(Long roleId);
+    List<RolePrivileges> findAllByRoleId(Long roleId);
 
     /**
      * 根据privilege查role
@@ -44,6 +44,6 @@ public interface RolePrivilegesRepository extends JpaRepository<RolePrivileges, 
      * @param privilegeId privilege主键
      * @return 关联数据集
      */
-    List<RolePrivileges> findByPrivilegeId(Long privilegeId);
+    List<RolePrivileges> findAllByPrivilegeId(Long privilegeId);
 
 }

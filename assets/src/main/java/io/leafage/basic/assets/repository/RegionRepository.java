@@ -18,13 +18,9 @@
 package io.leafage.basic.assets.repository;
 
 import io.leafage.basic.assets.domain.Region;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * region repository.
@@ -34,8 +30,6 @@ import java.util.List;
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecificationExecutor<Region> {
 
-    Page<Region> findAllBySuperiorIdIsNull(Pageable pageable);
-
     /**
      * <p>existsByName.</p>
      *
@@ -43,13 +37,5 @@ public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecif
      * @return a boolean
      */
     boolean existsByName(String name);
-
-    /**
-     * <p>findAllBySuperiorId.</p>
-     *
-     * @param id a {@link java.lang.Long} object
-     * @return a {@link java.util.List} object
-     */
-    List<Region> findAllBySuperiorId(Long id);
 
 }

@@ -22,11 +22,11 @@ import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -63,11 +63,19 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      * {@inheritDoc}
      */
     @Override
-    public Page<PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return privilegeRepository.findAllBySuperiorIdIsNull(pageable).map(this::convert);
+    public Page<PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<Privilege> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.isNull(root.get("superiorId")));
+            if (StringUtils.hasText(name)) {
+                predicates.add(cb.like(root.get("name"), "%" + name + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return privilegeRepository.findAll(spec, pageable).map(this::convert);
     }
 
     /**
@@ -84,7 +92,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      */
     @Override
     public List<PrivilegeVO> subset(Long superiorId) {
-        return privilegeRepository.findBySuperiorId(superiorId).stream().map(this::convert).toList();
+        return privilegeRepository.findAllBySuperiorId(superiorId).stream().map(this::convert).toList();
     }
 
     /**
@@ -165,13 +173,13 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         if (CollectionUtils.isEmpty(privileges)) {
             return Collections.emptyList();
         }
-        Set<String> expand = new HashSet<>();
-        expand.add("path");
-        expand.add("redirect");
-        expand.add("component");
-        expand.add("icon");
-        expand.add("hidden");
-        return this.convert(privileges, expand);
+        Set<String> meta = new HashSet<>();
+        meta.add("path");
+        meta.add("redirect");
+        meta.add("component");
+        meta.add("icon");
+        meta.add("hidden");
+        return this.convert(privileges, meta);
     }
 
 }

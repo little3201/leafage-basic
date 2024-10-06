@@ -33,7 +33,7 @@ public class RoleMembers {
     private Long id;
 
     /**
-     * group主键
+     * role主键
      */
     @Column(name = "role_id", nullable = false)
     private Long roleId;

@@ -80,15 +80,6 @@ public class RegionServiceImpl implements RegionService {
      * {@inheritDoc}
      */
     @Override
-    public List<RegionVO> subset(Long id) {
-        Assert.notNull(id, "id must not be null.");
-        return regionRepository.findAllBySuperiorId(id).stream().map(this::convert).toList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public RegionVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
         Region region = regionRepository.findById(id).orElse(null);

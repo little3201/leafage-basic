@@ -18,6 +18,7 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.vo.UserVO;
+import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
@@ -26,4 +27,17 @@ import top.leafage.common.servlet.ServletBasicService;
  * @author wq li
  */
 public interface UserService extends ServletBasicService<UserDTO, UserVO> {
+
+    /**
+     * Retrieves a paginated list of records.
+     *
+     * @param page       The page number (zero-based).
+     * @param size       The number of records per page.
+     * @param sortBy     The field to sort by. If null, records are unsorted.
+     * @param descending Whether sorting should be in descending order.
+     * @return A paginated list of records.
+     * @since 0.3.0
+     */
+    Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, Long groupId, String username);
+
 }

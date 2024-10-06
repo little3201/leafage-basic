@@ -50,7 +50,7 @@ class RolePrivilegeServiceImplTest {
 
     @Test
     void privileges() {
-        given(this.rolePrivilegesRepository.findByRoleId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RolePrivileges.class)));
+        given(this.rolePrivilegesRepository.findAllByRoleId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RolePrivileges.class)));
 
         List<RolePrivileges> privileges = rolePrivilegesService.privileges(Mockito.anyLong());
         Assertions.assertNotNull(privileges);
@@ -58,7 +58,7 @@ class RolePrivilegeServiceImplTest {
 
     @Test
     void roles() {
-        given(this.rolePrivilegesRepository.findByPrivilegeId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RolePrivileges.class)));
+        given(this.rolePrivilegesRepository.findAllByPrivilegeId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RolePrivileges.class)));
 
         List<RolePrivileges> roles = rolePrivilegesService.roles(Mockito.anyLong());
         Assertions.assertNotNull(roles);

@@ -22,16 +22,17 @@ import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -58,11 +59,19 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      * {@inheritDoc}
      */
     @Override
-    public Page<DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return dictionaryRepository.findBySuperiorIdIsNull(pageable).map(this::convert);
+    public Page<DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<Dictionary> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.isNull(root.get("superiorId")));
+            if (StringUtils.hasText(name)) {
+                predicates.add(cb.like(root.get("name"), "%" + name + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return dictionaryRepository.findAll(spec, pageable).map(this::convert);
     }
 
     /**
@@ -84,7 +93,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     @Override
     public List<DictionaryVO> subset(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return dictionaryRepository.findBySuperiorId(id)
+        return dictionaryRepository.findAllBySuperiorId(id)
                 .stream().map(this::convert).toList();
     }
 

@@ -11,8 +11,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-
 /**
  * file service impl.
  *
@@ -50,7 +48,7 @@ public class FileServiceImpl implements FileService {
      */
     private FileRecordVO convert(FileRecord fileRecord) {
         FileRecordVO vo = new FileRecordVO();
-        BeanCopier copier = BeanCopier.create(File.class, FileRecordVO.class, false);
+        BeanCopier copier = BeanCopier.create(FileRecord.class, FileRecordVO.class, false);
         copier.copy(fileRecord, vo, null);
         return vo;
     }

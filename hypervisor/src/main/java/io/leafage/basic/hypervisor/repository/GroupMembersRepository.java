@@ -36,7 +36,7 @@ public interface GroupMembersRepository extends JpaRepository<GroupMembers, Long
      * @param groupId group主键
      * @return 关联数据集
      */
-    List<GroupMembers> findByGroupId(Long groupId);
+    List<GroupMembers> findAllByGroupId(Long groupId);
 
     /**
      * 根据user查group
@@ -44,6 +44,6 @@ public interface GroupMembersRepository extends JpaRepository<GroupMembers, Long
      * @param username 用户名
      * @return 关联数据集
      */
-    List<GroupMembers> findByUsername(String username);
+    List<GroupMembers> findAllByUsername(String username);
 
 }

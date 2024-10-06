@@ -52,7 +52,7 @@ public class RoleMembersServiceImpl implements RoleMembersService {
     public List<RoleMembers> members(Long roleId) {
         Assert.notNull(roleId, "roleId must not be null.");
 
-        return roleMembersRepository.findByRoleId(roleId);
+        return roleMembersRepository.findAllByRoleId(roleId);
     }
 
     /**
@@ -62,7 +62,7 @@ public class RoleMembersServiceImpl implements RoleMembersService {
     public List<RoleMembers> roles(String username) {
         Assert.hasText(username, "username must not be blank.");
 
-        return roleMembersRepository.findByUsername(username);
+        return roleMembersRepository.findAllByUsername(username);
     }
 
     /**

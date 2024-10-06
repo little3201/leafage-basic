@@ -18,6 +18,7 @@ package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Repository;
  * @author wq li
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     /**
      * 是否存在

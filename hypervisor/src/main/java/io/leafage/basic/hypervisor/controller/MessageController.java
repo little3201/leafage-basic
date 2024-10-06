@@ -61,10 +61,10 @@ public class MessageController {
      */
     @GetMapping
     public ResponseEntity<Page<MessageVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                    String sortBy, boolean descending) {
+                                                    String sortBy, boolean descending, String name) {
         Page<MessageVO> voPage;
         try {
-            voPage = messageService.retrieve(page, size, sortBy, descending);
+            voPage = messageService.retrieve(page, size, sortBy, descending, name);
         } catch (Exception e) {
             logger.info("Retrieve message occurred an error: ", e);
             return ResponseEntity.noContent().build();

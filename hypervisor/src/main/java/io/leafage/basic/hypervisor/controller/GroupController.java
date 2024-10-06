@@ -69,10 +69,10 @@ public class GroupController {
      */
     @GetMapping
     public ResponseEntity<Page<GroupVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                  String sortBy, boolean descending, Long superiorId) {
+                                                  String sortBy, boolean descending, Long superiorId, String name) {
         Page<GroupVO> voPage;
         try {
-            voPage = groupService.retrieve(page, size, sortBy, descending, superiorId);
+            voPage = groupService.retrieve(page, size, sortBy, descending, superiorId, name);
         } catch (Exception e) {
             logger.info("Retrieve group occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -136,7 +136,7 @@ public class GroupController {
     /**
      * 修改信息
      *
-     * @param id       主键
+     * @param id  主键
      * @param dto 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */

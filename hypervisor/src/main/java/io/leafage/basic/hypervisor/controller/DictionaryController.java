@@ -63,10 +63,10 @@ public class DictionaryController {
      */
     @GetMapping
     public ResponseEntity<Page<DictionaryVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                       String sortBy, boolean descending) {
+                                                       String sortBy, boolean descending, String name) {
         Page<DictionaryVO> voPage;
         try {
-            voPage = dictionaryService.retrieve(page, size, sortBy, descending);
+            voPage = dictionaryService.retrieve(page, size, sortBy, descending, name);
         } catch (Exception e) {
             logger.error("Retrieve dictionary occurred an error: ", e);
             return ResponseEntity.noContent().build();

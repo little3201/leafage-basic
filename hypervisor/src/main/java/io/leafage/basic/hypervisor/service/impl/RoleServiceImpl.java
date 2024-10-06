@@ -23,12 +23,10 @@ import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.util.NoSuchElementException;
 
@@ -55,11 +53,12 @@ public class RoleServiceImpl implements RoleService {
      * {@inheritDoc}
      */
     @Override
-    public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return roleRepository.findAll(pageable).map(this::convert);
+    public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<Role> spec = (root, query, cb) -> cb.like(root.get("name"), "%" + name + "%");
+
+        return roleRepository.findAll(spec, pageable).map(this::convert);
     }
 
     /**

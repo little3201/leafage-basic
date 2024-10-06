@@ -30,6 +30,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,7 +57,7 @@ class RegionServiceImplTest {
     private RegionDTO regionDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         regionDTO = new RegionDTO();
         regionDTO.setName("西安市");
         regionDTO.setAreaCode("029");
@@ -68,9 +69,12 @@ class RegionServiceImplTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
         Page<Region> regions = new PageImpl<>(List.of(Mockito.mock(Region.class)));
-        given(this.regionRepository.findBySuperiorIdIsNull(pageable)).willReturn(regions);
 
-        Page<RegionVO> voPage = regionService.retrieve(0, 2, "id", true);
+        Specification<Region> spec = (root, query, cb) -> cb.like(root.get("name"), "%test%");
+
+        given(this.regionRepository.findAll(spec, pageable)).willReturn(regions);
+
+        Page<RegionVO> voPage = regionService.retrieve(0, 2, "id", true, null, "test");
         Assertions.assertNotNull(voPage.getContent());
     }
 
@@ -85,7 +89,7 @@ class RegionServiceImplTest {
 
     @Test
     void subset() {
-        given(this.regionRepository.findBySuperiorId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Region.class)));
+        given(this.regionRepository.findAllBySuperiorId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(Region.class)));
 
         List<RegionVO> voList = regionService.subset(Mockito.anyLong());
 

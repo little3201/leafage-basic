@@ -24,12 +24,9 @@ import io.leafage.basic.assets.service.TagService;
 import io.leafage.basic.assets.vo.TagVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -48,7 +45,7 @@ public class TagServiceImpl implements TagService {
     /**
      * <p>Constructor for TagServiceImpl.</p>
      *
-     * @param tagRepository a {@link io.leafage.basic.assets.repository.TagRepository} object
+     * @param tagRepository      a {@link io.leafage.basic.assets.repository.TagRepository} object
      * @param tagPostsRepository a {@link io.leafage.basic.assets.repository.TagPostsRepository} object
      */
     public TagServiceImpl(TagRepository tagRepository, TagPostsRepository tagPostsRepository) {
@@ -56,16 +53,18 @@ public class TagServiceImpl implements TagService {
         this.tagPostsRepository = tagPostsRepository;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<TagVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
         return tagRepository.findAll(pageable).map(this::convert);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TagVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
@@ -76,14 +75,18 @@ public class TagServiceImpl implements TagService {
         return this.convert(tag);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean exist(String name) {
         Assert.hasText(name, "name must not be blank.");
         return tagRepository.existsByName(name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TagVO create(TagDTO dto) {
         Tag tag = new Tag();
@@ -94,7 +97,9 @@ public class TagServiceImpl implements TagService {
         return this.convert(tag);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TagVO modify(Long id, TagDTO dto) {
         Assert.notNull(id, "id must not be null.");
@@ -109,7 +114,9 @@ public class TagServiceImpl implements TagService {
         return this.convert(tag);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "id must not be null.");

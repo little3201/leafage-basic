@@ -69,7 +69,7 @@ class CommentControllerTest {
     private CommentDTO commentDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         commentVO = new CommentVO();
         commentVO.setContent("content");
         commentVO.setPostId(1L);

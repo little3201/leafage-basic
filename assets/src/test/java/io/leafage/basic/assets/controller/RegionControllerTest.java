@@ -68,7 +68,7 @@ class RegionControllerTest {
     private RegionDTO regionDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         regionVO = new RegionVO();
         regionVO.setName("test");
         regionVO.setAreaCode("23234");

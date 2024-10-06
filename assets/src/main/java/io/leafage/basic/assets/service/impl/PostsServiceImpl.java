@@ -29,14 +29,11 @@ import io.leafage.basic.assets.service.PostsService;
 import io.leafage.basic.assets.vo.PostVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -61,10 +58,10 @@ public class PostsServiceImpl implements PostsService {
     /**
      * <p>Constructor for PostsServiceImpl.</p>
      *
-     * @param postRepository a {@link io.leafage.basic.assets.repository.PostRepository} object
+     * @param postRepository        a {@link io.leafage.basic.assets.repository.PostRepository} object
      * @param postContentRepository a {@link io.leafage.basic.assets.repository.PostContentRepository} object
-     * @param tagRepository a {@link io.leafage.basic.assets.repository.TagRepository} object
-     * @param tagPostsRepository a {@link io.leafage.basic.assets.repository.TagPostsRepository} object
+     * @param tagRepository         a {@link io.leafage.basic.assets.repository.TagRepository} object
+     * @param tagPostsRepository    a {@link io.leafage.basic.assets.repository.TagPostsRepository} object
      */
     public PostsServiceImpl(PostRepository postRepository, PostContentRepository postContentRepository,
                             TagRepository tagRepository, TagPostsRepository tagPostsRepository) {
@@ -74,16 +71,18 @@ public class PostsServiceImpl implements PostsService {
         this.tagPostsRepository = tagPostsRepository;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<PostVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
         return postRepository.findAll(pageable).map(this::convert);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PostVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
@@ -95,7 +94,9 @@ public class PostsServiceImpl implements PostsService {
         return this.convert(post);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public PostVO details(Long id) {
@@ -113,13 +114,17 @@ public class PostsServiceImpl implements PostsService {
         return vo;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean exist(String title) {
         return postRepository.existsByTitle(title);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public PostVO create(PostDTO dto) {
@@ -144,7 +149,9 @@ public class PostsServiceImpl implements PostsService {
         return this.convert(post);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PostVO modify(Long id, PostDTO dto) {
         Assert.notNull(id, "id must not be null.");
@@ -173,7 +180,9 @@ public class PostsServiceImpl implements PostsService {
         return this.convert(post);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove(Long id) {
         Assert.notNull(id, "id must not be null.");
@@ -196,7 +205,7 @@ public class PostsServiceImpl implements PostsService {
         Optional<Instant> optionalInstant = post.getLastModifiedDate();
         optionalInstant.ifPresent(vo::setLastModifiedDate);
 
-        List<TagPosts> tagPostsList = tagPostsRepository.findByPostId(post.getId());
+        List<TagPosts> tagPostsList = tagPostsRepository.findAllByPostId(post.getId());
         // 转换 tags
         if (!CollectionUtils.isEmpty(tagPostsList)) {
             Set<String> tags = tagPostsList.stream().map(tagPosts -> {

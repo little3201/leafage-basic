@@ -24,7 +24,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 
 /**
- * bo class for post
+ * bo class for post.
  *
  * @author wq li
  */

@@ -40,7 +40,7 @@ public interface RegionService extends ServletBasicService<RegionDTO, RegionVO> 
      * @param descending 顺序
      * @return 查询结果
      */
-    Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending);
+    Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId, String name);
 
     /**
      * 获取子节点

@@ -69,7 +69,7 @@ class PostControllerTest {
     private PostVO postVO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         // 构造请求对象
         postDTO = new PostDTO();
         postDTO.setTitle("test");

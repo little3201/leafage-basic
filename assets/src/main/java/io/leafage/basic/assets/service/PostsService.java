@@ -18,6 +18,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.vo.PostVO;
+import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
@@ -26,6 +27,8 @@ import top.leafage.common.servlet.ServletBasicService;
  * @author wq li
  */
 public interface PostsService extends ServletBasicService<PostDTO, PostVO> {
+
+    Page<PostVO> retrieve(int page, int size, String sortBy, boolean descending);
 
     /**
      * 根据id查询文章详情

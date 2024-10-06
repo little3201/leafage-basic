@@ -61,7 +61,7 @@ class CommentServiceImplTest {
 
     @Test
     void relation() {
-        given(commentRepository.findByPostIdAndReplierIsNull(Mockito.anyLong())).willReturn(Mockito.anyList());
+        given(commentRepository.findAllByPostIdAndReplierIsNull(Mockito.anyLong())).willReturn(Mockito.anyList());
 
         List<CommentVO> voList = commentService.relation(1L);
         Assertions.assertNotNull(voList);
@@ -69,7 +69,7 @@ class CommentServiceImplTest {
 
     @Test
     void relation_empty() {
-        given(commentRepository.findByPostIdAndReplierIsNull(Mockito.anyLong())).willReturn(Collections.emptyList());
+        given(commentRepository.findAllByPostIdAndReplierIsNull(Mockito.anyLong())).willReturn(Collections.emptyList());
 
         List<CommentVO> voList = commentService.relation(Mockito.anyLong());
         Assertions.assertTrue(voList.isEmpty());
@@ -85,7 +85,7 @@ class CommentServiceImplTest {
         comm.setContent("评论信息2222");
         comm.setPostId(1L);
         comm.setReplier(comment.getReplier());
-        given(commentRepository.findByReplier(Mockito.anyLong())).willReturn(List.of(comment, comm));
+        given(commentRepository.findAllByReplier(Mockito.anyLong())).willReturn(List.of(comment, comm));
 
         List<CommentVO> voList = commentService.replies(Mockito.anyLong());
         Assertions.assertNotNull(voList);

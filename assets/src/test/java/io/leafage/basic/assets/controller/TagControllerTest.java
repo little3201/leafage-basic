@@ -69,7 +69,7 @@ class TagControllerTest {
     private TagDTO tagDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         tagVO = new TagVO();
         tagVO.setName("test");
         tagVO.setCount(21L);

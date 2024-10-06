@@ -18,6 +18,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.TagDTO;
 import io.leafage.basic.assets.vo.TagVO;
+import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
 /**
@@ -26,4 +27,7 @@ import top.leafage.common.servlet.ServletBasicService;
  * @author wq li
  */
 public interface TagService extends ServletBasicService<TagDTO, TagVO> {
+
+    Page<TagVO> retrieve(int page, int size, String sortBy, boolean descending);
+
 }

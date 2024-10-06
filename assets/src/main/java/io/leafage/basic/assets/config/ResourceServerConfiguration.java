@@ -17,21 +17,21 @@
 
 package io.leafage.basic.assets.config;
 
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.http.HttpMethod;
-//import org.springframework.security.config.Customizer;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
  * resource server config.
  *
  * @author wq li
  */
-//@Configuration
-//@EnableWebSecurity
+@Configuration
+@EnableWebSecurity
 public class ResourceServerConfiguration {
 
     /**
@@ -41,12 +41,12 @@ public class ResourceServerConfiguration {
      * @return a {@link org.springframework.security.web.SecurityFilterChain} object
      * @throws java.lang.Exception if any.
      */
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.authorizeHttpRequests((authorize) -> authorize
-//                .requestMatchers(HttpMethod.GET).permitAll()
-//                .anyRequest().authenticated()
-//        ).oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
-//        return http.build();
-//    }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests((authorize) -> authorize
+                .requestMatchers(HttpMethod.GET).permitAll()
+                .anyRequest().authenticated()
+        ).oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
+        return http.build();
+    }
 }

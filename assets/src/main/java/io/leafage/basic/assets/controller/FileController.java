@@ -1,8 +1,8 @@
 package io.leafage.basic.assets.controller;
 
-import io.leafage.basic.assets.dto.FileDTO;
+import io.leafage.basic.assets.dto.FileRecordDTO;
 import io.leafage.basic.assets.service.FileService;
-import io.leafage.basic.assets.vo.FileVO;
+import io.leafage.basic.assets.vo.FileRecordVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +44,11 @@ public class FileController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Page<FileVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                 String sortBy, boolean descending) {
-        Page<FileVO> voPage;
+    public ResponseEntity<Page<FileRecordVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                       String sortBy, boolean descending, String name) {
+        Page<FileRecordVO> voPage;
         try {
-            voPage = fileService.retrieve(page, size, sortBy, descending);
+            voPage = fileService.retrieve(page, size, sortBy, descending, name);
         } catch (Exception e) {
             logger.error("Retrieve region occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -63,8 +63,8 @@ public class FileController {
      * @return 查询的数据，异常时返回204状态码
      */
     @GetMapping("/{id}")
-    public ResponseEntity<FileVO> fetch(@PathVariable Long id) {
-        FileVO vo;
+    public ResponseEntity<FileRecordVO> fetch(@PathVariable Long id) {
+        FileRecordVO vo;
         try {
             vo = fileService.fetch(id);
         } catch (Exception e) {
@@ -95,14 +95,14 @@ public class FileController {
     /**
      * 添加信息
      *
-     * @param fileDTO 要添加的数据
+     * @param fileRecordDTO 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<FileVO> create(@RequestBody @Valid FileDTO fileDTO) {
-        FileVO vo;
+    public ResponseEntity<FileRecordVO> create(@RequestBody @Valid FileRecordDTO fileRecordDTO) {
+        FileRecordVO vo;
         try {
-            vo = fileService.create(fileDTO);
+            vo = fileService.create(fileRecordDTO);
         } catch (Exception e) {
             logger.error("Create region occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

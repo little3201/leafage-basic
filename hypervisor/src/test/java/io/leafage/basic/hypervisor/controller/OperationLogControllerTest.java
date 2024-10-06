@@ -17,8 +17,6 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.leafage.basic.hypervisor.dto.OperationLogDTO;
 import io.leafage.basic.hypervisor.service.OperationLogService;
 import io.leafage.basic.hypervisor.vo.OperationLogVO;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,33 +55,13 @@ class OperationLogControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private ObjectMapper mapper;
-
     @MockBean
     private OperationLogService operationLogService;
 
     private OperationLogVO operationLogVO;
 
-    private OperationLogDTO operationLogDTO;
-
     @BeforeEach
     void setUp() {
-        // 构造请求对象
-        operationLogDTO = new OperationLogDTO();
-        operationLogDTO.setIp("12.1.3.2");
-        operationLogDTO.setLocation("test");
-        operationLogDTO.setBrowser("Chrome");
-        operationLogDTO.setDeviceType("PC");
-        operationLogDTO.setContent("Content");
-        operationLogDTO.setOs("Mac OS");
-        operationLogDTO.setReferer("test");
-        operationLogDTO.setBrowser("edge");
-        operationLogDTO.setSessionId("sessionId");
-        operationLogDTO.setStatusCode(200);
-        operationLogDTO.setOperation("Change password");
-        operationLogDTO.setUserAgent("xxx");
-
         // vo
         operationLogVO = new OperationLogVO();
         operationLogVO.setIp("12.1.3.2");

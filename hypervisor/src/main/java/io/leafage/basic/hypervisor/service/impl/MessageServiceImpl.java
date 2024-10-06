@@ -18,16 +18,22 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Message;
+import io.leafage.basic.hypervisor.domain.OperationLog;
 import io.leafage.basic.hypervisor.dto.MessageDTO;
 import io.leafage.basic.hypervisor.repository.MessageRepository;
 import io.leafage.basic.hypervisor.service.MessageService;
 import io.leafage.basic.hypervisor.vo.MessageVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * message service impl.
@@ -55,7 +61,13 @@ public class MessageServiceImpl implements MessageService {
     public Page<MessageVO> retrieve(int page, int size, String sortBy, boolean descending, String title) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<Message> spec = (root, query, cb) -> cb.like(root.get("title"), "%" + title + "%");
+        Specification<Message> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasText(title)) {
+                predicates.add(cb.like(root.get("title"), "%" + title + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
 
         return messageRepository.findAll(spec, pageable).map(this::convert);
     }

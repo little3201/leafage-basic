@@ -56,12 +56,11 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, Long groupId, String username) {
+    public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, String username) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<User> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
-            predicates.add(cb.equal(root.get("groupId"), groupId));
             if (StringUtils.hasText(username)) {
                 predicates.add(cb.like(root.get("username"), "%" + username + "%"));
             }

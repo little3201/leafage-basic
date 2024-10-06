@@ -17,17 +17,22 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Role;
+import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -56,7 +61,13 @@ public class RoleServiceImpl implements RoleService {
     public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<Role> spec = (root, query, cb) -> cb.like(root.get("name"), "%" + name + "%");
+        Specification<Role> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasText(name)) {
+                predicates.add(cb.like(root.get("name"), "%" + name + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
 
         return roleRepository.findAll(spec, pageable).map(this::convert);
     }

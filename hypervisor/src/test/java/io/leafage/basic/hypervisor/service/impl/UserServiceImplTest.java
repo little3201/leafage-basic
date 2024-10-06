@@ -60,6 +60,7 @@ class UserServiceImplTest {
     void setUp() {
         userDTO = new UserDTO();
         userDTO.setUsername("test");
+        userDTO.setFullName("zhang");
         userDTO.setAvatar("a.jpg");
         userDTO.setEmail("zhang@test.com");
     }
@@ -71,7 +72,7 @@ class UserServiceImplTest {
         given(this.userRepository.findAll(ArgumentMatchers.<Specification<User>>any(),
                 Mockito.any(Pageable.class))).willReturn(page);
 
-        Page<UserVO> voPage = userService.retrieve(0, 2, "id", true, 1L, "test");
+        Page<UserVO> voPage = userService.retrieve(0, 2, "id", true, "test");
         Assertions.assertNotNull(voPage.getContent());
     }
 

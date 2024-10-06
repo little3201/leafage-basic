@@ -62,10 +62,10 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                 String sortBy, boolean descending, Long groupId, String username) {
+                                                 String sortBy, boolean descending, String username) {
         Page<UserVO> voPage;
         try {
-            voPage = userService.retrieve(page, size, sortBy, descending, groupId, username);
+            voPage = userService.retrieve(page, size, sortBy, descending, username);
         } catch (Exception e) {
             logger.info("Retrieve user occurred an error: ", e);
             return ResponseEntity.noContent().build();

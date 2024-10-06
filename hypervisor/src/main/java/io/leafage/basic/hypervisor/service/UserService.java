@@ -38,6 +38,6 @@ public interface UserService extends ServletBasicService<UserDTO, UserVO> {
      * @return A paginated list of records.
      * @since 0.3.0
      */
-    Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, Long groupId, String username);
+    Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, String username);
 
 }

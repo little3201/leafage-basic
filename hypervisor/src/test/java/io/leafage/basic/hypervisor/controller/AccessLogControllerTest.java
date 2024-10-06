@@ -17,8 +17,6 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.leafage.basic.hypervisor.dto.AccessLogDTO;
 import io.leafage.basic.hypervisor.service.AccessLogService;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,28 +55,13 @@ class AccessLogControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private ObjectMapper mapper;
-
     @MockBean
     private AccessLogService accessLogService;
 
     private AccessLogVO accessLogVO;
 
-    private AccessLogDTO accessLogDTO;
-
     @BeforeEach
     void setUp() {
-        // 构造请求对象
-        accessLogDTO = new AccessLogDTO();
-        accessLogDTO.setIp("12.1.3.2");
-        accessLogDTO.setLocation("test");
-        accessLogDTO.setHttpMethod("POST");
-        accessLogDTO.setResponseTimes(232L);
-        accessLogDTO.setStatusCode(200);
-        accessLogDTO.setUrl("/test");
-        accessLogDTO.setBody("xxx");
-
         // vo
         accessLogVO = new AccessLogVO();
         accessLogVO.setIp("12.1.3.2");

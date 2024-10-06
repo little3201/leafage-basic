@@ -57,6 +57,7 @@ CREATE TABLE users
 (
     id                     bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username               varchar(50) UNIQUE NOT NULL,
+    full_name               varchar(50),
     password               varchar(100)       NOT NULL,
     email                  varchar(50),
     enabled                boolean            NOT NULL DEFAULT true,

@@ -17,10 +17,10 @@
 package io.leafage.basic.hypervisor.domain;
 
 
-import top.leafage.common.servlet.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import top.leafage.common.servlet.audit.AuditMetadata;
 
 import java.time.Instant;
 
@@ -35,6 +35,9 @@ public class User extends AuditMetadata {
 
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
+
+    @Column(name = "full_name", length = 50)
+    private String fullName;
 
     @Column(name = "password", nullable = false, length = 100)
     private String password;
@@ -70,6 +73,24 @@ public class User extends AuditMetadata {
      */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    /**
+     * <p>Getter for the field <code>fullname</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String getFullName() {
+        return fullName;
+    }
+
+    /**
+     * <p>Setter for the field <code>fullname</code>.</p>
+     *
+     * @param fullname a {@link java.lang.String} object
+     */
+    public void setFullName(String fullname) {
+        this.fullName = fullname;
     }
 
     /**

@@ -17,24 +17,18 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Privilege;
-import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
-import io.leafage.basic.hypervisor.vo.PrivilegeVO;
-import jakarta.persistence.criteria.Predicate;
-import org.springframework.cglib.beans.BeanCopier;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * privilege service impl.
@@ -58,109 +52,13 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         this.privilegeRepository = privilegeRepository;
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public Page<PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
-        Pageable pageable = pageable(page, size, sortBy, descending);
-
-        Specification<Privilege> spec = (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            predicates.add(cb.isNull(root.get("superiorId")));
-            if (StringUtils.hasText(name)) {
-                predicates.add(cb.like(root.get("name"), "%" + name + "%"));
-            }
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-
-        return privilegeRepository.findAll(spec, pageable).map(this::convert);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<TreeNode> tree(String username) {
+    public List<TreeNode> tree() {
         List<Privilege> privileges = privilegeRepository.findAll();
         return this.convertTree(privileges);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<PrivilegeVO> subset(Long superiorId) {
-        return privilegeRepository.findAllBySuperiorId(superiorId).stream().map(this::convert).toList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PrivilegeVO fetch(Long id) {
-        Assert.notNull(id, "id must not be null.");
-        Privilege privilege = privilegeRepository.findById(id).orElse(null);
-        if (privilege == null) {
-            return null;
-        }
-        return this.convert(privilege);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PrivilegeVO create(PrivilegeDTO dto) {
-        Privilege privilege = new Privilege();
-        BeanCopier copier = BeanCopier.create(PrivilegeDTO.class, Privilege.class, false);
-        copier.copy(dto, privilege, null);
-
-        privilege = privilegeRepository.saveAndFlush(privilege);
-        return this.convert(privilege);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PrivilegeVO modify(Long id, PrivilegeDTO dto) {
-        Assert.notNull(id, "id must not be null.");
-        Privilege privilege = privilegeRepository.findById(id).orElse(null);
-        if (privilege == null) {
-            throw new NoSuchElementException("当前操作数据不存在...");
-        }
-        BeanCopier copier = BeanCopier.create(PrivilegeDTO.class, Privilege.class, false);
-        copier.copy(dto, privilege, null);
-
-        privilege = privilegeRepository.save(privilege);
-        return this.convert(privilege);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void remove(Long id) {
-        Assert.notNull(id, "id must not be null.");
-
-        privilegeRepository.deleteById(id);
-    }
-
-    /**
-     * 转换对象
-     *
-     * @param privilege 基础对象
-     * @return 结果对象
-     */
-    private PrivilegeVO convert(Privilege privilege) {
-        PrivilegeVO vo = new PrivilegeVO();
-        BeanCopier copier = BeanCopier.create(Privilege.class, PrivilegeVO.class, false);
-        copier.copy(privilege, vo, null);
-        long count = privilegeRepository.countBySuperiorId(privilege.getId());
-        vo.setCount(count);
-        return vo;
     }
 
     /**

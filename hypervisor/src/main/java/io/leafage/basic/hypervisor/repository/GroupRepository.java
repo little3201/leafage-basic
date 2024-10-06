@@ -17,8 +17,6 @@
 package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.domain.Group;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -30,13 +28,4 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecificationExecutor<Group> {
-
-    /**
-     * <p>findAllBySuperiorId.</p>
-     *
-     * @param superiorId a {@link java.lang.Long} object
-     * @param pageable   a {@link org.springframework.data.domain.Pageable} object
-     * @return a {@link org.springframework.data.domain.Page} object
-     */
-    Page<Group> findAllBySuperiorId(Long superiorId, Pageable pageable);
 }

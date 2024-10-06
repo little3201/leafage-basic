@@ -16,7 +16,7 @@
  */
 package io.leafage.basic.assets.domain;
 
-import io.leafage.basic.assets.audit.AuditMetadata;
+import top.leafage.common.servlet.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;

@@ -57,14 +57,15 @@ public class UserController {
      * @param sortBy     排序字段
      * @param descending 排序方向
      * @param groupId    a {@link java.lang.Long} object
+     * @param username   username
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
     @GetMapping
     public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                 String sortBy, boolean descending, Long groupId) {
+                                                 String sortBy, boolean descending, String username) {
         Page<UserVO> voPage;
         try {
-            voPage = userService.retrieve(page, size, sortBy, descending, groupId);
+            voPage = userService.retrieve(page, size, sortBy, descending, username);
         } catch (Exception e) {
             logger.info("Retrieve user occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -111,7 +112,7 @@ public class UserController {
     /**
      * 修改信息.
      *
-     * @param id      主键
+     * @param id  主键
      * @param dto 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */

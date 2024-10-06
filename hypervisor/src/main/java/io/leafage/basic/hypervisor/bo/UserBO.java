@@ -31,6 +31,8 @@ public abstract class UserBO {
     @NotBlank(message = "username is blank.")
     private String username;
 
+    private String fullName;
+
     private String email;
 
     private String avatar;
@@ -58,6 +60,24 @@ public abstract class UserBO {
      */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    /**
+     * <p>Getter for the field <code>fullname</code>.</p>
+     *
+     * @return a {@link java.lang.String} object
+     */
+    public String getFullName() {
+        return fullName;
+    }
+
+    /**
+     * <p>Setter for the field <code>fullname</code>.</p>
+     *
+     * @param fullname a {@link java.lang.String} object
+     */
+    public void setFullName(String fullname) {
+        this.fullName = fullname;
     }
 
     /**

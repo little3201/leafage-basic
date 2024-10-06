@@ -58,7 +58,7 @@ class TagServiceImplTest {
     private TagDTO tagDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         tagDTO = new TagDTO();
         tagDTO.setName("test");
     }

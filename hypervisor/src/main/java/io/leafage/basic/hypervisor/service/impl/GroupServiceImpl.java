@@ -21,11 +21,11 @@ import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -60,11 +61,23 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      * {@inheritDoc}
      */
     @Override
-    public Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return groupRepository.findAllBySuperiorId(superiorId, pageable).map(this::convert);
+    public Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId, String name) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<Group> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (superiorId == null) {
+                predicates.add(cb.isNull(root.get("superiorId")));
+            } else {
+                predicates.add(cb.equal(root.get("superiorId"), superiorId));
+            }
+            if (StringUtils.hasText(name)) {
+                predicates.add(cb.like(root.get("name"), "%" + name + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return groupRepository.findAll(spec, pageable).map(this::convert);
     }
 
     /**
@@ -81,7 +94,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      */
     @Override
     public GroupVO fetch(Long id) {
-        Assert.notNull(id, "group id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Group group = groupRepository.findById(id).orElse(null);
         if (group == null) {
             return null;
@@ -107,7 +120,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      */
     @Override
     public GroupVO modify(Long id, GroupDTO dto) {
-        Assert.notNull(id, "group id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Group group = groupRepository.findById(id).orElse(null);
         if (group == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -125,7 +138,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "group id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         groupRepository.deleteById(id);
     }
 

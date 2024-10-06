@@ -44,7 +44,7 @@ public interface TagPostsRepository extends JpaRepository<TagPosts, Long> {
      * @param postId post主键
      * @return 关联数据集
      */
-    List<TagPosts> findByPostId(Long postId);
+    List<TagPosts> findAllByPostId(Long postId);
 
     /**
      * 根据post删除

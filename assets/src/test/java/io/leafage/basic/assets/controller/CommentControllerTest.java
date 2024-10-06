@@ -37,6 +37,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -69,7 +70,7 @@ class CommentControllerTest {
     private CommentDTO commentDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         commentVO = new CommentVO();
         commentVO.setContent("content");
         commentVO.setPostId(1L);
@@ -82,9 +83,9 @@ class CommentControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<CommentVO> page = new PageImpl<>(List.of(commentVO), pageable, 2L);
-        given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(page);
+        Page<CommentVO> page = new PageImpl<>(List.of(commentVO), Mockito.mock(PageRequest.class), 2L);
+
+        given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"), Mockito.anyBoolean())).willReturn(page);
 
         mvc.perform(get("/comments").queryParam("page", "0").queryParam("size", "2"))
                 .andExpect(status().isOk()).andDo(print()).andReturn();

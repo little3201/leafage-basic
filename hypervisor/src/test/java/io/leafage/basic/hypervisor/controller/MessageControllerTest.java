@@ -36,6 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -68,7 +69,7 @@ class MessageControllerTest {
     private MessageDTO messageDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         messageVO = new MessageVO();
         messageVO.setTitle("test");
         messageVO.setReceiver("23234");
@@ -82,21 +83,29 @@ class MessageControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<MessageVO> voPage = new PageImpl<>(List.of(messageVO), pageable, 2L);
-        given(this.messageService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(voPage);
+        Page<MessageVO> voPage = new PageImpl<>(List.of(messageVO), Mockito.mock(PageRequest.class), 2L);
+
+        given(this.messageService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
+                Mockito.anyBoolean(), eq("test"))).willReturn(voPage);
 
         mvc.perform(get("/messages").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sortBy", "")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("name", "test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(this.messageService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
+        given(this.messageService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyBoolean(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/messages").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("name", "test"))
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test

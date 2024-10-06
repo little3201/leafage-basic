@@ -19,6 +19,7 @@ package io.leafage.basic.hypervisor.repository;
 
 import io.leafage.basic.hypervisor.domain.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -27,5 +28,5 @@ import org.springframework.stereotype.Repository;
  * @author wq li
  */
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long> {
+public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpecificationExecutor<Message> {
 }

@@ -36,7 +36,7 @@ public interface RoleMembersRepository extends JpaRepository<RoleMembers, Long> 
      * @param username 用户名
      * @return 集合
      */
-    List<RoleMembers> findByUsername(String username);
+    List<RoleMembers> findAllByUsername(String username);
 
     /**
      * 根据role查询
@@ -44,6 +44,6 @@ public interface RoleMembersRepository extends JpaRepository<RoleMembers, Long> 
      * @param roleId role主键
      * @return 关联数据集
      */
-    List<RoleMembers> findByRoleId(Long roleId);
+    List<RoleMembers> findAllByRoleId(Long roleId);
 
 }

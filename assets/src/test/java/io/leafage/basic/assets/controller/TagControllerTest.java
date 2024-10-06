@@ -37,6 +37,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -69,7 +70,7 @@ class TagControllerTest {
     private TagDTO tagDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         tagVO = new TagVO();
         tagVO.setName("test");
         tagVO.setCount(21L);
@@ -80,9 +81,9 @@ class TagControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<TagVO> page = new PageImpl<>(List.of(tagVO), pageable, 2L);
-        given(tagService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(page);
+        Page<TagVO> page = new PageImpl<>(List.of(tagVO), Mockito.mock(PageRequest.class), 2L);
+
+        given(tagService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"), Mockito.anyBoolean())).willReturn(page);
 
         mvc.perform(get("/tags").queryParam("page", "0")
                         .queryParam("size", "2").queryParam("sortBy", "id"))

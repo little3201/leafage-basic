@@ -27,7 +27,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -35,6 +37,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -66,7 +69,7 @@ class UserControllerTest {
     private UserDTO userDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         userVO = new UserVO();
         userVO.setUsername("test");
         userVO.setEmail("john@test.com");
@@ -79,21 +82,28 @@ class UserControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<UserVO> voPage = new PageImpl<>(List.of(userVO), pageable, 2L);
-        given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyLong())).willReturn(voPage);
+        Page<UserVO> voPage = new PageImpl<>(List.of(userVO), Mockito.mock(PageRequest.class), 2L);
+
+        given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
+                Mockito.anyBoolean(), eq("test"))).willReturn(voPage);
 
         mvc.perform(get("/users").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sortBy", "").queryParam("groupId", "2")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("username", "test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
     void fetch() throws Exception {
         given(this.userService.fetch(Mockito.anyLong())).willReturn(userVO);
 
-        mvc.perform(get("/users/{id}", Mockito.anyLong())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstname").value("john")).andDo(print()).andReturn();
+        mvc.perform(get("/users/{id}", Mockito.anyLong()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username").value("test"))
+                .andDo(print())
+                .andReturn();
     }
 
     @Test

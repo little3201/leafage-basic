@@ -36,6 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -68,7 +69,7 @@ class DictionaryControllerTest {
     private DictionaryDTO dictionaryDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         dictionaryVO = new DictionaryVO();
         dictionaryVO.setName("gender");
         dictionaryVO.setDescription("description");
@@ -81,21 +82,29 @@ class DictionaryControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO), pageable, 2L);
-        given(this.dictionaryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(voPage);
+        Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO), Mockito.mock(PageRequest.class), 2L);
+
+        given(this.dictionaryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyBoolean(), Mockito.anyString())).willReturn(voPage);
 
         mvc.perform(get("/dictionaries").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sortBy", "")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("name", "test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(this.dictionaryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
+        given(this.dictionaryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
+                Mockito.anyBoolean(), eq("test"))).willThrow(new RuntimeException());
 
         mvc.perform(get("/dictionaries").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("name", "test"))
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test

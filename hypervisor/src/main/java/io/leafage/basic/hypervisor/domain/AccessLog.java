@@ -18,10 +18,10 @@
 package io.leafage.basic.hypervisor.domain;
 
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import top.leafage.common.servlet.audit.AuditMetadata;
 
 /**
  * model class for access log.
@@ -52,13 +52,16 @@ public class AccessLog extends AuditMetadata {
     @Column(name = "response_times")
     private Long responseTimes;
 
+    @Column(name = "response_message")
+    private String responseMessage;
+    
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String api) {
-        this.url = api;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getHttpMethod() {
@@ -125,7 +128,5 @@ public class AccessLog extends AuditMetadata {
         this.responseMessage = responseMessage;
     }
 
-    @Column(name = "response_message")
-    private String responseMessage;
 
 }

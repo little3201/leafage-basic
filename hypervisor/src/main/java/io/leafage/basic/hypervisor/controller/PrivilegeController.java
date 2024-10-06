@@ -58,61 +58,20 @@ public class PrivilegeController {
     }
 
     /**
-     * 分页查询
+     * 查询树形数据
      *
-     * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序字段
-     * @param descending 排序方向
      * @return 查询到的数据，否则返回空
      */
     @GetMapping
-    public ResponseEntity<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                      String sortBy, boolean descending) {
-        Page<PrivilegeVO> voPage;
-        try {
-            voPage = privilegeService.retrieve(page, size, sortBy, descending);
-        } catch (Exception e) {
-            logger.info("Retrieve privilege occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voPage);
-    }
-
-    /**
-     * 查询树形数据
-     *
-     * @param username a {@link java.lang.String} object
-     * @return 查询到的数据，否则返回空
-     */
-    @GetMapping("/{username}/tree")
-    public ResponseEntity<List<TreeNode>> tree(@PathVariable String username) {
+    public ResponseEntity<List<TreeNode>> tree() {
         List<TreeNode> treeNodes;
         try {
-            treeNodes = privilegeService.tree(username);
+            treeNodes = privilegeService.tree();
         } catch (Exception e) {
             logger.info("Retrieve privilege tree occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(treeNodes);
-    }
-
-    /**
-     * 查询信息
-     *
-     * @param superiorId 主键
-     * @return 查询到的信息，否则返回204状态码
-     */
-    @GetMapping("/{superiorId}/subset")
-    public ResponseEntity<List<PrivilegeVO>> subset(@PathVariable Long superiorId) {
-        List<PrivilegeVO> voList;
-        try {
-            voList = privilegeService.subset(superiorId);
-        } catch (Exception e) {
-            logger.info("Retrieve privilege subset occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voList);
     }
 
     /**
@@ -131,60 +90,6 @@ public class PrivilegeController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(vo);
-    }
-
-    /**
-     * 添加信息
-     *
-     * @param dto 要添加的数据
-     * @return 添加后的信息，否则返回417状态码
-     */
-    @PostMapping
-    public ResponseEntity<PrivilegeVO> create(@RequestBody @Valid PrivilegeDTO dto) {
-        PrivilegeVO vo;
-        try {
-            vo = privilegeService.create(dto);
-        } catch (Exception e) {
-            logger.error("Create privilege occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(vo);
-    }
-
-    /**
-     * 修改信息
-     *
-     * @param id           主键
-     * @param dto 要添加的数据
-     * @return 编辑后的信息，否则返回417状态码
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<PrivilegeVO> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO dto) {
-        PrivilegeVO vo;
-        try {
-            vo = privilegeService.modify(id, dto);
-        } catch (Exception e) {
-            logger.error("Modify privilege occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-        }
-        return ResponseEntity.accepted().body(vo);
-    }
-
-    /**
-     * 删除信息
-     *
-     * @param id 主键
-     * @return 200状态码，否则返回417状态码
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remove(@PathVariable Long id) {
-        try {
-            privilegeService.remove(id);
-        } catch (Exception e) {
-            logger.error("Remove privilege occurred an error: ", e);
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
-        }
-        return ResponseEntity.ok().build();
     }
 
     /**

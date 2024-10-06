@@ -50,9 +50,9 @@ public class RoleMembersServiceImpl implements RoleMembersService {
      */
     @Override
     public List<RoleMembers> members(Long roleId) {
-        Assert.notNull(roleId, "role id must not be null.");
+        Assert.notNull(roleId, "roleId must not be null.");
 
-        return roleMembersRepository.findByRoleId(roleId);
+        return roleMembersRepository.findAllByRoleId(roleId);
     }
 
     /**
@@ -62,7 +62,7 @@ public class RoleMembersServiceImpl implements RoleMembersService {
     public List<RoleMembers> roles(String username) {
         Assert.hasText(username, "username must not be blank.");
 
-        return roleMembersRepository.findByUsername(username);
+        return roleMembersRepository.findAllByUsername(username);
     }
 
     /**
@@ -70,7 +70,7 @@ public class RoleMembersServiceImpl implements RoleMembersService {
      */
     @Override
     public List<RoleMembers> relation(Long roleId, Set<String> usernames) {
-        Assert.notNull(roleId, "role id must not be null.");
+        Assert.notNull(roleId, "roleId must not be null.");
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
         List<RoleMembers> roleMembers = usernames.stream().map(username -> {

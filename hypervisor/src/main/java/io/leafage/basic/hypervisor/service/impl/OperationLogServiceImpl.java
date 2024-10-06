@@ -22,14 +22,17 @@ import io.leafage.basic.hypervisor.dto.OperationLogDTO;
 import io.leafage.basic.hypervisor.repository.OperationLogRepository;
 import io.leafage.basic.hypervisor.service.OperationLogService;
 import io.leafage.basic.hypervisor.vo.OperationLogVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * operation log service impl.
@@ -54,16 +57,23 @@ public class OperationLogServiceImpl implements OperationLogService {
      * {@inheritDoc}
      */
     @Override
-    public Page<OperationLogVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return operationLogRepository.findAll(pageable).map(this::convert);
+    public Page<OperationLogVO> retrieve(int page, int size, String sortBy, boolean descending, String operation) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<OperationLog> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasText(operation)) {
+                predicates.add(cb.like(root.get("operation"), "%" + operation + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return operationLogRepository.findAll(spec, pageable).map(this::convert);
     }
 
     @Override
     public OperationLogVO fetch(Long id) {
-        Assert.notNull(id, "access log id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         OperationLog operationLog = operationLogRepository.findById(id).orElse(null);
         if (operationLog == null) {
             return null;
@@ -86,7 +96,7 @@ public class OperationLogServiceImpl implements OperationLogService {
 
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "access log id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         operationLogRepository.deleteById(id);
     }
 

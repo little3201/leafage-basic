@@ -18,18 +18,22 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Message;
+import io.leafage.basic.hypervisor.domain.OperationLog;
 import io.leafage.basic.hypervisor.dto.MessageDTO;
 import io.leafage.basic.hypervisor.repository.MessageRepository;
 import io.leafage.basic.hypervisor.service.MessageService;
 import io.leafage.basic.hypervisor.vo.MessageVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * message service impl.
@@ -54,11 +58,18 @@ public class MessageServiceImpl implements MessageService {
      * {@inheritDoc}
      */
     @Override
-    public Page<MessageVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return messageRepository.findAll(pageable).map(this::convert);
+    public Page<MessageVO> retrieve(int page, int size, String sortBy, boolean descending, String title) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<Message> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasText(title)) {
+                predicates.add(cb.like(root.get("title"), "%" + title + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return messageRepository.findAll(spec, pageable).map(this::convert);
     }
 
     /**
@@ -66,7 +77,7 @@ public class MessageServiceImpl implements MessageService {
      */
     @Override
     public MessageVO fetch(Long id) {
-        Assert.notNull(id, "message id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Message message = messageRepository.findById(id).orElse(null);
         return this.convert(message);
     }

@@ -73,10 +73,10 @@ public class RoleController {
      */
     @GetMapping
     public ResponseEntity<Page<RoleVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                 String sortBy, boolean descending) {
+                                                 String sortBy, boolean descending, String name) {
         Page<RoleVO> voPage;
         try {
-            voPage = roleService.retrieve(page, size, sortBy, descending);
+            voPage = roleService.retrieve(page, size, sortBy, descending, name);
         } catch (Exception e) {
             logger.info("Retrieve role occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -123,7 +123,7 @@ public class RoleController {
     /**
      * 修改信息
      *
-     * @param id      主键
+     * @param id  主键
      * @param dto 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */

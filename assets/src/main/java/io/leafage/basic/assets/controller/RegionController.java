@@ -28,8 +28,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * region controller.
  *
@@ -63,33 +61,15 @@ public class RegionController {
      */
     @GetMapping
     public ResponseEntity<Page<RegionVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                   String sortBy, boolean descending) {
+                                                   String sortBy, boolean descending, Long superiorId, String name) {
         Page<RegionVO> voPage;
         try {
-            voPage = regionService.retrieve(page, size, sortBy, descending);
+            voPage = regionService.retrieve(page, size, sortBy, descending, superiorId, name);
         } catch (Exception e) {
             logger.error("Retrieve region occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voPage);
-    }
-
-    /**
-     * 查询下级数据
-     *
-     * @return 查询到的数据，否则返回空
-     * @param id a {@link java.lang.Long} object
-     */
-    @GetMapping("/{id}/subset")
-    public ResponseEntity<List<RegionVO>> subset(@PathVariable Long id) {
-        List<RegionVO> voList;
-        try {
-            voList = regionService.subset(id);
-        } catch (Exception e) {
-            logger.info("Retrieve region subset occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voList);
     }
 
     /**

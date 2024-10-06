@@ -37,7 +37,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @param postId 帖子ID
      * @return 关联的数据
      */
-    List<Comment> findByPostIdAndReplierIsNull(Long postId);
+    List<Comment> findAllByPostIdAndReplierIsNull(Long postId);
 
     /**
      * 根据replier查询
@@ -45,7 +45,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @param replier 回复信息
      * @return 关联的数据
      */
-    List<Comment> findByReplier(Long replier);
+    List<Comment> findAllByReplier(Long replier);
 
     /**
      * 查询回复记录数

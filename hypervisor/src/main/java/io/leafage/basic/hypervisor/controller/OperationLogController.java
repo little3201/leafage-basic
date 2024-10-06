@@ -59,10 +59,10 @@ public class OperationLogController {
      */
     @GetMapping
     public ResponseEntity<Page<OperationLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                         String sortBy, boolean descending) {
+                                                         String sortBy, boolean descending, String name) {
         Page<OperationLogVO> voPage;
         try {
-            voPage = operationLogService.retrieve(page, size, sortBy, descending);
+            voPage = operationLogService.retrieve(page, size, sortBy, descending, name);
         } catch (Exception e) {
             logger.error("Retrieve record occurred an error: ", e);
             return ResponseEntity.noContent().build();

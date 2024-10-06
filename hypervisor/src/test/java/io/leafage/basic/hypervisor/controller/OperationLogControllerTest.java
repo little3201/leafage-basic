@@ -17,8 +17,6 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.leafage.basic.hypervisor.dto.OperationLogDTO;
 import io.leafage.basic.hypervisor.service.OperationLogService;
 import io.leafage.basic.hypervisor.vo.OperationLogVO;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,18 +26,18 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
-import org.springframework.http.MediaType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,33 +55,13 @@ class OperationLogControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @Autowired
-    private ObjectMapper mapper;
-
     @MockBean
     private OperationLogService operationLogService;
 
     private OperationLogVO operationLogVO;
 
-    private OperationLogDTO operationLogDTO;
-
     @BeforeEach
-    void init() {
-        // 构造请求对象
-        operationLogDTO = new OperationLogDTO();
-        operationLogDTO.setIp("12.1.3.2");
-        operationLogDTO.setLocation("test");
-        operationLogDTO.setBrowser("Chrome");
-        operationLogDTO.setDeviceType("PC");
-        operationLogDTO.setContent("Content");
-        operationLogDTO.setOs("Mac OS");
-        operationLogDTO.setReferer("test");
-        operationLogDTO.setBrowser("edge");
-        operationLogDTO.setSessionId("sessionId");
-        operationLogDTO.setStatusCode(200);
-        operationLogDTO.setOperation("Change password");
-        operationLogDTO.setUserAgent("xxx");
-
+    void setUp() {
         // vo
         operationLogVO = new OperationLogVO();
         operationLogVO.setIp("12.1.3.2");
@@ -102,41 +80,29 @@ class OperationLogControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<OperationLogVO> voPage = new PageImpl<>(List.of(operationLogVO), pageable, 2L);
-        given(this.operationLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(voPage);
+        Page<OperationLogVO> voPage = new PageImpl<>(List.of(operationLogVO), Mockito.mock(PageRequest.class), 2L);
+
+        given(this.operationLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
+                Mockito.anyBoolean(), eq("test"))).willReturn(voPage);
 
         mvc.perform(get("/operation-logs").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sortBy", "")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("name", "test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(this.operationLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
+        given(this.operationLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyBoolean(), Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/operation-logs").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("name", "test"))
+                .andExpect(status().isNoContent())
+                .andDo(print())
+                .andReturn();
     }
 
-    @Test
-    void create() throws Exception {
-        given(this.operationLogService.create(Mockito.any(OperationLogDTO.class))).willReturn(operationLogVO);
-
-        mvc.perform(post("/operation-logs").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(operationLogDTO)).with(csrf().asHeader()))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.location").value("test"))
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void create_error() throws Exception {
-        given(this.operationLogService.create(Mockito.any(OperationLogDTO.class))).willThrow(new RuntimeException());
-
-        mvc.perform(post("/operation-logs").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(operationLogDTO)).with(csrf().asHeader()))
-                .andExpect(status().isExpectationFailed())
-                .andDo(print()).andReturn();
-    }
 }

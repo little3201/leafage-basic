@@ -28,15 +28,6 @@ import top.leafage.common.servlet.ServletBasicService;
  */
 public interface PostsService extends ServletBasicService<PostDTO, PostVO> {
 
-    /**
-     * 分页查询
-     *
-     * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序
-     * @param descending 顺序
-     * @return 查询结果
-     */
     Page<PostVO> retrieve(int page, int size, String sortBy, boolean descending);
 
     /**

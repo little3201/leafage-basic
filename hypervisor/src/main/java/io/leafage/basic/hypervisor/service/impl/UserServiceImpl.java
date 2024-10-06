@@ -21,14 +21,17 @@ import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * user service impl.
@@ -53,11 +56,17 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, Long groupId) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return userRepository.findAll(pageable).map(this::convert);
+    public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, String username) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<User> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasText(username)) {
+                predicates.add(cb.like(root.get("username"), "%" + username + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+        return userRepository.findAll(spec, pageable).map(this::convert);
     }
 
     /**
@@ -65,7 +74,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserVO fetch(Long id) {
-        Assert.notNull(id, "role id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
             return null;
@@ -90,7 +99,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         BeanCopier copier = BeanCopier.create(UserDTO.class, User.class, false);
         copier.copy(dto, user, null);
-        user.setPassword("123456");
+        user.setPassword("{noop}123456");
         user = userRepository.saveAndFlush(user);
         return this.convert(user);
     }
@@ -100,7 +109,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserVO modify(Long id, UserDTO dto) {
-        Assert.notNull(id, "role id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
             return null;
@@ -117,7 +126,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "role id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         userRepository.deleteById(id);
     }
 

@@ -18,7 +18,6 @@ package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
-import org.springframework.data.domain.Page;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletBasicService;
 
@@ -32,29 +31,10 @@ import java.util.List;
 public interface PrivilegeService extends ServletBasicService<PrivilegeDTO, PrivilegeVO> {
 
     /**
-     * 分页查询
-     *
-     * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序
-     * @param descending 顺序
-     * @return 查询结果
-     */
-    Page<PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending);
-
-    /**
      * 获取树结构数据
      *
-     * @param username a {@link java.lang.String} object
      * @return 树结构数据集
      */
-    List<TreeNode> tree(String username);
+    List<TreeNode> tree();
 
-    /**
-     * get subset
-     *
-     * @param superiorId superior主键
-     * @return 结果
-     */
-    List<PrivilegeVO> subset(Long superiorId);
 }

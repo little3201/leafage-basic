@@ -17,19 +17,23 @@
 
 package io.leafage.basic.assets.config;
 
-import io.leafage.basic.assets.audit.AuditorAwareImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import top.leafage.common.servlet.audit.AuditorAwareImpl;
+
+import static org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO;
 
 /**
- * jpa config.
+ * audit config.
  *
  * @author wq li
  */
 @Configuration
 @EnableJpaAuditing
+@EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class AuditingConfiguration {
 
     /**

@@ -59,10 +59,10 @@ public class AccessLogController {
      */
     @GetMapping
     public ResponseEntity<Page<AccessLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                      String sortBy, boolean descending) {
+                                                      String sortBy, boolean descending, String url) {
         Page<AccessLogVO> voPage;
         try {
-            voPage = accessLogService.retrieve(page, size, sortBy, descending);
+            voPage = accessLogService.retrieve(page, size, sortBy, descending, url);
         } catch (Exception e) {
             logger.error("Retrieve record occurred an error: ", e);
             return ResponseEntity.noContent().build();

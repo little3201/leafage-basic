@@ -39,7 +39,7 @@ public class RolePrivileges {
     private Long roleId;
 
     /**
-     * 资源主键
+     * privilege 主键
      */
     @Column(name = "privilege_id", nullable = false)
     private Long privilegeId;

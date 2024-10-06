@@ -50,7 +50,7 @@ class RoleMembersServiceImplTest {
 
     @Test
     void members() {
-        given(this.roleMembersRepository.findByRoleId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RoleMembers.class)));
+        given(this.roleMembersRepository.findAllByRoleId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(RoleMembers.class)));
 
         List<RoleMembers> members = roleMembersService.members(Mockito.anyLong());
         Assertions.assertNotNull(members);
@@ -58,7 +58,7 @@ class RoleMembersServiceImplTest {
 
     @Test
     void roles() {
-        given(this.roleMembersRepository.findByUsername(Mockito.anyString())).willReturn(List.of(Mockito.mock(RoleMembers.class)));
+        given(this.roleMembersRepository.findAllByUsername(Mockito.anyString())).willReturn(List.of(Mockito.mock(RoleMembers.class)));
 
         List<RoleMembers> roles = roleMembersService.roles("test");
         Assertions.assertNotNull(roles);

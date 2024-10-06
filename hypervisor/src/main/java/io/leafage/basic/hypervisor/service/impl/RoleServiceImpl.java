@@ -17,19 +17,22 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Role;
+import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -55,11 +58,18 @@ public class RoleServiceImpl implements RoleService {
      * {@inheritDoc}
      */
     @Override
-    public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return roleRepository.findAll(pageable).map(this::convert);
+    public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<Role> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (StringUtils.hasText(name)) {
+                predicates.add(cb.like(root.get("name"), "%" + name + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return roleRepository.findAll(spec, pageable).map(this::convert);
     }
 
     /**
@@ -67,7 +77,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public RoleVO fetch(Long id) {
-        Assert.notNull(id, "role id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Role role = roleRepository.findById(id).orElse(null);
         if (role == null) {
             return null;
@@ -93,7 +103,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public RoleVO modify(Long id, RoleDTO dto) {
-        Assert.notNull(id, "role id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Role role = roleRepository.findById(id).orElse(null);
         if (role == null) {
             throw new NoSuchElementException("当前操作数据不存在...");
@@ -110,7 +120,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "role id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         roleRepository.deleteById(id);
     }
 

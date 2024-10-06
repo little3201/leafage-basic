@@ -71,7 +71,7 @@ class PostServiceImplTest {
     private PostDTO postDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         postDTO = new PostDTO();
         postDTO.setTitle("title");
         postDTO.setExcerpt("excerpt");
@@ -82,9 +82,10 @@ class PostServiceImplTest {
     @Test
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<Post> postsPage = new PageImpl<>(List.of(Mockito.mock(Post.class)), pageable, 2L);
-        given(postRepository.findAll(pageable)).willReturn(postsPage);
-        given(tagPostsRepository.findByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
+        Page<Post> page = new PageImpl<>(List.of(Mockito.mock(Post.class)), pageable, 2L);
+
+        given(postRepository.findAll(pageable)).willReturn(page);
+        given(tagPostsRepository.findAllByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
         Page<PostVO> voPage = postsService.retrieve(0, 2, "id", true);
@@ -95,7 +96,7 @@ class PostServiceImplTest {
     void fetch() {
         given(postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
 
-        given(tagPostsRepository.findByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
+        given(tagPostsRepository.findAllByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
 
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
@@ -152,7 +153,7 @@ class PostServiceImplTest {
 
         given(tagRepository.getByName(Mockito.anyString())).willReturn(Mockito.mock(Tag.class));
 
-        given(tagPostsRepository.findByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
+        given(tagPostsRepository.findAllByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
 
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
@@ -176,7 +177,7 @@ class PostServiceImplTest {
 
         given(tagRepository.getByName(Mockito.anyString())).willReturn(Mockito.mock(Tag.class));
 
-        given(tagPostsRepository.findByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
+        given(tagPostsRepository.findAllByPostId(Mockito.anyLong())).willReturn(List.of(Mockito.mock(TagPosts.class)));
 
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 

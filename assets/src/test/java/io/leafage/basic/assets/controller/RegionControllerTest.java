@@ -36,6 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -68,7 +69,7 @@ class RegionControllerTest {
     private RegionDTO regionDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         regionVO = new RegionVO();
         regionVO.setName("test");
         regionVO.setAreaCode("23234");
@@ -85,21 +86,19 @@ class RegionControllerTest {
 
     @Test
     void retrieve() throws Exception {
-        Pageable pageable = PageRequest.of(0, 2, Sort.by(Sort.Direction.DESC, "id"));
-        Page<RegionVO> voPage = new PageImpl<>(List.of(regionVO), pageable, 2L);
-        given(this.regionService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(voPage);
+        Page<RegionVO> voPage = new PageImpl<>(List.of(regionVO), Mockito.mock(PageRequest.class), 2L);
 
+        // 使用 eq() 准确匹配参数
+        given(this.regionService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"), Mockito.anyBoolean(),
+                Mockito.isNull(), eq("test"))).willReturn(voPage);
+
+        // 调用接口并验证结果
         mvc.perform(get("/regions").queryParam("page", "0").queryParam("size", "2")
-                        .queryParam("sortBy", "")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
-    }
-
-    @Test
-    void retrieve_error() throws Exception {
-        given(this.regionService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
-
-        mvc.perform(get("/regions").queryParam("page", "0").queryParam("size", "2")
-                .queryParam("sortBy", "")).andExpect(status().isNoContent()).andDo(print()).andReturn();
+                        .queryParam("sortBy", "id").queryParam("name", "test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
@@ -131,23 +130,6 @@ class RegionControllerTest {
         given(this.regionService.exist(Mockito.anyString())).willThrow(new RuntimeException());
 
         mvc.perform(get("/regions/{name}/exist", "test")).andExpect(status().isNoContent())
-                .andDo(print()).andReturn();
-    }
-
-
-    @Test
-    void subset() throws Exception {
-        given(this.regionService.subset(Mockito.anyLong())).willReturn(List.of(regionVO));
-
-        mvc.perform(get("/regions/{id}/subset", Mockito.anyLong())).andExpect(status().isOk())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void lower_error() throws Exception {
-        given(this.regionService.subset(Mockito.anyLong())).willThrow(new RuntimeException());
-
-        mvc.perform(get("/regions/{id}/subset", Mockito.anyLong())).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

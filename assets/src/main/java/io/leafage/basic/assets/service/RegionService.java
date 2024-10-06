@@ -22,8 +22,6 @@ import io.leafage.basic.assets.vo.RegionVO;
 import org.springframework.data.domain.Page;
 import top.leafage.common.servlet.ServletBasicService;
 
-import java.util.List;
-
 /**
  * region service.
  *
@@ -40,13 +38,6 @@ public interface RegionService extends ServletBasicService<RegionDTO, RegionVO> 
      * @param descending 顺序
      * @return 查询结果
      */
-    Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending);
+    Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId, String name);
 
-    /**
-     * 获取子节点
-     *
-     * @return 数据集
-     * @param id a {@link java.lang.Long} object
-     */
-    List<RegionVO> subset(Long id);
 }

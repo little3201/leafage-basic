@@ -22,15 +22,16 @@ import io.leafage.basic.assets.dto.RegionDTO;
 import io.leafage.basic.assets.repository.RegionRepository;
 import io.leafage.basic.assets.service.RegionService;
 import io.leafage.basic.assets.vo.RegionVO;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,27 +53,35 @@ public class RegionServiceImpl implements RegionService {
         this.regionRepository = regionRepository;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return regionRepository.findBySuperiorIdIsNull(pageable).map(this::convert);
+    public Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId, String name) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Specification<Region> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (superiorId == null) {
+                predicates.add(cb.isNull(root.get("superiorId")));
+            } else {
+                predicates.add(cb.equal(root.get("superiorId"), superiorId));
+            }
+            if (StringUtils.hasText(name)) {
+                predicates.add(cb.like(root.get("name"), "%" + name + "%"));
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return regionRepository.findAll(spec, pageable).map(this::convert);
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public List<RegionVO> subset(Long id) {
-        Assert.notNull(id, "region id must not be null.");
-        return regionRepository.findBySuperiorId(id)
-                .stream().map(this::convert).toList();
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RegionVO fetch(Long id) {
-        Assert.notNull(id, "region id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Region region = regionRepository.findById(id).orElse(null);
         if (region == null) {
             return null;
@@ -80,14 +89,18 @@ public class RegionServiceImpl implements RegionService {
         return this.convert(region);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean exist(String name) {
-        Assert.hasText(name, "region name must not bu blank.");
+        Assert.hasText(name, "name must not bu blank.");
         return regionRepository.existsByName(name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RegionVO create(RegionDTO dto) {
         Region region = new Region();
@@ -98,10 +111,12 @@ public class RegionServiceImpl implements RegionService {
         return this.convert(region);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RegionVO modify(Long id, RegionDTO dto) {
-        Assert.notNull(id, "region id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         Region region = regionRepository.findById(id).orElse(null);
         if (region == null) {
             return null;
@@ -113,10 +128,12 @@ public class RegionServiceImpl implements RegionService {
         return this.convert(region);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove(Long id) {
-        Assert.notNull(id, "region id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         regionRepository.deleteById(id);
     }
 

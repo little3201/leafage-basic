@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -32,6 +33,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import top.leafage.common.TreeNode;
 
 import java.util.Arrays;
@@ -59,7 +61,7 @@ class GroupServiceImplTest {
     private GroupDTO groupDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         groupDTO = new GroupDTO();
         groupDTO.setName("group");
     }
@@ -67,9 +69,11 @@ class GroupServiceImplTest {
     @Test
     void retrieve() {
         Page<Group> page = new PageImpl<>(List.of(Mockito.mock(Group.class)));
-        given(this.groupRepository.findAllBySuperiorId(Mockito.anyLong(), Mockito.any(Pageable.class))).willReturn(page);
 
-        Page<GroupVO> voPage = groupService.retrieve(0, 2, "id", true, 2L);
+        given(this.groupRepository.findAll(ArgumentMatchers.<Specification<Group>>any(),
+                Mockito.any(Pageable.class))).willReturn(page);
+
+        Page<GroupVO> voPage = groupService.retrieve(0, 2, "id", true, 2L, "test");
         Assertions.assertNotNull(voPage.getContent());
     }
 

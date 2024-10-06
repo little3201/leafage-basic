@@ -50,9 +50,9 @@ public class GroupMembersServiceImpl implements GroupMembersService {
      */
     @Override
     public List<GroupMembers> members(Long groupId) {
-        Assert.notNull(groupId, "group id must not be null.");
+        Assert.notNull(groupId, "groupId must not be null.");
 
-        return groupMembersRepository.findByGroupId(groupId);
+        return groupMembersRepository.findAllByGroupId(groupId);
     }
 
     /**
@@ -62,7 +62,7 @@ public class GroupMembersServiceImpl implements GroupMembersService {
     public List<GroupMembers> groups(String username) {
         Assert.hasText(username, "username must not be blank.");
 
-        return groupMembersRepository.findByUsername(username);
+        return groupMembersRepository.findAllByUsername(username);
     }
 
     /**
@@ -70,7 +70,7 @@ public class GroupMembersServiceImpl implements GroupMembersService {
      */
     @Override
     public List<GroupMembers> relation(Long groupId, Set<String> usernames) {
-        Assert.notNull(groupId, "group id must not be null.");
+        Assert.notNull(groupId, "groupId must not be null.");
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
         List<GroupMembers> groupMembers = usernames.stream().map(username -> {

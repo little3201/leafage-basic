@@ -1,9 +1,6 @@
 package io.leafage.auth.jose;
 
-import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -21,7 +18,6 @@ public final class Jwks {
     private Jwks() {
     }
 
-
     public static RSAKey generateRsa() {
         KeyPair keyPair = generateRsaKey();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
@@ -34,7 +30,7 @@ public final class Jwks {
         // @formatter:on
     }
 
-    public static KeyPair generateRsaKey() {
+    static KeyPair generateRsaKey() {
         KeyPair keyPair;
         try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -44,11 +40,5 @@ public final class Jwks {
             throw new IllegalStateException(ex);
         }
         return keyPair;
-    }
-
-    public static JWKSource<SecurityContext> jwkSource() {
-        RSAKey rsaKey = Jwks.generateRsa();
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
     }
 }

@@ -7,8 +7,8 @@ LABEL maintainer="little3201@gmail.com"
 # Add a volume pointing to /tmp
 VOLUME /tmp
 
-# Make port 8763 available to the world outside this container
-EXPOSE 8763
+# Make port 8762 available to the world outside this container
+EXPOSE 8762
 
 # Add the application's jar to the container
 ADD hypervisor-0.1.0.jar .

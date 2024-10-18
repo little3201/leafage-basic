@@ -25,7 +25,9 @@ import io.leafage.basic.assets.vo.RegionVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -58,7 +60,9 @@ public class RegionServiceImpl implements RegionService {
      */
     @Override
     public Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId, String name) {
-        Pageable pageable = pageable(page, size, sortBy, descending);
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Specification<Region> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

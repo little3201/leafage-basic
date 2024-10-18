@@ -18,7 +18,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.AccessLog;
-import io.leafage.basic.hypervisor.domain.Message;
 import io.leafage.basic.hypervisor.dto.AccessLogDTO;
 import io.leafage.basic.hypervisor.repository.AccessLogRepository;
 import io.leafage.basic.hypervisor.service.AccessLogService;
@@ -26,7 +25,9 @@ import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -59,7 +60,9 @@ public class AccessLogServiceImpl implements AccessLogService {
      */
     @Override
     public Page<AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending, String url) {
-        Pageable pageable = pageable(page, size, sortBy, descending);
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Specification<AccessLog> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();

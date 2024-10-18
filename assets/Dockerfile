@@ -7,7 +7,7 @@ LABEL maintainer="little3201@gmail.com"
 # Add a volume pointing to /tmp
 VOLUME /tmp
 
-# Make port 8763 available to the world outside this container
+# Make port 8764 available to the world outside this container
 EXPOSE 8764
 
 # Add the application's jar to the container

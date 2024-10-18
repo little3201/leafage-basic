@@ -30,7 +30,7 @@ import org.springframework.security.web.SecurityFilterChain;
  *
  * @author wq li
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 public class ResourceServerConfiguration {
 

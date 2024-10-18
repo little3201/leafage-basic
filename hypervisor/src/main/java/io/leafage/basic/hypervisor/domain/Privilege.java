@@ -16,10 +16,10 @@
  */
 package io.leafage.basic.hypervisor.domain;
 
-import top.leafage.common.servlet.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import top.leafage.common.servlet.audit.AuditMetadata;
 
 /**
  * model class for privilege.
@@ -37,6 +37,7 @@ public class Privilege extends AuditMetadata {
     /**
      * 上级主键
      */
+    @Column(name = "superior_id")
     private Long superiorId;
 
     private String path;

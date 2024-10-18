@@ -56,7 +56,6 @@ public class UserController {
      * @param size       大小
      * @param sortBy     排序字段
      * @param descending 排序方向
-     * @param groupId    a {@link java.lang.Long} object
      * @param username   username
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */

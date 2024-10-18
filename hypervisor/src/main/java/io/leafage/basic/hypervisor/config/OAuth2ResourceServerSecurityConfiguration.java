@@ -29,7 +29,7 @@ import org.springframework.security.web.SecurityFilterChain;
  *
  * @author wq li
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 public class OAuth2ResourceServerSecurityConfiguration {
 
@@ -42,7 +42,8 @@ public class OAuth2ResourceServerSecurityConfiguration {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
+        http.authorizeHttpRequests((authorize) -> authorize.requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
         return http.build();
     }

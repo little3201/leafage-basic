@@ -1,7 +1,7 @@
 package io.leafage.basic.assets.controller;
 
 import io.leafage.basic.assets.dto.FileRecordDTO;
-import io.leafage.basic.assets.service.FileService;
+import io.leafage.basic.assets.service.FileRecordService;
 import io.leafage.basic.assets.vo.FileRecordVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -21,17 +21,17 @@ import org.springframework.web.bind.annotation.*;
 public class FileController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(RegionController.class);
+    private final Logger logger = LoggerFactory.getLogger(FileController.class);
 
-    private final FileService fileService;
+    private final FileRecordService fileRecordService;
 
     /**
      * <p>Constructor for RegionController.</p>
      * <p>
-     * //     * @param regionService a {@link io.leafage.basic.assets.service.RegionService} object
+     * //     * @param regionService a {@link io.leafage.basic.assets.service.FileRecordService} object
      */
-    public FileController(FileService fileService) {
-        this.fileService = fileService;
+    public FileController(FileRecordService fileRecordService) {
+        this.fileRecordService = fileRecordService;
     }
 
     /**
@@ -48,7 +48,7 @@ public class FileController {
                                                        String sortBy, boolean descending, String name) {
         Page<FileRecordVO> voPage;
         try {
-            voPage = fileService.retrieve(page, size, sortBy, descending, name);
+            voPage = fileRecordService.retrieve(page, size, sortBy, descending, name);
         } catch (Exception e) {
             logger.error("Retrieve region occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -66,7 +66,7 @@ public class FileController {
     public ResponseEntity<FileRecordVO> fetch(@PathVariable Long id) {
         FileRecordVO vo;
         try {
-            vo = fileService.fetch(id);
+            vo = fileRecordService.fetch(id);
         } catch (Exception e) {
             logger.error("Fetch region occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -84,7 +84,7 @@ public class FileController {
     public ResponseEntity<Boolean> exist(@PathVariable String name) {
         boolean exist;
         try {
-            exist = fileService.exist(name);
+            exist = fileRecordService.exist(name);
         } catch (Exception e) {
             logger.info("Query region exist occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -102,7 +102,7 @@ public class FileController {
     public ResponseEntity<FileRecordVO> create(@RequestBody @Valid FileRecordDTO fileRecordDTO) {
         FileRecordVO vo;
         try {
-            vo = fileService.create(fileRecordDTO);
+            vo = fileRecordService.create(fileRecordDTO);
         } catch (Exception e) {
             logger.error("Create region occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
@@ -119,7 +119,7 @@ public class FileController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         try {
-            fileService.remove(id);
+            fileRecordService.remove(id);
         } catch (Exception e) {
             logger.error("Remove region occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

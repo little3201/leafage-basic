@@ -2,7 +2,7 @@ package io.leafage.basic.assets.service.impl;
 
 import io.leafage.basic.assets.domain.FileRecord;
 import io.leafage.basic.assets.repository.FileRecordRepository;
-import io.leafage.basic.assets.service.FileService;
+import io.leafage.basic.assets.service.FileRecordService;
 import io.leafage.basic.assets.vo.FileRecordVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
@@ -24,11 +24,11 @@ import java.util.List;
  * @author wq li
  */
 @Service
-public class FileServiceImpl implements FileService {
+public class FileRecordServiceImpl implements FileRecordService {
 
     private final FileRecordRepository fileRecordRepository;
 
-    public FileServiceImpl(FileRecordRepository fileRecordRepository) {
+    public FileRecordServiceImpl(FileRecordRepository fileRecordRepository) {
         this.fileRecordRepository = fileRecordRepository;
     }
 

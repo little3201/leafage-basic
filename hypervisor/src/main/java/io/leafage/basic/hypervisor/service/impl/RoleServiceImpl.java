@@ -17,7 +17,6 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Role;
-import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
@@ -82,11 +81,8 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        Role role = roleRepository.findById(id).orElse(null);
-        if (role == null) {
-            return null;
-        }
-        return this.convert(role);
+
+        return roleRepository.findById(id).map(this::convert).orElse(null);
     }
 
     /**

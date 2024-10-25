@@ -23,10 +23,10 @@ public class DefaultSecurityConfiguration {
     public SecurityFilterChain standardSecurityFilterChain(HttpSecurity http) throws Exception {
         http
 
-                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/actuator/**").permitAll()
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/actuator/**").permitAll()
                         .anyRequest().authenticated())
-                .csrf((csrf) -> csrf.ignoringRequestMatchers("/token"))
-                .httpBasic(withDefaults());
+                .httpBasic(withDefaults())
+                .formLogin(withDefaults());
 
         return http.build();
     }

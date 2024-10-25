@@ -78,11 +78,8 @@ public class AccessLogServiceImpl implements AccessLogService {
     @Override
     public AccessLogVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        AccessLog accessLog = accessLogRepository.findById(id).orElse(null);
-        if (accessLog == null) {
-            return null;
-        }
-        return this.convert(accessLog);
+
+        return accessLogRepository.findById(id).map(this::convert).orElse(null);
     }
 
     /**

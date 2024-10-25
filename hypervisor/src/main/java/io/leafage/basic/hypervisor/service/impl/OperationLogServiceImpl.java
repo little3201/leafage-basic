@@ -78,11 +78,8 @@ public class OperationLogServiceImpl implements OperationLogService {
     @Override
     public OperationLogVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        OperationLog operationLog = operationLogRepository.findById(id).orElse(null);
-        if (operationLog == null) {
-            return null;
-        }
-        return this.convert(operationLog);
+
+        return operationLogRepository.findById(id).map(this::convert).orElse(null);
     }
 
     /**

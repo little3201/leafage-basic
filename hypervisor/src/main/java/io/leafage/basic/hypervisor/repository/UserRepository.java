@@ -21,6 +21,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 /**
  * user repository.
  *
@@ -28,6 +30,14 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+
+    /**
+     * find user by username
+     *
+     * @param username username
+     * @return Record data
+     */
+    Optional<User> findByUsername(String username);
 
     /**
      * 是否存在

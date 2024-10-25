@@ -17,19 +17,19 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
-import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import top.leafage.common.TreeNode;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -63,10 +63,10 @@ public class PrivilegeController {
      * @return 查询到的数据，否则返回空
      */
     @GetMapping
-    public ResponseEntity<List<TreeNode>> tree() {
+    public ResponseEntity<List<TreeNode>> tree(Principal principal) {
         List<TreeNode> treeNodes;
         try {
-            treeNodes = privilegeService.tree();
+            treeNodes = privilegeService.tree(principal.getName());
         } catch (Exception e) {
             logger.info("Retrieve privilege tree occurred an error: ", e);
             return ResponseEntity.noContent().build();

@@ -18,8 +18,12 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Privilege;
+import io.leafage.basic.hypervisor.domain.RoleMembers;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
+import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
+import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +34,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import top.leafage.common.TreeNode;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
 
@@ -42,6 +47,12 @@ import static org.mockito.BDDMockito.given;
  **/
 @ExtendWith(MockitoExtension.class)
 class PrivilegeServiceImplTest {
+
+    @Mock
+    private RoleMembersRepository roleMembersRepository;
+
+    @Mock
+    private RolePrivilegesRepository rolePrivilegesRepository;
 
     @Mock
     private PrivilegeRepository privilegeRepository;
@@ -64,9 +75,13 @@ class PrivilegeServiceImplTest {
 
     @Test
     void tree() {
-        given(this.privilegeRepository.findAll()).willReturn(Arrays.asList(Mockito.mock(Privilege.class), Mockito.mock(Privilege.class)));
+        given(this.roleMembersRepository.findAllByUsername(Mockito.anyString())).willReturn(Collections.singletonList(Mockito.mock(RoleMembers.class)));
 
-        List<TreeNode> nodes = privilegeService.tree();
+        given(this.rolePrivilegesRepository.findAllByRoleId(Mockito.anyLong())).willReturn(Collections.singletonList(Mockito.mock(RolePrivileges.class)));
+
+        given(this.privilegeRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Privilege.class)));
+
+        List<TreeNode> nodes = privilegeService.tree("test");
         Assertions.assertNotNull(nodes);
     }
 

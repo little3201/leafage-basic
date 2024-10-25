@@ -27,13 +27,13 @@ import static org.mockito.BDDMockito.given;
  * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
-class FileServiceImplTest {
+class FileRecordServiceImplTest {
 
     @Mock
     private FileRecordRepository fileRecordRepository;
 
     @InjectMocks
-    private FileServiceImpl fileService;
+    private FileRecordServiceImpl fileService;
 
 
     @BeforeEach

@@ -40,4 +40,11 @@ public interface UserService extends ServletBasicService<UserDTO, UserVO> {
      */
     Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, String username);
 
+    /**
+     * Fetch user
+     *
+     * @param username username
+     * @return Record
+     */
+    UserVO findByUsername(String username);
 }

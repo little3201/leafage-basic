@@ -73,17 +73,21 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(spec, pageable).map(this::convert);
     }
 
+    @Override
+    public UserVO findByUsername(String username) {
+        Assert.hasText(username, "username must not be blank.");
+
+        return userRepository.findByUsername(username).map(this::convert).orElse(null);
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public UserVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
-            return null;
-        }
-        return this.convert(user);
+
+        return userRepository.findById(id).map(this::convert).orElse(null);
     }
 
     /**
@@ -92,6 +96,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean exist(String username) {
         Assert.hasText(username, "username must not be blank.");
+
         return userRepository.existsByUsername(username);
     }
 
@@ -103,6 +108,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         BeanCopier copier = BeanCopier.create(UserDTO.class, User.class, false);
         copier.copy(dto, user, null);
+        // set default value
         user.setPassword("{noop}123456");
         user = userRepository.saveAndFlush(user);
         return this.convert(user);

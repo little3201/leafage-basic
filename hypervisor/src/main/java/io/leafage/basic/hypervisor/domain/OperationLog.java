@@ -23,6 +23,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import java.net.InetAddress;
 import java.time.Instant;
 
 /**
@@ -36,7 +37,7 @@ public class OperationLog extends AuditMetadata {
 
     private String operation;
 
-    private String ip;
+    private InetAddress ip;
 
     @Column(name = "location", length = 50)
     private String location;
@@ -81,7 +82,7 @@ public class OperationLog extends AuditMetadata {
      *
      * @return a {@link java.lang.String} object
      */
-    public String getIp() {
+    public InetAddress getIp() {
         return ip;
     }
 
@@ -90,7 +91,7 @@ public class OperationLog extends AuditMetadata {
      *
      * @param ip a {@link java.lang.String} object
      */
-    public void setIp(String ip) {
+    public void setIp(InetAddress ip) {
         this.ip = ip;
     }
 

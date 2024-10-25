@@ -99,11 +99,8 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     @Override
     public GroupVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        Group group = groupRepository.findById(id).orElse(null);
-        if (group == null) {
-            return null;
-        }
-        return this.convert(group);
+
+        return groupRepository.findById(id).map(this::convert).orElse(null);
     }
 
     /**

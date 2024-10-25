@@ -17,7 +17,10 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Privilege;
+import io.leafage.basic.hypervisor.domain.RoleMembers;
+import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
+import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import org.springframework.stereotype.Service;
@@ -25,10 +28,7 @@ import org.springframework.util.CollectionUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * privilege service impl.
@@ -38,6 +38,7 @@ import java.util.Set;
 @Service
 public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privilege> implements PrivilegeService {
 
+    public final RoleMembersRepository roleMembersRepository;
     public final RolePrivilegesRepository rolePrivilegesRepository;
     private final PrivilegeRepository privilegeRepository;
 
@@ -47,7 +48,8 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      * @param rolePrivilegesRepository a {@link io.leafage.basic.hypervisor.repository.RolePrivilegesRepository} object
      * @param privilegeRepository      a {@link io.leafage.basic.hypervisor.repository.PrivilegeRepository} object
      */
-    public PrivilegeServiceImpl(RolePrivilegesRepository rolePrivilegesRepository, PrivilegeRepository privilegeRepository) {
+    public PrivilegeServiceImpl(RoleMembersRepository roleMembersRepository, RolePrivilegesRepository rolePrivilegesRepository, PrivilegeRepository privilegeRepository) {
+        this.roleMembersRepository = roleMembersRepository;
         this.rolePrivilegesRepository = rolePrivilegesRepository;
         this.privilegeRepository = privilegeRepository;
     }
@@ -56,8 +58,18 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      * {@inheritDoc}
      */
     @Override
-    public List<TreeNode> tree() {
-        List<Privilege> privileges = privilegeRepository.findAll();
+    public List<TreeNode> tree(String username) {
+        List<Privilege> privileges = new ArrayList<>();
+        List<RoleMembers> roleMembers = roleMembersRepository.findAllByUsername(username);
+        if (CollectionUtils.isEmpty(roleMembers)) {
+            return Collections.emptyList();
+        }
+        for (RoleMembers roleMember : roleMembers) {
+            List<RolePrivileges> rolePrivileges = rolePrivilegesRepository.findAllByRoleId(roleMember.getRoleId());
+            for (RolePrivileges rolePrivilege : rolePrivileges) {
+                privilegeRepository.findById(rolePrivilege.getPrivilegeId()).ifPresent(privileges::add);
+            }
+        }
         return this.convertTree(privileges);
     }
 

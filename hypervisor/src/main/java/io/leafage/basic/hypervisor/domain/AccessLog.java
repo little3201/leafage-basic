@@ -23,6 +23,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import top.leafage.common.servlet.audit.AuditMetadata;
 
+import java.net.InetAddress;
+
 /**
  * model class for access log.
  *
@@ -37,7 +39,7 @@ public class AccessLog extends AuditMetadata {
     @Column(name = "http_method", length = 10)
     private String httpMethod;
 
-    private String ip;
+    private InetAddress ip;
 
     @Column(name = "location", length = 50)
     private String location;
@@ -54,7 +56,7 @@ public class AccessLog extends AuditMetadata {
 
     @Column(name = "response_message")
     private String responseMessage;
-    
+
 
     public String getUrl() {
         return url;
@@ -72,11 +74,11 @@ public class AccessLog extends AuditMetadata {
         this.httpMethod = method;
     }
 
-    public String getIp() {
+    public InetAddress getIp() {
         return ip;
     }
 
-    public void setIp(String ip) {
+    public void setIp(InetAddress ip) {
         this.ip = ip;
     }
 

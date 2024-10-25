@@ -81,8 +81,8 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public MessageVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        Message message = messageRepository.findById(id).orElse(null);
-        return this.convert(message);
+
+        return messageRepository.findById(id).map(this::convert).orElse(null);
     }
 
     /**

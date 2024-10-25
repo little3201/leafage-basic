@@ -58,29 +58,29 @@ class OperationLogControllerTest {
     @MockBean
     private OperationLogService operationLogService;
 
-    private OperationLogVO operationLogVO;
+    private OperationLogVO vo;
 
     @BeforeEach
     void setUp() {
         // vo
-        operationLogVO = new OperationLogVO();
-        operationLogVO.setIp("12.1.3.2");
-        operationLogVO.setLocation("test");
-        operationLogVO.setBrowser("Chrome");
-        operationLogVO.setDeviceType("PC");
-        operationLogVO.setBrowser("Edge");
-        operationLogVO.setOs("Mac OS");
-        operationLogVO.setReferer("test");
-        operationLogVO.setContent("content");
-        operationLogVO.setSessionId("sessionId");
-        operationLogVO.setStatusCode(200);
-        operationLogVO.setOperation("test");
-        operationLogVO.setUserAgent("xxx");
+        vo = new OperationLogVO();
+        vo.setIp("12.1.3.2");
+        vo.setLocation("test");
+        vo.setBrowser("Chrome");
+        vo.setDeviceType("PC");
+        vo.setBrowser("Edge");
+        vo.setOs("Mac OS");
+        vo.setReferer("test");
+        vo.setContent("content");
+        vo.setSessionId("sessionId");
+        vo.setStatusCode(200);
+        vo.setOperation("test");
+        vo.setUserAgent("xxx");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<OperationLogVO> voPage = new PageImpl<>(List.of(operationLogVO), Mockito.mock(PageRequest.class), 2L);
+        Page<OperationLogVO> voPage = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         given(this.operationLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
                 Mockito.anyBoolean(), eq("test"))).willReturn(voPage);

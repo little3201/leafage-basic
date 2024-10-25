@@ -52,11 +52,11 @@ public class PostController {
     /**
      * retrieve with page .
      *
-     * @param page   页码
-     * @param size   大小
-     * @param sortBy 排序字段
-     * @return 分页结果集
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序字段
      * @param descending a boolean
+     * @return 分页结果集
      */
     @GetMapping
     public ResponseEntity<Page<PostVO>> retrieve(@RequestParam int page, @RequestParam int size,
@@ -128,14 +128,14 @@ public class PostController {
     /**
      * 保存文章信息
      *
-     * @param postDTO 文章内容
+     * @param dto 文章内容
      * @return 帖子信息
      */
     @PostMapping
-    public ResponseEntity<PostVO> create(@RequestBody @Valid PostDTO postDTO) {
+    public ResponseEntity<PostVO> create(@RequestBody @Valid PostDTO dto) {
         PostVO vo;
         try {
-            vo = postsService.create(postDTO);
+            vo = postsService.create(dto);
         } catch (Exception e) {
             logger.error("Save posts occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
@@ -146,15 +146,15 @@ public class PostController {
     /**
      * 修改帖子信息
      *
-     * @param id      主键
-     * @param postDTO 帖子信息
+     * @param id  主键
+     * @param dto 帖子信息
      * @return 修改后的帖子信息
      */
     @PutMapping("/{id}")
-    public ResponseEntity<PostVO> modify(@PathVariable Long id, @RequestBody @Valid PostDTO postDTO) {
+    public ResponseEntity<PostVO> modify(@PathVariable Long id, @RequestBody @Valid PostDTO dto) {
         PostVO vo;
         try {
-            vo = postsService.modify(id, postDTO);
+            vo = postsService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify posts occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

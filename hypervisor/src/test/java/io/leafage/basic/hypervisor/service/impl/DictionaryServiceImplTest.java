@@ -58,12 +58,12 @@ class DictionaryServiceImplTest {
     @InjectMocks
     private DictionaryServiceImpl dictionaryService;
 
-    private DictionaryDTO dictionaryDTO;
+    private DictionaryDTO dto;
 
     @BeforeEach
     void setUp() {
-        dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setName("group");
+        dto = new DictionaryDTO();
+        dto.setName("group");
     }
 
     @Test
@@ -130,7 +130,7 @@ class DictionaryServiceImplTest {
 
         given(this.dictionaryRepository.save(Mockito.any(Dictionary.class))).willReturn(Mockito.mock(Dictionary.class));
 
-        DictionaryVO dictionaryVO = dictionaryService.modify(1L, dictionaryDTO);
+        DictionaryVO dictionaryVO = dictionaryService.modify(1L, dto);
 
         verify(this.dictionaryRepository, times(1)).save(Mockito.any(Dictionary.class));
         Assertions.assertNotNull(dictionaryVO);

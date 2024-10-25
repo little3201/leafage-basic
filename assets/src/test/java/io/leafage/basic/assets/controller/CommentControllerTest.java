@@ -65,25 +65,25 @@ class CommentControllerTest {
     @MockBean
     private CommentService commentService;
 
-    private CommentVO commentVO;
+    private CommentVO vo;
 
-    private CommentDTO commentDTO;
+    private CommentDTO dto;
 
     @BeforeEach
     void setUp() {
-        commentVO = new CommentVO();
-        commentVO.setContent("content");
-        commentVO.setPostId(1L);
+        vo = new CommentVO();
+        vo.setContent("content");
+        vo.setPostId(1L);
 
-        commentDTO = new CommentDTO();
-        commentDTO.setPostId(1L);
-        commentDTO.setContent("content");
-        commentDTO.setReplier(1L);
+        dto = new CommentDTO();
+        dto.setPostId(1L);
+        dto.setContent("content");
+        dto.setReplier(1L);
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<CommentVO> page = new PageImpl<>(List.of(commentVO), Mockito.mock(PageRequest.class), 2L);
+        Page<CommentVO> page = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         given(commentService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"), Mockito.anyBoolean())).willReturn(page);
 
@@ -103,7 +103,7 @@ class CommentControllerTest {
 
     @Test
     void relation() throws Exception {
-        given(commentService.relation(Mockito.anyLong())).willReturn(List.of(commentVO));
+        given(commentService.relation(Mockito.anyLong())).willReturn(List.of(vo));
 
         mvc.perform(get("/comments/{id}", Mockito.anyLong())).andExpect(status().isOk()).andDo(print()).andReturn();
     }
@@ -117,7 +117,7 @@ class CommentControllerTest {
 
     @Test
     void replies() throws Exception {
-        given(commentService.replies(Mockito.anyLong())).willReturn(List.of(commentVO));
+        given(commentService.replies(Mockito.anyLong())).willReturn(List.of(vo));
 
         mvc.perform(get("/comments/{id}/replies", 1L)).andExpect(status().isOk()).andDo(print()).andReturn();
     }
@@ -131,10 +131,10 @@ class CommentControllerTest {
 
     @Test
     void create() throws Exception {
-        given(commentService.create(Mockito.any(CommentDTO.class))).willReturn(commentVO);
+        given(commentService.create(Mockito.any(CommentDTO.class))).willReturn(vo);
 
         mvc.perform(post("/comments").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(commentDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.content").value("content")).andDo(print()).andReturn();
     }
 
@@ -143,7 +143,7 @@ class CommentControllerTest {
         given(commentService.create(Mockito.any(CommentDTO.class))).willThrow(new NoSuchElementException());
 
         mvc.perform(post("/comments").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(commentDTO)).with(csrf().asHeader())).andExpect(status()
+                .content(mapper.writeValueAsString(dto)).with(csrf().asHeader())).andExpect(status()
                 .isExpectationFailed()).andDo(print()).andReturn();
     }
 }

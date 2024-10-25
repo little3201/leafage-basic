@@ -58,25 +58,25 @@ class AccessLogControllerTest {
     @MockBean
     private AccessLogService accessLogService;
 
-    private AccessLogVO accessLogVO;
+    private AccessLogVO vo;
 
     @BeforeEach
     void setUp() {
         // vo
-        accessLogVO = new AccessLogVO();
-        accessLogVO.setIp("12.1.3.2");
-        accessLogVO.setLocation("test");
-        accessLogVO.setHttpMethod("POST");
-        accessLogVO.setResponseTimes(232L);
-        accessLogVO.setResponseMessage("sessionId");
-        accessLogVO.setStatusCode(200);
-        accessLogVO.setUrl("/test");
-        accessLogVO.setParams("xxx");
+        vo = new AccessLogVO();
+        vo.setIp("12.1.3.2");
+        vo.setLocation("test");
+        vo.setHttpMethod("POST");
+        vo.setResponseTimes(232L);
+        vo.setResponseMessage("sessionId");
+        vo.setStatusCode(200);
+        vo.setUrl("/test");
+        vo.setParams("xxx");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<AccessLogVO> voPage = new PageImpl<>(List.of(accessLogVO), Mockito.mock(PageRequest.class), 2L);
+        Page<AccessLogVO> voPage = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
                 Mockito.anyBoolean(), eq("test"))).willReturn(voPage);

@@ -64,29 +64,29 @@ class RegionControllerTest {
     @MockBean
     private RegionService regionService;
 
-    private RegionVO regionVO;
+    private RegionVO vo;
 
-    private RegionDTO regionDTO;
+    private RegionDTO dto;
 
     @BeforeEach
     void setUp() {
-        regionVO = new RegionVO();
-        regionVO.setName("test");
-        regionVO.setAreaCode("23234");
-        regionVO.setPostalCode(1212);
-        regionVO.setDescription("description");
+        vo = new RegionVO();
+        vo.setName("test");
+        vo.setAreaCode("23234");
+        vo.setPostalCode(1212);
+        vo.setDescription("description");
 
-        regionDTO = new RegionDTO();
-        regionDTO.setName("test");
-        regionDTO.setAreaCode("23234");
-        regionDTO.setPostalCode(1212);
-        regionDTO.setSuperiorId(1L);
-        regionDTO.setDescription("description");
+        dto = new RegionDTO();
+        dto.setName("test");
+        dto.setAreaCode("23234");
+        dto.setPostalCode(1212);
+        dto.setSuperiorId(1L);
+        dto.setDescription("description");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<RegionVO> voPage = new PageImpl<>(List.of(regionVO), Mockito.mock(PageRequest.class), 2L);
+        Page<RegionVO> voPage = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         // 使用 eq() 准确匹配参数
         given(this.regionService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"), Mockito.anyBoolean(),
@@ -103,7 +103,7 @@ class RegionControllerTest {
 
     @Test
     void fetch() throws Exception {
-        given(this.regionService.fetch(Mockito.anyLong())).willReturn(regionVO);
+        given(this.regionService.fetch(Mockito.anyLong())).willReturn(vo);
 
         mvc.perform(get("/regions/{id}", Mockito.anyLong())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
@@ -135,10 +135,10 @@ class RegionControllerTest {
 
     @Test
     void create() throws Exception {
-        given(this.regionService.create(Mockito.any(RegionDTO.class))).willReturn(regionVO);
+        given(this.regionService.create(Mockito.any(RegionDTO.class))).willReturn(vo);
 
         mvc.perform(post("/regions").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(regionDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test"))
                 .andDo(print()).andReturn();
@@ -149,17 +149,17 @@ class RegionControllerTest {
         given(this.regionService.create(Mockito.any(RegionDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(post("/regions").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(regionDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void modify() throws Exception {
-        given(this.regionService.modify(Mockito.anyLong(), Mockito.any(RegionDTO.class))).willReturn(regionVO);
+        given(this.regionService.modify(Mockito.anyLong(), Mockito.any(RegionDTO.class))).willReturn(vo);
 
         mvc.perform(put("/regions/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(regionDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -169,7 +169,7 @@ class RegionControllerTest {
         given(this.regionService.modify(Mockito.anyLong(), Mockito.any(RegionDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(put("/regions/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(regionDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }

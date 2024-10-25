@@ -68,15 +68,15 @@ class PostServiceImplTest {
     @InjectMocks
     private PostsServiceImpl postsService;
 
-    private PostDTO postDTO;
+    private PostDTO dto;
 
     @BeforeEach
     void setUp() {
-        postDTO = new PostDTO();
-        postDTO.setTitle("title");
-        postDTO.setExcerpt("excerpt");
-        postDTO.setContent("content");
-        postDTO.setTags(Set.of("code"));
+        dto = new PostDTO();
+        dto.setTitle("title");
+        dto.setExcerpt("excerpt");
+        dto.setContent("content");
+        dto.setTags(Set.of("code"));
     }
 
     @Test
@@ -157,7 +157,7 @@ class PostServiceImplTest {
 
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
-        PostVO postVO = postsService.create(postDTO);
+        PostVO postVO = postsService.create(dto);
 
         verify(postRepository, times(1)).saveAndFlush(Mockito.any(Post.class));
         verify(postContentRepository, times(1)).saveAndFlush(Mockito.any(PostContent.class));
@@ -181,7 +181,7 @@ class PostServiceImplTest {
 
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
-        PostVO postVO = postsService.modify(1L, postDTO);
+        PostVO postVO = postsService.modify(1L, dto);
 
         verify(postRepository, times(1)).save(Mockito.any(Post.class));
         verify(postContentRepository, times(1)).save(Mockito.any(PostContent.class));

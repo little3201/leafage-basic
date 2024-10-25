@@ -54,15 +54,15 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-    private UserDTO userDTO;
+    private UserDTO dto;
 
     @BeforeEach
     void setUp() {
-        userDTO = new UserDTO();
-        userDTO.setUsername("test");
-        userDTO.setFullName("zhang");
-        userDTO.setAvatar("a.jpg");
-        userDTO.setEmail("zhang@test.com");
+        dto = new UserDTO();
+        dto.setUsername("test");
+        dto.setFullName("zhang");
+        dto.setAvatar("a.jpg");
+        dto.setEmail("zhang@test.com");
     }
 
     @Test
@@ -89,7 +89,7 @@ class UserServiceImplTest {
     void create() {
         given(this.userRepository.saveAndFlush(Mockito.any(User.class))).willReturn(Mockito.mock(User.class));
 
-        UserVO vo = userService.create(userDTO);
+        UserVO vo = userService.create(dto);
 
         verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any(User.class));
         Assertions.assertNotNull(vo);
@@ -103,7 +103,7 @@ class UserServiceImplTest {
         // 保存更新信息
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(Mockito.mock(User.class));
 
-        UserVO vo = userService.modify(1L, userDTO);
+        UserVO vo = userService.modify(1L, dto);
 
         verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
         Assertions.assertNotNull(vo);

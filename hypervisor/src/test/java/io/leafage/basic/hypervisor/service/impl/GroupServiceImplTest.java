@@ -58,12 +58,12 @@ class GroupServiceImplTest {
     @InjectMocks
     private GroupServiceImpl groupService;
 
-    private GroupDTO groupDTO;
+    private GroupDTO dto;
 
     @BeforeEach
     void setUp() {
-        groupDTO = new GroupDTO();
-        groupDTO.setName("group");
+        dto = new GroupDTO();
+        dto.setName("group");
     }
 
     @Test
@@ -117,7 +117,7 @@ class GroupServiceImplTest {
 
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
 
-        GroupVO groupVO = groupService.modify(1L, groupDTO);
+        GroupVO groupVO = groupService.modify(1L, dto);
 
         verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));
         Assertions.assertNotNull(groupVO);

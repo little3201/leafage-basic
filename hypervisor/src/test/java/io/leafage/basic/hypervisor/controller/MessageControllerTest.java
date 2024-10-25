@@ -64,26 +64,26 @@ class MessageControllerTest {
     @MockBean
     private MessageService messageService;
 
-    private MessageVO messageVO;
+    private MessageVO vo;
 
-    private MessageDTO messageDTO;
+    private MessageDTO dto;
 
     @BeforeEach
     void setUp() {
-        messageVO = new MessageVO();
-        messageVO.setTitle("test");
-        messageVO.setReceiver("23234");
-        messageVO.setContent("content");
+        vo = new MessageVO();
+        vo.setTitle("test");
+        vo.setReceiver("23234");
+        vo.setContent("content");
 
-        messageDTO = new MessageDTO();
-        messageDTO.setTitle("test");
-        messageDTO.setReceiver("23234");
-        messageDTO.setContent("content");
+        dto = new MessageDTO();
+        dto.setTitle("test");
+        dto.setReceiver("23234");
+        dto.setContent("content");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<MessageVO> voPage = new PageImpl<>(List.of(messageVO), Mockito.mock(PageRequest.class), 2L);
+        Page<MessageVO> voPage = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         given(this.messageService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
                 Mockito.anyBoolean(), eq("test"))).willReturn(voPage);
@@ -110,7 +110,7 @@ class MessageControllerTest {
 
     @Test
     void fetch() throws Exception {
-        given(this.messageService.fetch(Mockito.anyLong())).willReturn(messageVO);
+        given(this.messageService.fetch(Mockito.anyLong())).willReturn(vo);
 
         mvc.perform(get("/messages/{id}", Mockito.anyLong())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").value("content")).andDo(print()).andReturn();
@@ -126,10 +126,10 @@ class MessageControllerTest {
 
     @Test
     void create() throws Exception {
-        given(this.messageService.create(Mockito.any(MessageDTO.class))).willReturn(messageVO);
+        given(this.messageService.create(Mockito.any(MessageDTO.class))).willReturn(vo);
 
         mvc.perform(post("/messages").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(messageDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("test"))
                 .andDo(print()).andReturn();
@@ -140,7 +140,7 @@ class MessageControllerTest {
         given(this.messageService.create(Mockito.any(MessageDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(post("/messages").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(messageDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }

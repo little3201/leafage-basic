@@ -56,15 +56,15 @@ class RegionServiceImplTest {
     @InjectMocks
     private RegionServiceImpl regionService;
 
-    private RegionDTO regionDTO;
+    private RegionDTO dto;
 
     @BeforeEach
     void setUp() {
-        regionDTO = new RegionDTO();
-        regionDTO.setName("西安市");
-        regionDTO.setAreaCode("029");
-        regionDTO.setPostalCode(71000);
-        regionDTO.setSuperiorId(1L);
+        dto = new RegionDTO();
+        dto.setName("西安市");
+        dto.setAreaCode("029");
+        dto.setPostalCode(71000);
+        dto.setSuperiorId(1L);
     }
 
     @Test
@@ -111,7 +111,7 @@ class RegionServiceImplTest {
 
         given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mockito.mock(Region.class));
 
-        RegionVO regionVO = regionService.modify(Mockito.anyLong(), regionDTO);
+        RegionVO regionVO = regionService.modify(Mockito.anyLong(), dto);
 
         verify(this.regionRepository, times(1)).save(Mockito.any(Region.class));
         Assertions.assertNotNull(regionVO);

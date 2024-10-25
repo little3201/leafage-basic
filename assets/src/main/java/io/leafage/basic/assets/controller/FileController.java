@@ -95,14 +95,14 @@ public class FileController {
     /**
      * 添加信息
      *
-     * @param fileRecordDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<FileRecordVO> create(@RequestBody @Valid FileRecordDTO fileRecordDTO) {
+    public ResponseEntity<FileRecordVO> create(@RequestBody @Valid FileRecordDTO dto) {
         FileRecordVO vo;
         try {
-            vo = fileRecordService.create(fileRecordDTO);
+            vo = fileRecordService.create(dto);
         } catch (Exception e) {
             logger.error("Create region occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

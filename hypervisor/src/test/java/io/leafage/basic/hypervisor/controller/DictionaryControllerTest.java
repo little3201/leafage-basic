@@ -64,25 +64,25 @@ class DictionaryControllerTest {
     @MockBean
     private DictionaryService dictionaryService;
 
-    private DictionaryVO dictionaryVO;
+    private DictionaryVO vo;
 
-    private DictionaryDTO dictionaryDTO;
+    private DictionaryDTO dto;
 
     @BeforeEach
     void setUp() {
-        dictionaryVO = new DictionaryVO();
-        dictionaryVO.setName("gender");
-        dictionaryVO.setDescription("description");
+        vo = new DictionaryVO();
+        vo.setName("gender");
+        vo.setDescription("description");
 
-        dictionaryDTO = new DictionaryDTO();
-        dictionaryDTO.setName("gender");
-        dictionaryDTO.setSuperiorId(1L);
-        dictionaryDTO.setDescription("description");
+        dto = new DictionaryDTO();
+        dto.setName("gender");
+        dto.setSuperiorId(1L);
+        dto.setDescription("description");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<DictionaryVO> voPage = new PageImpl<>(List.of(dictionaryVO), Mockito.mock(PageRequest.class), 2L);
+        Page<DictionaryVO> voPage = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         given(this.dictionaryService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
                 Mockito.anyBoolean(), Mockito.anyString())).willReturn(voPage);
@@ -109,7 +109,7 @@ class DictionaryControllerTest {
 
     @Test
     void subset() throws Exception {
-        given(this.dictionaryService.subset(Mockito.anyLong())).willReturn(List.of(dictionaryVO));
+        given(this.dictionaryService.subset(Mockito.anyLong())).willReturn(List.of(vo));
 
         mvc.perform(get("/dictionaries/{id}/subset", Mockito.anyLong())).andExpect(status().isOk())
                 .andDo(print()).andReturn();
@@ -117,7 +117,7 @@ class DictionaryControllerTest {
 
     @Test
     void fetch() throws Exception {
-        given(this.dictionaryService.fetch(Mockito.anyLong())).willReturn(dictionaryVO);
+        given(this.dictionaryService.fetch(Mockito.anyLong())).willReturn(vo);
 
         mvc.perform(get("/dictionaries/{id}", Mockito.anyLong())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("gender")).andDo(print()).andReturn();
@@ -134,10 +134,10 @@ class DictionaryControllerTest {
 
     @Test
     void modify() throws Exception {
-        given(this.dictionaryService.modify(Mockito.anyLong(), Mockito.any(DictionaryDTO.class))).willReturn(dictionaryVO);
+        given(this.dictionaryService.modify(Mockito.anyLong(), Mockito.any(DictionaryDTO.class))).willReturn(vo);
 
         mvc.perform(put("/dictionaries/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dictionaryDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -147,7 +147,7 @@ class DictionaryControllerTest {
         given(this.dictionaryService.modify(Mockito.anyLong(), Mockito.any(DictionaryDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(put("/dictionaries/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dictionaryDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }
@@ -187,10 +187,10 @@ class DictionaryControllerTest {
 
     @Test
     void create() throws Exception {
-        given(this.dictionaryService.create(Mockito.any(DictionaryDTO.class))).willReturn(dictionaryVO);
+        given(this.dictionaryService.create(Mockito.any(DictionaryDTO.class))).willReturn(vo);
 
         mvc.perform(post("/dictionaries").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dictionaryDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("gender"))
                 .andDo(print()).andReturn();
@@ -201,7 +201,7 @@ class DictionaryControllerTest {
         given(this.dictionaryService.create(Mockito.any(DictionaryDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(post("/dictionaries").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dictionaryDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }

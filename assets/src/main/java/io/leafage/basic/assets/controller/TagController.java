@@ -50,7 +50,7 @@ public class TagController {
     }
 
     /**
-     * 分页查询类目
+     * 分页查询tag
      *
      * @param page   页码
      * @param size   大小
@@ -72,10 +72,10 @@ public class TagController {
     }
 
     /**
-     * 查询类目信息
+     * 查询tag信息
      *
      * @param id 主键
-     * @return 匹配到的类目信息
+     * @return 匹配到的tag信息
      */
     @GetMapping("/{id}")
     public ResponseEntity<TagVO> fetch(@PathVariable Long id) {
@@ -90,16 +90,16 @@ public class TagController {
     }
 
     /**
-     * 保存类目信息
+     * 保存tag信息
      *
-     * @param categoryDTO 类目信息
-     * @return 类目信息
+     * @param dto tag信息
+     * @return tag信息
      */
     @PostMapping
-    public ResponseEntity<TagVO> create(@RequestBody @Valid TagDTO categoryDTO) {
+    public ResponseEntity<TagVO> create(@RequestBody @Valid TagDTO dto) {
         TagVO categoryVO;
         try {
-            categoryVO = tagService.create(categoryDTO);
+            categoryVO = tagService.create(dto);
         } catch (Exception e) {
             logger.error("Save tag occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
@@ -108,11 +108,11 @@ public class TagController {
     }
 
     /**
-     * 修改类目信息
+     * 修改tag信息
      *
      * @param id          主键
-     * @param categoryDTO 类目信息
-     * @return 修改后的类目信息
+     * @param categoryDTO tag信息
+     * @return 修改后的tag信息
      */
     @PutMapping("/{id}")
     public ResponseEntity<TagVO> modify(@PathVariable Long id, @RequestBody @Valid TagDTO categoryDTO) {
@@ -127,7 +127,7 @@ public class TagController {
     }
 
     /**
-     * 删除类目信息
+     * 删除tag信息
      *
      * @param id 主键
      * @return 删除结果

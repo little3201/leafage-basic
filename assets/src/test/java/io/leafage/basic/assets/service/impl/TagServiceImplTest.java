@@ -55,12 +55,12 @@ class TagServiceImplTest {
     @InjectMocks
     private TagServiceImpl tagService;
 
-    private TagDTO tagDTO;
+    private TagDTO dto;
 
     @BeforeEach
     void setUp() {
-        tagDTO = new TagDTO();
-        tagDTO.setName("test");
+        dto = new TagDTO();
+        dto.setName("test");
     }
 
     @Test
@@ -105,7 +105,7 @@ class TagServiceImplTest {
 
         given(tagPostsRepository.countByTagId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-        TagVO categoryVO = tagService.modify(1L, tagDTO);
+        TagVO categoryVO = tagService.modify(1L, dto);
 
         verify(tagRepository, times(1)).save(Mockito.any(Tag.class));
         Assertions.assertNotNull(categoryVO);

@@ -20,7 +20,6 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.domain.Privilege;
 import io.leafage.basic.hypervisor.domain.RoleMembers;
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
-import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
@@ -60,17 +59,8 @@ class PrivilegeServiceImplTest {
     @InjectMocks
     private PrivilegeServiceImpl privilegeService;
 
-    private PrivilegeDTO privilegeDTO;
-
     @BeforeEach
     void setUp() {
-        privilegeDTO = new PrivilegeDTO();
-        privilegeDTO.setName("system");
-        privilegeDTO.setPath("/system");
-        privilegeDTO.setRedirect("/system/user");
-        privilegeDTO.setComponent("#");
-        privilegeDTO.setIcon("user");
-        privilegeDTO.setSuperiorId(1L);
     }
 
     @Test

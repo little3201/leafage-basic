@@ -64,25 +64,25 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    private UserVO userVO;
+    private UserVO vo;
 
-    private UserDTO userDTO;
+    private UserDTO dto;
 
     @BeforeEach
     void setUp() {
-        userVO = new UserVO();
-        userVO.setUsername("test");
-        userVO.setEmail("john@test.com");
+        vo = new UserVO();
+        vo.setUsername("test");
+        vo.setEmail("john@test.com");
 
-        userDTO = new UserDTO();
-        userDTO.setUsername("test");
-        userDTO.setAccountNonLocked(true);
-        userDTO.setAvatar("steven.jpg");
+        dto = new UserDTO();
+        dto.setUsername("test");
+        dto.setAccountNonLocked(true);
+        dto.setAvatar("steven.jpg");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<UserVO> voPage = new PageImpl<>(List.of(userVO), Mockito.mock(PageRequest.class), 2L);
+        Page<UserVO> voPage = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
                 Mockito.anyBoolean(), eq("test"))).willReturn(voPage);
@@ -97,7 +97,7 @@ class UserControllerTest {
 
     @Test
     void fetch() throws Exception {
-        given(this.userService.fetch(Mockito.anyLong())).willReturn(userVO);
+        given(this.userService.fetch(Mockito.anyLong())).willReturn(vo);
 
         mvc.perform(get("/users/{id}", Mockito.anyLong()))
                 .andExpect(status().isOk())
@@ -116,20 +116,20 @@ class UserControllerTest {
 
     @Test
     void create() throws Exception {
-        given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(userVO);
+        given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(vo);
 
         mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.username").value("test"))
                 .andDo(print()).andReturn();
     }
 
     @Test
     void modify() throws Exception {
-        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(userVO);
+        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(vo);
 
         mvc.perform(put("/users/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -139,7 +139,7 @@ class UserControllerTest {
         given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(put("/users/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }

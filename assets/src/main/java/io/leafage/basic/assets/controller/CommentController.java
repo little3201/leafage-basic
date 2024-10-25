@@ -114,14 +114,14 @@ public class CommentController {
     /**
      * 添加信息
      *
-     * @param commentDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 添加后的信息，异常时返回417状态码
      */
     @PostMapping
-    public ResponseEntity<CommentVO> create(@RequestBody @Valid CommentDTO commentDTO) {
+    public ResponseEntity<CommentVO> create(@RequestBody @Valid CommentDTO dto) {
         CommentVO vo;
         try {
-            vo = commentService.create(commentDTO);
+            vo = commentService.create(dto);
         } catch (Exception e) {
             logger.error("Create comment occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

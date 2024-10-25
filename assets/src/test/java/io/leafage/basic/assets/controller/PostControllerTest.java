@@ -66,27 +66,27 @@ class PostControllerTest {
     @MockBean
     private PostsService postsService;
 
-    private PostDTO postDTO;
-    private PostVO postVO;
+    private PostDTO dto;
+    private PostVO vo;
 
     @BeforeEach
     void setUp() {
         // 构造请求对象
-        postDTO = new PostDTO();
-        postDTO.setTitle("test");
-        postDTO.setTags(Set.of("Code"));
-        postDTO.setTags(Collections.singleton("java"));
-        postDTO.setContent("content");
+        dto = new PostDTO();
+        dto.setTitle("test");
+        dto.setTags(Set.of("Code"));
+        dto.setTags(Collections.singleton("java"));
+        dto.setContent("content");
 
-        postVO = new PostVO();
-        postVO.setTitle(postDTO.getTitle());
-        postVO.setTags(postDTO.getTags());
+        vo = new PostVO();
+        vo.setTitle(dto.getTitle());
+        vo.setTags(dto.getTags());
 
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<PostVO> page = new PageImpl<>(List.of(postVO), Mockito.mock(PageRequest.class), 2L);
+        Page<PostVO> page = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         given(postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"), Mockito.anyBoolean())).willReturn(page);
 
@@ -106,7 +106,7 @@ class PostControllerTest {
 
     @Test
     void fetch() throws Exception {
-        given(postsService.fetch(Mockito.anyLong())).willReturn(postVO);
+        given(postsService.fetch(Mockito.anyLong())).willReturn(vo);
 
         mvc.perform(get("/posts/{id}", Mockito.anyLong())).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
@@ -121,7 +121,7 @@ class PostControllerTest {
 
     @Test
     void details() throws Exception {
-        given(postsService.details(Mockito.anyLong())).willReturn(postVO);
+        given(postsService.details(Mockito.anyLong())).willReturn(vo);
 
         mvc.perform(get("/posts/{id}/details", 1L)).andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
@@ -153,10 +153,10 @@ class PostControllerTest {
 
     @Test
     void create() throws Exception {
-        given(postsService.create(Mockito.any(PostDTO.class))).willReturn(postVO);
+        given(postsService.create(Mockito.any(PostDTO.class))).willReturn(vo);
 
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("test"))
                 .andDo(print()).andReturn();
     }
@@ -166,16 +166,16 @@ class PostControllerTest {
         given(postsService.create(Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void modify() throws Exception {
-        given(postsService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willReturn(postVO);
+        given(postsService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willReturn(vo);
 
         mvc.perform(put("/posts/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -185,7 +185,7 @@ class PostControllerTest {
         given(postsService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(put("/posts/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(postDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }

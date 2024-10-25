@@ -56,13 +56,13 @@ class RoleServiceImplTest {
     @InjectMocks
     private RoleServiceImpl roleService;
 
-    private RoleDTO roleDTO;
+    private RoleDTO dto;
 
     @BeforeEach
     void setUp() {
-        roleDTO = new RoleDTO();
-        roleDTO.setName("role");
-        roleDTO.setDescription("role");
+        dto = new RoleDTO();
+        dto.setName("role");
+        dto.setDescription("role");
     }
 
     @Test
@@ -101,7 +101,7 @@ class RoleServiceImplTest {
 
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
 
-        RoleVO roleVO = roleService.modify(1L, roleDTO);
+        RoleVO roleVO = roleService.modify(1L, dto);
 
         verify(this.roleRepository, times(1)).save(Mockito.any(Role.class));
         Assertions.assertNotNull(roleVO);

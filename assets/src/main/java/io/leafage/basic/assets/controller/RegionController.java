@@ -111,14 +111,14 @@ public class RegionController {
     /**
      * 添加信息
      *
-     * @param regionDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<RegionVO> create(@RequestBody @Valid RegionDTO regionDTO) {
+    public ResponseEntity<RegionVO> create(@RequestBody @Valid RegionDTO dto) {
         RegionVO vo;
         try {
-            vo = regionService.create(regionDTO);
+            vo = regionService.create(dto);
         } catch (Exception e) {
             logger.error("Create region occurred an error: ", e);
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
@@ -130,14 +130,14 @@ public class RegionController {
      * 修改信息
      *
      * @param id        主键
-     * @param regionDTO 要修改的数据
+     * @param dto 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<RegionVO> modify(@PathVariable Long id, @RequestBody RegionDTO regionDTO) {
+    public ResponseEntity<RegionVO> modify(@PathVariable Long id, @RequestBody RegionDTO dto) {
         RegionVO regionVO;
         try {
-            regionVO = regionService.modify(id, regionDTO);
+            regionVO = regionService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify region occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

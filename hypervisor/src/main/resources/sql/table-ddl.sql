@@ -57,7 +57,7 @@ CREATE TABLE users
 (
     id                     bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username               varchar(50) UNIQUE NOT NULL,
-    full_name               varchar(50),
+    full_name              varchar(50),
     password               varchar(100)       NOT NULL,
     email                  varchar(50),
     enabled                boolean            NOT NULL DEFAULT true,
@@ -264,6 +264,7 @@ CREATE TABLE privileges
     redirect           varchar(255),
     component          varchar(255),
     icon               varchar(127),
+    actions            varchar(255),
     description        varchar(255),
     enabled            boolean     NOT NULL DEFAULT true,
     created_by         varchar(50),
@@ -289,6 +290,8 @@ COMMENT
 ON COLUMN privileges.component IS '组件路径';
 COMMENT
 ON COLUMN privileges.icon IS '图标';
+COMMENT
+ON COLUMN privileges.actions IS '操作';
 COMMENT
 ON COLUMN privileges.description IS '描述';
 COMMENT

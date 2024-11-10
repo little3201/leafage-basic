@@ -17,9 +17,12 @@
 package io.leafage.basic.hypervisor.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import top.leafage.common.servlet.audit.AuditMetadata;
+
+import java.util.Set;
 
 /**
  * model class for privilege.
@@ -56,6 +59,9 @@ public class Privilege extends AuditMetadata {
      * 图标
      */
     private String icon;
+
+    @ElementCollection
+    private Set<String> actions;
 
     private boolean hidden;
 
@@ -171,6 +177,14 @@ public class Privilege extends AuditMetadata {
      */
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public Set<String> getActions() {
+        return actions;
+    }
+
+    public void setActions(Set<String> actions) {
+        this.actions = actions;
     }
 
     /**

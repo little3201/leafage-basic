@@ -24,6 +24,7 @@ CREATE TABLE groups
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     group_name         varchar(50) NOT NULL,
     superior_id        bigint,
+    description        varchar(255),
     enabled            boolean     NOT NULL DEFAULT true,
     created_by         varchar(50),
     created_date       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -31,13 +32,17 @@ CREATE TABLE groups
     last_modified_date timestamp
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE groups IS '用户组表';
 COMMENT
 ON COLUMN groups.id IS '主键';
 COMMENT
 ON COLUMN groups.group_name IS '名称';
+COMMENT
+ON COLUMN groups.superior_id IS '上级ID';
+COMMENT
+ON COLUMN groups.description IS '描述';
 COMMENT
 ON COLUMN groups.enabled IS '是否启用';
 COMMENT
@@ -71,7 +76,7 @@ CREATE TABLE users
     last_modified_date     timestamp
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE users IS '用户表';
 COMMENT
@@ -113,7 +118,7 @@ CREATE TABLE authorities
     CONSTRAINT fk_authorities_users FOREIGN KEY (username) references users (username)
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE authorities IS '用户权限表';
 COMMENT
@@ -142,7 +147,7 @@ CREATE TABLE roles
     last_modified_date timestamp
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE roles IS '角色表';
 COMMENT
@@ -175,7 +180,7 @@ CREATE TABLE group_members
     CONSTRAINT fk_group_members_users FOREIGN KEY (username) references users (username)
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE group_members IS '用户组成员关系表';
 COMMENT
@@ -197,7 +202,7 @@ CREATE TABLE group_authorities
     CONSTRAINT fk_group_authorities_groups FOREIGN KEY (group_id) references groups (id)
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE group_authorities IS '用户组权限关系表';
 COMMENT
@@ -219,7 +224,7 @@ CREATE TABLE persistent_logins
     last_used timestamp   not null
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE persistent_logins IS '持久化登录表';
 COMMENT
@@ -244,7 +249,7 @@ CREATE TABLE role_members
     CONSTRAINT fk_role_members_users FOREIGN KEY (username) REFERENCES users (username)
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE role_members IS '角色成员关系表';
 COMMENT
@@ -267,7 +272,7 @@ CREATE TABLE privileges
     redirect           varchar(255),
     component          varchar(255),
     icon               varchar(127),
-    actions            varchar(255),
+    actions            text[],
     description        varchar(255),
     enabled            boolean     NOT NULL DEFAULT true,
     created_by         varchar(50),
@@ -276,7 +281,7 @@ CREATE TABLE privileges
     last_modified_date timestamp
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE privileges IS '权限表';
 COMMENT
@@ -293,6 +298,8 @@ COMMENT
 ON COLUMN privileges.component IS '组件路径';
 COMMENT
 ON COLUMN privileges.icon IS '图标';
+COMMENT
+ON COLUMN privileges.actions IS '操作按钮';
 COMMENT
 ON COLUMN privileges.description IS '描述';
 COMMENT
@@ -319,7 +326,7 @@ CREATE TABLE role_privileges
     CONSTRAINT fk_role_privileges_privileges FOREIGN KEY (privilege_id) REFERENCES privileges (id)
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE role_privileges IS '角色权限关系表';
 COMMENT
@@ -346,7 +353,7 @@ CREATE TABLE dictionaries
     last_modified_date timestamp
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE dictionaries IS '字典表';
 COMMENT
@@ -387,7 +394,7 @@ CREATE TABLE messages
     last_modified_date timestamp
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE messages IS '消息表';
 COMMENT
@@ -421,7 +428,7 @@ DROP TABLE IF EXISTS access_logs;
 CREATE TABLE access_logs
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    api                varchar(10),
+    url                varchar(255),
     http_method        varchar(10),
     params             varchar(255),
     body               json,
@@ -437,19 +444,19 @@ CREATE TABLE access_logs
     last_modified_date timestamp
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE access_logs IS '访问日志表';
 COMMENT
 ON COLUMN access_logs.id IS '主键';
 COMMENT
-ON COLUMN access_logs.api IS '内容';
+ON COLUMN access_logs.url IS '接口';
 COMMENT
-ON COLUMN access_logs.http_method IS '内容';
+ON COLUMN access_logs.http_method IS 'http方法';
 COMMENT
-ON COLUMN access_logs.params IS '内容';
+ON COLUMN access_logs.params IS '参数';
 COMMENT
-ON COLUMN access_logs.body IS '内容';
+ON COLUMN access_logs.body IS '请求体';
 COMMENT
 ON COLUMN access_logs.ip IS 'IP地址';
 COMMENT
@@ -457,7 +464,7 @@ ON COLUMN access_logs.location IS '位置';
 COMMENT
 ON COLUMN access_logs.status_code IS 'HTTP状态码';
 COMMENT
-ON COLUMN access_logs.response_times IS '响应时间';
+ON COLUMN access_logs.response_times IS '响应时长';
 COMMENT
 ON COLUMN access_logs.response_message IS '响应消息';
 COMMENT
@@ -479,20 +486,19 @@ DROP TABLE IF EXISTS operation_logs;
 CREATE TABLE operation_logs
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    operation          varchar(255),
+    os                 varchar(50),
+    browser            varchar(50),
     ip                 inet,
     location           varchar(50),
     content            varchar(1000),
     user_agent         varchar(255),
-    http_method        varchar(10),
-    url                varchar(255),
     status_code        integer,
-    operated_times     bigint,
+    operated_time      timestamp,
     response_message   varchar(255),
     referer            varchar(255),
     session_id         varchar(50),
     device_type        varchar(20),
-    os                 varchar(50),
-    browser            varchar(50),
     enabled            boolean   NOT NULL DEFAULT true,
     created_by         varchar(50),
     created_date       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -500,11 +506,17 @@ CREATE TABLE operation_logs
     last_modified_date timestamp
 );
 
--- Add comment to the schema and columns
+-- Add comment to the table and columns
 COMMENT
 ON TABLE operation_logs IS '访问日志表';
 COMMENT
 ON COLUMN operation_logs.id IS '主键';
+COMMENT
+ON COLUMN operation_logs.operation IS '操作';
+COMMENT
+ON COLUMN operation_logs.os IS '操作系统';
+COMMENT
+ON COLUMN operation_logs.browser IS '浏览器';
 COMMENT
 ON COLUMN operation_logs.ip IS 'IP地址';
 COMMENT
@@ -514,23 +526,17 @@ ON COLUMN operation_logs.content IS '内容';
 COMMENT
 ON COLUMN operation_logs.user_agent IS '用户代理信息';
 COMMENT
-ON COLUMN operation_logs.http_method IS 'HTTP方法';
-COMMENT
-ON COLUMN operation_logs.url IS '请求URL';
-COMMENT
 ON COLUMN operation_logs.status_code IS 'HTTP状态码';
 COMMENT
 ON COLUMN operation_logs.operated_times IS '操作时间';
+COMMENT
+ON COLUMN operation_logs.response_message IS '响应消息';
 COMMENT
 ON COLUMN operation_logs.referer IS '来源页面';
 COMMENT
 ON COLUMN operation_logs.session_id IS '会话标识符';
 COMMENT
 ON COLUMN operation_logs.device_type IS '设备类型';
-COMMENT
-ON COLUMN operation_logs.os IS '操作系统';
-COMMENT
-ON COLUMN operation_logs.browser IS '浏览器';
 COMMENT
 ON COLUMN operation_logs.enabled IS '是否启用';
 COMMENT

@@ -16,11 +16,10 @@
  */
 package io.leafage.basic.assets.domain;
 
-import top.leafage.common.servlet.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import top.leafage.common.servlet.audit.AuditMetadata;
 
 /**
  * model class for posts content.
@@ -28,7 +27,7 @@ import jakarta.persistence.Table;
  * @author wq li
  */
 @Entity
-@Table(name = "post_content", indexes = {@Index(name = "uni_post_content_post_id", columnList = "post_id")})
+@Table(name = "post_content")
 public class PostContent extends AuditMetadata {
 
     /**

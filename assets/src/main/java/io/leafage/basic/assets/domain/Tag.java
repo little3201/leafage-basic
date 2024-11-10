@@ -16,11 +16,10 @@
  */
 package io.leafage.basic.assets.domain;
 
-import top.leafage.common.servlet.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import top.leafage.common.servlet.audit.AuditMetadata;
 
 /**
  * model class for tag.
@@ -28,7 +27,7 @@ import jakarta.persistence.Table;
  * @author wq li
  */
 @Entity
-@Table(name = "tags", indexes = {@Index(name = "uni_tags_name", columnList = "name")})
+@Table(name = "tags")
 public class Tag extends AuditMetadata {
 
 

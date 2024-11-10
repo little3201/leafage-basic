@@ -103,7 +103,7 @@ public class MessageController {
             vo = messageService.create(dto);
         } catch (Exception e) {
             logger.info("Create message occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }

@@ -141,7 +141,7 @@ public class DictionaryController {
             vo = dictionaryService.create(dto);
         } catch (Exception e) {
             logger.error("Create dictionary occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
@@ -160,7 +160,7 @@ public class DictionaryController {
             vo = dictionaryService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify dictionary occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.accepted().body(vo);
     }

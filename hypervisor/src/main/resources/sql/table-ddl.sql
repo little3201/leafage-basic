@@ -18,7 +18,7 @@
 -- Drop table if exists groups
 DROP TABLE IF EXISTS groups;
 
--- Create table groups
+-- Table structure groups
 CREATE TABLE groups
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -31,7 +31,7 @@ CREATE TABLE groups
     last_modified_date timestamp
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE groups IS '用户组表';
 COMMENT
@@ -52,7 +52,7 @@ ON COLUMN groups.last_modified_date IS '最后修改时间';
 -- Drop table if exists users
 DROP TABLE IF EXISTS users;
 
--- Create table users
+-- Table structure users
 CREATE TABLE users
 (
     id                     bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -60,6 +60,7 @@ CREATE TABLE users
     full_name              varchar(50),
     password               varchar(100)       NOT NULL,
     email                  varchar(50),
+    avatar                 varchar(255),
     enabled                boolean            NOT NULL DEFAULT true,
     account_non_locked     boolean,
     account_expires_at     timestamp,
@@ -70,7 +71,7 @@ CREATE TABLE users
     last_modified_date     timestamp
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE users IS '用户表';
 COMMENT
@@ -103,7 +104,7 @@ ON COLUMN users.last_modified_date IS '最后修改时间';
 -- Drop table if exists authorities
 DROP TABLE IF EXISTS authorities;
 
--- Create table authorities
+-- Table structure authorities
 CREATE TABLE authorities
 (
     id        bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -112,7 +113,7 @@ CREATE TABLE authorities
     CONSTRAINT fk_authorities_users FOREIGN KEY (username) references users (username)
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE authorities IS '用户权限表';
 COMMENT
@@ -128,7 +129,7 @@ CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
 -- Drop table if exists roles
 DROP TABLE IF EXISTS roles;
 
--- Create table roles
+-- Table structure roles
 CREATE TABLE roles
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -141,7 +142,7 @@ CREATE TABLE roles
     last_modified_date timestamp
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE roles IS '角色表';
 COMMENT
@@ -164,16 +165,17 @@ ON COLUMN roles.last_modified_date IS '最后修改时间';
 -- Drop table if exists group_members
 DROP TABLE IF EXISTS group_members;
 
--- Create table group_members
+-- Table structure group_members
 CREATE TABLE group_members
 (
     id       bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     group_id bigint      NOT NULL,
     username varchar(50) NOT NULL,
-    CONSTRAINT fk_group_members_group foreign key (group_id) references groups (id)
+    CONSTRAINT fk_group_members_groups foreign key (group_id) references groups (id),
+    CONSTRAINT fk_group_members_users FOREIGN KEY (username) references users (username)
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE group_members IS '用户组成员关系表';
 COMMENT
@@ -186,16 +188,16 @@ ON COLUMN group_members.username IS '用户名';
 -- Drop table if exists group_authorities
 DROP TABLE IF EXISTS group_authorities;
 
--- Create table group_authorities
+-- Table structure group_authorities
 CREATE TABLE group_authorities
 (
     id        bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     group_id  bigint      NOT NULL,
     authority varchar(50) NOT NULL,
-    CONSTRAINT fk_group_authorities_group FOREIGN KEY (group_id) references groups (id)
+    CONSTRAINT fk_group_authorities_groups FOREIGN KEY (group_id) references groups (id)
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE group_authorities IS '用户组权限关系表';
 COMMENT
@@ -208,7 +210,7 @@ ON COLUMN group_authorities.authority IS '权限';
 -- Drop table if exists persistent_logins
 DROP TABLE IF EXISTS persistent_logins;
 
--- Create table persistent_logins
+-- Table structure persistent_logins
 CREATE TABLE persistent_logins
 (
     series    varchar(64) primary key,
@@ -217,7 +219,7 @@ CREATE TABLE persistent_logins
     last_used timestamp   not null
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE persistent_logins IS '持久化登录表';
 COMMENT
@@ -232,16 +234,17 @@ ON COLUMN persistent_logins.last_used IS '最后使用时间';
 -- Drop table if exists role_members
 DROP TABLE IF EXISTS role_members;
 
--- Create table role_members
+-- Table structure role_members
 CREATE TABLE role_members
 (
     id       bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     role_id  bigint      NOT NULL,
     username varchar(50) NOT NULL,
-    CONSTRAINT fk_role_members_role FOREIGN KEY (role_id) REFERENCES roles (id)
+    CONSTRAINT fk_role_members_roles FOREIGN KEY (role_id) REFERENCES roles (id),
+    CONSTRAINT fk_role_members_users FOREIGN KEY (username) REFERENCES users (username)
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE role_members IS '角色成员关系表';
 COMMENT
@@ -254,7 +257,7 @@ ON COLUMN role_members.username IS '用户名';
 -- Drop table if exists privileges
 DROP TABLE IF EXISTS privileges;
 
--- Create table privileges
+-- Table structure privileges
 CREATE TABLE privileges
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -273,7 +276,7 @@ CREATE TABLE privileges
     last_modified_date timestamp
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE privileges IS '权限表';
 COMMENT
@@ -291,8 +294,6 @@ ON COLUMN privileges.component IS '组件路径';
 COMMENT
 ON COLUMN privileges.icon IS '图标';
 COMMENT
-ON COLUMN privileges.actions IS '操作';
-COMMENT
 ON COLUMN privileges.description IS '描述';
 COMMENT
 ON COLUMN privileges.enabled IS '是否启用';
@@ -308,17 +309,17 @@ ON COLUMN privileges.last_modified_date IS '最后修改时间';
 -- Drop table if exists role_privileges
 DROP TABLE IF EXISTS role_privileges;
 
--- Create table role_privileges
+-- Table structure role_privileges
 CREATE TABLE role_privileges
 (
     id           bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     role_id      bigint NOT NULL,
     privilege_id bigint NOT NULL,
-    CONSTRAINT fk_role_privileges_role FOREIGN KEY (role_id) REFERENCES roles (id),
-    CONSTRAINT fk_role_privileges_privilege FOREIGN KEY (privilege_id) REFERENCES privileges (id)
+    CONSTRAINT fk_role_privileges_roles FOREIGN KEY (role_id) REFERENCES roles (id),
+    CONSTRAINT fk_role_privileges_privileges FOREIGN KEY (privilege_id) REFERENCES privileges (id)
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE role_privileges IS '角色权限关系表';
 COMMENT
@@ -331,7 +332,7 @@ ON COLUMN role_privileges.privilege_id IS '权限ID';
 -- Drop table if exists dictionaries
 DROP TABLE IF EXISTS dictionaries;
 
--- Create table dictionaries
+-- Table structure dictionaries
 CREATE TABLE dictionaries
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -345,7 +346,7 @@ CREATE TABLE dictionaries
     last_modified_date timestamp
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE dictionaries IS '字典表';
 COMMENT
@@ -370,7 +371,7 @@ ON COLUMN dictionaries.last_modified_date IS '最后修改时间';
 -- Drop table if exists messages
 DROP TABLE IF EXISTS messages;
 
--- Create table messages
+-- Table structure messages
 CREATE TABLE messages
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -386,7 +387,7 @@ CREATE TABLE messages
     last_modified_date timestamp
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE messages IS '消息表';
 COMMENT
@@ -416,12 +417,12 @@ ON COLUMN messages.last_modified_date IS '最后修改时间';
 -- Drop table if exists access_logs
 DROP TABLE IF EXISTS access_logs;
 
--- Create table access_logs
+-- Table structure access_logs
 CREATE TABLE access_logs
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     api                varchar(10),
-    method             varchar(10),
+    http_method        varchar(10),
     params             varchar(255),
     body               json,
     ip                 inet,
@@ -436,7 +437,7 @@ CREATE TABLE access_logs
     last_modified_date timestamp
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE access_logs IS '访问日志表';
 COMMENT
@@ -474,7 +475,7 @@ ON COLUMN access_logs.last_modified_date IS '最后修改时间';
 -- Drop table if exists operation_logs
 DROP TABLE IF EXISTS operation_logs;
 
--- Create table operation_logs
+-- Table structure operation_logs
 CREATE TABLE operation_logs
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -499,7 +500,7 @@ CREATE TABLE operation_logs
     last_modified_date timestamp
 );
 
--- Add comment to the table and columns
+-- Add comment to the schema and columns
 COMMENT
 ON TABLE operation_logs IS '访问日志表';
 COMMENT
@@ -519,7 +520,7 @@ ON COLUMN operation_logs.url IS '请求URL';
 COMMENT
 ON COLUMN operation_logs.status_code IS 'HTTP状态码';
 COMMENT
-ON COLUMN operation_logs.operated_time IS '操作时间';
+ON COLUMN operation_logs.operated_times IS '操作时间';
 COMMENT
 ON COLUMN operation_logs.referer IS '来源页面';
 COMMENT

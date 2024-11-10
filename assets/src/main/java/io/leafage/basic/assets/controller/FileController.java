@@ -105,7 +105,7 @@ public class FileController {
             vo = fileRecordService.create(dto);
         } catch (Exception e) {
             logger.error("Create region occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }

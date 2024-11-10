@@ -115,7 +115,7 @@ public class RoleController {
             vo = roleService.create(dto);
         } catch (Exception e) {
             logger.error("Create role occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
@@ -134,7 +134,7 @@ public class RoleController {
             vo = roleService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify role occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.accepted().body(vo);
     }
@@ -151,7 +151,7 @@ public class RoleController {
             roleService.remove(id);
         } catch (Exception e) {
             logger.error("Remove role occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();
     }
@@ -206,7 +206,7 @@ public class RoleController {
             voList = rolePrivilegesService.relation(id, privileges);
         } catch (Exception e) {
             logger.error("Relation role privileges occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.accepted().body(voList);
     }

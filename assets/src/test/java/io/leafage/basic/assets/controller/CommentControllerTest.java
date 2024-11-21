@@ -32,6 +32,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -69,7 +70,7 @@ class CommentControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new CommentVO();
+        vo = new CommentVO(1L, true, Instant.now());
         vo.setContent("content");
         vo.setPostId(1L);
 

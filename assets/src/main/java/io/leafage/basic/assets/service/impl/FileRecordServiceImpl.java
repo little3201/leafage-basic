@@ -58,7 +58,7 @@ public class FileRecordServiceImpl implements FileRecordService {
         };
 
         return fileRecordRepository.findAll(spec, pageable)
-                .map(fileRecord -> convert(fileRecord, FileRecordVO.class));
+                .map(fileRecord -> convertToVO(fileRecord, FileRecordVO.class));
     }
 
     @Override

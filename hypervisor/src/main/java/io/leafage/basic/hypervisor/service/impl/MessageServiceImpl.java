@@ -67,7 +67,7 @@ public class MessageServiceImpl implements MessageService {
         };
 
         return messageRepository.findAll(spec, pageable)
-                .map(message -> convert(message, MessageVO.class));
+                .map(message -> convertToVO(message, MessageVO.class));
     }
 
     /**
@@ -78,7 +78,7 @@ public class MessageServiceImpl implements MessageService {
         Assert.notNull(id, "id must not be null.");
 
         return messageRepository.findById(id)
-                .map(message -> convert(message, MessageVO.class)).orElse(null);
+                .map(message -> convertToVO(message, MessageVO.class)).orElse(null);
     }
 
     /**
@@ -86,12 +86,10 @@ public class MessageServiceImpl implements MessageService {
      */
     @Override
     public MessageVO create(MessageDTO dto) {
-        Message message = new Message();
-        BeanCopier copier = BeanCopier.create(MessageDTO.class, Message.class, false);
-        copier.copy(dto, message, null);
+        Message message = convertToDomain(dto, Message.class);
 
-        messageRepository.saveAndFlush(message);
-        return convert(message, MessageVO.class);
+        messageRepository.save(message);
+        return convertToVO(message, MessageVO.class);
     }
 
 }

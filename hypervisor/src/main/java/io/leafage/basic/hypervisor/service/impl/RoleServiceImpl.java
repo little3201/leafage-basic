@@ -20,7 +20,6 @@ import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
 import jakarta.persistence.criteria.Predicate;
-import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,7 +29,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * role service impl.
@@ -67,7 +65,7 @@ public class RoleServiceImpl implements RoleService {
         };
 
         return roleRepository.findAll(spec, pageable)
-                .map(role -> convert(role, RoleVO.class));
+                .map(role -> convertToVO(role, RoleVO.class));
     }
 
     /**
@@ -78,7 +76,12 @@ public class RoleServiceImpl implements RoleService {
         Assert.notNull(id, "id must not be null.");
 
         return roleRepository.findById(id)
-                .map(role -> convert(role, RoleVO.class)).orElse(null);
+                .map(role -> convertToVO(role, RoleVO.class)).orElse(null);
+    }
+
+    @Override
+    public boolean enable(Long id) {
+        return roleRepository.updateEnabledById(id);
     }
 
     @Override
@@ -94,12 +97,10 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public RoleVO create(RoleDTO dto) {
-        Role role = new Role();
-        BeanCopier copier = BeanCopier.create(RoleDTO.class, Role.class, false);
-        copier.copy(dto, role, null);
+        Role role = convertToDomain(dto, Role.class);
 
-        role = roleRepository.saveAndFlush(role);
-        return convert(role, RoleVO.class);
+        roleRepository.save(role);
+        return convertToVO(role, RoleVO.class);
     }
 
     /**
@@ -108,15 +109,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleVO modify(Long id, RoleDTO dto) {
         Assert.notNull(id, "id must not be null.");
-        Role role = roleRepository.findById(id).orElse(null);
-        if (role == null) {
-            throw new NoSuchElementException("当前操作数据不存在...");
-        }
-        BeanCopier copier = BeanCopier.create(RoleDTO.class, Role.class, false);
-        copier.copy(dto, role, null);
-
-        role = roleRepository.save(role);
-        return convert(role, RoleVO.class);
+        return roleRepository.findById(id).map(existing -> {
+            Role role = convert(dto, existing);
+            role = roleRepository.save(role);
+            return convertToVO(role, RoleVO.class);
+        }).orElseThrow();
     }
 
     /**

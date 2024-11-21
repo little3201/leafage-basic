@@ -16,53 +16,43 @@
 package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.DictionaryBO;
+import top.leafage.common.ReadonlyMetadata;
+
+import java.time.Instant;
 
 /**
  * vo class for dictionary.
  *
  * @author wq li
  */
-public class DictionaryVO extends DictionaryBO {
+public class DictionaryVO extends DictionaryBO implements ReadonlyMetadata {
 
-    private Long id;
+    private final Long id;
 
-    private boolean enabled;
+    private final boolean enabled;
 
+    private final Instant lastModifiedDate;
 
-    /**
-     * <p>Getter for the field <code>id</code>.</p>
-     *
-     * @return a {@link java.lang.Long} object
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * <p>Setter for the field <code>id</code>.</p>
-     *
-     * @param id a {@link java.lang.Long} object
-     */
-    public void setId(Long id) {
+    public DictionaryVO(Long id, boolean enabled, Instant lastModifiedDate) {
         this.id = id;
-    }
-
-    /**
-     * <p>isEnabled.</p>
-     *
-     * @return a boolean
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * <p>Setter for the field <code>enabled</code>.</p>
-     *
-     * @param enabled a boolean
-     */
-    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
     }
 
 }

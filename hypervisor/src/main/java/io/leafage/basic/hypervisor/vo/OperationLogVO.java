@@ -16,34 +16,43 @@
 package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.OperationLogBO;
+import top.leafage.common.ReadonlyMetadata;
+
+import java.time.Instant;
 
 /**
  * vo class for operation log.
  *
  * @author wq li
  */
-public class OperationLogVO extends OperationLogBO {
+public class OperationLogVO extends OperationLogBO implements ReadonlyMetadata {
 
+    private final Long id;
 
-    private Long id;
+    private final boolean enabled;
 
+    private final Instant lastModifiedDate;
 
-    /**
-     * <p>Getter for the field <code>id</code>.</p>
-     *
-     * @return a {@link Long} object
-     */
-    public Long getId() {
-        return id;
+    public OperationLogVO(Long id, boolean enabled, Instant lastModifiedDate) {
+        this.id = id;
+        this.enabled = enabled;
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    /**
-     * <p>Setter for the field <code>id</code>.</p>
-     *
-     * @param id a {@link Long} object
-     */
-    public void setId(Long id) {
-        this.id = id;
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
     }
 
 }

@@ -36,6 +36,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import top.leafage.common.TreeNode;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -76,7 +77,7 @@ class GroupControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new GroupVO();
+        vo = new GroupVO(1L, true, Instant.now());
         vo.setName("test");
 
         dto = new GroupDTO();

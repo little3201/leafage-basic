@@ -34,6 +34,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -69,9 +70,8 @@ class TagControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new TagVO();
+        vo = new TagVO(1L, true, Instant.now());
         vo.setName("test");
-        vo.setCount(21L);
 
         dto = new TagDTO();
         dto.setName("test");

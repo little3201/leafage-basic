@@ -71,7 +71,7 @@ public class RegionServiceImpl implements RegionService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return regionRepository.findAll(spec, pageable).map(region -> convert(region, RegionVO.class));
+        return regionRepository.findAll(spec, pageable).map(region -> convertToVO(region, RegionVO.class));
     }
 
     /**
@@ -84,7 +84,7 @@ public class RegionServiceImpl implements RegionService {
         if (region == null) {
             return null;
         }
-        return convert(region, RegionVO.class);
+        return convertToVO(region, RegionVO.class);
     }
 
     /**
@@ -109,7 +109,7 @@ public class RegionServiceImpl implements RegionService {
         copier.copy(dto, region, null);
 
         regionRepository.saveAndFlush(region);
-        return convert(region, RegionVO.class);
+        return convertToVO(region, RegionVO.class);
     }
 
     /**
@@ -126,7 +126,7 @@ public class RegionServiceImpl implements RegionService {
         copier.copy(dto, region, null);
 
         regionRepository.save(region);
-        return convert(region, RegionVO.class);
+        return convertToVO(region, RegionVO.class);
     }
 
     /**

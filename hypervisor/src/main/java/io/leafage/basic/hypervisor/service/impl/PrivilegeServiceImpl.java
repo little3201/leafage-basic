@@ -17,12 +17,20 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.domain.Privilege;
 import io.leafage.basic.hypervisor.domain.RoleMembers;
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
+import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
+import io.leafage.basic.hypervisor.vo.PrivilegeVO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
@@ -56,6 +64,24 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      * {@inheritDoc}
      */
     @Override
+    public Page<PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return privilegeRepository.findAllBySuperiorIdIsNull(pageable)
+                .map(privilege -> {
+                    PrivilegeVO vo = convertToVO(privilege, PrivilegeVO.class);
+                    long count = privilegeRepository.countBySuperiorId(privilege.getId());
+                    vo.setCount(count);
+                    return vo;
+                });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<TreeNode> tree(String username) {
         List<Privilege> privileges = new ArrayList<>();
         List<RoleMembers> roleMembers = roleMembersRepository.findAllByUsername(username);
@@ -72,7 +98,52 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
                 });
             }
         }
-        return convertTree(privileges);
+        return this.convertTree(privileges);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PrivilegeVO> subset(Long superiorId) {
+        return privilegeRepository.findAllBySuperiorId(superiorId).stream()
+                .map(privilege -> {
+                    PrivilegeVO vo = convertToVO(privilege, PrivilegeVO.class);
+                    long count = privilegeRepository.countBySuperiorId(privilege.getId());
+                    vo.setCount(count);
+                    return vo;
+                }).toList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PrivilegeVO fetch(Long id) {
+        Assert.notNull(id, "id must not be null.");
+
+        return privilegeRepository.findById(id)
+                .map(privilege -> convertToVO(privilege, PrivilegeVO.class))
+                .orElse(null);
+    }
+
+    @Override
+    public boolean enable(Long id) {
+        return privilegeRepository.updateEnabledById(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PrivilegeVO modify(Long id, PrivilegeDTO dto) {
+        Assert.notNull(id, "id must not be null.");
+        return privilegeRepository.findById(id).map(existing -> {
+                    Privilege privilege = convert(dto, existing);
+                    privilege = privilegeRepository.save(privilege);
+                    return convertToVO(privilege, PrivilegeVO.class);
+                })
+                .orElseThrow();
     }
 
     /**

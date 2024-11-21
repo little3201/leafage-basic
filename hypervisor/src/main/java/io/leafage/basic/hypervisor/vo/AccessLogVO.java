@@ -16,34 +16,43 @@
 package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.AccessLogBO;
+import top.leafage.common.ReadonlyMetadata;
+
+import java.time.Instant;
 
 /**
  * vo class for access log.
  *
  * @author wq li
  */
-public class AccessLogVO extends AccessLogBO {
+public class AccessLogVO extends AccessLogBO implements ReadonlyMetadata {
 
+    private final Long id;
 
-    private Long id;
+    private final boolean enabled;
 
+    private final Instant lastModifiedDate;
 
-    /**
-     * <p>Getter for the field <code>id</code>.</p>
-     *
-     * @return a {@link java.lang.Long} object
-     */
-    public Long getId() {
-        return id;
+    public AccessLogVO(Long id, boolean enabled, Instant lastModifiedDate) {
+        this.id = id;
+        this.enabled = enabled;
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    /**
-     * <p>Setter for the field <code>id</code>.</p>
-     *
-     * @param id a {@link java.lang.Long} object
-     */
-    public void setId(Long id) {
-        this.id = id;
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
     }
 
 }

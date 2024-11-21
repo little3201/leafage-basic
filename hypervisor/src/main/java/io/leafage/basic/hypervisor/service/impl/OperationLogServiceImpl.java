@@ -21,7 +21,6 @@ import io.leafage.basic.hypervisor.repository.OperationLogRepository;
 import io.leafage.basic.hypervisor.service.OperationLogService;
 import io.leafage.basic.hypervisor.vo.OperationLogVO;
 import jakarta.persistence.criteria.Predicate;
-import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -67,7 +66,7 @@ public class OperationLogServiceImpl implements OperationLogService {
         };
 
         return operationLogRepository.findAll(spec, pageable)
-                .map(operationLog -> convert(operationLog, OperationLogVO.class));
+                .map(operationLog -> convertToVO(operationLog, OperationLogVO.class));
     }
 
     @Override
@@ -75,7 +74,8 @@ public class OperationLogServiceImpl implements OperationLogService {
         Assert.notNull(id, "id must not be null.");
 
         return operationLogRepository.findById(id)
-                .map(operationLog -> convert(operationLog, OperationLogVO.class)).orElse(null);
+                .map(operationLog -> convertToVO(operationLog, OperationLogVO.class))
+                .orElse(null);
     }
 
     /**
@@ -83,12 +83,10 @@ public class OperationLogServiceImpl implements OperationLogService {
      */
     @Override
     public OperationLogVO create(OperationLogDTO dto) {
-        OperationLog operationLog = new OperationLog();
-        BeanCopier copier = BeanCopier.create(OperationLogDTO.class, OperationLog.class, false);
-        copier.copy(dto, operationLog, null);
+        OperationLog operationLog = convertToDomain(dto, OperationLog.class);
 
-        operationLogRepository.saveAndFlush(operationLog);
-        return convert(operationLog, OperationLogVO.class);
+        operationLogRepository.save(operationLog);
+        return convertToVO(operationLog, OperationLogVO.class);
     }
 
     @Override

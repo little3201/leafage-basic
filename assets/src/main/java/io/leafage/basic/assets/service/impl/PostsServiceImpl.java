@@ -33,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -188,13 +187,7 @@ public class PostsServiceImpl implements PostsService {
      * @return 输出转换后的vo对象
      */
     private PostVO convert(Post post) {
-        PostVO vo = new PostVO();
-        BeanCopier copier = BeanCopier.create(Post.class, PostVO.class, false);
-        copier.copy(post, vo, null);
-
-        // get lastModifiedDate
-        Optional<Instant> optionalInstant = post.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
+        PostVO vo = convertToVO(post, PostVO.class);
 
         List<TagPosts> tagPostsList = tagPostsRepository.findAllByPostId(post.getId());
         // 转换 tags

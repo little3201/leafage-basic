@@ -26,9 +26,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.time.Instant;
-import java.util.Optional;
-
 /**
  * tag service impl.
  *
@@ -57,7 +54,12 @@ public class TagServiceImpl implements TagService {
     @Override
     public Page<TagVO> retrieve(int page, int size, String sortBy, boolean descending) {
         Pageable pageable = pageable(page, size, sortBy, descending);
-        return tagRepository.findAll(pageable).map(this::convert);
+        return tagRepository.findAll(pageable).map(tag -> {
+            TagVO vo = convertToVO(tag, TagVO.class);
+            long count = tagPostsRepository.countByTagId(tag.getId());
+            vo.setCount(count);
+            return vo;
+        });
     }
 
     /**
@@ -70,7 +72,7 @@ public class TagServiceImpl implements TagService {
         if (tag == null) {
             return null;
         }
-        return this.convert(tag);
+        return convertToVO(tag, TagVO.class);
     }
 
     /**
@@ -95,7 +97,7 @@ public class TagServiceImpl implements TagService {
         copier.copy(dto, tag, null);
 
         tag = tagRepository.saveAndFlush(tag);
-        return this.convert(tag);
+        return convertToVO(tag, TagVO.class);
     }
 
     /**
@@ -112,7 +114,7 @@ public class TagServiceImpl implements TagService {
         copier.copy(dto, tag, null);
 
         tag = tagRepository.save(tag);
-        return this.convert(tag);
+        return convertToVO(tag, TagVO.class);
     }
 
     /**
@@ -125,23 +127,4 @@ public class TagServiceImpl implements TagService {
         tagRepository.deleteById(id);
     }
 
-    /**
-     * 对象转换为输出结果对象
-     *
-     * @param tag 信息
-     * @return 输出转换后的vo对象
-     */
-    private TagVO convert(Tag tag) {
-        TagVO vo = new TagVO();
-        BeanCopier copier = BeanCopier.create(Tag.class, TagVO.class, false);
-        copier.copy(tag, vo, null);
-
-        // get last modified date
-        Optional<Instant> optionalInstant = tag.getLastModifiedDate();
-        optionalInstant.ifPresent(vo::setLastModifiedDate);
-
-        long count = tagPostsRepository.countByTagId(tag.getId());
-        vo.setCount(count);
-        return vo;
-    }
 }

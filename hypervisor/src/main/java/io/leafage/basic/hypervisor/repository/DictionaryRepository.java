@@ -18,6 +18,8 @@ package io.leafage.basic.hypervisor.repository;
 import io.leafage.basic.hypervisor.domain.Dictionary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -56,4 +58,13 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long>, J
      */
     List<Dictionary> findAllBySuperiorId(Long superiorId);
 
+    /**
+     * Toggles the enabled status of a record by its ID.
+     *
+     * @param id The ID of the record.
+     * @return true if the update was successful, false otherwise.
+     */
+    @Modifying
+    @Query("UPDATE Dictionary t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
+    boolean updateEnabledById(Long id);
 }

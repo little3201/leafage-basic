@@ -33,6 +33,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -69,17 +70,16 @@ class PostControllerTest {
 
     @BeforeEach
     void setUp() {
+        vo = new PostVO(1L, true, Instant.now());
+        vo.setTitle(dto.getTitle());
+        vo.setTags(dto.getTags());
+
         // 构造请求对象
         dto = new PostDTO();
         dto.setTitle("test");
         dto.setTags(Set.of("Code"));
         dto.setTags(Collections.singleton("java"));
         dto.setContent("content");
-
-        vo = new PostVO();
-        vo.setTitle(dto.getTitle());
-        vo.setTags(dto.getTags());
-
     }
 
     @Test

@@ -31,6 +31,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -61,7 +62,7 @@ class AccessLogControllerTest {
     @BeforeEach
     void setUp() {
         // vo
-        vo = new AccessLogVO();
+        vo = new AccessLogVO(1L, true, Instant.now());
         vo.setIp("12.1.3.2");
         vo.setLocation("test");
         vo.setHttpMethod("POST");

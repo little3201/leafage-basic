@@ -15,73 +15,53 @@
 package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.PrivilegeBO;
+import top.leafage.common.ReadonlyMetadata;
+
+import java.time.Instant;
 
 /**
  * vo class for privilege.
  *
  * @author wq li
  */
-public class PrivilegeVO extends PrivilegeBO {
+public class PrivilegeVO extends PrivilegeBO implements ReadonlyMetadata {
 
-    private Long id;
+    private final Long id;
+
+    private final boolean enabled;
+
+    private final Instant lastModifiedDate;
 
     private long count;
 
-
-    private boolean enabled;
-
-
-    /**
-     * <p>Getter for the field <code>id</code>.</p>
-     *
-     * @return a {@link java.lang.Long} object
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * <p>Setter for the field <code>id</code>.</p>
-     *
-     * @param id a {@link java.lang.Long} object
-     */
-    public void setId(Long id) {
+    public PrivilegeVO(Long id, boolean enabled, Instant lastModifiedDate) {
         this.id = id;
+        this.enabled = enabled;
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    /**
-     * <p>Getter for the field <code>count</code>.</p>
-     *
-     * @return a long
-     */
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
     public long getCount() {
         return count;
     }
 
-    /**
-     * <p>Setter for the field <code>count</code>.</p>
-     *
-     * @param count a long
-     */
     public void setCount(long count) {
         this.count = count;
     }
 
-    /**
-     * <p>isEnabled.</p>
-     *
-     * @return a boolean
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * <p>Setter for the field <code>enabled</code>.</p>
-     *
-     * @param enabled a boolean
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 }

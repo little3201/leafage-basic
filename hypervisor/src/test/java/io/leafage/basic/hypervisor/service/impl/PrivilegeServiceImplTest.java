@@ -18,9 +18,11 @@ package io.leafage.basic.hypervisor.service.impl;
 import io.leafage.basic.hypervisor.domain.Privilege;
 import io.leafage.basic.hypervisor.domain.RoleMembers;
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
+import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.repository.RoleMembersRepository;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
+import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import top.leafage.common.TreeNode;
 
 import java.util.Collections;
@@ -36,6 +41,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * privilege service test
@@ -57,8 +64,48 @@ class PrivilegeServiceImplTest {
     @InjectMocks
     private PrivilegeServiceImpl privilegeService;
 
+    private PrivilegeDTO privilegeDTO;
+
     @BeforeEach
-    void setUp() {
+    void init() {
+        privilegeDTO = new PrivilegeDTO();
+        privilegeDTO.setName("西安市");
+        privilegeDTO.setIcon("user");
+        privilegeDTO.setPath("/user");
+        privilegeDTO.setSuperiorId(1L);
+    }
+
+    @Test
+    void retrieve() {
+        Page<Privilege> page = new PageImpl<>(List.of(Mockito.mock(Privilege.class)));
+        given(this.privilegeRepository.findAll(Mockito.any(Pageable.class))).willReturn(page);
+
+        Page<PrivilegeVO> voPage = privilegeService.retrieve(0, 2, "id", true, null);
+        Assertions.assertNotNull(voPage.getContent());
+    }
+
+    @Test
+    void create() {
+        given(this.privilegeRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Privilege.class)));
+
+        given(this.privilegeRepository.saveAndFlush(Mockito.any(Privilege.class))).willReturn(Mockito.mock(Privilege.class));
+
+        PrivilegeVO privilegeVO = privilegeService.create(Mockito.mock(PrivilegeDTO.class));
+
+        verify(this.privilegeRepository, times(1)).saveAndFlush(Mockito.any(Privilege.class));
+        Assertions.assertNotNull(privilegeVO);
+    }
+
+    @Test
+    void modify() {
+        given(this.privilegeRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Privilege.class)));
+
+        given(this.privilegeRepository.save(Mockito.any(Privilege.class))).willReturn(Mockito.mock(Privilege.class));
+
+        PrivilegeVO privilegeVO = privilegeService.modify(Mockito.anyLong(), privilegeDTO);
+
+        verify(this.privilegeRepository, times(1)).save(Mockito.any(Privilege.class));
+        Assertions.assertNotNull(privilegeVO);
     }
 
     @Test

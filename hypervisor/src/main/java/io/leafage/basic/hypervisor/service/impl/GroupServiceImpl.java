@@ -20,7 +20,6 @@ import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
 import jakarta.persistence.criteria.Predicate;
-import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,7 +31,6 @@ import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * group service impl.
@@ -73,7 +71,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return groupRepository.findAll(spec, pageable).map(group -> convert(group, GroupVO.class));
+        return groupRepository.findAll(spec, pageable).map(group -> convertToVO(group, GroupVO.class));
     }
 
     /**
@@ -92,7 +90,13 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     public GroupVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
 
-        return groupRepository.findById(id).map(group -> convert(group, GroupVO.class)).orElse(null);
+        return groupRepository.findById(id)
+                .map(group -> convertToVO(group, GroupVO.class)).orElse(null);
+    }
+
+    @Override
+    public boolean enable(Long id) {
+        return groupRepository.updateEnabledById(id);
     }
 
     @Override
@@ -108,12 +112,10 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      */
     @Override
     public GroupVO create(GroupDTO dto) {
-        Group group = new Group();
-        BeanCopier copier = BeanCopier.create(GroupDTO.class, Group.class, false);
-        copier.copy(dto, group, null);
+        Group group = convertToDomain(dto, Group.class);
 
-        group = groupRepository.saveAndFlush(group);
-        return convert(group, GroupVO.class);
+        groupRepository.save(group);
+        return convertToVO(group, GroupVO.class);
     }
 
     /**
@@ -122,16 +124,12 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     @Override
     public GroupVO modify(Long id, GroupDTO dto) {
         Assert.notNull(id, "id must not be null.");
-        Group group = groupRepository.findById(id).orElse(null);
-        if (group == null) {
-            throw new NoSuchElementException("当前操作数据不存在...");
-        }
-
-        BeanCopier copier = BeanCopier.create(GroupDTO.class, Group.class, false);
-        copier.copy(dto, group, null);
-
-        group = groupRepository.save(group);
-        return convert(group, GroupVO.class);
+        return groupRepository.findById(id).map(existing -> {
+                    Group group = convert(dto, existing);
+                    group = groupRepository.save(group);
+                    return convertToVO(group, GroupVO.class);
+                })
+                .orElseThrow();
     }
 
     /**

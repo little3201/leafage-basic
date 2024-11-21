@@ -15,6 +15,7 @@
 package io.leafage.basic.assets.vo;
 
 import io.leafage.basic.assets.bo.TagBO;
+import top.leafage.common.ReadonlyMetadata;
 
 import java.time.Instant;
 
@@ -23,73 +24,42 @@ import java.time.Instant;
  *
  * @author wq li
  */
-public class TagVO extends TagBO {
+public class TagVO extends TagBO implements ReadonlyMetadata {
 
+    private final Long id;
 
-    private Long id;
+    private final boolean enabled;
 
-    /**
-     * 贴子数
-     */
+    private final Instant lastModifiedDate;
+
     private long count;
 
-    /**
-     * 最后修改时间
-     */
-    private Instant lastModifiedDate;
-
-
-    /**
-     * <p>Getter for the field <code>id</code>.</p>
-     *
-     * @return a {@link java.lang.Long} object
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * <p>Setter for the field <code>id</code>.</p>
-     *
-     * @param id a {@link java.lang.Long} object
-     */
-    public void setId(Long id) {
+    public TagVO(Long id, boolean enabled, Instant lastModifiedDate) {
         this.id = id;
+        this.enabled = enabled;
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    /**
-     * <p>Getter for the field <code>count</code>.</p>
-     *
-     * @return a long
-     */
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
     public long getCount() {
         return count;
     }
 
-    /**
-     * <p>Setter for the field <code>count</code>.</p>
-     *
-     * @param count a long
-     */
     public void setCount(long count) {
         this.count = count;
-    }
-
-    /**
-     * <p>Getter for the field <code>lastModifiedDate</code>.</p>
-     *
-     * @return a {@link java.time.Instant} object
-     */
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    /**
-     * <p>Setter for the field <code>lastModifiedDate</code>.</p>
-     *
-     * @param lastModifiedDate a {@link java.time.Instant} object
-     */
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 }

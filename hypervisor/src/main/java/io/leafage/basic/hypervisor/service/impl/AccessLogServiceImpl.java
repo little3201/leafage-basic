@@ -67,7 +67,7 @@ public class AccessLogServiceImpl implements AccessLogService {
         };
 
         return accessLogRepository.findAll(spec, pageable)
-                .map(accessLog -> convert(accessLog, AccessLogVO.class));
+                .map(accessLog -> convertToVO(accessLog, AccessLogVO.class));
     }
 
     @Override
@@ -75,7 +75,7 @@ public class AccessLogServiceImpl implements AccessLogService {
         Assert.notNull(id, "id must not be null.");
 
         return accessLogRepository.findById(id)
-                .map(accessLog -> convert(accessLog, AccessLogVO.class)).orElse(null);
+                .map(accessLog -> convertToVO(accessLog, AccessLogVO.class)).orElse(null);
     }
 
     /**
@@ -88,7 +88,7 @@ public class AccessLogServiceImpl implements AccessLogService {
         copier.copy(dto, accessLog, null);
 
         accessLogRepository.saveAndFlush(accessLog);
-        return convert(accessLog, AccessLogVO.class);
+        return convertToVO(accessLog, AccessLogVO.class);
     }
 
     @Override

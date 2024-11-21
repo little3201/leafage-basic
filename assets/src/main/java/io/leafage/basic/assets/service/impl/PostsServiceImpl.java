@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.assets.service.impl;
 
@@ -92,30 +90,12 @@ public class PostsServiceImpl implements PostsService {
     public PostVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
         //查询基本信息
-        Post post = postRepository.findById(id).orElse(null);
-        if (post == null) {
+        PostVO vo = postRepository.findById(id).map(this::convert).orElse(null);
+        if (vo == null) {
             return null;
         }
-        return this.convert(post);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public PostVO details(Long id) {
-        Assert.notNull(id, "id must not be null.");
-        Post post = postRepository.findById(id).orElse(null);
-        if (post == null) {
-            return null;
-        }
-        PostVO vo = this.convert(post);
         // 获取内容详情
-        PostContent postContent = postContentRepository.getByPostId(id);
-        if (postContent != null) {
-            vo.setContent(postContent.getContent());
-        }
+        postContentRepository.getByPostId(id).ifPresent(postContent -> vo.setContent(postContent.getContent()));
         return vo;
     }
 
@@ -123,7 +103,7 @@ public class PostsServiceImpl implements PostsService {
      * {@inheritDoc}
      */
     @Override
-    public boolean exist(String title) {
+    public boolean exists(String title) {
         return postRepository.existsByTitle(title);
     }
 
@@ -140,11 +120,14 @@ public class PostsServiceImpl implements PostsService {
         // 保存并立即刷盘
         post = postRepository.saveAndFlush(post);
         //保存帖子内容
-        PostContent postContent = postContentRepository.getByPostId(post.getId());
-        if (postContent == null) {
+        Optional<PostContent> optional = postContentRepository.getByPostId(post.getId());
+        PostContent postContent;
+        if (optional.isPresent()) {
+            postContent = optional.get();
+        } else {
             postContent = new PostContent();
+            postContent.setPostId(post.getId());
         }
-        postContent.setPostId(post.getId());
         postContent.setContent(dto.getContent());
         postContentRepository.saveAndFlush(postContent);
 
@@ -171,9 +154,13 @@ public class PostsServiceImpl implements PostsService {
         post = postRepository.save(post);
 
         //保存文章内容
-        PostContent postContent = postContentRepository.getByPostId(id);
-        if (postContent == null) {
+        Optional<PostContent> optional = postContentRepository.getByPostId(id);
+        PostContent postContent;
+        if (optional.isPresent()) {
+            postContent = optional.get();
+        } else {
             postContent = new PostContent();
+            postContent.setPostId(id);
         }
         postContent.setContent(dto.getContent());
         postContentRepository.save(postContent);

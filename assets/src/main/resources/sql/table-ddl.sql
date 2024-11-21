@@ -1,4 +1,19 @@
 /*
+ * Copyright (c) 2024.  little3201.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  *  Copyright 2018-2024 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,8 +62,7 @@ COMMENT
 ON COLUMN tags.last_modified_by IS '最后修改者';
 COMMENT
 ON COLUMN tags.last_modified_date IS '最后修改时间';
-COMMENT
-ON INDEX idx_unique_name IS '标签名称唯一索引';
+
 
 -- Drop table if exists posts
 DROP TABLE IF EXISTS posts;
@@ -85,8 +99,6 @@ COMMENT
 ON COLUMN posts.last_modified_by IS '最后修改者';
 COMMENT
 ON COLUMN posts.last_modified_date IS '最后修改时间';
-COMMENT
-ON INDEX idx_created_by IS '帖子创建者索引';
 
 
 -- Drop table if exists tags
@@ -122,6 +134,7 @@ CREATE TABLE post_content
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     post_id            bigint    NOT NULL UNIQUE,
     content            text,
+    enabled            boolean      NOT NULL DEFAULT true,
     created_by         varchar(50),
     created_date       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_modified_by   varchar(50),
@@ -139,6 +152,8 @@ ON COLUMN post_content.post_id IS '帖子ID';
 COMMENT
 ON COLUMN post_content.content IS '内容';
 COMMENT
+ON COLUMN posts.enabled IS '是否启用';
+COMMENT
 ON COLUMN post_content.created_by IS '创建者';
 COMMENT
 ON COLUMN post_content.created_date IS '创建时间';
@@ -146,8 +161,6 @@ COMMENT
 ON COLUMN post_content.last_modified_by IS '最后修改者';
 COMMENT
 ON COLUMN post_content.last_modified_date IS '最后修改时间';
-COMMENT
-ON INDEX idx_unique_post_id IS '帖子ID唯一索引';
 
 
 -- Drop table if exists comments

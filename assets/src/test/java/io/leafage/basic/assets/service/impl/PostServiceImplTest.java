@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.assets.service.impl;
 
@@ -115,39 +113,19 @@ class PostServiceImplTest {
     }
 
     @Test
-    void details() {
-        given(postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
-
-        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
-
-        PostVO postVO = postsService.details(Mockito.anyLong());
-
-        Assertions.assertNotNull(postVO);
-    }
-
-    @Test
-    void details_posts_null() {
-        given(postRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
-
-        PostVO postVO = postsService.details(Mockito.anyLong());
-
-        Assertions.assertNull(postVO);
-    }
-
-    @Test
-    void exist() {
+    void exists() {
         given(postRepository.existsByTitle(Mockito.anyString())).willReturn(true);
 
-        boolean exist = postsService.exist("test");
+        boolean exists = postsService.exists("test");
 
-        Assertions.assertTrue(exist);
+        Assertions.assertTrue(exists);
     }
 
     @Test
     void create() {
         given(postRepository.saveAndFlush(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
-        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(PostContent.class)));
 
         given(postContentRepository.saveAndFlush(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 
@@ -171,7 +149,7 @@ class PostServiceImplTest {
 
         given(postRepository.save(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
-        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(PostContent.class)));
 
         given(postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 

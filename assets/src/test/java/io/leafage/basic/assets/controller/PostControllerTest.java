@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.assets.controller;
 
@@ -27,7 +25,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -120,34 +120,18 @@ class PostControllerTest {
     }
 
     @Test
-    void details() throws Exception {
-        given(postsService.details(Mockito.anyLong())).willReturn(vo);
+    void exists() throws Exception {
+        given(postsService.exists(Mockito.anyString())).willReturn(true);
 
-        mvc.perform(get("/posts/{id}/details", 1L)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
-    }
-
-    @Test
-    void details_error() throws Exception {
-        given(postsService.details(Mockito.anyLong())).willThrow(new RuntimeException());
-
-        mvc.perform(get("/posts/{id}/details", 1L)).andExpect(status().isNoContent())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void exist() throws Exception {
-        given(postsService.exist(Mockito.anyString())).willReturn(true);
-
-        mvc.perform(get("/posts/exist").queryParam("title", "test")).andExpect(status().isOk())
+        mvc.perform(get("/posts/exists").queryParam("title", "test")).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void exist_error() throws Exception {
-        given(postsService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+        given(postsService.exists(Mockito.anyString())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/posts/exist").queryParam("title", "test")).andExpect(status().isExpectationFailed())
+        mvc.perform(get("/posts/exists").queryParam("title", "test")).andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

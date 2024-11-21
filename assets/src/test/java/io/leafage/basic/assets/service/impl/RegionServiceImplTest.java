@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.leafage.basic.assets.service.impl;
@@ -56,15 +54,15 @@ class RegionServiceImplTest {
     @InjectMocks
     private RegionServiceImpl regionService;
 
-    private RegionDTO regionDTO;
+    private RegionDTO dto;
 
     @BeforeEach
     void setUp() {
-        regionDTO = new RegionDTO();
-        regionDTO.setName("西安市");
-        regionDTO.setAreaCode("029");
-        regionDTO.setPostalCode(71000);
-        regionDTO.setSuperiorId(1L);
+        dto = new RegionDTO();
+        dto.setName("西安市");
+        dto.setAreaCode("029");
+        dto.setPostalCode(71000);
+        dto.setSuperiorId(1L);
     }
 
     @Test
@@ -87,12 +85,21 @@ class RegionServiceImplTest {
     }
 
     @Test
-    void exist() {
+    void exists() {
+        given(this.regionRepository.existsByNameAndIdNot(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+
+        boolean exists = regionService.exists("test", 1L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
         given(this.regionRepository.existsByName(Mockito.anyString())).willReturn(true);
 
-        boolean exist = regionService.exist("成都市");
+        boolean exists = regionService.exists("test", null);
 
-        Assertions.assertTrue(exist);
+        Assertions.assertTrue(exists);
     }
 
     @Test
@@ -111,7 +118,7 @@ class RegionServiceImplTest {
 
         given(this.regionRepository.save(Mockito.any(Region.class))).willReturn(Mockito.mock(Region.class));
 
-        RegionVO regionVO = regionService.modify(Mockito.anyLong(), regionDTO);
+        RegionVO regionVO = regionService.modify(Mockito.anyLong(), dto);
 
         verify(this.regionRepository, times(1)).save(Mockito.any(Region.class));
         Assertions.assertNotNull(regionVO);

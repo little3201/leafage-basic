@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.hypervisor.service.impl;
 
@@ -54,15 +52,15 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
 
-    private UserDTO userDTO;
+    private UserDTO dto;
 
     @BeforeEach
     void setUp() {
-        userDTO = new UserDTO();
-        userDTO.setUsername("test");
-        userDTO.setFullName("zhang");
-        userDTO.setAvatar("a.jpg");
-        userDTO.setEmail("zhang@test.com");
+        dto = new UserDTO();
+        dto.setUsername("test");
+        dto.setFullName("zhang");
+        dto.setAvatar("a.jpg");
+        dto.setEmail("zhang@test.com");
     }
 
     @Test
@@ -86,10 +84,29 @@ class UserServiceImplTest {
     }
 
     @Test
+    void exists() {
+        given(this.userRepository.existsByUsernameAndIdNot(Mockito.anyString(),
+                Mockito.anyLong())).willReturn(true);
+
+        boolean exists = userService.exists("test", 2L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
+        given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(true);
+
+        boolean exists = userService.exists("test", null);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
     void create() {
         given(this.userRepository.saveAndFlush(Mockito.any(User.class))).willReturn(Mockito.mock(User.class));
 
-        UserVO vo = userService.create(userDTO);
+        UserVO vo = userService.create(dto);
 
         verify(userRepository, Mockito.times(1)).saveAndFlush(Mockito.any(User.class));
         Assertions.assertNotNull(vo);
@@ -103,28 +120,10 @@ class UserServiceImplTest {
         // 保存更新信息
         given(this.userRepository.save(Mockito.any(User.class))).willReturn(Mockito.mock(User.class));
 
-        UserVO vo = userService.modify(1L, userDTO);
+        UserVO vo = userService.modify(1L, dto);
 
         verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
         Assertions.assertNotNull(vo);
-    }
-
-    @Test
-    void exist() {
-        given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(Boolean.TRUE);
-
-        boolean exist = userService.exist("test");
-
-        Assertions.assertTrue(exist);
-    }
-
-    @Test
-    void exist_false() {
-        given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(false);
-
-        boolean exist = userService.exist("test");
-
-        Assertions.assertFalse(exist);
     }
 
     @Test

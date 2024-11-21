@@ -1,4 +1,19 @@
 /*
+ * Copyright (c) 2024.  little3201.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  *  Copyright 2018-2024 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,12 +33,13 @@
 -- Drop table if exists groups
 DROP TABLE IF EXISTS groups;
 
--- Create table groups
+-- Table structure groups
 CREATE TABLE groups
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     group_name         varchar(50) NOT NULL,
     superior_id        bigint,
+    description        varchar(255),
     enabled            boolean     NOT NULL DEFAULT true,
     created_by         varchar(50),
     created_date       timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,6 +55,10 @@ ON COLUMN groups.id IS '主键';
 COMMENT
 ON COLUMN groups.group_name IS '名称';
 COMMENT
+ON COLUMN groups.superior_id IS '上级ID';
+COMMENT
+ON COLUMN groups.description IS '描述';
+COMMENT
 ON COLUMN groups.enabled IS '是否启用';
 COMMENT
 ON COLUMN groups.created_by IS '创建者';
@@ -52,14 +72,15 @@ ON COLUMN groups.last_modified_date IS '最后修改时间';
 -- Drop table if exists users
 DROP TABLE IF EXISTS users;
 
--- Create table users
+-- Table structure users
 CREATE TABLE users
 (
     id                     bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username               varchar(50) UNIQUE NOT NULL,
-    full_name               varchar(50),
+    full_name              varchar(50),
     password               varchar(100)       NOT NULL,
     email                  varchar(50),
+    avatar                 varchar(255),
     enabled                boolean            NOT NULL DEFAULT true,
     account_non_locked     boolean,
     account_expires_at     timestamp,
@@ -103,7 +124,7 @@ ON COLUMN users.last_modified_date IS '最后修改时间';
 -- Drop table if exists authorities
 DROP TABLE IF EXISTS authorities;
 
--- Create table authorities
+-- Table structure authorities
 CREATE TABLE authorities
 (
     id        bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -128,7 +149,7 @@ CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
 -- Drop table if exists roles
 DROP TABLE IF EXISTS roles;
 
--- Create table roles
+-- Table structure roles
 CREATE TABLE roles
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -164,13 +185,14 @@ ON COLUMN roles.last_modified_date IS '最后修改时间';
 -- Drop table if exists group_members
 DROP TABLE IF EXISTS group_members;
 
--- Create table group_members
+-- Table structure group_members
 CREATE TABLE group_members
 (
     id       bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     group_id bigint      NOT NULL,
     username varchar(50) NOT NULL,
-    CONSTRAINT fk_group_members_group foreign key (group_id) references groups (id)
+    CONSTRAINT fk_group_members_groups foreign key (group_id) references groups (id),
+    CONSTRAINT fk_group_members_users FOREIGN KEY (username) references users (username)
 );
 
 -- Add comment to the table and columns
@@ -186,13 +208,13 @@ ON COLUMN group_members.username IS '用户名';
 -- Drop table if exists group_authorities
 DROP TABLE IF EXISTS group_authorities;
 
--- Create table group_authorities
+-- Table structure group_authorities
 CREATE TABLE group_authorities
 (
     id        bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     group_id  bigint      NOT NULL,
     authority varchar(50) NOT NULL,
-    CONSTRAINT fk_group_authorities_group FOREIGN KEY (group_id) references groups (id)
+    CONSTRAINT fk_group_authorities_groups FOREIGN KEY (group_id) references groups (id)
 );
 
 -- Add comment to the table and columns
@@ -208,7 +230,7 @@ ON COLUMN group_authorities.authority IS '权限';
 -- Drop table if exists persistent_logins
 DROP TABLE IF EXISTS persistent_logins;
 
--- Create table persistent_logins
+-- Table structure persistent_logins
 CREATE TABLE persistent_logins
 (
     series    varchar(64) primary key,
@@ -232,13 +254,14 @@ ON COLUMN persistent_logins.last_used IS '最后使用时间';
 -- Drop table if exists role_members
 DROP TABLE IF EXISTS role_members;
 
--- Create table role_members
+-- Table structure role_members
 CREATE TABLE role_members
 (
     id       bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     role_id  bigint      NOT NULL,
     username varchar(50) NOT NULL,
-    CONSTRAINT fk_role_members_role FOREIGN KEY (role_id) REFERENCES roles (id)
+    CONSTRAINT fk_role_members_roles FOREIGN KEY (role_id) REFERENCES roles (id),
+    CONSTRAINT fk_role_members_users FOREIGN KEY (username) REFERENCES users (username)
 );
 
 -- Add comment to the table and columns
@@ -254,7 +277,7 @@ ON COLUMN role_members.username IS '用户名';
 -- Drop table if exists privileges
 DROP TABLE IF EXISTS privileges;
 
--- Create table privileges
+-- Table structure privileges
 CREATE TABLE privileges
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -264,6 +287,7 @@ CREATE TABLE privileges
     redirect           varchar(255),
     component          varchar(255),
     icon               varchar(127),
+    actions            text[],
     description        varchar(255),
     enabled            boolean     NOT NULL DEFAULT true,
     created_by         varchar(50),
@@ -290,6 +314,8 @@ ON COLUMN privileges.component IS '组件路径';
 COMMENT
 ON COLUMN privileges.icon IS '图标';
 COMMENT
+ON COLUMN privileges.actions IS '操作按钮';
+COMMENT
 ON COLUMN privileges.description IS '描述';
 COMMENT
 ON COLUMN privileges.enabled IS '是否启用';
@@ -305,14 +331,14 @@ ON COLUMN privileges.last_modified_date IS '最后修改时间';
 -- Drop table if exists role_privileges
 DROP TABLE IF EXISTS role_privileges;
 
--- Create table role_privileges
+-- Table structure role_privileges
 CREATE TABLE role_privileges
 (
     id           bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     role_id      bigint NOT NULL,
     privilege_id bigint NOT NULL,
-    CONSTRAINT fk_role_privileges_role FOREIGN KEY (role_id) REFERENCES roles (id),
-    CONSTRAINT fk_role_privileges_privilege FOREIGN KEY (privilege_id) REFERENCES privileges (id)
+    CONSTRAINT fk_role_privileges_roles FOREIGN KEY (role_id) REFERENCES roles (id),
+    CONSTRAINT fk_role_privileges_privileges FOREIGN KEY (privilege_id) REFERENCES privileges (id)
 );
 
 -- Add comment to the table and columns
@@ -328,7 +354,7 @@ ON COLUMN role_privileges.privilege_id IS '权限ID';
 -- Drop table if exists dictionaries
 DROP TABLE IF EXISTS dictionaries;
 
--- Create table dictionaries
+-- Table structure dictionaries
 CREATE TABLE dictionaries
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -367,7 +393,7 @@ ON COLUMN dictionaries.last_modified_date IS '最后修改时间';
 -- Drop table if exists messages
 DROP TABLE IF EXISTS messages;
 
--- Create table messages
+-- Table structure messages
 CREATE TABLE messages
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -413,12 +439,12 @@ ON COLUMN messages.last_modified_date IS '最后修改时间';
 -- Drop table if exists access_logs
 DROP TABLE IF EXISTS access_logs;
 
--- Create table access_logs
+-- Table structure access_logs
 CREATE TABLE access_logs
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    api                varchar(10),
-    method             varchar(10),
+    url                varchar(255),
+    http_method        varchar(10),
     params             varchar(255),
     body               json,
     ip                 inet,
@@ -439,13 +465,13 @@ ON TABLE access_logs IS '访问日志表';
 COMMENT
 ON COLUMN access_logs.id IS '主键';
 COMMENT
-ON COLUMN access_logs.api IS '内容';
+ON COLUMN access_logs.url IS '接口';
 COMMENT
-ON COLUMN access_logs.http_method IS '内容';
+ON COLUMN access_logs.http_method IS 'http方法';
 COMMENT
-ON COLUMN access_logs.params IS '内容';
+ON COLUMN access_logs.params IS '参数';
 COMMENT
-ON COLUMN access_logs.body IS '内容';
+ON COLUMN access_logs.body IS '请求体';
 COMMENT
 ON COLUMN access_logs.ip IS 'IP地址';
 COMMENT
@@ -453,7 +479,7 @@ ON COLUMN access_logs.location IS '位置';
 COMMENT
 ON COLUMN access_logs.status_code IS 'HTTP状态码';
 COMMENT
-ON COLUMN access_logs.response_times IS '响应时间';
+ON COLUMN access_logs.response_times IS '响应时长';
 COMMENT
 ON COLUMN access_logs.response_message IS '响应消息';
 COMMENT
@@ -471,24 +497,23 @@ ON COLUMN access_logs.last_modified_date IS '最后修改时间';
 -- Drop table if exists operation_logs
 DROP TABLE IF EXISTS operation_logs;
 
--- Create table operation_logs
+-- Table structure operation_logs
 CREATE TABLE operation_logs
 (
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    operation          varchar(255),
+    os                 varchar(50),
+    browser            varchar(50),
     ip                 inet,
     location           varchar(50),
     content            varchar(1000),
     user_agent         varchar(255),
-    http_method        varchar(10),
-    url                varchar(255),
     status_code        integer,
-    operated_times     bigint,
+    operated_time      timestamp,
     response_message   varchar(255),
     referer            varchar(255),
     session_id         varchar(50),
     device_type        varchar(20),
-    os                 varchar(50),
-    browser            varchar(50),
     enabled            boolean   NOT NULL DEFAULT true,
     created_by         varchar(50),
     created_date       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -502,6 +527,12 @@ ON TABLE operation_logs IS '访问日志表';
 COMMENT
 ON COLUMN operation_logs.id IS '主键';
 COMMENT
+ON COLUMN operation_logs.operation IS '操作';
+COMMENT
+ON COLUMN operation_logs.os IS '操作系统';
+COMMENT
+ON COLUMN operation_logs.browser IS '浏览器';
+COMMENT
 ON COLUMN operation_logs.ip IS 'IP地址';
 COMMENT
 ON COLUMN operation_logs.location IS '位置';
@@ -510,23 +541,17 @@ ON COLUMN operation_logs.content IS '内容';
 COMMENT
 ON COLUMN operation_logs.user_agent IS '用户代理信息';
 COMMENT
-ON COLUMN operation_logs.http_method IS 'HTTP方法';
-COMMENT
-ON COLUMN operation_logs.url IS '请求URL';
-COMMENT
 ON COLUMN operation_logs.status_code IS 'HTTP状态码';
 COMMENT
-ON COLUMN operation_logs.operated_time IS '操作时间';
+ON COLUMN operation_logs.operated_times IS '操作时间';
+COMMENT
+ON COLUMN operation_logs.response_message IS '响应消息';
 COMMENT
 ON COLUMN operation_logs.referer IS '来源页面';
 COMMENT
 ON COLUMN operation_logs.session_id IS '会话标识符';
 COMMENT
 ON COLUMN operation_logs.device_type IS '设备类型';
-COMMENT
-ON COLUMN operation_logs.os IS '操作系统';
-COMMENT
-ON COLUMN operation_logs.browser IS '浏览器';
 COMMENT
 ON COLUMN operation_logs.enabled IS '是否启用';
 COMMENT

@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.leafage.basic.hypervisor.service.impl;
@@ -58,12 +56,12 @@ class GroupServiceImplTest {
     @InjectMocks
     private GroupServiceImpl groupService;
 
-    private GroupDTO groupDTO;
+    private GroupDTO dto;
 
     @BeforeEach
     void setUp() {
-        groupDTO = new GroupDTO();
-        groupDTO.setName("group");
+        dto = new GroupDTO();
+        dto.setName("group");
     }
 
     @Test
@@ -95,6 +93,25 @@ class GroupServiceImplTest {
     }
 
     @Test
+    void exists() {
+        given(this.groupRepository.existsByNameAndIdNot(Mockito.anyString(),
+                Mockito.anyLong())).willReturn(true);
+
+        boolean exists = groupService.exists("test", 2L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
+        given(this.groupRepository.existsByName(Mockito.anyString())).willReturn(true);
+
+        boolean exists = groupService.exists("test", null);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
     void create() {
         given(this.groupRepository.saveAndFlush(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
 
@@ -117,7 +134,7 @@ class GroupServiceImplTest {
 
         given(this.groupRepository.save(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
 
-        GroupVO groupVO = groupService.modify(1L, groupDTO);
+        GroupVO groupVO = groupService.modify(1L, dto);
 
         verify(this.groupRepository, times(1)).save(Mockito.any(Group.class));
         Assertions.assertNotNull(groupVO);

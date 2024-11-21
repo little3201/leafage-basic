@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.leafage.basic.hypervisor.service.impl;
@@ -56,13 +54,13 @@ class RoleServiceImplTest {
     @InjectMocks
     private RoleServiceImpl roleService;
 
-    private RoleDTO roleDTO;
+    private RoleDTO dto;
 
     @BeforeEach
     void setUp() {
-        roleDTO = new RoleDTO();
-        roleDTO.setName("role");
-        roleDTO.setDescription("role");
+        dto = new RoleDTO();
+        dto.setName("role");
+        dto.setDescription("role");
     }
 
     @Test
@@ -86,6 +84,25 @@ class RoleServiceImplTest {
     }
 
     @Test
+    void exists() {
+        given(this.roleRepository.existsByNameAndIdNot(Mockito.anyString(),
+                Mockito.anyLong())).willReturn(true);
+
+        boolean exists = roleService.exists("test", 2L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
+        given(this.roleRepository.existsByName(Mockito.anyString())).willReturn(true);
+
+        boolean exists = roleService.exists("test", null);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
     void create() {
         given(this.roleRepository.saveAndFlush(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
 
@@ -101,7 +118,7 @@ class RoleServiceImplTest {
 
         given(this.roleRepository.save(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
 
-        RoleVO roleVO = roleService.modify(1L, roleDTO);
+        RoleVO roleVO = roleService.modify(1L, dto);
 
         verify(this.roleRepository, times(1)).save(Mockito.any(Role.class));
         Assertions.assertNotNull(roleVO);

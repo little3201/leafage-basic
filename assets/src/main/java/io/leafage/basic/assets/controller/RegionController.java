@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.leafage.basic.assets.controller;
@@ -94,34 +92,35 @@ public class RegionController {
      * 是否存在
      *
      * @param name 名称
+     * @param id   主键
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/{name}/exist")
-    public ResponseEntity<Boolean> exist(@PathVariable String name) {
-        boolean exist;
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> exists(@RequestParam String name, Long id) {
+        boolean exists;
         try {
-            exist = regionService.exist(name);
+            exists = regionService.exists(name, id);
         } catch (Exception e) {
-            logger.info("Query region exist occurred an error: ", e);
+            logger.info("Check region exists occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(exist);
+        return ResponseEntity.ok(exists);
     }
 
     /**
      * 添加信息
      *
-     * @param regionDTO 要添加的数据
+     * @param dto 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PostMapping
-    public ResponseEntity<RegionVO> create(@RequestBody @Valid RegionDTO regionDTO) {
+    public ResponseEntity<RegionVO> create(@RequestBody @Valid RegionDTO dto) {
         RegionVO vo;
         try {
-            vo = regionService.create(regionDTO);
+            vo = regionService.create(dto);
         } catch (Exception e) {
             logger.error("Create region occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
@@ -129,15 +128,15 @@ public class RegionController {
     /**
      * 修改信息
      *
-     * @param id        主键
-     * @param regionDTO 要修改的数据
+     * @param id  主键
+     * @param dto 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
     @PutMapping("/{id}")
-    public ResponseEntity<RegionVO> modify(@PathVariable Long id, @RequestBody RegionDTO regionDTO) {
+    public ResponseEntity<RegionVO> modify(@PathVariable Long id, @RequestBody RegionDTO dto) {
         RegionVO regionVO;
         try {
-            regionVO = regionService.modify(id, regionDTO);
+            regionVO = regionService.modify(id, dto);
         } catch (Exception e) {
             logger.error("Modify region occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.assets.service.impl;
 
@@ -68,15 +66,15 @@ class PostServiceImplTest {
     @InjectMocks
     private PostsServiceImpl postsService;
 
-    private PostDTO postDTO;
+    private PostDTO dto;
 
     @BeforeEach
     void setUp() {
-        postDTO = new PostDTO();
-        postDTO.setTitle("title");
-        postDTO.setExcerpt("excerpt");
-        postDTO.setContent("content");
-        postDTO.setTags(Set.of("code"));
+        dto = new PostDTO();
+        dto.setTitle("title");
+        dto.setExcerpt("excerpt");
+        dto.setContent("content");
+        dto.setTags(Set.of("code"));
     }
 
     @Test
@@ -115,39 +113,28 @@ class PostServiceImplTest {
     }
 
     @Test
-    void details() {
-        given(postRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Post.class)));
+    void exists() {
+        given(postRepository.existsByTitleAndIdNot(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
 
-        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+        boolean exists = postsService.exists("test", 1L);
 
-        PostVO postVO = postsService.details(Mockito.anyLong());
-
-        Assertions.assertNotNull(postVO);
+        Assertions.assertTrue(exists);
     }
 
     @Test
-    void details_posts_null() {
-        given(postRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
-
-        PostVO postVO = postsService.details(Mockito.anyLong());
-
-        Assertions.assertNull(postVO);
-    }
-
-    @Test
-    void exist() {
+    void exists_id_null() {
         given(postRepository.existsByTitle(Mockito.anyString())).willReturn(true);
 
-        boolean exist = postsService.exist("test");
+        boolean exists = postsService.exists("test", null);
 
-        Assertions.assertTrue(exist);
+        Assertions.assertTrue(exists);
     }
 
     @Test
     void create() {
         given(postRepository.saveAndFlush(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
-        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(PostContent.class)));
 
         given(postContentRepository.saveAndFlush(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 
@@ -157,7 +144,7 @@ class PostServiceImplTest {
 
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
-        PostVO postVO = postsService.create(postDTO);
+        PostVO postVO = postsService.create(dto);
 
         verify(postRepository, times(1)).saveAndFlush(Mockito.any(Post.class));
         verify(postContentRepository, times(1)).saveAndFlush(Mockito.any(PostContent.class));
@@ -171,7 +158,7 @@ class PostServiceImplTest {
 
         given(postRepository.save(Mockito.any(Post.class))).willReturn(Mockito.mock(Post.class));
 
-        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mockito.mock(PostContent.class));
+        given(postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(PostContent.class)));
 
         given(postContentRepository.save(Mockito.any(PostContent.class))).willReturn(Mockito.mock(PostContent.class));
 
@@ -181,7 +168,7 @@ class PostServiceImplTest {
 
         given(tagRepository.findById(Mockito.anyLong())).willReturn(Optional.of(Mockito.mock(Tag.class)));
 
-        PostVO postVO = postsService.modify(1L, postDTO);
+        PostVO postVO = postsService.modify(1L, dto);
 
         verify(postRepository, times(1)).save(Mockito.any(Post.class));
         verify(postContentRepository, times(1)).save(Mockito.any(PostContent.class));

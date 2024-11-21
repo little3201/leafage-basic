@@ -1,25 +1,26 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.hypervisor.domain;
 
-import top.leafage.common.servlet.audit.AuditMetadata;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import top.leafage.common.servlet.audit.AuditMetadata;
+
+import java.util.Set;
 
 /**
  * model class for privilege.
@@ -37,6 +38,7 @@ public class Privilege extends AuditMetadata {
     /**
      * 上级主键
      */
+    @Column(name = "superior_id")
     private Long superiorId;
 
     private String path;
@@ -56,7 +58,8 @@ public class Privilege extends AuditMetadata {
      */
     private String icon;
 
-    private boolean hidden;
+    @ElementCollection
+    private Set<String> actions;
 
     /**
      * 描述
@@ -172,22 +175,12 @@ public class Privilege extends AuditMetadata {
         this.icon = icon;
     }
 
-    /**
-     * <p>isHidden.</p>
-     *
-     * @return a boolean
-     */
-    public boolean isHidden() {
-        return hidden;
+    public Set<String> getActions() {
+        return actions;
     }
 
-    /**
-     * <p>Setter for the field <code>hidden</code>.</p>
-     *
-     * @param hidden a boolean
-     */
-    public void setHidden(boolean hidden) {
-        this.hidden = hidden;
+    public void setActions(Set<String> actions) {
+        this.actions = actions;
     }
 
     /**

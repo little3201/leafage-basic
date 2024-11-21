@@ -1,24 +1,21 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.AccessLog;
-import io.leafage.basic.hypervisor.domain.Message;
 import io.leafage.basic.hypervisor.dto.AccessLogDTO;
 import io.leafage.basic.hypervisor.repository.AccessLogRepository;
 import io.leafage.basic.hypervisor.service.AccessLogService;
@@ -69,17 +66,16 @@ public class AccessLogServiceImpl implements AccessLogService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return accessLogRepository.findAll(spec, pageable).map(this::convert);
+        return accessLogRepository.findAll(spec, pageable)
+                .map(accessLog -> convertToVO(accessLog, AccessLogVO.class));
     }
 
     @Override
     public AccessLogVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        AccessLog accessLog = accessLogRepository.findById(id).orElse(null);
-        if (accessLog == null) {
-            return null;
-        }
-        return this.convert(accessLog);
+
+        return accessLogRepository.findById(id)
+                .map(accessLog -> convertToVO(accessLog, AccessLogVO.class)).orElse(null);
     }
 
     /**
@@ -92,7 +88,7 @@ public class AccessLogServiceImpl implements AccessLogService {
         copier.copy(dto, accessLog, null);
 
         accessLogRepository.saveAndFlush(accessLog);
-        return this.convert(accessLog);
+        return convertToVO(accessLog, AccessLogVO.class);
     }
 
     @Override
@@ -101,10 +97,4 @@ public class AccessLogServiceImpl implements AccessLogService {
         accessLogRepository.deleteById(id);
     }
 
-    private AccessLogVO convert(AccessLog accessLog) {
-        AccessLogVO vo = new AccessLogVO();
-        BeanCopier copier = BeanCopier.create(AccessLog.class, AccessLogVO.class, false);
-        copier.copy(accessLog, vo, null);
-        return vo;
-    }
 }

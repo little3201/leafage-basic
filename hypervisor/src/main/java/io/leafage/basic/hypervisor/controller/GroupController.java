@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.hypervisor.controller;
 
@@ -116,6 +114,25 @@ public class GroupController {
     }
 
     /**
+     * 是否存在
+     *
+     * @param name 名称
+     * @param id   主键
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> exists(@RequestParam String name, Long id) {
+        boolean exists;
+        try {
+            exists = groupService.exists(name, id);
+        } catch (Exception e) {
+            logger.info("Check group exists occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(exists);
+    }
+
+    /**
      * 添加信息
      *
      * @param dto 要添加的数据
@@ -128,7 +145,7 @@ public class GroupController {
             groupVO = groupService.create(dto);
         } catch (Exception e) {
             logger.error("Create group occurred an error: ", e);
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(groupVO);
     }

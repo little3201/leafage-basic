@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.assets.service.impl;
 
@@ -55,12 +53,12 @@ class TagServiceImplTest {
     @InjectMocks
     private TagServiceImpl tagService;
 
-    private TagDTO tagDTO;
+    private TagDTO dto;
 
     @BeforeEach
     void setUp() {
-        tagDTO = new TagDTO();
-        tagDTO.setName("test");
+        dto = new TagDTO();
+        dto.setName("test");
     }
 
     @Test
@@ -84,6 +82,23 @@ class TagServiceImplTest {
         Assertions.assertNotNull(categoryVO);
     }
 
+    @Test
+    void exists() {
+        given(this.tagRepository.existsByNameAndIdNot(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+
+        boolean exists = tagService.exists("test", 1L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
+        given(this.tagRepository.existsByName(Mockito.anyString())).willReturn(true);
+
+        boolean exists = tagService.exists("test", null);
+
+        Assertions.assertTrue(exists);
+    }
 
     @Test
     void create() {
@@ -105,7 +120,7 @@ class TagServiceImplTest {
 
         given(tagPostsRepository.countByTagId(Mockito.anyLong())).willReturn(Mockito.anyLong());
 
-        TagVO categoryVO = tagService.modify(1L, tagDTO);
+        TagVO categoryVO = tagService.modify(1L, dto);
 
         verify(tagRepository, times(1)).save(Mockito.any(Tag.class));
         Assertions.assertNotNull(categoryVO);

@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.leafage.basic.hypervisor.controller;
@@ -33,6 +31,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -58,25 +57,25 @@ class AccessLogControllerTest {
     @MockBean
     private AccessLogService accessLogService;
 
-    private AccessLogVO accessLogVO;
+    private AccessLogVO vo;
 
     @BeforeEach
     void setUp() {
         // vo
-        accessLogVO = new AccessLogVO();
-        accessLogVO.setIp("12.1.3.2");
-        accessLogVO.setLocation("test");
-        accessLogVO.setHttpMethod("POST");
-        accessLogVO.setResponseTimes(232L);
-        accessLogVO.setResponseMessage("sessionId");
-        accessLogVO.setStatusCode(200);
-        accessLogVO.setUrl("/test");
-        accessLogVO.setParams("xxx");
+        vo = new AccessLogVO(1L, true, Instant.now());
+        vo.setIp("12.1.3.2");
+        vo.setLocation("test");
+        vo.setHttpMethod("POST");
+        vo.setResponseTimes(232L);
+        vo.setResponseMessage("sessionId");
+        vo.setStatusCode(200);
+        vo.setUrl("/test");
+        vo.setParams("xxx");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<AccessLogVO> voPage = new PageImpl<>(List.of(accessLogVO), Mockito.mock(PageRequest.class), 2L);
+        Page<AccessLogVO> voPage = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
                 Mockito.anyBoolean(), eq("test"))).willReturn(voPage);

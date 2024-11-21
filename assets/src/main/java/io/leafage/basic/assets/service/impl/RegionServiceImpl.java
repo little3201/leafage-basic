@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.leafage.basic.assets.service.impl;
@@ -73,7 +71,7 @@ public class RegionServiceImpl implements RegionService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return regionRepository.findAll(spec, pageable).map(this::convert);
+        return regionRepository.findAll(spec, pageable).map(region -> convertToVO(region, RegionVO.class));
     }
 
     /**
@@ -86,16 +84,19 @@ public class RegionServiceImpl implements RegionService {
         if (region == null) {
             return null;
         }
-        return this.convert(region);
+        return convertToVO(region, RegionVO.class);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean exist(String name) {
+    public boolean exists(String name, Long id) {
         Assert.hasText(name, "name must not bu blank.");
-        return regionRepository.existsByName(name);
+        if (id == null) {
+            return regionRepository.existsByName(name);
+        }
+        return regionRepository.existsByNameAndIdNot(name, id);
     }
 
     /**
@@ -108,7 +109,7 @@ public class RegionServiceImpl implements RegionService {
         copier.copy(dto, region, null);
 
         regionRepository.saveAndFlush(region);
-        return this.convert(region);
+        return convertToVO(region, RegionVO.class);
     }
 
     /**
@@ -125,7 +126,7 @@ public class RegionServiceImpl implements RegionService {
         copier.copy(dto, region, null);
 
         regionRepository.save(region);
-        return this.convert(region);
+        return convertToVO(region, RegionVO.class);
     }
 
     /**
@@ -137,16 +138,4 @@ public class RegionServiceImpl implements RegionService {
         regionRepository.deleteById(id);
     }
 
-    /**
-     * 数据转换
-     *
-     * @param region 信息
-     * @return RegionVO 输出对象
-     */
-    private RegionVO convert(Region region) {
-        RegionVO vo = new RegionVO();
-        BeanCopier copier = BeanCopier.create(Region.class, RegionVO.class, false);
-        copier.copy(region, vo, null);
-        return vo;
-    }
 }

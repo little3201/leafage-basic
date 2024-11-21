@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.hypervisor.controller;
 
@@ -35,6 +33,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -64,25 +63,25 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    private UserVO userVO;
+    private UserVO vo;
 
-    private UserDTO userDTO;
+    private UserDTO dto;
 
     @BeforeEach
     void setUp() {
-        userVO = new UserVO();
-        userVO.setUsername("test");
-        userVO.setEmail("john@test.com");
+        vo = new UserVO(1L, true, Instant.now());
+        vo.setUsername("test");
+        vo.setEmail("john@test.com");
 
-        userDTO = new UserDTO();
-        userDTO.setUsername("test");
-        userDTO.setAccountNonLocked(true);
-        userDTO.setAvatar("steven.jpg");
+        dto = new UserDTO();
+        dto.setUsername("test");
+        dto.setAccountNonLocked(true);
+        dto.setAvatar("steven.jpg");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<UserVO> voPage = new PageImpl<>(List.of(userVO), Mockito.mock(PageRequest.class), 2L);
+        Page<UserVO> voPage = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
         given(this.userService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"),
                 Mockito.anyBoolean(), eq("test"))).willReturn(voPage);
@@ -97,7 +96,7 @@ class UserControllerTest {
 
     @Test
     void fetch() throws Exception {
-        given(this.userService.fetch(Mockito.anyLong())).willReturn(userVO);
+        given(this.userService.fetch(Mockito.anyLong())).willReturn(vo);
 
         mvc.perform(get("/users/{id}", Mockito.anyLong()))
                 .andExpect(status().isOk())
@@ -115,21 +114,42 @@ class UserControllerTest {
     }
 
     @Test
+    void exists() throws Exception {
+        given(this.userService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+
+        mvc.perform(get("/users/exists")
+                        .queryParam("username", "test"))
+                .andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void exist_error() throws Exception {
+        given(this.userService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
+
+        mvc.perform(get("/users/exists")
+                        .queryParam("username", "test")
+                        .queryParam("id", "1"))
+                .andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
     void create() throws Exception {
-        given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(userVO);
+        given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(vo);
 
         mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader())).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader())).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.username").value("test"))
                 .andDo(print()).andReturn();
     }
 
     @Test
     void modify() throws Exception {
-        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(userVO);
+        given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willReturn(vo);
 
         mvc.perform(put("/users/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isAccepted())
                 .andDo(print()).andReturn();
     }
@@ -139,7 +159,7 @@ class UserControllerTest {
         given(this.userService.modify(Mockito.anyLong(), Mockito.any(UserDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(put("/users/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)).with(csrf().asHeader()))
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isNotModified())
                 .andDo(print()).andReturn();
     }

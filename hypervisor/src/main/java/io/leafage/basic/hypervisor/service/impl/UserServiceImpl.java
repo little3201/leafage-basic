@@ -1,18 +1,16 @@
 /*
- *  Copyright 2018-2024 little3201.
+ * Copyright (c) 2024.  little3201.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *       https://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.leafage.basic.hypervisor.service.impl;
 
@@ -22,7 +20,6 @@ import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
 import jakarta.persistence.criteria.Predicate;
-import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -66,7 +63,16 @@ public class UserServiceImpl implements UserService {
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
-        return userRepository.findAll(spec, pageable).map(this::convert);
+        return userRepository.findAll(spec, pageable)
+                .map(user -> convertToVO(user, UserVO.class));
+    }
+
+    @Override
+    public UserVO findByUsername(String username) {
+        Assert.hasText(username, "username must not be blank.");
+
+        return userRepository.findByUsername(username)
+                .map(user -> convertToVO(user, UserVO.class)).orElse(null);
     }
 
     /**
@@ -75,20 +81,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
-            return null;
-        }
-        return this.convert(user);
+
+        return userRepository.findById(id)
+                .map(user -> convertToVO(user, UserVO.class)).orElse(null);
+    }
+
+    @Override
+    public boolean enable(Long id) {
+        return userRepository.updateEnabledById(id);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean exist(String username) {
+    public boolean exists(String username, Long id) {
         Assert.hasText(username, "username must not be blank.");
-        return userRepository.existsByUsername(username);
+        if (id == null) {
+            return userRepository.existsByUsername(username);
+        }
+        return userRepository.existsByUsernameAndIdNot(username, id);
     }
 
     /**
@@ -96,12 +108,11 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserVO create(UserDTO dto) {
-        User user = new User();
-        BeanCopier copier = BeanCopier.create(UserDTO.class, User.class, false);
-        copier.copy(dto, user, null);
+        User user = convertToDomain(dto, User.class);
         user.setPassword("{noop}123456");
-        user = userRepository.saveAndFlush(user);
-        return this.convert(user);
+
+        userRepository.save(user);
+        return convertToVO(user, UserVO.class);
     }
 
     /**
@@ -110,15 +121,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserVO modify(Long id, UserDTO dto) {
         Assert.notNull(id, "id must not be null.");
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
-            return null;
-        }
-        BeanCopier copier = BeanCopier.create(UserDTO.class, User.class, false);
-        copier.copy(dto, user, null);
 
-        user = userRepository.save(user);
-        return this.convert(user);
+        return userRepository.findById(id).map(existing -> {
+            User user = convert(dto, existing);
+            user = userRepository.save(user);
+            return convertToVO(user, UserVO.class);
+        }).orElseThrow();
     }
 
     /**
@@ -128,18 +136,6 @@ public class UserServiceImpl implements UserService {
     public void remove(Long id) {
         Assert.notNull(id, "id must not be null.");
         userRepository.deleteById(id);
-    }
-
-    /**
-     * 转换为输出对象
-     *
-     * @return ExampleMatcher
-     */
-    private UserVO convert(User user) {
-        UserVO vo = new UserVO();
-        BeanCopier copier = BeanCopier.create(User.class, UserVO.class, false);
-        copier.copy(user, vo, null);
-        return vo;
     }
 
 }

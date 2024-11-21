@@ -91,6 +91,25 @@ public class UserController {
     }
 
     /**
+     * 是否存在
+     *
+     * @param username 名称
+     * @param id       主键
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> exists(@RequestParam String username, Long id) {
+        boolean exists;
+        try {
+            exists = userService.exists(username, id);
+        } catch (Exception e) {
+            logger.info("Check user exists occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(exists);
+    }
+
+    /**
      * 查询信息
      *
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码

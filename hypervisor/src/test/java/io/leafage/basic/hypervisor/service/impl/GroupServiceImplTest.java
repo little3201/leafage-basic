@@ -93,6 +93,25 @@ class GroupServiceImplTest {
     }
 
     @Test
+    void exists() {
+        given(this.groupRepository.existsByNameAndIdNot(Mockito.anyString(),
+                Mockito.anyLong())).willReturn(true);
+
+        boolean exists = groupService.exists("test", 2L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
+        given(this.groupRepository.existsByName(Mockito.anyString())).willReturn(true);
+
+        boolean exists = groupService.exists("test", null);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
     void create() {
         given(this.groupRepository.saveAndFlush(Mockito.any(Group.class))).willReturn(Mockito.mock(Group.class));
 

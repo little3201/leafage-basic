@@ -36,4 +36,11 @@ public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecif
      */
     boolean existsByName(String name);
 
+    /**
+     * <p>existsByName.</p>
+     *
+     * @param name a {@link java.lang.String} object
+     * @return a boolean
+     */
+    boolean existsByNameAndIdNot(String name, Long id);
 }

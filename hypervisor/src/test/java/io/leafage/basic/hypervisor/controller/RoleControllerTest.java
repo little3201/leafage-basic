@@ -132,6 +132,27 @@ class RoleControllerTest {
     }
 
     @Test
+    void exists() throws Exception {
+        given(this.roleService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+
+        mvc.perform(get("/roles/exists")
+                        .queryParam("name", "test"))
+                .andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void exist_error() throws Exception {
+        given(this.roleService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
+
+        mvc.perform(get("/roles/exists")
+                        .queryParam("name", "test")
+                        .queryParam("id", "1"))
+                .andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
     void create() throws Exception {
         given(this.roleService.create(Mockito.any(RoleDTO.class))).willReturn(vo);
 

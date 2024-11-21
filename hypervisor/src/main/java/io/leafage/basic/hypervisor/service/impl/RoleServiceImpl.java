@@ -22,9 +22,7 @@ import io.leafage.basic.hypervisor.vo.RoleVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -58,9 +56,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<Role> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -70,7 +66,8 @@ public class RoleServiceImpl implements RoleService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return roleRepository.findAll(spec, pageable).map(this::convert);
+        return roleRepository.findAll(spec, pageable)
+                .map(role -> convert(role, RoleVO.class));
     }
 
     /**
@@ -80,7 +77,16 @@ public class RoleServiceImpl implements RoleService {
     public RoleVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
 
-        return roleRepository.findById(id).map(this::convert).orElse(null);
+        return roleRepository.findById(id)
+                .map(role -> convert(role, RoleVO.class)).orElse(null);
+    }
+
+    @Override
+    public boolean exists(String name, Long id) {
+        if (id == null) {
+            return roleRepository.existsByName(name);
+        }
+        return roleRepository.existsByNameAndIdNot(name, id);
     }
 
     /**
@@ -93,7 +99,7 @@ public class RoleServiceImpl implements RoleService {
         copier.copy(dto, role, null);
 
         role = roleRepository.saveAndFlush(role);
-        return this.convert(role);
+        return convert(role, RoleVO.class);
     }
 
     /**
@@ -110,7 +116,7 @@ public class RoleServiceImpl implements RoleService {
         copier.copy(dto, role, null);
 
         role = roleRepository.save(role);
-        return this.convert(role);
+        return convert(role, RoleVO.class);
     }
 
     /**
@@ -120,19 +126,6 @@ public class RoleServiceImpl implements RoleService {
     public void remove(Long id) {
         Assert.notNull(id, "id must not be null.");
         roleRepository.deleteById(id);
-    }
-
-    /**
-     * 转换对象
-     *
-     * @param role {@link Role}
-     * @return 结果对象
-     */
-    private RoleVO convert(Role role) {
-        RoleVO vo = new RoleVO();
-        BeanCopier copier = BeanCopier.create(Role.class, RoleVO.class, false);
-        copier.copy(role, vo, null);
-        return vo;
     }
 
 }

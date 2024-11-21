@@ -84,6 +84,25 @@ class UserServiceImplTest {
     }
 
     @Test
+    void exists() {
+        given(this.userRepository.existsByUsernameAndIdNot(Mockito.anyString(),
+                Mockito.anyLong())).willReturn(true);
+
+        boolean exists = userService.exists("test", 2L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
+        given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(true);
+
+        boolean exists = userService.exists("test", null);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
     void create() {
         given(this.userRepository.saveAndFlush(Mockito.any(User.class))).willReturn(Mockito.mock(User.class));
 
@@ -105,24 +124,6 @@ class UserServiceImplTest {
 
         verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
         Assertions.assertNotNull(vo);
-    }
-
-    @Test
-    void exists() {
-        given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(Boolean.TRUE);
-
-        boolean exists = userService.exists("test");
-
-        Assertions.assertTrue(exists);
-    }
-
-    @Test
-    void exist_false() {
-        given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(false);
-
-        boolean exists = userService.exists("test");
-
-        Assertions.assertFalse(exists);
     }
 
     @Test

@@ -91,15 +91,16 @@ public class PostController {
      * 查询帖子是否存在
      *
      * @param title 标题
+     * @param id   主键
      * @return 帖子是否已存在
      */
     @GetMapping("/exists")
-    public ResponseEntity<Boolean> exists(@RequestParam String title) {
+    public ResponseEntity<Boolean> exists(@RequestParam String title, Long id) {
         boolean exists;
         try {
-            exists = postsService.exists(title);
+            exists = postsService.exists(title, id);
         } catch (Exception e) {
-            logger.info("Fetch posts exists occurred an error: ", e);
+            logger.info("Check posts exists occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok(exists);

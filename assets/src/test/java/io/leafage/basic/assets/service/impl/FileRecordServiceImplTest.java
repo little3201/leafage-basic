@@ -59,7 +59,8 @@ class FileRecordServiceImplTest {
     void retrieve() {
         Page<FileRecord> page = new PageImpl<>(List.of(Mockito.mock(FileRecord.class)));
 
-        given(this.fileRecordRepository.findAll(ArgumentMatchers.<Specification<FileRecord>>any(), Mockito.any(Pageable.class))).willReturn(page);
+        given(this.fileRecordRepository.findAll(ArgumentMatchers.<Specification<FileRecord>>any(),
+                Mockito.any(Pageable.class))).willReturn(page);
 
         Page<FileRecordVO> voPage = fileService.retrieve(0, 2, "id", true, "test");
         Assertions.assertNotNull(voPage.getContent());

@@ -22,12 +22,9 @@ import io.leafage.basic.assets.service.TagService;
 import io.leafage.basic.assets.vo.TagVO;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -59,9 +56,7 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public Page<TagVO> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
         return tagRepository.findAll(pageable).map(this::convert);
     }
 
@@ -82,9 +77,12 @@ public class TagServiceImpl implements TagService {
      * {@inheritDoc}
      */
     @Override
-    public boolean exists(String name) {
+    public boolean exists(String name, Long id) {
         Assert.hasText(name, "name must not be blank.");
-        return tagRepository.existsByName(name);
+        if (id == null) {
+            return tagRepository.existsByName(name);
+        }
+        return tagRepository.existsByNameAndIdNot(name, id);
     }
 
     /**

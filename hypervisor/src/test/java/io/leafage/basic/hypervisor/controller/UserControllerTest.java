@@ -113,6 +113,27 @@ class UserControllerTest {
     }
 
     @Test
+    void exists() throws Exception {
+        given(this.userService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+
+        mvc.perform(get("/users/exists")
+                        .queryParam("username", "test"))
+                .andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void exist_error() throws Exception {
+        given(this.userService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
+
+        mvc.perform(get("/users/exists")
+                        .queryParam("username", "test")
+                        .queryParam("id", "1"))
+                .andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
     void create() throws Exception {
         given(this.userService.create(Mockito.any(UserDTO.class))).willReturn(vo);
 

@@ -72,7 +72,7 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
                 });
             }
         }
-        return this.convertTree(privileges);
+        return convertTree(privileges);
     }
 
     /**
@@ -90,8 +90,8 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
         meta.add("redirect");
         meta.add("component");
         meta.add("icon");
-        meta.add("hidden");
-        return this.convert(privileges, meta);
+        meta.add("actions");
+        return convertToTree(privileges, meta);
     }
 
 }

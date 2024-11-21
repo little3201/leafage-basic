@@ -16,9 +16,9 @@
 package io.leafage.basic.assets.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.leafage.basic.assets.dto.TagDTO;
-import io.leafage.basic.assets.service.TagService;
-import io.leafage.basic.assets.vo.TagVO;
+import io.leafage.basic.assets.dto.FileRecordDTO;
+import io.leafage.basic.assets.service.FileRecordService;
+import io.leafage.basic.assets.vo.FileRecordVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,14 +45,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * tags 接口测试
+ * files 接口测试
  *
  * @author wq li
  **/
 @WithMockUser
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(TagController.class)
-class TagControllerTest {
+@WebMvcTest(FileController.class)
+class FileControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -61,68 +61,71 @@ class TagControllerTest {
     private ObjectMapper mapper;
 
     @MockBean
-    private TagService tagService;
+    private FileRecordService fileRecordService;
 
-    private TagVO vo;
+    private FileRecordVO vo;
 
-    private TagDTO dto;
+    private FileRecordDTO dto;
 
     @BeforeEach
     void setUp() {
-        vo = new TagVO();
+        vo = new FileRecordVO();
         vo.setName("test");
-        vo.setCount(21L);
+        vo.setSize(21232);
 
-        dto = new TagDTO();
+        dto = new FileRecordDTO();
         dto.setName("test");
     }
 
     @Test
     void retrieve() throws Exception {
-        Page<TagVO> page = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
+        Page<FileRecordVO> page = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
-        given(tagService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
-                Mockito.anyBoolean())).willReturn(page);
+        given(fileRecordService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyBoolean(), Mockito.anyString())).willReturn(page);
 
-        mvc.perform(get("/tags").queryParam("page", "0")
-                        .queryParam("size", "2").queryParam("sortBy", "id"))
-                .andExpect(status().isOk()).andDo(print()).andReturn();
+        mvc.perform(get("/files").queryParam("page", "0")
+                        .queryParam("size", "2")
+                        .queryParam("sortBy", "id")
+                        .queryParam("name", "test"))
+                .andExpect(status().isOk())
+                .andDo(print()).andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(tagService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
-                Mockito.anyBoolean())).willThrow(new RuntimeException());
+        given(fileRecordService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyBoolean(), Mockito.anyString())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/tags").queryParam("page", "0")
-                        .queryParam("size", "2").queryParam("sortBy", "id"))
+        mvc.perform(get("/files").queryParam("page", "0")
+                        .queryParam("size", "2")
+                        .queryParam("sortBy", "id")
+                        .queryParam("name", "test"))
                 .andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void fetch() throws Exception {
-        given(tagService.fetch(Mockito.anyLong())).willReturn(vo);
+        given(fileRecordService.fetch(Mockito.anyLong())).willReturn(vo);
 
-        mvc.perform(get("/tags/{id}", 1L)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("test"))
-                .andDo(print()).andReturn();
+        mvc.perform(get("/files/{id}", 1L)).andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("test")).andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
-        given(tagService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
+        given(fileRecordService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/tags/{id}", 1L))
-                .andExpect(status().isNoContent())
+        mvc.perform(get("/files/{id}", 1L)).andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void exists() throws Exception {
-        given(this.tagService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+        given(this.fileRecordService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
 
-        mvc.perform(get("/tags/exists")
+        mvc.perform(get("/files/exists")
                         .queryParam("name", "text")
                         .queryParam("id", "1"))
                 .andExpect(status().isOk())
@@ -131,9 +134,9 @@ class TagControllerTest {
 
     @Test
     void exist_error() throws Exception {
-        given(this.tagService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
+        given(this.fileRecordService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/tags/exists", "test")
+        mvc.perform(get("/files/exists", "test")
                         .queryParam("name", "text")
                         .queryParam("id", "1"))
                 .andExpect(status().isNoContent())
@@ -142,9 +145,9 @@ class TagControllerTest {
 
     @Test
     void create() throws Exception {
-        given(tagService.create(Mockito.any(TagDTO.class))).willReturn(vo);
+        given(fileRecordService.create(Mockito.any(FileRecordDTO.class))).willReturn(vo);
 
-        mvc.perform(post("/tags").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/files").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("test"))
@@ -153,48 +156,28 @@ class TagControllerTest {
 
     @Test
     void create_error() throws Exception {
-        given(tagService.create(Mockito.any(TagDTO.class))).willThrow(new RuntimeException());
+        given(fileRecordService.create(Mockito.any(FileRecordDTO.class))).willThrow(new RuntimeException());
 
-        mvc.perform(post("/tags").contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/files").contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
     @Test
-    void modify() throws Exception {
-        given(tagService.modify(Mockito.anyLong(), Mockito.any(TagDTO.class))).willReturn(vo);
-
-        mvc.perform(put("/tags/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
-                .andExpect(status().isAccepted())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
-    void modify_error() throws Exception {
-        given(tagService.modify(Mockito.anyLong(), Mockito.any(TagDTO.class))).willThrow(new RuntimeException());
-
-        mvc.perform(put("/tags/{id}", Mockito.anyLong()).contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
-                .andExpect(status().isNotModified())
-                .andDo(print()).andReturn();
-    }
-
-    @Test
     void remove() throws Exception {
-        tagService.remove(Mockito.anyLong());
+        fileRecordService.remove(Mockito.anyLong());
 
-        mvc.perform(delete("/tags/{id}", Mockito.anyLong()).with(csrf().asHeader()))
+        mvc.perform(delete("/files/{id}", Mockito.anyLong()).with(csrf().asHeader()))
                 .andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void remove_error() throws Exception {
-        doThrow(new RuntimeException()).when(tagService).remove(Mockito.anyLong());
+        doThrow(new RuntimeException()).when(fileRecordService).remove(Mockito.anyLong());
 
-        mvc.perform(delete("/tags/{id}", Mockito.anyLong()).with(csrf().asHeader()))
+        mvc.perform(delete("/files/{id}", Mockito.anyLong()).with(csrf().asHeader()))
                 .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }

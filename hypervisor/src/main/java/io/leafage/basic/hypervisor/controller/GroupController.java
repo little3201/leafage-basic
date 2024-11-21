@@ -114,6 +114,25 @@ public class GroupController {
     }
 
     /**
+     * 是否存在
+     *
+     * @param name 名称
+     * @param id   主键
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> exists(@RequestParam String name, Long id) {
+        boolean exists;
+        try {
+            exists = groupService.exists(name, id);
+        } catch (Exception e) {
+            logger.info("Check group exists occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(exists);
+    }
+
+    /**
      * 添加信息
      *
      * @param dto 要添加的数据

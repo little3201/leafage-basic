@@ -23,9 +23,7 @@ import io.leafage.basic.assets.vo.RegionVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -58,9 +56,7 @@ public class RegionServiceImpl implements RegionService {
      */
     @Override
     public Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId, String name) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<Region> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -75,7 +71,7 @@ public class RegionServiceImpl implements RegionService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return regionRepository.findAll(spec, pageable).map(this::convert);
+        return regionRepository.findAll(spec, pageable).map(region -> convert(region, RegionVO.class));
     }
 
     /**
@@ -88,16 +84,19 @@ public class RegionServiceImpl implements RegionService {
         if (region == null) {
             return null;
         }
-        return this.convert(region);
+        return convert(region, RegionVO.class);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean exists(String name) {
+    public boolean exists(String name, Long id) {
         Assert.hasText(name, "name must not bu blank.");
-        return regionRepository.existsByName(name);
+        if (id == null) {
+            return regionRepository.existsByName(name);
+        }
+        return regionRepository.existsByNameAndIdNot(name, id);
     }
 
     /**
@@ -110,7 +109,7 @@ public class RegionServiceImpl implements RegionService {
         copier.copy(dto, region, null);
 
         regionRepository.saveAndFlush(region);
-        return this.convert(region);
+        return convert(region, RegionVO.class);
     }
 
     /**
@@ -127,7 +126,7 @@ public class RegionServiceImpl implements RegionService {
         copier.copy(dto, region, null);
 
         regionRepository.save(region);
-        return this.convert(region);
+        return convert(region, RegionVO.class);
     }
 
     /**
@@ -139,16 +138,4 @@ public class RegionServiceImpl implements RegionService {
         regionRepository.deleteById(id);
     }
 
-    /**
-     * 数据转换
-     *
-     * @param region 信息
-     * @return RegionVO 输出对象
-     */
-    private RegionVO convert(Region region) {
-        RegionVO vo = new RegionVO();
-        BeanCopier copier = BeanCopier.create(Region.class, RegionVO.class, false);
-        copier.copy(region, vo, null);
-        return vo;
-    }
 }

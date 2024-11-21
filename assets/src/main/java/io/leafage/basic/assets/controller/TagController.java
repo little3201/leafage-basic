@@ -50,11 +50,11 @@ public class TagController {
     /**
      * 分页查询tag
      *
-     * @param page   页码
-     * @param size   大小
-     * @param sortBy 排序字段
-     * @return 分页结果集
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序字段
      * @param descending a boolean
+     * @return 分页结果集
      */
     @GetMapping
     public ResponseEntity<Page<TagVO>> retrieve(@RequestParam int page, @RequestParam int size,
@@ -85,6 +85,25 @@ public class TagController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(categoryVO);
+    }
+
+    /**
+     * 是否存在
+     *
+     * @param name 名称
+     * @param id   主键
+     * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
+     */
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> exists(@RequestParam String name, Long id) {
+        boolean exists;
+        try {
+            exists = tagService.exists(name, id);
+        } catch (Exception e) {
+            logger.info("Check file exists occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(exists);
     }
 
     /**

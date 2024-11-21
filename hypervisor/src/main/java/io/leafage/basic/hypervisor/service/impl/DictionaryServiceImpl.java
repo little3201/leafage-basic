@@ -23,9 +23,7 @@ import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -60,9 +58,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      */
     @Override
     public Page<DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending, String name) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<Dictionary> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -100,9 +96,12 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      * {@inheritDoc}
      */
     @Override
-    public boolean exists(String name) {
+    public boolean exists(Long superiorId, String name, Long id) {
         Assert.hasText(name, "name must not be blank.");
-        return dictionaryRepository.existsByName(name);
+        if (id == null) {
+            return dictionaryRepository.existsBySuperiorIdAndName(superiorId, name);
+        }
+        return dictionaryRepository.existsBySuperiorIdAndNameAndIdNot(superiorId, name, id);
     }
 
     /**

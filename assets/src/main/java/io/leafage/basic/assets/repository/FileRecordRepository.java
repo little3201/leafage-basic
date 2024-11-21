@@ -27,4 +27,20 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface FileRecordRepository extends JpaRepository<FileRecord, Long>, JpaSpecificationExecutor<FileRecord> {
+
+    /**
+     * 是否已存在
+     *
+     * @param name 名称
+     * @return true-是，false-否
+     */
+    boolean existsByName(String name);
+
+    /**
+     * 是否已存在
+     *
+     * @param name 名称
+     * @return true-是，false-否
+     */
+    boolean existsByNameAndIdNot(String name, Long id);
 }

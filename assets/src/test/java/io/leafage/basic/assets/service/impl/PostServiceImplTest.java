@@ -114,9 +114,18 @@ class PostServiceImplTest {
 
     @Test
     void exists() {
+        given(postRepository.existsByTitleAndIdNot(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+
+        boolean exists = postsService.exists("test", 1L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
         given(postRepository.existsByTitle(Mockito.anyString())).willReturn(true);
 
-        boolean exists = postsService.exists("test");
+        boolean exists = postsService.exists("test", null);
 
         Assertions.assertTrue(exists);
     }

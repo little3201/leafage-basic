@@ -27,7 +27,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -133,6 +135,27 @@ class GroupControllerTest {
         given(this.groupService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
         mvc.perform(get("/groups/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void exists() throws Exception {
+        given(this.groupService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+
+        mvc.perform(get("/groups/exists")
+                        .queryParam("name", "test"))
+                .andExpect(status().isOk())
+                .andDo(print()).andReturn();
+    }
+
+    @Test
+    void exist_error() throws Exception {
+        given(this.groupService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
+
+        mvc.perform(get("/groups/exists")
+                        .queryParam("name", "test")
+                        .queryParam("id", "1"))
+                .andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

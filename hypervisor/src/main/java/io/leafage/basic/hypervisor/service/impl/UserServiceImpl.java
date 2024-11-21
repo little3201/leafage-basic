@@ -22,9 +22,7 @@ import io.leafage.basic.hypervisor.vo.UserVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -57,9 +55,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, String username) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<User> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -68,14 +64,16 @@ public class UserServiceImpl implements UserService {
             }
             return cb.and(predicates.toArray(new Predicate[0]));
         };
-        return userRepository.findAll(spec, pageable).map(this::convert);
+        return userRepository.findAll(spec, pageable)
+                .map(user -> convert(user, UserVO.class));
     }
 
     @Override
     public UserVO findByUsername(String username) {
         Assert.hasText(username, "username must not be blank.");
 
-        return userRepository.findByUsername(username).map(this::convert).orElse(null);
+        return userRepository.findByUsername(username)
+                .map(user -> convert(user, UserVO.class)).orElse(null);
     }
 
     /**
@@ -85,17 +83,20 @@ public class UserServiceImpl implements UserService {
     public UserVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
 
-        return userRepository.findById(id).map(this::convert).orElse(null);
+        return userRepository.findById(id)
+                .map(user -> convert(user, UserVO.class)).orElse(null);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean exists(String username) {
+    public boolean exists(String username, Long id) {
         Assert.hasText(username, "username must not be blank.");
-
-        return userRepository.existsByUsername(username);
+        if (id == null) {
+            return userRepository.existsByUsername(username);
+        }
+        return userRepository.existsByUsernameAndIdNot(username, id);
     }
 
     /**
@@ -109,7 +110,7 @@ public class UserServiceImpl implements UserService {
         // set default value
         user.setPassword("{noop}123456");
         user = userRepository.saveAndFlush(user);
-        return this.convert(user);
+        return convert(user, UserVO.class);
     }
 
     /**
@@ -126,7 +127,7 @@ public class UserServiceImpl implements UserService {
         copier.copy(dto, user, null);
 
         user = userRepository.save(user);
-        return this.convert(user);
+        return convert(user, UserVO.class);
     }
 
     /**
@@ -136,18 +137,6 @@ public class UserServiceImpl implements UserService {
     public void remove(Long id) {
         Assert.notNull(id, "id must not be null.");
         userRepository.deleteById(id);
-    }
-
-    /**
-     * 转换为输出对象
-     *
-     * @return ExampleMatcher
-     */
-    private UserVO convert(User user) {
-        UserVO vo = new UserVO();
-        BeanCopier copier = BeanCopier.create(User.class, UserVO.class, false);
-        copier.copy(user, vo, null);
-        return vo;
     }
 
 }

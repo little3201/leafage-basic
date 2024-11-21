@@ -86,9 +86,18 @@ class RegionServiceImplTest {
 
     @Test
     void exists() {
+        given(this.regionRepository.existsByNameAndIdNot(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+
+        boolean exists = regionService.exists("test", 1L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
         given(this.regionRepository.existsByName(Mockito.anyString())).willReturn(true);
 
-        boolean exists = regionService.exists("成都市");
+        boolean exists = regionService.exists("test", null);
 
         Assertions.assertTrue(exists);
     }

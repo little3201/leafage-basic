@@ -84,6 +84,25 @@ class RoleServiceImplTest {
     }
 
     @Test
+    void exists() {
+        given(this.roleRepository.existsByNameAndIdNot(Mockito.anyString(),
+                Mockito.anyLong())).willReturn(true);
+
+        boolean exists = roleService.exists("test", 2L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
+        given(this.roleRepository.existsByName(Mockito.anyString())).willReturn(true);
+
+        boolean exists = roleService.exists("test", null);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
     void create() {
         given(this.roleRepository.saveAndFlush(Mockito.any(Role.class))).willReturn(Mockito.mock(Role.class));
 

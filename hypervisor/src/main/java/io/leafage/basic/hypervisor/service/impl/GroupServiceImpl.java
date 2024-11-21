@@ -22,19 +22,15 @@ import io.leafage.basic.hypervisor.vo.GroupVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.TreeNode;
 import top.leafage.common.servlet.ServletAbstractTreeNodeService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -62,9 +58,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
      */
     @Override
     public Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending, Long superiorId, String name) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<Group> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -79,7 +73,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return groupRepository.findAll(spec, pageable).map(this::convert);
+        return groupRepository.findAll(spec, pageable).map(group -> convert(group, GroupVO.class));
     }
 
     /**
@@ -88,7 +82,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     @Override
     public List<TreeNode> tree() {
         List<Group> groups = groupRepository.findAll();
-        return this.convertTree(groups);
+        return convertToTree(groups);
     }
 
     /**
@@ -98,7 +92,15 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     public GroupVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
 
-        return groupRepository.findById(id).map(this::convert).orElse(null);
+        return groupRepository.findById(id).map(group -> convert(group, GroupVO.class)).orElse(null);
+    }
+
+    @Override
+    public boolean exists(String name, Long id) {
+        if (id == null) {
+            return groupRepository.existsByName(name);
+        }
+        return groupRepository.existsByNameAndIdNot(name, id);
     }
 
     /**
@@ -111,7 +113,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         copier.copy(dto, group, null);
 
         group = groupRepository.saveAndFlush(group);
-        return this.convert(group);
+        return convert(group, GroupVO.class);
     }
 
     /**
@@ -129,7 +131,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
         copier.copy(dto, group, null);
 
         group = groupRepository.save(group);
-        return this.convert(group);
+        return convert(group, GroupVO.class);
     }
 
     /**
@@ -139,32 +141,6 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     public void remove(Long id) {
         Assert.notNull(id, "id must not be null.");
         groupRepository.deleteById(id);
-    }
-
-    /**
-     * 转换对象
-     *
-     * @param group 基础对象
-     * @return 结果对象
-     */
-    private GroupVO convert(Group group) {
-        GroupVO vo = new GroupVO();
-        BeanCopier copier = BeanCopier.create(Group.class, GroupVO.class, false);
-        copier.copy(group, vo, null);
-        return vo;
-    }
-
-    /**
-     * 转换为TreeNode
-     *
-     * @param groups 集合数据
-     * @return 树集合
-     */
-    private List<TreeNode> convertTree(List<Group> groups) {
-        if (CollectionUtils.isEmpty(groups)) {
-            return Collections.emptyList();
-        }
-        return this.convert(groups, null);
     }
 
 }

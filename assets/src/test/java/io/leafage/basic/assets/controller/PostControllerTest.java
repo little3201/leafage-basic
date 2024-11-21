@@ -35,10 +35,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -48,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * 帖子接口测试类
+ * posts 接口测试
  *
  * @author wq li
  **/
@@ -88,19 +86,24 @@ class PostControllerTest {
     void retrieve() throws Exception {
         Page<PostVO> page = new PageImpl<>(List.of(vo), Mockito.mock(PageRequest.class), 2L);
 
-        given(postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), eq("id"), Mockito.anyBoolean())).willReturn(page);
+        given(postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyBoolean())).willReturn(page);
 
         mvc.perform(get("/posts").queryParam("page", "0")
-                        .queryParam("size", "2").queryParam("sortBy", "id")).andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isNotEmpty()).andDo(print()).andReturn();
+                        .queryParam("size", "2").queryParam("sortBy", "id"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isNotEmpty())
+                .andDo(print()).andReturn();
     }
 
     @Test
     void retrieve_error() throws Exception {
-        given(postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new NoSuchElementException());
+        given(postsService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(),
+                Mockito.anyBoolean())).willThrow(new RuntimeException());
 
         mvc.perform(get("/posts").queryParam("page", "0")
-                        .queryParam("size", "2").queryParam("sortBy", "id")).andExpect(status().isNoContent())
+                        .queryParam("size", "2").queryParam("sortBy", "id"))
+                .andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -109,29 +112,37 @@ class PostControllerTest {
         given(postsService.fetch(Mockito.anyLong())).willReturn(vo);
 
         mvc.perform(get("/posts/{id}", Mockito.anyLong())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("test")).andDo(print()).andReturn();
+                .andExpect(jsonPath("$.title").value("test"))
+                .andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
         given(postsService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
-        mvc.perform(get("/posts/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
+        mvc.perform(get("/posts/{id}", Mockito.anyLong()))
+                .andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void exists() throws Exception {
-        given(postsService.exists(Mockito.anyString())).willReturn(true);
+        given(postsService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
 
-        mvc.perform(get("/posts/exists").queryParam("title", "test")).andExpect(status().isOk())
+        mvc.perform(get("/posts/exists")
+                        .queryParam("title", "test")
+                        .queryParam("id", "1"))
+                .andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void exist_error() throws Exception {
-        given(postsService.exists(Mockito.anyString())).willThrow(new RuntimeException());
+        given(postsService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/posts/exists").queryParam("title", "test")).andExpect(status().isExpectationFailed())
+        mvc.perform(get("/posts/exists")
+                        .queryParam("title", "test")
+                        .queryParam("id", "1"))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -140,7 +151,8 @@ class PostControllerTest {
         given(postsService.create(Mockito.any(PostDTO.class))).willReturn(vo);
 
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader())).andExpect(status().isCreated())
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("test"))
                 .andDo(print()).andReturn();
     }
@@ -150,7 +162,8 @@ class PostControllerTest {
         given(postsService.create(Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
         mvc.perform(post("/posts").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+                        .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 
@@ -177,14 +190,16 @@ class PostControllerTest {
     @Test
     void remove() throws Exception {
         postsService.remove(Mockito.anyLong());
-        mvc.perform(delete("/posts/{id}", 1L).with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/posts/{id}", 1L).with(csrf().asHeader()))
+                .andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void remove_error() throws Exception {
         doThrow(new RuntimeException()).when(postsService).remove(Mockito.anyLong());
-        mvc.perform(delete("/posts/{id}", 1L).with(csrf().asHeader())).andExpect(status().isExpectationFailed())
+        mvc.perform(delete("/posts/{id}", 1L).with(csrf().asHeader()))
+                .andExpect(status().isExpectationFailed())
                 .andDo(print()).andReturn();
     }
 

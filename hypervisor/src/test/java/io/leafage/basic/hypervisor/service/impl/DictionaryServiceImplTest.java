@@ -105,9 +105,19 @@ class DictionaryServiceImplTest {
 
     @Test
     void exists() {
-        given(this.dictionaryRepository.existsByName(Mockito.anyString())).willReturn(true);
+        given(this.dictionaryRepository.existsBySuperiorIdAndNameAndIdNot(Mockito.anyLong(), Mockito.anyString(),
+                Mockito.anyLong())).willReturn(true);
 
-        boolean exists = dictionaryService.exists("性别");
+        boolean exists = dictionaryService.exists(1L, "test", 2L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
+        given(this.dictionaryRepository.existsBySuperiorIdAndName(Mockito.anyLong(), Mockito.anyString())).willReturn(true);
+
+        boolean exists = dictionaryService.exists(1L, "test", null);
 
         Assertions.assertTrue(exists);
     }

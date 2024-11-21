@@ -48,4 +48,14 @@ public interface DictionaryService extends ServletBasicService<DictionaryDTO, Di
      * @return 数据集
      */
     List<DictionaryVO> subset(Long id);
+
+    /**
+     * Checks if a record exists by it's superiorId and name.
+     *
+     * @param superiorId the record's superiorId.
+     * @param name       the record's name.
+     * @param id         the record's id.
+     * @return a Mono emitting true if the record exists, false otherwise.
+     */
+    boolean exists(Long superiorId, String name, Long id);
 }

@@ -15,6 +15,8 @@
 
 package io.leafage.basic.assets.bo;
 
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * bo class for file record.
  *
@@ -22,10 +24,13 @@ package io.leafage.basic.assets.bo;
  */
 public abstract class FileRecordBO {
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String path;
 
+    @NotBlank
     private String type;
 
     private float size;

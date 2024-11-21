@@ -111,16 +111,18 @@ public class DictionaryController {
     /**
      * 是否存在
      *
-     * @param name 名称
+     * @param superiorId superior id
+     * @param name       名称
+     * @param id         主键
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/{name}/exists")
-    public ResponseEntity<Boolean> exists(@PathVariable String name) {
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> exists(@RequestParam Long superiorId, @RequestParam String name, Long id) {
         boolean exists;
         try {
-            exists = dictionaryService.exists(name);
+            exists = dictionaryService.exists(superiorId, name, id);
         } catch (Exception e) {
-            logger.info("Query dictionary exists occurred an error: ", e);
+            logger.info("Check dictionary exists occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(exists);

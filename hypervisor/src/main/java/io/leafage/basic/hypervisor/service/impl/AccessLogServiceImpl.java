@@ -23,9 +23,7 @@ import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -58,9 +56,7 @@ public class AccessLogServiceImpl implements AccessLogService {
      */
     @Override
     public Page<AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending, String url) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<AccessLog> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -70,14 +66,16 @@ public class AccessLogServiceImpl implements AccessLogService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return accessLogRepository.findAll(spec, pageable).map(this::convert);
+        return accessLogRepository.findAll(spec, pageable)
+                .map(accessLog -> convert(accessLog, AccessLogVO.class));
     }
 
     @Override
     public AccessLogVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
 
-        return accessLogRepository.findById(id).map(this::convert).orElse(null);
+        return accessLogRepository.findById(id)
+                .map(accessLog -> convert(accessLog, AccessLogVO.class)).orElse(null);
     }
 
     /**
@@ -90,7 +88,7 @@ public class AccessLogServiceImpl implements AccessLogService {
         copier.copy(dto, accessLog, null);
 
         accessLogRepository.saveAndFlush(accessLog);
-        return this.convert(accessLog);
+        return convert(accessLog, AccessLogVO.class);
     }
 
     @Override
@@ -99,10 +97,4 @@ public class AccessLogServiceImpl implements AccessLogService {
         accessLogRepository.deleteById(id);
     }
 
-    private AccessLogVO convert(AccessLog accessLog) {
-        AccessLogVO vo = new AccessLogVO();
-        BeanCopier copier = BeanCopier.create(AccessLog.class, AccessLogVO.class, false);
-        copier.copy(accessLog, vo, null);
-        return vo;
-    }
 }

@@ -65,7 +65,7 @@ public class FileController {
         try {
             voPage = fileRecordService.retrieve(page, size, sortBy, descending, name);
         } catch (Exception e) {
-            logger.error("Retrieve region occurred an error: ", e);
+            logger.error("Retrieve file occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voPage);
@@ -83,7 +83,7 @@ public class FileController {
         try {
             vo = fileRecordService.fetch(id);
         } catch (Exception e) {
-            logger.error("Fetch region occurred an error: ", e);
+            logger.error("Fetch file occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(vo);
@@ -93,15 +93,16 @@ public class FileController {
      * 是否存在
      *
      * @param name 名称
+     * @param id   主键
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @GetMapping("/{name}/exists")
-    public ResponseEntity<Boolean> exists(@PathVariable String name) {
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> exists(@RequestParam String name, Long id) {
         boolean exists;
         try {
-            exists = fileRecordService.exists(name);
+            exists = fileRecordService.exists(name, id);
         } catch (Exception e) {
-            logger.info("Query region exists occurred an error: ", e);
+            logger.info("Check file exists occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(exists);
@@ -119,7 +120,7 @@ public class FileController {
         try {
             vo = fileRecordService.create(dto);
         } catch (Exception e) {
-            logger.error("Create region occurred an error: ", e);
+            logger.error("Create file occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(vo);
@@ -136,7 +137,7 @@ public class FileController {
         try {
             fileRecordService.remove(id);
         } catch (Exception e) {
-            logger.error("Remove region occurred an error: ", e);
+            logger.error("Remove file occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();

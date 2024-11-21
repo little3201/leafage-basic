@@ -26,7 +26,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -109,7 +111,8 @@ class DictionaryControllerTest {
     void subset() throws Exception {
         given(this.dictionaryService.subset(Mockito.anyLong())).willReturn(List.of(vo));
 
-        mvc.perform(get("/dictionaries/{id}/subset", Mockito.anyLong())).andExpect(status().isOk())
+        mvc.perform(get("/dictionaries/{id}/subset", Mockito.anyLong()))
+                .andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -117,15 +120,18 @@ class DictionaryControllerTest {
     void fetch() throws Exception {
         given(this.dictionaryService.fetch(Mockito.anyLong())).willReturn(vo);
 
-        mvc.perform(get("/dictionaries/{id}", Mockito.anyLong())).andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("gender")).andDo(print()).andReturn();
+        mvc.perform(get("/dictionaries/{id}", Mockito.anyLong()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("gender"))
+                .andDo(print()).andReturn();
     }
 
     @Test
     void fetch_error() throws Exception {
         given(this.dictionaryService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/dictionaries/{id}", Mockito.anyLong())).andExpect(status().isNoContent())
+        mvc.perform(get("/dictionaries/{id}", Mockito.anyLong()))
+                .andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -154,24 +160,31 @@ class DictionaryControllerTest {
     void remove() throws Exception {
         this.dictionaryService.remove(Mockito.anyLong());
 
-        mvc.perform(delete("/dictionaries/{id}", Mockito.anyLong()).with(csrf().asHeader())).andExpect(status().isOk())
+        mvc.perform(delete("/dictionaries/{id}", Mockito.anyLong()).with(csrf().asHeader()))
+                .andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
-
     @Test
     void exists() throws Exception {
-        given(this.dictionaryService.exists(Mockito.anyString())).willReturn(true);
+        given(this.dictionaryService.exists(Mockito.anyLong(), Mockito.anyString(), Mockito.anyLong())).willReturn(true);
 
-        mvc.perform(get("/dictionaries/{name}/exists", "gender")).andExpect(status().isOk())
+        mvc.perform(get("/dictionaries/exists")
+                        .queryParam("superiorId", "1")
+                        .queryParam("name", "test"))
+                .andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
     @Test
     void exist_error() throws Exception {
-        given(this.dictionaryService.exists(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.dictionaryService.exists(Mockito.anyLong(), Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/dictionaries/{name}/exists", "gender")).andExpect(status().isNoContent())
+        mvc.perform(get("/dictionaries/exists")
+                        .queryParam("superiorId", "1")
+                        .queryParam("name", "test")
+                        .queryParam("id", "2"))
+                .andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 
@@ -179,7 +192,8 @@ class DictionaryControllerTest {
     void lower_error() throws Exception {
         given(this.dictionaryService.subset(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/dictionaries/{id}/subset", Mockito.anyLong())).andExpect(status().isNoContent())
+        mvc.perform(get("/dictionaries/{id}/subset", Mockito.anyLong()))
+                .andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
 

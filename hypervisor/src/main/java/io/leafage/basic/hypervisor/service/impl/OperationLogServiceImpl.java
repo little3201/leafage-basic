@@ -23,9 +23,7 @@ import io.leafage.basic.hypervisor.vo.OperationLogVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -58,9 +56,7 @@ public class OperationLogServiceImpl implements OperationLogService {
      */
     @Override
     public Page<OperationLogVO> retrieve(int page, int size, String sortBy, boolean descending, String operation) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<OperationLog> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -70,14 +66,16 @@ public class OperationLogServiceImpl implements OperationLogService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return operationLogRepository.findAll(spec, pageable).map(this::convert);
+        return operationLogRepository.findAll(spec, pageable)
+                .map(operationLog -> convert(operationLog, OperationLogVO.class));
     }
 
     @Override
     public OperationLogVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
 
-        return operationLogRepository.findById(id).map(this::convert).orElse(null);
+        return operationLogRepository.findById(id)
+                .map(operationLog -> convert(operationLog, OperationLogVO.class)).orElse(null);
     }
 
     /**
@@ -90,7 +88,7 @@ public class OperationLogServiceImpl implements OperationLogService {
         copier.copy(dto, operationLog, null);
 
         operationLogRepository.saveAndFlush(operationLog);
-        return this.convert(operationLog);
+        return convert(operationLog, OperationLogVO.class);
     }
 
     @Override
@@ -99,10 +97,4 @@ public class OperationLogServiceImpl implements OperationLogService {
         operationLogRepository.deleteById(id);
     }
 
-    private OperationLogVO convert(OperationLog operationLog) {
-        OperationLogVO vo = new OperationLogVO();
-        BeanCopier copier = BeanCopier.create(OperationLog.class, OperationLogVO.class, false);
-        copier.copy(operationLog, vo, null);
-        return vo;
-    }
 }

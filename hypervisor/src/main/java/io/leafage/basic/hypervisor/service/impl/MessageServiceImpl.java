@@ -23,9 +23,7 @@ import io.leafage.basic.hypervisor.vo.MessageVO;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -58,9 +56,7 @@ public class MessageServiceImpl implements MessageService {
      */
     @Override
     public Page<MessageVO> retrieve(int page, int size, String sortBy, boolean descending, String title) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<Message> spec = (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -70,7 +66,8 @@ public class MessageServiceImpl implements MessageService {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
 
-        return messageRepository.findAll(spec, pageable).map(this::convert);
+        return messageRepository.findAll(spec, pageable)
+                .map(message -> convert(message, MessageVO.class));
     }
 
     /**
@@ -80,7 +77,8 @@ public class MessageServiceImpl implements MessageService {
     public MessageVO fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
 
-        return messageRepository.findById(id).map(this::convert).orElse(null);
+        return messageRepository.findById(id)
+                .map(message -> convert(message, MessageVO.class)).orElse(null);
     }
 
     /**
@@ -93,18 +91,7 @@ public class MessageServiceImpl implements MessageService {
         copier.copy(dto, message, null);
 
         messageRepository.saveAndFlush(message);
-        return this.convert(message);
+        return convert(message, MessageVO.class);
     }
 
-    /**
-     * 转换为输出对象
-     *
-     * @return ExampleMatcher
-     */
-    private MessageVO convert(Message message) {
-        MessageVO vo = new MessageVO();
-        BeanCopier copier = BeanCopier.create(Message.class, MessageVO.class, false);
-        copier.copy(message, vo, null);
-        return vo;
-    }
 }

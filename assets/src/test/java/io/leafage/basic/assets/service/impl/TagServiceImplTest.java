@@ -82,6 +82,23 @@ class TagServiceImplTest {
         Assertions.assertNotNull(categoryVO);
     }
 
+    @Test
+    void exists() {
+        given(this.tagRepository.existsByNameAndIdNot(Mockito.anyString(), Mockito.anyLong())).willReturn(true);
+
+        boolean exists = tagService.exists("test", 1L);
+
+        Assertions.assertTrue(exists);
+    }
+
+    @Test
+    void exists_id_null() {
+        given(this.tagRepository.existsByName(Mockito.anyString())).willReturn(true);
+
+        boolean exists = tagService.exists("test", null);
+
+        Assertions.assertTrue(exists);
+    }
 
     @Test
     void create() {

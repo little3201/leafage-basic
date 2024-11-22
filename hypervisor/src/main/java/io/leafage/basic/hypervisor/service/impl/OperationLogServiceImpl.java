@@ -85,7 +85,7 @@ public class OperationLogServiceImpl implements OperationLogService {
     public OperationLogVO create(OperationLogDTO dto) {
         OperationLog operationLog = convertToDomain(dto, OperationLog.class);
 
-        operationLogRepository.save(operationLog);
+        operationLogRepository.saveAndFlush(operationLog);
         return convertToVO(operationLog, OperationLogVO.class);
     }
 

@@ -61,7 +61,6 @@ class OperationLogControllerTest {
 
     @BeforeEach
     void setUp() {
-        // vo
         vo = new OperationLogVO(1L, true, Instant.now());
         vo.setIp("12.1.3.2");
         vo.setLocation("test");

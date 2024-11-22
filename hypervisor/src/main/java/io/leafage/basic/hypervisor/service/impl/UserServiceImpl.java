@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
         User user = convertToDomain(dto, User.class);
         user.setPassword("{noop}123456");
 
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
         return convertToVO(user, UserVO.class);
     }
 

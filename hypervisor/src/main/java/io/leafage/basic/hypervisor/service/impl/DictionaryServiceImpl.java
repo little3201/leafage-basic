@@ -118,7 +118,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     public DictionaryVO create(DictionaryDTO dto) {
         Dictionary dictionary = convertToDomain(dto, Dictionary.class);
 
-        dictionaryRepository.save(dictionary);
+        dictionaryRepository.saveAndFlush(dictionary);
         return convertToVO(dictionary, DictionaryVO.class);
     }
 

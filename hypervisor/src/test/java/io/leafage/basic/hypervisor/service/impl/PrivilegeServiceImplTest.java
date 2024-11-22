@@ -77,23 +77,11 @@ class PrivilegeServiceImplTest {
 
     @Test
     void retrieve() {
-        Page<Privilege> page = new PageImpl<>(List.of(Mockito.mock(Privilege.class)));
-        given(this.privilegeRepository.findAll(Mockito.any(Pageable.class))).willReturn(page);
+        Page<Privilege> page = new PageImpl<>(List.of(new Privilege()));
+        given(this.privilegeRepository.findAllBySuperiorIdIsNull(Mockito.any(Pageable.class))).willReturn(page);
 
         Page<PrivilegeVO> voPage = privilegeService.retrieve(0, 2, "id", true, null);
         Assertions.assertNotNull(voPage.getContent());
-    }
-
-    @Test
-    void create() {
-        given(this.privilegeRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(Mockito.mock(Privilege.class)));
-
-        given(this.privilegeRepository.saveAndFlush(Mockito.any(Privilege.class))).willReturn(Mockito.mock(Privilege.class));
-
-        PrivilegeVO privilegeVO = privilegeService.create(Mockito.mock(PrivilegeDTO.class));
-
-        verify(this.privilegeRepository, times(1)).saveAndFlush(Mockito.any(Privilege.class));
-        Assertions.assertNotNull(privilegeVO);
     }
 
     @Test

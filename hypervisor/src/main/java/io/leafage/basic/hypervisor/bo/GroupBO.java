@@ -25,7 +25,7 @@ import jakarta.validation.constraints.NotBlank;
 public abstract class GroupBO {
 
 
-    @NotBlank(message = "name must not be blank.")
+    @NotBlank(message = "name must not be empty.")
     private String name;
 
     private Long superiorId;

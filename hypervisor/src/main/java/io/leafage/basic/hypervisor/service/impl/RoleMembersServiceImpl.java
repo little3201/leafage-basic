@@ -58,7 +58,7 @@ public class RoleMembersServiceImpl implements RoleMembersService {
      */
     @Override
     public List<RoleMembers> roles(String username) {
-        Assert.hasText(username, "username must not be blank.");
+        Assert.hasText(username, "username must not be empty.");
 
         return roleMembersRepository.findAllByUsername(username);
     }

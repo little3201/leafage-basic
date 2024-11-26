@@ -26,7 +26,7 @@ import java.time.Instant;
  */
 public abstract class UserBO {
 
-    @NotBlank(message = "username is blank.")
+    @NotBlank(message = "username is empty.")
     private String username;
 
     private String fullName;

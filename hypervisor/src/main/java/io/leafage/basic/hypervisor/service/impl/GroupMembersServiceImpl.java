@@ -58,7 +58,7 @@ public class GroupMembersServiceImpl implements GroupMembersService {
      */
     @Override
     public List<GroupMembers> groups(String username) {
-        Assert.hasText(username, "username must not be blank.");
+        Assert.hasText(username, "username must not be empty.");
 
         return groupMembersRepository.findAllByUsername(username);
     }

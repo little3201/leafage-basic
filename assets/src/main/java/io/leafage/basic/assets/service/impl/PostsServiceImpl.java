@@ -98,7 +98,7 @@ public class PostsServiceImpl implements PostsService {
      */
     @Override
     public boolean exists(String title, Long id) {
-        Assert.hasText(title, "title must not be blank.");
+        Assert.hasText(title, "title must not be empty.");
         if (id == null) {
             return postRepository.existsByTitle(title);
         }

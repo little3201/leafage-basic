@@ -80,7 +80,7 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public boolean exists(String name, Long id) {
-        Assert.hasText(name, "name must not be blank.");
+        Assert.hasText(name, "name must not be empty.");
         if (id == null) {
             return tagRepository.existsByName(name);
         }

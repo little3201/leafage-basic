@@ -63,7 +63,7 @@ public class FileRecordServiceImpl implements FileRecordService {
 
     @Override
     public boolean exists(String name, Long id) {
-        Assert.hasText(name, "name must not be blank.");
+        Assert.hasText(name, "name must not be empty.");
         if (id == null) {
             return fileRecordRepository.existsByName(name);
         }

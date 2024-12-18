@@ -91,7 +91,7 @@ public class PostController {
      * 查询帖子是否存在
      *
      * @param title 标题
-     * @param id   主键
+     * @param id    主键
      * @return 帖子是否已存在
      */
     @GetMapping("/exists")

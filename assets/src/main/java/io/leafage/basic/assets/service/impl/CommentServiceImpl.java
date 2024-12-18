@@ -20,7 +20,6 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.domain.Comment;
 import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
-import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
 import org.springframework.beans.BeanUtils;
@@ -39,58 +38,46 @@ import reactor.core.publisher.Mono;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
 
     /**
      * <p>Constructor for CommentServiceImpl.</p>
      *
-     * @param commentRepository a {@link io.leafage.basic.assets.repository.CommentRepository} object
-     * @param postRepository    a {@link io.leafage.basic.assets.repository.PostRepository} object
+     * @param commentRepository a {@link CommentRepository} object
      */
-    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
+    public CommentServiceImpl(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
-        this.postRepository = postRepository;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Flux<CommentVO> comments(Long postId) {
-        Assert.notNull(postId, "postId must not be null.");
-        return commentRepository.findByPostIdAndReplierIsNull(postId).flatMap(this::convert);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Flux<CommentVO> replies(Long replier) {
-        Assert.notNull(replier, "replier must not be null.");
-        return commentRepository.findByReplier(replier).flatMap(this::convert);
-    }
-
-    /** {@inheritDoc} */
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public Mono<CommentVO> create(CommentDTO commentDTO) {
-        Comment comment = new Comment();
-        BeanUtils.copyProperties(commentDTO, comment);
-        return commentRepository.save(comment).flatMap(this::convert);
     }
 
     /**
-     * 对象转换为输出结果对象
-     *
-     * @param comment 信息
-     * @return 输出转换后的vo对象
+     * {@inheritDoc}
      */
-    private Mono<CommentVO> convert(Comment comment) {
-        return Mono.just(comment).flatMap(c -> commentRepository.countByReplier(c.getReplier())
-                .switchIfEmpty(Mono.just(0L))
-                .map(count -> {
-                    CommentVO vo = new CommentVO();
-                    BeanUtils.copyProperties(c, vo);
-                    vo.setLastModifiedDate(c.getLastModifiedDate().orElse(null));
-                    vo.setCount(count);
-                    return vo;
-                }));
+    @Override
+    public Flux<CommentVO> comments(Long postId) {
+        Assert.notNull(postId, "postId must not be null.");
+
+        return commentRepository.findByPostIdAndReplierIsNull(postId)
+                .map(c -> convertToVO(c, CommentVO.class));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Flux<CommentVO> replies(Long replier) {
+        Assert.notNull(replier, "replier must not be null.");
+
+        return commentRepository.findByReplier(replier).map(c -> convertToVO(c, CommentVO.class));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Mono<CommentVO> create(CommentDTO dto) {
+        Comment comment = new Comment();
+        BeanUtils.copyProperties(dto, comment);
+        return commentRepository.save(comment).map(c -> convertToVO(c, CommentVO.class));
     }
 
 }

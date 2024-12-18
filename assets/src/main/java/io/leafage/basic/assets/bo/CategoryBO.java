@@ -29,7 +29,7 @@ public abstract class CategoryBO {
     /**
      * 名称
      */
-    @NotBlank(message = "category name is blank.")
+    @NotBlank
     private String name;
 
     /**

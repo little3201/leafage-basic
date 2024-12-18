@@ -60,16 +60,16 @@ public class PostController {
      *
      * @param page       页码
      * @param size       大小
-     * @param sort       排序字段
-     * @param categoryId 分类ID
+     * @param sortBy     排序字段
+     * @param descending 是否倒序
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
     public ResponseEntity<Mono<Page<PostVO>>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                       String sort, Long categoryId) {
+                                                       String sortBy, boolean descending) {
         Mono<Page<PostVO>> pageMono;
         try {
-            pageMono = postService.retrieve(page, size, sort, categoryId);
+            pageMono = postService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve posts occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -120,10 +120,10 @@ public class PostController {
      * @return true-是，false-否
      */
     @GetMapping("/exists")
-    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String title) {
+    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String title, Long id) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = postService.exists(title);
+            existsMono = postService.exists(title, id);
         } catch (Exception e) {
             logger.error("Check post is exists occurred an error: ", e);
             return ResponseEntity.noContent().build();

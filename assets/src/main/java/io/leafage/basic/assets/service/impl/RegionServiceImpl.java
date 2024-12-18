@@ -23,10 +23,11 @@ import io.leafage.basic.assets.repository.RegionRepository;
 import io.leafage.basic.assets.service.RegionService;
 import io.leafage.basic.assets.vo.RegionVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -45,7 +46,7 @@ public class RegionServiceImpl implements RegionService {
     /**
      * <p>Constructor for RegionServiceImpl.</p>
      *
-     * @param regionRepository a {@link io.leafage.basic.assets.repository.RegionRepository} object
+     * @param regionRepository a {@link RegionRepository} object
      */
     public RegionServiceImpl(RegionRepository regionRepository) {
         this.regionRepository = regionRepository;
@@ -56,74 +57,77 @@ public class RegionServiceImpl implements RegionService {
      */
     @Override
     public Mono<Page<RegionVO>> retrieve(int page, int size, String sortBy, boolean descending) {
-        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
-                StringUtils.hasText(sortBy) ? sortBy : "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageable).flatMap(this::convert);
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Mono<Long> count = regionRepository.countByEnabledTrue();
-
-        return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
+        return regionRepository.findAllBy(pageable)
+                .map(r -> convertToVO(r, RegionVO.class))
+                .collectList()
+                .zipWith(regionRepository.countByEnabledTrue())
+                .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<RegionVO> fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return regionRepository.findById(id).flatMap(this::convert);
+
+        return regionRepository.findById(id)
+                .map(r -> convertToVO(r, RegionVO.class));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<Boolean> exists(String name) {
+    public Mono<Boolean> exists(String name, Long id) {
         Assert.hasText(name, "name must not be empty.");
         return regionRepository.existsByName(name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Flux<RegionVO> subset(Long superiorId) {
         Assert.notNull(superiorId, "superiorId must not be null.");
-        return regionRepository.findBySuperiorId(superiorId).flatMap(this::convert);
+
+        return regionRepository.findBySuperiorId(superiorId)
+                .map(r -> convertToVO(r, RegionVO.class));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<RegionVO> create(RegionDTO regionDTO) {
+    public Mono<RegionVO> create(RegionDTO dto) {
         Region region = new Region();
-        BeanUtils.copyProperties(regionDTO, region);
-        return regionRepository.save(region).flatMap(this::convert);
+        BeanUtils.copyProperties(dto, region);
+        return regionRepository.save(region)
+                .map(r -> convertToVO(r, RegionVO.class));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<RegionVO> modify(Long id, RegionDTO regionDTO) {
+    public Mono<RegionVO> modify(Long id, RegionDTO dto) {
         Assert.notNull(id, "id must not be null.");
-        return regionRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .doOnNext(region -> BeanUtils.copyProperties(regionDTO, region))
-                .flatMap(regionRepository::save).flatMap(this::convert);
+        return regionRepository.findById(id)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .map(region -> convert(dto, region))
+                .flatMap(regionRepository::save)
+                .map(r -> convertToVO(r, RegionVO.class));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "id must not be null.");
         return regionRepository.deleteById(id);
     }
 
-    /**
-     * 数据转换
-     *
-     * @param region 信息
-     * @return RegionVO 输出对象
-     */
-    private Mono<RegionVO> convert(Region region) {
-        return Mono.just(region).map(r -> {
-            RegionVO vo = new RegionVO();
-            BeanUtils.copyProperties(r, vo);
-            vo.setLastModifiedDate(r.getLastModifiedDate().orElse(null));
-            return vo;
-        });
-    }
 }

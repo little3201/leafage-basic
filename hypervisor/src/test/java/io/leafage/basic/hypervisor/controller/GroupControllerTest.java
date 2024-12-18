@@ -139,7 +139,7 @@ class GroupControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exists")
                         .queryParam("name", "test")
-                        .queryParam("id", "1")
+                        .queryParam("id", 1L)
                         .build())
                 .exchange()
                 .expectStatus().isNoContent();

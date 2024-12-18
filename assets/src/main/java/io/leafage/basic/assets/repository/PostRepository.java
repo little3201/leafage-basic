@@ -38,7 +38,7 @@ public interface PostRepository extends R2dbcRepository<Post, Long> {
      * @param pageable 分页参数
      * @return 有效帖子
      */
-    Flux<Post> findByEnabledTrue(Pageable pageable);
+    Flux<Post> findAllBy(Pageable pageable);
 
     /**
      * 根据分类分页查询

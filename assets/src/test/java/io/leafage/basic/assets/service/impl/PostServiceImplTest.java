@@ -17,11 +17,9 @@
 
 package io.leafage.basic.assets.service.impl;
 
-import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.domain.Post;
 import io.leafage.basic.assets.domain.PostContent;
 import io.leafage.basic.assets.dto.PostDTO;
-import io.leafage.basic.assets.repository.CategoryRepository;
 import io.leafage.basic.assets.repository.PostContentRepository;
 import io.leafage.basic.assets.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,9 +50,6 @@ class PostServiceImplTest {
     private PostRepository postRepository;
 
     @Mock
-    private CategoryRepository categoryRepository;
-
-    @Mock
     private PostContentRepository postContentRepository;
 
     @InjectMocks
@@ -73,33 +68,17 @@ class PostServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.postRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Post.class)));
+        given(this.postRepository.findAllBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Post.class)));
 
         given(this.postRepository.count()).willReturn(Mono.just(2L));
 
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        StepVerifier.create(this.postsService.retrieve(0, 2, "", null))
-                .expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void retrieve_with_categoryId() {
-        given(this.postRepository.findByCategoryId(Mockito.anyLong(), Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Post.class)));
-
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(1L));
-
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        StepVerifier.create(this.postsService.retrieve(0, 2, null, 1L))
+        StepVerifier.create(this.postsService.retrieve(0, 2, "id", true))
                 .expectNextCount(1).verifyComplete();
     }
 
     @Test
     void fetch() {
         given(this.postRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Post.class)));
-
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
         given(this.postContentRepository.getByPostId(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(PostContent.class)));
 
@@ -110,7 +89,7 @@ class PostServiceImplTest {
     void exists() {
         given(this.postRepository.existsByTitle(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(postsService.exists("test")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(postsService.exists("test", 1L)).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test
@@ -149,8 +128,6 @@ class PostServiceImplTest {
     @Test
     void search() {
         given(this.postRepository.findAllByTitle(Mockito.anyString())).willReturn(Flux.just(Mockito.mock(Post.class)));
-
-        given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
         StepVerifier.create(postsService.search("test")).expectNextCount(1).verifyComplete();
     }

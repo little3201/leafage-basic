@@ -29,7 +29,7 @@ public abstract class RegionBO {
     /**
      * 名称
      */
-    @NotBlank(message = "region name must not be empty.")
+    @NotBlank
     private String name;
 
     /**

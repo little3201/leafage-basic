@@ -57,8 +57,8 @@ public class AccessLogServiceImpl implements AccessLogService {
                 .map(accessLog -> convertToVO(accessLog, AccessLogVO.class));
         Mono<Long> count = accessLogRepository.count();
 
-        return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
+        return voFlux.collectList().zipWith(count).map(tuple ->
+                new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
 }

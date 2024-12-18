@@ -61,11 +61,11 @@ class RegionServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.regionRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Region.class)));
+        given(this.regionRepository.findAllBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Region.class)));
 
         given(this.regionRepository.countByEnabledTrue()).willReturn(Mono.just(Mockito.anyLong()));
 
-        StepVerifier.create(regionService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.retrieve(0, 2, "id", true)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -86,7 +86,7 @@ class RegionServiceImplTest {
     void exists() {
         given(this.regionRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(regionService.exists("北京市")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(regionService.exists("test", 1L)).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test

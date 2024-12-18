@@ -143,7 +143,7 @@ class RoleControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles/exists")
                         .queryParam("name", "test")
-                        .queryParam("id", "1")
+                        .queryParam("id", 1L)
                         .build())
                 .exchange()
                 .expectStatus().isOk();
@@ -155,7 +155,7 @@ class RoleControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles/exists")
                         .queryParam("name", "test")
-                        .queryParam("id", "1")
+                        .queryParam("id", 1L)
                         .build())
                 .exchange()
                 .expectStatus().isNoContent();

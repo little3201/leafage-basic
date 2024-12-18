@@ -62,10 +62,11 @@ public class CategoryController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<CategoryVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Mono<Page<CategoryVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                           String sortBy, boolean descending) {
         Mono<Page<CategoryVO>> pageMono;
         try {
-            pageMono = categoryService.retrieve(page, size);
+            pageMono = categoryService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve categories occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -98,12 +99,12 @@ public class CategoryController {
      * @return true-是，false-否
      */
     @GetMapping("/exists")
-    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String name) {
+    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String name, Long id) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = categoryService.exists(name);
+            existsMono = categoryService.exists(name, id);
         } catch (Exception e) {
-            logger.error("Check category name is exists occurred an error: ", e);
+            logger.error("Check category is exists occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);

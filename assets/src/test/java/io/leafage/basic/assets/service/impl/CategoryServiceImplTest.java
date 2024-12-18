@@ -20,7 +20,6 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,9 +45,6 @@ class CategoryServiceImplTest {
     @Mock
     private CategoryRepository categoryRepository;
 
-    @Mock
-    private PostRepository postRepository;
-
     @InjectMocks
     private CategoryServiceImpl categoryService;
 
@@ -63,13 +59,11 @@ class CategoryServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.categoryRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Category.class)));
-
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(2L));
+        given(this.categoryRepository.findAllBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Category.class)));
 
         given(this.categoryRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
-        StepVerifier.create(this.categoryService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(this.categoryService.retrieve(0, 2, "id", true)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -84,14 +78,12 @@ class CategoryServiceImplTest {
     void exists() {
         given(this.categoryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(categoryService.exists("test")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(categoryService.exists("test", 1L)).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test
     void create() {
         given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(2L));
 
         StepVerifier.create(categoryService.create(Mockito.mock(CategoryDTO.class))).expectNextCount(1).verifyComplete();
     }
@@ -101,8 +93,6 @@ class CategoryServiceImplTest {
         given(this.categoryRepository.findById(Mockito.anyLong())).willReturn(Mono.just(Mockito.mock(Category.class)));
 
         given(this.categoryRepository.save(Mockito.any(Category.class))).willReturn(Mono.just(Mockito.mock(Category.class)));
-
-        given(this.postRepository.countByCategoryId(Mockito.anyLong())).willReturn(Mono.just(2L));
 
         StepVerifier.create(categoryService.modify(1L, categoryDTO)).expectNextCount(1).verifyComplete();
     }

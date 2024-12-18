@@ -65,8 +65,8 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
 
         Mono<Long> count = dictionaryRepository.count();
 
-        return voFlux.collectList().zipWith(count).map(objects ->
-                new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
+        return voFlux.collectList().zipWith(count).map(tuple ->
+                new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
     /**

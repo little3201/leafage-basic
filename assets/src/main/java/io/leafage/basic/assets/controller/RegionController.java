@@ -45,7 +45,7 @@ public class RegionController {
     /**
      * <p>Constructor for RegionController.</p>
      *
-     * @param regionService a {@link io.leafage.basic.hypervisor.service.RegionService} object
+     * @param regionService a {@link RegionService} object
      */
     public RegionController(RegionService regionService) {
         this.regionService = regionService;
@@ -59,10 +59,11 @@ public class RegionController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<RegionVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Mono<Page<RegionVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                         String sortBy, boolean descending) {
         Mono<Page<RegionVO>> pageMono;
         try {
-            pageMono = regionService.retrieve(page, size);
+            pageMono = regionService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve regions occurred an error: ", e);
             return ResponseEntity.noContent().build();

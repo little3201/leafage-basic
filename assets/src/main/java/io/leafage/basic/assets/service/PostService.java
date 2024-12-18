@@ -19,7 +19,9 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.PostDTO;
 import io.leafage.basic.assets.vo.PostVO;
+import org.springframework.data.domain.Page;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -28,6 +30,8 @@ import top.leafage.common.reactive.ReactiveBasicService;
  * @author wq li
  */
 public interface PostService extends ReactiveBasicService<PostDTO, PostVO> {
+
+    Mono<Page<PostVO>> retrieve(int page, int size, String sortBy, boolean descending);
 
     /**
      * 全文搜索

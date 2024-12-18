@@ -34,7 +34,7 @@ public interface AccessLogRepository extends R2dbcRepository<AccessLog, Long> {
     /**
      * 查询
      *
-     * @param pageable a {@link org.springframework.data.domain.Pageable} object
+     * @param pageable a {@link Pageable} object
      * @return 有效帖子
      */
     Flux<AccessLog> findAllBy(Pageable pageable);

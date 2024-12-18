@@ -38,7 +38,7 @@ public interface CategoryRepository extends R2dbcRepository<Category, Long> {
      * @param pageable 分页参数
      * @return 有效类别
      */
-    Flux<Category> findByEnabledTrue(Pageable pageable);
+    Flux<Category> findAllBy(Pageable pageable);
 
     /**
      * 是否已存在

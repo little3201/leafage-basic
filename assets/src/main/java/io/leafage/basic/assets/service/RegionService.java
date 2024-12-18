@@ -19,7 +19,9 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.RegionDTO;
 import io.leafage.basic.assets.vo.RegionVO;
+import org.springframework.data.domain.Page;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -28,6 +30,8 @@ import top.leafage.common.reactive.ReactiveBasicService;
  * @author wq li
  */
 public interface RegionService extends ReactiveBasicService<RegionDTO, RegionVO> {
+
+    Mono<Page<RegionVO>> retrieve(int page, int size, String sortBy, boolean descending);
 
     /**
      * 获取下级

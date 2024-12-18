@@ -96,7 +96,7 @@ class UserControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/users/exists")
                         .queryParam("username", "test")
-                        .queryParam("id", "1")
+                        .queryParam("id", 1L)
                         .build())
                 .exchange().expectStatus().isOk();
     }
@@ -107,7 +107,7 @@ class UserControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/users/exists")
                         .queryParam("username", "test")
-                        .queryParam("id", "1")
+                        .queryParam("id", 1L)
                         .build())
                 .exchange()
                 .expectStatus().isNoContent();

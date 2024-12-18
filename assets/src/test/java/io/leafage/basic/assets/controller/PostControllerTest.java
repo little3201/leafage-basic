@@ -26,13 +26,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -55,7 +55,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 @WebFluxTest(PostController.class)
 class PostControllerTest {
 
-    @MockBean
+    @MockitoBean
     private PostService postService;
 
     @Autowired
@@ -74,45 +74,40 @@ class PostControllerTest {
         postDTO.setTags(Collections.singleton("java"));
         postDTO.setContext("内容信息");
 
-        postVO = new PostVO();
+        postVO = new PostVO(1L, true, Instant.now());
         postVO.setTitle(postDTO.getTitle());
         postVO.setTags(postDTO.getTags());
         postVO.setCover(postDTO.getCover());
         postVO.setContext(postDTO.getContext());
-        postVO.setLastModifiedDate(Instant.now());
     }
 
     @Test
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
         Page<PostVO> page = new PageImpl<>(List.of(postVO), pageable, 1L);
-        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
+        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
                 .willReturn(Mono.just(page));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).build())
-                .exchange().expectStatus().isOk().expectBodyList(PostVO.class);
-    }
-
-    @Test
-    void retrieve_category() {
-        Page<PostVO> page = new PageImpl<>(List.of(postVO));
-        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
-                .willReturn(Mono.just(page));
-
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("categoryId", 1L).build())
-                .exchange().expectStatus().isOk().expectBodyList(PostVO.class);
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts")
+                        .queryParam("page", 0)
+                        .queryParam("size", 2)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(PostVO.class);
     }
 
     @Test
     void retrieve_error() {
-        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyLong()))
+        given(this.postService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean()))
                 .willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("categoryId", 1L)
-                        .queryParam("sort", "").build()).exchange()
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts")
+                        .queryParam("page", 0)
+                        .queryParam("size", 2)
+                        .queryParam("sortBy", "id")
+                        .build())
+                .exchange()
                 .expectStatus().isNoContent();
     }
 
@@ -120,7 +115,8 @@ class PostControllerTest {
     void fetch() {
         given(this.postService.fetch(Mockito.anyLong())).willReturn(Mono.just(postVO));
 
-        webTestClient.get().uri("/posts/{id}", 1).exchange()
+        webTestClient.get().uri("/posts/{id}", 1)
+                .exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
     }
@@ -129,7 +125,9 @@ class PostControllerTest {
     void fetch_error() {
         given(this.postService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/posts/{id}", 1).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/posts/{id}", 1)
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
@@ -137,7 +135,9 @@ class PostControllerTest {
         given(this.postService.search(Mockito.anyString())).willReturn(Flux.just(postVO));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/search")
-                        .queryParam("keyword", "test").build()).exchange()
+                        .queryParam("keyword", "test")
+                        .build())
+                .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(PostVO.class);
     }
@@ -147,33 +147,43 @@ class PostControllerTest {
         given(this.postService.search(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/search")
-                        .queryParam("keyword", "test").build()).exchange()
+                        .queryParam("keyword", "test")
+                        .build())
+                .exchange()
                 .expectStatus().isNoContent();
     }
 
     @Test
     void exists() {
-        given(this.postService.exists(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+        given(this.postService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(Mono.just(Boolean.TRUE));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/exists")
-                        .queryParam("title", "test").build()).exchange()
+                        .queryParam("title", "test")
+                        .build())
+                .exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void exist_error() {
-        given(this.postService.exists(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.postService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/exists")
-                .queryParam("title", "test").build()).exchange().expectStatus().isNoContent();
+                        .queryParam("title", "test")
+                        .queryParam("id", 1L)
+                        .build())
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
     void create() {
         given(this.postService.create(Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
 
-        webTestClient.mutateWith(csrf()).post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(postDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/posts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(postDTO)
+                .exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
     }
@@ -182,8 +192,10 @@ class PostControllerTest {
     void create_error() {
         given(this.postService.create(Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.mutateWith(csrf()).post().uri("/posts").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(postDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/posts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(postDTO)
+                .exchange()
                 .expectStatus().is4xxClientError();
     }
 
@@ -191,8 +203,10 @@ class PostControllerTest {
     void modify() {
         given(this.postService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willReturn(Mono.just(postVO));
 
-        webTestClient.mutateWith(csrf()).put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(postDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/posts/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(postDTO)
+                .exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.title").isEqualTo("test");
     }
@@ -201,21 +215,28 @@ class PostControllerTest {
     void modify_error() {
         given(this.postService.modify(Mockito.anyLong(), Mockito.any(PostDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.mutateWith(csrf()).put().uri("/posts/{id}", 1).contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(postDTO).exchange().expectStatus().isNotModified();
+        webTestClient.mutateWith(csrf()).put().uri("/posts/{id}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(postDTO)
+                .exchange()
+                .expectStatus().isNotModified();
     }
 
     @Test
     void remove() {
         given(this.postService.remove(Mockito.anyLong())).willReturn(Mono.empty());
 
-        webTestClient.mutateWith(csrf()).delete().uri("/posts/{id}", 1).exchange().expectStatus().isOk();
+        webTestClient.mutateWith(csrf()).delete().uri("/posts/{id}", 1)
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
     void remove_error() {
         given(this.postService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.mutateWith(csrf()).delete().uri("/posts/{id}", 1).exchange().expectStatus().is4xxClientError();
+        webTestClient.mutateWith(csrf()).delete().uri("/posts/{id}", 1)
+                .exchange()
+                .expectStatus().is4xxClientError();
     }
 }

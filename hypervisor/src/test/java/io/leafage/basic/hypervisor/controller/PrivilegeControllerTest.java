@@ -158,7 +158,7 @@ class PrivilegeControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/privileges/exists")
                         .queryParam("name", "test")
-                        .queryParam("id", "1")
+                        .queryParam("id", 1L)
                         .build())
                 .exchange().expectStatus().isOk();
     }
@@ -169,7 +169,7 @@ class PrivilegeControllerTest {
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/privileges/exists")
                         .queryParam("name", "test")
-                        .queryParam("id", "1")
+                        .queryParam("id", 1L)
                         .build())
                 .exchange()
                 .expectStatus().isNoContent();

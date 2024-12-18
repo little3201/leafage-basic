@@ -37,5 +37,5 @@ public interface RoleService extends ReactiveBasicService<RoleDTO, RoleVO> {
      * @param size 大小
      * @return 结果集
      */
-    Mono<Page<RoleVO>> retrieve(int page, int size);
+    Mono<Page<RoleVO>> retrieve(int page, int size, String sortBy, boolean descending);
 }

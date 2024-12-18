@@ -28,12 +28,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -57,10 +57,10 @@ class GroupControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @MockBean
+    @MockitoBean
     private GroupMembersService groupMembersService;
 
-    @MockBean
+    @MockitoBean
     private GroupService groupService;
 
     private GroupDTO groupDTO;
@@ -68,12 +68,10 @@ class GroupControllerTest {
     private GroupMembers groupMembers;
 
     @BeforeEach
-    void init() {
-        groupVO = new GroupVO();
+    void setUp() {
+        groupVO = new GroupVO(1L, true, Instant.now());
         groupVO.setName("test");
         groupVO.setPrincipal("test");
-        groupVO.setSuperior("test");
-        groupVO.setLastModifiedDate(Instant.now());
 
         groupDTO = new GroupDTO();
         groupDTO.setName("test");
@@ -89,7 +87,7 @@ class GroupControllerTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
         Page<GroupVO> voPage = new PageImpl<>(List.of(groupVO), pageable, 1L);
-        given(this.groupService.retrieve(0, 2)).willReturn(Mono.just(voPage));
+        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -98,10 +96,15 @@ class GroupControllerTest {
 
     @Test
     void retrieve_error() {
-        given(this.groupService.retrieve(0, 2)).willThrow(new RuntimeException());
+        given(this.groupService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups")
+                        .queryParam("page", 0)
+                        .queryParam("size", 2)
+                        .queryParam("sortBy", "id")
+                        .build())
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
@@ -120,19 +123,26 @@ class GroupControllerTest {
     }
 
     @Test
-    void exist() {
-        given(this.groupService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void exists() {
+        given(this.groupService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
-                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exists")
+                        .queryParam("name", "test")
+                        .build())
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
     void exist_error() {
-        given(this.groupService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.groupService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exist")
-                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/groups/exists")
+                        .queryParam("name", "test")
+                        .queryParam("id", "1")
+                        .build())
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test

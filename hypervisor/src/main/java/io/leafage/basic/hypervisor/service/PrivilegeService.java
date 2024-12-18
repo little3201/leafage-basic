@@ -18,8 +18,10 @@
 package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
+import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import org.springframework.data.domain.Page;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.TreeNode;
 import top.leafage.common.reactive.ReactiveBasicService;
@@ -34,6 +36,15 @@ import java.util.List;
 public interface PrivilegeService extends ReactiveBasicService<PrivilegeDTO, PrivilegeVO> {
 
     /**
+     * 分页查询
+     *
+     * @param page 页码
+     * @param size 大小
+     * @return 结果集
+     */
+    Mono<Page<PrivilegeVO>> retrieve(int page, int size, String sortBy, boolean descending);
+
+    /**
      * 查询构造树结构的数据
      *
      * @return 数据集
@@ -41,11 +52,11 @@ public interface PrivilegeService extends ReactiveBasicService<PrivilegeDTO, Pri
     Mono<List<TreeNode>> tree();
 
     /**
-     * 分页查询
+     * 获取下级
      *
-     * @param page 页码
-     * @param size 大小
-     * @return 结果集
+     * @param id 主键
+     * @return 数据集
      */
-    Mono<Page<PrivilegeVO>> retrieve(int page, int size);
+    Flux<DictionaryVO> subset(Long id);
+
 }

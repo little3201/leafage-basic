@@ -30,19 +30,19 @@ public abstract class MessageBO {
     /**
      * 标题
      */
-    @NotBlank(message = "title must not be blank.")
+    @NotBlank(message = "title must not be empty.")
     private String title;
 
     /**
      * 内容
      */
-    @NotBlank(message = "context must not be blank.")
+    @NotBlank(message = "context must not be empty.")
     private String context;
 
     /**
      * 接收人
      */
-    @NotBlank(message = "receiver must not be blank.")
+    @NotBlank(message = "receiver must not be empty.")
     private String receiver;
 
 

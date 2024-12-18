@@ -48,11 +48,11 @@ class AccessLogServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.accessLogRepository.findBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(AccessLog.class)));
+        given(this.accessLogRepository.findAllBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(AccessLog.class)));
 
         given(this.accessLogRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
-        StepVerifier.create(recordService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(recordService.retrieve(0, 2, "id", true)).expectNextCount(1).verifyComplete();
     }
 
 }

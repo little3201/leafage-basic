@@ -17,16 +17,18 @@
 
 package io.leafage.basic.hypervisor.service;
 
+import io.leafage.basic.hypervisor.dto.AccessLogDTO;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Mono;
+import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
  * access log service
  *
  * @author wq li
  */
-public interface AccessLogService {
+public interface AccessLogService extends ReactiveBasicService<AccessLogDTO, AccessLogVO> {
 
     /**
      * 分页查询
@@ -35,5 +37,5 @@ public interface AccessLogService {
      * @param size 大小
      * @return 结果集
      */
-    Mono<Page<AccessLogVO>> retrieve(int page, int size);
+    Mono<Page<AccessLogVO>> retrieve(int page, int size, String sortBy, boolean descending);
 }

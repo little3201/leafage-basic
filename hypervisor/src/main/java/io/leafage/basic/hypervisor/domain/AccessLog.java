@@ -17,9 +17,9 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import top.leafage.common.reactive.audit.ReactiveAuditMetadata;
 
 /**
  * model class for access log
@@ -27,7 +27,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author wq li
  */
 @Table(name = "access_logs")
-public class AccessLog extends AuditMetadata {
+public class AccessLog extends ReactiveAuditMetadata {
 
     /**
      * IP地址

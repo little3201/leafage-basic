@@ -64,32 +64,28 @@ public class PostServiceImpl implements PostService {
         this.categoryRepository = categoryRepository;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<Page<PostVO>> retrieve(int page, int size, String sort, Long categoryId) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,
-                StringUtils.hasText(sort) ? sort : "lastModifiedDate"));
-        Flux<Post> postFlux;
-        Mono<Long> count;
-        // if categoryId null, select all, else filter by categoryId
-        if (null == categoryId) {
-            postFlux = postRepository.findByEnabledTrue(pageable);
-            count = postRepository.count();
-        } else {
-            postFlux = postRepository.findByCategoryId(categoryId, pageable);
-            count = postRepository.countByCategoryId(categoryId);
-        }
+    public Mono<Page<PostVO>> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Flux<Post> postFlux = postRepository.findByEnabledTrue(pageable);
+        Mono<Long> count = postRepository.count();
 
-        return postFlux.flatMap(this::convertOuter).collectList().zipWith(count).map(objects ->
+        return postFlux.flatMap(this::convert).collectList().zipWith(count).map(objects ->
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<PostVO> fetch(Long id) {
-        Assert.notNull(id, "post id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return postRepository.findById(id).flatMap(post ->
-                // 查询关联分类信息
                 categoryRepository.findById(post.getCategoryId()).map(category -> {
                     PostVO postVO = new PostVO();
                     BeanUtils.copyProperties(post, postVO);
@@ -103,7 +99,9 @@ public class PostServiceImpl implements PostService {
         );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostVO> create(PostDTO postDTO) {
@@ -113,15 +111,17 @@ public class PostServiceImpl implements PostService {
             PostContent postContent = new PostContent();
             postContent.setPostId(p.getId());
             postContent.setContext(postDTO.getContext());
-            return postContentRepository.save(postContent).flatMap(pc -> this.convertOuter(post));
+            return postContentRepository.save(postContent).flatMap(pc -> this.convert(post));
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<PostVO> modify(Long id, PostDTO postDTO) {
-        Assert.notNull(id, "post id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return postRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(post -> BeanUtils.copyProperties(postDTO, post))
                 .flatMap(postRepository::save)
@@ -130,11 +130,13 @@ public class PostServiceImpl implements PostService {
                             postContent.setPostId(p.getId());
                             postContent.setContext(postDTO.getContext());
                             return postContentRepository.save(postContent);
-                        }).flatMap(pc -> this.convertOuter(p))
+                        }).flatMap(pc -> this.convert(p))
                 );
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "id must not be null.");
@@ -149,17 +151,21 @@ public class PostServiceImpl implements PostService {
                 .then(postRepository.deleteById(id));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Flux<PostVO> search(String keyword) {
-        Assert.hasText(keyword, "keyword must not be blank.");
-        return postRepository.findAllByTitle(keyword).flatMap(this::convertOuter);
+        Assert.hasText(keyword, "keyword must not be empty.");
+        return postRepository.findAllByTitle(keyword).flatMap(this::convert);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<Boolean> exist(String title) {
-        Assert.hasText(title, "title must not be blank.");
+    public Mono<Boolean> exists(String title) {
+        Assert.hasText(title, "title must not be empty.");
         return postRepository.existsByTitle(title);
     }
 
@@ -169,7 +175,7 @@ public class PostServiceImpl implements PostService {
      * @param post 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<PostVO> convertOuter(Post post) {
+    private Mono<PostVO> convert(Post post) {
         return Mono.just(post).flatMap(p -> {
             PostVO vo = new PostVO();
             BeanUtils.copyProperties(p, vo);

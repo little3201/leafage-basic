@@ -62,32 +62,16 @@ public class DictionaryController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<DictionaryVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Mono<Page<DictionaryVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                             String sortBy, boolean descending) {
         Mono<Page<DictionaryVO>> pageMono;
         try {
-            pageMono = dictionaryService.retrieve(page, size);
+            pageMono = dictionaryService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve dictionary occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(pageMono);
-    }
-
-    /**
-     * 查询上级
-     *
-     * @return 查询的数据集，异常时返回204状态码
-     */
-    @GetMapping("/superior")
-    public ResponseEntity<Flux<DictionaryVO>> superior() {
-        Flux<DictionaryVO> voFlux;
-        try {
-            voFlux = dictionaryService.superior();
-        } catch (Exception e) {
-            logger.error("Retrieve dictionary superior occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(voFlux);
     }
 
     /**
@@ -114,11 +98,11 @@ public class DictionaryController {
      * @param id 主键
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/{id}/subordinates")
-    public ResponseEntity<Flux<DictionaryVO>> subordinates(@PathVariable Long id) {
+    @GetMapping("/{id}/subset")
+    public ResponseEntity<Flux<DictionaryVO>> subset(@PathVariable Long id) {
         Flux<DictionaryVO> voFlux;
         try {
-            voFlux = dictionaryService.subordinates(id);
+            voFlux = dictionaryService.subset(id);
         } catch (Exception e) {
             logger.info("Retrieve dictionaries lower occurred an error: ", e);
             return ResponseEntity.noContent().build();

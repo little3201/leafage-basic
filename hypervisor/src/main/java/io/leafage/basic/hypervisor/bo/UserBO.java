@@ -55,6 +55,11 @@ public abstract class UserBO {
     private Instant accountExpiresAt;
 
     /**
+     * 是否锁定
+     */
+    private boolean accountNonLocked;
+
+    /**
      * 密码有效期
      */
     private Instant credentialsExpiresAt;
@@ -148,6 +153,24 @@ public abstract class UserBO {
      */
     public void setAccountExpiresAt(Instant accountExpiresAt) {
         this.accountExpiresAt = accountExpiresAt;
+    }
+
+    /**
+     * <p>isAccountNonLocked.</p>
+     *
+     * @return a boolean
+     */
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    /**
+     * <p>Setter for the field <code>accountNonLocked</code>.</p>
+     *
+     * @param accountNonLocked a boolean
+     */
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
     }
 
     /**

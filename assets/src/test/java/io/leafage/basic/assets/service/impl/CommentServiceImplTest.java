@@ -50,7 +50,7 @@ class CommentServiceImplTest {
     private CommentDTO commentDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         commentDTO = new CommentDTO();
         commentDTO.setPostId(1L);
         commentDTO.setReplier(1L);

@@ -15,10 +15,7 @@
  *
  */
 
-/**
- * Audit
- *
- * @author wq li
- */
-@org.springframework.lang.NonNullApi
-package io.leafage.basic.hypervisor.audit;
+package io.leafage.basic.hypervisor.dto;
+
+public class AccessLogDTO {
+}

@@ -25,7 +25,6 @@ import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -48,7 +47,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     /**
      * <p>Constructor for DictionaryServiceImpl.</p>
      *
-     * @param dictionaryRepository a {@link io.leafage.basic.hypervisor.repository.DictionaryRepository} object
+     * @param dictionaryRepository a {@link DictionaryRepository} object
      */
     public DictionaryServiceImpl(DictionaryRepository dictionaryRepository) {
         this.dictionaryRepository = dictionaryRepository;
@@ -58,9 +57,11 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
      * {@inheritDoc}
      */
     @Override
-    public Mono<Page<DictionaryVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<DictionaryVO> voFlux = dictionaryRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
+    public Mono<Page<DictionaryVO>> retrieve(int page, int size, String sortBy, boolean descending) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Flux<DictionaryVO> voFlux = dictionaryRepository.findAllBy(pageable)
+                .map(d -> convertToVO(d, DictionaryVO.class));
 
         Mono<Long> count = dictionaryRepository.count();
 
@@ -68,57 +69,54 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Flux<DictionaryVO> superior() {
-        return dictionaryRepository.findBySuperiorIdIsNull().flatMap(this::convertOuter);
+    public Flux<DictionaryVO> subset(Long id) {
+        Assert.notNull(id, "id must not be null.");
+        return dictionaryRepository.findBySuperiorId(id).map(d -> convertToVO(d, DictionaryVO.class));
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public Flux<DictionaryVO> subordinates(Long id) {
-        Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findBySuperiorId(id).flatMap(this::convertOuter);
-    }
-
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<DictionaryVO> fetch(Long id) {
-        Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findById(id).flatMap(this::convertOuter);
+        Assert.notNull(id, "id must not be null.");
+        return dictionaryRepository.findById(id).map(d -> convertToVO(d, DictionaryVO.class));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "dictionary name must not be blank.");
+    public Mono<Boolean> exists(String name, Long id) {
+        Assert.hasText(name, "name must not be empty.");
         return dictionaryRepository.existsByName(name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<DictionaryVO> create(DictionaryDTO dictionaryDTO) {
+    public Mono<DictionaryVO> create(DictionaryDTO dto) {
         Dictionary dictionary = new Dictionary();
-        BeanUtils.copyProperties(dictionaryDTO, dictionary);
-        return dictionaryRepository.save(dictionary).flatMap(this::convertOuter);
+        BeanUtils.copyProperties(dto, dictionary);
+        return dictionaryRepository.save(dictionary).map(d -> convertToVO(d, DictionaryVO.class));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<DictionaryVO> modify(Long id, DictionaryDTO dictionaryDTO) {
-        Assert.notNull(id, "dictionary id must not be null.");
-        return dictionaryRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .doOnNext(dictionary -> BeanUtils.copyProperties(dictionaryDTO, dictionary))
+    public Mono<DictionaryVO> modify(Long id, DictionaryDTO dto) {
+        Assert.notNull(id, "id must not be null.");
+        return dictionaryRepository.findById(id)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .map(dictionary -> convert(dto, dictionary))
                 .flatMap(dictionaryRepository::save)
-                .flatMap(this::convertOuter);
+                .map(d -> convertToVO(d, DictionaryVO.class));
     }
 
-    private Mono<DictionaryVO> convertOuter(Dictionary dictionary) {
-        return Mono.just(dictionary).map(d -> {
-            DictionaryVO vo = new DictionaryVO();
-            BeanUtils.copyProperties(d, vo);
-            vo.setLastModifiedDate(d.getLastModifiedDate().orElse(null));
-            return vo;
-        });
-    }
 }

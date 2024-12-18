@@ -35,8 +35,7 @@ public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
      *
      * @param page 页码
      * @param size 大小
-     * @return 查询结果
+     * @return 结果集
      */
-    Mono<Page<UserVO>> retrieve(int page, int size);
-
+    Mono<Page<UserVO>> retrieve(int page, int size, String sortBy, boolean descending);
 }

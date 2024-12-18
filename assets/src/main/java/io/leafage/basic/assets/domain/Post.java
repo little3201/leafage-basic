@@ -16,7 +16,7 @@
  */
 package io.leafage.basic.assets.domain;
 
-import io.leafage.basic.assets.audit.AuditMetadata;
+import io.leafage.basic.assets.audit.ReactiveAuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -28,7 +28,7 @@ import java.util.Set;
  * @author wq li
  */
 @Table(name = "posts")
-public class Post extends AuditMetadata {
+public class Post extends ReactiveAuditMetadata {
 
     /**
      * category 主键

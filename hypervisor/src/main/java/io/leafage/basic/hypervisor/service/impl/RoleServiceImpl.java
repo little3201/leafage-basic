@@ -25,13 +25,14 @@ import io.leafage.basic.hypervisor.vo.RoleVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -47,7 +48,7 @@ public class RoleServiceImpl implements RoleService {
     /**
      * <p>Constructor for RoleServiceImpl.</p>
      *
-     * @param roleRepository a {@link io.leafage.basic.hypervisor.repository.RoleRepository} object
+     * @param roleRepository a {@link RoleRepository} object
      */
     public RoleServiceImpl(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
@@ -57,15 +58,11 @@ public class RoleServiceImpl implements RoleService {
      * {@inheritDoc}
      */
     @Override
-    public Flux<RoleVO> retrieve() {
-        return roleRepository.findAll().flatMap(this::convertOuter);
-    }
+    public Mono<Page<RoleVO>> retrieve(int page, int size, String sortBy, boolean descending) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
-    /** {@inheritDoc} */
-    @Override
-    public Mono<Page<RoleVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<RoleVO> voFlux = roleRepository.findBy(pageable).flatMap(this::convertOuter);
+        Flux<RoleVO> voFlux = roleRepository.findAllBy(pageable)
+                .map(r -> convertToVO(r, RoleVO.class));
 
         Mono<Long> count = roleRepository.count();
 
@@ -73,58 +70,67 @@ public class RoleServiceImpl implements RoleService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<RoleVO> fetch(Long id) {
-        Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.findById(id).flatMap(this::convertOuter);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "role name must not be blank.");
-        return roleRepository.existsByName(name);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<RoleVO> create(RoleDTO roleDTO) {
-        Role role = new Role();
-        BeanUtils.copyProperties(roleDTO, role);
-        return roleRepository.save(role).flatMap(this::convertOuter);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<RoleVO> modify(Long id, RoleDTO roleDTO) {
-        Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .doOnNext(role -> BeanUtils.copyProperties(roleDTO, role))
-                .flatMap(roleRepository::save)
-                .flatMap(this::convertOuter);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "role id must not be blank.");
-        return roleRepository.deleteById(id);
+    public Flux<RoleVO> retrieve(List<Long> ids) {
+        Flux<Role> flux;
+        if (CollectionUtils.isEmpty(ids)) {
+            flux = roleRepository.findAll();
+        } else {
+            flux = roleRepository.findAllById(ids);
+        }
+        return flux.map(r -> convertToVO(r, RoleVO.class));
     }
 
     /**
-     * 对象转换为输出结果对象
-     *
-     * @param role 信息
-     * @return 输出转换后的vo对象
+     * {@inheritDoc}
      */
-    private Mono<RoleVO> convertOuter(Role role) {
-        return Mono.just(role).map(r -> {
-            RoleVO vo = new RoleVO();
-            BeanUtils.copyProperties(r, vo);
-            vo.setLastModifiedDate(r.getLastModifiedDate().orElse(null));
-            return vo;
-        });
+    @Override
+    public Mono<RoleVO> fetch(Long id) {
+        Assert.notNull(id, "id must not be null.");
+        return roleRepository.findById(id).map(r -> convertToVO(r, RoleVO.class));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<Boolean> exists(String name, Long id) {
+        Assert.hasText(name, "name must not be empty.");
+        return roleRepository.existsByName(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<RoleVO> create(RoleDTO dto) {
+        Role role = new Role();
+        BeanUtils.copyProperties(dto, role);
+        return roleRepository.save(role).map(r -> convertToVO(r, RoleVO.class));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<RoleVO> modify(Long id, RoleDTO dto) {
+        Assert.notNull(id, "id must not be null.");
+        return roleRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .map(role -> convert(dto, role))
+                .flatMap(roleRepository::save)
+                .map(r -> convertToVO(r, RoleVO.class));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<Void> remove(Long id) {
+        Assert.notNull(id, "id must not be null.");
+        return roleRepository.deleteById(id);
     }
 
 }

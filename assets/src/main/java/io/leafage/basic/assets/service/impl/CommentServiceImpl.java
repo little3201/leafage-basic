@@ -56,14 +56,14 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Flux<CommentVO> comments(Long postId) {
         Assert.notNull(postId, "postId must not be null.");
-        return commentRepository.findByPostIdAndReplierIsNull(postId).flatMap(this::convertOuter);
+        return commentRepository.findByPostIdAndReplierIsNull(postId).flatMap(this::convert);
     }
 
     /** {@inheritDoc} */
     @Override
     public Flux<CommentVO> replies(Long replier) {
         Assert.notNull(replier, "replier must not be null.");
-        return commentRepository.findByReplier(replier).flatMap(this::convertOuter);
+        return commentRepository.findByReplier(replier).flatMap(this::convert);
     }
 
     /** {@inheritDoc} */
@@ -72,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
     public Mono<CommentVO> create(CommentDTO commentDTO) {
         Comment comment = new Comment();
         BeanUtils.copyProperties(commentDTO, comment);
-        return commentRepository.save(comment).flatMap(this::convertOuter);
+        return commentRepository.save(comment).flatMap(this::convert);
     }
 
     /**
@@ -81,7 +81,7 @@ public class CommentServiceImpl implements CommentService {
      * @param comment 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<CommentVO> convertOuter(Comment comment) {
+    private Mono<CommentVO> convert(Comment comment) {
         return Mono.just(comment).flatMap(c -> commentRepository.countByReplier(c.getReplier())
                 .switchIfEmpty(Mono.just(0L))
                 .map(count -> {

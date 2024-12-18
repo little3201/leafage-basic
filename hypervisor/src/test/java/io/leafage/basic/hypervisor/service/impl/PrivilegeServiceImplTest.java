@@ -32,6 +32,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -51,7 +53,7 @@ class PrivilegeServiceImplTest {
     private PrivilegeDTO privilegeDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         privilegeDTO = new PrivilegeDTO();
         privilegeDTO.setName("test");
         privilegeDTO.setType('M');
@@ -59,18 +61,25 @@ class PrivilegeServiceImplTest {
 
     @Test
     void retrieve_page() {
-        given(this.privilegeRepository.findByEnabledTrue(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Privilege.class)));
+        given(this.privilegeRepository.findAllBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Privilege.class)));
 
         given(this.privilegeRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
-        StepVerifier.create(privilegeService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.retrieve(0, 2, "id", true)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void retrieve() {
+        given(this.privilegeRepository.findAllById(Mockito.anyList())).willReturn(Flux.just(Mockito.mock(Privilege.class)));
+
+        StepVerifier.create(privilegeService.retrieve(List.of(1L))).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void retrieve_ids_null() {
         given(this.privilegeRepository.findAll()).willReturn(Flux.just(Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(privilegeService.retrieve()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.retrieve(null)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -119,9 +128,9 @@ class PrivilegeServiceImplTest {
     }
 
     @Test
-    void exist() {
+    void exists() {
         given(this.privilegeRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(privilegeService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(privilegeService.exists("test", 1L)).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

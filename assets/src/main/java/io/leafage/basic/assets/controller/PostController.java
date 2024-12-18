@@ -119,13 +119,13 @@ public class PostController {
      * @param title 标题
      * @return true-是，false-否
      */
-    @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String title) {
+    @GetMapping("/exists")
+    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String title) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = postService.exist(title);
+            existsMono = postService.exists(title);
         } catch (Exception e) {
-            logger.error("Check post is exist an error: ", e);
+            logger.error("Check post is exists occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);

@@ -55,7 +55,7 @@ class CategoryServiceImplTest {
     private CategoryDTO categoryDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
         categoryDTO.setDescription("category");
@@ -81,10 +81,10 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    void exist() {
+    void exists() {
         given(this.categoryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(categoryService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(categoryService.exists("test")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test

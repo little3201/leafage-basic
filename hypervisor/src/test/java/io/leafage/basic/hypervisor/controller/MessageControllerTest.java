@@ -26,12 +26,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -52,7 +52,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 @WebFluxTest(MessageController.class)
 class MessageControllerTest {
 
-    @MockBean
+    @MockitoBean
     private MessageService messageService;
 
     @Autowired
@@ -62,12 +62,11 @@ class MessageControllerTest {
     private MessageDTO messageDTO;
 
     @BeforeEach
-    void init() {
-        messageVO = new MessageVO();
+    void setUp() {
+        messageVO = new MessageVO(1L, true, Instant.now());
         messageVO.setTitle("标题");
         messageVO.setContext("内容");
         messageVO.setReceiver("test");
-        messageVO.setLastModifiedDate(Instant.now());
 
         messageDTO = new MessageDTO();
         messageDTO.setTitle("标题");
@@ -79,27 +78,38 @@ class MessageControllerTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
         Page<MessageVO> voPage = new PageImpl<>(List.of(messageVO), pageable, 1L);
-        given(this.messageService.retrieve(0, 2, "test")).willReturn(Mono.just(voPage));
+        given(this.messageService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyString())).willReturn(Mono.just(voPage));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/messages").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("receiver", "test").build()).exchange()
-                .expectStatus().isOk().expectBodyList(MessageVO.class);
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/messages")
+                        .queryParam("page", 0)
+                        .queryParam("size", 2)
+                        .queryParam("receiver", "test")
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(MessageVO.class);
     }
 
     @Test
     void retrieve_error() {
-        given(this.messageService.retrieve(0, 2, "test")).willThrow(new RuntimeException());
+        given(this.messageService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/messages").queryParam("page", 0)
-                        .queryParam("size", 2).queryParam("receiver", "test").build())
-                .exchange().expectStatus().isNoContent();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/messages")
+                        .queryParam("page", 0)
+                        .queryParam("size", 2)
+                        .queryParam("sortBy", "id")
+                        .queryParam("receiver", "test")
+                        .build())
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
     void fetch() {
         given(this.messageService.fetch(Mockito.anyLong())).willReturn(Mono.just(messageVO));
 
-        webTestClient.get().uri("/messages/{id}", 1L).exchange()
+        webTestClient.get().uri("/messages/{id}", 1L)
+                .exchange()
                 .expectStatus().isOk()
                 .expectBody().jsonPath("$.title").isEqualTo("标题");
     }
@@ -115,7 +125,8 @@ class MessageControllerTest {
     void create() {
         given(this.messageService.create(Mockito.any(MessageDTO.class))).willReturn(Mono.just(messageVO));
 
-        webTestClient.mutateWith(csrf()).post().uri("/messages").bodyValue(messageDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/messages").bodyValue(messageDTO)
+                .exchange()
                 .expectStatus().isCreated()
                 .expectBody().jsonPath("$.title").isEqualTo("标题");
     }
@@ -124,7 +135,8 @@ class MessageControllerTest {
     void create_error() {
         given(this.messageService.create(Mockito.any(MessageDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.mutateWith(csrf()).post().uri("/messages").bodyValue(messageDTO).exchange()
+        webTestClient.mutateWith(csrf()).post().uri("/messages").bodyValue(messageDTO)
+                .exchange()
                 .expectStatus().is4xxClientError();
     }
 
@@ -132,7 +144,8 @@ class MessageControllerTest {
     void remove() {
         given(this.messageService.remove(Mockito.anyLong())).willReturn(Mono.empty());
 
-        webTestClient.mutateWith(csrf()).delete().uri("/messages/{id}", 1L).exchange()
+        webTestClient.mutateWith(csrf()).delete().uri("/messages/{id}", 1L)
+                .exchange()
                 .expectStatus().isOk();
     }
 
@@ -140,7 +153,8 @@ class MessageControllerTest {
     void remove_error() {
         given(this.messageService.remove(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.mutateWith(csrf()).delete().uri("/messages/{id}", 1L).exchange()
+        webTestClient.mutateWith(csrf()).delete().uri("/messages/{id}", 1L)
+                .exchange()
                 .expectStatus().is4xxClientError();
     }
 }

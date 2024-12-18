@@ -51,7 +51,7 @@ class DictionaryServiceImplTest {
     private DictionaryDTO dictionaryDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         dictionaryDTO = new DictionaryDTO();
         dictionaryDTO.setName("Gender");
         dictionaryDTO.setDescription("描述");
@@ -59,12 +59,12 @@ class DictionaryServiceImplTest {
 
     @Test
     void retrieve() {
-        given(this.dictionaryRepository.findByEnabledTrue(Mockito.any(PageRequest.class)))
+        given(this.dictionaryRepository.findAllBy(Mockito.any(PageRequest.class)))
                 .willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
         given(this.dictionaryRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
-        StepVerifier.create(dictionaryService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(dictionaryService.retrieve(0, 2, "id", true)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -75,17 +75,10 @@ class DictionaryServiceImplTest {
     }
 
     @Test
-    void superior() {
-        given(this.dictionaryRepository.findBySuperiorIdIsNull()).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
-
-        StepVerifier.create(dictionaryService.superior()).expectNextCount(1).verifyComplete();
-    }
-
-    @Test
-    void subordinates() {
+    void subset() {
         given(this.dictionaryRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Dictionary.class)));
 
-        StepVerifier.create(dictionaryService.subordinates(Mockito.anyLong())).expectNextCount(1).verifyComplete();
+        StepVerifier.create(dictionaryService.subset(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -105,9 +98,9 @@ class DictionaryServiceImplTest {
     }
 
     @Test
-    void exist() {
+    void exists() {
         given(this.dictionaryRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(dictionaryService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(dictionaryService.exists("vip", 1L)).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

@@ -60,7 +60,7 @@ class RegionControllerTest {
     private RegionVO regionVO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         regionVO = new RegionVO();
         regionVO.setName("test");
         regionVO.setSuperior("super");
@@ -105,18 +105,18 @@ class RegionControllerTest {
     }
 
     @Test
-    void subordinates() {
-        given(this.regionService.subordinates(Mockito.anyLong())).willReturn(Flux.just(regionVO));
+    void subset() {
+        given(this.regionService.subset(Mockito.anyLong())).willReturn(Flux.just(regionVO));
 
-        webTestClient.get().uri("/regions/{id}/subordinates", 1L).exchange()
+        webTestClient.get().uri("/regions/{id}/subset", 1L).exchange()
                 .expectStatus().isOk().expectBodyList(RegionVO.class);
     }
 
     @Test
     void subordinates_error() {
-        given(this.regionService.subordinates(Mockito.anyLong())).willThrow(new RuntimeException());
+        given(this.regionService.subset(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/regions/{id}/subordinates", 1L).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/regions/{id}/subset", 1L).exchange().expectStatus().isNoContent();
     }
 
 }

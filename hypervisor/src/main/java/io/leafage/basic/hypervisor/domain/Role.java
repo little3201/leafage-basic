@@ -17,10 +17,10 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import top.leafage.common.reactive.audit.ReactiveAuditMetadata;
 
 /**
  * model class for role
@@ -28,7 +28,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author wq li
  */
 @Table(name = "roles")
-public class Role extends AuditMetadata {
+public class Role extends ReactiveAuditMetadata {
 
     /**
      * 名称

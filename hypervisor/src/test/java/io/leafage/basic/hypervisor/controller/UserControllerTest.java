@@ -26,8 +26,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -47,7 +47,7 @@ import static org.springframework.security.test.web.reactive.server.SecurityMock
 @WebFluxTest(UserController.class)
 class UserControllerTest {
 
-    @MockBean
+    @MockitoBean
     private UserService userService;
 
     @Autowired
@@ -57,7 +57,7 @@ class UserControllerTest {
     private UserVO userVO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         userDTO = new UserDTO();
         userDTO.setUsername("test");
         userDTO.setAvatar("avatar.jpg");
@@ -66,12 +66,11 @@ class UserControllerTest {
         userDTO.setAccountExpiresAt(Instant.now());
         userDTO.setCredentialsExpiresAt(Instant.now());
 
-        userVO = new UserVO();
+        userVO = new UserVO(1L, true, Instant.now());
         userVO.setUsername("test");
         userVO.setAccountExpiresAt(Instant.now());
         userVO.setFirstname("john");
         userVO.setLastname("steven");
-        userVO.setLastModifiedDate(Instant.now());
     }
 
     @Test
@@ -92,17 +91,26 @@ class UserControllerTest {
     }
 
     @Test
-    void exist() {
-        given(this.userService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void exists() {
+        given(this.userService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.get().uri("/users/{username}/exist", "test").exchange().expectStatus().isOk();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/users/exists")
+                        .queryParam("username", "test")
+                        .queryParam("id", "1")
+                        .build())
+                .exchange().expectStatus().isOk();
     }
 
     @Test
     void exist_error() {
-        given(this.userService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.userService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/users/{username}/exist", "test").exchange().expectStatus().isNoContent();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/users/exists")
+                        .queryParam("username", "test")
+                        .queryParam("id", "1")
+                        .build())
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test

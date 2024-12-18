@@ -17,10 +17,10 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import top.leafage.common.reactive.audit.ReactiveAuditMetadata;
 
 import java.time.LocalDateTime;
 
@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
  * @author wq li
  */
 @Table(name = "users")
-public class User extends AuditMetadata {
+public class User extends ReactiveAuditMetadata {
 
     /**
      * 用户名

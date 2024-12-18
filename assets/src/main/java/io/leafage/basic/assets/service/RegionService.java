@@ -19,9 +19,7 @@ package io.leafage.basic.assets.service;
 
 import io.leafage.basic.assets.dto.RegionDTO;
 import io.leafage.basic.assets.vo.RegionVO;
-import org.springframework.data.domain.Page;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveBasicService;
 
 /**
@@ -37,14 +35,6 @@ public interface RegionService extends ReactiveBasicService<RegionDTO, RegionVO>
      * @param id 主键
      * @return 数据集
      */
-    Flux<RegionVO> subordinates(Long id);
+    Flux<RegionVO> subset(Long id);
 
-    /**
-     * 分页查询
-     *
-     * @param page 页码
-     * @param size 大小
-     * @return 结果集
-     */
-    Mono<Page<RegionVO>> retrieve(int page, int size);
 }

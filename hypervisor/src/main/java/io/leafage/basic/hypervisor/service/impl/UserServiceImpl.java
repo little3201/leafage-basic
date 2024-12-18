@@ -25,7 +25,6 @@ import io.leafage.basic.hypervisor.vo.UserVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -58,9 +57,11 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public Mono<Page<UserVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<UserVO> voFlux = userRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
+    public Mono<Page<UserVO>> retrieve(int page, int size, String sortBy, boolean descending) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Flux<UserVO> voFlux = userRepository.findByEnabledTrue(pageable)
+                .map(u -> convertToVO(u, UserVO.class));
 
         Mono<Long> count = userRepository.count();
 
@@ -68,60 +69,55 @@ public class UserServiceImpl implements UserService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<UserVO> fetch(Long id) {
-        Assert.notNull(id, "user id must not be blank.");
-        return userRepository.findById(id).flatMap(this::convertOuter);
+        Assert.notNull(id, "id must not be null.");
+        return userRepository.findById(id).map(u -> convertToVO(u, UserVO.class));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<Boolean> exist(String username) {
-        Assert.hasText(username, "username must not be blank.");
+    public Mono<Boolean> exists(String username, Long id) {
+        Assert.hasText(username, "username must not be empty.");
         return userRepository.existsByUsername(username);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<UserVO> create(UserDTO userDTO) {
+    public Mono<UserVO> create(UserDTO dto) {
         User user = new User();
-        BeanUtils.copyProperties(userDTO, user);
+        BeanUtils.copyProperties(dto, user);
         user.setPassword("123456");
-        return userRepository.save(user).flatMap(this::convertOuter);
+        return userRepository.save(user).map(u -> convertToVO(u, UserVO.class));
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<UserVO> modify(Long id, UserDTO userDTO) {
-        Assert.notNull(id, "user id must not be blank.");
-        return userRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .doOnNext(user -> BeanUtils.copyProperties(userDTO, user))
-                .flatMap(userRepository::save)
-                .flatMap(this::convertOuter);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "user id must not be blank.");
-        return userRepository.deleteById(id);
-    }
-
 
     /**
-     * 数据转换
-     *
-     * @param user 信息
-     * @return UserVO 输出对象
+     * {@inheritDoc}
      */
-    private Mono<UserVO> convertOuter(User user) {
-        return Mono.just(user).map(u -> {
-            UserVO vo = new UserVO();
-            BeanUtils.copyProperties(u, vo);
-            vo.setLastModifiedDate(u.getLastModifiedDate().orElse(null));
-            return vo;
-        });
+    @Override
+    public Mono<UserVO> modify(Long id, UserDTO dto) {
+        Assert.notNull(id, "id must not be null.");
+        return userRepository.findById(id)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .map(user -> convert(dto, user))
+                .flatMap(userRepository::save)
+                .map(u -> convertToVO(u, UserVO.class));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<Void> remove(Long id) {
+        Assert.notNull(id, "id must not be null.");
+        return userRepository.deleteById(id);
     }
 
 }

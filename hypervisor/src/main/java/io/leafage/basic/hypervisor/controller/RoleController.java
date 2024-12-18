@@ -75,10 +75,11 @@ public class RoleController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<RoleVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Mono<Page<RoleVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                       String sortBy, boolean descending) {
         Mono<Page<RoleVO>> pageMono;
         try {
-            pageMono = roleService.retrieve(page, size);
+            pageMono = roleService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve roles occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -110,13 +111,13 @@ public class RoleController {
      * @param name 名称
      * @return true-是，false-否
      */
-    @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
+    @GetMapping("/exists")
+    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String name, Long id) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = roleService.exist(name);
+            existsMono = roleService.exists(name, id);
         } catch (Exception e) {
-            logger.error("Check role is exist an error: ", e);
+            logger.error("Check role is exists occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);

@@ -38,14 +38,7 @@ public interface DictionaryService extends ReactiveBasicService<DictionaryDTO, D
      * @param size 大小
      * @return 结果集
      */
-    Mono<Page<DictionaryVO>> retrieve(int page, int size);
-
-    /**
-     * 获取上级
-     *
-     * @return 数据集
-     */
-    Flux<DictionaryVO> superior();
+    Mono<Page<DictionaryVO>> retrieve(int page, int size, String sortBy, boolean descending);
 
     /**
      * 获取下级
@@ -53,6 +46,6 @@ public interface DictionaryService extends ReactiveBasicService<DictionaryDTO, D
      * @param id 主键
      * @return 数据集
      */
-    Flux<DictionaryVO> subordinates(Long id);
+    Flux<DictionaryVO> subset(Long id);
 
 }

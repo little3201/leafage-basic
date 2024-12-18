@@ -29,7 +29,7 @@ public abstract class GroupBO {
     /**
      * 名称
      */
-    @NotBlank(message = "group name must not be blank.")
+    @NotBlank(message = "group name must not be empty.")
     private String name;
 
     /**

@@ -17,14 +17,11 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.AccessLog;
 import io.leafage.basic.hypervisor.repository.AccessLogRepository;
 import io.leafage.basic.hypervisor.service.AccessLogService;
 import io.leafage.basic.hypervisor.vo.AccessLogVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -43,7 +40,7 @@ public class AccessLogServiceImpl implements AccessLogService {
     /**
      * <p>Constructor for AccessLogServiceImpl.</p>
      *
-     * @param accessLogRepository a {@link io.leafage.basic.hypervisor.repository.AccessLogRepository} object
+     * @param accessLogRepository a {@link AccessLogRepository} object
      */
     public AccessLogServiceImpl(AccessLogRepository accessLogRepository) {
         this.accessLogRepository = accessLogRepository;
@@ -53,28 +50,15 @@ public class AccessLogServiceImpl implements AccessLogService {
      * {@inheritDoc}
      */
     @Override
-    public Mono<Page<AccessLogVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<AccessLogVO> voFlux = accessLogRepository.findBy(pageable).flatMap(this::convertOuter);
+    public Mono<Page<AccessLogVO>> retrieve(int page, int size, String sortBy, boolean descending) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
+        Flux<AccessLogVO> voFlux = accessLogRepository.findAllBy(pageable)
+                .map(accessLog -> convertToVO(accessLog, AccessLogVO.class));
         Mono<Long> count = accessLogRepository.count();
 
         return voFlux.collectList().zipWith(count).map(objects ->
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /**
-     * 对象转换
-     *
-     * @param accessLog 数据对象
-     * @return 输出对象
-     */
-    private Mono<AccessLogVO> convertOuter(AccessLog accessLog) {
-        return Mono.just(accessLog).map(a -> {
-            AccessLogVO vo = new AccessLogVO();
-            BeanUtils.copyProperties(a, vo);
-            vo.setLastModifiedDate(a.getLastModifiedDate().orElse(null));
-            return vo;
-        });
-    }
 }

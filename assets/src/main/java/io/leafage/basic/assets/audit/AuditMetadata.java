@@ -33,7 +33,7 @@ import java.util.Optional;
  *
  * @author wq li
  */
-public abstract class AuditMetadata implements Auditable<String, Long, Instant> {
+public abstract class ReactiveAuditMetadata implements Auditable<String, Long, Instant> {
 
     /**
      * 主键

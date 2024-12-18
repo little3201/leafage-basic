@@ -51,7 +51,7 @@ class RegionServiceImplTest {
     private RegionDTO regionDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         regionDTO = new RegionDTO();
         regionDTO.setName("西安市");
         regionDTO.setAreaCode("029");
@@ -76,17 +76,17 @@ class RegionServiceImplTest {
     }
 
     @Test
-    void subordinates() {
+    void subset() {
         given(this.regionRepository.findBySuperiorId(Mockito.anyLong())).willReturn(Flux.just(Mockito.mock(Region.class)));
 
-        StepVerifier.create(regionService.subordinates(Mockito.anyLong())).expectNextCount(1).verifyComplete();
+        StepVerifier.create(regionService.subset(Mockito.anyLong())).expectNextCount(1).verifyComplete();
     }
 
     @Test
-    void exist() {
+    void exists() {
         given(this.regionRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(regionService.exist("北京市")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(regionService.exists("北京市")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test

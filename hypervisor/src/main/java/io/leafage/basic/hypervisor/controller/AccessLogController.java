@@ -61,10 +61,11 @@ public class AccessLogController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<AccessLogVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Mono<Page<AccessLogVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                            String sortBy, boolean descending) {
         Mono<Page<AccessLogVO>> pageMono;
         try {
-            pageMono = accessLogService.retrieve(page, size);
+            pageMono = accessLogService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve access logs occurred an error: ", e);
             return ResponseEntity.noContent().build();

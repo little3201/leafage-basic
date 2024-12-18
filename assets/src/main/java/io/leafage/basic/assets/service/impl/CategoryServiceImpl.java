@@ -24,12 +24,10 @@ import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -57,11 +55,15 @@ public class CategoryServiceImpl implements CategoryService {
         this.postRepository = postRepository;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<Page<CategoryVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
+    public Mono<Page<CategoryVO>> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Flux<CategoryVO> voFlux = categoryRepository.findByEnabledTrue(pageable).flatMap(this::convert);
 
         Mono<Long> count = categoryRepository.count();
 
@@ -69,42 +71,52 @@ public class CategoryServiceImpl implements CategoryService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<CategoryVO> fetch(Long id) {
-        Assert.notNull(id, "category id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return categoryRepository.findById(id).flatMap(this::fetchOuter);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "category name must not be blank.");
+    public Mono<Boolean> exists(String name) {
+        Assert.hasText(name, "name must not be empty.");
         return categoryRepository.existsByName(name);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<CategoryVO> create(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO, category);
-        return categoryRepository.save(category).flatMap(this::convertOuter);
+        return categoryRepository.save(category).flatMap(this::convert);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<CategoryVO> modify(Long id, CategoryDTO categoryDTO) {
-        Assert.notNull(id, "category id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return categoryRepository.findById(id).switchIfEmpty(Mono.error(NotContextException::new))
                 .doOnNext(category -> BeanUtils.copyProperties(categoryDTO, category))
                 .flatMap(categoryRepository::save)
-                .flatMap(this::convertOuter);
+                .flatMap(this::convert);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "category id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return categoryRepository.deleteById(id);
     }
 
@@ -129,7 +141,7 @@ public class CategoryServiceImpl implements CategoryService {
      * @param category 信息
      * @return 输出转换后的vo对象
      */
-    private Mono<CategoryVO> convertOuter(Category category) {
+    private Mono<CategoryVO> convert(Category category) {
         return this.fetchOuter(category).flatMap(vo -> postRepository.countByCategoryId(category.getId())
                 .switchIfEmpty(Mono.just(0L))
                 .map(count -> {

@@ -60,7 +60,7 @@ class CommentControllerTest {
     private CommentVO commentVO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         commentDTO = new CommentDTO();
         commentDTO.setPostId(1L);
         commentDTO.setContext("test");

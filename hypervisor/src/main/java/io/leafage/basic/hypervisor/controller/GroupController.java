@@ -68,10 +68,11 @@ public class GroupController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<GroupVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Mono<Page<GroupVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                        String sortBy, boolean descending) {
         Mono<Page<GroupVO>> pageMono;
         try {
-            pageMono = groupService.retrieve(page, size);
+            pageMono = groupService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve groups occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -103,13 +104,13 @@ public class GroupController {
      * @param name 名称
      * @return true-是，false-否
      */
-    @GetMapping("/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@RequestParam String name) {
+    @GetMapping("/exists")
+    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String name, Long id) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = groupService.exist(name);
+            existsMono = groupService.exists(name, id);
         } catch (Exception e) {
-            logger.error("Check group is exist an error: ", e);
+            logger.error("Check group is exists occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);

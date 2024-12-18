@@ -27,7 +27,6 @@ import io.leafage.basic.hypervisor.vo.MessageVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -46,26 +45,25 @@ import java.util.NoSuchElementException;
 public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> implements MessageService {
 
     private final MessageRepository messageRepository;
-    private final UserRepository userRepository;
 
     /**
      * <p>Constructor for MessageServiceImpl.</p>
      *
-     * @param messageRepository a {@link io.leafage.basic.hypervisor.repository.MessageRepository} object
-     * @param userRepository    a {@link io.leafage.basic.hypervisor.repository.UserRepository} object
+     * @param messageRepository a {@link MessageRepository} object
      */
     public MessageServiceImpl(MessageRepository messageRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
-        this.userRepository = userRepository;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Mono<Page<MessageVO>> retrieve(int page, int size, String receiver) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<MessageVO> voFlux = messageRepository.findByReceiver(receiver, pageable).flatMap(this::convertOuter);
+    public Mono<Page<MessageVO>> retrieve(int page, int size, String sortBy, boolean descending, String receiver) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
+
+        Flux<MessageVO> voFlux = messageRepository.findByReceiver(receiver, pageable)
+                .map(m -> convertToVO(m, MessageVO.class));
 
         Mono<Long> count = messageRepository.countByReceiver(receiver);
 
@@ -73,49 +71,36 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<MessageVO> fetch(Long id) {
-        Assert.notNull(id, "message id must not be null.");
-        return messageRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+        Assert.notNull(id, "id must not be null.");
+        return messageRepository.findById(id)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(message -> message.setRead(Boolean.TRUE))
                 .flatMap(messageRepository::save)
-                .flatMap(this::convertOuter);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<MessageVO> create(MessageDTO messageDTO) {
-        Message message = new Message();
-        BeanUtils.copyProperties(messageDTO, message);
-        return Mono.just(message).map(m -> {
-            userRepository.getByUsername(messageDTO.getReceiver()).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                    .doOnNext(user -> message.setReceiver(user.getUsername()));
-            return m;
-        }).flatMap(messageRepository::save).flatMap(this::convertOuter);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "message id must not be null.");
-        return messageRepository.deleteById(id);
+                .map(m -> convertToVO(m, MessageVO.class));
     }
 
     /**
-     * 数据转换
-     *
-     * @param message 信息
-     * @return NotificationVO 输出对象
+     * {@inheritDoc}
      */
-    private Mono<MessageVO> convertOuter(Message message) {
-        return Mono.just(message).map(m -> {
-            MessageVO vo = new MessageVO();
-            BeanUtils.copyProperties(m, vo);
-            vo.setLastModifiedDate(m.getLastModifiedDate().orElse(null));
-            return vo;
-        });
+    @Override
+    public Mono<MessageVO> create(MessageDTO dto) {
+        Message message = new Message();
+        BeanUtils.copyProperties(dto, message);
+        return messageRepository.save(message).map(m -> convertToVO(m, MessageVO.class));
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<Void> remove(Long id) {
+        Assert.notNull(id, "id must not be null.");
+        return messageRepository.deleteById(id);
     }
 
 }

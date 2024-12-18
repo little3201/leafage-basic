@@ -41,7 +41,7 @@ public class GroupRolesServiceImpl implements GroupRolesService {
     /**
      * <p>Constructor for GroupRolesServiceImpl.</p>
      *
-     * @param groupRolesRepository a {@link io.leafage.basic.hypervisor.repository.GroupRolesRepository} object
+     * @param groupRolesRepository a {@link GroupRolesRepository} object
      */
     public GroupRolesServiceImpl(GroupRolesRepository groupRolesRepository) {
         this.groupRolesRepository = groupRolesRepository;
@@ -52,22 +52,22 @@ public class GroupRolesServiceImpl implements GroupRolesService {
      */
     @Override
     public Mono<List<GroupRoles>> roles(Long groupId) {
-        Assert.notNull(groupId, "group id must not be null.");
+        Assert.notNull(groupId, "groupId must not be null.");
         return groupRolesRepository.findByGroupId(groupId).collectList();
     }
 
     /** {@inheritDoc} */
     @Override
     public Mono<List<GroupRoles>> groups(Long roleId) {
-        Assert.notNull(roleId, "role id must not be blank.");
+        Assert.notNull(roleId, "roleId must not be empty.");
         return groupRolesRepository.findByRoleId(roleId).collectList();
     }
 
     /** {@inheritDoc} */
     @Override
     public Mono<Boolean> relation(Long groupId, Set<Long> roleIds) {
-        Assert.notNull(groupId, "group id must not be blank.");
-        Assert.notEmpty(roleIds, "role ids must not be empty.");
+        Assert.notNull(groupId, "groupId must not be empty.");
+        Assert.notEmpty(roleIds, "roleIds must not be empty.");
 
         return Flux.fromIterable(roleIds).map(roleId -> {
             GroupRoles groupRoles = new GroupRoles();

@@ -94,13 +94,13 @@ public class RegionController {
      * @param id a {@link java.lang.Long} object
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping("/{id}/subordinates")
-    public ResponseEntity<Flux<RegionVO>> subordinates(@PathVariable Long id) {
+    @GetMapping("/{id}/subset")
+    public ResponseEntity<Flux<RegionVO>> subset(@PathVariable Long id) {
         Flux<RegionVO> voFlux;
         try {
-            voFlux = regionService.subordinates(id);
+            voFlux = regionService.subset(id);
         } catch (Exception e) {
-            logger.info("Retrieve region subordinates occurred an error: ", e);
+            logger.info("Retrieve region subset occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(voFlux);

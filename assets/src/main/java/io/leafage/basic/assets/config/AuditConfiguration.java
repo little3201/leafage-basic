@@ -17,11 +17,14 @@
 
 package io.leafage.basic.assets.config;
 
-import io.leafage.basic.assets.audit.AuditorAwareImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.ReactiveAuditorAware;
 import org.springframework.data.r2dbc.config.EnableR2dbcAuditing;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import reactor.core.publisher.Mono;
 
 /**
  * audit configuration
@@ -39,6 +42,9 @@ public class AuditConfiguration {
      */
     @Bean
     public ReactiveAuditorAware<String> auditorProvider() {
-        return new AuditorAwareImpl();
+        return () -> Mono.defer(() -> Mono.justOrEmpty(SecurityContextHolder.getContext()))
+                .map(SecurityContext::getAuthentication)
+                .filter(auth -> auth != null && auth.isAuthenticated() && auth.getPrincipal() instanceof User)
+                .map(auth -> ((User) auth.getPrincipal()).getUsername());
     }
 }

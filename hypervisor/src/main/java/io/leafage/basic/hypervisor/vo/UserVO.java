@@ -18,6 +18,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.UserBO;
+import top.leafage.common.ReadonlyMetadata;
 
 import java.time.Instant;
 
@@ -26,52 +27,33 @@ import java.time.Instant;
  *
  * @author wq li
  */
-public class UserVO extends UserBO {
+public class UserVO extends UserBO implements ReadonlyMetadata {
 
-    /**
-     * 是否锁定
-     */
-    private boolean accountNonLocked;
+    private final Long id;
 
-    /**
-     * 最后更新时间
-     */
-    private Instant lastModifiedDate;
+    private final boolean enabled;
 
+    private final Instant lastModifiedDate;
 
-    /**
-     * <p>isAccountNonLocked.</p>
-     *
-     * @return a boolean
-     */
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    /**
-     * <p>Setter for the field <code>accountNonLocked</code>.</p>
-     *
-     * @param accountNonLocked a boolean
-     */
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    /**
-     * <p>Getter for the field <code>lastModifiedDate</code>.</p>
-     *
-     * @return a {@link java.time.Instant} object
-     */
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    /**
-     * <p>Setter for the field <code>lastModifiedDate</code>.</p>
-     *
-     * @param lastModifiedDate a {@link java.time.Instant} object
-     */
-    public void setLastModifiedDate(Instant lastModifiedDate) {
+    public UserVO(Long id, boolean enabled, Instant lastModifiedDate) {
+        this.id = id;
+        this.enabled = enabled;
         this.lastModifiedDate = lastModifiedDate;
     }
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
 }

@@ -41,7 +41,7 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
     /**
      * <p>Constructor for RolePrivilegesServiceImpl.</p>
      *
-     * @param rolePrivilegesRepository a {@link io.leafage.basic.hypervisor.repository.RolePrivilegesRepository} object
+     * @param rolePrivilegesRepository a {@link RolePrivilegesRepository} object
      */
     public RolePrivilegesServiceImpl(RolePrivilegesRepository rolePrivilegesRepository) {
         this.rolePrivilegesRepository = rolePrivilegesRepository;
@@ -52,22 +52,22 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
      */
     @Override
     public Mono<List<RolePrivileges>> privileges(Long roleId) {
-        Assert.notNull(roleId, "role id must not be null.");
+        Assert.notNull(roleId, "roleId must not be null.");
         return rolePrivilegesRepository.findByRoleId(roleId).collectList();
     }
 
     /** {@inheritDoc} */
     @Override
     public Mono<List<RolePrivileges>> roles(Long privilegeId) {
-        Assert.notNull(privilegeId, "privilege id must not be null.");
+        Assert.notNull(privilegeId, "privilegeId must not be null.");
         return rolePrivilegesRepository.findByPrivilegeId(privilegeId).collectList();
     }
 
     /** {@inheritDoc} */
     @Override
     public Mono<Boolean> relation(Long roleId, Set<Long> privilegeIds) {
-        Assert.notNull(roleId, "role id must not be null.");
-        Assert.notEmpty(privilegeIds, "privilege ids must not be empty.");
+        Assert.notNull(roleId, "roleId must not be null.");
+        Assert.notEmpty(privilegeIds, "privilegeIds must not be empty.");
 
         return Flux.fromIterable(privilegeIds).map(privilegeId -> {
             RolePrivileges rolePrivileges = new RolePrivileges();

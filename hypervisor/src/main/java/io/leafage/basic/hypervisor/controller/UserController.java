@@ -61,10 +61,11 @@ public class UserController {
      * @return a {@link org.springframework.http.ResponseEntity} object
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<UserVO>>> retrieve(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Mono<Page<UserVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                       String sortBy, boolean descending) {
         Mono<Page<UserVO>> pageMono;
         try {
-            pageMono = userService.retrieve(page, size);
+            pageMono = userService.retrieve(page, size, sortBy, descending);
         } catch (Exception e) {
             logger.error("Retrieve users occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -96,13 +97,13 @@ public class UserController {
      * @param username 用户名
      * @return true-是，false-否
      */
-    @GetMapping("/{username}/exist")
-    public ResponseEntity<Mono<Boolean>> exist(@PathVariable String username) {
+    @GetMapping("/exists")
+    public ResponseEntity<Mono<Boolean>> exists(@RequestParam String username, Long id) {
         Mono<Boolean> existsMono;
         try {
-            existsMono = userService.exist(username);
+            existsMono = userService.exists(username, id);
         } catch (Exception e) {
-            logger.error("Check user is exist an error: ", e);
+            logger.error("Check user is exists occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);

@@ -65,7 +65,7 @@ class PostControllerTest {
     private PostVO postVO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         // 构造请求对象
         postDTO = new PostDTO();
         postDTO.setTitle("test");
@@ -152,19 +152,19 @@ class PostControllerTest {
     }
 
     @Test
-    void exist() {
-        given(this.postService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void exists() {
+        given(this.postService.exists(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/exists")
                         .queryParam("title", "test").build()).exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void exist_error() {
-        given(this.postService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.postService.exists(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/posts/exists")
                 .queryParam("title", "test").build()).exchange().expectStatus().isNoContent();
     }
 

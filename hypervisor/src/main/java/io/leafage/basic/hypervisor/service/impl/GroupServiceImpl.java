@@ -24,13 +24,15 @@ import io.leafage.basic.hypervisor.vo.GroupVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.TreeNode;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -46,7 +48,7 @@ public class GroupServiceImpl implements GroupService {
     /**
      * <p>Constructor for GroupServiceImpl.</p>
      *
-     * @param groupRepository a {@link io.leafage.basic.hypervisor.repository.GroupRepository} object
+     * @param groupRepository a {@link GroupRepository} object
      */
     public GroupServiceImpl(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
@@ -56,16 +58,11 @@ public class GroupServiceImpl implements GroupService {
      * {@inheritDoc}
      */
     @Override
-    public Flux<GroupVO> retrieve() {
-        return groupRepository.findAll().flatMap(this::convertOuter)
-                .switchIfEmpty(Mono.error(NoSuchElementException::new));
-    }
+    public Mono<Page<GroupVO>> retrieve(int page, int size, String sortBy, boolean descending) {
+        Pageable pageable = pageable(page, size, sortBy, descending);
 
-    /** {@inheritDoc} */
-    @Override
-    public Mono<Page<GroupVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<GroupVO> voFlux = groupRepository.findBy(pageable).flatMap(this::convertOuter);
+        Flux<GroupVO> voFlux = groupRepository.findAllBy(pageable)
+                .map(g -> convertToVO(g, GroupVO.class));
 
         Mono<Long> count = groupRepository.count();
 
@@ -73,57 +70,69 @@ public class GroupServiceImpl implements GroupService {
                 new PageImpl<>(objects.getT1(), pageable, objects.getT2()));
     }
 
-    /** {@inheritDoc} */
     @Override
-    public Mono<GroupVO> fetch(Long id) {
-        Assert.notNull(id, "group id must not be null.");
-        return groupRepository.findById(id).flatMap(this::convertOuter);
+    public Flux<GroupVO> retrieve(List<Long> ids) {
+        Flux<Group> flux;
+        if (CollectionUtils.isEmpty(ids)) {
+            flux = groupRepository.findAll();
+        } else {
+            flux = groupRepository.findAllById(ids);
+        }
+        return flux.map(g -> convertToVO(g, GroupVO.class));
     }
 
-    /** {@inheritDoc} */
     @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "group name must not be blank.");
-        return groupRepository.existsByName(name);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<GroupVO> create(GroupDTO groupDTO) {
-        Group group = new Group();
-        BeanUtils.copyProperties(groupDTO, group);
-        return groupRepository.save(group).flatMap(this::convertOuter);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<GroupVO> modify(Long id, GroupDTO groupDTO) {
-        Assert.notNull(id, "group id must not be null.");
-        return groupRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
-                .doOnNext(group -> BeanUtils.copyProperties(groupDTO, group))
-                .flatMap(groupRepository::save)
-                .flatMap(this::convertOuter);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "group id must not be null.");
-        return groupRepository.deleteById(id);
+    public Mono<List<TreeNode>> tree() {
+        return null;
     }
 
     /**
-     * 对象转换为输出结果对象(单条查询)
-     *
-     * @param group 信息
-     * @return 输出转换后的vo对象
+     * {@inheritDoc}
      */
-    private Mono<GroupVO> convertOuter(Group group) {
-        return Mono.just(group).map(g -> {
-            GroupVO vo = new GroupVO();
-            BeanUtils.copyProperties(g, vo);
-            vo.setLastModifiedDate(g.getLastModifiedDate().orElse(null));
-            return vo;
-        });
+    @Override
+    public Mono<GroupVO> fetch(Long id) {
+        Assert.notNull(id, "id must not be null.");
+        return groupRepository.findById(id).map(g -> convertToVO(g, GroupVO.class));
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<Boolean> exists(String name, Long id) {
+        Assert.hasText(name, "name must not be empty.");
+        return groupRepository.existsByName(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<GroupVO> create(GroupDTO dto) {
+        Group group = new Group();
+        BeanUtils.copyProperties(dto, group);
+        return groupRepository.save(group).map(g -> convertToVO(g, GroupVO.class));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<GroupVO> modify(Long id, GroupDTO dto) {
+        Assert.notNull(id, "id must not be null.");
+        return groupRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .map(group -> convert(dto, group))
+                .flatMap(groupRepository::save)
+                .map(g -> convertToVO(g, GroupVO.class));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Mono<Void> remove(Long id) {
+        Assert.notNull(id, "id must not be null.");
+        return groupRepository.deleteById(id);
+    }
+
 }

@@ -18,10 +18,8 @@
 package io.leafage.basic.hypervisor.service.impl;
 
 import io.leafage.basic.hypervisor.domain.Message;
-import io.leafage.basic.hypervisor.domain.User;
 import io.leafage.basic.hypervisor.dto.MessageDTO;
 import io.leafage.basic.hypervisor.repository.MessageRepository;
-import io.leafage.basic.hypervisor.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,16 +45,13 @@ class MessageServiceImplTest {
     @Mock
     private MessageRepository messageRepository;
 
-    @Mock
-    private UserRepository userRepository;
-
     @InjectMocks
     private MessageServiceImpl messageService;
 
     private MessageDTO messageDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         messageDTO = new MessageDTO();
         messageDTO.setTitle("标题");
         messageDTO.setContext("内容信息");
@@ -70,7 +65,7 @@ class MessageServiceImplTest {
 
         given(this.messageRepository.countByReceiver(Mockito.anyString())).willReturn(Mono.just(2L));
 
-        StepVerifier.create(messageService.retrieve(0, 2, "test")).expectNextCount(1).verifyComplete();
+        StepVerifier.create(messageService.retrieve(0, 2, "id", true, "test")).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -84,8 +79,6 @@ class MessageServiceImplTest {
 
     @Test
     void create() {
-        given(this.userRepository.getByUsername(Mockito.anyString())).willReturn(Mono.just(Mockito.mock(User.class)));
-
         given(this.messageRepository.save(Mockito.any(Message.class))).willReturn(Mono.just(Mockito.mock(Message.class)));
 
         StepVerifier.create(messageService.create(messageDTO)).expectNextCount(1).verifyComplete();

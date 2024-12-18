@@ -30,12 +30,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -60,13 +60,13 @@ class RoleControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @MockBean
+    @MockitoBean
     private RoleMembersService roleMembersService;
 
-    @MockBean
+    @MockitoBean
     private RoleService roleService;
 
-    @MockBean
+    @MockitoBean
     private RolePrivilegesService rolePrivilegesService;
 
     private RoleDTO roleDTO;
@@ -75,15 +75,14 @@ class RoleControllerTest {
     private RoleMembers roleMembers;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         roleDTO = new RoleDTO();
         roleDTO.setName("test");
         roleDTO.setSuperiorId(1L);
         roleDTO.setName("role");
 
-        roleVO = new RoleVO();
+        roleVO = new RoleVO(1L, true, Instant.now());
         roleVO.setName("test");
-        roleVO.setLastModifiedDate(Instant.now());
         roleVO.setDescription("role");
 
         rolePrivileges = new RolePrivileges();
@@ -99,7 +98,7 @@ class RoleControllerTest {
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
         Page<RoleVO> voPage = new PageImpl<>(List.of(roleVO), pageable, 1L);
-        given(this.roleService.retrieve(0, 2)).willReturn(Mono.just(voPage));
+        given(this.roleService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(Mono.just(voPage));
 
         webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles").queryParam("page", 0)
                         .queryParam("size", 2).build()).exchange()
@@ -108,48 +107,67 @@ class RoleControllerTest {
 
     @Test
     void retrieve_error() {
-        given(this.roleService.retrieve(0, 2)).willThrow(new RuntimeException());
+        given(this.roleService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles")
+                        .queryParam("page", 0)
+                        .queryParam("size", 2)
+                        .queryParam("sortBy", "id")
+                        .build())
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
     void fetch() {
         given(this.roleService.fetch(Mockito.anyLong())).willReturn(Mono.just(roleVO));
 
-        webTestClient.get().uri("/roles/{id}", 1L).exchange()
-                .expectStatus().isOk().expectBody().jsonPath("$.name").isEqualTo("test");
+        webTestClient.get().uri("/roles/{id}", 1L)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
     @Test
     void fetch_error() {
         given(this.roleService.fetch(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/roles/{id}", 1L).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/roles/{id}", 1L)
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
-    void exist() {
-        given(this.roleService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void exists() {
+        given(this.roleService.exists(Mockito.anyString(), Mockito.anyLong())).willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles/exist")
-                .queryParam("name", "test").build()).exchange().expectStatus().isOk();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles/exists")
+                        .queryParam("name", "test")
+                        .queryParam("id", "1")
+                        .build())
+                .exchange()
+                .expectStatus().isOk();
     }
 
     @Test
     void exist_error() {
-        given(this.roleService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.roleService.exists(Mockito.anyString(), Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles/exist")
-                .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/roles/exists")
+                        .queryParam("name", "test")
+                        .queryParam("id", "1")
+                        .build())
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
     void create() {
         given(this.roleService.create(Mockito.any(RoleDTO.class))).willReturn(Mono.just(roleVO));
 
-        webTestClient.mutateWith(csrf()).post().uri("/roles").bodyValue(roleDTO).exchange().expectStatus().isCreated()
+        webTestClient.mutateWith(csrf()).post().uri("/roles").bodyValue(roleDTO)
+                .exchange()
+                .expectStatus().isCreated()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
 
@@ -157,14 +175,17 @@ class RoleControllerTest {
     void create_error() {
         given(this.roleService.create(Mockito.any(RoleDTO.class))).willThrow(new RuntimeException());
 
-        webTestClient.mutateWith(csrf()).post().uri("/roles").bodyValue(roleDTO).exchange().expectStatus().is4xxClientError();
+        webTestClient.mutateWith(csrf()).post().uri("/roles").bodyValue(roleDTO)
+                .exchange()
+                .expectStatus().is4xxClientError();
     }
 
     @Test
     void modify() {
         given(this.roleService.modify(Mockito.anyLong(), Mockito.any(RoleDTO.class))).willReturn(Mono.just(roleVO));
 
-        webTestClient.mutateWith(csrf()).put().uri("/roles/{id}", 1L).bodyValue(roleDTO).exchange()
+        webTestClient.mutateWith(csrf()).put().uri("/roles/{id}", 1L).bodyValue(roleDTO)
+                .exchange()
                 .expectStatus().isAccepted()
                 .expectBody().jsonPath("$.name").isEqualTo("test");
     }
@@ -206,7 +227,9 @@ class RoleControllerTest {
     void privileges_error() {
         given(this.rolePrivilegesService.privileges(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri("/roles/{id}/privileges", 1L).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri("/roles/{id}/privileges", 1L)
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
     @Test
@@ -216,7 +239,8 @@ class RoleControllerTest {
 
         webTestClient.mutateWith(csrf()).patch().uri("/roles/{id}/privileges", 1L)
                 .bodyValue(Collections.singleton(1L))
-                .exchange().expectStatus().isAccepted();
+                .exchange()
+                .expectStatus().isAccepted();
     }
 
     @Test
@@ -225,6 +249,7 @@ class RoleControllerTest {
 
         webTestClient.mutateWith(csrf()).patch().uri("/roles/{id}/privileges", 1L)
                 .bodyValue(Collections.singleton(1L))
-                .exchange().expectStatus().is4xxClientError();
+                .exchange()
+                .expectStatus().is4xxClientError();
     }
 }

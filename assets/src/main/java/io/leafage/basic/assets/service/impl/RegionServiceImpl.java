@@ -23,12 +23,10 @@ import io.leafage.basic.assets.repository.RegionRepository;
 import io.leafage.basic.assets.service.RegionService;
 import io.leafage.basic.assets.vo.RegionVO;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -57,9 +55,11 @@ public class RegionServiceImpl implements RegionService {
      * {@inheritDoc}
      */
     @Override
-    public Mono<Page<RegionVO>> retrieve(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageable).flatMap(this::convertOuter);
+    public Mono<Page<RegionVO>> retrieve(int page, int size, String sortBy, boolean descending) {
+        Sort sort = Sort.by(descending ? Sort.Direction.DESC : Sort.Direction.ASC,
+                StringUtils.hasText(sortBy) ? sortBy : "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Flux<RegionVO> voFlux = regionRepository.findByEnabledTrue(pageable).flatMap(this::convert);
 
         Mono<Long> count = regionRepository.countByEnabledTrue();
 
@@ -70,22 +70,22 @@ public class RegionServiceImpl implements RegionService {
     /** {@inheritDoc} */
     @Override
     public Mono<RegionVO> fetch(Long id) {
-        Assert.notNull(id, "region id must not be null.");
-        return regionRepository.findById(id).flatMap(this::convertOuter);
+        Assert.notNull(id, "id must not be null.");
+        return regionRepository.findById(id).flatMap(this::convert);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Mono<Boolean> exist(String name) {
-        Assert.hasText(name, "region name must not be blank.");
+    public Mono<Boolean> exists(String name) {
+        Assert.hasText(name, "name must not be empty.");
         return regionRepository.existsByName(name);
     }
 
     /** {@inheritDoc} */
     @Override
-    public Flux<RegionVO> subordinates(Long superiorId) {
-        Assert.notNull(superiorId, "region superior id must not be null.");
-        return regionRepository.findBySuperiorId(superiorId).flatMap(this::convertOuter);
+    public Flux<RegionVO> subset(Long superiorId) {
+        Assert.notNull(superiorId, "superiorId must not be null.");
+        return regionRepository.findBySuperiorId(superiorId).flatMap(this::convert);
     }
 
     /** {@inheritDoc} */
@@ -93,22 +93,22 @@ public class RegionServiceImpl implements RegionService {
     public Mono<RegionVO> create(RegionDTO regionDTO) {
         Region region = new Region();
         BeanUtils.copyProperties(regionDTO, region);
-        return regionRepository.save(region).flatMap(this::convertOuter);
+        return regionRepository.save(region).flatMap(this::convert);
     }
 
     /** {@inheritDoc} */
     @Override
     public Mono<RegionVO> modify(Long id, RegionDTO regionDTO) {
-        Assert.notNull(id, "region id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return regionRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(region -> BeanUtils.copyProperties(regionDTO, region))
-                .flatMap(regionRepository::save).flatMap(this::convertOuter);
+                .flatMap(regionRepository::save).flatMap(this::convert);
     }
 
     /** {@inheritDoc} */
     @Override
     public Mono<Void> remove(Long id) {
-        Assert.notNull(id, "region id must not be null.");
+        Assert.notNull(id, "id must not be null.");
         return regionRepository.deleteById(id);
     }
 
@@ -118,7 +118,7 @@ public class RegionServiceImpl implements RegionService {
      * @param region 信息
      * @return RegionVO 输出对象
      */
-    private Mono<RegionVO> convertOuter(Region region) {
+    private Mono<RegionVO> convert(Region region) {
         return Mono.just(region).map(r -> {
             RegionVO vo = new RegionVO();
             BeanUtils.copyProperties(r, vo);

@@ -18,6 +18,7 @@
 package io.leafage.basic.hypervisor.vo;
 
 import io.leafage.basic.hypervisor.bo.RoleBO;
+import top.leafage.common.ReadonlyMetadata;
 
 import java.time.Instant;
 
@@ -26,75 +27,33 @@ import java.time.Instant;
  *
  * @author wq li
  */
-public class RoleVO extends RoleBO {
+public class RoleVO extends RoleBO implements ReadonlyMetadata {
 
-    /**
-     * 主键
-     */
-    private Long id;
+    private final Long id;
 
-    /**
-     * 状态
-     */
-    private boolean enabled;
+    private final boolean enabled;
 
-    /**
-     * 最后更新时间
-     */
-    private Instant lastModifiedDate;
+    private final Instant lastModifiedDate;
 
-
-    /**
-     * <p>Getter for the field <code>id</code>.</p>
-     *
-     * @return a {@link java.lang.Long} object
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * <p>Setter for the field <code>id</code>.</p>
-     *
-     * @param id a {@link java.lang.Long} object
-     */
-    public void setId(Long id) {
+    public RoleVO(Long id, boolean enabled, Instant lastModifiedDate) {
         this.id = id;
-    }
-
-    /**
-     * <p>isEnabled.</p>
-     *
-     * @return a boolean
-     */
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    /**
-     * <p>Setter for the field <code>enabled</code>.</p>
-     *
-     * @param enabled a boolean
-     */
-    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    /**
-     * <p>Getter for the field <code>lastModifiedDate</code>.</p>
-     *
-     * @return a {@link java.time.Instant} object
-     */
-    public Instant getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    /**
-     * <p>Setter for the field <code>lastModifiedDate</code>.</p>
-     *
-     * @param lastModifiedDate a {@link java.time.Instant} object
-     */
-    public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    @Override
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
 }

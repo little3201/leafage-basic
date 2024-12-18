@@ -25,12 +25,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -51,7 +51,7 @@ import static org.mockito.BDDMockito.given;
 @WebFluxTest(AccessLogController.class)
 class AccessLogControllerTest {
 
-    @MockBean
+    @MockitoBean
     private AccessLogService accessLogService;
 
     @Autowired
@@ -60,31 +60,39 @@ class AccessLogControllerTest {
     private AccessLogVO accessLogVO;
 
     @BeforeEach
-    void init() {
-        accessLogVO = new AccessLogVO();
+    void setUp() {
+        accessLogVO = new AccessLogVO(1L, true, Instant.now());
         accessLogVO.setIp("12.1.2.1");
         accessLogVO.setLocation("某国某城市");
         accessLogVO.setDescription("更新个人资料");
-        accessLogVO.setLastModifiedDate(Instant.now());
     }
 
     @Test
     void retrieve() {
         Pageable pageable = PageRequest.of(0, 2);
         Page<AccessLogVO> page = new PageImpl<>(List.of(accessLogVO), pageable, 1L);
-        given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willReturn(Mono.just(page));
+        given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willReturn(Mono.just(page));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/access-logs").queryParam("page", 0)
-                        .queryParam("size", 2).build()).exchange()
-                .expectStatus().isOk().expectBodyList(AccessLogVO.class);
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/access-logs")
+                        .queryParam("page", 0)
+                        .queryParam("size", 2)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(AccessLogVO.class);
     }
 
     @Test
     void retrieve_error() {
-        given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt())).willThrow(new NoSuchElementException());
+        given(this.accessLogService.retrieve(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyBoolean())).willThrow(new NoSuchElementException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/access-logs").queryParam("page", 0)
-                .queryParam("size", 2).build()).exchange().expectStatus().isNoContent();
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/access-logs")
+                        .queryParam("page", 0)
+                        .queryParam("size", 2)
+                        .queryParam("sortBy", "id")
+                        .build())
+                .exchange()
+                .expectStatus().isNoContent();
     }
 
 }

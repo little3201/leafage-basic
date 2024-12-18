@@ -63,7 +63,7 @@ class CategoryControllerTest {
     private CategoryVO categoryVO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         // 构造请求对象
         categoryDTO = new CategoryDTO();
         categoryDTO.setName("test");
@@ -112,19 +112,19 @@ class CategoryControllerTest {
     }
 
     @Test
-    void exist() {
-        given(this.categoryService.exist(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
+    void exists() {
+        given(this.categoryService.exists(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exists")
                         .queryParam("name", "test").build()).exchange()
                 .expectStatus().isOk();
     }
 
     @Test
     void exist_error() {
-        given(this.categoryService.exist(Mockito.anyString())).willThrow(new RuntimeException());
+        given(this.categoryService.exists(Mockito.anyString())).willThrow(new RuntimeException());
 
-        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exist")
+        webTestClient.get().uri(uriBuilder -> uriBuilder.path("/categories/exists")
                 .queryParam("name", "test").build()).exchange().expectStatus().isNoContent();
     }
 

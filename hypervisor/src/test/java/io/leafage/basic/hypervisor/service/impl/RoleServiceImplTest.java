@@ -32,6 +32,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.List;
+
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -51,7 +53,7 @@ class RoleServiceImplTest {
     private RoleDTO roleDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         roleDTO = new RoleDTO();
         roleDTO.setName("test");
         roleDTO.setSuperiorId(1L);
@@ -59,18 +61,25 @@ class RoleServiceImplTest {
 
     @Test
     void retrieve() {
+        given(this.roleRepository.findAllById(Mockito.anyList())).willReturn(Flux.just(Mockito.mock(Role.class)));
+
+        StepVerifier.create(roleService.retrieve(List.of(1L))).expectNextCount(1).verifyComplete();
+    }
+
+    @Test
+    void retrieve_ids_null() {
         given(this.roleRepository.findAll()).willReturn(Flux.just(Mockito.mock(Role.class)));
 
-        StepVerifier.create(roleService.retrieve()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(roleService.retrieve(null)).expectNextCount(1).verifyComplete();
     }
 
     @Test
     void retrieve_page() {
-        given(this.roleRepository.findBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Role.class)));
+        given(this.roleRepository.findAllBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Role.class)));
 
         given(this.roleRepository.count()).willReturn(Mono.just(2L));
 
-        StepVerifier.create(roleService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(roleService.retrieve(0, 2, "id", true)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -97,9 +106,9 @@ class RoleServiceImplTest {
     }
 
     @Test
-    void exist() {
+    void exists() {
         given(this.roleRepository.existsByName(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(roleService.exist("vip")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(roleService.exists("vip", 1L)).expectNext(Boolean.TRUE).verifyComplete();
     }
 }

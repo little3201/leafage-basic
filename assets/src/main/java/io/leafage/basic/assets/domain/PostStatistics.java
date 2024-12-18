@@ -17,7 +17,7 @@
 
 package io.leafage.basic.assets.domain;
 
-import io.leafage.basic.assets.audit.AuditMetadata;
+import io.leafage.basic.assets.audit.ReactiveAuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -27,7 +27,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author wq li
  */
 @Table(name = "post_statistics")
-public class PostStatistics extends AuditMetadata {
+public class PostStatistics extends ReactiveAuditMetadata {
 
     /**
      * 帖子

@@ -62,10 +62,12 @@ public class MessageController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Mono<Page<MessageVO>>> retrieve(@RequestParam int page, @RequestParam int size, @RequestParam String receiver) {
+    public ResponseEntity<Mono<Page<MessageVO>>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                          @RequestParam String receiver, String sortBy,
+                                                          boolean descending) {
         Mono<Page<MessageVO>> pageMono;
         try {
-            pageMono = messageService.retrieve(page, size, receiver);
+            pageMono = messageService.retrieve(page, size, sortBy, descending, receiver);
         } catch (Exception e) {
             logger.error("Retrieve messages occurred an error: ", e);
             return ResponseEntity.noContent().build();

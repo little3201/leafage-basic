@@ -38,7 +38,7 @@ public interface PrivilegeRepository extends R2dbcRepository<Privilege, Long> {
      * @param pageable a {@link org.springframework.data.domain.Pageable} object
      * @return 有效帖子
      */
-    Flux<Privilege> findByEnabledTrue(Pageable pageable);
+    Flux<Privilege> findAllBy(Pageable pageable);
 
     /**
      * 是否已存在

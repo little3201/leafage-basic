@@ -41,7 +41,7 @@ public class GroupMembersServiceImpl implements GroupMembersService {
     /**
      * <p>Constructor for GroupMembersServiceImpl.</p>
      *
-     * @param groupMembersRepository a {@link io.leafage.basic.hypervisor.repository.GroupMembersRepository} object
+     * @param groupMembersRepository a {@link GroupMembersRepository} object
      */
     public GroupMembersServiceImpl(GroupMembersRepository groupMembersRepository) {
         this.groupMembersRepository = groupMembersRepository;
@@ -52,21 +52,21 @@ public class GroupMembersServiceImpl implements GroupMembersService {
      */
     @Override
     public Mono<List<GroupMembers>> members(Long groupId) {
-        Assert.notNull(groupId, "group id must not be null.");
+        Assert.notNull(groupId, "groupId must not be null.");
         return groupMembersRepository.findByGroupId(groupId).collectList();
     }
 
     /** {@inheritDoc} */
     @Override
     public Mono<List<GroupMembers>> groups(String username) {
-        Assert.hasText(username, "username must not be blank.");
+        Assert.hasText(username, "username must not be empty.");
         return groupMembersRepository.findByUsername(username).collectList();
     }
 
     /** {@inheritDoc} */
     @Override
     public Mono<Boolean> relation(Long groupId, Set<String> usernames) {
-        Assert.notNull(groupId, "group id must not be blank.");
+        Assert.notNull(groupId, "groupId must not be empty.");
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
         return Flux.fromIterable(usernames).map(username -> {

@@ -53,7 +53,7 @@ class UserServiceImplTest {
     private UserDTO userDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         userDTO = new UserDTO();
         userDTO.setUsername("test");
         userDTO.setFirstname("john");
@@ -67,7 +67,7 @@ class UserServiceImplTest {
 
         given(this.userRepository.count()).willReturn(Mono.just(2L));
 
-        StepVerifier.create(userService.retrieve(0, 2)).expectNextCount(1).verifyComplete();
+        StepVerifier.create(userService.retrieve(0, 2, "id", true)).expectNextCount(1).verifyComplete();
     }
 
     @Test
@@ -86,10 +86,10 @@ class UserServiceImplTest {
     }
 
     @Test
-    void exist() {
+    void exists() {
         given(this.userRepository.existsByUsername(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(userService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(userService.exists("test", 1L)).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test

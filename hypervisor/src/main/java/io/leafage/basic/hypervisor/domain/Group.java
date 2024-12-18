@@ -17,9 +17,9 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import io.leafage.basic.hypervisor.audit.AuditMetadata;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
+import top.leafage.common.reactive.audit.ReactiveAuditMetadata;
 
 /**
  * model class for group
@@ -27,7 +27,7 @@ import org.springframework.data.relational.core.mapping.Table;
  * @author wq li
  */
 @Table(name = "groups")
-public class Group extends AuditMetadata {
+public class Group extends ReactiveAuditMetadata {
 
     /**
      * 名称

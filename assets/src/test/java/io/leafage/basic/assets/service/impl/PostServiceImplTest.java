@@ -63,7 +63,7 @@ class PostServiceImplTest {
     private PostDTO postDTO;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         postDTO = new PostDTO();
         postDTO.setTitle("标题");
         postDTO.setTags(Set.of("test"));
@@ -107,10 +107,10 @@ class PostServiceImplTest {
     }
 
     @Test
-    void exist() {
+    void exists() {
         given(this.postRepository.existsByTitle(Mockito.anyString())).willReturn(Mono.just(Boolean.TRUE));
 
-        StepVerifier.create(postsService.exist("test")).expectNext(Boolean.TRUE).verifyComplete();
+        StepVerifier.create(postsService.exists("test")).expectNext(Boolean.TRUE).verifyComplete();
     }
 
     @Test

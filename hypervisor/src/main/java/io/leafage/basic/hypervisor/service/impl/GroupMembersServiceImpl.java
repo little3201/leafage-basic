@@ -53,27 +53,34 @@ public class GroupMembersServiceImpl implements GroupMembersService {
     @Override
     public Mono<List<GroupMembers>> members(Long groupId) {
         Assert.notNull(groupId, "groupId must not be null.");
+
         return groupMembersRepository.findByGroupId(groupId).collectList();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<GroupMembers>> groups(String username) {
         Assert.hasText(username, "username must not be empty.");
+
         return groupMembersRepository.findByUsername(username).collectList();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> relation(Long groupId, Set<String> usernames) {
         Assert.notNull(groupId, "groupId must not be empty.");
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
         return Flux.fromIterable(usernames).map(username -> {
-            GroupMembers groupMembers = new GroupMembers();
-            groupMembers.setUsername(username);
-            groupMembers.setGroupId(groupId);
-            return groupMembers;
-        }).flatMap(groupMembersRepository::save).all(groupMembers -> Boolean.TRUE);
+                    GroupMembers groupMembers = new GroupMembers();
+                    groupMembers.setUsername(username);
+                    groupMembers.setGroupId(groupId);
+                    return groupMembers;
+                }).flatMap(groupMembersRepository::save)
+                .all(groupMembers -> Boolean.TRUE);
     }
 }

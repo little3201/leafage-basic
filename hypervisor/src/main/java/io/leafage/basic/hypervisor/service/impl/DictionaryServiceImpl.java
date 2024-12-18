@@ -22,7 +22,6 @@ import io.leafage.basic.hypervisor.dto.DictionaryDTO;
 import io.leafage.basic.hypervisor.repository.DictionaryRepository;
 import io.leafage.basic.hypervisor.service.DictionaryService;
 import io.leafage.basic.hypervisor.vo.DictionaryVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -60,13 +59,11 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     public Mono<Page<DictionaryVO>> retrieve(int page, int size, String sortBy, boolean descending) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Flux<DictionaryVO> voFlux = dictionaryRepository.findAllBy(pageable)
-                .map(d -> convertToVO(d, DictionaryVO.class));
-
-        Mono<Long> count = dictionaryRepository.count();
-
-        return voFlux.collectList().zipWith(count).map(tuple ->
-                new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+        return dictionaryRepository.findAllBy(pageable)
+                .map(d -> convertToVO(d, DictionaryVO.class))
+                .collectList()
+                .zipWith(dictionaryRepository.count())
+                .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
     /**
@@ -75,7 +72,9 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Flux<DictionaryVO> subset(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return dictionaryRepository.findBySuperiorId(id).map(d -> convertToVO(d, DictionaryVO.class));
+
+        return dictionaryRepository.findBySuperiorId(id)
+                .map(d -> convertToVO(d, DictionaryVO.class));
     }
 
     /**
@@ -84,7 +83,9 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Mono<DictionaryVO> fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return dictionaryRepository.findById(id).map(d -> convertToVO(d, DictionaryVO.class));
+
+        return dictionaryRepository.findById(id)
+                .map(d -> convertToVO(d, DictionaryVO.class));
     }
 
     /**
@@ -93,6 +94,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Mono<Boolean> exists(String name, Long id) {
         Assert.hasText(name, "name must not be empty.");
+
         return dictionaryRepository.existsByName(name);
     }
 
@@ -101,9 +103,8 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
      */
     @Override
     public Mono<DictionaryVO> create(DictionaryDTO dto) {
-        Dictionary dictionary = new Dictionary();
-        BeanUtils.copyProperties(dto, dictionary);
-        return dictionaryRepository.save(dictionary).map(d -> convertToVO(d, DictionaryVO.class));
+        return dictionaryRepository.save(convertToDomain(dto, Dictionary.class))
+                .map(d -> convertToVO(d, DictionaryVO.class));
     }
 
     /**
@@ -112,6 +113,7 @@ public class DictionaryServiceImpl extends ReactiveAbstractTreeNodeService<Dicti
     @Override
     public Mono<DictionaryVO> modify(Long id, DictionaryDTO dto) {
         Assert.notNull(id, "id must not be null.");
+
         return dictionaryRepository.findById(id)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(dictionary -> convert(dto, dictionary))

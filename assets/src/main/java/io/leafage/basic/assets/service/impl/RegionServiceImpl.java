@@ -22,7 +22,6 @@ import io.leafage.basic.assets.dto.RegionDTO;
 import io.leafage.basic.assets.repository.RegionRepository;
 import io.leafage.basic.assets.service.RegionService;
 import io.leafage.basic.assets.vo.RegionVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -102,9 +101,7 @@ public class RegionServiceImpl implements RegionService {
      */
     @Override
     public Mono<RegionVO> create(RegionDTO dto) {
-        Region region = new Region();
-        BeanUtils.copyProperties(dto, region);
-        return regionRepository.save(region)
+        return regionRepository.save(convertToDomain(dto, Region.class))
                 .map(r -> convertToVO(r, RegionVO.class));
     }
 

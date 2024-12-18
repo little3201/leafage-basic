@@ -22,7 +22,6 @@ import io.leafage.basic.assets.dto.CommentDTO;
 import io.leafage.basic.assets.repository.CommentRepository;
 import io.leafage.basic.assets.service.CommentService;
 import io.leafage.basic.assets.vo.CommentVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -66,7 +65,8 @@ public class CommentServiceImpl implements CommentService {
     public Flux<CommentVO> replies(Long replier) {
         Assert.notNull(replier, "replier must not be null.");
 
-        return commentRepository.findByReplier(replier).map(c -> convertToVO(c, CommentVO.class));
+        return commentRepository.findByReplier(replier)
+                .map(c -> convertToVO(c, CommentVO.class));
     }
 
     /**
@@ -75,9 +75,8 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Mono<CommentVO> create(CommentDTO dto) {
-        Comment comment = new Comment();
-        BeanUtils.copyProperties(dto, comment);
-        return commentRepository.save(comment).map(c -> convertToVO(c, CommentVO.class));
+        return commentRepository.save(convertToDomain(dto, Comment.class))
+                .map(c -> convertToVO(c, CommentVO.class));
     }
 
 }

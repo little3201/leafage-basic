@@ -21,9 +21,7 @@ import io.leafage.basic.hypervisor.domain.Privilege;
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.repository.PrivilegeRepository;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
-import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -66,13 +64,11 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     public Mono<Page<PrivilegeVO>> retrieve(int page, int size, String sortBy, boolean descending) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Flux<PrivilegeVO> voFlux = privilegeRepository.findAllBy(pageable)
-                .map(p -> convertToVO(p, PrivilegeVO.class));
-
-        Mono<Long> count = privilegeRepository.count();
-
-        return voFlux.collectList().zipWith(count).map(tuple ->
-                new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+        return privilegeRepository.findAllBy(pageable)
+                .map(p -> convertToVO(p, PrivilegeVO.class))
+                .collectList()
+                .zipWith(privilegeRepository.count())
+                .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
     /**
@@ -85,8 +81,9 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     }
 
     @Override
-    public Flux<DictionaryVO> subset(Long id) {
-        return null;
+    public Flux<PrivilegeVO> subset(Long id) {
+        return privilegeRepository.findAllBySuperiorId(id)
+                .map(p -> convertToVO(p, PrivilegeVO.class));
     }
 
     /**
@@ -109,7 +106,8 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     @Override
     public Mono<PrivilegeVO> fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return privilegeRepository.findById(id).map(p -> convertToVO(p, PrivilegeVO.class));
+        return privilegeRepository.findById(id)
+                .map(p -> convertToVO(p, PrivilegeVO.class));
     }
 
     /**
@@ -126,9 +124,8 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
      */
     @Override
     public Mono<PrivilegeVO> create(PrivilegeDTO dto) {
-        Privilege privilege = new Privilege();
-        BeanUtils.copyProperties(dto, privilege);
-        return privilegeRepository.save(privilege).map(p -> convertToVO(p, PrivilegeVO.class));
+        return privilegeRepository.save(convertToDomain(dto, Privilege.class))
+                .map(p -> convertToVO(p, PrivilegeVO.class));
     }
 
     /**
@@ -137,7 +134,9 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     @Override
     public Mono<PrivilegeVO> modify(Long id, PrivilegeDTO dto) {
         Assert.notNull(id, "id must not be null.");
-        return privilegeRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+
+        return privilegeRepository.findById(id)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(privilege -> convert(dto, privilege))
                 .flatMap(privilegeRepository::save)
                 .map(p -> convertToVO(p, PrivilegeVO.class));

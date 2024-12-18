@@ -21,7 +21,6 @@ import io.leafage.basic.hypervisor.dto.GroupDTO;
 import io.leafage.basic.hypervisor.repository.GroupRepository;
 import io.leafage.basic.hypervisor.service.GroupService;
 import io.leafage.basic.hypervisor.vo.GroupVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -61,13 +60,11 @@ public class GroupServiceImpl implements GroupService {
     public Mono<Page<GroupVO>> retrieve(int page, int size, String sortBy, boolean descending) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Flux<GroupVO> voFlux = groupRepository.findAllBy(pageable)
-                .map(g -> convertToVO(g, GroupVO.class));
-
-        Mono<Long> count = groupRepository.count();
-
-        return voFlux.collectList().zipWith(count).map(tuple ->
-                new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+        return groupRepository.findAllBy(pageable)
+                .map(g -> convertToVO(g, GroupVO.class))
+                .collectList()
+                .zipWith(groupRepository.count())
+                .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
     @Override
@@ -92,7 +89,9 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Mono<GroupVO> fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return groupRepository.findById(id).map(g -> convertToVO(g, GroupVO.class));
+
+        return groupRepository.findById(id)
+                .map(g -> convertToVO(g, GroupVO.class));
     }
 
     /**
@@ -101,6 +100,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Mono<Boolean> exists(String name, Long id) {
         Assert.hasText(name, "name must not be empty.");
+
         return groupRepository.existsByName(name);
     }
 
@@ -109,9 +109,8 @@ public class GroupServiceImpl implements GroupService {
      */
     @Override
     public Mono<GroupVO> create(GroupDTO dto) {
-        Group group = new Group();
-        BeanUtils.copyProperties(dto, group);
-        return groupRepository.save(group).map(g -> convertToVO(g, GroupVO.class));
+        return groupRepository.save(convertToDomain(dto, Group.class))
+                .map(g -> convertToVO(g, GroupVO.class));
     }
 
     /**
@@ -120,7 +119,9 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Mono<GroupVO> modify(Long id, GroupDTO dto) {
         Assert.notNull(id, "id must not be null.");
-        return groupRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+
+        return groupRepository.findById(id)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(group -> convert(dto, group))
                 .flatMap(groupRepository::save)
                 .map(g -> convertToVO(g, GroupVO.class));
@@ -132,6 +133,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "id must not be null.");
+
         return groupRepository.deleteById(id);
     }
 

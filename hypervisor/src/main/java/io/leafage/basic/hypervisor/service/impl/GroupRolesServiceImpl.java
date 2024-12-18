@@ -53,27 +53,34 @@ public class GroupRolesServiceImpl implements GroupRolesService {
     @Override
     public Mono<List<GroupRoles>> roles(Long groupId) {
         Assert.notNull(groupId, "groupId must not be null.");
+
         return groupRolesRepository.findByGroupId(groupId).collectList();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<GroupRoles>> groups(Long roleId) {
         Assert.notNull(roleId, "roleId must not be empty.");
+
         return groupRolesRepository.findByRoleId(roleId).collectList();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> relation(Long groupId, Set<Long> roleIds) {
         Assert.notNull(groupId, "groupId must not be empty.");
         Assert.notEmpty(roleIds, "roleIds must not be empty.");
 
         return Flux.fromIterable(roleIds).map(roleId -> {
-            GroupRoles groupRoles = new GroupRoles();
-            groupRoles.setRoleId(roleId);
-            groupRoles.setGroupId(groupId);
-            return groupRoles;
-        }).flatMap(groupRolesRepository::save).all(groupRoles -> Boolean.TRUE);
+                    GroupRoles groupRoles = new GroupRoles();
+                    groupRoles.setRoleId(roleId);
+                    groupRoles.setGroupId(groupId);
+                    return groupRoles;
+                }).flatMap(groupRolesRepository::save)
+                .all(groupRoles -> Boolean.TRUE);
     }
 }

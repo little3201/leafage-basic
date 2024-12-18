@@ -22,13 +22,11 @@ import io.leafage.basic.hypervisor.dto.UserDTO;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.UserService;
 import io.leafage.basic.hypervisor.vo.UserVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.NoSuchElementException;
@@ -47,7 +45,7 @@ public class UserServiceImpl implements UserService {
     /**
      * <p>Constructor for UserServiceImpl.</p>
      *
-     * @param userRepository a {@link io.leafage.basic.hypervisor.repository.UserRepository} object
+     * @param userRepository a {@link UserRepository} object
      */
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -60,13 +58,11 @@ public class UserServiceImpl implements UserService {
     public Mono<Page<UserVO>> retrieve(int page, int size, String sortBy, boolean descending) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Flux<UserVO> voFlux = userRepository.findByEnabledTrue(pageable)
-                .map(u -> convertToVO(u, UserVO.class));
-
-        Mono<Long> count = userRepository.count();
-
-        return voFlux.collectList().zipWith(count).map(tuple ->
-                new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+        return userRepository.findByEnabledTrue(pageable)
+                .map(u -> convertToVO(u, UserVO.class))
+                .collectList()
+                .zipWith(userRepository.count())
+                .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
     /**
@@ -75,7 +71,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserVO> fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return userRepository.findById(id).map(u -> convertToVO(u, UserVO.class));
+
+        return userRepository.findById(id)
+                .map(u -> convertToVO(u, UserVO.class));
     }
 
     /**
@@ -84,6 +82,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<Boolean> exists(String username, Long id) {
         Assert.hasText(username, "username must not be empty.");
+
         return userRepository.existsByUsername(username);
     }
 
@@ -92,10 +91,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Mono<UserVO> create(UserDTO dto) {
-        User user = new User();
-        BeanUtils.copyProperties(dto, user);
-        user.setPassword("123456");
-        return userRepository.save(user).map(u -> convertToVO(u, UserVO.class));
+        return userRepository.save(convertToDomain(dto, User.class))
+                .map(u -> convertToVO(u, UserVO.class));
     }
 
     /**
@@ -104,6 +101,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserVO> modify(Long id, UserDTO dto) {
         Assert.notNull(id, "id must not be null.");
+
         return userRepository.findById(id)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(user -> convert(dto, user))
@@ -117,6 +115,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "id must not be null.");
+
         return userRepository.deleteById(id);
     }
 

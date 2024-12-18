@@ -22,7 +22,6 @@ import io.leafage.basic.hypervisor.dto.RoleDTO;
 import io.leafage.basic.hypervisor.repository.RoleRepository;
 import io.leafage.basic.hypervisor.service.RoleService;
 import io.leafage.basic.hypervisor.vo.RoleVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -61,13 +60,11 @@ public class RoleServiceImpl implements RoleService {
     public Mono<Page<RoleVO>> retrieve(int page, int size, String sortBy, boolean descending) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Flux<RoleVO> voFlux = roleRepository.findAllBy(pageable)
-                .map(r -> convertToVO(r, RoleVO.class));
-
-        Mono<Long> count = roleRepository.count();
-
-        return voFlux.collectList().zipWith(count).map(tuple ->
-                new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+        return roleRepository.findAllBy(pageable)
+                .map(r -> convertToVO(r, RoleVO.class))
+                .collectList()
+                .zipWith(roleRepository.count())
+                .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
     /**
@@ -90,7 +87,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Mono<RoleVO> fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
-        return roleRepository.findById(id).map(r -> convertToVO(r, RoleVO.class));
+
+        return roleRepository.findById(id)
+                .map(r -> convertToVO(r, RoleVO.class));
     }
 
     /**
@@ -99,6 +98,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Mono<Boolean> exists(String name, Long id) {
         Assert.hasText(name, "name must not be empty.");
+
         return roleRepository.existsByName(name);
     }
 
@@ -107,9 +107,8 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Mono<RoleVO> create(RoleDTO dto) {
-        Role role = new Role();
-        BeanUtils.copyProperties(dto, role);
-        return roleRepository.save(role).map(r -> convertToVO(r, RoleVO.class));
+        return roleRepository.save(convertToDomain(dto, Role.class))
+                .map(r -> convertToVO(r, RoleVO.class));
     }
 
     /**
@@ -118,7 +117,9 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Mono<RoleVO> modify(Long id, RoleDTO dto) {
         Assert.notNull(id, "id must not be null.");
-        return roleRepository.findById(id).switchIfEmpty(Mono.error(NoSuchElementException::new))
+
+        return roleRepository.findById(id)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .map(role -> convert(dto, role))
                 .flatMap(roleRepository::save)
                 .map(r -> convertToVO(r, RoleVO.class));
@@ -130,6 +131,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "id must not be null.");
+
         return roleRepository.deleteById(id);
     }
 

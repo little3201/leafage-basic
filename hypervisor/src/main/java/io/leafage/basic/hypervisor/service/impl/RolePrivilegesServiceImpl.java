@@ -53,27 +53,34 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
     @Override
     public Mono<List<RolePrivileges>> privileges(Long roleId) {
         Assert.notNull(roleId, "roleId must not be null.");
+
         return rolePrivilegesRepository.findByRoleId(roleId).collectList();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<RolePrivileges>> roles(Long privilegeId) {
         Assert.notNull(privilegeId, "privilegeId must not be null.");
+
         return rolePrivilegesRepository.findByPrivilegeId(privilegeId).collectList();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> relation(Long roleId, Set<Long> privilegeIds) {
         Assert.notNull(roleId, "roleId must not be null.");
         Assert.notEmpty(privilegeIds, "privilegeIds must not be empty.");
 
         return Flux.fromIterable(privilegeIds).map(privilegeId -> {
-            RolePrivileges rolePrivileges = new RolePrivileges();
-            rolePrivileges.setRoleId(roleId);
-            rolePrivileges.setPrivilegeId(privilegeId);
-            return rolePrivileges;
-        }).flatMap(rolePrivilegesRepository::save).all(rolePrivileges -> Boolean.TRUE);
+                    RolePrivileges rolePrivileges = new RolePrivileges();
+                    rolePrivileges.setRoleId(roleId);
+                    rolePrivileges.setPrivilegeId(privilegeId);
+                    return rolePrivileges;
+                }).flatMap(rolePrivilegesRepository::save)
+                .all(rolePrivileges -> Boolean.TRUE);
     }
 }

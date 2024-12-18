@@ -53,27 +53,34 @@ public class RoleMembersServiceImpl implements RoleMembersService {
     @Override
     public Mono<List<RoleMembers>> members(Long roleId) {
         Assert.notNull(roleId, "roleId must not be null.");
+
         return roleMembersRepository.findByRoleId(roleId).collectList();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<List<RoleMembers>> roles(String username) {
         Assert.hasText(username, "username must not be empty.");
+
         return roleMembersRepository.findByUsername(username).collectList();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Mono<Boolean> relation(Long roleId, Set<String> usernames) {
         Assert.notNull(roleId, "roleId must not be empty.");
         Assert.notEmpty(usernames, "usernames must not be empty.");
 
         return Flux.fromIterable(usernames).map(username -> {
-            RoleMembers roleMembers = new RoleMembers();
-            roleMembers.setUsername(username);
-            roleMembers.setRoleId(roleId);
-            return roleMembers;
-        }).flatMap(roleMembersRepository::save).all(roleMembers -> Boolean.TRUE);
+                    RoleMembers roleMembers = new RoleMembers();
+                    roleMembers.setUsername(username);
+                    roleMembers.setRoleId(roleId);
+                    return roleMembers;
+                }).flatMap(roleMembersRepository::save)
+                .all(roleMembers -> Boolean.TRUE);
     }
 }

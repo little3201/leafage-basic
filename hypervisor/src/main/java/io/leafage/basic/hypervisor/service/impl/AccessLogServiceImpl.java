@@ -24,7 +24,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -53,12 +52,11 @@ public class AccessLogServiceImpl implements AccessLogService {
     public Mono<Page<AccessLogVO>> retrieve(int page, int size, String sortBy, boolean descending) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Flux<AccessLogVO> voFlux = accessLogRepository.findAllBy(pageable)
-                .map(accessLog -> convertToVO(accessLog, AccessLogVO.class));
-        Mono<Long> count = accessLogRepository.count();
-
-        return voFlux.collectList().zipWith(count).map(tuple ->
-                new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+        return accessLogRepository.findAllBy(pageable)
+                .map(accessLog -> convertToVO(accessLog, AccessLogVO.class))
+                .collectList()
+                .zipWith(accessLogRepository.count())
+                .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
 }

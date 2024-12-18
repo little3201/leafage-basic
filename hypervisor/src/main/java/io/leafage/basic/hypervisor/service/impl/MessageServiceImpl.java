@@ -24,13 +24,11 @@ import io.leafage.basic.hypervisor.repository.MessageRepository;
 import io.leafage.basic.hypervisor.repository.UserRepository;
 import io.leafage.basic.hypervisor.service.MessageService;
 import io.leafage.basic.hypervisor.vo.MessageVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.reactive.ReactiveAbstractTreeNodeService;
 
@@ -62,13 +60,11 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
     public Mono<Page<MessageVO>> retrieve(int page, int size, String sortBy, boolean descending, String receiver) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Flux<MessageVO> voFlux = messageRepository.findByReceiver(receiver, pageable)
-                .map(m -> convertToVO(m, MessageVO.class));
-
-        Mono<Long> count = messageRepository.countByReceiver(receiver);
-
-        return voFlux.collectList().zipWith(count).map(tuple ->
-                new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+        return messageRepository.findByReceiver(receiver, pageable)
+                .map(m -> convertToVO(m, MessageVO.class))
+                .collectList()
+                .zipWith(messageRepository.countByReceiver(receiver))
+                .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
     /**
@@ -77,6 +73,7 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
     @Override
     public Mono<MessageVO> fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
+
         return messageRepository.findById(id)
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .doOnNext(message -> message.setRead(Boolean.TRUE))
@@ -89,9 +86,8 @@ public class MessageServiceImpl extends ReactiveAbstractTreeNodeService<Group> i
      */
     @Override
     public Mono<MessageVO> create(MessageDTO dto) {
-        Message message = new Message();
-        BeanUtils.copyProperties(dto, message);
-        return messageRepository.save(message).map(m -> convertToVO(m, MessageVO.class));
+        return messageRepository.save(convertToDomain(dto, Message.class))
+                .map(m -> convertToVO(m, MessageVO.class));
     }
 
     /**

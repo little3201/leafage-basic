@@ -40,6 +40,8 @@ public interface PrivilegeRepository extends R2dbcRepository<Privilege, Long> {
      */
     Flux<Privilege> findAllBy(Pageable pageable);
 
+    Flux<Privilege> findAllBySuperiorId(Long superiorId);
+
     /**
      * 是否已存在
      *

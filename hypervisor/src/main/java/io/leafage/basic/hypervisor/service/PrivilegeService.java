@@ -18,7 +18,6 @@
 package io.leafage.basic.hypervisor.service;
 
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
-import io.leafage.basic.hypervisor.vo.DictionaryVO;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import org.springframework.data.domain.Page;
 import reactor.core.publisher.Flux;
@@ -57,6 +56,6 @@ public interface PrivilegeService extends ReactiveBasicService<PrivilegeDTO, Pri
      * @param id 主键
      * @return 数据集
      */
-    Flux<DictionaryVO> subset(Long id);
+    Flux<PrivilegeVO> subset(Long id);
 
 }

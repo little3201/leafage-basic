@@ -20,10 +20,8 @@ package io.leafage.basic.assets.service.impl;
 import io.leafage.basic.assets.domain.Category;
 import io.leafage.basic.assets.dto.CategoryDTO;
 import io.leafage.basic.assets.repository.CategoryRepository;
-import io.leafage.basic.assets.repository.PostRepository;
 import io.leafage.basic.assets.service.CategoryService;
 import io.leafage.basic.assets.vo.CategoryVO;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -42,17 +40,14 @@ import javax.naming.NotContextException;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final PostRepository postRepository;
 
     /**
      * <p>Constructor for CategoryServiceImpl.</p>
      *
      * @param categoryRepository a {@link CategoryRepository} object
-     * @param postRepository     a {@link PostRepository} object
      */
-    public CategoryServiceImpl(CategoryRepository categoryRepository, PostRepository postRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        this.postRepository = postRepository;
     }
 
     /**
@@ -75,6 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Mono<CategoryVO> fetch(Long id) {
         Assert.notNull(id, "id must not be null.");
+
         return categoryRepository.findById(id)
                 .map(c -> convertToVO(c, CategoryVO.class));
     }
@@ -85,6 +81,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Mono<Boolean> exists(String name, Long id) {
         Assert.hasText(name, "name must not be empty.");
+
         return categoryRepository.existsByName(name);
     }
 
@@ -93,9 +90,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public Mono<CategoryVO> create(CategoryDTO dto) {
-        Category category = new Category();
-        BeanUtils.copyProperties(dto, category);
-        return categoryRepository.save(category)
+        return categoryRepository.save(convertToDomain(dto, Category.class))
                 .map(c -> convertToVO(c, CategoryVO.class));
     }
 
@@ -105,6 +100,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Mono<CategoryVO> modify(Long id, CategoryDTO dto) {
         Assert.notNull(id, "id must not be null.");
+
         return categoryRepository.findById(id)
                 .switchIfEmpty(Mono.error(NotContextException::new))
                 .map(category -> convert(dto, category))
@@ -118,6 +114,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, "id must not be null.");
+
         return categoryRepository.deleteById(id);
     }
 

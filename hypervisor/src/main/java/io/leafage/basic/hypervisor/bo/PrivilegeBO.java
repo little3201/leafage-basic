@@ -27,7 +27,7 @@ import jakarta.validation.constraints.Size;
 public abstract class PrivilegeBO {
 
 
-    @NotBlank(message = "name must not be blank.")
+    @NotBlank(message = "name must not be empty.")
     @Size(max = 32, message = "name max length is 32.")
     private String name;
 
@@ -46,7 +46,7 @@ public abstract class PrivilegeBO {
     /**
      * 图标
      */
-    @NotBlank(message = "icon must not be blank.")
+    @NotBlank(message = "icon must not be empty.")
     private String icon;
 
     /**

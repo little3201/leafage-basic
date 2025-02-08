@@ -16,10 +16,10 @@
 package io.leafage.basic.hypervisor.domain;
 
 
-import top.leafage.common.servlet.audit.AuditMetadata;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import top.leafage.common.servlet.audit.AuditMetadata;
 
 import java.net.InetAddress;
 import java.time.Instant;

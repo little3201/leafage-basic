@@ -15,16 +15,17 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
+import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.leafage.common.TreeNode;
 
 import java.security.Principal;
@@ -56,11 +57,33 @@ public class PrivilegeController {
     }
 
     /**
+     * 分页查询
+     *
+     * @param page       页码
+     * @param size       大小
+     * @param sortBy     排序字段
+     * @param descending 排序方向
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping
+    public ResponseEntity<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                      String sortBy, boolean descending, String name) {
+        Page<PrivilegeVO> voPage;
+        try {
+            voPage = privilegeService.retrieve(page, size, sortBy, descending, name);
+        } catch (Exception e) {
+            logger.info("Retrieve privilege occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voPage);
+    }
+
+    /**
      * 查询树形数据
      *
      * @return 查询到的数据，否则返回空
      */
-    @GetMapping
+    @GetMapping("/tree")
     public ResponseEntity<List<TreeNode>> tree(Principal principal) {
         List<TreeNode> treeNodes;
         try {
@@ -88,6 +111,43 @@ public class PrivilegeController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * 修改信息
+     *
+     * @param id  主键
+     * @param dto 要添加的数据
+     * @return 编辑后的信息，否则返回417状态码
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<PrivilegeVO> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO dto) {
+        PrivilegeVO vo;
+        try {
+            vo = privilegeService.modify(id, dto);
+        } catch (Exception e) {
+            logger.error("Modify privilege occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        }
+        return ResponseEntity.accepted().body(vo);
+    }
+
+    /**
+     * 启用、停用
+     *
+     * @param id 主键
+     * @return 编辑后的信息，否则返回417状态码
+     */
+    @PatchMapping("/{id}")
+    public ResponseEntity<Boolean> enable(@PathVariable Long id) {
+        boolean enabled;
+        try {
+            enabled = privilegeService.enable(id);
+        } catch (Exception e) {
+            logger.error("Modify privilege occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        }
+        return ResponseEntity.accepted().body(enabled);
     }
 
     /**

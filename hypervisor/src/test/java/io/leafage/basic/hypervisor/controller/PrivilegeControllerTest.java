@@ -26,10 +26,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import top.leafage.common.TreeNode;
@@ -62,10 +62,10 @@ class PrivilegeControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @MockBean
+    @MockitoBean
     private PrivilegeService privilegeService;
 
-    @MockBean
+    @MockitoBean
     private RolePrivilegesService rolePrivilegesService;
 
     private PrivilegeVO privilegeVO;
@@ -158,7 +158,7 @@ class PrivilegeControllerTest {
         TreeNode treeNode = TreeNode.withId(1L).name("test").build();
         given(this.privilegeService.tree(Mockito.anyString())).willReturn(Collections.singletonList(treeNode));
 
-        mvc.perform(get("/privileges"))
+        mvc.perform(get("/privileges/tree"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -168,7 +168,7 @@ class PrivilegeControllerTest {
     void tree_error() throws Exception {
         given(this.privilegeService.tree(Mockito.anyString())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/privileges"))
+        mvc.perform(get("/privileges/tree"))
                 .andExpect(status().isNoContent())
                 .andDo(print())
                 .andReturn();
@@ -178,7 +178,8 @@ class PrivilegeControllerTest {
     void roles() throws Exception {
         given(this.rolePrivilegesService.roles(Mockito.anyLong())).willReturn(Mockito.anyList());
 
-        mvc.perform(get("/privileges/{id}/roles", 1L)).andExpect(status().isOk())
+        mvc.perform(get("/privileges/{id}/roles", 1L))
+                .andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }
 
@@ -186,7 +187,9 @@ class PrivilegeControllerTest {
     void roles_error() throws Exception {
         given(this.rolePrivilegesService.roles(Mockito.anyLong())).willThrow(new RuntimeException());
 
-        mvc.perform(get("/privileges/{id}/roles", Mockito.anyLong())).andExpect(status().isNoContent())
+        mvc.perform(get("/privileges/{id}/roles", Mockito.anyLong()))
+                .andExpect(status().isNoContent())
                 .andDo(print()).andReturn();
     }
+
 }

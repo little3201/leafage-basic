@@ -99,7 +99,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleVO create(RoleDTO dto) {
         Role role = convertToDomain(dto, Role.class);
 
-        roleRepository.save(role);
+        roleRepository.saveAndFlush(role);
         return convertToVO(role, RoleVO.class);
     }
 

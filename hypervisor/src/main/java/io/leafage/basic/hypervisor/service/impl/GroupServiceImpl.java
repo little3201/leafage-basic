@@ -114,7 +114,7 @@ public class GroupServiceImpl extends ServletAbstractTreeNodeService<Group> impl
     public GroupVO create(GroupDTO dto) {
         Group group = convertToDomain(dto, Group.class);
 
-        groupRepository.save(group);
+        groupRepository.saveAndFlush(group);
         return convertToVO(group, GroupVO.class);
     }
 

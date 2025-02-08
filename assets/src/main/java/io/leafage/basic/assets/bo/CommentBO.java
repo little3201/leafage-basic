@@ -35,7 +35,7 @@ public abstract class CommentBO {
     /**
      * 内容
      */
-    @NotBlank(message = "content must not be blank.")
+    @NotBlank(message = "content must not be empty.")
     private String content;
 
     /**

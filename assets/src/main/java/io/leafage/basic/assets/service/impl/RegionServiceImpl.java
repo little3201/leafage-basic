@@ -92,7 +92,7 @@ public class RegionServiceImpl implements RegionService {
      */
     @Override
     public boolean exists(String name, Long id) {
-        Assert.hasText(name, "name must not bu blank.");
+        Assert.hasText(name, "name must not bu empty.");
         if (id == null) {
             return regionRepository.existsByName(name);
         }

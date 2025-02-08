@@ -103,7 +103,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
      */
     @Override
     public boolean exists(Long superiorId, String name, Long id) {
-        Assert.hasText(name, "name must not be blank.");
+        Assert.hasText(name, "name must not be empty.");
 
         if (id == null) {
             return dictionaryRepository.existsBySuperiorIdAndName(superiorId, name);
@@ -118,7 +118,7 @@ public class DictionaryServiceImpl extends ServletAbstractTreeNodeService<Dictio
     public DictionaryVO create(DictionaryDTO dto) {
         Dictionary dictionary = convertToDomain(dto, Dictionary.class);
 
-        dictionaryRepository.save(dictionary);
+        dictionaryRepository.saveAndFlush(dictionary);
         return convertToVO(dictionary, DictionaryVO.class);
     }
 

@@ -53,11 +53,11 @@ public class CommentController {
     /**
      * 列表查询
      *
-     * @param page 分页位置
-     * @param size 分页大小
-     * @return 查询到数据集，异常时返回204
-     * @param sortBy a {@link java.lang.String} object
+     * @param page       分页位置
+     * @param size       分页大小
+     * @param sortBy     a {@link java.lang.String} object
      * @param descending a boolean
+     * @return 查询到数据集，异常时返回204
      */
     @GetMapping
     public ResponseEntity<Page<CommentVO>> retrieve(@RequestParam int page, @RequestParam int size,

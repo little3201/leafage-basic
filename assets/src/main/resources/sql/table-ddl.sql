@@ -134,7 +134,7 @@ CREATE TABLE post_content
     id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     post_id            bigint    NOT NULL UNIQUE,
     content            text,
-    enabled            boolean      NOT NULL DEFAULT true,
+    enabled            boolean   NOT NULL DEFAULT true,
     created_by         varchar(50),
     created_date       timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_modified_by   varchar(50),

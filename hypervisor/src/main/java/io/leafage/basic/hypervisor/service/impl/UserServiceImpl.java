@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO findByUsername(String username) {
-        Assert.hasText(username, "username must not be blank.");
+        Assert.hasText(username, "username must not be empty.");
 
         return userRepository.findByUsername(username)
                 .map(user -> convertToVO(user, UserVO.class)).orElse(null);
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public boolean exists(String username, Long id) {
-        Assert.hasText(username, "username must not be blank.");
+        Assert.hasText(username, "username must not be empty.");
         if (id == null) {
             return userRepository.existsByUsername(username);
         }
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
         User user = convertToDomain(dto, User.class);
         user.setPassword("{noop}123456");
 
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
         return convertToVO(user, UserVO.class);
     }
 

@@ -21,7 +21,6 @@ import io.leafage.basic.hypervisor.repository.MessageRepository;
 import io.leafage.basic.hypervisor.service.MessageService;
 import io.leafage.basic.hypervisor.vo.MessageVO;
 import jakarta.persistence.criteria.Predicate;
-import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -88,7 +87,7 @@ public class MessageServiceImpl implements MessageService {
     public MessageVO create(MessageDTO dto) {
         Message message = convertToDomain(dto, Message.class);
 
-        messageRepository.save(message);
+        messageRepository.saveAndFlush(message);
         return convertToVO(message, MessageVO.class);
     }
 

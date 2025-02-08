@@ -4,7 +4,6 @@ server:
 spring:
   application:
     name: auth
-
   profiles:
     active: dev
 
@@ -16,3 +15,7 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
+
+logging:
+  level:
+    org.springframework.security: DEBUG

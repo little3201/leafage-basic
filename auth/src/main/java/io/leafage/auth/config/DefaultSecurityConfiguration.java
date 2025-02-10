@@ -28,8 +28,6 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import javax.sql.DataSource;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
 public class DefaultSecurityConfiguration {
@@ -38,9 +36,11 @@ public class DefaultSecurityConfiguration {
     public SecurityFilterChain standardSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/actuator/**").permitAll()
+                        authorize.requestMatchers("/actuator/**", "/assets/**", "/favicon.svg", "/login").permitAll()
                                 .anyRequest().authenticated())
-                .formLogin(withDefaults());
+                .formLogin(formLogin ->
+                        formLogin.loginPage("/login")
+                );
 
         return http.build();
     }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,10 +37,11 @@ public class AuthorizationServerConfiguration {
 
     @Bean
     SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.authorizeExchange(exchanges -> exchanges
+        http
+                .authorizeExchange(exchanges -> exchanges
                         .pathMatchers(HttpMethod.GET).permitAll()
                         .anyExchange().authenticated())
-                .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
     }
 }

@@ -6,41 +6,15 @@
     <title>Login</title>
     <link rel="icon" type="image/ico" href="/favicon.ico"/>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-    <style type="text/tailwindcss">
-        .bg-spring-gradient {
-            background: radial-gradient(circle at top right, #ffffff, blue);
-        }
-
-        .bg-summer-gradient {
-            background: radial-gradient(circle at center right, limegreen, green);
-        }
-
-        .bg-autumn-gradient {
-            background: radial-gradient(circle at center left, red, orangered);
-        }
-
-        .bg-winter-gradient {
-            background: radial-gradient(circle at center top, orange, yellow);
-        }
-    </style>
 </head>
 <body>
-<div class="h-screen overflow-hidden relative flex flex-col justify-center px-6 py-12 lg:px-8">
-    <figure class="absolute bg-spring-gradient rounded-full"
-            style="height: 31em; width: 31em;  top: -14em; right: -12em; "></figure>
-    <figure class="absolute bg-summer-gradient rounded-full"
-            style="height: 19em; width: 19em; bottom: 6em; right: -7em; "></figure>
-    <figure class="absolute bg-autumn-gradient rounded-full"
-            style="height: 40em; width: 40em; bottom: -17em; left: -15em;"></figure>
-    <figure class="absolute bg-winter-gradient rounded-full"
-            style="height: 19em;  width: 19em; bottom: -12em; left: 12em; "></figure>
-
+<div class="h-screen flex flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
         <img class="mx-auto h-16 w-16" th:src="@{/assets/logo.svg}" alt="logo">
         <h2 class="mt-6 text-center text-xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
     </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-xs">
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             Invalid username or password.
         </div>

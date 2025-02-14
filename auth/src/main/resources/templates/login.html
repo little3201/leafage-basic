@@ -4,49 +4,45 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
-    <link rel="icon" type="image/ico" href="/favicon.svg"/>
+    <link rel="icon" type="image/ico" href="/favicon.ico"/>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">
-        .bg-primary-gradient {
+        .bg-spring-gradient {
             background: radial-gradient(circle at top right, #ffffff, blue);
         }
 
-        .bg-error-gradient {
-            background: radial-gradient(circle at center left, red, orangered);
-        }
-
-        .bg-success-gradient {
+        .bg-summer-gradient {
             background: radial-gradient(circle at center right, limegreen, green);
         }
 
-        .bg-warning-gradient {
+        .bg-autumn-gradient {
+            background: radial-gradient(circle at center left, red, orangered);
+        }
+
+        .bg-winter-gradient {
             background: radial-gradient(circle at center top, orange, yellow);
         }
     </style>
 </head>
 <body>
 <div class="h-screen overflow-hidden relative flex flex-col justify-center px-6 py-12 lg:px-8">
-    <figure class="absolute bg-primary-gradient rounded-full"
+    <figure class="absolute bg-spring-gradient rounded-full"
             style="height: 31em; width: 31em;  top: -14em; right: -12em; "></figure>
-    <figure class="absolute bg-success-gradient rounded-full"
+    <figure class="absolute bg-summer-gradient rounded-full"
             style="height: 19em; width: 19em; bottom: 6em; right: -7em; "></figure>
-    <figure class="absolute bg-warning-gradient rounded-full"
+    <figure class="absolute bg-autumn-gradient rounded-full"
             style="height: 40em; width: 40em; bottom: -17em; left: -15em;"></figure>
-    <figure class="absolute bg-error-gradient rounded-full"
+    <figure class="absolute bg-winter-gradient rounded-full"
             style="height: 19em;  width: 19em; bottom: -12em; left: 12em; "></figure>
 
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img class="mx-auto h-10 w-auto"
-             src="/assets/vite.svg" th:src="@{/assets/vite.svg}" alt="logo">
-        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+        <img class="mx-auto h-16 w-16" th:src="@{/assets/logo.svg}" alt="logo">
+        <h2 class="mt-6 text-center text-xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
     </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             Invalid username or password.
-        </div>
-        <div th:if="${param.logout}" class="alert alert-success" role="alert">
-            You have been logged out.
         </div>
         <form class="space-y-6" th:action="@{/login}" method="POST">
             <div>
@@ -71,19 +67,19 @@
                     <label for="remember-me" class="block text-sm/6 font-medium text-gray-900">Remember me</label>
                 </div>
                 <div class="text-sm">
-                    <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
+                    <a href="#" class="font-semibold text-lime-600 hover:text-lime-500">Forgot password?</a>
                 </div>
             </div>
             <div>
                 <button type="submit"
-                        class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        class="flex w-full justify-center rounded-md bg-lime-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-lime-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-600">
                     Sign in
                 </button>
             </div>
         </form>
 
         <div>
-            <div class="relative mt-10">
+            <div class="relative mt-8">
                 <div aria-hidden="true" class="absolute flex items-center inset-0">
                     <div class="w-full border-gray-200 border-t"></div>
                 </div>
@@ -119,7 +115,7 @@
 
         <p class="mt-10 text-center text-sm/6 text-gray-500">
             Not a account?
-            <a href="#" class="font-semibold text-indigo-600 hover:text-indigo-500"> Register a new account</a>
+            <a href="#" class="font-semibold text-lime-600 hover:text-lime-500"> Register a new account</a>
         </p>
     </div>
 </div>

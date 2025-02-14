@@ -29,7 +29,7 @@ public class HypervisorApplication {
     /**
      * <p>main.</p>
      *
-     * @param args an array of {@link java.lang.String} objects
+     * @param args an array of {@link String} objects
      */
     public static void main(String[] args) {
         SpringApplication.run(HypervisorApplication.class, args);

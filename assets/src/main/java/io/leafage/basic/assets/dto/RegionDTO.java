@@ -32,7 +32,7 @@ public class RegionDTO extends RegionBO {
     /**
      * <p>Getter for the field <code>superiorId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getSuperiorId() {
         return superiorId;
@@ -41,7 +41,7 @@ public class RegionDTO extends RegionBO {
     /**
      * <p>Setter for the field <code>superiorId</code>.</p>
      *
-     * @param superiorId a {@link java.lang.Long} object
+     * @param superiorId a {@link Long} object
      */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;

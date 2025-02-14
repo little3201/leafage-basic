@@ -22,7 +22,6 @@ import jakarta.persistence.Table;
 import top.leafage.common.servlet.audit.AuditMetadata;
 
 import java.net.InetAddress;
-import java.time.Instant;
 
 /**
  * model class for operation log.
@@ -49,8 +48,8 @@ public class OperationLog extends AuditMetadata {
     @Column(name = "status_code")
     private Integer statusCode;
 
-    @Column(name = "operated_time")
-    private Instant operatedTime;
+    @Column(name = "operated_times")
+    private Long operatedTime;
 
     private String referer;
 
@@ -78,7 +77,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>ip</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public InetAddress getIp() {
         return ip;
@@ -87,7 +86,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>ip</code>.</p>
      *
-     * @param ip a {@link java.lang.String} object
+     * @param ip a {@link String} object
      */
     public void setIp(InetAddress ip) {
         this.ip = ip;
@@ -96,7 +95,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>location</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getLocation() {
         return location;
@@ -105,7 +104,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>location</code>.</p>
      *
-     * @param location a {@link java.lang.String} object
+     * @param location a {@link String} object
      */
     public void setLocation(String location) {
         this.location = location;
@@ -114,7 +113,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>content</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getContent() {
         return content;
@@ -123,7 +122,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>content</code>.</p>
      *
-     * @param content a {@link java.lang.String} object
+     * @param content a {@link String} object
      */
     public void setContent(String content) {
         this.content = content;
@@ -132,7 +131,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>userAgent</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getUserAgent() {
         return userAgent;
@@ -141,7 +140,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>userAgent</code>.</p>
      *
-     * @param userAgent a {@link java.lang.String} object
+     * @param userAgent a {@link String} object
      */
     public void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
@@ -150,7 +149,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>statusCode</code>.</p>
      *
-     * @return a {@link java.lang.Integer} object
+     * @return a {@link Integer} object
      */
     public Integer getStatusCode() {
         return statusCode;
@@ -159,7 +158,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>statusCode</code>.</p>
      *
-     * @param statusCode a {@link java.lang.Integer} object
+     * @param statusCode a {@link Integer} object
      */
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
@@ -168,25 +167,25 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>operatedTime</code>.</p>
      *
-     * @return a {@link java.time.Instant} object
+     * @return a {@link Long object
      */
-    public Instant getOperatedTime() {
+    public Long getOperatedTime() {
         return operatedTime;
     }
 
     /**
      * <p>Setter for the field <code>operatedTime</code>.</p>
      *
-     * @param operatedTime a {@link java.time.Instant} object
+     * @param operatedTime a {@link Long} object
      */
-    public void setOperatedTime(Instant operatedTime) {
+    public void setOperatedTime(Long operatedTime) {
         this.operatedTime = operatedTime;
     }
 
     /**
      * <p>Getter for the field <code>referer</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getReferer() {
         return referer;
@@ -195,7 +194,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>referer</code>.</p>
      *
-     * @param referer a {@link java.lang.String} object
+     * @param referer a {@link String} object
      */
     public void setReferer(String referer) {
         this.referer = referer;
@@ -204,7 +203,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>sessionId</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getSessionId() {
         return sessionId;
@@ -213,7 +212,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>sessionId</code>.</p>
      *
-     * @param sessionId a {@link java.lang.String} object
+     * @param sessionId a {@link String} object
      */
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
@@ -222,7 +221,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>deviceType</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getDeviceType() {
         return deviceType;
@@ -231,7 +230,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>deviceType</code>.</p>
      *
-     * @param deviceType a {@link java.lang.String} object
+     * @param deviceType a {@link String} object
      */
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
@@ -240,7 +239,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>os</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getOs() {
         return os;
@@ -249,7 +248,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>os</code>.</p>
      *
-     * @param os a {@link java.lang.String} object
+     * @param os a {@link String} object
      */
     public void setOs(String os) {
         this.os = os;
@@ -258,7 +257,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>browser</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getBrowser() {
         return browser;
@@ -267,7 +266,7 @@ public class OperationLog extends AuditMetadata {
     /**
      * <p>Setter for the field <code>browser</code>.</p>
      *
-     * @param browser a {@link java.lang.String} object
+     * @param browser a {@link String} object
      */
     public void setBrowser(String browser) {
         this.browser = browser;

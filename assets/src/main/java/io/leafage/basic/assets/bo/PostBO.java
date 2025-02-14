@@ -55,7 +55,7 @@ public abstract class PostBO {
     /**
      * <p>Getter for the field <code>title</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getTitle() {
         return title;
@@ -64,7 +64,7 @@ public abstract class PostBO {
     /**
      * <p>Setter for the field <code>title</code>.</p>
      *
-     * @param title a {@link java.lang.String} object
+     * @param title a {@link String} object
      */
     public void setTitle(String title) {
         this.title = title;
@@ -73,7 +73,7 @@ public abstract class PostBO {
     /**
      * <p>Getter for the field <code>excerpt</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getExcerpt() {
         return excerpt;
@@ -82,7 +82,7 @@ public abstract class PostBO {
     /**
      * <p>Setter for the field <code>excerpt</code>.</p>
      *
-     * @param excerpt a {@link java.lang.String} object
+     * @param excerpt a {@link String} object
      */
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
@@ -91,7 +91,7 @@ public abstract class PostBO {
     /**
      * <p>Getter for the field <code>content</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getContent() {
         return content;
@@ -100,7 +100,7 @@ public abstract class PostBO {
     /**
      * <p>Setter for the field <code>content</code>.</p>
      *
-     * @param content a {@link java.lang.String} object
+     * @param content a {@link String} object
      */
     public void setContent(String content) {
         this.content = content;

@@ -64,25 +64,25 @@ CREATE TABLE groups
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE groups IS '用户组表';
+    ON TABLE groups IS '用户组表';
 COMMENT
-ON COLUMN groups.id IS '主键';
+    ON COLUMN groups.id IS '主键';
 COMMENT
-ON COLUMN groups.group_name IS '名称';
+    ON COLUMN groups.group_name IS '名称';
 COMMENT
-ON COLUMN groups.superior_id IS '上级ID';
+    ON COLUMN groups.superior_id IS '上级ID';
 COMMENT
-ON COLUMN groups.description IS '描述';
+    ON COLUMN groups.description IS '描述';
 COMMENT
-ON COLUMN groups.enabled IS '是否启用';
+    ON COLUMN groups.enabled IS '是否启用';
 COMMENT
-ON COLUMN groups.created_by IS '创建者';
+    ON COLUMN groups.created_by IS '创建者';
 COMMENT
-ON COLUMN groups.created_date IS '创建时间';
+    ON COLUMN groups.created_date IS '创建时间';
 COMMENT
-ON COLUMN groups.last_modified_by IS '最后修改者';
+    ON COLUMN groups.last_modified_by IS '最后修改者';
 COMMENT
-ON COLUMN groups.last_modified_date IS '最后修改时间';
+    ON COLUMN groups.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists users
 DROP TABLE IF EXISTS users;
@@ -108,33 +108,33 @@ CREATE TABLE users
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE users IS '用户表';
+    ON TABLE users IS '用户表';
 COMMENT
-ON COLUMN users.id IS '主键';
+    ON COLUMN users.id IS '主键';
 COMMENT
-ON COLUMN users.username IS '用户名';
+    ON COLUMN users.username IS '用户名';
 COMMENT
-ON COLUMN users.password IS '密码';
+    ON COLUMN users.password IS '密码';
 COMMENT
-ON COLUMN users.email IS '邮箱';
+    ON COLUMN users.email IS '邮箱';
 COMMENT
-ON COLUMN users.avatar IS '头像';
+    ON COLUMN users.avatar IS '头像';
 COMMENT
-ON COLUMN users.enabled IS '是否启用';
+    ON COLUMN users.enabled IS '是否启用';
 COMMENT
-ON COLUMN users.account_non_locked IS '是否未锁定';
+    ON COLUMN users.account_non_locked IS '是否未锁定';
 COMMENT
-ON COLUMN users.account_expires_at IS '失效时间';
+    ON COLUMN users.account_expires_at IS '失效时间';
 COMMENT
-ON COLUMN users.credentials_expires_at IS '密码失效时间';
+    ON COLUMN users.credentials_expires_at IS '密码失效时间';
 COMMENT
-ON COLUMN users.created_by IS '创建者';
+    ON COLUMN users.created_by IS '创建者';
 COMMENT
-ON COLUMN users.created_date IS '创建时间';
+    ON COLUMN users.created_date IS '创建时间';
 COMMENT
-ON COLUMN users.last_modified_by IS '最后修改者';
+    ON COLUMN users.last_modified_by IS '最后修改者';
 COMMENT
-ON COLUMN users.last_modified_date IS '最后修改时间';
+    ON COLUMN users.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists authorities
 DROP TABLE IF EXISTS authorities;
@@ -150,13 +150,13 @@ CREATE TABLE authorities
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE authorities IS '用户权限表';
+    ON TABLE authorities IS '用户权限表';
 COMMENT
-ON COLUMN authorities.id IS '主键';
+    ON COLUMN authorities.id IS '主键';
 COMMENT
-ON COLUMN authorities.username IS '用户名';
+    ON COLUMN authorities.username IS '用户名';
 COMMENT
-ON COLUMN authorities.authority IS '权限';
+    ON COLUMN authorities.authority IS '权限';
 
 -- Create unique index
 CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
@@ -179,23 +179,23 @@ CREATE TABLE roles
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE roles IS '角色表';
+    ON TABLE roles IS '角色表';
 COMMENT
-ON COLUMN roles.id IS '主键';
+    ON COLUMN roles.id IS '主键';
 COMMENT
-ON COLUMN roles.name IS '名称';
+    ON COLUMN roles.name IS '名称';
 COMMENT
-ON COLUMN roles.description IS '描述';
+    ON COLUMN roles.description IS '描述';
 COMMENT
-ON COLUMN roles.enabled IS '是否启用';
+    ON COLUMN roles.enabled IS '是否启用';
 COMMENT
-ON COLUMN roles.created_by IS '创建者';
+    ON COLUMN roles.created_by IS '创建者';
 COMMENT
-ON COLUMN roles.created_date IS '创建时间';
+    ON COLUMN roles.created_date IS '创建时间';
 COMMENT
-ON COLUMN roles.last_modified_by IS '最后修改者';
+    ON COLUMN roles.last_modified_by IS '最后修改者';
 COMMENT
-ON COLUMN roles.last_modified_date IS '最后修改时间';
+    ON COLUMN roles.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists group_members
 DROP TABLE IF EXISTS group_members;
@@ -212,13 +212,13 @@ CREATE TABLE group_members
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE group_members IS '用户组成员关系表';
+    ON TABLE group_members IS '用户组成员关系表';
 COMMENT
-ON COLUMN group_members.id IS '主键';
+    ON COLUMN group_members.id IS '主键';
 COMMENT
-ON COLUMN group_members.group_id IS '用户组ID';
+    ON COLUMN group_members.group_id IS '用户组ID';
 COMMENT
-ON COLUMN group_members.username IS '用户名';
+    ON COLUMN group_members.username IS '用户名';
 
 -- Drop table if exists group_authorities
 DROP TABLE IF EXISTS group_authorities;
@@ -234,13 +234,13 @@ CREATE TABLE group_authorities
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE group_authorities IS '用户组权限关系表';
+    ON TABLE group_authorities IS '用户组权限关系表';
 COMMENT
-ON COLUMN group_authorities.id IS '主键';
+    ON COLUMN group_authorities.id IS '主键';
 COMMENT
-ON COLUMN group_authorities.group_id IS '用户组ID';
+    ON COLUMN group_authorities.group_id IS '用户组ID';
 COMMENT
-ON COLUMN group_authorities.authority IS '权限';
+    ON COLUMN group_authorities.authority IS '权限';
 
 -- Drop table if exists persistent_logins
 DROP TABLE IF EXISTS persistent_logins;
@@ -256,15 +256,15 @@ CREATE TABLE persistent_logins
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE persistent_logins IS '持久化登录表';
+    ON TABLE persistent_logins IS '持久化登录表';
 COMMENT
-ON COLUMN persistent_logins.username IS '用户名';
+    ON COLUMN persistent_logins.username IS '用户名';
 COMMENT
-ON COLUMN persistent_logins.series IS '系列';
+    ON COLUMN persistent_logins.series IS '系列';
 COMMENT
-ON COLUMN persistent_logins.token IS '令牌';
+    ON COLUMN persistent_logins.token IS '令牌';
 COMMENT
-ON COLUMN persistent_logins.last_used IS '最后使用时间';
+    ON COLUMN persistent_logins.last_used IS '最后使用时间';
 
 -- Drop table if exists role_members
 DROP TABLE IF EXISTS role_members;
@@ -281,13 +281,13 @@ CREATE TABLE role_members
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE role_members IS '角色成员关系表';
+    ON TABLE role_members IS '角色成员关系表';
 COMMENT
-ON COLUMN role_members.id IS '主键';
+    ON COLUMN role_members.id IS '主键';
 COMMENT
-ON COLUMN role_members.role_id IS '角色ID';
+    ON COLUMN role_members.role_id IS '角色ID';
 COMMENT
-ON COLUMN role_members.username IS '用户名';
+    ON COLUMN role_members.username IS '用户名';
 
 -- Drop table if exists privileges
 DROP TABLE IF EXISTS privileges;
@@ -313,35 +313,60 @@ CREATE TABLE privileges
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE privileges IS '权限表';
+    ON TABLE privileges IS '权限表';
 COMMENT
-ON COLUMN privileges.id IS '主键';
+    ON COLUMN privileges.id IS '主键';
 COMMENT
-ON COLUMN privileges.superior_id IS '上级ID';
+    ON COLUMN privileges.superior_id IS '上级ID';
 COMMENT
-ON COLUMN privileges.name IS '名称';
+    ON COLUMN privileges.name IS '名称';
 COMMENT
-ON COLUMN privileges.path IS '路径';
+    ON COLUMN privileges.path IS '路径';
 COMMENT
-ON COLUMN privileges.redirect IS '跳转路径';
+    ON COLUMN privileges.redirect IS '跳转路径';
 COMMENT
-ON COLUMN privileges.component IS '组件路径';
+    ON COLUMN privileges.component IS '组件路径';
 COMMENT
-ON COLUMN privileges.icon IS '图标';
+    ON COLUMN privileges.icon IS '图标';
 COMMENT
-ON COLUMN privileges.actions IS '操作按钮';
+    ON COLUMN privileges.actions IS '操作按钮';
 COMMENT
-ON COLUMN privileges.description IS '描述';
+    ON COLUMN privileges.description IS '描述';
 COMMENT
-ON COLUMN privileges.enabled IS '是否启用';
+    ON COLUMN privileges.enabled IS '是否启用';
 COMMENT
-ON COLUMN privileges.created_by IS '创建者';
+    ON COLUMN privileges.created_by IS '创建者';
 COMMENT
-ON COLUMN privileges.created_date IS '创建时间';
+    ON COLUMN privileges.created_date IS '创建时间';
 COMMENT
-ON COLUMN privileges.last_modified_by IS '最后修改者';
+    ON COLUMN privileges.last_modified_by IS '最后修改者';
 COMMENT
-ON COLUMN privileges.last_modified_date IS '最后修改时间';
+    ON COLUMN privileges.last_modified_date IS '最后修改时间';
+
+
+-- Drop table if exists privilege_actions
+DROP TABLE IF EXISTS privilege_actions;
+
+-- ----------------------------
+-- Table structure for privilege_actions
+-- ----------------------------
+DROP TABLE IF EXISTS privilege_actions;
+CREATE TABLE privilege_actions
+(
+    id           bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    privilege_id bigint      NOT NULL,
+    action       varchar(50) NOT NULL,
+    CONSTRAINT fk_privileges_action FOREIGN KEY (privilege_id) REFERENCES privileges (id)
+);
+
+-- Table structure privilege_actions
+COMMENT
+    ON COLUMN privilege_actions.id IS '主键';
+COMMENT
+    ON COLUMN privilege_actions.privilege_id IS '权限ID';
+COMMENT
+    ON COLUMN privilege_actions.action IS '操作';
+
 
 -- Drop table if exists role_privileges
 DROP TABLE IF EXISTS role_privileges;
@@ -358,13 +383,13 @@ CREATE TABLE role_privileges
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE role_privileges IS '角色权限关系表';
+    ON TABLE role_privileges IS '角色权限关系表';
 COMMENT
-ON COLUMN role_privileges.id IS '主键';
+    ON COLUMN role_privileges.id IS '主键';
 COMMENT
-ON COLUMN role_privileges.role_id IS '角色ID';
+    ON COLUMN role_privileges.role_id IS '角色ID';
 COMMENT
-ON COLUMN role_privileges.privilege_id IS '权限ID';
+    ON COLUMN role_privileges.privilege_id IS '权限ID';
 
 -- Drop table if exists dictionaries
 DROP TABLE IF EXISTS dictionaries;
@@ -385,25 +410,25 @@ CREATE TABLE dictionaries
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE dictionaries IS '字典表';
+    ON TABLE dictionaries IS '字典表';
 COMMENT
-ON COLUMN dictionaries.id IS '主键';
+    ON COLUMN dictionaries.id IS '主键';
 COMMENT
-ON COLUMN dictionaries.name IS '名称';
+    ON COLUMN dictionaries.name IS '名称';
 COMMENT
-ON COLUMN dictionaries.superior_id IS '上级ID';
+    ON COLUMN dictionaries.superior_id IS '上级ID';
 COMMENT
-ON COLUMN dictionaries.description IS '描述';
+    ON COLUMN dictionaries.description IS '描述';
 COMMENT
-ON COLUMN dictionaries.enabled IS '是否启用';
+    ON COLUMN dictionaries.enabled IS '是否启用';
 COMMENT
-ON COLUMN dictionaries.created_by IS '创建者';
+    ON COLUMN dictionaries.created_by IS '创建者';
 COMMENT
-ON COLUMN dictionaries.created_date IS '创建时间';
+    ON COLUMN dictionaries.created_date IS '创建时间';
 COMMENT
-ON COLUMN dictionaries.last_modified_by IS '最后修改者';
+    ON COLUMN dictionaries.last_modified_by IS '最后修改者';
 COMMENT
-ON COLUMN dictionaries.last_modified_date IS '最后修改时间';
+    ON COLUMN dictionaries.last_modified_date IS '最后修改时间';
 
 -- Drop table if exists messages
 DROP TABLE IF EXISTS messages;
@@ -426,29 +451,29 @@ CREATE TABLE messages
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE messages IS '消息表';
+    ON TABLE messages IS '消息表';
 COMMENT
-ON COLUMN messages.id IS '主键';
+    ON COLUMN messages.id IS '主键';
 COMMENT
-ON COLUMN messages.title IS '标题';
+    ON COLUMN messages.title IS '标题';
 COMMENT
-ON COLUMN messages.content IS '内容';
+    ON COLUMN messages.content IS '内容';
 COMMENT
-ON COLUMN messages.is_read IS '是否已读';
+    ON COLUMN messages.is_read IS '是否已读';
 COMMENT
-ON COLUMN messages.receiver IS '接收者';
+    ON COLUMN messages.receiver IS '接收者';
 COMMENT
-ON COLUMN messages.description IS '描述';
+    ON COLUMN messages.description IS '描述';
 COMMENT
-ON COLUMN messages.enabled IS '是否启用';
+    ON COLUMN messages.enabled IS '是否启用';
 COMMENT
-ON COLUMN messages.created_by IS '创建者';
+    ON COLUMN messages.created_by IS '创建者';
 COMMENT
-ON COLUMN messages.created_date IS '创建时间';
+    ON COLUMN messages.created_date IS '创建时间';
 COMMENT
-ON COLUMN messages.last_modified_by IS '最后修改者';
+    ON COLUMN messages.last_modified_by IS '最后修改者';
 COMMENT
-ON COLUMN messages.last_modified_date IS '最后修改时间';
+    ON COLUMN messages.last_modified_date IS '最后修改时间';
 
 
 -- Drop table if exists access_logs
@@ -476,37 +501,37 @@ CREATE TABLE access_logs
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE access_logs IS '访问日志表';
+    ON TABLE access_logs IS '访问日志表';
 COMMENT
-ON COLUMN access_logs.id IS '主键';
+    ON COLUMN access_logs.id IS '主键';
 COMMENT
-ON COLUMN access_logs.url IS '接口';
+    ON COLUMN access_logs.url IS '接口';
 COMMENT
-ON COLUMN access_logs.http_method IS 'http方法';
+    ON COLUMN access_logs.http_method IS 'http方法';
 COMMENT
-ON COLUMN access_logs.params IS '参数';
+    ON COLUMN access_logs.params IS '参数';
 COMMENT
-ON COLUMN access_logs.body IS '请求体';
+    ON COLUMN access_logs.body IS '请求体';
 COMMENT
-ON COLUMN access_logs.ip IS 'IP地址';
+    ON COLUMN access_logs.ip IS 'IP地址';
 COMMENT
-ON COLUMN access_logs.location IS '位置';
+    ON COLUMN access_logs.location IS '位置';
 COMMENT
-ON COLUMN access_logs.status_code IS 'HTTP状态码';
+    ON COLUMN access_logs.status_code IS 'HTTP状态码';
 COMMENT
-ON COLUMN access_logs.response_times IS '响应时长';
+    ON COLUMN access_logs.response_times IS '响应时长';
 COMMENT
-ON COLUMN access_logs.response_message IS '响应消息';
+    ON COLUMN access_logs.response_message IS '响应消息';
 COMMENT
-ON COLUMN access_logs.enabled IS '是否启用';
+    ON COLUMN access_logs.enabled IS '是否启用';
 COMMENT
-ON COLUMN access_logs.created_by IS '创建者';
+    ON COLUMN access_logs.created_by IS '创建者';
 COMMENT
-ON COLUMN access_logs.created_date IS '创建时间';
+    ON COLUMN access_logs.created_date IS '创建时间';
 COMMENT
-ON COLUMN access_logs.last_modified_by IS '最后修改者';
+    ON COLUMN access_logs.last_modified_by IS '最后修改者';
 COMMENT
-ON COLUMN access_logs.last_modified_date IS '最后修改时间';
+    ON COLUMN access_logs.last_modified_date IS '最后修改时间';
 
 
 -- Drop table if exists operation_logs
@@ -524,7 +549,7 @@ CREATE TABLE operation_logs
     content            varchar(1000),
     user_agent         varchar(255),
     status_code        integer,
-    operated_time      timestamp,
+    operated_times     bigint,
     response_message   varchar(255),
     referer            varchar(255),
     session_id         varchar(50),
@@ -538,42 +563,42 @@ CREATE TABLE operation_logs
 
 -- Add comment to the table and columns
 COMMENT
-ON TABLE operation_logs IS '访问日志表';
+    ON TABLE operation_logs IS '访问日志表';
 COMMENT
-ON COLUMN operation_logs.id IS '主键';
+    ON COLUMN operation_logs.id IS '主键';
 COMMENT
-ON COLUMN operation_logs.operation IS '操作';
+    ON COLUMN operation_logs.operation IS '操作';
 COMMENT
-ON COLUMN operation_logs.os IS '操作系统';
+    ON COLUMN operation_logs.os IS '操作系统';
 COMMENT
-ON COLUMN operation_logs.browser IS '浏览器';
+    ON COLUMN operation_logs.browser IS '浏览器';
 COMMENT
-ON COLUMN operation_logs.ip IS 'IP地址';
+    ON COLUMN operation_logs.ip IS 'IP地址';
 COMMENT
-ON COLUMN operation_logs.location IS '位置';
+    ON COLUMN operation_logs.location IS '位置';
 COMMENT
-ON COLUMN operation_logs.content IS '内容';
+    ON COLUMN operation_logs.content IS '内容';
 COMMENT
-ON COLUMN operation_logs.user_agent IS '用户代理信息';
+    ON COLUMN operation_logs.user_agent IS '用户代理信息';
 COMMENT
-ON COLUMN operation_logs.status_code IS 'HTTP状态码';
+    ON COLUMN operation_logs.status_code IS 'HTTP状态码';
 COMMENT
-ON COLUMN operation_logs.operated_times IS '操作时间';
+    ON COLUMN operation_logs.operated_times IS '操作时长';
 COMMENT
-ON COLUMN operation_logs.response_message IS '响应消息';
+    ON COLUMN operation_logs.response_message IS '响应消息';
 COMMENT
-ON COLUMN operation_logs.referer IS '来源页面';
+    ON COLUMN operation_logs.referer IS '来源页面';
 COMMENT
-ON COLUMN operation_logs.session_id IS '会话标识符';
+    ON COLUMN operation_logs.session_id IS '会话标识符';
 COMMENT
-ON COLUMN operation_logs.device_type IS '设备类型';
+    ON COLUMN operation_logs.device_type IS '设备类型';
 COMMENT
-ON COLUMN operation_logs.enabled IS '是否启用';
+    ON COLUMN operation_logs.enabled IS '是否启用';
 COMMENT
-ON COLUMN operation_logs.created_by IS '创建者';
+    ON COLUMN operation_logs.created_by IS '创建者';
 COMMENT
-ON COLUMN operation_logs.created_date IS '创建时间';
+    ON COLUMN operation_logs.created_date IS '创建时间';
 COMMENT
-ON COLUMN operation_logs.last_modified_by IS '最后修改者';
+    ON COLUMN operation_logs.last_modified_by IS '最后修改者';
 COMMENT
-ON COLUMN operation_logs.last_modified_date IS '最后修改时间';
+    ON COLUMN operation_logs.last_modified_date IS '最后修改时间';

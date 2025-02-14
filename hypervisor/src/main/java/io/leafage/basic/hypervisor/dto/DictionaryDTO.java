@@ -32,7 +32,7 @@ public class DictionaryDTO extends DictionaryBO {
     /**
      * <p>Getter for the field <code>superiorId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getSuperiorId() {
         return superiorId;

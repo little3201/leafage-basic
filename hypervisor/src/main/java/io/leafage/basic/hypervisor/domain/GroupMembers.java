@@ -46,7 +46,7 @@ public class GroupMembers {
     /**
      * <p>Getter for the field <code>id</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getId() {
         return id;
@@ -55,7 +55,7 @@ public class GroupMembers {
     /**
      * <p>Setter for the field <code>id</code>.</p>
      *
-     * @param id a {@link java.lang.Long} object
+     * @param id a {@link Long} object
      */
     public void setId(Long id) {
         this.id = id;
@@ -64,7 +64,7 @@ public class GroupMembers {
     /**
      * <p>Getter for the field <code>groupId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getGroupId() {
         return groupId;
@@ -73,7 +73,7 @@ public class GroupMembers {
     /**
      * <p>Setter for the field <code>groupId</code>.</p>
      *
-     * @param groupId a {@link java.lang.Long} object
+     * @param groupId a {@link Long} object
      */
     public void setGroupId(Long groupId) {
         this.groupId = groupId;
@@ -82,7 +82,7 @@ public class GroupMembers {
     /**
      * <p>Getter for the field <code>username</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getUsername() {
         return username;
@@ -91,7 +91,7 @@ public class GroupMembers {
     /**
      * <p>Setter for the field <code>username</code>.</p>
      *
-     * @param username a {@link java.lang.String} object
+     * @param username a {@link String} object
      */
     public void setUsername(String username) {
         this.username = username;

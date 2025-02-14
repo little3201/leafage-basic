@@ -34,14 +34,17 @@ public class OAuth2ResourceServerSecurityConfiguration {
     /**
      * <p>securityFilterChain.</p>
      *
-     * @param http a {@link org.springframework.security.config.annotation.web.builders.HttpSecurity} object
-     * @return a {@link org.springframework.security.web.SecurityFilterChain} object
+     * @param http a {@link HttpSecurity} object
+     * @return a {@link SecurityFilterChain} object
      * @throws java.lang.Exception if any.
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
-                .oauth2ResourceServer(o -> o.jwt(Customizer.withDefaults()));
+        http
+                .authorizeHttpRequests(authorize ->
+                        authorize.anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 ->
+                        oauth2.jwt(Customizer.withDefaults()));
         return http.build();
     }
 }

@@ -87,7 +87,7 @@ public class PrivilegeController {
     public ResponseEntity<List<TreeNode>> tree(Principal principal) {
         List<TreeNode> treeNodes;
         try {
-            treeNodes = privilegeService.tree(principal.getName());
+            treeNodes = privilegeService.tree("admin");
         } catch (Exception e) {
             logger.info("Retrieve privilege tree occurred an error: ", e);
             return ResponseEntity.noContent().build();

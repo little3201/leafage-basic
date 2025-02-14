@@ -47,7 +47,7 @@ public abstract class CommentBO {
     /**
      * <p>Getter for the field <code>postId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getPostId() {
         return postId;
@@ -56,7 +56,7 @@ public abstract class CommentBO {
     /**
      * <p>Setter for the field <code>postId</code>.</p>
      *
-     * @param postId a {@link java.lang.Long} object
+     * @param postId a {@link Long} object
      */
     public void setPostId(Long postId) {
         this.postId = postId;
@@ -65,7 +65,7 @@ public abstract class CommentBO {
     /**
      * <p>Getter for the field <code>content</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getContent() {
         return content;
@@ -74,7 +74,7 @@ public abstract class CommentBO {
     /**
      * <p>Setter for the field <code>content</code>.</p>
      *
-     * @param content a {@link java.lang.String} object
+     * @param content a {@link String} object
      */
     public void setContent(String content) {
         this.content = content;
@@ -83,7 +83,7 @@ public abstract class CommentBO {
     /**
      * <p>Getter for the field <code>replier</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getReplier() {
         return replier;
@@ -92,7 +92,7 @@ public abstract class CommentBO {
     /**
      * <p>Setter for the field <code>replier</code>.</p>
      *
-     * @param replier a {@link java.lang.Long} object
+     * @param replier a {@link Long} object
      */
     public void setReplier(Long replier) {
         this.replier = replier;

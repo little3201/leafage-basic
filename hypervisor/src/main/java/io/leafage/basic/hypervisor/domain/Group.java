@@ -39,7 +39,7 @@ public class Group extends AuditMetadata {
     /**
      * <p>Getter for the field <code>name</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getName() {
         return name;
@@ -48,7 +48,7 @@ public class Group extends AuditMetadata {
     /**
      * <p>Setter for the field <code>name</code>.</p>
      *
-     * @param name a {@link java.lang.String} object
+     * @param name a {@link String} object
      */
     public void setName(String name) {
         this.name = name;
@@ -57,7 +57,7 @@ public class Group extends AuditMetadata {
     /**
      * <p>Getter for the field <code>superiorId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getSuperiorId() {
         return superiorId;
@@ -66,7 +66,7 @@ public class Group extends AuditMetadata {
     /**
      * <p>Setter for the field <code>superiorId</code>.</p>
      *
-     * @param superiorId a {@link java.lang.Long} object
+     * @param superiorId a {@link Long} object
      */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
@@ -75,7 +75,7 @@ public class Group extends AuditMetadata {
     /**
      * <p>Getter for the field <code>description</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getDescription() {
         return description;
@@ -84,7 +84,7 @@ public class Group extends AuditMetadata {
     /**
      * <p>Setter for the field <code>description</code>.</p>
      *
-     * @param description a {@link java.lang.String} object
+     * @param description a {@link String} object
      */
     public void setDescription(String description) {
         this.description = description;

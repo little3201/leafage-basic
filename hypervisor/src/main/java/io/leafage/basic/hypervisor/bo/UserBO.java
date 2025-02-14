@@ -45,7 +45,7 @@ public abstract class UserBO {
     /**
      * <p>Getter for the field <code>username</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getUsername() {
         return username;
@@ -54,7 +54,7 @@ public abstract class UserBO {
     /**
      * <p>Setter for the field <code>username</code>.</p>
      *
-     * @param username a {@link java.lang.String} object
+     * @param username a {@link String} object
      */
     public void setUsername(String username) {
         this.username = username;
@@ -63,7 +63,7 @@ public abstract class UserBO {
     /**
      * <p>Getter for the field <code>fullname</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getFullName() {
         return fullName;
@@ -72,7 +72,7 @@ public abstract class UserBO {
     /**
      * <p>Setter for the field <code>fullname</code>.</p>
      *
-     * @param fullname a {@link java.lang.String} object
+     * @param fullname a {@link String} object
      */
     public void setFullName(String fullname) {
         this.fullName = fullname;
@@ -81,7 +81,7 @@ public abstract class UserBO {
     /**
      * <p>Getter for the field <code>email</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getEmail() {
         return email;
@@ -90,7 +90,7 @@ public abstract class UserBO {
     /**
      * <p>Setter for the field <code>email</code>.</p>
      *
-     * @param email a {@link java.lang.String} object
+     * @param email a {@link String} object
      */
     public void setEmail(String email) {
         this.email = email;
@@ -99,7 +99,7 @@ public abstract class UserBO {
     /**
      * <p>Getter for the field <code>avatar</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getAvatar() {
         return avatar;
@@ -108,7 +108,7 @@ public abstract class UserBO {
     /**
      * <p>Setter for the field <code>avatar</code>.</p>
      *
-     * @param avatar a {@link java.lang.String} object
+     * @param avatar a {@link String} object
      */
     public void setAvatar(String avatar) {
         this.avatar = avatar;

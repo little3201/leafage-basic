@@ -62,7 +62,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Getter for the field <code>name</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getName() {
         return name;
@@ -71,7 +71,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Setter for the field <code>name</code>.</p>
      *
-     * @param name a {@link java.lang.String} object
+     * @param name a {@link String} object
      */
     public void setName(String name) {
         this.name = name;
@@ -80,7 +80,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Getter for the field <code>superiorId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getSuperiorId() {
         return superiorId;
@@ -89,7 +89,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Setter for the field <code>superiorId</code>.</p>
      *
-     * @param superiorId a {@link java.lang.Long} object
+     * @param superiorId a {@link Long} object
      */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
@@ -98,7 +98,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Getter for the field <code>areaCode</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getAreaCode() {
         return areaCode;
@@ -107,7 +107,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Setter for the field <code>areaCode</code>.</p>
      *
-     * @param areaCode a {@link java.lang.String} object
+     * @param areaCode a {@link String} object
      */
     public void setAreaCode(String areaCode) {
         this.areaCode = areaCode;
@@ -116,7 +116,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Getter for the field <code>postalCode</code>.</p>
      *
-     * @return a {@link java.lang.Integer} object
+     * @return a {@link Integer} object
      */
     public Integer getPostalCode() {
         return postalCode;
@@ -125,7 +125,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Setter for the field <code>postalCode</code>.</p>
      *
-     * @param postalCode a {@link java.lang.Integer} object
+     * @param postalCode a {@link Integer} object
      */
     public void setPostalCode(Integer postalCode) {
         this.postalCode = postalCode;
@@ -152,7 +152,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Getter for the field <code>description</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getDescription() {
         return description;
@@ -161,7 +161,7 @@ public class Region extends AuditMetadata {
     /**
      * <p>Setter for the field <code>description</code>.</p>
      *
-     * @param description a {@link java.lang.String} object
+     * @param description a {@link String} object
      */
     public void setDescription(String description) {
         this.description = description;

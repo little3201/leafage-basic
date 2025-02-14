@@ -75,7 +75,7 @@ public class DictionaryController {
     /**
      * 查询下级数据
      *
-     * @param id a {@link java.lang.Long} object
+     * @param id a {@link Long} object
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/{id}/subset")
@@ -150,7 +150,7 @@ public class DictionaryController {
      * 修改信息
      *
      * @param dto 要添加的数据
-     * @param id  a {@link java.lang.Long} object
+     * @param id  a {@link Long} object
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PutMapping("/{id}")

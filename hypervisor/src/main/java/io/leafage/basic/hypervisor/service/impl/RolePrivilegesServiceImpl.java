@@ -79,4 +79,12 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
         }).toList();
         return rolePrivilegesRepository.saveAllAndFlush(rolePrivileges);
     }
+
+    @Override
+    public void removeRelation(Long roleId, Set<Long> privilegeIds) {
+        List<RolePrivileges> rolePrivileges = rolePrivilegesRepository.findAllByRoleId(roleId);
+        List<Long> filteredIds = rolePrivileges.stream().map(RolePrivileges::getId)
+                .filter(privilegeIds::contains).toList();
+        rolePrivilegesRepository.deleteAllByIdInBatch(filteredIds);
+    }
 }

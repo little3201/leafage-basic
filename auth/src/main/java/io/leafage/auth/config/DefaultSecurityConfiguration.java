@@ -37,9 +37,12 @@ public class DefaultSecurityConfiguration {
     public SecurityFilterChain standardSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/actuator/**", "/assets/**", "/.well-known/**", "/favicon.ico").permitAll()
+                        authorize.requestMatchers("/actuator/**",
+                                        "/assets/**",
+                                        "/favicon.ico",
+                                        "/login").permitAll()
                                 .anyRequest().authenticated())
-                .formLogin(Customizer.withDefaults());
+                .formLogin(formLogin -> formLogin.loginPage("/login"));
 
         return http.cors(Customizer.withDefaults()).build();
     }

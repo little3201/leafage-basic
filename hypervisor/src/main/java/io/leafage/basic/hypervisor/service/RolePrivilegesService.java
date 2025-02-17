@@ -51,4 +51,12 @@ public interface RolePrivilegesService {
      * @return 结果集
      */
     List<RolePrivileges> relation(Long roleId, Set<Long> privilegeIds);
+
+    /**
+     * 保存role-privilege关系
+     *
+     * @param roleId       role主键
+     * @param privilegeIds privilegeId集合
+     */
+    void removeRelation(Long roleId, Set<Long> privilegeIds);
 }

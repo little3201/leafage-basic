@@ -228,4 +228,21 @@ public class RoleController {
         return ResponseEntity.accepted().body(voList);
     }
 
+    /**
+     * 删除 role-privilege关联
+     *
+     * @param id         role主键
+     * @param privileges privilege信息
+     * @return 操作结果
+     */
+    @DeleteMapping("/{id}/privileges")
+    public ResponseEntity<List<RolePrivileges>> removeRelation(@PathVariable Long id, @RequestParam Set<Long> privileges) {
+        try {
+            rolePrivilegesService.removeRelation(id, privileges);
+        } catch (Exception e) {
+            logger.error("Remove relation role privileges occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok().build();
+    }
 }

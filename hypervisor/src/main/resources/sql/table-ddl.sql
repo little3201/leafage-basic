@@ -242,6 +242,31 @@ COMMENT
 COMMENT
     ON COLUMN group_authorities.authority IS '权限';
 
+
+-- Drop table if exists group_roles
+DROP TABLE IF EXISTS group_roles;
+
+-- Table structure group_roles
+CREATE TABLE group_roles
+(
+    id       bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    group_id bigint NOT NULL,
+    role_id  bigint NOT NULL,
+    CONSTRAINT fk_group_roles_groups FOREIGN KEY (group_id) REFERENCES groups (id),
+    CONSTRAINT fk_group_roles_roles FOREIGN KEY (role_id) REFERENCES roles (id)
+);
+
+-- Add comment to the table and columns
+COMMENT
+    ON TABLE group_roles IS '用户组角色关系表';
+COMMENT
+    ON COLUMN group_roles.id IS '主键';
+COMMENT
+    ON COLUMN group_roles.group_id IS '用户组ID';
+COMMENT
+    ON COLUMN group_roles.role_id IS '角色ID';
+
+
 -- Drop table if exists persistent_logins
 DROP TABLE IF EXISTS persistent_logins;
 

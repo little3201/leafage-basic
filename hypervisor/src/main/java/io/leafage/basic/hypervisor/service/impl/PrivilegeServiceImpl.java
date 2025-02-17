@@ -83,21 +83,24 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      */
     @Override
     public List<TreeNode> tree(String username) {
-        List<Privilege> privileges = new ArrayList<>();
         List<RoleMembers> roleMembers = roleMembersRepository.findAllByUsername(username);
         if (CollectionUtils.isEmpty(roleMembers)) {
             return Collections.emptyList();
         }
+
+        Map<Long, Privilege> privilegeMap = new HashMap<>();
         for (RoleMembers roleMember : roleMembers) {
             List<RolePrivileges> rolePrivileges = rolePrivilegesRepository.findAllByRoleId(roleMember.getRoleId());
             for (RolePrivileges rolePrivilege : rolePrivileges) {
                 privilegeRepository.findById(rolePrivilege.getPrivilegeId()).ifPresent(privilege -> {
-                    if (privilege.isEnabled()) {
-                        privileges.add(privilege);
+                    if (privilege.isEnabled() && !privilegeMap.containsKey(privilege.getId())) {
+                        privilegeMap.put(privilege.getId(), privilege);
                     }
                 });
             }
         }
+
+        List<Privilege> privileges = new ArrayList<>(privilegeMap.values());
         return this.convertTree(privileges);
     }
 

@@ -15,7 +15,3 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
-
-logging:
-  level:
-    org.springframework.security: DEBUG

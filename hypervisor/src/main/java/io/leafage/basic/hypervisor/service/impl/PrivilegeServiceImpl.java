@@ -95,6 +95,8 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
                 privilegeRepository.findById(rolePrivilege.getPrivilegeId()).ifPresent(privilege -> {
                     if (privilege.isEnabled() && !privilegeMap.containsKey(privilege.getId())) {
                         privilegeMap.put(privilege.getId(), privilege);
+                        // 处理没有勾选父级的数据（递归查找父级数据）
+                        addSuperior(privilege, privilegeMap);
                     }
                 });
             }
@@ -147,6 +149,19 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
                     return convertToVO(privilege, PrivilegeVO.class);
                 })
                 .orElseThrow();
+    }
+
+    private void addSuperior(Privilege privilege, Map<Long, Privilege> privilegeMap) {
+        Long superiorId = privilege.getSuperiorId();
+        if (superiorId != null && !privilegeMap.containsKey(superiorId)) {
+            privilegeRepository.findById(superiorId).ifPresent(superior -> {
+                if (superior.isEnabled()) {
+                    privilegeMap.put(superior.getId(), superior);
+                    // 递归，添加上级
+                    addSuperior(superior, privilegeMap);
+                }
+            });
+        }
     }
 
     /**

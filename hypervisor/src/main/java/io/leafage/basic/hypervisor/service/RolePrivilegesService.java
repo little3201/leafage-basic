@@ -38,7 +38,7 @@ public interface RolePrivilegesService {
     /**
      * 查询关联role
      *
-     * @param privilegeId privilege 主键
+     * @param privilegeId privilege id
      * @return 数据集
      */
     List<RolePrivileges> roles(Long privilegeId);

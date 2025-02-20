@@ -31,13 +31,13 @@ public class GroupRoles {
     private Long id;
 
     /**
-     * group 主键
+     * group id
      */
     @Column(name = "group_id", nullable = false)
     private Long groupId;
 
     /**
-     * role 主键
+     * role id
      */
     @Column(name = "role_id", nullable = false)
     private Long roleId;

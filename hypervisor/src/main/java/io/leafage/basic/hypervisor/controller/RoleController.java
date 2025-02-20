@@ -212,15 +212,15 @@ public class RoleController {
     /**
      * 保存role-privilege关联
      *
-     * @param id         role主键
-     * @param privileges privilege信息
+     * @param id           role id
+     * @param privilegeIds privilege id集合
      * @return 操作结果
      */
     @PatchMapping("/{id}/privileges")
-    public ResponseEntity<List<RolePrivileges>> relation(@PathVariable Long id, @RequestBody Set<Long> privileges) {
+    public ResponseEntity<List<RolePrivileges>> relation(@PathVariable Long id, @RequestBody Set<Long> privilegeIds) {
         List<RolePrivileges> voList;
         try {
-            voList = rolePrivilegesService.relation(id, privileges);
+            voList = rolePrivilegesService.relation(id, privilegeIds);
         } catch (Exception e) {
             logger.error("Relation role privileges occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();

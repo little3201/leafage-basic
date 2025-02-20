@@ -38,7 +38,7 @@ public interface GroupRolesService {
     /**
      * 查询关联 group
      *
-     * @param roleId role 主键
+     * @param roleId role id
      * @return 数据集
      */
     List<GroupRoles> groups(Long roleId);

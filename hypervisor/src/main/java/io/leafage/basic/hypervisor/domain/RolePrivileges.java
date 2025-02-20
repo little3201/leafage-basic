@@ -37,7 +37,7 @@ public class RolePrivileges {
     private Long roleId;
 
     /**
-     * privilege 主键
+     * privilege id
      */
     @Column(name = "privilege_id", nullable = false)
     private Long privilegeId;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright (c) 2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 package io.leafage.basic.hypervisor.controller;
 
 import io.leafage.basic.hypervisor.service.AccessLogService;
-import io.leafage.basic.hypervisor.vo.AccessLogVO;
+import io.leafage.basic.hypervisor.service.AuditLogService;
+import io.leafage.basic.hypervisor.vo.AuditLogVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -25,25 +26,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * access log controller.
+ * audit log controller.
  *
  * @author wq li
  */
 @RestController
-@RequestMapping("/access-logs")
-public class AccessLogController {
+@RequestMapping("/audit-logs")
+public class AuditLogController {
+    
+    private final Logger logger = LoggerFactory.getLogger(AuditLogController.class);
 
-    private final Logger logger = LoggerFactory.getLogger(AccessLogController.class);
-
-    private final AccessLogService accessLogService;
+    private final AuditLogService auditLogService;
 
     /**
      * <p>Constructor for AccessLogController.</p>
      *
-     * @param accessLogService a {@link io.leafage.basic.hypervisor.service.AccessLogService} object
+     * @param auditLogService a {@link AuditLogService} object
      */
-    public AccessLogController(AccessLogService accessLogService) {
-        this.accessLogService = accessLogService;
+    public AuditLogController(AuditLogService auditLogService) {
+        this.auditLogService = auditLogService;
     }
 
     /**
@@ -56,11 +57,11 @@ public class AccessLogController {
      * @return 查询到数据集，异常时返回204
      */
     @GetMapping
-    public ResponseEntity<Page<AccessLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
+    public ResponseEntity<Page<AuditLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                       String sortBy, boolean descending, String url) {
-        Page<AccessLogVO> voPage;
+        Page<AuditLogVO> voPage;
         try {
-            voPage = accessLogService.retrieve(page, size, sortBy, descending, url);
+            voPage = auditLogService.retrieve(page, size, sortBy, descending, url);
         } catch (Exception e) {
             logger.error("Retrieve record occurred an error: ", e);
             return ResponseEntity.noContent().build();
@@ -75,12 +76,12 @@ public class AccessLogController {
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @GetMapping("/{id}")
-    public ResponseEntity<AccessLogVO> fetch(@PathVariable Long id) {
-        AccessLogVO vo;
+    public ResponseEntity<AuditLogVO> fetch(@PathVariable Long id) {
+        AuditLogVO vo;
         try {
-            vo = accessLogService.fetch(id);
+            vo = auditLogService.fetch(id);
         } catch (Exception e) {
-            logger.info("Fetch access log occurred an error: ", e);
+            logger.info("Fetch audit log occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(vo);
@@ -95,9 +96,9 @@ public class AccessLogController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         try {
-            accessLogService.remove(id);
+            auditLogService.remove(id);
         } catch (Exception e) {
-            logger.error("Remove access log occurred an error: ", e);
+            logger.error("Remove audit log occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();

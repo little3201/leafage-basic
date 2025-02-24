@@ -176,7 +176,7 @@ public class DictionaryController {
         try {
             dictionaryService.remove(id);
         } catch (Exception e) {
-            logger.error("Remove group occurred an error: ", e);
+            logger.error("Remove dictionary occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();

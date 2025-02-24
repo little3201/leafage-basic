@@ -97,7 +97,7 @@ public class OperationLogController {
         try {
             operationLogService.remove(id);
         } catch (Exception e) {
-            logger.error("Remove group occurred an error: ", e);
+            logger.error("Remove operation log occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();

@@ -627,3 +627,59 @@ COMMENT
     ON COLUMN operation_logs.last_modified_by IS '最后修改者';
 COMMENT
     ON COLUMN operation_logs.last_modified_date IS '最后修改时间';
+
+
+-- Drop table if exists audit_logs
+DROP TABLE IF EXISTS audit_logs;
+
+-- Table structure audit_logs
+CREATE TABLE audit_logs
+(
+    id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    operator           VARCHAR(255) NOT NULL,
+    operation          VARCHAR(50)  NOT NULL,
+    resource           VARCHAR(50)  NOT NULL,
+    old_value          TEXT,
+    new_value          TEXT,
+    ip                 VARCHAR(50)  NOT NULL,
+    location           VARCHAR(100),
+    status_code        INT          NOT NULL,
+    operated_time      TIMESTAMP    NOT NULL,
+    enabled            boolean      NOT NULL DEFAULT true,
+    created_by         varchar(50),
+    created_date       timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_by   varchar(50),
+    last_modified_date timestamp
+);
+
+-- 添加字段注释
+COMMENT
+    ON COLUMN audit_logs.id IS '主键，自增';
+COMMENT
+    ON COLUMN audit_logs.operator IS '操作者';
+COMMENT
+    ON COLUMN audit_logs.operation IS '操作类型';
+COMMENT
+    ON COLUMN audit_logs.resource IS '操作资源';
+COMMENT
+    ON COLUMN audit_logs.old_value IS '旧值（JSON 格式）';
+COMMENT
+    ON COLUMN audit_logs.new_value IS '新值（JSON 格式）';
+COMMENT
+    ON COLUMN audit_logs.ip IS 'IP 地址';
+COMMENT
+    ON COLUMN audit_logs.location IS '位置';
+COMMENT
+    ON COLUMN audit_logs.status_code IS '状态码';
+COMMENT
+    ON COLUMN audit_logs.operated_time IS '操作时间';
+COMMENT
+    ON COLUMN audit_logs.enabled IS '是否启用';
+COMMENT
+    ON COLUMN audit_logs.created_by IS '创建者';
+COMMENT
+    ON COLUMN audit_logs.created_date IS '创建时间';
+COMMENT
+    ON COLUMN audit_logs.last_modified_by IS '最后修改者';
+COMMENT
+    ON COLUMN audit_logs.last_modified_date IS '最后修改时间';

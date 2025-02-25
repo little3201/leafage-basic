@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,17 +27,17 @@ public class GroupRoles {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * group 主键
+     * group id
      */
     @Column(name = "group_id", nullable = false)
     private Long groupId;
 
     /**
-     * role 主键
+     * role id
      */
     @Column(name = "role_id", nullable = false)
     private Long roleId;

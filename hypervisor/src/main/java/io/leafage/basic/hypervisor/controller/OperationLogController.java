@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ public class OperationLogController {
         try {
             operationLogService.remove(id);
         } catch (Exception e) {
-            logger.error("Remove group occurred an error: ", e);
+            logger.error("Remove operation log occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();

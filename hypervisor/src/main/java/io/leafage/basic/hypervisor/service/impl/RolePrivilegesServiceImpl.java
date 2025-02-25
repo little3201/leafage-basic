@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,14 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
+import io.leafage.basic.hypervisor.domain.Authorities;
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +39,7 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
     /**
      * <p>Constructor for RolePrivilegesServiceImpl.</p>
      *
-     * @param rolePrivilegesRepository a {@link io.leafage.basic.hypervisor.repository.RolePrivilegesRepository} object
+     * @param rolePrivilegesRepository a {@link RolePrivilegesRepository} object
      */
     public RolePrivilegesServiceImpl(RolePrivilegesRepository rolePrivilegesRepository) {
         this.rolePrivilegesRepository = rolePrivilegesRepository;
@@ -71,12 +73,22 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
         Assert.notNull(roleId, "roleId must not be null.");
         Assert.notEmpty(privilegeIds, "privilegeIds must not be empty.");
 
+        List<Authorities> authoritiesList = new ArrayList<>(privilegeIds.size());
         List<RolePrivileges> rolePrivileges = privilegeIds.stream().map(privilegeId -> {
             RolePrivileges rolePrivilege = new RolePrivileges();
             rolePrivilege.setRoleId(roleId);
             rolePrivilege.setPrivilegeId(privilegeId);
+
             return rolePrivilege;
         }).toList();
         return rolePrivilegesRepository.saveAllAndFlush(rolePrivileges);
+    }
+
+    @Override
+    public void removeRelation(Long roleId, Set<Long> privilegeIds) {
+        List<RolePrivileges> rolePrivileges = rolePrivilegesRepository.findAllByRoleId(roleId);
+        List<Long> filteredIds = rolePrivileges.stream().map(RolePrivileges::getId)
+                .filter(privilegeIds::contains).toList();
+        rolePrivilegesRepository.deleteAllByIdInBatch(filteredIds);
     }
 }

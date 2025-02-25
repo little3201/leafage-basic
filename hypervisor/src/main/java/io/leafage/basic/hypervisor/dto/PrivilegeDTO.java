@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class PrivilegeDTO extends PrivilegeBO {
     /**
      * <p>Getter for the field <code>superiorId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getSuperiorId() {
         return superiorId;
@@ -40,7 +40,7 @@ public class PrivilegeDTO extends PrivilegeBO {
     /**
      * <p>Setter for the field <code>superiorId</code>.</p>
      *
-     * @param superiorId a {@link java.lang.Long} object
+     * @param superiorId a {@link Long} object
      */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public interface DictionaryService extends ServletBasicService<DictionaryDTO, Di
     /**
      * 获取子节点
      *
-     * @param id a {@link java.lang.Long} object
+     * @param id a {@link Long} object
      * @return 数据集
      */
     List<DictionaryVO> subset(Long id);

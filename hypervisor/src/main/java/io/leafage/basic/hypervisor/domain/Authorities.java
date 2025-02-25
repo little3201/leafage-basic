@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class Authorities {
     /**
      * <p>Getter for the field <code>id</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getId() {
         return id;
@@ -55,7 +55,7 @@ public class Authorities {
     /**
      * <p>Setter for the field <code>id</code>.</p>
      *
-     * @param id a {@link java.lang.Long} object
+     * @param id a {@link Long} object
      */
     public void setId(Long id) {
         this.id = id;
@@ -64,7 +64,7 @@ public class Authorities {
     /**
      * <p>Getter for the field <code>username</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getUsername() {
         return username;
@@ -73,7 +73,7 @@ public class Authorities {
     /**
      * <p>Setter for the field <code>username</code>.</p>
      *
-     * @param username a {@link java.lang.String} object
+     * @param username a {@link String} object
      */
     public void setUsername(String username) {
         this.username = username;
@@ -82,7 +82,7 @@ public class Authorities {
     /**
      * <p>Getter for the field <code>authority</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getAuthority() {
         return authority;
@@ -91,7 +91,7 @@ public class Authorities {
     /**
      * <p>Setter for the field <code>authority</code>.</p>
      *
-     * @param authority a {@link java.lang.String} object
+     * @param authority a {@link String} object
      */
     public void setAuthority(String authority) {
         this.authority = authority;

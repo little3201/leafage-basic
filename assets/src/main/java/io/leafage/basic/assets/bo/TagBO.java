@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public abstract class TagBO {
     /**
      * <p>Getter for the field <code>name</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getName() {
         return name;
@@ -41,7 +41,7 @@ public abstract class TagBO {
     /**
      * <p>Setter for the field <code>name</code>.</p>
      *
-     * @param name a {@link java.lang.String} object
+     * @param name a {@link String} object
      */
     public void setName(String name) {
         this.name = name;

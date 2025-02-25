@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class TagPosts {
     /**
      * <p>Getter for the field <code>id</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getId() {
         return id;
@@ -55,7 +55,7 @@ public class TagPosts {
     /**
      * <p>Setter for the field <code>id</code>.</p>
      *
-     * @param id a {@link java.lang.Long} object
+     * @param id a {@link Long} object
      */
     public void setId(Long id) {
         this.id = id;
@@ -64,7 +64,7 @@ public class TagPosts {
     /**
      * <p>Getter for the field <code>tagId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getTagId() {
         return tagId;
@@ -73,7 +73,7 @@ public class TagPosts {
     /**
      * <p>Setter for the field <code>tagId</code>.</p>
      *
-     * @param tagId a {@link java.lang.Long} object
+     * @param tagId a {@link Long} object
      */
     public void setTagId(Long tagId) {
         this.tagId = tagId;
@@ -82,7 +82,7 @@ public class TagPosts {
     /**
      * <p>Getter for the field <code>postId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getPostId() {
         return postId;
@@ -91,7 +91,7 @@ public class TagPosts {
     /**
      * <p>Setter for the field <code>postId</code>.</p>
      *
-     * @param postId a {@link java.lang.Long} object
+     * @param postId a {@link Long} object
      */
     public void setPostId(Long postId) {
         this.postId = postId;

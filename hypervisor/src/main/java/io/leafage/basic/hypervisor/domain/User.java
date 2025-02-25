@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Getter for the field <code>username</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getUsername() {
         return username;
@@ -67,7 +67,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Setter for the field <code>username</code>.</p>
      *
-     * @param username a {@link java.lang.String} object
+     * @param username a {@link String} object
      */
     public void setUsername(String username) {
         this.username = username;
@@ -76,7 +76,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Getter for the field <code>fullname</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getFullName() {
         return fullName;
@@ -85,7 +85,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Setter for the field <code>fullname</code>.</p>
      *
-     * @param fullname a {@link java.lang.String} object
+     * @param fullname a {@link String} object
      */
     public void setFullName(String fullname) {
         this.fullName = fullname;
@@ -94,7 +94,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Getter for the field <code>password</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getPassword() {
         return password;
@@ -103,7 +103,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Setter for the field <code>password</code>.</p>
      *
-     * @param password a {@link java.lang.String} object
+     * @param password a {@link String} object
      */
     public void setPassword(String password) {
         this.password = password;
@@ -112,7 +112,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Getter for the field <code>email</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getEmail() {
         return email;
@@ -121,7 +121,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Setter for the field <code>email</code>.</p>
      *
-     * @param email a {@link java.lang.String} object
+     * @param email a {@link String} object
      */
     public void setEmail(String email) {
         this.email = email;
@@ -130,7 +130,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Getter for the field <code>avatar</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getAvatar() {
         return avatar;
@@ -139,7 +139,7 @@ public class User extends AuditMetadata {
     /**
      * <p>Setter for the field <code>avatar</code>.</p>
      *
-     * @param avatar a {@link java.lang.String} object
+     * @param avatar a {@link String} object
      */
     public void setAvatar(String avatar) {
         this.avatar = avatar;

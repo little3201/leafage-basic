@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,21 +83,26 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
      */
     @Override
     public List<TreeNode> tree(String username) {
-        List<Privilege> privileges = new ArrayList<>();
         List<RoleMembers> roleMembers = roleMembersRepository.findAllByUsername(username);
         if (CollectionUtils.isEmpty(roleMembers)) {
             return Collections.emptyList();
         }
+
+        Map<Long, Privilege> privilegeMap = new HashMap<>();
         for (RoleMembers roleMember : roleMembers) {
             List<RolePrivileges> rolePrivileges = rolePrivilegesRepository.findAllByRoleId(roleMember.getRoleId());
             for (RolePrivileges rolePrivilege : rolePrivileges) {
                 privilegeRepository.findById(rolePrivilege.getPrivilegeId()).ifPresent(privilege -> {
-                    if (privilege.isEnabled()) {
-                        privileges.add(privilege);
+                    if (privilege.isEnabled() && !privilegeMap.containsKey(privilege.getId())) {
+                        privilegeMap.put(privilege.getId(), privilege);
+                        // 处理没有勾选父级的数据（递归查找父级数据）
+                        addSuperior(privilege, privilegeMap);
                     }
                 });
             }
         }
+
+        List<Privilege> privileges = new ArrayList<>(privilegeMap.values());
         return this.convertTree(privileges);
     }
 
@@ -144,6 +149,19 @@ public class PrivilegeServiceImpl extends ServletAbstractTreeNodeService<Privile
                     return convertToVO(privilege, PrivilegeVO.class);
                 })
                 .orElseThrow();
+    }
+
+    private void addSuperior(Privilege privilege, Map<Long, Privilege> privilegeMap) {
+        Long superiorId = privilege.getSuperiorId();
+        if (superiorId != null && !privilegeMap.containsKey(superiorId)) {
+            privilegeRepository.findById(superiorId).ifPresent(superior -> {
+                if (superior.isEnabled()) {
+                    privilegeMap.put(superior.getId(), superior);
+                    // 递归，添加上级
+                    addSuperior(superior, privilegeMap);
+                }
+            });
+        }
     }
 
     /**

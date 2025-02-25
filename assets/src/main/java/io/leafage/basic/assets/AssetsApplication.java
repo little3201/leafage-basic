@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ public class AssetsApplication {
     /**
      * <p>main.</p>
      *
-     * @param args an array of {@link java.lang.String} objects
+     * @param args an array of {@link String} objects
      */
     public static void main(String[] args) {
         SpringApplication.run(AssetsApplication.class, args);

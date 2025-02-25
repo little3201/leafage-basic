@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public class RolePrivileges {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -37,7 +37,7 @@ public class RolePrivileges {
     private Long roleId;
 
     /**
-     * privilege 主键
+     * privilege id
      */
     @Column(name = "privilege_id", nullable = false)
     private Long privilegeId;
@@ -46,7 +46,7 @@ public class RolePrivileges {
     /**
      * <p>Getter for the field <code>id</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getId() {
         return id;
@@ -55,7 +55,7 @@ public class RolePrivileges {
     /**
      * <p>Setter for the field <code>id</code>.</p>
      *
-     * @param id a {@link java.lang.Long} object
+     * @param id a {@link Long} object
      */
     public void setId(Long id) {
         this.id = id;
@@ -64,7 +64,7 @@ public class RolePrivileges {
     /**
      * <p>Getter for the field <code>roleId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getRoleId() {
         return roleId;
@@ -73,7 +73,7 @@ public class RolePrivileges {
     /**
      * <p>Setter for the field <code>roleId</code>.</p>
      *
-     * @param roleId a {@link java.lang.Long} object
+     * @param roleId a {@link Long} object
      */
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
@@ -82,7 +82,7 @@ public class RolePrivileges {
     /**
      * <p>Getter for the field <code>privilegeId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getPrivilegeId() {
         return privilegeId;
@@ -91,7 +91,7 @@ public class RolePrivileges {
     /**
      * <p>Setter for the field <code>privilegeId</code>.</p>
      *
-     * @param privilegeId a {@link java.lang.Long} object
+     * @param privilegeId a {@link Long} object
      */
     public void setPrivilegeId(Long privilegeId) {
         this.privilegeId = privilegeId;

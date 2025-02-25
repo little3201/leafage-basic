@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public interface RolePrivilegesService {
     /**
      * 查询关联role
      *
-     * @param privilegeId privilege 主键
+     * @param privilegeId privilege id
      * @return 数据集
      */
     List<RolePrivileges> roles(Long privilegeId);
@@ -51,4 +51,12 @@ public interface RolePrivilegesService {
      * @return 结果集
      */
     List<RolePrivileges> relation(Long roleId, Set<Long> privilegeIds);
+
+    /**
+     * 保存role-privilege关系
+     *
+     * @param roleId       role主键
+     * @param privilegeIds privilegeId集合
+     */
+    void removeRelation(Long roleId, Set<Long> privilegeIds);
 }

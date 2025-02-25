@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,7 @@
  */
 package io.leafage.basic.hypervisor.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import top.leafage.common.servlet.audit.AuditMetadata;
 
 import java.util.Set;
@@ -58,7 +55,12 @@ public class Privilege extends AuditMetadata {
      */
     private String icon;
 
-    @ElementCollection
+    /**
+     * 操作
+     */
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "privilege_actions", joinColumns = @JoinColumn(name = "privilege_id"))
+    @Column(name = "action")
     private Set<String> actions;
 
     /**
@@ -70,7 +72,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Getter for the field <code>superiorId</code>.</p>
      *
-     * @return a {@link java.lang.Long} object
+     * @return a {@link Long} object
      */
     public Long getSuperiorId() {
         return superiorId;
@@ -79,7 +81,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Setter for the field <code>superiorId</code>.</p>
      *
-     * @param superiorId a {@link java.lang.Long} object
+     * @param superiorId a {@link Long} object
      */
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
@@ -88,7 +90,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Getter for the field <code>name</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getName() {
         return name;
@@ -97,7 +99,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Setter for the field <code>name</code>.</p>
      *
-     * @param name a {@link java.lang.String} object
+     * @param name a {@link String} object
      */
     public void setName(String name) {
         this.name = name;
@@ -106,7 +108,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Getter for the field <code>path</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getPath() {
         return path;
@@ -115,7 +117,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Setter for the field <code>path</code>.</p>
      *
-     * @param path a {@link java.lang.String} object
+     * @param path a {@link String} object
      */
     public void setPath(String path) {
         this.path = path;
@@ -124,7 +126,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Getter for the field <code>redirect</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getRedirect() {
         return redirect;
@@ -133,7 +135,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Setter for the field <code>redirect</code>.</p>
      *
-     * @param redirect a {@link java.lang.String} object
+     * @param redirect a {@link String} object
      */
     public void setRedirect(String redirect) {
         this.redirect = redirect;
@@ -142,7 +144,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Getter for the field <code>component</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getComponent() {
         return component;
@@ -151,7 +153,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Setter for the field <code>component</code>.</p>
      *
-     * @param component a {@link java.lang.String} object
+     * @param component a {@link String} object
      */
     public void setComponent(String component) {
         this.component = component;
@@ -160,7 +162,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Getter for the field <code>icon</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getIcon() {
         return icon;
@@ -169,7 +171,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Setter for the field <code>icon</code>.</p>
      *
-     * @param icon a {@link java.lang.String} object
+     * @param icon a {@link String} object
      */
     public void setIcon(String icon) {
         this.icon = icon;
@@ -186,7 +188,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Getter for the field <code>description</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getDescription() {
         return description;
@@ -195,7 +197,7 @@ public class Privilege extends AuditMetadata {
     /**
      * <p>Setter for the field <code>description</code>.</p>
      *
-     * @param description a {@link java.lang.String} object
+     * @param description a {@link String} object
      */
     public void setDescription(String description) {
         this.description = description;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class DictionaryController {
     /**
      * 查询下级数据
      *
-     * @param id a {@link java.lang.Long} object
+     * @param id a {@link Long} object
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/{id}/subset")
@@ -150,7 +150,7 @@ public class DictionaryController {
      * 修改信息
      *
      * @param dto 要添加的数据
-     * @param id  a {@link java.lang.Long} object
+     * @param id  a {@link Long} object
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PutMapping("/{id}")
@@ -176,7 +176,7 @@ public class DictionaryController {
         try {
             dictionaryService.remove(id);
         } catch (Exception e) {
-            logger.error("Remove group occurred an error: ", e);
+            logger.error("Remove dictionary occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         }
         return ResponseEntity.ok().build();

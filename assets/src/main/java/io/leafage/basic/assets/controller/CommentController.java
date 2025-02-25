@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class CommentController {
      *
      * @param page       分页位置
      * @param size       分页大小
-     * @param sortBy     a {@link java.lang.String} object
+     * @param sortBy     a {@link String} object
      * @param descending a boolean
      * @return 查询到数据集，异常时返回204
      */

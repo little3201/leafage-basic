@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecif
     /**
      * <p>existsByName.</p>
      *
-     * @param name a {@link java.lang.String} object
+     * @param name a {@link String} object
      * @return a boolean
      */
     boolean existsByName(String name);
@@ -39,7 +39,7 @@ public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecif
     /**
      * <p>existsByName.</p>
      *
-     * @param name a {@link java.lang.String} object
+     * @param name a {@link String} object
      * @return a boolean
      */
     boolean existsByNameAndIdNot(String name, Long id);

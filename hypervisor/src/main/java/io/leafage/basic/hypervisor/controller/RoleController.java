@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -212,15 +212,15 @@ public class RoleController {
     /**
      * 保存role-privilege关联
      *
-     * @param id         role主键
-     * @param privileges privilege信息
+     * @param id           role id
+     * @param privilegeIds privilege id集合
      * @return 操作结果
      */
     @PatchMapping("/{id}/privileges")
-    public ResponseEntity<List<RolePrivileges>> relation(@PathVariable Long id, @RequestBody Set<Long> privileges) {
+    public ResponseEntity<List<RolePrivileges>> relation(@PathVariable Long id, @RequestBody Set<Long> privilegeIds) {
         List<RolePrivileges> voList;
         try {
-            voList = rolePrivilegesService.relation(id, privileges);
+            voList = rolePrivilegesService.relation(id, privilegeIds);
         } catch (Exception e) {
             logger.error("Relation role privileges occurred an error: ", e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
@@ -228,4 +228,21 @@ public class RoleController {
         return ResponseEntity.accepted().body(voList);
     }
 
+    /**
+     * 删除 role-privilege关联
+     *
+     * @param id         role主键
+     * @param privileges privilege信息
+     * @return 操作结果
+     */
+    @DeleteMapping("/{id}/privileges")
+    public ResponseEntity<List<RolePrivileges>> removeRelation(@PathVariable Long id, @RequestParam Set<Long> privileges) {
+        try {
+            rolePrivilegesService.removeRelation(id, privileges);
+        } catch (Exception e) {
+            logger.error("Remove relation role privileges occurred an error: ", e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
+        }
+        return ResponseEntity.ok().build();
+    }
 }

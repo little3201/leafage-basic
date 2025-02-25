@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2024-2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public abstract class MessageBO {
     /**
      * <p>Getter for the field <code>title</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getTitle() {
         return title;
@@ -55,7 +55,7 @@ public abstract class MessageBO {
     /**
      * <p>Setter for the field <code>title</code>.</p>
      *
-     * @param title a {@link java.lang.String} object
+     * @param title a {@link String} object
      */
     public void setTitle(String title) {
         this.title = title;
@@ -64,7 +64,7 @@ public abstract class MessageBO {
     /**
      * <p>Getter for the field <code>content</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getContent() {
         return content;
@@ -73,7 +73,7 @@ public abstract class MessageBO {
     /**
      * <p>Setter for the field <code>content</code>.</p>
      *
-     * @param content a {@link java.lang.String} object
+     * @param content a {@link String} object
      */
     public void setContent(String content) {
         this.content = content;
@@ -82,7 +82,7 @@ public abstract class MessageBO {
     /**
      * <p>Getter for the field <code>receiver</code>.</p>
      *
-     * @return a {@link java.lang.String} object
+     * @return a {@link String} object
      */
     public String getReceiver() {
         return receiver;
@@ -91,7 +91,7 @@ public abstract class MessageBO {
     /**
      * <p>Setter for the field <code>receiver</code>.</p>
      *
-     * @param receiver a {@link java.lang.String} object
+     * @param receiver a {@link String} object
      */
     public void setReceiver(String receiver) {
         this.receiver = receiver;

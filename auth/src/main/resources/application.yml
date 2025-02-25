@@ -4,7 +4,6 @@ server:
 spring:
   application:
     name: auth
-
   profiles:
     active: dev
 

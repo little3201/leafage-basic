@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -69,6 +70,7 @@ public class RoleController {
      * @param descending 排序方向
      * @return 如果查询到数据，返回查询到的分页后的信息列表，否则返回空
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:read')")
     @GetMapping
     public ResponseEntity<Page<RoleVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                  String sortBy, boolean descending, String name) {
@@ -88,6 +90,7 @@ public class RoleController {
      * @param id 主键
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:read')")
     @GetMapping("/{id}")
     public ResponseEntity<RoleVO> fetch(@PathVariable Long id) {
         RoleVO vo;
@@ -125,6 +128,7 @@ public class RoleController {
      * @param dto 要添加的数据
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:write')")
     @PostMapping
     public ResponseEntity<RoleVO> create(@RequestBody @Valid RoleDTO dto) {
         RoleVO vo;
@@ -144,6 +148,7 @@ public class RoleController {
      * @param dto 要修改的数据
      * @return 如果修改数据成功，返回修改后的信息，否则返回304状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:write')")
     @PutMapping("/{id}")
     public ResponseEntity<RoleVO> modify(@PathVariable Long id, @RequestBody @Valid RoleDTO dto) {
         RoleVO vo;

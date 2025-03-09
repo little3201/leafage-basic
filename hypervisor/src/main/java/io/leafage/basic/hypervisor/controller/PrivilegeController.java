@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import top.leafage.common.TreeNode;
 
@@ -65,6 +66,7 @@ public class PrivilegeController {
      * @param descending 排序方向
      * @return 查询到的数据，否则返回空
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:read')")
     @GetMapping
     public ResponseEntity<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                       String sortBy, boolean descending, String name) {
@@ -83,6 +85,7 @@ public class PrivilegeController {
      *
      * @return 查询到的数据，否则返回空
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:read')")
     @GetMapping("/tree")
     public ResponseEntity<List<TreeNode>> tree(Principal principal) {
         List<TreeNode> treeNodes;
@@ -93,6 +96,25 @@ public class PrivilegeController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(treeNodes);
+    }
+
+    /**
+     * 查询信息
+     *
+     * @param superiorId 主键
+     * @return 查询到的信息，否则返回204状态码
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:read')")
+    @GetMapping("/{superiorId}/subset")
+    public ResponseEntity<List<PrivilegeVO>> subset(@PathVariable Long superiorId) {
+        List<PrivilegeVO> voList;
+        try {
+            voList = privilegeService.subset(superiorId);
+        } catch (Exception e) {
+            logger.info("Retrieve privilege subset occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voList);
     }
 
     /**
@@ -120,6 +142,7 @@ public class PrivilegeController {
      * @param dto 要添加的数据
      * @return 编辑后的信息，否则返回417状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:write')")
     @PutMapping("/{id}")
     public ResponseEntity<PrivilegeVO> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO dto) {
         PrivilegeVO vo;
@@ -138,6 +161,7 @@ public class PrivilegeController {
      * @param id 主键
      * @return 编辑后的信息，否则返回417状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:write')")
     @PatchMapping("/{id}")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled;

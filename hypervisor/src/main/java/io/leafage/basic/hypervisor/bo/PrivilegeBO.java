@@ -19,6 +19,8 @@ package io.leafage.basic.hypervisor.bo;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.Set;
+
 /**
  * bo class for privilege
  *
@@ -48,6 +50,11 @@ public abstract class PrivilegeBO {
      */
     @NotBlank(message = "icon must not be empty.")
     private String icon;
+
+    /**
+     * 操作
+     */
+    private Set<String> actions;
 
     /**
      * 描述
@@ -142,6 +149,14 @@ public abstract class PrivilegeBO {
      */
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public Set<String> getActions() {
+        return actions;
+    }
+
+    public void setActions(Set<String> actions) {
+        this.actions = actions;
     }
 
     /**

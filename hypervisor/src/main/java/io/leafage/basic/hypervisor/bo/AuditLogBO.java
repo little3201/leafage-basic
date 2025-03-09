@@ -41,7 +41,7 @@ public abstract class AuditLogBO {
 
     private Integer statusCode;
 
-    private Instant operatedTime;
+    private Long operatedTimes;
 
 
 
@@ -109,11 +109,11 @@ public abstract class AuditLogBO {
         this.statusCode = statusCode;
     }
 
-    public Instant getOperatedTime() {
-        return operatedTime;
+    public Long getOperatedTimes() {
+        return operatedTimes;
     }
 
-    public void setOperatedTime(Instant operatedTime) {
-        this.operatedTime = operatedTime;
+    public void setOperatedTimes(Long operatedTimes) {
+        this.operatedTimes = operatedTimes;
     }
 }

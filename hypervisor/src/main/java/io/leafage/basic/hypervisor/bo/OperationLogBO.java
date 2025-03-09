@@ -15,8 +15,6 @@
 
 package io.leafage.basic.hypervisor.bo;
 
-import java.time.Instant;
-
 /**
  * bo class for operation log
  *
@@ -51,7 +49,7 @@ public abstract class OperationLogBO {
     /**
      * 响应时间
      */
-    private Instant operatedTime;
+    private Long operatedTimes;
 
     /**
      * 来源页面
@@ -169,19 +167,19 @@ public abstract class OperationLogBO {
     /**
      * <p>Getter for the field <code>operatedTime</code>.</p>
      *
-     * @return a {@link Instant} object
+     * @return a {@link Long} object
      */
-    public Instant getOperatedTime() {
-        return operatedTime;
+    public Long getOperatedTimes() {
+        return operatedTimes;
     }
 
     /**
      * <p>Setter for the field <code>operatedTime</code>.</p>
      *
-     * @param operatedTime a {@link Instant} object
+     * @param operatedTimes a {@link Long} object
      */
-    public void setOperatedTime(Instant operatedTime) {
-        this.operatedTime = operatedTime;
+    public void setOperatedTimes(Long operatedTimes) {
+        this.operatedTimes = operatedTimes;
     }
 
     /**

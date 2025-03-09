@@ -644,7 +644,7 @@ CREATE TABLE audit_logs
     ip                 VARCHAR(50)  NOT NULL,
     location           VARCHAR(100),
     status_code        INT          NOT NULL,
-    operated_time      TIMESTAMP    NOT NULL,
+    operated_times     bigint       NOT NULL,
     enabled            boolean      NOT NULL DEFAULT true,
     created_by         varchar(50),
     created_date       timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -672,7 +672,7 @@ COMMENT
 COMMENT
     ON COLUMN audit_logs.status_code IS '状态码';
 COMMENT
-    ON COLUMN audit_logs.operated_time IS '操作时间';
+    ON COLUMN audit_logs.operated_time IS '操作时长';
 COMMENT
     ON COLUMN audit_logs.enabled IS '是否启用';
 COMMENT

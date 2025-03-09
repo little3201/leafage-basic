@@ -18,8 +18,11 @@ package io.leafage.basic.assets.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -29,7 +32,8 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration(proxyBeanMethods = false)
 @EnableWebSecurity
-public class ResourceServerConfiguration {
+@EnableMethodSecurity
+public class OAuth2ResourceServerSecurityConfiguration {
 
     /**
      * <p>securityFilterChain.</p>
@@ -46,5 +50,20 @@ public class ResourceServerConfiguration {
                 ).oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults()));
         return http.build();
+    }
+
+    /**
+     * authorization server 配置了自定义claims，添加用户 authorities，这里需要配置解析的authoritiesClaimName
+     *
+     * @return JwtAuthenticationConverter
+     */
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
     }
 }

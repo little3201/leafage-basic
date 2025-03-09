@@ -22,6 +22,7 @@ import jakarta.persistence.Table;
 import top.leafage.common.servlet.audit.AuditMetadata;
 
 import java.net.InetAddress;
+import java.time.Instant;
 
 /**
  * model class for operation log.
@@ -49,7 +50,7 @@ public class OperationLog extends AuditMetadata {
     private Integer statusCode;
 
     @Column(name = "operated_times")
-    private Long operatedTime;
+    private Long operatedTimes;
 
     private String referer;
 
@@ -169,8 +170,8 @@ public class OperationLog extends AuditMetadata {
      *
      * @return a {@link Long object
      */
-    public Long getOperatedTime() {
-        return operatedTime;
+    public Long getOperatedTimes() {
+        return operatedTimes;
     }
 
     /**
@@ -178,8 +179,8 @@ public class OperationLog extends AuditMetadata {
      *
      * @param operatedTime a {@link Long} object
      */
-    public void setOperatedTime(Long operatedTime) {
-        this.operatedTime = operatedTime;
+    public void setOperatedTimes(Long operatedTime) {
+        this.operatedTimes = operatedTime;
     }
 
     /**

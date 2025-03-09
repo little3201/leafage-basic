@@ -22,7 +22,6 @@ import jakarta.persistence.Table;
 import top.leafage.common.servlet.audit.AuditMetadata;
 
 import java.net.InetAddress;
-import java.time.Instant;
 
 /**
  * model class for audit log.
@@ -53,8 +52,8 @@ public class AuditLog extends AuditMetadata {
     @Column(name = "status_code")
     private Integer statusCode;
 
-    @Column(name = "operated_time")
-    private Instant operatedTime;
+    @Column(name = "operated_times")
+    private Long operatedTimes;
 
 
     public String getOperator() {
@@ -154,19 +153,19 @@ public class AuditLog extends AuditMetadata {
     /**
      * <p>Getter for the field <code>operatedTime</code>.</p>
      *
-     * @return a {@link Instant object
+     * @return a {@link Long object
      */
-    public Instant getOperatedTime() {
-        return operatedTime;
+    public Long getOperatedTimes() {
+        return operatedTimes;
     }
 
     /**
      * <p>Setter for the field <code>operatedTime</code>.</p>
      *
-     * @param operatedTime a {@link Instant} object
+     * @param operatedTime a {@link Long} object
      */
-    public void setOperatedTime(Instant operatedTime) {
-        this.operatedTime = operatedTime;
+    public void setOperatedTimes(Long operatedTime) {
+        this.operatedTimes = operatedTime;
     }
 
 }

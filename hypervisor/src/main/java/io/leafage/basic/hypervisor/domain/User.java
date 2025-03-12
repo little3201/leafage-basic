@@ -34,14 +34,23 @@ public class User extends AuditMetadata {
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
 
-    @Column(name = "full_name", length = 50)
-    private String fullName;
+    @Column(name = "given_name", length = 50)
+    private String givenName;
+
+    @Column(name = "family_name", length = 50)
+    private String familyName;
+
+    @Column(name = "middle_name", length = 50)
+    private String middleName;
 
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
     @Column(name = "email", length = 50)
     private String email;
+
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
 
     @Column(name = "avatar", length = 100)
     private String avatar;
@@ -73,22 +82,28 @@ public class User extends AuditMetadata {
         this.username = username;
     }
 
-    /**
-     * <p>Getter for the field <code>fullname</code>.</p>
-     *
-     * @return a {@link String} object
-     */
-    public String getFullName() {
-        return fullName;
+    public String getGivenName() {
+        return givenName;
     }
 
-    /**
-     * <p>Setter for the field <code>fullname</code>.</p>
-     *
-     * @param fullname a {@link String} object
-     */
-    public void setFullName(String fullname) {
-        this.fullName = fullname;
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
     /**
@@ -125,6 +140,14 @@ public class User extends AuditMetadata {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     /**

@@ -15,14 +15,13 @@
 
 package io.leafage.basic.hypervisor.service.impl;
 
-import io.leafage.basic.hypervisor.domain.Authorities;
 import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.repository.RolePrivilegesRepository;
 import io.leafage.basic.hypervisor.service.RolePrivilegesService;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -73,7 +72,6 @@ public class RolePrivilegesServiceImpl implements RolePrivilegesService {
         Assert.notNull(roleId, "roleId must not be null.");
         Assert.notEmpty(privilegeIds, "privilegeIds must not be empty.");
 
-        List<Authorities> authoritiesList = new ArrayList<>(privilegeIds.size());
         List<RolePrivileges> rolePrivileges = privilegeIds.stream().map(privilegeId -> {
             RolePrivileges rolePrivilege = new RolePrivileges();
             rolePrivilege.setRoleId(roleId);

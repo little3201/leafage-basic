@@ -92,9 +92,12 @@ CREATE TABLE users
 (
     id                     bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     username               varchar(50) UNIQUE NOT NULL,
-    full_name              varchar(50),
+    given_name             varchar(50),
+    family_name            varchar(50),
+    middle_name            varchar(50),
     password               varchar(100)       NOT NULL,
     email                  varchar(50),
+    phone_number           varchar(20),
     avatar                 varchar(255),
     enabled                boolean            NOT NULL DEFAULT true,
     account_non_locked     boolean,
@@ -114,9 +117,17 @@ COMMENT
 COMMENT
     ON COLUMN users.username IS '用户名';
 COMMENT
+    ON COLUMN users.given_name IS '名字';
+COMMENT
+    ON COLUMN users.family_name IS '姓';
+COMMENT
+    ON COLUMN users.middle_name IS '中间名';
+COMMENT
     ON COLUMN users.password IS '密码';
 COMMENT
     ON COLUMN users.email IS '邮箱';
+COMMENT
+    ON COLUMN users.phone_number IS '电话号码';
 COMMENT
     ON COLUMN users.avatar IS '头像';
 COMMENT
@@ -672,7 +683,7 @@ COMMENT
 COMMENT
     ON COLUMN audit_logs.status_code IS '状态码';
 COMMENT
-    ON COLUMN audit_logs.operated_time IS '操作时长';
+    ON COLUMN audit_logs.operated_times IS '操作时长';
 COMMENT
     ON COLUMN audit_logs.enabled IS '是否启用';
 COMMENT

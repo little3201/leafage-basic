@@ -29,9 +29,15 @@ public abstract class UserBO {
     @NotBlank(message = "username is empty.")
     private String username;
 
-    private String fullName;
+    private String givenName;
+
+    private String familyName;
+
+    private String middleName;
 
     private String email;
+
+    private String phoneNumber;
 
     private String avatar;
 
@@ -60,22 +66,28 @@ public abstract class UserBO {
         this.username = username;
     }
 
-    /**
-     * <p>Getter for the field <code>fullname</code>.</p>
-     *
-     * @return a {@link String} object
-     */
-    public String getFullName() {
-        return fullName;
+    public String getGivenName() {
+        return givenName;
     }
 
-    /**
-     * <p>Setter for the field <code>fullname</code>.</p>
-     *
-     * @param fullname a {@link String} object
-     */
-    public void setFullName(String fullname) {
-        this.fullName = fullname;
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
     /**
@@ -94,6 +106,14 @@ public abstract class UserBO {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     /**

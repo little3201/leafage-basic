@@ -43,12 +43,14 @@ public class DefaultSecurityConfiguration {
                                 .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults());
 
-        return http.build();
+        return http.cors(Customizer.withDefaults()).build();
     }
 
     @Bean
     UserDetailsService userDetailsService(DataSource dataSource) {
-        return new JdbcUserDetailsManager(dataSource);
+        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
+        jdbcUserDetailsManager.setEnableGroups(true);
+        return jdbcUserDetailsManager;
     }
 
     @Bean

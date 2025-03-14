@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.security.Principal;
 
 /**
  * user controller
@@ -107,6 +109,24 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(existsMono);
+    }
+
+    /**
+     * 查询当前用户
+     *
+     * @param principal 当前用户
+     * @return 查询的数据，异常时返回204状态码
+     */
+    @GetMapping("/me")
+    public ResponseEntity<Mono<UserVO>> fetchMe(Principal principal) {
+        Mono<UserVO> voMono;
+        try {
+            voMono = userService.findByUsername(principal.getName());
+        } catch (Exception e) {
+            logger.error("Fetch me occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voMono);
     }
 
     /**

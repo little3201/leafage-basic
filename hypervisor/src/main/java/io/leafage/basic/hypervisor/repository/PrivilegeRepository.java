@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,8 +38,14 @@ public interface PrivilegeRepository extends R2dbcRepository<Privilege, Long> {
      * @param pageable a {@link org.springframework.data.domain.Pageable} object
      * @return 有效帖子
      */
-    Flux<Privilege> findAllBy(Pageable pageable);
+    Flux<Privilege> findAllBySuperiorIdIsNull(Pageable pageable);
 
+    /**
+     * 查询
+     *
+     * @param superiorId 上级
+     * @return 有效帖子
+     */
     Flux<Privilege> findAllBySuperiorId(Long superiorId);
 
     /**
@@ -49,4 +55,12 @@ public interface PrivilegeRepository extends R2dbcRepository<Privilege, Long> {
      * @return true-是，false-否
      */
     Mono<Boolean> existsByName(String name);
+
+    /**
+     * 统计
+     *
+     * @param superiorId 上级
+     * @return 数量
+     */
+    Mono<Long> countBySuperiorId(Long superiorId);
 }

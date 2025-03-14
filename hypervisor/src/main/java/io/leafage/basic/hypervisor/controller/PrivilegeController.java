@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,10 +17,8 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
-import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -30,9 +28,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.TreeNode;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -48,17 +48,14 @@ public class PrivilegeController {
     private final Logger logger = LoggerFactory.getLogger(PrivilegeController.class);
 
     private final PrivilegeService privilegeService;
-    private final RolePrivilegesService rolePrivilegesService;
 
     /**
      * <p>Constructor for PrivilegeController.</p>
      *
-     * @param privilegeService      a {@link io.leafage.basic.hypervisor.service.PrivilegeService} object
-     * @param rolePrivilegesService a {@link io.leafage.basic.hypervisor.service.RolePrivilegesService} object
+     * @param privilegeService a {@link PrivilegeService} object
      */
-    public PrivilegeController(PrivilegeService privilegeService, RolePrivilegesService rolePrivilegesService) {
+    public PrivilegeController(PrivilegeService privilegeService) {
         this.privilegeService = privilegeService;
-        this.rolePrivilegesService = rolePrivilegesService;
     }
 
     /**
@@ -87,15 +84,32 @@ public class PrivilegeController {
      * @return 查询到的数据，否则返回空
      */
     @GetMapping("/tree")
-    public ResponseEntity<Mono<List<TreeNode>>> tree() {
+    public ResponseEntity<Mono<List<TreeNode>>> tree(Principal principal) {
         Mono<List<TreeNode>> authorities;
         try {
-            authorities = privilegeService.tree();
+            authorities = privilegeService.tree(principal.getName());
         } catch (Exception e) {
             logger.info("Retrieve privileges occurred an error: ", e);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(authorities);
+    }
+
+    /**
+     * 查询
+     *
+     * @return 查询到的数据，否则返回空
+     */
+    @GetMapping("/{superiorId}/subset")
+    public ResponseEntity<Flux<PrivilegeVO>> subset(@PathVariable Long superiorId) {
+        Flux<PrivilegeVO> voFlux;
+        try {
+            voFlux = privilegeService.subset(superiorId);
+        } catch (Exception e) {
+            logger.info("Retrieve privilege subset occurred an error: ", e);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(voFlux);
     }
 
     /**
@@ -169,24 +183,6 @@ public class PrivilegeController {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.accepted().body(voMono);
-    }
-
-    /**
-     * 查询关联role
-     *
-     * @param id 主键
-     * @return 查询到的数据集，异常时返回204状态码
-     */
-    @GetMapping("/{id}/roles")
-    public ResponseEntity<Mono<List<RolePrivileges>>> roles(@PathVariable Long id) {
-        Mono<List<RolePrivileges>> listMono;
-        try {
-            listMono = rolePrivilegesService.roles(id);
-        } catch (Exception e) {
-            logger.error("Retrieve group users occurred an error: ", e);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(listMono);
     }
 
 }

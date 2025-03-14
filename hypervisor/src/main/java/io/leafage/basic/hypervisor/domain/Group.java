@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,13 +32,8 @@ public class Group extends ReactiveAuditMetadata {
     /**
      * 名称
      */
-    @Column(value = "name")
+    @Column(value = "group_name")
     private String name;
-
-    /**
-     * 负责人
-     */
-    private String principal;
 
     /**
      * 描述
@@ -61,24 +56,6 @@ public class Group extends ReactiveAuditMetadata {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * <p>Getter for the field <code>principal</code>.</p>
-     *
-     * @return a {@link java.lang.String} object
-     */
-    public String getPrincipal() {
-        return principal;
-    }
-
-    /**
-     * <p>Setter for the field <code>principal</code>.</p>
-     *
-     * @param principal a {@link java.lang.String} object
-     */
-    public void setPrincipal(String principal) {
-        this.principal = principal;
     }
 
     /**

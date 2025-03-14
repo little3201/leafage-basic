@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 
 package io.leafage.basic.hypervisor.domain;
 
-import org.checkerframework.common.aliasing.qual.Unique;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import top.leafage.common.reactive.audit.ReactiveAuditMetadata;
@@ -35,18 +34,25 @@ public class User extends ReactiveAuditMetadata {
     /**
      * 用户名
      */
-    @Unique
     private String username;
 
     /**
      * 名
      */
-    private String firstname;
+    @Column(value = "given_name")
+    private String givenName;
+
+    /**
+     * 中间名
+     */
+    @Column(value = "middle_name")
+    private String middleName;
 
     /**
      * 姓
      */
-    private String lastname;
+    @Column(value = "family_name")
+    private String familyName;
 
     /**
      * 密码
@@ -94,40 +100,28 @@ public class User extends ReactiveAuditMetadata {
         this.username = username;
     }
 
-    /**
-     * <p>Getter for the field <code>firstname</code>.</p>
-     *
-     * @return a {@link java.lang.String} object
-     */
-    public String getFirstname() {
-        return firstname;
+    public String getGivenName() {
+        return givenName;
     }
 
-    /**
-     * <p>Setter for the field <code>firstname</code>.</p>
-     *
-     * @param firstname a {@link java.lang.String} object
-     */
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
     }
 
-    /**
-     * <p>Getter for the field <code>lastname</code>.</p>
-     *
-     * @return a {@link java.lang.String} object
-     */
-    public String getLastname() {
-        return lastname;
+    public String getMiddleName() {
+        return middleName;
     }
 
-    /**
-     * <p>Setter for the field <code>lastname</code>.</p>
-     *
-     * @param lastname a {@link java.lang.String} object
-     */
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public void setFamilyName(String familyName) {
+        this.familyName = familyName;
     }
 
     /**

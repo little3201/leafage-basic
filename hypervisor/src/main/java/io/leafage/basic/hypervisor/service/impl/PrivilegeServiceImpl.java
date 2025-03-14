@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -64,18 +64,24 @@ public class PrivilegeServiceImpl extends ReactiveAbstractTreeNodeService<Privil
     public Mono<Page<PrivilegeVO>> retrieve(int page, int size, String sortBy, boolean descending) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        return privilegeRepository.findAllBy(pageable)
-                .map(p -> convertToVO(p, PrivilegeVO.class))
+        return privilegeRepository.findAllBySuperiorIdIsNull(pageable)
+                .flatMap(p -> privilegeRepository.countBySuperiorId(p.getId())
+                        .map(count -> {
+                            PrivilegeVO vo = convertToVO(p, PrivilegeVO.class);
+                            vo.setCount(count);
+                            return vo;
+                        }))
                 .collectList()
-                .zipWith(privilegeRepository.count())
-                .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+                .map(voList -> new PageImpl<>(voList, pageable, voList.size()));
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Mono<List<TreeNode>> tree() {
+    public Mono<List<TreeNode>> tree(String username) {
+        Assert.hasText(username, "username must not be empty.");
+
         Flux<Privilege> privilegeFlux = privilegeRepository.findAll();
         return this.convertTree(privilegeFlux);
     }

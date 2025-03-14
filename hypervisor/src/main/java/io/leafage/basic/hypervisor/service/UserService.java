@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,4 +38,12 @@ public interface UserService extends ReactiveBasicService<UserDTO, UserVO> {
      * @return 结果集
      */
     Mono<Page<UserVO>> retrieve(int page, int size, String sortBy, boolean descending);
+
+    /**
+     * 根据用户名查询
+     *
+     * @param username 用户名
+     * @return 查询结果
+     */
+    Mono<UserVO> findByUsername(String username);
 }

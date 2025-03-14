@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,11 +58,19 @@ public class UserServiceImpl implements UserService {
     public Mono<Page<UserVO>> retrieve(int page, int size, String sortBy, boolean descending) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        return userRepository.findByEnabledTrue(pageable)
+        return userRepository.findAllBy(pageable)
                 .map(u -> convertToVO(u, UserVO.class))
                 .collectList()
                 .zipWith(userRepository.count())
                 .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
+    }
+
+    @Override
+    public Mono<UserVO> findByUsername(String username) {
+        Assert.hasText(username, "username must not be empty.");
+
+        return userRepository.findByUsername(username)
+                .map(user -> convertToVO(user, UserVO.class));
     }
 
     /**

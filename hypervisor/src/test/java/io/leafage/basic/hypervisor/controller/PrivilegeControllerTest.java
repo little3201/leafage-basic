@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,11 +17,8 @@
 
 package io.leafage.basic.hypervisor.controller;
 
-import io.leafage.basic.hypervisor.domain.RoleMembers;
-import io.leafage.basic.hypervisor.domain.RolePrivileges;
 import io.leafage.basic.hypervisor.dto.PrivilegeDTO;
 import io.leafage.basic.hypervisor.service.PrivilegeService;
-import io.leafage.basic.hypervisor.service.RolePrivilegesService;
 import io.leafage.basic.hypervisor.vo.PrivilegeVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,14 +57,10 @@ class PrivilegeControllerTest {
     private WebTestClient webTestClient;
 
     @MockitoBean
-    private RolePrivilegesService rolePrivilegesService;
-
-    @MockitoBean
     private PrivilegeService privilegeService;
 
     private PrivilegeDTO privilegeDTO;
     private PrivilegeVO privilegeVO;
-    private RolePrivileges rolePrivileges;
 
     @BeforeEach
     void setUp() {
@@ -83,10 +76,6 @@ class PrivilegeControllerTest {
         privilegeVO.setIcon("add");
         privilegeVO.setPath("/test");
         privilegeVO.setType('M');
-
-        rolePrivileges = new RolePrivileges();
-        rolePrivileges.setRoleId(1L);
-        rolePrivileges.setPrivilegeId(1L);
     }
 
     @Test
@@ -116,7 +105,7 @@ class PrivilegeControllerTest {
     @Test
     void tree() {
         TreeNode treeNode = TreeNode.withId(1L).name("test").build();
-        given(this.privilegeService.tree()).willReturn(Mono.just(List.of(treeNode)));
+        given(this.privilegeService.tree(Mockito.anyString())).willReturn(Mono.just(List.of(treeNode)));
 
         webTestClient.get().uri("/privileges/tree")
                 .exchange()
@@ -126,7 +115,7 @@ class PrivilegeControllerTest {
 
     @Test
     void tree_error() {
-        given(this.privilegeService.tree()).willThrow(new RuntimeException());
+        given(this.privilegeService.tree(Mockito.anyString())).willThrow(new RuntimeException());
 
         webTestClient.get().uri("/privileges/tree")
                 .exchange()
@@ -213,22 +202,4 @@ class PrivilegeControllerTest {
                 .expectStatus().isNotModified();
     }
 
-    @Test
-    void roles() {
-        given(this.rolePrivilegesService.roles(Mockito.anyLong())).willReturn(Mono.just(List.of(rolePrivileges)));
-
-        webTestClient.get().uri("/privileges/{id}/roles", 1L)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(RoleMembers.class);
-    }
-
-    @Test
-    void roles_error() {
-        given(this.rolePrivilegesService.roles(Mockito.anyLong())).willThrow(new RuntimeException());
-
-        webTestClient.get().uri("/privileges/{id}/roles", 1L)
-                .exchange()
-                .expectStatus().isNoContent();
-    }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,9 +46,10 @@ public interface PrivilegeService extends ReactiveBasicService<PrivilegeDTO, Pri
     /**
      * 查询构造树结构的数据
      *
+     * @param username 账号
      * @return 数据集
      */
-    Mono<List<TreeNode>> tree();
+    Mono<List<TreeNode>> tree(String username);
 
     /**
      * 获取下级

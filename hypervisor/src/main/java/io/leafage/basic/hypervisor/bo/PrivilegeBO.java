@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@ package io.leafage.basic.hypervisor.bo;
 
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.util.Set;
 
 /**
  * bo class for privilege
@@ -37,12 +38,6 @@ public abstract class PrivilegeBO {
     private String name;
 
     /**
-     * 类型
-     */
-    @NotNull(message = "type must not be null.")
-    private Character type;
-
-    /**
      * 图标
      */
     @NotBlank(message = "icon must not be empty.")
@@ -53,6 +48,16 @@ public abstract class PrivilegeBO {
      */
     private String path;
 
+    /**
+     * redirect
+     */
+    private String redirect;
+    /**
+     * component
+     */
+    private String component;
+
+    private Set<String> actions;
     /**
      * 描述
      */
@@ -76,22 +81,28 @@ public abstract class PrivilegeBO {
         this.name = name;
     }
 
-    /**
-     * <p>Getter for the field <code>type</code>.</p>
-     *
-     * @return a {@link java.lang.Character} object
-     */
-    public Character getType() {
-        return type;
+    public String getRedirect() {
+        return redirect;
     }
 
-    /**
-     * <p>Setter for the field <code>type</code>.</p>
-     *
-     * @param type a {@link java.lang.Character} object
-     */
-    public void setType(Character type) {
-        this.type = type;
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    public Set<String> getActions() {
+        return actions;
+    }
+
+    public void setActions(Set<String> actions) {
+        this.actions = actions;
     }
 
     /**

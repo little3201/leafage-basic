@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ public class PrivilegeVO extends PrivilegeBO implements ReadonlyMetadata {
 
     private final Instant lastModifiedDate;
 
+    private long count;
+
     public PrivilegeVO(Long id, boolean enabled, Instant lastModifiedDate) {
         this.id = id;
         this.enabled = enabled;
@@ -56,4 +58,11 @@ public class PrivilegeVO extends PrivilegeBO implements ReadonlyMetadata {
         return this.lastModifiedDate;
     }
 
+    public long getCount() {
+        return count;
+    }
+
+    public void setCount(long count) {
+        this.count = count;
+    }
 }

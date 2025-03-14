@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ class PrivilegeServiceImplTest {
 
     @Test
     void retrieve_page() {
-        given(this.privilegeRepository.findAllBy(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Privilege.class)));
+        given(this.privilegeRepository.findAllBySuperiorIdIsNull(Mockito.any(PageRequest.class))).willReturn(Flux.just(Mockito.mock(Privilege.class)));
 
         given(this.privilegeRepository.count()).willReturn(Mono.just(Mockito.anyLong()));
 
@@ -124,7 +124,7 @@ class PrivilegeServiceImplTest {
     void tree() {
         given(this.privilegeRepository.findAll()).willReturn(Flux.just(Mockito.mock(Privilege.class), Mockito.mock(Privilege.class)));
 
-        StepVerifier.create(privilegeService.tree()).expectNextCount(1).verifyComplete();
+        StepVerifier.create(privilegeService.tree(Mockito.anyString())).expectNextCount(1).verifyComplete();
     }
 
     @Test

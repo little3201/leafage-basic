@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 import top.leafage.common.reactive.audit.ReactiveAuditMetadata;
 
+import java.util.Set;
+
 /**
  * model class for privileges
  *
@@ -40,10 +42,6 @@ public class Privilege extends ReactiveAuditMetadata {
     @Column(value = "superior_id")
     private Long superiorId;
     /**
-     * 类型
-     */
-    private Character type;
-    /**
      * 图标
      */
     private String icon;
@@ -51,7 +49,16 @@ public class Privilege extends ReactiveAuditMetadata {
      * 路径
      */
     private String path;
+    /**
+     * redirect
+     */
+    private String redirect;
+    /**
+     * component
+     */
+    private String component;
 
+    private Set<String> actions;
     /**
      * 描述
      */
@@ -94,24 +101,6 @@ public class Privilege extends ReactiveAuditMetadata {
     }
 
     /**
-     * <p>Getter for the field <code>type</code>.</p>
-     *
-     * @return a {@link java.lang.Character} object
-     */
-    public Character getType() {
-        return type;
-    }
-
-    /**
-     * <p>Setter for the field <code>type</code>.</p>
-     *
-     * @param type a {@link java.lang.Character} object
-     */
-    public void setType(Character type) {
-        this.type = type;
-    }
-
-    /**
      * <p>Getter for the field <code>icon</code>.</p>
      *
      * @return a {@link java.lang.String} object
@@ -145,6 +134,30 @@ public class Privilege extends ReactiveAuditMetadata {
      */
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getRedirect() {
+        return redirect;
+    }
+
+    public void setRedirect(String redirect) {
+        this.redirect = redirect;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    public Set<String> getActions() {
+        return actions;
+    }
+
+    public void setActions(Set<String> actions) {
+        this.actions = actions;
     }
 
     /**

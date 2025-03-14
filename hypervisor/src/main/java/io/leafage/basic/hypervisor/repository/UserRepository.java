@@ -1,5 +1,5 @@
 /*
- *  Copyright 2018-2024 little3201.
+ *  Copyright 2018-2025 little3201.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
      * @param pageable 分页参数
      * @return 有效数据集
      */
-    Flux<User> findByEnabledTrue(Pageable pageable);
+    Flux<User> findAllBy(Pageable pageable);
 
     /**
      * 根据user查
@@ -46,7 +46,7 @@ public interface UserRepository extends R2dbcRepository<User, Long> {
      * @param username user
      * @return user
      */
-    Mono<User> getByUsername(String username);
+    Mono<User> findByUsername(String username);
 
     /**
      * 是否已存在

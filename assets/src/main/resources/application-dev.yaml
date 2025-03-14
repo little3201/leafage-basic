@@ -1,17 +1,4 @@
-logging:
-  level:
-    root: info
-    org:
-      springframework: info
-
 spring:
-  cloud:
-    consul:
-      host: 127.0.0.1
-      port: 8500
-      discovery:
-        prefer-ip-address: true
-
   r2dbc:
     url: r2dbc:postgresql://postgres@localhost:5432
     username: postgres

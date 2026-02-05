@@ -87,6 +87,6 @@ class RoleMembersServiceImplTest {
         when(roleMembersRepository.findAllByRoleId(anyLong())).thenReturn(List.of(roleMembers));
 
         roleMembersService.removeRelation(1L, Set.of("test"));
-        verify(roleMembersRepository).deleteAllByIdInBatch(anyCollection());
+        verify(roleMembersRepository).deleteAllById(anyCollection());
     }
 }

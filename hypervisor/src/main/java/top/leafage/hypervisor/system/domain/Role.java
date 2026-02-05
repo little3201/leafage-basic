@@ -33,7 +33,6 @@ import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 @Table(name = "roles")
 public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
-    @NotBlank
     @Column(unique = true, nullable = false)
     private String name;
 

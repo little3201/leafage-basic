@@ -88,6 +88,6 @@ class GroupMembersServiceImplTest {
         when(groupMembersRepository.findAllByGroupId(anyLong())).thenReturn(List.of(groupMembers));
 
         groupMembersService.removeRelation(1L, Set.of("test"));
-        verify(groupMembersRepository).deleteAllByIdInBatch(anyCollection());
+        verify(groupMembersRepository).deleteAllById(anyCollection());
     }
 }

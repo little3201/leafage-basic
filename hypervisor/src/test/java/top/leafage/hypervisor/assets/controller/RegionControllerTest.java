@@ -74,7 +74,7 @@ class RegionControllerTest {
         dto.setSuperiorId(1L);
         dto.setDescription("description");
 
-        vo = new RegionVO(1L, "test", "029", "712000", "description", true);
+        vo = new RegionVO(1L, 1L, "test", "029", "712000", "description", 2L, true);
     }
 
     @Test

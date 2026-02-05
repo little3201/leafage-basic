@@ -88,6 +88,6 @@ class GroupRolesServiceImplTest {
         when(groupRolesRepository.findAllByGroupId(anyLong())).thenReturn(List.of(groupRoles));
 
         groupRolesService.removeRelation(1L, Set.of(1L));
-        verify(groupRolesRepository).deleteAllByIdInBatch(anyCollection());
+        verify(groupRolesRepository).deleteAllById(anyCollection());
     }
 }

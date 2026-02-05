@@ -19,7 +19,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
@@ -34,7 +33,6 @@ import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 @Table(name = "dictionaries")
 public class Dictionary extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
-    @NotBlank
     @Column(nullable = false, length = 50)
     private String name;
 

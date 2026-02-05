@@ -147,7 +147,7 @@ class FileControllerTest {
         when(fileRecordService.upload(any(MultipartFile.class), anyLong())).thenReturn(vo);
 
         MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "Hello World".getBytes());
-        assertThat(mvc.post().uri("/files").param("superiorId", "1")
+        assertThat(mvc.post().uri("/files/upload").param("superiorId", "1")
                 .multipart().file(file).with(csrf().asHeader()))
                 .hasStatusOk()
                 .bodyJson()
@@ -160,7 +160,7 @@ class FileControllerTest {
         when(fileRecordService.upload(any(MultipartFile.class), anyLong())).thenThrow(new RuntimeException());
 
         MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "Hello World".getBytes());
-        assertThat(mvc.post().uri("/files").param("superiorId", "1")
+        assertThat(mvc.post().uri("/files/upload").param("superiorId", "1")
                 .multipart().file(file).with(csrf().asHeader()))
                 .hasStatus5xxServerError();
     }

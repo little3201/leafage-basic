@@ -72,7 +72,7 @@ public class SecurityConfiguration {
 
     private AuthenticationEntryPoint authenticationEntryPoint() {
         AuthenticationEntryPoint authenticationEntryPoint =
-                new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/web-client-oidc");
+                new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/web-client");
 
         MediaTypeRequestMatcher textHtmlMatcher = new MediaTypeRequestMatcher(MediaType.TEXT_HTML);
         textHtmlMatcher.setUseEquals(true);

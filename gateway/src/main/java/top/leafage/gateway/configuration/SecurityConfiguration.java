@@ -65,7 +65,7 @@ public class SecurityConfiguration {
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login.successHandler(new SimpleUrlAuthenticationSuccessHandler(appBaseUri)))
-                .oidcLogout(logout -> logout.backChannel(Customizer.withDefaults()))
+                .logout(Customizer.withDefaults())
                 .oauth2Client(Customizer.withDefaults());
         return http.build();
     }

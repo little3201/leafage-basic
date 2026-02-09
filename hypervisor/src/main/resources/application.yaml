@@ -17,9 +17,9 @@ spring:
 
   security:
     oauth2:
-      resource-server:
+      resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8761/oauth2/jwks
+          issuer-uri: http://localhost:8761
 
 management:
   endpoints:

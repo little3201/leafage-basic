@@ -29,10 +29,9 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
@@ -50,8 +49,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -93,9 +91,10 @@ public class AuthorizationServerConfiguration {
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) {
         http
-                .authorizeHttpRequests((authorize )->
+                .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/actuator/**", "/assets/**", "/login").permitAll()
                                 .anyRequest().authenticated())
+                .rememberMe(Customizer.withDefaults())
                 .formLogin(formLogin -> formLogin.loginPage("/login"));
         return http.build();
     }
@@ -107,6 +106,26 @@ public class AuthorizationServerConfiguration {
         return jdbcUserDetailsManager;
     }
 
+    /**
+     * token中添加 roles，减少token长度
+     *
+     * @return JwtEncodingContext
+     */
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer() {
+        return (context) -> {
+            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
+                context.getClaims().claims((claims) -> {
+                    Set<String> roles = AuthorityUtils.authorityListToSet(context.getPrincipal().getAuthorities())
+                            .stream()
+                            .map(c -> c.replaceFirst("^ROLE_", ""))
+                            .collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
+                    claims.put("roles", roles);
+                });
+            }
+        };
+    }
+
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
         return new JdbcRegisteredClientRepository(jdbcTemplate);
@@ -116,13 +135,6 @@ public class AuthorizationServerConfiguration {
     public JdbcOAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate,
                                                                RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
-    }
-
-    @Bean
-    public JdbcOAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate,
-                                                                             RegisteredClientRepository registeredClientRepository) {
-        // Will be used by the ConsentController
-        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }
 
     @Bean
@@ -138,39 +150,6 @@ public class AuthorizationServerConfiguration {
         return new ImmutableJWKSet<>(jwkSet);
     }
 
-    @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-    }
-
-    @Bean
-    public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().build();
-    }
-
-    @Bean
-    public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer() {
-        return (context) -> {
-            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-                context.getClaims().claims(claims -> {
-                    // 获取原有的 scope，若不存在则初始化
-                    Set<String> scope = Optional.of((Collection<?>) claims.get("scope"))
-                            .stream()
-                            .flatMap(Collection::stream)
-                            .filter(String.class::isInstance)
-                            .map(String.class::cast)
-                            .collect(Collectors.toSet());
-                    claims.put("scope", scope);
-
-                    // 获取用户权限并添加到 scope
-                    context.getPrincipal().getAuthorities().stream()
-                            .map(GrantedAuthority::getAuthority)
-                            .forEach(scope::add);
-                });
-            }
-        };
-    }
-
     private static KeyPair generateRsaKey() {
         KeyPair keyPair;
         try {
@@ -181,5 +160,15 @@ public class AuthorizationServerConfiguration {
             throw new IllegalStateException(ex);
         }
         return keyPair;
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+    }
+
+    @Bean
+    public AuthorizationServerSettings authorizationServerSettings() {
+        return AuthorizationServerSettings.builder().build();
     }
 }

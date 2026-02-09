@@ -15,7 +15,6 @@
 
 package top.leafage.gateway.configuration;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,20 +29,11 @@ import org.springframework.security.web.authentication.DelegatingAuthenticationE
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.CompositeLogoutHandler;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfLogoutHandler;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcherEntry;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -58,11 +48,8 @@ public class SecurityConfiguration {
     private String appBaseUri;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-        CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
-
-        csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName(null);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        CookieCsrfTokenRepository cookieCsrfTokenRepository = new CookieCsrfTokenRepository();
 
         http
                 .authorizeHttpRequests(authorize ->
@@ -70,7 +57,6 @@ public class SecurityConfiguration {
                 )
                 .csrf(csrf ->
                         csrf.csrfTokenRepository(cookieCsrfTokenRepository)
-                                .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                 )
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exceptionHandling ->
@@ -79,10 +65,7 @@ public class SecurityConfiguration {
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login.successHandler(new SimpleUrlAuthenticationSuccessHandler(appBaseUri)))
-                .logout(logout ->
-                        logout.addLogoutHandler(logoutHandler(cookieCsrfTokenRepository))
-                                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-                )
+                .oidcLogout(logout -> logout.backChannel(Customizer.withDefaults()))
                 .oauth2Client(Customizer.withDefaults());
         return http.build();
     }
@@ -90,22 +73,13 @@ public class SecurityConfiguration {
     private AuthenticationEntryPoint authenticationEntryPoint() {
         AuthenticationEntryPoint authenticationEntryPoint =
                 new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/web-client-oidc");
-        MediaTypeRequestMatcher textHtmlMatcher =
-                new MediaTypeRequestMatcher(MediaType.TEXT_HTML);
+
+        MediaTypeRequestMatcher textHtmlMatcher = new MediaTypeRequestMatcher(MediaType.TEXT_HTML);
         textHtmlMatcher.setUseEquals(true);
 
-        LinkedHashMap<RequestMatcher, AuthenticationEntryPoint> entryPoints = new LinkedHashMap<>();
-        entryPoints.put(textHtmlMatcher, authenticationEntryPoint);
+        List<RequestMatcherEntry<AuthenticationEntryPoint>> entryPoints = new ArrayList<>();
+        entryPoints.add(new RequestMatcherEntry<>(textHtmlMatcher, authenticationEntryPoint));
 
-        DelegatingAuthenticationEntryPoint delegatingAuthenticationEntryPoint = new DelegatingAuthenticationEntryPoint(entryPoints);
-        delegatingAuthenticationEntryPoint.setDefaultEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-        return delegatingAuthenticationEntryPoint;
+        return new DelegatingAuthenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), entryPoints);
     }
-
-    private LogoutHandler logoutHandler(CsrfTokenRepository csrfTokenRepository) {
-        return new CompositeLogoutHandler(
-                new SecurityContextLogoutHandler(),
-                new CsrfLogoutHandler(csrfTokenRepository));
-    }
-
 }

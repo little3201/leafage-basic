@@ -27,14 +27,20 @@ public record DictionaryVO(
         String name,
         Long superiorId,
         String description,
+        long count,
         boolean enabled
 ) {
     public static DictionaryVO from(Dictionary entity) {
+        return DictionaryVO.from(entity, 0);
+    }
+
+    public static DictionaryVO from(Dictionary entity, long count) {
         return new DictionaryVO(
                 entity.getId(),
                 entity.getName(),
                 entity.getSuperiorId(),
                 entity.getDescription(),
+                count,
                 entity.isEnabled()
         );
     }

@@ -24,19 +24,27 @@ import top.leafage.hypervisor.assets.domain.Region;
  */
 public record RegionVO(
         Long id,
+        Long superioeId,
         String name,
         String areaCode,
         String postalCode,
         String description,
+        long count,
         boolean enabled
 ) {
     public static RegionVO from(Region entity) {
+        return RegionVO.from(entity, 0);
+    }
+
+    public static RegionVO from(Region entity, long count) {
         return new RegionVO(
                 entity.getId(),
+                entity.getSuperiorId(),
                 entity.getName(),
                 entity.getAreaCode(),
                 entity.getPostalCode(),
                 entity.getDescription(),
+                count,
                 entity.isEnabled()
         );
     }

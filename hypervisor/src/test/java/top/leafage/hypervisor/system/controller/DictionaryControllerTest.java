@@ -32,7 +32,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
-import top.leafage.hypervisor.system.controller.DictionaryController;
 import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
 import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import top.leafage.hypervisor.system.service.DictionaryService;
@@ -70,7 +69,7 @@ class DictionaryControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new DictionaryVO(1L, "test", null, "description", true);
+        vo = new DictionaryVO(1L, "test", null, "description", 2L, true);
 
         dto = new DictionaryDTO();
         dto.setName("gender");

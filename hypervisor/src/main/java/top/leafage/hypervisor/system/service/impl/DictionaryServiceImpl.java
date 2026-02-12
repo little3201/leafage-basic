@@ -64,7 +64,10 @@ public class DictionaryServiceImpl implements DictionaryService {
         spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
 
         return dictionaryRepository.findAll(spec, pageable)
-                .map(DictionaryVO::from);
+                .map(entity -> {
+                    long count = dictionaryRepository.countBySuperiorId(entity.getId());
+                    return DictionaryVO.from(entity, count);
+                });
     }
 
     /**
@@ -97,7 +100,10 @@ public class DictionaryServiceImpl implements DictionaryService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         return dictionaryRepository.findAllBySuperiorId(id)
-                .stream().map(DictionaryVO::from)
+                .stream().map(entity -> {
+                    long count = dictionaryRepository.countBySuperiorId(entity.getId());
+                    return DictionaryVO.from(entity, count);
+                })
                 .toList();
     }
 

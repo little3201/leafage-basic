@@ -15,9 +15,11 @@
 
 package top.leafage.hypervisor.assets.service;
 
+import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
-import top.leafage.common.data.jpa.JpaCrudService;
+
+import java.util.List;
 
 /**
  * region service.
@@ -26,4 +28,11 @@ import top.leafage.common.data.jpa.JpaCrudService;
  */
 public interface RegionService extends JpaCrudService<RegionDTO, RegionVO> {
 
+    /**
+     * 获取子节点
+     *
+     * @param id th pk.
+     * @return 数据集
+     */
+    List<RegionVO> subset(Long id);
 }

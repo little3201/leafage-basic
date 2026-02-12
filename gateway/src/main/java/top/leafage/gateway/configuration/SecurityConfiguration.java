@@ -15,7 +15,7 @@
 
 package top.leafage.gateway.configuration;
 
-import org.jspecify.annotations.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,26 +24,21 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.CompositeLogoutHandler;
-import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfLogoutHandler;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcherEntry;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -57,20 +52,17 @@ public class SecurityConfiguration {
     @Value("${app.base-uri}")
     private String appBaseUri;
 
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-        CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
-
-        csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName(null);
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
                 .authorizeHttpRequests(authorize ->
                         authorize.anyRequest().authenticated()
                 )
                 .csrf(csrf ->
-                        csrf.csrfTokenRepository(cookieCsrfTokenRepository)
-                                .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
+                        csrf.csrfTokenRepository(new CookieCsrfTokenRepository())
                 )
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exceptionHandling ->
@@ -79,33 +71,34 @@ public class SecurityConfiguration {
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login.successHandler(new SimpleUrlAuthenticationSuccessHandler(appBaseUri)))
-                .logout(logout ->
-                        logout.addLogoutHandler(logoutHandler(cookieCsrfTokenRepository))
-                                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-                )
+                .logout(logout -> logout
+                        .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/logout"))
+                        .logoutSuccessHandler(oidcLogoutSuccessHandler()))
                 .oauth2Client(Customizer.withDefaults());
         return http.build();
     }
 
     private AuthenticationEntryPoint authenticationEntryPoint() {
         AuthenticationEntryPoint authenticationEntryPoint =
-                new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/web-client-oidc");
-        MediaTypeRequestMatcher textHtmlMatcher =
-                new MediaTypeRequestMatcher(MediaType.TEXT_HTML);
+                new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/web-client");
+
+        MediaTypeRequestMatcher textHtmlMatcher = new MediaTypeRequestMatcher(MediaType.TEXT_HTML);
         textHtmlMatcher.setUseEquals(true);
 
-        LinkedHashMap<RequestMatcher, AuthenticationEntryPoint> entryPoints = new LinkedHashMap<>();
-        entryPoints.put(textHtmlMatcher, authenticationEntryPoint);
+        List<RequestMatcherEntry<AuthenticationEntryPoint>> entryPoints = new ArrayList<>();
+        entryPoints.add(new RequestMatcherEntry<>(textHtmlMatcher, authenticationEntryPoint));
 
-        DelegatingAuthenticationEntryPoint delegatingAuthenticationEntryPoint = new DelegatingAuthenticationEntryPoint(entryPoints);
-        delegatingAuthenticationEntryPoint.setDefaultEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
-        return delegatingAuthenticationEntryPoint;
+        return new DelegatingAuthenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), entryPoints);
     }
 
-    private LogoutHandler logoutHandler(CsrfTokenRepository csrfTokenRepository) {
-        return new CompositeLogoutHandler(
-                new SecurityContextLogoutHandler(),
-                new CsrfLogoutHandler(csrfTokenRepository));
-    }
+    private LogoutSuccessHandler oidcLogoutSuccessHandler() {
+        OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler =
+                new OidcClientInitiatedLogoutSuccessHandler(this.clientRegistrationRepository);
 
+        // Sets the location that the End-User's User Agent will be redirected to
+        // after the logout has been performed at the Provider
+        oidcLogoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}");
+
+        return oidcLogoutSuccessHandler;
+    }
 }

@@ -81,11 +81,8 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
         return privilegeRepository.findAll(spec, pageable)
                 .map(entity -> {
-                    if (entity.getId() != null) {
-                        long count = privilegeRepository.countBySuperiorId(entity.getId());
-                        return PrivilegeVO.from(entity, count);
-                    }
-                    return PrivilegeVO.from(entity);
+                    long count = privilegeRepository.countBySuperiorId(entity.getId());
+                    return PrivilegeVO.from(entity, count);
                 });
     }
 
@@ -146,7 +143,11 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         Assert.notNull(superiorId, String.format(_MUST_NOT_BE_NULL, "superiorId"));
 
         return privilegeRepository.findAllBySuperiorId(superiorId)
-                .stream().map(PrivilegeVO::from)
+                .stream()
+                .map(entity -> {
+                    long count = privilegeRepository.countBySuperiorId(entity.getId());
+                    return PrivilegeVO.from(entity, count);
+                })
                 .toList();
     }
 

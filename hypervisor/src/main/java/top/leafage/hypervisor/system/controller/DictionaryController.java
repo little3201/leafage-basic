@@ -70,29 +70,29 @@ public class DictionaryController {
     }
 
     /**
-     * subset.
-     *
-     * @param id th pk.
-     * @return th result.
-     */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
-    @GetMapping("/{id}/subset")
-    public ResponseEntity<List<DictionaryVO>> subset(@PathVariable Long id) {
-        List<DictionaryVO> voList = dictionaryService.subset(id);
-        return ResponseEntity.ok(voList);
-    }
-
-    /**
      * fetch.
      *
      * @param id th pk.
-     * @return th result.
+     * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
     @GetMapping("/{id}")
     public ResponseEntity<DictionaryVO> fetch(@PathVariable Long id) {
         DictionaryVO vo = dictionaryService.fetch(id);
         return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * subset.
+     *
+     * @param id th pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
+    @GetMapping("/{id}/subset")
+    public ResponseEntity<List<DictionaryVO>> subset(@PathVariable Long id) {
+        List<DictionaryVO> voList = dictionaryService.subset(id);
+        return ResponseEntity.ok(voList);
     }
 
     /**
@@ -137,7 +137,7 @@ public class DictionaryController {
     /**
      * enable.
      *
-     * @param id the pk..
+     * @param id the pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:enable')")

@@ -3,22 +3,14 @@ spring:
     oauth2:
       client:
         registration:
-          web-client-oidc:
+          web-client:
             provider: spring
             client-id: web-client
             client-secret: secret
             authorization-grant-type: authorization_code
-            redirect-uri: "http://127.0.0.1:8760/login/oauth2/code/{registrationId}"
-            scope: openid,profile
-            client-name: web-client-oidc
-          web-client-authorization-code:
-            provider: spring
-            client-id: web-client
-            client-secret: secret
-            authorization-grant-type: authorization_code
-            redirect-uri: "http://127.0.0.1:8760/authorized"
-            scope: message.read,message.write
-            client-name: web-client-authorization-code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid,profile,offline_access
+            client-name: web-client
         provider:
           spring:
             issuer-uri: http://localhost:8761

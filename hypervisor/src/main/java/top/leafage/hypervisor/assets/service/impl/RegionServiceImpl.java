@@ -30,6 +30,8 @@ import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
 import top.leafage.hypervisor.assets.service.RegionService;
 
+import java.util.List;
+
 /**
  * region service impl.
  *
@@ -62,7 +64,10 @@ public class RegionServiceImpl implements RegionService {
         spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
 
         return regionRepository.findAll(spec, pageable)
-                .map(RegionVO::from);
+                .map(entity -> {
+                    long count = regionRepository.countBySuperiorId(entity.getId());
+                    return RegionVO.from(entity, count);
+                });
     }
 
     /**
@@ -85,6 +90,21 @@ public class RegionServiceImpl implements RegionService {
             throw new EntityNotFoundException("region not found: " + id);
         }
         return regionRepository.updateEnabledById(id) > 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<RegionVO> subset(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        return regionRepository.findAllBySuperiorId(id)
+                .stream().map(entity -> {
+                    long count = regionRepository.countBySuperiorId(entity.getId());
+                    return RegionVO.from(entity, count);
+                })
+                .toList();
     }
 
     /**

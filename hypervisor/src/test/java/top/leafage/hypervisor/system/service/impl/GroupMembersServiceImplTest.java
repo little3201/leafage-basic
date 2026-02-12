@@ -23,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import top.leafage.hypervisor.system.domain.GroupMembers;
 import top.leafage.hypervisor.system.repository.GroupMembersRepository;
-import top.leafage.hypervisor.system.service.impl.GroupMembersServiceImpl;
 
 import java.util.List;
 import java.util.Set;
@@ -88,6 +87,6 @@ class GroupMembersServiceImplTest {
         when(groupMembersRepository.findAllByGroupId(anyLong())).thenReturn(List.of(groupMembers));
 
         groupMembersService.removeRelation(1L, Set.of("test"));
-        verify(groupMembersRepository).deleteAllByIdInBatch(anyCollection());
+        verify(groupMembersRepository).deleteAllById(anyCollection());
     }
 }

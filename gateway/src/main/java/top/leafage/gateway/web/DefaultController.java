@@ -34,10 +34,4 @@ public class DefaultController {
         return "redirect:" + this.appBaseUri;
     }
 
-    // '/authorized' is the registered 'redirect_uri' for authorization_code
-    @GetMapping("/authorized")
-    public String authorized() {
-        return "redirect:" + this.appBaseUri;
-    }
-
 }

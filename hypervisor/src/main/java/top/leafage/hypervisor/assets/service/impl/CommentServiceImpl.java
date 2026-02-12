@@ -60,11 +60,8 @@ public class CommentServiceImpl implements CommentService {
                 buildPredicate(filters, cb, root).orElse(null);
 
         return commentRepository.findAll(spec, pageable).map(entity -> {
-            if (entity.getId() != null) {
-                long count = commentRepository.countByReplier(entity.getId());
-                return CommentVO.from(entity, count);
-            }
-            return CommentVO.from(entity);
+            long count = commentRepository.countBySuperiorId(entity.getId());
+            return CommentVO.from(entity, count);
         });
     }
 
@@ -74,7 +71,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentVO> relation(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        return commentRepository.findAllByPostIdAndReplierIsNull(id)
+        return commentRepository.findAllByPostIdAndSuperiorIdIsNull(id)
                 .stream().map(CommentVO::from)
                 .toList();
     }
@@ -84,13 +81,10 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentVO> replies(Long replier) {
-        return commentRepository.findAllByReplier(replier)
+        return commentRepository.findAllBySuperiorId(replier)
                 .stream().map(entity -> {
-                    if (entity.getId() != null) {
-                        long count = commentRepository.countByReplier(entity.getId());
-                        return CommentVO.from(entity, count);
-                    }
-                    return CommentVO.from(entity);
+                    long count = commentRepository.countBySuperiorId(entity.getId());
+                    return CommentVO.from(entity, count);
                 }).toList();
     }
 

@@ -31,7 +31,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
-import top.leafage.hypervisor.system.controller.RoleController;
 import top.leafage.hypervisor.system.domain.RoleMembers;
 import top.leafage.hypervisor.system.domain.RolePrivileges;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
@@ -261,9 +260,10 @@ class RoleControllerTest {
     void relationMembers_error() {
         doThrow(new RuntimeException()).when(roleMembersService).relation(anyLong(), anySet());
 
-        assertThat(mvc.patch().uri("/roles/{id}/members/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
-                .contentType(MediaType.APPLICATION_JSON).with(csrf().asHeader())
+        assertThat(mvc.patch().uri("/roles/{id}/members", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of("test")))
+                .with(csrf().asHeader())
         )
                 .hasStatus5xxServerError();
     }

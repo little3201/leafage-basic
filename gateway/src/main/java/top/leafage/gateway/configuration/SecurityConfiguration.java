@@ -15,6 +15,7 @@
 
 package top.leafage.gateway.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,13 +24,17 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcherEntry;
 
@@ -47,16 +52,17 @@ public class SecurityConfiguration {
     @Value("${app.base-uri}")
     private String appBaseUri;
 
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        CookieCsrfTokenRepository cookieCsrfTokenRepository = new CookieCsrfTokenRepository();
-
         http
                 .authorizeHttpRequests(authorize ->
                         authorize.anyRequest().authenticated()
                 )
                 .csrf(csrf ->
-                        csrf.csrfTokenRepository(cookieCsrfTokenRepository)
+                        csrf.csrfTokenRepository(new CookieCsrfTokenRepository())
                 )
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exceptionHandling ->
@@ -65,7 +71,9 @@ public class SecurityConfiguration {
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login.successHandler(new SimpleUrlAuthenticationSuccessHandler(appBaseUri)))
-                .logout(Customizer.withDefaults())
+                .logout(logout -> logout
+                        .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/logout"))
+                        .logoutSuccessHandler(oidcLogoutSuccessHandler()))
                 .oauth2Client(Customizer.withDefaults());
         return http.build();
     }
@@ -81,5 +89,16 @@ public class SecurityConfiguration {
         entryPoints.add(new RequestMatcherEntry<>(textHtmlMatcher, authenticationEntryPoint));
 
         return new DelegatingAuthenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), entryPoints);
+    }
+
+    private LogoutSuccessHandler oidcLogoutSuccessHandler() {
+        OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler =
+                new OidcClientInitiatedLogoutSuccessHandler(this.clientRegistrationRepository);
+
+        // Sets the location that the End-User's User Agent will be redirected to
+        // after the logout has been performed at the Provider
+        oidcLogoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}");
+
+        return oidcLogoutSuccessHandler;
     }
 }

@@ -140,20 +140,20 @@ public class RegionServiceImpl implements RegionService {
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(existing -> {
                     if (!existing.getName().equals(dto.getName())) {
-                        return Mono.just(existing);
+                        return regionRepository.existsByName(dto.getName())
+                                .flatMap(exists -> {
+                                    if (exists) {
+                                        return Mono.error(new IllegalArgumentException("region name already exists: " + dto.getName()));
+                                    }
+                                    // Copy the DTO to the existing entity if names differ
+                                    copier.copy(dto, existing, null);
+                                    return regionRepository.save(existing);
+                                });
+                    } else {
+                        // If the names are the same, no need to check the database
+                        copier.copy(dto, existing, null);
+                        return regionRepository.save(existing);
                     }
-
-                    return regionRepository.existsByName(dto.getName())
-                            .flatMap(exists -> {
-                                if (exists) {
-                                    return Mono.error(new IllegalArgumentException("region name already exists: " + dto.getName()));
-                                }
-                                return Mono.just(existing);
-                            });
-                })
-                .flatMap(existing -> {
-                    copier.copy(dto, existing, null);
-                    return regionRepository.save(existing);
                 })
                 .map(RegionVO::from);
     }
@@ -164,6 +164,7 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         return regionRepository.existsById(id)
                 .flatMap(exists -> {
                     if (!exists) {

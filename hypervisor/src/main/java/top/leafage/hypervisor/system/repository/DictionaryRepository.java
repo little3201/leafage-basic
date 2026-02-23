@@ -30,10 +30,10 @@ import top.leafage.hypervisor.system.domain.Dictionary;
 public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> {
 
     /**
-     * 是否已存在
+     * Checks if a record exists by name.
      *
-     * @param name 名称
-     * @return true-是，false-否
+     * @param name The name of the record.
+     * @return result.
      */
     Mono<Boolean> existsByName(String name);
 

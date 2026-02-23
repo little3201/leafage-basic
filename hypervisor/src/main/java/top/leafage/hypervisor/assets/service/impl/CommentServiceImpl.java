@@ -17,15 +17,19 @@
 
 package top.leafage.hypervisor.assets.service.impl;
 
+import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.hypervisor.assets.domain.Comment;
 import top.leafage.hypervisor.assets.domain.dto.CommentDTO;
 import top.leafage.hypervisor.assets.domain.vo.CommentVO;
 import top.leafage.hypervisor.assets.repository.CommentRepository;
 import top.leafage.hypervisor.assets.service.CommentService;
+
+import java.util.NoSuchElementException;
 
 
 /**
@@ -36,6 +40,7 @@ import top.leafage.hypervisor.assets.service.CommentService;
 @Service
 public class CommentServiceImpl implements CommentService {
 
+    private static final BeanCopier copier = BeanCopier.create(CommentDTO.class, Comment.class, false);
     private final CommentRepository commentRepository;
 
     /**
@@ -79,4 +84,29 @@ public class CommentServiceImpl implements CommentService {
                 .map(CommentVO::from);
     }
 
+    @Override
+    public Mono<CommentVO> modify(Long id, CommentDTO dto) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        return commentRepository.findById(id)
+                .switchIfEmpty(Mono.error(NoSuchElementException::new))
+                .flatMap(existing -> {
+                    copier.copy(dto, existing, null);
+                    return commentRepository.save(existing);
+                })
+                .map(CommentVO::from);
+    }
+
+    @Override
+    public Mono<Void> remove(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        return commentRepository.existsById(id)
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return Mono.error(new NoSuchElementException("comment not found: " + id));
+                    }
+                    return commentRepository.deleteById(id);
+                });
+    }
 }

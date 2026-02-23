@@ -18,14 +18,15 @@
                 <img alt="login_illustration" height="100%"
                      src="/assets/svgs/hello_ccwj.svg" th:src="@{/assets/svgs/hello_ccwj.svg}" width="100%">
             </div>
-            <div class="bg-white rounded-xl xl:bg-transparent flex min-h-full flex-col justify-center px-6 py-12 xl:px-8 ">
-                <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+            <div class="bg-white rounded-xl xl:bg-transparent flex min-h-full flex-col justify-center px-6 py-12">
+                <div class="sm:mx-auto sm:w-full sm:max-w-1/2 min-w-sm">
                     <div class="text-center">
                         <img alt="logo" class="mx-auto h-20 w-auto" height="64" src="/assets/svgs/logo.svg"
                              style="display: inline-block"
                              th:src="@{/assets/svgs/logo.svg}">
-                        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign
-                            in to your account</h2>
+                        <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
+                            Sign in to your account
+                        </h2>
                     </div>
 
                     <div class="my-10">
@@ -34,33 +35,38 @@
                                 <label class="block font-medium text-gray-900" for="username">Username</label>
                                 <div class="mt-2">
                                     <input autocomplete="username"
-                                           class="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"
+                                           class="block w-full rounded-xl bg-white px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"
                                            id="username" name="username" required
                                            type="text"/>
                                 </div>
                             </div>
 
                             <div>
-                                <div class="flex items-center justify-between">
-                                    <label class="block font-medium text-gray-900"
-                                           for="password">Password</label>
-                                    <div class="text-sm">
-                                        <a class="font-semibold text-blue-600 hover:text-blue-500"
-                                           href="#">Forgot
-                                            password?</a>
-                                    </div>
-                                </div>
+                                <label class="block font-medium text-gray-900"
+                                       for="password">Password</label>
                                 <div class="mt-2">
                                     <input autocomplete="current-password"
-                                           class="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"
+                                           class="block w-full rounded-xl bg-white px-3 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"
                                            id="password" name="password"
                                            required
                                            type="password"/>
                                 </div>
                             </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="rememberMe" name="rememberMe"
+                                           class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                    <label class="block text-sm hover:text-blue-500 ml-1" for="rememberMe">Remember me?</label>
+                                </div>
+                                <div>
+                                    <a class="text-sm hover:text-blue-500" href="#">
+                                        Forgot your password?
+                                    </a>
+                                </div>
+                            </div>
 
                             <div>
-                                <button class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 cursor-pointer"
+                                <button class="flex w-full justify-center rounded-xl bg-blue-600 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 cursor-pointer"
                                         type="submit">
                                     Sign in
                                 </button>
@@ -75,7 +81,7 @@
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 mt-6">
-                            <button class="flex w-full justify-center space-x-4 rounded-md px-3 py-2 text-sm/6 font-semibold ring ring-gray-300 shadow-xs hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-200 cursor-pointer"
+                            <button class="flex w-full justify-center space-x-4 rounded-xl px-3 py-2 text-sm/6 font-semibold ring ring-gray-300 shadow-xs hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-200 cursor-pointer"
                                     title="google"
                                     type="button">
                                 <svg aria-hidden="true" class="w-6 h-6" viewBox="0 0 24 24">
@@ -90,7 +96,7 @@
                                 </svg>
                                 <span>Google</span>
                             </button>
-                            <button class="flex w-full justify-center space-x-4 rounded-md px-3 py-2 text-sm/6 font-semibold ring ring-gray-300 shadow-xs hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-200 cursor-pointer"
+                            <button class="flex w-full justify-center space-x-4 rounded-xl px-3 py-2 text-sm/6 font-semibold ring ring-gray-300 shadow-xs hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-200 cursor-pointer"
                                     title="google"
                                     type="button">
                                 <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">

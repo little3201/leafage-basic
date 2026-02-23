@@ -112,20 +112,20 @@ public class MessageServiceImpl implements MessageService {
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(existing -> {
                     if (!existing.getTitle().equals(dto.getTitle())) {
-                        return Mono.just(existing);
+                        return messageRepository.existsByTitle(dto.getTitle())
+                                .flatMap(exists -> {
+                                    if (exists) {
+                                        return Mono.error(new IllegalArgumentException("title already exists: " + dto.getTitle()));
+                                    }
+                                    // Copy the DTO to the existing entity if names differ
+                                    copier.copy(dto, existing, null);
+                                    return messageRepository.save(existing);
+                                });
+                    } else {
+                        // If the names are the same, no need to check the database
+                        copier.copy(dto, existing, null);
+                        return messageRepository.save(existing);
                     }
-
-                    return messageRepository.existsByTitle(dto.getTitle())
-                            .flatMap(exists -> {
-                                if (exists) {
-                                    return Mono.error(new IllegalArgumentException("title already exists: " + dto.getTitle()));
-                                }
-                                return Mono.just(existing);
-                            });
-                })
-                .flatMap(existing -> {
-                    copier.copy(dto, existing, null);
-                    return messageRepository.save(existing);
                 })
                 .map(MessageVO::from);
     }

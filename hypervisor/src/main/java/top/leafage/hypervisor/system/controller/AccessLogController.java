@@ -16,6 +16,7 @@
 package top.leafage.hypervisor.system.controller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import top.leafage.hypervisor.system.domain.vo.AccessLogVO;
@@ -48,6 +49,7 @@ public class AccessLogController {
      * @param size a int
      * @return 查询到数据集，异常时返回204
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_access_logs')")
     @GetMapping
     public Mono<Page<AccessLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                             String sortBy, boolean descending, String filters) {
@@ -60,6 +62,7 @@ public class AccessLogController {
      * @param id the pk. ID
      * @return 查询的数据
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_access_logs')")
     @GetMapping("/{id}")
     public Mono<AccessLogVO> fetch(@PathVariable Long id) {
         return accessLogService.fetch(id);
@@ -71,6 +74,7 @@ public class AccessLogController {
      * @param id user the pk.
      * @return 200状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_access_logs:remove')")
     @DeleteMapping("/{id}")
     public Mono<Void> remove(@PathVariable Long id) {
         return accessLogService.remove(id);
@@ -81,6 +85,7 @@ public class AccessLogController {
      *
      * @return 200状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_access_logs:clear')")
     @DeleteMapping("/clear")
     public Mono<Void> clear() {
         return accessLogService.clear();

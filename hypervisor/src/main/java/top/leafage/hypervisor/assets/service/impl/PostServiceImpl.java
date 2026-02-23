@@ -116,20 +116,20 @@ public class PostServiceImpl implements PostService {
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(existing -> {
                     if (!existing.getTitle().equals(dto.getTitle())) {
-                        return Mono.just(existing);
+                        return postRepository.existsByTitle(dto.getTitle())
+                                .flatMap(exists -> {
+                                    if (exists) {
+                                        return Mono.error(new IllegalArgumentException("post title already exists: " + dto.getTitle()));
+                                    }
+                                    // Copy the DTO to the existing entity if names differ
+                                    copier.copy(dto, existing, null);
+                                    return postRepository.save(existing);
+                                });
+                    } else {
+                        // If the names are the same, no need to check the database
+                        copier.copy(dto, existing, null);
+                        return postRepository.save(existing);
                     }
-
-                    return postRepository.existsByTitle(dto.getTitle())
-                            .flatMap(exists -> {
-                                if (exists) {
-                                    return Mono.error(new IllegalArgumentException("post title already exists: " + dto.getTitle()));
-                                }
-                                return Mono.just(existing);
-                            });
-                })
-                .flatMap(existing -> {
-                    copier.copy(dto, existing, null);
-                    return postRepository.save(existing);
                 })
                 .map(PostVO::from);
     }
@@ -140,6 +140,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         return postRepository.existsById(id)
                 .flatMap(exists -> {
                     if (!exists) {

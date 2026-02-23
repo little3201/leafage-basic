@@ -58,6 +58,7 @@ public class PrivilegeController {
      * @param size 大小
      * @return 查询的数据集
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges')")
     @GetMapping
     public Mono<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                             String sortBy, boolean descending, String filters) {
@@ -80,6 +81,7 @@ public class PrivilegeController {
      * @param id the pk.
      * @return 查询的数据
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges')")
     @GetMapping("/{id}")
     public Mono<PrivilegeVO> fetch(@PathVariable Long id) {
         return privilegeService.fetch(id);
@@ -90,20 +92,10 @@ public class PrivilegeController {
      *
      * @return 查询到的数据，否则返回空
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges')")
     @GetMapping("/{superiorId}/subset")
     public Flux<PrivilegeVO> subset(@PathVariable Long superiorId) {
         return privilegeService.subset(superiorId);
-    }
-
-    /**
-     * 添加
-     *
-     * @param dto 要添加的数据
-     * @return 添加后的信息
-     */
-    @PostMapping
-    public Mono<PrivilegeVO> create(@RequestBody @Valid PrivilegeDTO dto) {
-        return privilegeService.create(dto);
     }
 
     /**
@@ -113,6 +105,7 @@ public class PrivilegeController {
      * @param dto 要修改的数据
      * @return 修改后的信息
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:modify')")
     @PutMapping("/{id}")
     public Mono<PrivilegeVO> modify(@PathVariable Long id, @RequestBody @Valid PrivilegeDTO dto) {
         return privilegeService.modify(id, dto);

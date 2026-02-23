@@ -54,6 +54,7 @@ public class UserController {
      * @param size a int
      * @return a {@link org.springframework.http.ResponseEntity} object
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users')")
     @GetMapping
     public Mono<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                        String sortBy, boolean descending, String filters) {
@@ -66,6 +67,7 @@ public class UserController {
      * @param id user the pk.
      * @return 查询的数据
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users')")
     @GetMapping("/{id}")
     public Mono<UserVO> fetch(@PathVariable Long id) {
         return userService.fetch(id);
@@ -77,6 +79,7 @@ public class UserController {
      * @param dto 要添加的数据
      * @return 修改后的信息
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:create')")
     @PostMapping
     public Mono<UserVO> create(@RequestBody @Valid UserDTO dto) {
         return userService.create(dto);
@@ -89,6 +92,7 @@ public class UserController {
      * @param dto 要修改的数据
      * @return 修改后的信息
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:modify')")
     @PutMapping("/{id}")
     public Mono<UserVO> modify(@PathVariable Long id, @RequestBody @Valid UserDTO dto) {
         return userService.modify(id, dto);
@@ -100,6 +104,7 @@ public class UserController {
      * @param id user the pk.
      * @return 200状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:remove')")
     @DeleteMapping("/{id}")
     public Mono<Void> remove(@PathVariable Long id) {
         return userService.remove(id);

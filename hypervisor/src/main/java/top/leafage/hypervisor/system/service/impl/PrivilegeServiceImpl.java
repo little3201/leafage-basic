@@ -153,20 +153,20 @@ public class PrivilegeServiceImpl implements PrivilegeService {
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(existing -> {
                     if (!existing.getName().equals(dto.getName())) {
-                        return Mono.just(existing);
+                        return privilegeRepository.existsByName(dto.getName())
+                                .flatMap(exists -> {
+                                    if (exists) {
+                                        return Mono.error(new IllegalArgumentException("privilege name already exists: " + dto.getName()));
+                                    }
+                                    // Copy the DTO to the existing entity if names differ
+                                    copier.copy(dto, existing, null);
+                                    return privilegeRepository.save(existing);
+                                });
+                    } else {
+                        // If the names are the same, no need to check the database
+                        copier.copy(dto, existing, null);
+                        return privilegeRepository.save(existing);
                     }
-
-                    return privilegeRepository.existsByName(dto.getName())
-                            .flatMap(exists -> {
-                                if (exists) {
-                                    return Mono.error(new IllegalArgumentException("privilege name already exists: " + dto.getName()));
-                                }
-                                return Mono.just(existing);
-                            });
-                })
-                .flatMap(existing -> {
-                    copier.copy(dto, existing, null);
-                    return privilegeRepository.save(existing);
                 })
                 .map(PrivilegeVO::from);
     }

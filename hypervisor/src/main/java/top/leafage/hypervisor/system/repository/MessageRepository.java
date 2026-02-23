@@ -29,10 +29,10 @@ import top.leafage.hypervisor.system.domain.Message;
 public interface MessageRepository extends R2dbcRepository<Message, Long> {
 
     /**
-     * 是否已存在
+     * Checks if a record exists by title.
      *
-     * @param title 标题
-     * @return true-是，false-否
+     * @param title The title of the record.
+     * @return result.
      */
     Mono<Boolean> existsByTitle(String title);
 

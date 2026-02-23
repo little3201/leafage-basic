@@ -93,7 +93,7 @@ public class FileController {
      * @return 如果添加数据成功，返回添加后的信息，否则返回417状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_files:upload')")
-    @PostMapping
+    @PostMapping("/upload")
     public Mono<FileRecordVO> upload(FilePart file) {
         return fileRecordService.upload(file);
     }

@@ -67,6 +67,7 @@ public class GroupController {
      * @param size 大小
      * @return 查询的数据集
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups')")
     @GetMapping
     public Mono<Page<GroupVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                         String sortBy, boolean descending, String filters) {
@@ -79,6 +80,7 @@ public class GroupController {
      * @param id the pk. ID
      * @return 查询的数据
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups')")
     @GetMapping("/{id}")
     public Mono<GroupVO> fetch(@PathVariable Long id) {
         return groupService.fetch(id);
@@ -90,6 +92,7 @@ public class GroupController {
      * @param dto 要添加的数据
      * @return 添加后的信息
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:create')")
     @PostMapping
     public Mono<GroupVO> create(@RequestBody @Valid GroupDTO dto) {
         return groupService.create(dto);
@@ -102,6 +105,7 @@ public class GroupController {
      * @param dto 要修改的数据
      * @return 修改后的信息，否则返回417状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:modify')")
     @PutMapping("/{id}")
     public Mono<GroupVO> modify(@PathVariable Long id, @RequestBody @Valid GroupDTO dto) {
         return groupService.modify(id, dto);
@@ -113,6 +117,7 @@ public class GroupController {
      * @param id the pk.
      * @return 200状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:remove')")
     @DeleteMapping("/{id}")
     public Mono<Void> remove(@PathVariable Long id) {
         return groupService.remove(id);
@@ -124,7 +129,7 @@ public class GroupController {
      * @param id The record ID.
      * @return 200 status code if successful, or 417 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:enable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:enable')")
     @PatchMapping("/{id}")
     public Mono<Boolean> enable(@PathVariable Long id) {
         return groupService.enable(id);
@@ -147,6 +152,7 @@ public class GroupController {
      * @param id 组id
      * @return 查询到的数据集
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
     @PatchMapping("/{id}/privileges/{privilegeId}")
     public Mono<GroupPrivileges> relation(@PathVariable Long id, @PathVariable Long privilegeId,
                                           @RequestBody Set<String> actions) {
@@ -159,6 +165,7 @@ public class GroupController {
      * @param id 组id
      * @return 查询到的数据集
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
     @DeleteMapping("/{id}/privileges/{privilegeId}")
     public Mono<Void> removeRelation(@PathVariable Long id, @PathVariable Long privilegeId,
                                      Set<String> actions) {
@@ -170,7 +177,7 @@ public class GroupController {
      *
      * @return 200 status code if successful, or 417 status code if an error occurs.
      */
-    @PreAuthorize("hasAuthority('SCOPE_groups:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:import')")
     @PostMapping("/import")
     public Flux<GroupVO> importFromFile(FilePart file) {
         return ReactiveExcelReader.read(file, GroupDTO.class)

@@ -114,20 +114,20 @@ public class UserServiceImpl implements UserService {
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(existing -> {
                     if (existing.getUsername().equals(dto.getUsername())) {
-                        return Mono.just(existing);
+                        return userRepository.existsByUsername(dto.getUsername())
+                                .flatMap(exists -> {
+                                    if (exists) {
+                                        return Mono.error(new IllegalArgumentException("username already exists: " + dto.getUsername()));
+                                    }
+                                    // Copy the DTO to the existing entity if names differ
+                                    copier.copy(dto, existing, null);
+                                    return userRepository.save(existing);
+                                });
+                    } else {
+                        // If the names are the same, no need to check the database
+                        copier.copy(dto, existing, null);
+                        return userRepository.save(existing);
                     }
-
-                    return userRepository.existsByUsername(dto.getUsername())
-                            .flatMap(exists -> {
-                                if (exists) {
-                                    return Mono.error(new IllegalArgumentException("username already exists: " + dto.getUsername()));
-                                }
-                                return Mono.just(existing);
-                            });
-                })
-                .flatMap(existing -> {
-                    copier.copy(dto, existing, null);
-                    return userRepository.save(existing);
                 })
                 .map(UserVO::from);
     }

@@ -31,10 +31,10 @@ import top.leafage.hypervisor.system.domain.User;
 public interface UserRepository extends R2dbcRepository<User, Long> {
 
     /**
-     * 是否已存在
+     * Checks if a record exists by username.
      *
-     * @param username user
-     * @return true-是，false-否
+     * @param username The username of the record.
+     * @return result.
      */
     Mono<Boolean> existsByUsername(String username);
 

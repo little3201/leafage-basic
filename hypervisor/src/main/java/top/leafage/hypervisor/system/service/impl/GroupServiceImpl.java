@@ -127,20 +127,20 @@ public class GroupServiceImpl implements GroupService {
                 .switchIfEmpty(Mono.error(NoSuchElementException::new))
                 .flatMap(existing -> {
                     if (!existing.getName().equals(dto.getName())) {
-                        return Mono.just(existing);
+                        return groupRepository.existsByName(dto.getName())
+                                .flatMap(exists -> {
+                                    if (exists) {
+                                        return Mono.error(new IllegalArgumentException("group name already exists: " + dto.getName()));
+                                    }
+                                    // Copy the DTO to the existing entity if names differ
+                                    copier.copy(dto, existing, null);
+                                    return groupRepository.save(existing);
+                                });
+                    } else {
+                        // If the names are the same, no need to check the database
+                        copier.copy(dto, existing, null);
+                        return groupRepository.save(existing);
                     }
-
-                    return groupRepository.existsByName(dto.getName())
-                            .flatMap(exists -> {
-                                if (exists) {
-                                    return Mono.error(new IllegalArgumentException("group name already exists: " + dto.getName()));
-                                }
-                                return Mono.just(existing);
-                            });
-                })
-                .flatMap(existing -> {
-                    copier.copy(dto, existing, null);
-                    return groupRepository.save(existing);
                 })
                 .map(GroupVO::from);
     }

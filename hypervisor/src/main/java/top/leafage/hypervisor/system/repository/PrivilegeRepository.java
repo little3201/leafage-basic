@@ -38,10 +38,10 @@ public interface PrivilegeRepository extends R2dbcRepository<Privilege, Long> {
     Flux<Privilege> findAllBySuperiorId(Long superiorId);
 
     /**
-     * 是否已存在
+     * Checks if a record exists by name.
      *
-     * @param name 名称
-     * @return true-是，false-否
+     * @param name The name of the record.
+     * @return result.
      */
     Mono<Boolean> existsByName(String name);
 

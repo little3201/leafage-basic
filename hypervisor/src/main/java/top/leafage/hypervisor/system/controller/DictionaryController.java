@@ -54,6 +54,7 @@ public class DictionaryController {
      * @param size 大小
      * @return 查询的数据集
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
     @GetMapping
     public Mono<Page<DictionaryVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                              String sortBy, boolean descending, String filters) {
@@ -66,6 +67,7 @@ public class DictionaryController {
      * @param id the pk.
      * @return 查询的数据
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
     @GetMapping("/{id}")
     public Mono<DictionaryVO> fetch(@PathVariable Long id) {
         return dictionaryService.fetch(id);
@@ -88,6 +90,7 @@ public class DictionaryController {
      * @param dto 要添加的数据
      * @return 添加后的信息
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:create')")
     @PostMapping
     public Mono<DictionaryVO> create(@RequestBody @Valid DictionaryDTO dto) {
         return dictionaryService.create(dto);
@@ -100,6 +103,7 @@ public class DictionaryController {
      * @param dto 要修改的数据
      * @return 修改后的信息
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:modify')")
     @PutMapping("/{id}")
     public Mono<DictionaryVO> modify(@PathVariable Long id, @RequestBody @Valid DictionaryDTO dto) {
         return dictionaryService.modify(id, dto);
@@ -111,6 +115,7 @@ public class DictionaryController {
      * @param id the pk.
      * @return 200状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:remove')")
     @DeleteMapping("/{id}")
     public Mono<Void> remove(@PathVariable Long id) {
         return dictionaryService.remove(id);
@@ -122,7 +127,7 @@ public class DictionaryController {
      * @param id The record ID.
      * @return 200 status code if successful, or 417 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:enable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:enable')")
     @PatchMapping("/{id}")
     public Mono<Boolean> enable(@PathVariable Long id) {
         return dictionaryService.enable(id);

@@ -33,6 +33,7 @@ import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.repository.FileRecordRepository;
 import top.leafage.hypervisor.assets.service.FileRecordService;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 
@@ -88,7 +89,14 @@ public class FileRecordServiceImpl implements FileRecordService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        return fileRecordRepository.deleteById(id);
+
+        return fileRecordRepository.existsById(id)
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return Mono.error(new NoSuchElementException("file record not found: " + id));
+                    }
+                    return fileRecordRepository.deleteById(id);
+                });
     }
 
     @Override

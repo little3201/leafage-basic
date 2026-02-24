@@ -24,18 +24,24 @@ import top.leafage.hypervisor.system.domain.Dictionary;
  */
 public record DictionaryVO(
         Long id,
-        String name,
         Long superiorId,
+        String name,
         String description,
-        boolean enabled
+        boolean enabled,
+        long count
 ) {
     public static DictionaryVO from(Dictionary entity) {
+        return from(entity, 0);
+    }
+
+    public static DictionaryVO from(Dictionary entity, long count) {
         return new DictionaryVO(
                 entity.getId(),
-                entity.getName(),
                 entity.getSuperiorId(),
+                entity.getName(),
                 entity.getDescription(),
-                entity.isEnabled()
+                entity.isEnabled(),
+                count
         );
     }
 }

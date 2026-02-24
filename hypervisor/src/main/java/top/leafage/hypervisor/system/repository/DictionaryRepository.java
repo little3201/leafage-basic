@@ -38,6 +38,14 @@ public interface DictionaryRepository extends R2dbcRepository<Dictionary, Long> 
     Mono<Boolean> existsByName(String name);
 
     /**
+     * count by superiorId
+     *
+     * @param superiorId the superior id.
+     * @return the result.
+     */
+    Mono<Long> countBySuperiorId(Long superiorId);
+
+    /**
      * 查询下级
      *
      * @param superiorId a {@link java.lang.Long} object

@@ -25,6 +25,7 @@ import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.hypervisor.system.domain.Dictionary;
@@ -64,12 +65,15 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Mono<Page<DictionaryVO>> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
         Criteria criteria = buildCriteria(filters, Dictionary.class);
-        criteria = criteria.and("superiorId").isNull();
+        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
+            criteria = criteria.and("superiorId").isNull();
+        }
 
         return r2dbcEntityTemplate.select(Dictionary.class)
                 .matching(Query.query(criteria).with(pageable))
                 .all()
-                .map(DictionaryVO::from)
+                .flatMapSequential(entity -> dictionaryRepository.countBySuperiorId(entity.getId())
+                        .map(count -> DictionaryVO.from(entity, count)))
                 .collectList()
                 .zipWith(r2dbcEntityTemplate.count(Query.query(criteria), Dictionary.class))
                 .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
@@ -83,7 +87,8 @@ public class DictionaryServiceImpl implements DictionaryService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         return dictionaryRepository.findBySuperiorId(id)
-                .map(DictionaryVO::from);
+                .flatMap(entity -> dictionaryRepository.countBySuperiorId(entity.getId())
+                        .map(count -> DictionaryVO.from(entity, count)));
     }
 
     /**

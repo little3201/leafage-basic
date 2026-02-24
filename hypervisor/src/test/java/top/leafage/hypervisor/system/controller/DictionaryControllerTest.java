@@ -68,7 +68,7 @@ class DictionaryControllerTest {
         dto.setName("test");
         dto.setDescription("描述");
 
-        vo = new DictionaryVO(1L, "test", null, "description", true);
+        vo = new DictionaryVO(1L, "test", null, "description", true, 0L);
     }
 
     @Test

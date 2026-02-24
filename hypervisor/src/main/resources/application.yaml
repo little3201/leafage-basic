@@ -22,7 +22,3 @@ management:
   metrics:
     tags:
       application: ${spring.application.name}
-
-logging:
-  level:
-    org.springframework.r2dbc.core: DEBUG

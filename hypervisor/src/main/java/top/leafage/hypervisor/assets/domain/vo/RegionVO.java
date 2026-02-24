@@ -28,16 +28,22 @@ public record RegionVO(
         String areaCode,
         String postalCode,
         String description,
-        boolean enabled
+        boolean enabled,
+        long count
 ) {
     public static RegionVO from(Region entity) {
+        return from(entity, 0);
+    }
+
+    public static RegionVO from(Region entity, long count) {
         return new RegionVO(
                 entity.getId(),
                 entity.getName(),
                 entity.getAreaCode(),
                 entity.getPostalCode(),
                 entity.getDescription(),
-                entity.isEnabled()
+                entity.isEnabled(),
+                count
         );
     }
 }

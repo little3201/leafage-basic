@@ -27,15 +27,20 @@ import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.leafage.common.data.domain.TreeNode;
 import top.leafage.hypervisor.assets.domain.Region;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
 import top.leafage.hypervisor.assets.service.RegionService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+
+import static top.leafage.common.data.reactive.ReactiveModelToTreeNodeConverter.toTree;
 
 /**
  * region service impl
@@ -66,12 +71,15 @@ public class RegionServiceImpl implements RegionService {
     public Mono<Page<RegionVO>> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
         Criteria criteria = buildCriteria(filters, Region.class);
-        criteria = criteria.and("superiorId").isNull();
+        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
+            criteria = criteria.and("superiorId").isNull();
+        }
 
         return r2dbcEntityTemplate.select(Region.class)
                 .matching(Query.query(criteria).with(pageable))
                 .all()
-                .map(RegionVO::from)
+                .flatMapSequential(entity -> regionRepository.countBySuperiorId(entity.getId())
+                        .map(count -> RegionVO.from(entity, count)))
                 .collectList()
                 .zipWith(r2dbcEntityTemplate.count(Query.query(criteria), Region.class))
                 .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
@@ -111,7 +119,8 @@ public class RegionServiceImpl implements RegionService {
         Assert.notNull(superiorId, "superiorId must not be null.");
 
         return regionRepository.findBySuperiorId(superiorId)
-                .map(RegionVO::from);
+                .flatMap(entity -> regionRepository.countBySuperiorId(entity.getId())
+                        .map(count -> RegionVO.from(entity, count)));
     }
 
     /**

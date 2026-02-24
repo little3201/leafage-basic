@@ -41,6 +41,8 @@ public interface RegionRepository extends R2dbcRepository<Region, Long> {
      */
     Mono<Boolean> existsByName(String name);
 
+    Mono<Long> countBySuperiorId(Long superiorId);
+
     /**
      * 查询下级
      *

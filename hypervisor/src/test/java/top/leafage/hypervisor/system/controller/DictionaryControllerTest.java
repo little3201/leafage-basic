@@ -32,7 +32,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.leafage.hypervisor.system.controller.DictionaryController;
 import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
 import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
@@ -68,7 +67,7 @@ class DictionaryControllerTest {
         dto.setName("test");
         dto.setDescription("描述");
 
-        vo = new DictionaryVO(1L, "test", null, "description", true, 0L);
+        vo = new DictionaryVO(1L, null, "test", "description", true, 0L);
     }
 
     @Test

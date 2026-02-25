@@ -40,9 +40,8 @@ import top.leafage.hypervisor.system.repository.GroupPrivilegesRepository;
 import top.leafage.hypervisor.system.repository.PrivilegeRepository;
 import top.leafage.hypervisor.system.service.PrivilegeService;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static top.leafage.common.data.reactive.ReactiveModelToTreeNodeConverter.toTree;
 
@@ -103,10 +102,27 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         return groupMembersRepository.findByUsername(username)
                 .map(GroupMembers::getGroupId)
                 .flatMap(groupPrivilegesRepository::findByGroupId)
-                .map(GroupPrivileges::getPrivilegeId)
-                .concatMap(this::expandPrivileges)
-                .collectMap(Privilege::getId)
-                .flatMap(privMap -> toTree(Flux.fromIterable(privMap.values()), meta));
+                .collectList()
+                .flatMap(groupPrivileges -> {
+                    // 构建 privilegeId -> Set<String> actions
+                    Map<Long, Set<String>> actionsMap = groupPrivileges.stream()
+                            .collect(Collectors.toMap(GroupPrivileges::getPrivilegeId,
+                                    gp -> gp.getActions() == null
+                                            ? Collections.emptySet()
+                                            : new HashSet<>(gp.getActions()),
+                                    (a, b) -> {
+                                        a.addAll(b);  // 同一 privilege 多条记录合并
+                                        return a;
+                                    }
+                            ));
+
+                    return Flux.fromIterable(actionsMap.keySet())
+                            .concatMap(id -> expandPrivileges(id, actionsMap))
+                            .collectMap(Privilege::getId)
+                            .flatMap(privMap ->
+                                    toTree(Flux.fromIterable(privMap.values()), meta)
+                            );
+                });
     }
 
     @Override
@@ -171,15 +187,21 @@ public class PrivilegeServiceImpl implements PrivilegeService {
                 .map(PrivilegeVO::from);
     }
 
-    private Flux<Privilege> expandPrivileges(Long privilegeId) {
+    private Flux<Privilege> expandPrivileges(Long privilegeId, Map<Long, Set<String>> actionsMap) {
         return privilegeRepository.findById(privilegeId)
                 .filter(Privilege::isEnabled)
                 .flatMapMany(privilege -> {
+                    // 如果当前 privilege 是 group 直接拥有的
+                    if (actionsMap.containsKey(privilege.getId())) {
+                        privilege.setActions(actionsMap.get(privilege.getId()));
+                    }
+
                     if (privilege.getSuperiorId() == null) {
                         return Flux.just(privilege);
                     }
-                    return expandPrivileges(privilege.getSuperiorId())
-                            .concatWith(Mono.just(privilege));   // 先上级，再自己
+
+                    return expandPrivileges(privilege.getSuperiorId(), actionsMap)
+                            .concatWith(Mono.just(privilege)); // 先父级，再自己先上级，再自己
                 })
                 .switchIfEmpty(Flux.empty());
     }

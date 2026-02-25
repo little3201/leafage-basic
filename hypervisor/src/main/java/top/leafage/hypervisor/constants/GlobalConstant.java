@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,26 +11,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package top.leafage.hypervisor.exploiter.repository;
+package top.leafage.hypervisor.constants;
 
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import top.leafage.hypervisor.exploiter.domain.Field;
+import java.util.List;
 
+public final class GlobalConstant {
 
-/**
- * field repository.
- *
- * @author wq li
- **/
-@Repository
-public interface FieldRepository extends R2dbcRepository<Field, Long> {
+    // 公共常量
+    public static final String TEMP_DIR = "temp";
 
-    Flux<Field> findAllBySchemaId(Long schemaId);
+    public static final List<String> METADATA = List.of("id", "enabled", "created_by", "created_date", "last_modified_by", "last_modified_date");
 
-    Flux<Field> findAllBySchemaIdAndTableName(Long schemaId, String tableName);
+    // private construce
+    private GlobalConstant() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 }

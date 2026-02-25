@@ -20,12 +20,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.poi.reactive.ReactiveExcelReader;
 import top.leafage.hypervisor.system.domain.dto.UserDTO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.UserService;
+
+import java.util.List;
 
 /**
  * user controller
@@ -141,9 +142,10 @@ public class UserController {
      */
     @PreAuthorize("hasAuthority('SCOPE_users:import')")
     @PostMapping("/import")
-    public Flux<UserVO> importFromFile(FilePart file) {
+    public Mono<List<UserVO>> importFromFile(FilePart file) {
         return ReactiveExcelReader.read(file, UserDTO.class)
-                .flatMapMany(userService::createAll);
+                .flatMapMany(userService::createAll)
+                .collectList();
     }
 
 }

@@ -27,6 +27,8 @@ import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
 import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import top.leafage.hypervisor.system.service.DictionaryService;
 
+import java.util.List;
+
 /**
  * dictionary controller
  *
@@ -140,8 +142,9 @@ public class DictionaryController {
      */
     @PreAuthorize("hasAuthority('SCOPE_dictionaries:import')")
     @PostMapping("/import")
-    public Flux<DictionaryVO> importFromFile(FilePart file) {
+    public Mono<List<DictionaryVO>> importFromFile(FilePart file) {
         return ReactiveExcelReader.read(file, DictionaryDTO.class)
-                .flatMapMany(dictionaryService::createAll);
+                .flatMapMany(dictionaryService::createAll)
+                .collectList();
     }
 }

@@ -29,6 +29,8 @@ import top.leafage.hypervisor.assets.domain.vo.PostVO;
 import top.leafage.hypervisor.assets.service.PostService;
 import top.leafage.common.poi.reactive.ReactiveExcelReader;
 
+import java.util.List;
+
 
 /**
  * posts controller
@@ -131,8 +133,9 @@ public class PostController {
      */
     @PreAuthorize("hasAuthority('SCOPE_schemas:import')")
     @PostMapping("/import")
-    public Flux<PostVO> importFromFile(FilePart file) {
+    public Mono<List<PostVO>> importFromFile(FilePart file) {
         return ReactiveExcelReader.read(file, PostDTO.class)
-                .flatMapMany(postService::createAll);
+                .flatMapMany(postService::createAll)
+                .collectList();
     }
 }

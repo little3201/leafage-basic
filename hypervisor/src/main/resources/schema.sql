@@ -265,7 +265,7 @@ ON COLUMN "public"."group_privilege_actions"."id" IS '主键';
 COMMENT
 ON COLUMN "public"."group_privilege_actions"."group_privilege_id" IS '分组权限ID';
 COMMENT
-ON COLUMN "public"."group_privilege_actions"."action" IS '权限ID';
+ON COLUMN "public"."group_privilege_actions"."action" IS '权限操作';
 COMMENT
 ON TABLE "public"."group_privilege_actions" IS '分组权限操作表';
 

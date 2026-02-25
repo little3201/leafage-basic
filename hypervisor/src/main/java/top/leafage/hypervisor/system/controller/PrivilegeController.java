@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.poi.reactive.ReactiveExcelReader;
@@ -94,8 +93,8 @@ public class PrivilegeController {
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges')")
     @GetMapping("/{superiorId}/subset")
-    public Flux<PrivilegeVO> subset(@PathVariable Long superiorId) {
-        return privilegeService.subset(superiorId);
+    public Mono<List<PrivilegeVO>> subset(@PathVariable Long superiorId) {
+        return privilegeService.subset(superiorId).collectList();
     }
 
     /**
@@ -130,8 +129,9 @@ public class PrivilegeController {
      */
     @PreAuthorize("hasAuthority('SCOPE_privileges:import')")
     @PostMapping("/import")
-    public Flux<PrivilegeVO> importFromFile(FilePart file) {
+    public Mono<List<PrivilegeVO>> importFromFile(FilePart file) {
         return ReactiveExcelReader.read(file, PrivilegeDTO.class)
-                .flatMapMany(privilegeService::createAll);
+                .flatMapMany(privilegeService::createAll)
+                .collectList();
     }
 }

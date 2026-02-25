@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.leafage.common.poi.reactive.ReactiveExcelReader;
 import top.leafage.hypervisor.system.domain.GroupMembers;
@@ -31,6 +30,7 @@ import top.leafage.hypervisor.system.service.GroupMembersService;
 import top.leafage.hypervisor.system.service.GroupPrivilegesService;
 import top.leafage.hypervisor.system.service.GroupService;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -142,8 +142,8 @@ public class GroupController {
      * @return 查询到的数据集
      */
     @GetMapping("/{id}/members")
-    public Flux<GroupMembers> members(@PathVariable Long id) {
-        return groupMembersService.members(id);
+    public Mono<List<GroupMembers>> members(@PathVariable Long id) {
+        return groupMembersService.members(id).collectList();
     }
 
     /**
@@ -179,8 +179,9 @@ public class GroupController {
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:import')")
     @PostMapping("/import")
-    public Flux<GroupVO> importFromFile(FilePart file) {
+    public Mono<List<GroupVO>> importFromFile(FilePart file) {
         return ReactiveExcelReader.read(file, GroupDTO.class)
-                .flatMapMany(groupService::createAll);
+                .flatMapMany(groupService::createAll)
+                .collectList();
     }
 }

@@ -29,6 +29,8 @@ import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.service.RegionService;
 
+import java.util.List;
+
 /**
  * region controller
  *
@@ -137,8 +139,9 @@ public class RegionController {
      */
     @PreAuthorize("hasAuthority('SCOPE_schemas:import')")
     @PostMapping("/import")
-    public Flux<RegionVO> importFromFile(FilePart file) {
+    public Mono<List<RegionVO>> importFromFile(FilePart file) {
         return ReactiveExcelReader.read(file, RegionDTO.class)
-                .flatMapMany(regionService::createAll);
+                .flatMapMany(regionService::createAll)
+                .collectList();
     }
 }

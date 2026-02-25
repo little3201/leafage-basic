@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024.  little3201.
+ * Copyright (c) 2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -11,26 +11,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package top.leafage.hypervisor.exploiter.repository;
-
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
-import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import top.leafage.hypervisor.exploiter.domain.Field;
-
+package top.leafage.hypervisor.constants;
 
 /**
- * field repository.
- *
- * @author wq li
- **/
-@Repository
-public interface FieldRepository extends R2dbcRepository<Field, Long> {
+ * code language
+ */
+public enum Language {
+    JAVA,
+    YML,
+    XML,
+    SQL,
+    TS,
+    TSX,
+    JS,
+    JSX,
+    VUE,
+    REACT;
 
-    Flux<Field> findAllBySchemaId(Long schemaId);
-
-    Flux<Field> findAllBySchemaIdAndTableName(Long schemaId, String tableName);
+    public static Language of(String value) {
+        return valueOf(value.toUpperCase());
+    }
 }

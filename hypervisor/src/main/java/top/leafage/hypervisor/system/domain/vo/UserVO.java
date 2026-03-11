@@ -36,7 +36,7 @@ public record UserVO(
                 entity.getUsername(),
                 entity.getFullName(),
                 mask(entity.getEmail()),
-                "ACTIVE",
+                Status.determineStatus(entity).name(),
                 entity.isEnabled()
         );
     }
@@ -57,6 +57,32 @@ public record UserVO(
         } else {
             // 用户名 ≥2 个字符，保留第一个，后面全部变*
             return prefix.charAt(0) + "****" + domain;
+        }
+    }
+
+
+    public enum Status {
+        ACTIVE,                  // 正常可用
+        LOCKED,                  // 账户被锁定
+        EXPIRED,                // 账户已过期
+        CREDENTIALS_EXPIRED, // 凭证（密码）已过期
+        DISABLED;              // 账户被禁用
+
+        public static Status determineStatus(User entity) {
+            if (entity.isAccountNonExpired() &&
+                    entity.isAccountNonLocked() &&
+                    entity.isCredentialsNonExpired() &&
+                    entity.isEnabled()) {
+                return ACTIVE;
+            } else if (!entity.isAccountNonExpired()) {
+                return EXPIRED;
+            } else if (!entity.isAccountNonLocked()) {
+                return LOCKED;
+            } else if (!entity.isCredentialsNonExpired()) {
+                return CREDENTIALS_EXPIRED;
+            } else {
+                return DISABLED;
+            }
         }
     }
 }

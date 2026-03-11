@@ -153,6 +153,7 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         return dictionaryRepository.existsById(id)
                 .flatMap(exists -> {
                     if (!exists) {

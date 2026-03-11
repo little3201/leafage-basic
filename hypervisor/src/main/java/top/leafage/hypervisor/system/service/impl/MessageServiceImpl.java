@@ -137,7 +137,14 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Mono<Void> remove(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        return messageRepository.deleteById(id);
+
+        return messageRepository.existsById(id)
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return Mono.error(new NoSuchElementException("message not found: " + id));
+                    }
+                    return messageRepository.deleteById(id);
+                });
     }
 
 }

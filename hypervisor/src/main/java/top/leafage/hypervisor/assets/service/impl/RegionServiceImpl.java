@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import top.leafage.hypervisor.assets.domain.Region;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
@@ -61,7 +62,9 @@ public class RegionServiceImpl implements RegionService {
 
         Specification<@NonNull Region> spec = (root, query, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
-        spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
+        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
+            spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
+        }
 
         return regionRepository.findAll(spec, pageable)
                 .map(entity -> {

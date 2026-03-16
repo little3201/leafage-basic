@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright (c) 2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,31 +23,26 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.poi.excel.ExcelReader;
-import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
-import top.leafage.hypervisor.assets.domain.vo.RegionVO;
-import top.leafage.hypervisor.assets.service.RegionService;
+import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.vo.SectionVO;
+import top.leafage.hypervisor.assets.service.SectionService;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * region controller.
+ * section controller.
  *
  * @author wq li
  */
 @RestController
-@RequestMapping("/regions")
-public class RegionController {
+@RequestMapping("/sections")
+public class SectionController {
 
-    private final RegionService regionService;
+    private final SectionService sectionService;
 
-    /**
-     * Constructor for RegionController.
-     *
-     * @param regionService a {@link RegionService} object
-     */
-    public RegionController(RegionService regionService) {
-        this.regionService = regionService;
+    public SectionController(SectionService sectionService) {
+        this.sectionService = sectionService;
     }
 
     /**
@@ -60,9 +55,9 @@ public class RegionController {
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
-    public ResponseEntity<Page<RegionVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                   String sortBy, boolean descending, String filters) {
-        Page<RegionVO> voPage = regionService.retrieve(page, size, sortBy, descending, filters);
+    public ResponseEntity<Page<SectionVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                    String sortBy, boolean descending, String filters) {
+        Page<SectionVO> voPage = sectionService.retrieve(page, size, sortBy, descending, filters);
         return ResponseEntity.ok(voPage);
     }
 
@@ -73,8 +68,8 @@ public class RegionController {
      * @return the result.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<RegionVO> fetch(@PathVariable Long id) {
-        RegionVO vo = regionService.fetch(id);
+    public ResponseEntity<SectionVO> fetch(@PathVariable Long id) {
+        SectionVO vo = sectionService.fetch(id);
         return ResponseEntity.ok(vo);
     }
 
@@ -84,10 +79,10 @@ public class RegionController {
      * @param id th pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
     @GetMapping("/{id}/subset")
-    public ResponseEntity<List<RegionVO>> subset(@PathVariable Long id) {
-        List<RegionVO> voList = regionService.subset(id);
+    public ResponseEntity<List<SectionVO>> subset(@PathVariable Long id) {
+        List<SectionVO> voList = sectionService.subset(id);
         return ResponseEntity.ok(voList);
     }
 
@@ -97,10 +92,10 @@ public class RegionController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:create')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:create')")
     @PostMapping
-    public ResponseEntity<RegionVO> create(@Valid @RequestBody RegionDTO dto) {
-        RegionVO vo = regionService.create(dto);
+    public ResponseEntity<SectionVO> create(@Valid @RequestBody SectionDTO dto) {
+        SectionVO vo = sectionService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
 
@@ -111,10 +106,10 @@ public class RegionController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:modify')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:modify')")
     @PutMapping("/{id}")
-    public ResponseEntity<RegionVO> modify(@PathVariable Long id, @RequestBody RegionDTO dto) {
-        RegionVO vo = regionService.modify(id, dto);
+    public ResponseEntity<SectionVO> modify(@PathVariable Long id, @RequestBody SectionDTO dto) {
+        SectionVO vo = sectionService.modify(id, dto);
         return ResponseEntity.accepted().body(vo);
     }
 
@@ -123,10 +118,10 @@ public class RegionController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
-        regionService.remove(id);
+        sectionService.remove(id);
         return ResponseEntity.ok().build();
     }
 
@@ -136,10 +131,10 @@ public class RegionController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:enable')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:enable')")
     @PatchMapping("/{id}")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
-        boolean enabled = regionService.enable(id);
+        boolean enabled = sectionService.enable(id);
         return ResponseEntity.ok(enabled);
     }
 
@@ -148,11 +143,11 @@ public class RegionController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('SCOPE_regions:import')")
+    @PreAuthorize("hasAuthority('SCOPE_sections:import')")
     @PostMapping("/import")
-    public ResponseEntity<List<RegionVO>> importFromFile(MultipartFile file) throws IOException {
-        List<RegionDTO> dtoList = ExcelReader.read(file.getInputStream(), RegionDTO.class);
-        List<RegionVO> voList = regionService.createAll(dtoList);
+    public ResponseEntity<List<SectionVO>> importFromFile(MultipartFile file) throws IOException {
+        List<SectionDTO> dtoList = ExcelReader.read(file.getInputStream(), SectionDTO.class);
+        List<SectionVO> voList = sectionService.createAll(dtoList);
         return ResponseEntity.ok().body(voList);
     }
 

@@ -54,10 +54,10 @@ public class FileRecordServiceImpl implements FileRecordService {
     public Page<@NonNull FileRecordVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull FileRecord> spec = (root, query, cb) ->
+        Specification<@NonNull FileRecord> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
         if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
-            spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
+            spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
         }
 
         return fileRecordRepository.findAll(spec, pageable)

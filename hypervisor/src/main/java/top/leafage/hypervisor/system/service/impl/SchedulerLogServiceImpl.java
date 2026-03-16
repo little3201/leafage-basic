@@ -46,7 +46,7 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
     public Page<@NonNull SchedulerLogVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull SchedulerLog> spec = (root, query, cb) ->
+        Specification<@NonNull SchedulerLog> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return schedulerLogRepository.findAll(spec, pageable)

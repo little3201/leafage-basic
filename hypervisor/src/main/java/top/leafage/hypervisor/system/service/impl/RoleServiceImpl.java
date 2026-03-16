@@ -56,7 +56,7 @@ public class RoleServiceImpl implements RoleService {
     public Page<@NonNull RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Role> spec = (root, query, cb) ->
+        Specification<@NonNull Role> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return roleRepository.findAll(spec, pageable)

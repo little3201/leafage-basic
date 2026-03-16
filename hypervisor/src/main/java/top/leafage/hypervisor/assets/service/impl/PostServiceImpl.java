@@ -57,7 +57,7 @@ public class PostServiceImpl implements PostService {
     public Page<@NonNull PostVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Post> spec = (root, query, cb) ->
+        Specification<@NonNull Post> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return postRepository.findAll(spec, pageable)

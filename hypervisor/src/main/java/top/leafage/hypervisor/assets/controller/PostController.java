@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import top.leafage.hypervisor.assets.domain.dto.PostDTO;
 import top.leafage.hypervisor.assets.domain.vo.PostVO;
 import top.leafage.hypervisor.assets.service.PostService;
-import top.leafage.common.poi.ExcelReader;
+import top.leafage.common.poi.excel.ExcelReader;
 
 import java.io.IOException;
 import java.util.List;
@@ -137,7 +137,7 @@ public class PostController {
     }
 
     /**
-     * import..
+     * import.
      *
      * @return the result.
      */

@@ -75,9 +75,9 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     public Page<@NonNull PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Privilege> spec = (root, query, cb) ->
+        Specification<@NonNull Privilege> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
-        spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
+        spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
 
         return privilegeRepository.findAll(spec, pageable)
                 .map(entity -> {

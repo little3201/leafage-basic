@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
@@ -64,8 +65,11 @@ public class GroupServiceImpl implements GroupService {
     public Page<@NonNull GroupVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Group> spec = (root, query, cb) ->
+        Specification<@NonNull Group> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
+        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
+            spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
+        }
 
         return groupRepository.findAll(spec, pageable)
                 .map(GroupVO::from);

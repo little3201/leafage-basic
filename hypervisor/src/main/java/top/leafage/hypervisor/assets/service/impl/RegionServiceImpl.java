@@ -60,10 +60,10 @@ public class RegionServiceImpl implements RegionService {
     public Page<@NonNull RegionVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Region> spec = (root, query, cb) ->
+        Specification<@NonNull Region> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
         if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
-            spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
+            spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
         }
 
         return regionRepository.findAll(spec, pageable)

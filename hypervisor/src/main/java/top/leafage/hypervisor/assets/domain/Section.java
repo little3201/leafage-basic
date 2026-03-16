@@ -41,6 +41,10 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     private boolean enabled = true;
 
+
+    public Section() {
+    }
+
     public Section(Long superiorId, String title, String body, String type) {
         this.superiorId = superiorId;
         this.title = title;

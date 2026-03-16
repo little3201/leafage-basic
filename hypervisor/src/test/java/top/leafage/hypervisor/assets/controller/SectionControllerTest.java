@@ -69,7 +69,7 @@ class SectionControllerTest {
     void setUp() {
         dto = new SectionDTO();
         dto.setTitle("test");
-        dto.setType("TITLE");
+        dto.setType("HEADING");
         dto.setSuperiorId(1L);
         dto.setBody("body");
 

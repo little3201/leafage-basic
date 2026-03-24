@@ -45,6 +45,8 @@ import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
 @Service
 public class PrivilegeServiceImpl implements PrivilegeService {
 
+    private static final Set<String> META_FIELDS = Set.of("path", "redirect", "component", "icon", "actions");
+
     private static final BeanCopier copier = BeanCopier.create(PrivilegeDTO.class, Privilege.class, false);
 
     private final PrivilegeRepository privilegeRepository;
@@ -84,26 +86,22 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     public List<TreeNode<@NonNull Long>> tree(String username) {
         Assert.hasText(username, String.format(_MUST_NOT_BE_EMPTY, "username"));
 
-        List<Privilege> groupPrivs = privilegeRepository.findGroupPrivilegesByUsername(username);
-        List<Privilege> viaGroupRolesPrivs = privilegeRepository.findPrivilegesViaGroupRolesByUsername(username);
-        List<Privilege> rolePrivs = privilegeRepository.findRolePrivilegesByUsername(username);
-
-        Set<Privilege> uniqueSet = new LinkedHashSet<>(groupPrivs);
-        uniqueSet.addAll(viaGroupRolesPrivs);
-        uniqueSet.addAll(rolePrivs);
-        if (CollectionUtils.isEmpty(uniqueSet)) {
+        Set<Long> privilegeIds = new LinkedHashSet<>();
+        privilegeIds.addAll(privilegeRepository.findGroupPrivilegeIdsByUsername(username));
+        privilegeIds.addAll(privilegeRepository.findGroupRolePrivilegeIdsByUsername(username));
+        privilegeIds.addAll(privilegeRepository.findRolePrivilegeIdsByUsername(username));
+        if (CollectionUtils.isEmpty(privilegeIds)) {
             return Collections.emptyList();
         }
 
-        Map<Long, Privilege> privilegeMap = uniqueSet.stream()
+        Map<Long, Privilege> privilegeMap = privilegeRepository.findAllById(privilegeIds).stream()
                 .filter(Privilege::isEnabled)
-                .collect(Collectors.toMap(Privilege::getId, Function.identity(), (a, _) -> a));
+                .collect(Collectors.toMap(Privilege::getId, Function.identity()));
 
         expandPrivileges(privilegeMap);
 
         List<Privilege> allPrivileges = new ArrayList<>(privilegeMap.values());
-        Set<String> meta = Set.of("path", "redirect", "component", "icon", "actions");
-        return toTree(allPrivileges, meta);
+        return toTree(allPrivileges, META_FIELDS);
     }
 
     /**
@@ -175,10 +173,16 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     }
 
     private void expandPrivileges(Map<Long, Privilege> privilegeMap) {
+        final int MAX_ITERATIONS = 8;
+        int iterations = 0;
         Set<Long> toLoad;
         do {
             toLoad = collectMissingSuperiorIds(privilegeMap);
             if (toLoad.isEmpty()) {
+                break;
+            }
+
+            if (++iterations > MAX_ITERATIONS) {
                 break;
             }
 

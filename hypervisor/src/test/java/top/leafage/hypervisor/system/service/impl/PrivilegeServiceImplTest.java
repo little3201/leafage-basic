@@ -138,7 +138,9 @@ class PrivilegeServiceImplTest {
 
     @Test
     void tree() {
-        when(privilegeRepository.findGroupPrivilegesByUsername(anyString())).thenReturn(List.of(entity));
+        when(privilegeRepository.findGroupPrivilegeIdsByUsername(anyString())).thenReturn(List.of(1L, 2L, 3L));
+        when(privilegeRepository.findGroupRolePrivilegeIdsByUsername(anyString())).thenReturn(List.of(4L, 5L));
+        when(privilegeRepository.findRolePrivilegeIdsByUsername(anyString())).thenReturn(List.of(6L, 7L));
 
         List<TreeNode<Long>> nodes = privilegeService.tree("test");
         assertNotNull(nodes);

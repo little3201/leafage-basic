@@ -48,6 +48,55 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>, Jpa
     List<Privilege> findAllBySuperiorId(Long superiorId);
 
     /**
+     * Group 直接配置的 Privilege
+     *
+     * @param username the username of user.
+     * @return result.
+     */
+    @Query("""
+            SELECT DISTINCT p 
+            FROM Group g
+            JOIN g.members u
+            JOIN g.groupPrivileges gp
+            JOIN gp.privilege p
+            WHERE u.username = :username
+            """)
+    List<Privilege> findGroupPrivilegesByUsername(String username);
+
+    /**
+     * 通过 Group → Role 继承的 Privilege
+     *
+     * @param username the username of user.
+     * @return result.
+     */
+    @Query("""
+            SELECT DISTINCT p 
+            FROM Group g
+            JOIN g.members u
+            JOIN g.roles r
+            JOIN r.rolePrivileges rp
+            JOIN rp.privilege p
+            WHERE u.username = :username
+            """)
+    List<Privilege> findPrivilegesViaGroupRolesByUsername(String username);
+
+    /**
+     * Group 直接配置的 Privilege
+     *
+     * @param username the username of user.
+     * @return result.
+     */
+    @Query("""
+            SELECT DISTINCT p 
+            FROM Role r
+            JOIN r.members u
+            JOIN r.rolePrivileges rp
+            JOIN rp.privilege p
+            WHERE u.username = :username
+            """)
+    List<Privilege> findRolePrivilegesByUsername(String username);
+
+    /**
      * Counts the number of records by superior ID.
      *
      * @param superiorId The superior ID.

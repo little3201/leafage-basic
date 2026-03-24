@@ -32,15 +32,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
 import top.leafage.common.data.domain.TreeNode;
-import top.leafage.hypervisor.system.controller.GroupController;
-import top.leafage.hypervisor.system.domain.GroupMembers;
-import top.leafage.hypervisor.system.domain.GroupPrivileges;
-import top.leafage.hypervisor.system.domain.GroupRoles;
+import top.leafage.hypervisor.system.domain.GroupPrivilege;
+import top.leafage.hypervisor.system.domain.Role;
+import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
-import top.leafage.hypervisor.system.service.GroupMembersService;
-import top.leafage.hypervisor.system.service.GroupPrivilegesService;
-import top.leafage.hypervisor.system.service.GroupRolesService;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.GroupService;
 
 import java.util.Collections;
@@ -70,15 +68,6 @@ class GroupControllerTest {
 
     @MockitoBean
     private GroupService groupService;
-
-    @MockitoBean
-    private GroupPrivilegesService groupPrivilegesService;
-
-    @MockitoBean
-    private GroupMembersService groupMembersService;
-
-    @MockitoBean
-    private GroupRolesService groupRolesService;
 
     private GroupVO vo;
 
@@ -233,52 +222,51 @@ class GroupControllerTest {
     }
 
     @Test
+    void addMembers() {
+        groupService.addMembers(anyLong(), anySet());
+
+        assertThat(mvc.patch().uri("/groups/{id}/members", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of("test")))
+                .with(csrf().asHeader())
+        )
+                .hasStatusOk();
+    }
+
+    @Test
+    void addMembers_error() {
+        doThrow(new RuntimeException()).when(groupService).addMembers(anyLong(), anySet());
+
+        assertThat(mvc.patch().uri("/groups/{id}/members", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of("test")))
+                .with(csrf().asHeader())
+        )
+                .hasStatus5xxServerError();
+    }
+
+    @Test
     void members() {
-        when(groupMembersService.members(anyLong())).thenReturn(anyList());
+        when(groupService.members(anyLong())).thenReturn(List.of(mock(UserVO.class)));
 
         assertThat(mvc.get().uri("/groups/{id}/members", 1L))
                 .hasStatusOk()
-                .body().isNotNull();
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(UserVO.class))
+                .hasSize(1);
     }
 
     @Test
     void members_error() {
-        doThrow(new RuntimeException()).when(groupMembersService).members(anyLong());
+        doThrow(new RuntimeException()).when(groupService).members(anyLong());
 
         assertThat(mvc.get().uri("/groups/{id}/members", anyLong()))
                 .hasStatus5xxServerError();
     }
 
     @Test
-    void relationMembers() {
-        when(groupMembersService.relation(anyLong(), anySet())).thenReturn(List.of(mock(GroupMembers.class)));
-
-        assertThat(mvc.patch().uri("/groups/{id}/members", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(Set.of("test")))
-                .with(csrf().asHeader())
-        )
-                .hasStatusOk()
-                .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(GroupMembers.class))
-                .hasSize(1);
-    }
-
-    @Test
-    void relationMembers_error() {
-        doThrow(new RuntimeException()).when(groupMembersService).relation(anyLong(), anySet());
-
-        assertThat(mvc.patch().uri("/groups/{id}/members", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(Set.of("test")))
-                .with(csrf().asHeader())
-        )
-                .hasStatus5xxServerError();
-    }
-
-    @Test
     void removeMembers() {
-        groupMembersService.removeRelation(anyLong(), anySet());
+        groupService.removeMembers(anyLong(), anySet());
 
         assertThat(mvc.delete().uri("/groups/{id}/members", 1L)
                 .queryParam("usernames", "test")
@@ -288,80 +276,20 @@ class GroupControllerTest {
     }
 
     @Test
-    void relationPrivileges() {
-        when(groupPrivilegesService.relation(anyLong(), anyLong(), anyString()))
-                .thenReturn(mock(GroupPrivileges.class));
-
-        assertThat(mvc.patch().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf().asHeader())
-        )
-                .hasStatusOk()
-                .body().isNotNull();
-    }
-
-    @Test
-    void relationPrivileges_error() {
-        doThrow(new RuntimeException()).when(groupPrivilegesService).relation(anyLong(), anyLong(), anyString());
-
-        assertThat(mvc.patch().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf().asHeader())
-        )
-                .hasStatus5xxServerError();
-    }
-
-    @Test
-    void privileges() {
-        when(groupPrivilegesService.privileges(anyLong())).thenReturn(List.of(mock(GroupPrivileges.class)));
-
-        assertThat(mvc.get().uri("/groups/{id}/privileges", 1L))
-                .hasStatusOk()
-                .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(GroupPrivileges.class))
-                .hasSize(1);
-    }
-
-    @Test
-    void privileges_error() {
-        doThrow(new RuntimeException()).when(groupPrivilegesService).privileges(anyLong());
-
-        assertThat(mvc.get().uri("/groups/{id}/privileges", anyLong()))
-                .hasStatus5xxServerError();
-    }
-
-    @Test
-    void removePrivileges() {
-        groupPrivilegesService.removeRelation(anyLong(), anyLong(), anyString());
-
-        assertThat(mvc.delete().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
-                .with(csrf().asHeader())
-        )
-                .hasStatus(HttpStatus.NO_CONTENT);
-    }
-
-
-    @Test
-    void relationRoles() {
-        when(groupRolesService.relation(anyLong(), anySet())).thenReturn(List.of(mock(GroupRoles.class)));
+    void addRoles() {
+        groupService.addRoles(anyLong(), anySet());
 
         assertThat(mvc.patch().uri("/groups/{id}/roles", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(Set.of(1L)))
                 .with(csrf().asHeader())
         )
-                .hasStatusOk()
-                .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(GroupRoles.class))
-                .hasSize(1);
+                .hasStatusOk();
     }
 
     @Test
-    void relationRoles_error() {
-        doThrow(new RuntimeException()).when(groupPrivilegesService).relation(anyLong(), anyLong(), anyString());
+    void addRoles_error() {
+        doThrow(new RuntimeException()).when(groupService).addRoles(anyLong(), anySet());
 
         assertThat(mvc.patch().uri("/groups/{id}/roles", 1L)
                 .queryParam("action", "create")
@@ -373,18 +301,18 @@ class GroupControllerTest {
 
     @Test
     void roles() {
-        when(groupRolesService.roles(anyLong())).thenReturn(List.of(mock(GroupRoles.class)));
+        when(groupService.roles(anyLong())).thenReturn(List.of(mock(RoleVO.class)));
 
         assertThat(mvc.get().uri("/groups/{id}/roles", 1L))
                 .hasStatusOk()
                 .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(GroupRoles.class))
+                .convertTo(InstanceOfAssertFactories.list(RoleVO.class))
                 .hasSize(1);
     }
 
     @Test
     void roles_error() {
-        doThrow(new RuntimeException()).when(groupRolesService).roles(anyLong());
+        doThrow(new RuntimeException()).when(groupService).roles(anyLong());
 
         assertThat(mvc.get().uri("/groups/{id}/roles", anyLong()))
                 .hasStatus5xxServerError();
@@ -392,10 +320,65 @@ class GroupControllerTest {
 
     @Test
     void removeRoles() {
-        groupRolesService.removeRelation(anyLong(), anySet());
+        groupService.removeRoles(anyLong(), anySet());
 
         assertThat(mvc.delete().uri("/groups/{id}/roles", 1L)
                 .queryParam("roleIds", "1,2,3")
+                .with(csrf().asHeader())
+        )
+                .hasStatus(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void addPrivilege() {
+        groupService.addPrivilege(anyLong(), anyLong(), anyString());
+
+        assertThat(mvc.patch().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
+                .queryParam("action", "create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf().asHeader())
+        )
+                .hasStatusOk()
+                .body().isNotNull();
+    }
+
+    @Test
+    void addPrivilege_error() {
+        doThrow(new RuntimeException()).when(groupService).addPrivilege(anyLong(), anyLong(), anyString());
+
+        assertThat(mvc.patch().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
+                .queryParam("action", "create")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf().asHeader())
+        )
+                .hasStatus5xxServerError();
+    }
+
+    @Test
+    void privileges() {
+        when(groupService.privileges(anyLong())).thenReturn(List.of(mock(GroupPrivilege.class)));
+
+        assertThat(mvc.get().uri("/groups/{id}/privileges", 1L))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(GroupPrivilege.class))
+                .hasSize(1);
+    }
+
+    @Test
+    void privileges_error() {
+        doThrow(new RuntimeException()).when(groupService).privileges(anyLong());
+
+        assertThat(mvc.get().uri("/groups/{id}/privileges", anyLong()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
+    void removePrivilege() {
+        groupService.removePrivilege(anyLong(), anyLong(), anyString());
+
+        assertThat(mvc.delete().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
+                .queryParam("action", "create")
                 .with(csrf().asHeader())
         )
                 .hasStatus(HttpStatus.NO_CONTENT);

@@ -85,8 +85,8 @@ public class RegionController {
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions')")
-    @GetMapping("/{id}/subset")
-    public ResponseEntity<List<RegionVO>> subset(@PathVariable Long id) {
+    @GetMapping("/subset")
+    public ResponseEntity<List<RegionVO>> subset(Long id) {
         List<RegionVO> voList = regionService.subset(id);
         return ResponseEntity.ok(voList);
     }
@@ -148,7 +148,7 @@ public class RegionController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('SCOPE_regions:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:import')")
     @PostMapping("/import")
     public ResponseEntity<List<RegionVO>> importFromFile(MultipartFile file) throws IOException {
         List<RegionDTO> dtoList = ExcelReader.read(file.getInputStream(), RegionDTO.class);

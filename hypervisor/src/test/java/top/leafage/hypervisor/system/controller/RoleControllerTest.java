@@ -31,12 +31,11 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
-import top.leafage.hypervisor.system.domain.RoleMembers;
-import top.leafage.hypervisor.system.domain.RolePrivileges;
+import top.leafage.hypervisor.system.domain.RolePrivilege;
+import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.service.RoleMembersService;
-import top.leafage.hypervisor.system.service.RolePrivilegesService;
+import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.RoleService;
 
 import java.util.List;
@@ -65,12 +64,6 @@ class RoleControllerTest {
 
     @MockitoBean
     private RoleService roleService;
-
-    @MockitoBean
-    private RoleMembersService roleMembersService;
-
-    @MockitoBean
-    private RolePrivilegesService rolePrivilegesService;
 
     private RoleVO vo;
     private RoleDTO dto;
@@ -224,41 +217,38 @@ class RoleControllerTest {
 
     @Test
     void members() {
-        when(roleMembersService.members(anyLong())).thenReturn(List.of(mock(RoleMembers.class)));
+        when(roleService.members(anyLong())).thenReturn(List.of(mock(UserVO.class)));
 
         assertThat(mvc.get().uri("/roles/{id}/members", 1L))
                 .hasStatusOk()
                 .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(RoleMembers.class))
+                .convertTo(InstanceOfAssertFactories.list(UserVO.class))
                 .hasSize(1);
     }
 
     @Test
     void members_error() {
-        doThrow(new RuntimeException()).when(roleMembersService).members(anyLong());
+        doThrow(new RuntimeException()).when(roleService).members(anyLong());
 
         assertThat(mvc.get().uri("/roles/{id}/members", anyLong()))
                 .hasStatus5xxServerError();
     }
 
     @Test
-    void relationMembers() {
-        when(roleMembersService.relation(anyLong(), anySet())).thenReturn(List.of(mock(RoleMembers.class)));
+    void addMembers() {
+        roleService.addMembers(anyLong(), anySet());
 
         assertThat(mvc.patch().uri("/roles/{id}/members", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(Set.of("test")))
                 .with(csrf().asHeader())
         )
-                .hasStatusOk()
-                .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(RoleMembers.class))
-                .hasSize(1);
+                .hasStatusOk();
     }
 
     @Test
     void relationMembers_error() {
-        doThrow(new RuntimeException()).when(roleMembersService).relation(anyLong(), anySet());
+        doThrow(new RuntimeException()).when(roleService).addMembers(anyLong(), anySet());
 
         assertThat(mvc.patch().uri("/roles/{id}/members", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -270,7 +260,7 @@ class RoleControllerTest {
 
     @Test
     void removeMembers() {
-        roleMembersService.removeRelation(anyLong(), anySet());
+        roleService.removeMembers(anyLong(), anySet());
 
         assertThat(mvc.delete().uri("/roles/{id}/members", 1L)
                 .queryParam("usernames", "test")
@@ -282,41 +272,38 @@ class RoleControllerTest {
 
     @Test
     void privileges() {
-        when(rolePrivilegesService.privileges(anyLong())).thenReturn(List.of(mock(RolePrivileges.class)));
+        when(roleService.privileges(anyLong())).thenReturn(List.of(mock(RolePrivilege.class)));
 
         assertThat(mvc.get().uri("/roles/{id}/privileges", 1L))
                 .hasStatusOk()
                 .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(RolePrivileges.class))
+                .convertTo(InstanceOfAssertFactories.list(RolePrivilege.class))
                 .hasSize(1);
     }
 
     @Test
     void privileges_error() {
-        doThrow(new RuntimeException()).when(rolePrivilegesService).privileges(anyLong());
+        doThrow(new RuntimeException()).when(roleService).privileges(anyLong());
 
         assertThat(mvc.get().uri("/roles/{id}/privileges", anyLong()))
                 .hasStatus5xxServerError();
     }
 
     @Test
-    void relationPrivileges() {
-        when(rolePrivilegesService.relation(anyLong(), anyLong(), anyString())).thenReturn(mock(RolePrivileges.class));
+    void addPrivilege() {
+        roleService.addPrivilege(anyLong(), anyLong(), anyString());
 
         assertThat(mvc.patch().uri("/roles/{id}/privileges/{privilegeId}", 1L, 1L)
                 .queryParam("action", "create")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(csrf().asHeader())
         )
-                .hasStatusOk()
-                .bodyJson()
-                .convertTo(RolePrivileges.class)
-                .isNotNull();
+                .hasStatusOk();
     }
 
     @Test
-    void relationPrivileges_error() {
-        doThrow(new RuntimeException()).when(rolePrivilegesService).relation(anyLong(), anyLong(), anyString());
+    void addPrivilege_error() {
+        doThrow(new RuntimeException()).when(roleService).addPrivilege(anyLong(), anyLong(), anyString());
 
         assertThat(mvc.patch().uri("/roles/{id}/privileges/{privilegeId}", 1L, 1L)
                 .queryParam("action", "create")
@@ -326,8 +313,8 @@ class RoleControllerTest {
     }
 
     @Test
-    void removePrivileges() {
-        rolePrivilegesService.removeRelation(anyLong(), anyLong(), anyString());
+    void removePrivilege() {
+        roleService.removePrivilege(anyLong(), anyLong(), anyString());
 
         assertThat(mvc.delete().uri("/roles/{id}/privileges/{privilegeId}", 1L, 1L)
                 .queryParam("action", "create")

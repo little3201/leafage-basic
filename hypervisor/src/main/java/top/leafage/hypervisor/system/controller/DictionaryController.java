@@ -88,7 +88,6 @@ public class DictionaryController {
      * @param id th pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
     @GetMapping("/{id}/subset")
     public ResponseEntity<List<DictionaryVO>> subset(@PathVariable Long id) {
         List<DictionaryVO> voList = dictionaryService.subset(id);

@@ -139,7 +139,7 @@ public class PrivilegeController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('SCOPE_privileges:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:import')")
     @PostMapping("/import")
     public ResponseEntity<List<PrivilegeVO>> importFromFile(MultipartFile file) throws IOException {
         List<PrivilegeDTO> dtoList = ExcelReader.read(file.getInputStream(), PrivilegeDTO.class);

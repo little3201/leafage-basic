@@ -28,11 +28,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import top.leafage.common.data.domain.TreeNode;
-import top.leafage.hypervisor.system.domain.*;
+import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
-import top.leafage.hypervisor.system.service.impl.PrivilegeServiceImpl;
-import top.leafage.hypervisor.system.repository.*;
+import top.leafage.hypervisor.system.repository.PrivilegeRepository;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +40,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.when;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 
@@ -54,22 +52,7 @@ import static org.mockito.Mockito.verify;
 class PrivilegeServiceImplTest {
 
     @Mock
-    private RoleMembersRepository roleMembersRepository;
-
-    @Mock
-    private RolePrivilegesRepository rolePrivilegesRepository;
-
-    @Mock
     private PrivilegeRepository privilegeRepository;
-
-    @Mock
-    private GroupMembersRepository groupMembersRepository;
-
-    @Mock
-    private GroupRolesRepository groupRolesRepository;
-
-    @Mock
-    private GroupPrivilegesRepository groupPrivilegesRepository;
 
     @InjectMocks
     private PrivilegeServiceImpl privilegeService;
@@ -155,11 +138,7 @@ class PrivilegeServiceImplTest {
 
     @Test
     void tree() {
-        when(groupMembersRepository.findAllByUsername(anyString())).thenReturn(Collections.singletonList(mock(GroupMembers.class)));
-        when(groupRolesRepository.findAllByGroupId(anyLong())).thenReturn(Collections.singletonList(mock(GroupRoles.class)));
-        when(groupPrivilegesRepository.findAllByGroupId(anyLong())).thenReturn(Collections.singletonList(mock(GroupPrivileges.class)));
-        when(roleMembersRepository.findAllByUsername(anyString())).thenReturn(Collections.singletonList(mock(RoleMembers.class)));
-        when(rolePrivilegesRepository.findAllByRoleId(anyLong())).thenReturn(Collections.singletonList(mock(RolePrivileges.class)));
+        when(privilegeRepository.findGroupPrivilegesByUsername(anyString())).thenReturn(List.of(entity));
 
         List<TreeNode<Long>> nodes = privilegeService.tree("test");
         assertNotNull(nodes);

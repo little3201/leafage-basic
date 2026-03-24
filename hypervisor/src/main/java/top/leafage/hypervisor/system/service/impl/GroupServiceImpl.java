@@ -27,13 +27,18 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.Group;
+import top.leafage.hypervisor.system.domain.GroupPrivilege;
+import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
-import top.leafage.hypervisor.system.repository.GroupRepository;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.UserVO;
+import top.leafage.hypervisor.system.repository.*;
 import top.leafage.hypervisor.system.service.GroupService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
 
@@ -47,15 +52,24 @@ import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
 public class GroupServiceImpl implements GroupService {
 
     private static final BeanCopier copier = BeanCopier.create(GroupDTO.class, Group.class, false);
+
     private final GroupRepository groupRepository;
+    private final GroupPrivilegeRepository groupPrivilegeRepository;
+    private final PrivilegeRepository privilegeRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     /**
      * Constructor for GroupServiceImpl.
      *
      * @param groupRepository a {@link GroupRepository} object
      */
-    public GroupServiceImpl(GroupRepository groupRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupPrivilegeRepository groupPrivilegeRepository, PrivilegeRepository privilegeRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.groupRepository = groupRepository;
+        this.groupPrivilegeRepository = groupPrivilegeRepository;
+        this.privilegeRepository = privilegeRepository;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -103,6 +117,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!groupRepository.existsById(id)) {
             throw new EntityNotFoundException("group not found: " + id);
         }
@@ -155,4 +170,127 @@ public class GroupServiceImpl implements GroupService {
         groupRepository.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public void addMembers(Long id, Set<String> usernames) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        Group group = groupRepository.findById(id).orElseThrow();
+
+        usernames.forEach(username -> userRepository.findByUsername(username)
+                .ifPresent(group::addMember));
+        groupRepository.save(group);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<UserVO> members(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        Group group = groupRepository.findWithMembersById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Group not found: " + id));
+        return group.getMembers().stream().map(UserVO::from).toList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public void removeMembers(Long id, Set<String> usernames) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        Group group = groupRepository.findById(id).orElseThrow();
+
+        usernames.forEach(username -> userRepository.findByUsername(username)
+                .ifPresent(group::removeMember));
+        groupRepository.save(group);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public void addRoles(Long id, Set<Long> roleIds) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        Group group = groupRepository.findById(id).orElseThrow();
+
+        roleIds.forEach(roleId -> roleRepository.findById(roleId)
+                .ifPresent(group::addRole));
+        groupRepository.save(group);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<RoleVO> roles(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        Group group = groupRepository.findWithRolesById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Group not found: " + id));
+        return group.getRoles().stream().map(RoleVO::from).toList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public void removeRoles(Long id, Set<Long> roleIds) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        Group group = groupRepository.findById(id).orElseThrow();
+
+        roleIds.forEach(roleId -> roleRepository.findById(roleId)
+                .ifPresent(group::removeRole));
+        groupRepository.save(group);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public void addPrivilege(Long groupId, Long privilegeId, String action) {
+        Assert.notNull(groupId, String.format(_MUST_NOT_BE_NULL, "groupId"));
+        Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
+
+        Group group = groupRepository.findById(groupId).orElseThrow();
+        Privilege priv = privilegeRepository.findById(privilegeId).orElseThrow();
+
+        group.addPrivilege(priv, Set.of(action));
+        groupRepository.save(group);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<GroupPrivilege> privileges(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        return groupPrivilegeRepository.findAllByGroupId(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public void removePrivilege(Long id, Long privilegeId, String action) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+        Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
+
+        Group group = groupRepository.findById(id).orElseThrow();
+        group.removePrivilege(privilegeRepository.findById(privilegeId).orElseThrow());
+        groupRepository.save(group);
+    }
 }

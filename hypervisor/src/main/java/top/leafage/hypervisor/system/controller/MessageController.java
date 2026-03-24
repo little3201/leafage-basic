@@ -96,7 +96,7 @@ public class MessageController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_messages:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<MessageVO> modify(@PathVariable Long id, @RequestBody MessageDTO dto) {
         MessageVO vo = messageService.modify(id, dto);
@@ -108,7 +108,7 @@ public class MessageController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_messages:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         messageService.remove(id);

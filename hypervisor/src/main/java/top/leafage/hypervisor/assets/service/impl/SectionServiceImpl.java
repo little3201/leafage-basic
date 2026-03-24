@@ -25,12 +25,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import top.leafage.hypervisor.assets.domain.Region;
 import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.service.SectionService;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -95,10 +97,14 @@ public class SectionServiceImpl implements SectionService {
      */
     @Override
     public List<SectionVO> subset(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        return sectionRepository.findAllBySuperiorId(id)
-                .stream().map(entity -> {
+        List<Section> list;
+        if (id == null) {
+            list = sectionRepository.findAllBySuperiorIdIsNull();
+        } else {
+            list = sectionRepository.findAllBySuperiorId(id);
+        }
+        return list.stream().sorted(Comparator.comparing(Section::getId))
+                .map(entity -> {
                     long count = sectionRepository.countBySuperiorId(entity.getId());
                     return SectionVO.from(entity, count);
                 })

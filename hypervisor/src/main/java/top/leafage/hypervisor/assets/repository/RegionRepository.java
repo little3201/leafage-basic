@@ -41,6 +41,13 @@ public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecif
     boolean existsByName(String name);
 
     /**
+     * 查询
+     *
+     * @return 关联的数据
+     */
+    List<Region> findAllBySuperiorIdIsNull();
+
+    /**
      * find by superior id.
      *
      * @param superiorId the pk of superior.

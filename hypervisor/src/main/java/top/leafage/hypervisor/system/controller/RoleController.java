@@ -22,12 +22,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.poi.excel.ExcelReader;
-import top.leafage.hypervisor.system.domain.RoleMembers;
-import top.leafage.hypervisor.system.domain.RolePrivileges;
+import top.leafage.hypervisor.system.domain.RolePrivilege;
+import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
+import top.leafage.hypervisor.system.domain.vo.RolePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.service.RoleMembersService;
-import top.leafage.hypervisor.system.service.RolePrivilegesService;
+import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.RoleService;
 
 import java.io.IOException;
@@ -43,23 +43,16 @@ import java.util.Set;
 @RequestMapping("/roles")
 public class RoleController {
 
-    private final RoleMembersService roleMembersService;
     private final RoleService roleService;
-    private final RolePrivilegesService rolePrivilegesService;
 
     /**
      * Constructor for RoleController.
      *
-     * @param roleMembersService    a {@link RoleMembersService} object
-     * @param roleService           a {@link RoleService} object
-     * @param rolePrivilegesService a {@link RolePrivilegesService} object
+     * @param roleService a {@link RoleService} object
      */
-    public RoleController(RoleMembersService roleMembersService, RoleService roleService, RolePrivilegesService rolePrivilegesService) {
-        this.roleMembersService = roleMembersService;
+    public RoleController(RoleService roleService) {
         this.roleService = roleService;
-        this.rolePrivilegesService = rolePrivilegesService;
     }
-
 
     /**
      * Retrieves a paginated list of records.
@@ -149,7 +142,7 @@ public class RoleController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('SCOPE_roles:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:import')")
     @PostMapping("/import")
     public ResponseEntity<List<RoleVO>> importFromFile(MultipartFile file) throws IOException {
         List<RoleDTO> dtoList = ExcelReader.read(file.getInputStream(), RoleDTO.class);
@@ -165,10 +158,11 @@ public class RoleController {
      * @param usernames 账号
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:relation')")
     @PatchMapping("/{id}/members")
-    public ResponseEntity<List<RoleMembers>> relationMembers(@PathVariable Long id, @RequestBody Set<String> usernames) {
-        List<RoleMembers> roleMembers = roleMembersService.relation(id, usernames);
-        return ResponseEntity.ok(roleMembers);
+    public ResponseEntity<Void> addMembers(@PathVariable Long id, @RequestBody Set<String> usernames) {
+        roleService.addMembers(id, usernames);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -178,9 +172,10 @@ public class RoleController {
      * @param usernames username集合
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:relation')")
     @DeleteMapping("/{id}/members")
     public ResponseEntity<Void> removeMembers(@PathVariable Long id, @RequestParam Set<String> usernames) {
-        roleMembersService.removeRelation(id, usernames);
+        roleService.removeMembers(id, usernames);
         return ResponseEntity.noContent().build();
     }
 
@@ -190,9 +185,10 @@ public class RoleController {
      * @param id roleid
      * @return 查询到的数据集，异常时返回204状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:relation')")
     @GetMapping("/{id}/members")
-    public ResponseEntity<List<RoleMembers>> members(@PathVariable Long id) {
-        List<RoleMembers> members = roleMembersService.members(id);
+    public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
+        List<UserVO> members = roleService.members(id);
         return ResponseEntity.ok(members);
     }
 
@@ -204,11 +200,12 @@ public class RoleController {
      * @param action      操作
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:authorize')")
     @PatchMapping("/{id}/privileges/{privilegeId}")
-    public ResponseEntity<RolePrivileges> relationPrivileges(@PathVariable Long id, @PathVariable Long privilegeId,
-                                                             String action) {
-        RolePrivileges rolePrivilege = rolePrivilegesService.relation(id, privilegeId, action);
-        return ResponseEntity.ok(rolePrivilege);
+    public ResponseEntity<Void> addPrivilege(@PathVariable Long id, @PathVariable Long privilegeId,
+                                             String action) {
+        roleService.addPrivilege(id, privilegeId, action);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -217,24 +214,26 @@ public class RoleController {
      * @param id role代码
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:authorize')")
     @GetMapping("/{id}/privileges")
-    public ResponseEntity<List<RolePrivileges>> privileges(@PathVariable Long id) {
-        List<RolePrivileges> privileges = rolePrivilegesService.privileges(id);
+    public ResponseEntity<List<RolePrivilegeVO>> privileges(@PathVariable Long id) {
+        List<RolePrivilegeVO> privileges = roleService.privileges(id);
         return ResponseEntity.ok(privileges);
     }
 
     /**
-     * 删除 role-privilege关联
+     * 移除 privilege
      *
-     * @param id          role id
-     * @param privilegeId privilege id
-     * @param action      操作
+     * @param id          the pk of role.
+     * @param privilegeId the pk of privilege.
+     * @param action      the action of privilege.
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:authorize')")
     @DeleteMapping("/{id}/privileges/{privilegeId}")
-    public ResponseEntity<Void> removePrivileges(@PathVariable Long id, @PathVariable Long privilegeId,
-                                                 String action) {
-        rolePrivilegesService.removeRelation(id, privilegeId, action);
+    public ResponseEntity<Void> removePrivilege(@PathVariable Long id, @PathVariable Long privilegeId,
+                                                String action) {
+        roleService.removePrivilege(id, privilegeId, action);
         return ResponseEntity.noContent().build();
     }
 }

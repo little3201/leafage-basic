@@ -153,7 +153,7 @@ public class UserController {
      * @param file the file of data.
      * @return the imported data.
      */
-    @PreAuthorize("hasAuthority('SCOPE_users:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:import')")
     @PostMapping("/import")
     public ResponseEntity<List<UserVO>> importFromFile(MultipartFile file) throws IOException {
         List<UserDTO> dtoList = ExcelReader.read(file.getInputStream(), UserDTO.class);

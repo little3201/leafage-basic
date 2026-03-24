@@ -26,11 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.hypervisor.assets.domain.Region;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
 import top.leafage.hypervisor.assets.service.RegionService;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -100,10 +102,14 @@ public class RegionServiceImpl implements RegionService {
      */
     @Override
     public List<RegionVO> subset(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        return regionRepository.findAllBySuperiorId(id)
-                .stream().map(entity -> {
+        List<Region> list;
+        if (id == null) {
+            list = regionRepository.findAllBySuperiorIdIsNull();
+        } else {
+            list = regionRepository.findAllBySuperiorId(id);
+        }
+        return list.stream().sorted(Comparator.comparing(Region::getId))
+                .map(entity -> {
                     long count = regionRepository.countBySuperiorId(entity.getId());
                     return RegionVO.from(entity, count);
                 })

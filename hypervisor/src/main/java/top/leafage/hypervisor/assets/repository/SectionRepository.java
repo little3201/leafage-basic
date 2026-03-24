@@ -41,6 +41,13 @@ public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpec
     boolean existsByTitle(String title);
 
     /**
+     * 查询
+     *
+     * @return 关联的数据
+     */
+    List<Section> findAllBySuperiorIdIsNull();
+
+    /**
      * 根据superior id查询
      *
      * @param superiorId 回复信息

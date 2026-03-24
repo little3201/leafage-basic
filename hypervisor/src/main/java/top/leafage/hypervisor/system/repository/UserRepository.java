@@ -21,6 +21,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.User;
 
+import java.util.Optional;
+
 /**
  * user repository.
  *
@@ -28,6 +30,14 @@ import top.leafage.hypervisor.system.domain.User;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+
+    /**
+     * 查询.
+     *
+     * @param username the username of user.
+     * @return result.
+     */
+    Optional<User> findByUsername(String username);
 
     /**
      * is exists.

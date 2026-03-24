@@ -54,6 +54,7 @@ public class SectionController {
      * @param descending 排序方向
      * @return 查询的数据集，异常时返回204状态码
      */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
     @GetMapping
     public ResponseEntity<Page<SectionVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                     String sortBy, boolean descending, String filters) {
@@ -67,6 +68,7 @@ public class SectionController {
      * @param id th pk.
      * @return the result.
      */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
     @GetMapping("/{id}")
     public ResponseEntity<SectionVO> fetch(@PathVariable Long id) {
         SectionVO vo = sectionService.fetch(id);
@@ -80,8 +82,8 @@ public class SectionController {
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
-    @GetMapping("/{id}/subset")
-    public ResponseEntity<List<SectionVO>> subset(@PathVariable Long id) {
+    @GetMapping("/subset")
+    public ResponseEntity<List<SectionVO>> subset(Long id) {
         List<SectionVO> voList = sectionService.subset(id);
         return ResponseEntity.ok(voList);
     }
@@ -143,7 +145,7 @@ public class SectionController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('SCOPE_sections:import')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:import')")
     @PostMapping("/import")
     public ResponseEntity<List<SectionVO>> importFromFile(MultipartFile file) throws IOException {
         List<SectionDTO> dtoList = ExcelReader.read(file.getInputStream(), SectionDTO.class);

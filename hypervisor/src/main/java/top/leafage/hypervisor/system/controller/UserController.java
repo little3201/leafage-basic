@@ -21,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import top.leafage.common.poi.ExcelReader;
+import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.system.domain.dto.UserDTO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.UserService;
@@ -153,7 +153,7 @@ public class UserController {
      * @param file the file of data.
      * @return the imported data.
      */
-    @PreAuthorize("hasAuthority('SCOPE_users:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:import')")
     @PostMapping("/import")
     public ResponseEntity<List<UserVO>> importFromFile(MultipartFile file) throws IOException {
         List<UserDTO> dtoList = ExcelReader.read(file.getInputStream(), UserDTO.class);

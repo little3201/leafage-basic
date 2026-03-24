@@ -22,15 +22,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.data.domain.TreeNode;
-import top.leafage.common.poi.ExcelReader;
-import top.leafage.hypervisor.system.domain.GroupMembers;
-import top.leafage.hypervisor.system.domain.GroupPrivileges;
-import top.leafage.hypervisor.system.domain.GroupRoles;
+import top.leafage.common.poi.excel.ExcelReader;
+import top.leafage.hypervisor.system.domain.GroupPrivilege;
+import top.leafage.hypervisor.system.domain.Role;
+import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
-import top.leafage.hypervisor.system.service.GroupMembersService;
-import top.leafage.hypervisor.system.service.GroupPrivilegesService;
-import top.leafage.hypervisor.system.service.GroupRolesService;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
+import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.GroupService;
 
 import java.io.IOException;
@@ -47,22 +47,14 @@ import java.util.Set;
 public class GroupController {
 
     private final GroupService groupService;
-    private final GroupMembersService groupMembersService;
-    private final GroupRolesService groupRolesService;
-    private final GroupPrivilegesService groupPrivilegesService;
 
     /**
      * Constructor for GroupController.
      *
-     * @param groupMembersService a {@link GroupMembersService} object
-     * @param groupService        a {@link GroupService} object
+     * @param groupService a {@link GroupService} object
      */
-    public GroupController(GroupService groupService, GroupMembersService groupMembersService,
-                           GroupRolesService groupRolesService, GroupPrivilegesService groupPrivilegesService) {
+    public GroupController(GroupService groupService) {
         this.groupService = groupService;
-        this.groupMembersService = groupMembersService;
-        this.groupRolesService = groupRolesService;
-        this.groupPrivilegesService = groupPrivilegesService;
     }
 
     /**
@@ -161,7 +153,7 @@ public class GroupController {
     }
 
     /**
-     * import..
+     * import.
      *
      * @return the result.
      */
@@ -181,10 +173,11 @@ public class GroupController {
      * @param usernames 账号
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
     @PatchMapping("/{id}/members")
-    public ResponseEntity<List<GroupMembers>> relationMembers(@PathVariable Long id, @RequestBody Set<String> usernames) {
-        List<GroupMembers> groupMembers = groupMembersService.relation(id, usernames);
-        return ResponseEntity.ok(groupMembers);
+    public ResponseEntity<Void> addMembers(@PathVariable Long id, @RequestBody Set<String> usernames) {
+        groupService.addMembers(id, usernames);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -194,9 +187,10 @@ public class GroupController {
      * @param usernames username集合
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
     @DeleteMapping("/{id}/members")
     public ResponseEntity<Void> removeMembers(@PathVariable Long id, @RequestParam Set<String> usernames) {
-        groupMembersService.removeRelation(id, usernames);
+        groupService.removeMembers(id, usernames);
         return ResponseEntity.noContent().build();
     }
 
@@ -206,9 +200,10 @@ public class GroupController {
      * @param id group id
      * @return 查询到的数据集，异常时返回204状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
     @GetMapping("/{id}/members")
-    public ResponseEntity<List<GroupMembers>> members(@PathVariable Long id) {
-        List<GroupMembers> members = groupMembersService.members(id);
+    public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
+        List<UserVO> members = groupService.members(id);
         return ResponseEntity.ok(members);
     }
 
@@ -219,10 +214,11 @@ public class GroupController {
      * @param roleIds role ids
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
     @PatchMapping("/{id}/roles")
-    public ResponseEntity<List<GroupRoles>> relationRoles(@PathVariable Long id, @RequestBody Set<Long> roleIds) {
-        List<GroupRoles> groupRoles = groupRolesService.relation(id, roleIds);
-        return ResponseEntity.ok(groupRoles);
+    public ResponseEntity<Void> addRoles(@PathVariable Long id, @RequestBody Set<Long> roleIds) {
+        groupService.addRoles(id, roleIds);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -231,9 +227,10 @@ public class GroupController {
      * @param id group id
      * @return 查询到的数据集，异常时返回204状态码
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
     @GetMapping("/{id}/roles")
-    public ResponseEntity<List<GroupRoles>> roles(@PathVariable Long id) {
-        List<GroupRoles> roles = groupRolesService.roles(id);
+    public ResponseEntity<List<RoleVO>> roles(@PathVariable Long id) {
+        List<RoleVO> roles = groupService.roles(id);
         return ResponseEntity.ok(roles);
     }
 
@@ -244,52 +241,55 @@ public class GroupController {
      * @param roleIds role ids
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
     @DeleteMapping("/{id}/roles")
     public ResponseEntity<Void> removeRoles(@PathVariable Long id, @RequestParam Set<Long> roleIds) {
-        groupRolesService.removeRelation(id, roleIds);
+        groupService.removeRoles(id, roleIds);
         return ResponseEntity.noContent().build();
     }
 
     /**
-     * 查询role-privilege关联
-     *
-     * @param id role代码
-     * @return 操作结果
-     */
-    @GetMapping("/{id}/privileges")
-    public ResponseEntity<List<GroupPrivileges>> privileges(@PathVariable Long id) {
-        List<GroupPrivileges> privileges = groupPrivilegesService.privileges(id);
-        return ResponseEntity.ok(privileges);
-    }
-
-    /**
-     * 保存 group-privilege关联
+     * 添加 privilege
      *
      * @param id          role id
      * @param privilegeId privilege id
      * @param action      操作
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
     @PatchMapping("/{id}/privileges/{privilegeId}")
-    public ResponseEntity<GroupPrivileges> relationPrivileges(@PathVariable Long id, @PathVariable Long privilegeId,
-                                                              String action) {
-        GroupPrivileges groupPrivileges = groupPrivilegesService.relation(id, privilegeId, action);
-        return ResponseEntity.ok(groupPrivileges);
+    public ResponseEntity<Void> addPrivilege(@PathVariable Long id, @PathVariable Long privilegeId,
+                                             String action) {
+        groupService.addPrivilege(id, privilegeId, action);
+        return ResponseEntity.ok().build();
     }
 
     /**
-     * 删除 group-privilege关联
+     * 查询 privilege
+     *
+     * @param id role代码
+     * @return 操作结果
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
+    @GetMapping("/{id}/privileges")
+    public ResponseEntity<List<SimplePrivilegeVO>> privileges(@PathVariable Long id) {
+        List<SimplePrivilegeVO> privileges = groupService.privileges(id);
+        return ResponseEntity.ok(privileges);
+    }
+
+    /**
+     * 删除 privilege
      *
      * @param id          group id
      * @param privilegeId privilege id
      * @param action      操作
      * @return 操作结果
      */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
     @DeleteMapping("/{id}/privileges/{privilegeId}")
-    public ResponseEntity<Void> removePrivileges(@PathVariable Long id, @PathVariable Long privilegeId,
-                                                 String action) {
-        groupPrivilegesService.removeRelation(id, privilegeId, action);
-
+    public ResponseEntity<Void> removePrivilege(@PathVariable Long id, @PathVariable Long privilegeId,
+                                                String action) {
+        groupService.removePrivilege(id, privilegeId, action);
         return ResponseEntity.noContent().build();
     }
 }

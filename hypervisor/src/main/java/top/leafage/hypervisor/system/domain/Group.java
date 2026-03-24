@@ -14,13 +14,13 @@
  */
 package top.leafage.hypervisor.system.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * entity class for group.
@@ -41,6 +41,26 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
 
     private boolean enabled = true;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "group_members",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
+    private final Set<User> members = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "group_roles",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private final Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<GroupPrivilege> groupPrivileges = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "group_authorities", joinColumns = @JoinColumn(name = "group_id"))
+    @Column(name = "authority")
+    private final Set<String> authorities = new HashSet<>();
+
 
     public Group() {
     }
@@ -56,6 +76,69 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
         this.name = name;
         this.superiorId = superiorId;
         this.description = description;
+    }
+
+    public void addMember(User user) {
+        this.members.add(user);
+    }
+
+    public void removeMember(User user) {
+        this.members.remove(user);
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+        syncAuthorities();
+    }
+
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+        syncAuthorities();
+    }
+
+    public void addPrivilege(Privilege privilege, Set<String> actions) {
+        GroupPrivilege gp = new GroupPrivilege();
+        gp.setGroup(this);
+        gp.setPrivilege(privilege);
+        gp.addActions(actions);
+        this.groupPrivileges.add(gp);
+        syncAuthorities();
+    }
+
+    public void removePrivilege(Privilege privilege) {
+        groupPrivileges.removeIf(gp -> gp.getPrivilege().equals(privilege));
+        syncAuthorities();
+    }
+
+    /**
+     * 核心同步方法：把 Role 的权限 + Group 自身的权限全部转换成 authorities
+     */
+    public void syncAuthorities() {
+        this.authorities.clear();
+
+        // 1. 来自关联的 Roles
+        for (Role role : roles) {
+            for (RolePrivilege rp : role.getRolePrivileges()) {
+                addAuthoritiesFromPrivilege(rp.getPrivilege().getName(), rp.getActions());
+            }
+        }
+
+        // 2. 来自 Group 自身直接配置的 Privileges
+        for (GroupPrivilege gp : groupPrivileges) {
+            addAuthoritiesFromPrivilege(gp.getPrivilege().getName(), gp.getActions());
+        }
+    }
+
+    private void addAuthoritiesFromPrivilege(String privilegeName, Set<String> actions) {
+        for (String action : actions) {
+            String authority = buildAuthority(privilegeName, action);
+            this.authorities.add(authority);
+        }
+    }
+
+    private String buildAuthority(String privilegeName, String action) {
+        // 示例：users:create
+        return privilegeName + ":" + action;
     }
 
     public String getName() {
@@ -88,5 +171,21 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Set<User> getMembers() {
+        return Set.copyOf(members);
+    }
+
+    public Set<Role> getRoles() {
+        return Set.copyOf(roles);
+    }
+
+    public Set<GroupPrivilege> getGroupPrivileges() {
+        return Set.copyOf(groupPrivileges);
+    }
+
+    public Set<String> getAuthorities() {
+        return Set.copyOf(authorities);
     }
 }

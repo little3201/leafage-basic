@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.task;
+package top.leafage.hypervisor.schedule;
 
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,12 +22,12 @@ import top.leafage.hypervisor.system.service.OperationLogService;
 import top.leafage.hypervisor.system.service.SchedulerLogService;
 
 @Component
-public class LoggingTask {
+public class LoggingSchedule {
 
     private final OperationLogService operationLogService;
     private final SchedulerLogService schedulerLogService;
 
-    public LoggingTask(OperationLogService operationLogService, SchedulerLogService schedulerLogService) {
+    public LoggingSchedule(OperationLogService operationLogService, SchedulerLogService schedulerLogService) {
         this.operationLogService = operationLogService;
         this.schedulerLogService = schedulerLogService;
     }

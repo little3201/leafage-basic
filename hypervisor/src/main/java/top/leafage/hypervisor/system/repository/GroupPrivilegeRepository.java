@@ -15,32 +15,41 @@
 package top.leafage.hypervisor.system.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import top.leafage.hypervisor.system.domain.GroupRoles;
+import top.leafage.hypervisor.system.domain.GroupPrivilege;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
- * group members repository.
+ * group privileges repository.
  *
  * @author wq li
  */
 @Repository
-public interface GroupRolesRepository extends JpaRepository<GroupRoles, Long> {
+public interface GroupPrivilegeRepository extends JpaRepository<GroupPrivilege, Long> {
 
     /**
-     * find by role id.
+     * 查询 privilege.
      *
-     * @param roleId role id
+     * @param groupId the pk of privilege.
      * @return the result.
      */
-    List<GroupRoles> findAllByRoleId(Long roleId);
+    @Query("""
+            SELECT gp 
+            FROM GroupPrivilege gp 
+            LEFT JOIN FETCH gp.privilege p 
+            LEFT JOIN FETCH gp.group g 
+            WHERE gp.group.id = :groupId
+            """)
+    List<GroupPrivilege> findAllByGroupId(Long groupId);
 
     /**
-     * find by group id.
+     * 根据group查privilege
      *
-     * @param groupId group id
+     * @param groupId the pk of privilege.
      * @return the result.
      */
-    List<GroupRoles> findAllByGroupId(Long groupId);
+    Optional<GroupPrivilege> findByGroupIdAndPrivilegeId(Long groupId, Long privilegeId);
 }

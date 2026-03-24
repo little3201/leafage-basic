@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     public Page<@NonNull UserVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull User> spec = (root, query, cb) ->
+        Specification<@NonNull User> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return userRepository.findAll(spec, pageable)

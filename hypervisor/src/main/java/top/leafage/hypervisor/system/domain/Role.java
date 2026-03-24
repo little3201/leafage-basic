@@ -14,14 +14,13 @@
  */
 package top.leafage.hypervisor.system.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.*;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * entity class for role.
@@ -40,12 +39,41 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
     private boolean enabled = true;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "role_members",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
+    private final Set<User> members = new HashSet<>();
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<RolePrivilege> rolePrivileges = new HashSet<>();
+
     public Role() {
     }
 
     public Role(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public void addPrivilege(Privilege privilege, Set<String> actions) {
+        RolePrivilege rp = new RolePrivilege();
+        rp.setRole(this);
+        rp.setPrivilege(privilege);
+        rp.addActions(actions);
+        this.rolePrivileges.add(rp);
+    }
+
+    public void removePrivilege(Privilege privilege) {
+        rolePrivileges.removeIf(rp -> rp.getPrivilege().equals(privilege));
+    }
+
+    public void addMember(User user) {
+        this.members.add(user);
+    }
+
+    public void removeMember(User user) {
+        this.members.remove(user);
     }
 
     public String getName() {
@@ -70,5 +98,13 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Set<User> getMembers() {
+        return Set.copyOf(members);
+    }
+
+    public Set<RolePrivilege> getRolePrivileges() {
+        return Set.copyOf(rolePrivileges);
     }
 }

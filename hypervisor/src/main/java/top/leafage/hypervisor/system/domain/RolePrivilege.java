@@ -18,6 +18,9 @@ import jakarta.persistence.*;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -27,55 +30,49 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "role_privileges")
-public class RolePrivileges extends AbstractPersistable<@NonNull Long> {
+public class RolePrivilege extends AbstractPersistable<@NonNull Long> {
 
-    @Column(nullable = false)
-    private Long roleId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 
-    @Column(nullable = false)
-    private Long privilegeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "privilege_id", nullable = false)
+    private Privilege privilege;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "role_privilege_actions", joinColumns = @JoinColumn(name = "role_privilege_id"))
-    private Set<String> actions;
+    private final Set<String> actions = new HashSet<>();
 
-    public RolePrivileges() {
+
+    public Role getRole() {
+        return role;
     }
 
-    public RolePrivileges(Long roleId, Long privilegeId, Set<String> actions) {
-        this.roleId = roleId;
-        this.privilegeId = privilegeId;
-        this.actions = actions;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public RolePrivileges(Long id, Long roleId, Long privilegeId, Set<String> actions) {
-        this.setId(id);
-        this.roleId = roleId;
-        this.privilegeId = privilegeId;
-        this.actions = actions;
+    public Privilege getPrivilege() {
+        return privilege;
     }
 
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
-
-    public Long getPrivilegeId() {
-        return privilegeId;
-    }
-
-    public void setPrivilegeId(Long privilegeId) {
-        this.privilegeId = privilegeId;
+    public void setPrivilege(Privilege privilege) {
+        this.privilege = privilege;
     }
 
     public Set<String> getActions() {
-        return actions;
+        return Set.copyOf(actions);
     }
 
-    public void setActions(Set<String> actions) {
-        this.actions = actions;
+    public void updateActions(Set<String> newActions) {
+        this.actions.clear();
+        this.actions.addAll(newActions);
+    }
+
+    public void addActions(Collection<String> newActions) {
+        if (newActions != null) {
+            this.actions.addAll(newActions);
+        }
     }
 }

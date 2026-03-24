@@ -54,7 +54,7 @@ public class AccessLogServiceImpl implements AccessLogService {
     public Page<@NonNull AccessLogVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull AccessLog> spec = (root, query, cb) ->
+        Specification<@NonNull AccessLog> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return accessLogRepository.findAll(spec, pageable).map(AccessLogVO::from);

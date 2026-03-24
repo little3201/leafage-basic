@@ -50,7 +50,7 @@ cd leafage
 
 ### 配置数据库
 
-1. 创建数据库（如 leafage），导入 `scheme.sql`
+1. 创建数据库（如 leafage），导入 `schema.sql`
 2. 修改 `application.yml` 配置数据库连接信息
 
 ### 启动项目
@@ -64,12 +64,6 @@ mvn spring-boot:run
 ```bash
 ./mvnw spring-boot:run
 ```
-
-### 访问系统
-
-默认接口地址：`http://localhost:8080/`
-
-前端地址（如有）：`http://localhost:xxxx/`
 
 ## 项目结构
 

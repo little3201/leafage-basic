@@ -57,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
     public Page<@NonNull MessageVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Message> spec = (root, query, cb) ->
+        Specification<@NonNull Message> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return messageRepository.findAll(spec, pageable)

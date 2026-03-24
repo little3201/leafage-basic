@@ -17,10 +17,15 @@ package top.leafage.hypervisor.system.service;
 import org.jspecify.annotations.NonNull;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
+import top.leafage.hypervisor.system.domain.GroupPrivilege;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
+import top.leafage.hypervisor.system.domain.vo.UserVO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * group service.
@@ -29,5 +34,84 @@ import java.util.List;
  */
 public interface GroupService extends JpaCrudService<GroupDTO, GroupVO> {
 
+    /**
+     * 查询树
+     *
+     * @return result.
+     */
     List<TreeNode<@NonNull Long>> tree();
+
+    /**
+     * 添加 user
+     *
+     * @param id        the pk of group.
+     * @param usernames the username of users.
+     */
+    void addMembers(Long id, Set<String> usernames);
+
+    /**
+     * 查询 user
+     *
+     * @param id the pk of group.
+     * @return 数据集
+     */
+    List<UserVO> members(Long id);
+
+    /**
+     * 移除 user
+     *
+     * @param id        the pk of group.
+     * @param usernames the username of users.
+     */
+    void removeMembers(Long id, Set<String> usernames);
+
+    /**
+     * 添加 role
+     *
+     * @param id      the pk of group.
+     * @param roleIds the pk of roles.
+     */
+    void addRoles(Long id, Set<Long> roleIds);
+
+    /**
+     * 查询 role
+     *
+     * @param id the pk of group.
+     * @return 数据集
+     */
+    List<RoleVO> roles(Long id);
+
+    /**
+     * 移除 role
+     *
+     * @param id      the pk of group.
+     * @param roleIds the pk of roles.
+     */
+    void removeRoles(Long id, Set<Long> roleIds);
+
+    /**
+     * 添加 privilege
+     *
+     * @param id          the pk of group.
+     * @param privilegeId the pk of privilege.
+     * @param action      the action of privilege.
+     */
+    void addPrivilege(Long id, Long privilegeId, String action);
+
+    /**
+     * 查询 privilege
+     *
+     * @param id the pk of group.
+     * @return 数据集
+     */
+    List<SimplePrivilegeVO> privileges(Long id);
+
+    /**
+     * 移除 privilege
+     *
+     * @param id          the pk of group.
+     * @param privilegeId the pk of privilege.
+     * @param action      the action of privilege.
+     */
+    void removePrivilege(Long id, Long privilegeId, String action);
 }

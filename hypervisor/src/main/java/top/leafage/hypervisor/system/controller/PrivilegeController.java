@@ -21,7 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.data.domain.TreeNode;
-import top.leafage.common.poi.ExcelReader;
+import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 import top.leafage.hypervisor.system.service.PrivilegeService;
@@ -135,11 +135,11 @@ public class PrivilegeController {
     }
 
     /**
-     * import..
+     * import.
      *
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('SCOPE_privileges:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:import')")
     @PostMapping("/import")
     public ResponseEntity<List<PrivilegeVO>> importFromFile(MultipartFile file) throws IOException {
         List<PrivilegeDTO> dtoList = ExcelReader.read(file.getInputStream(), PrivilegeDTO.class);

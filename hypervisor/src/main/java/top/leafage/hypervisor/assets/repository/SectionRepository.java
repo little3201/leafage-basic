@@ -12,48 +12,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package top.leafage.hypervisor.system.repository;
+
+package top.leafage.hypervisor.assets.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import top.leafage.hypervisor.system.domain.User;
+import top.leafage.hypervisor.assets.domain.Section;
 
-import java.util.Optional;
+import java.util.List;
 
 /**
- * user repository.
+ * section repository.
  *
  * @author wq li
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpecificationExecutor<Section> {
 
     /**
-     * 查询.
+     * exists by title.
      *
-     * @param username the username of user.
-     * @return result.
+     * @param title a {@link String} object
+     * @return a boolean
      */
-    Optional<User> findByUsername(String username);
+    boolean existsByTitle(String title);
 
     /**
-     * is exists.
+     * 查询
      *
-     * @param username username.
-     * @return if exists return true or false.
+     * @return 关联的数据
      */
-    boolean existsByUsername(String username);
+    List<Section> findAllBySuperiorIdIsNull();
 
     /**
-     * is exists.
+     * 根据superior id查询
      *
-     * @param email username.
-     * @return if exists return true or false.
+     * @param superiorId 回复信息
+     * @return 关联的数据
      */
-    boolean existsByEmail(String email);
+    List<Section> findAllBySuperiorId(Long superiorId);
+
+    /**
+     * 记录数
+     *
+     * @param superiorId 回复id
+     * @return 记录数
+     */
+    long countBySuperiorId(Long superiorId);
 
     /**
      * enable a record by pk.
@@ -62,16 +70,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @return result.
      */
     @Modifying
-    @Query("UPDATE User t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
+    @Query("UPDATE Section t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
     int updateEnabledById(Long id);
-
-    /**
-     * update the accountNonLocked to true by pk.
-     *
-     * @param id the pk.
-     * @return result.
-     */
-    @Modifying
-    @Query("UPDATE User t SET t.accountNonLocked = true WHERE t.id = :id")
-    int updateAccountNonLockedById(Long id);
 }

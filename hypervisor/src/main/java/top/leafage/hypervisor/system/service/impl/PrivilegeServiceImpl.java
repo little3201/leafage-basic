@@ -23,11 +23,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
-import top.leafage.hypervisor.system.repository.*;
+import top.leafage.hypervisor.system.repository.PrivilegeRepository;
 import top.leafage.hypervisor.system.service.PrivilegeService;
 
 import java.util.*;
@@ -44,28 +45,20 @@ import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
 @Service
 public class PrivilegeServiceImpl implements PrivilegeService {
 
+    private static final Set<String> META_FIELDS = Set.of("path", "redirect", "component", "icon", "actions");
+
     private static final BeanCopier copier = BeanCopier.create(PrivilegeDTO.class, Privilege.class, false);
-    public final RoleMembersRepository roleMembersRepository;
-    public final RolePrivilegesRepository rolePrivilegesRepository;
+
     private final PrivilegeRepository privilegeRepository;
-    private final GroupMembersRepository groupMembersRepository;
-    private final GroupRolesRepository groupRolesRepository;
-    private final GroupPrivilegesRepository groupPrivilegesRepository;
 
     /**
      * Constructor for PrivilegeServiceImpl.
      *
-     * @param rolePrivilegesRepository a {@link RolePrivilegesRepository} object
-     * @param privilegeRepository      a {@link PrivilegeRepository} object
+     * @param privilegeRepository a {@link PrivilegeRepository} object
      */
-    public PrivilegeServiceImpl(RoleMembersRepository roleMembersRepository, RolePrivilegesRepository rolePrivilegesRepository,
-                                PrivilegeRepository privilegeRepository, GroupMembersRepository groupMembersRepository, GroupRolesRepository groupRolesRepository, GroupPrivilegesRepository groupPrivilegesRepository) {
-        this.roleMembersRepository = roleMembersRepository;
-        this.rolePrivilegesRepository = rolePrivilegesRepository;
+    public PrivilegeServiceImpl(PrivilegeRepository privilegeRepository) {
+
         this.privilegeRepository = privilegeRepository;
-        this.groupMembersRepository = groupMembersRepository;
-        this.groupRolesRepository = groupRolesRepository;
-        this.groupPrivilegesRepository = groupPrivilegesRepository;
     }
 
     /**
@@ -75,9 +68,9 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     public Page<@NonNull PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Privilege> spec = (root, query, cb) ->
+        Specification<@NonNull Privilege> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
-        spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
+        spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
 
         return privilegeRepository.findAll(spec, pageable)
                 .map(entity -> {
@@ -93,46 +86,22 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     public List<TreeNode<@NonNull Long>> tree(String username) {
         Assert.hasText(username, String.format(_MUST_NOT_BE_EMPTY, "username"));
 
-        Map<Long, Set<String>> privilegeActionsMap = new HashMap<>();
-        // Group
-        groupMembersRepository.findAllByUsername(username).forEach(gm ->
-                groupRolesRepository.findAllByGroupId(gm.getGroupId()).forEach(gr -> {
-                    // GroupPrivileges
-                    groupPrivilegesRepository.findAllByGroupId(gr.getGroupId())
-                            .forEach(gp -> mergeActions(gp.getPrivilegeId(), gp.getActions(), privilegeActionsMap));
-                    // RolePrivileges (from GroupRole)
-                    rolePrivilegesRepository.findAllByRoleId(gr.getRoleId())
-                            .forEach(rp -> mergeActions(rp.getPrivilegeId(), rp.getActions(), privilegeActionsMap));
-                })
-        );
-
-        // Role
-        roleMembersRepository.findAllByUsername(username).forEach(rm ->
-                rolePrivilegesRepository.findAllByRoleId(rm.getRoleId())
-                        .forEach(rp -> mergeActions(rp.getPrivilegeId(), rp.getActions(), privilegeActionsMap))
-        );
-
-        if (privilegeActionsMap.isEmpty()) {
+        Set<Long> privilegeIds = new LinkedHashSet<>();
+        privilegeIds.addAll(privilegeRepository.findGroupPrivilegeIdsByUsername(username));
+        privilegeIds.addAll(privilegeRepository.findGroupRolePrivilegeIdsByUsername(username));
+        privilegeIds.addAll(privilegeRepository.findRolePrivilegeIdsByUsername(username));
+        if (CollectionUtils.isEmpty(privilegeIds)) {
             return Collections.emptyList();
         }
-        List<Privilege> directPrivileges = privilegeRepository.findAllById(privilegeActionsMap.keySet());
-        Map<Long, Privilege> privilegeMap = directPrivileges.stream()
-                .filter(Privilege::isEnabled)
-                .collect(Collectors.toMap(Privilege::getId, Function.identity(), (a, b) -> a));
 
-        // 设置 actions
-        privilegeActionsMap.forEach((id, actions) -> {
-            Privilege p = privilegeMap.get(id);
-            if (p != null) {
-                p.setActions(actions);
-            }
-        });
+        Map<Long, Privilege> privilegeMap = privilegeRepository.findAllById(privilegeIds).stream()
+                .filter(Privilege::isEnabled)
+                .collect(Collectors.toMap(Privilege::getId, Function.identity()));
 
         expandPrivileges(privilegeMap);
 
         List<Privilege> allPrivileges = new ArrayList<>(privilegeMap.values());
-        Set<String> meta = Set.of("path", "redirect", "component", "icon", "actions");
-        return toTree(allPrivileges, meta);
+        return toTree(allPrivileges, META_FIELDS);
     }
 
     /**
@@ -195,10 +164,6 @@ public class PrivilegeServiceImpl implements PrivilegeService {
         return PrivilegeVO.from(entity);
     }
 
-    private void mergeActions(Long privilegeId, Set<String> actions, Map<Long, Set<String>> map) {
-        map.computeIfAbsent(privilegeId, k -> new HashSet<>()).addAll(actions);
-    }
-
     private Set<Long> collectMissingSuperiorIds(Map<Long, Privilege> privilegeMap) {
         return privilegeMap.values().stream()
                 .map(Privilege::getSuperiorId)
@@ -208,10 +173,18 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     }
 
     private void expandPrivileges(Map<Long, Privilege> privilegeMap) {
+        final int MAX_ITERATIONS = 8;
+        int iterations = 0;
         Set<Long> toLoad;
         do {
             toLoad = collectMissingSuperiorIds(privilegeMap);
-            if (toLoad.isEmpty()) break;
+            if (toLoad.isEmpty()) {
+                break;
+            }
+
+            if (++iterations > MAX_ITERATIONS) {
+                break;
+            }
 
             privilegeRepository.findAllById(toLoad).stream()
                     .filter(Privilege::isEnabled)

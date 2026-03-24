@@ -24,12 +24,15 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import top.leafage.hypervisor.assets.domain.Region;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
 import top.leafage.hypervisor.assets.service.RegionService;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -59,9 +62,11 @@ public class RegionServiceImpl implements RegionService {
     public Page<@NonNull RegionVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Region> spec = (root, query, cb) ->
+        Specification<@NonNull Region> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
-        spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
+        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
+            spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
+        }
 
         return regionRepository.findAll(spec, pageable)
                 .map(entity -> {
@@ -97,10 +102,14 @@ public class RegionServiceImpl implements RegionService {
      */
     @Override
     public List<RegionVO> subset(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        return regionRepository.findAllBySuperiorId(id)
-                .stream().map(entity -> {
+        List<Region> list;
+        if (id == null) {
+            list = regionRepository.findAllBySuperiorIdIsNull();
+        } else {
+            list = regionRepository.findAllBySuperiorId(id);
+        }
+        return list.stream().sorted(Comparator.comparing(Region::getId))
+                .map(entity -> {
                     long count = regionRepository.countBySuperiorId(entity.getId());
                     return RegionVO.from(entity, count);
                 })

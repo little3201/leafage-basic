@@ -34,6 +34,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcherEntry;
@@ -57,12 +58,19 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+        CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
+
+        // 设置attribute name 为 null
+        csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName(null);
+
         http
                 .authorizeHttpRequests(authorize ->
                         authorize.anyRequest().authenticated()
                 )
                 .csrf(csrf ->
-                        csrf.csrfTokenRepository(new CookieCsrfTokenRepository())
+                        csrf.csrfTokenRepository(cookieCsrfTokenRepository)
+                                .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                 )
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exceptionHandling ->

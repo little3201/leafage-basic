@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     public Page<@NonNull CommentVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Comment> spec = (root, query, cb) ->
+        Specification<@NonNull Comment> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return commentRepository.findAll(spec, pageable).map(entity -> {

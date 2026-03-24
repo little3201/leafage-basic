@@ -59,9 +59,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Page<@NonNull DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Dictionary> spec = (root, query, cb) ->
+        Specification<@NonNull Dictionary> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
-        spec = spec.and((root, query, cb) -> cb.isNull(root.get("superiorId")));
+        spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
 
         return dictionaryRepository.findAll(spec, pageable)
                 .map(entity -> {

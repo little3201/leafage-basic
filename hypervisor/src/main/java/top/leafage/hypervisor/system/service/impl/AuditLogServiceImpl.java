@@ -54,7 +54,7 @@ public class AuditLogServiceImpl implements AuditLogService {
     public Page<@NonNull AuditLogVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull AuditLog> spec = (root, query, cb) ->
+        Specification<@NonNull AuditLog> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return auditLogRepository.findAll(spec, pageable)

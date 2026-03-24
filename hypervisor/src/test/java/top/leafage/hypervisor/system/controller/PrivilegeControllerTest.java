@@ -35,7 +35,6 @@ import top.leafage.common.data.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 import top.leafage.hypervisor.system.service.PrivilegeService;
-import top.leafage.hypervisor.system.service.RolePrivilegesService;
 
 import java.util.Collections;
 import java.util.List;
@@ -65,9 +64,6 @@ class PrivilegeControllerTest {
 
     @MockitoBean
     private PrivilegeService privilegeService;
-
-    @MockitoBean
-    private RolePrivilegesService rolePrivilegesService;
 
     private PrivilegeVO vo;
 

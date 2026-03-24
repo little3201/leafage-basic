@@ -26,9 +26,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.data.domain.TreeNode;
-import top.leafage.hypervisor.system.domain.Group;
-import top.leafage.hypervisor.system.domain.GroupPrivilege;
-import top.leafage.hypervisor.system.domain.Privilege;
+import top.leafage.hypervisor.system.domain.*;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
@@ -38,6 +36,7 @@ import top.leafage.hypervisor.system.service.GroupService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
@@ -259,15 +258,27 @@ public class GroupServiceImpl implements GroupService {
      */
     @Transactional
     @Override
-    public void addPrivilege(Long groupId, Long privilegeId, String action) {
-        Assert.notNull(groupId, String.format(_MUST_NOT_BE_NULL, "groupId"));
+    public void addPrivilege(Long id, Long privilegeId, String action) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
 
-        Group group = groupRepository.findById(groupId).orElseThrow();
         Privilege priv = privilegeRepository.findById(privilegeId).orElseThrow();
+        if (!priv.getActions().contains(action)) {
+            throw new IllegalArgumentException("无效的 action");
+        }
 
-        group.addPrivilege(priv, Set.of(action));
-        groupRepository.save(group);
+        Optional<GroupPrivilege> existing = groupPrivilegeRepository
+                .findByGroupIdAndPrivilegeId(id, privilegeId);
+        Group group = groupRepository.findById(id).orElseThrow();
+        if (existing.isPresent()) {
+            // 已存在 → 只更新 actions（最高效）
+            existing.get().updateActions(Set.of(action));
+            groupPrivilegeRepository.save(existing.get());
+        } else {
+            // 不存在 → 新增
+            group.addPrivilege(priv, Set.of(action));
+            groupRepository.save(group);
+        }
     }
 
     /**

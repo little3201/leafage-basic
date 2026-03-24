@@ -14,12 +14,13 @@
  */
 package top.leafage.hypervisor.system.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.GroupPrivilege;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * group privileges repository.
@@ -30,12 +31,25 @@ import java.util.List;
 public interface GroupPrivilegeRepository extends JpaRepository<GroupPrivilege, Long> {
 
     /**
-     *
      * 查询 privilege.
      *
      * @param groupId the pk of privilege.
      * @return the result.
      */
-    @EntityGraph(attributePaths = {"privilege", "privilege.actions"})
+    @Query("""
+            SELECT gp 
+            FROM GroupPrivilege gp 
+            LEFT JOIN FETCH gp.privilege p 
+            LEFT JOIN FETCH gp.group g 
+            WHERE gp.group.id = :groupId
+            """)
     List<GroupPrivilege> findAllByGroupId(Long groupId);
+
+    /**
+     * 根据group查privilege
+     *
+     * @param groupId the pk of privilege.
+     * @return the result.
+     */
+    Optional<GroupPrivilege> findByGroupIdAndPrivilegeId(Long groupId, Long privilegeId);
 }

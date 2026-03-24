@@ -64,6 +64,11 @@ public class GroupPrivilege extends AbstractPersistable<@NonNull Long> {
         return Set.copyOf(actions);
     }
 
+    public void updateActions(Set<String> newActions) {
+        this.actions.clear();
+        this.actions.addAll(newActions);
+    }
+
     public void addActions(Collection<String> newActions) {
         if (newActions != null) {
             this.actions.addAll(newActions);

@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.Role;
+import top.leafage.hypervisor.system.domain.RolePrivilege;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
 import top.leafage.hypervisor.system.domain.vo.RolePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
@@ -34,6 +35,7 @@ import top.leafage.hypervisor.system.repository.*;
 import top.leafage.hypervisor.system.service.RoleService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -200,16 +202,24 @@ public class RoleServiceImpl implements RoleService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
 
-        Role role = roleRepository.findById(id).orElseThrow();
         Privilege priv = privilegeRepository.findById(privilegeId).orElseThrow();
-
         if (!priv.getActions().contains(action)) {
             throw new IllegalArgumentException("无效的 action");
         }
 
-        role.addPrivilege(priv, Set.of(action));
-        roleRepository.save(role);
+        Optional<RolePrivilege> existing = rolePrivilegeRepository
+                .findByRoleIdAndPrivilegeId(id, privilegeId);
 
+        Role role = roleRepository.findById(id).orElseThrow();
+        if (existing.isPresent()) {
+            // 已存在 → 只更新 actions（最高效）
+            existing.get().updateActions(Set.of(action));
+            rolePrivilegeRepository.save(existing.get());
+        } else {
+            // 不存在 → 新增
+            role.addPrivilege(priv, Set.of(action));
+            roleRepository.save(role);
+        }
         syncAllGroupsContainingRole(role);
     }
 

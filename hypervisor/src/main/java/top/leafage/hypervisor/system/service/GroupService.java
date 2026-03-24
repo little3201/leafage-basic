@@ -21,6 +21,7 @@ import top.leafage.hypervisor.system.domain.GroupPrivilege;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 
 import java.util.List;
@@ -103,7 +104,7 @@ public interface GroupService extends JpaCrudService<GroupDTO, GroupVO> {
      * @param id the pk of group.
      * @return 数据集
      */
-    List<GroupPrivilege> privileges(Long id);
+    List<SimplePrivilegeVO> privileges(Long id);
 
     /**
      * 移除 privilege

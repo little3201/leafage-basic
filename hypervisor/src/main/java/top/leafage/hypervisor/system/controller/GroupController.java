@@ -29,6 +29,7 @@ import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.GroupService;
 
@@ -271,8 +272,8 @@ public class GroupController {
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
     @GetMapping("/{id}/privileges")
-    public ResponseEntity<List<GroupPrivilege>> privileges(@PathVariable Long id) {
-        List<GroupPrivilege> privileges = groupService.privileges(id);
+    public ResponseEntity<List<SimplePrivilegeVO>> privileges(@PathVariable Long id) {
+        List<SimplePrivilegeVO> privileges = groupService.privileges(id);
         return ResponseEntity.ok(privileges);
     }
 

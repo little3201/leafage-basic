@@ -38,6 +38,7 @@ import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.GroupService;
 
@@ -356,12 +357,12 @@ class GroupControllerTest {
 
     @Test
     void privileges() {
-        when(groupService.privileges(anyLong())).thenReturn(List.of(mock(GroupPrivilege.class)));
+        when(groupService.privileges(anyLong())).thenReturn(List.of(mock(SimplePrivilegeVO.class)));
 
         assertThat(mvc.get().uri("/groups/{id}/privileges", 1L))
                 .hasStatusOk()
                 .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(GroupPrivilege.class))
+                .convertTo(InstanceOfAssertFactories.list(SimplePrivilegeVO.class))
                 .hasSize(1);
     }
 

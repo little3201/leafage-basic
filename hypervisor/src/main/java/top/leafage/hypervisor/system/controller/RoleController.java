@@ -22,10 +22,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.poi.excel.ExcelReader;
-import top.leafage.hypervisor.system.domain.RolePrivilege;
-import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
-import top.leafage.hypervisor.system.domain.vo.RolePrivilegeVO;
+import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.RoleService;
@@ -216,8 +214,8 @@ public class RoleController {
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:authorize')")
     @GetMapping("/{id}/privileges")
-    public ResponseEntity<List<RolePrivilegeVO>> privileges(@PathVariable Long id) {
-        List<RolePrivilegeVO> privileges = roleService.privileges(id);
+    public ResponseEntity<List<SimplePrivilegeVO>> privileges(@PathVariable Long id) {
+        List<SimplePrivilegeVO> privileges = roleService.privileges(id);
         return ResponseEntity.ok(privileges);
     }
 

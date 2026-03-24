@@ -28,7 +28,7 @@ import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.Role;
 import top.leafage.hypervisor.system.domain.RolePrivilege;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
-import top.leafage.hypervisor.system.domain.vo.RolePrivilegeVO;
+import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.repository.*;
@@ -228,11 +228,11 @@ public class RoleServiceImpl implements RoleService {
      */
     @Transactional(readOnly = true)
     @Override
-    public List<RolePrivilegeVO> privileges(Long id) {
+    public List<SimplePrivilegeVO> privileges(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         return rolePrivilegeRepository.findAllByRoleId(id)
-                .stream().map(RolePrivilegeVO::from)
+                .stream().map(SimplePrivilegeVO::from)
                 .toList();
     }
 

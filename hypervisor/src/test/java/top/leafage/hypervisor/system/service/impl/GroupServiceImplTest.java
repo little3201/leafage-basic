@@ -32,7 +32,6 @@ import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
 import top.leafage.hypervisor.system.repository.GroupRepository;
-import top.leafage.hypervisor.system.service.impl.GroupServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +40,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -91,7 +91,7 @@ class GroupServiceImplTest {
 
         List<TreeNode<Long>> nodes = groupService.tree();
         assertEquals(1, nodes.size());
-        assertEquals(1, nodes.get(0).getChildren().size());
+        assertEquals(1, nodes.getFirst().getChildren().size());
         verify(groupRepository).findAll();
     }
 

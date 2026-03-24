@@ -14,6 +14,7 @@
  */
 package top.leafage.hypervisor.system.domain.vo;
 
+import top.leafage.hypervisor.system.domain.GroupPrivilege;
 import top.leafage.hypervisor.system.domain.RolePrivilege;
 
 import java.util.Set;
@@ -23,16 +24,22 @@ import java.util.Set;
  *
  * @author wq li
  */
-public record RolePrivilegeVO(
+public record SimplePrivilegeVO(
         Long id,
-        Long roleId,
         Long privilegeId,
         Set<String> actions
 ) {
-    public static RolePrivilegeVO from(RolePrivilege entity) {
-        return new RolePrivilegeVO(
+    public static SimplePrivilegeVO from(RolePrivilege entity) {
+        return new SimplePrivilegeVO(
                 entity.getId(),
-                entity.getRole().getId(),
+                entity.getPrivilege().getId(),
+                entity.getActions()
+        );
+    }
+
+    public static SimplePrivilegeVO from(GroupPrivilege entity) {
+        return new SimplePrivilegeVO(
+                entity.getId(),
                 entity.getPrivilege().getId(),
                 entity.getActions()
         );

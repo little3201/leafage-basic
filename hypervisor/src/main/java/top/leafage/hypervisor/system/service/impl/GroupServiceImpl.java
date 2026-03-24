@@ -30,6 +30,7 @@ import top.leafage.hypervisor.system.domain.*;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.repository.*;
 import top.leafage.hypervisor.system.service.GroupService;
@@ -285,10 +286,12 @@ public class GroupServiceImpl implements GroupService {
      * {@inheritDoc}
      */
     @Override
-    public List<GroupPrivilege> privileges(Long id) {
+    public List<SimplePrivilegeVO> privileges(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
-        return groupPrivilegeRepository.findAllByGroupId(id);
+        return groupPrivilegeRepository.findAllByGroupId(id)
+                .stream().map(SimplePrivilegeVO::from)
+                .toList();
     }
 
     /**

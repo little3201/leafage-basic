@@ -13,26 +13,28 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.system.service;
+package top.leafage.hypervisor.assets.repository;
 
-import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
-import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+import top.leafage.hypervisor.assets.domain.ReportSection;
 
 import java.util.List;
 
 /**
- * dictionary service.
+ * schema section repository.
  *
  * @author wq li
  */
-public interface DictionaryService extends JpaCrudService<DictionaryDTO, DictionaryVO> {
+@Repository
+public interface ReportSectionRepository extends JpaRepository<ReportSection, Long>, JpaSpecificationExecutor<ReportSection> {
 
     /**
-     * 获取子节点
+     * Retrieve by reportId.
      *
-     * @param id th pk.
-     * @return 数据集
+     * @param reportId the pk of report.
+     * @return the result.
      */
-    List<DictionaryVO> subset(Long id);
+    List<ReportSection> findAllByReportId(Long reportId);
 }

@@ -88,8 +88,8 @@ public class DictionaryController {
      * @param id th pk.
      * @return the result.
      */
-    @GetMapping("/{id}/subset")
-    public ResponseEntity<List<DictionaryVO>> subset(@PathVariable Long id) {
+    @GetMapping("subset")
+    public ResponseEntity<List<DictionaryVO>> subset(Long id) {
         List<DictionaryVO> voList = dictionaryService.subset(id);
         return ResponseEntity.ok(voList);
     }

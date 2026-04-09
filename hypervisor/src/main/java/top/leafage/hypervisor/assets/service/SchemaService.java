@@ -15,24 +15,36 @@
 
 package top.leafage.hypervisor.assets.service;
 
+import org.springframework.data.domain.Page;
 import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.dto.SchemaDTO;
+import top.leafage.hypervisor.assets.domain.vo.SchemaVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 
 import java.util.List;
 
 /**
- * section service.
+ * schema service.
  *
  * @author wq li
  */
-public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
+public interface SchemaService extends JpaCrudService<SchemaDTO, SchemaVO> {
 
     /**
-     * 获取子节点
+     * sections
      *
-     * @param id th pk.
-     * @return 数据集
+     * @param id the pk.
+     * @return the result.
      */
-    List<SectionVO> subset(Long id);
+    Page<SectionVO> sections(Long id, int page, int size,
+                             String sortBy, boolean descending, String filters);
+
+    /**
+     * section subset
+     *
+     * @param id        the pk.
+     * @param sectionId the pk of section.
+     * @return the result.
+     */
+    List<SectionVO> subset(Long id, Long sectionId);
 }

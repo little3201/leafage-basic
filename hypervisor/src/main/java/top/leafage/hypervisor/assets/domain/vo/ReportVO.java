@@ -15,33 +15,33 @@
 
 package top.leafage.hypervisor.assets.domain.vo;
 
-import top.leafage.hypervisor.assets.domain.Section;
+import top.leafage.hypervisor.assets.domain.Report;
+
+import java.time.LocalDateTime;
 
 /**
- * vo class for section.
+ * vo class for report.
  *
  * @author wq li
  */
-public record SectionVO(
+public record ReportVO(
         Long id,
-        Long superiorId,
-        String name,
-        String body,
+        String title,
+        Long schemaId,
         String type,
-        long count
+        int version,
+        String owner,
+        LocalDateTime lastModifiedDate
 ) {
-    public static SectionVO from(Section entity) {
-        return from(entity, 0);
-    }
-
-    public static SectionVO from(Section entity, long count) {
-        return new SectionVO(
+    public static ReportVO from(Report entity) {
+        return new ReportVO(
                 entity.getId(),
-                entity.getSuperiorId(),
-                entity.getName(),
+                entity.getTitle(),
+                entity.getSchemaId(),
                 entity.getBody(),
-                entity.getType().name(),
-                count
+                entity.getVersion(),
+                entity.getOwner(),
+                entity.getLastModifiedDate().isPresent() ? entity.getLastModifiedDate().get() : null
         );
     }
 }

@@ -48,15 +48,11 @@ public class FileRecord extends JpaAbstractAuditable<@NonNull String, @NonNull L
 
     private boolean directory;
 
-    private boolean regularFile;
-
-    private boolean symbolicLink;
-
 
     public FileRecord() {
     }
 
-    public FileRecord(Long superiorId, String name, String extension, String path, String contentType, long size, boolean directory, boolean regularFile, boolean symbolicLink) {
+    public FileRecord(Long superiorId, String name, String extension, String path, String contentType, long size, boolean directory) {
         this.superiorId = superiorId;
         this.name = name;
         this.extension = extension;
@@ -64,8 +60,6 @@ public class FileRecord extends JpaAbstractAuditable<@NonNull String, @NonNull L
         this.contentType = contentType;
         this.size = size;
         this.directory = directory;
-        this.regularFile = regularFile;
-        this.symbolicLink = symbolicLink;
     }
 
     public Long getSuperiorId() {
@@ -124,19 +118,4 @@ public class FileRecord extends JpaAbstractAuditable<@NonNull String, @NonNull L
         this.directory = directory;
     }
 
-    public boolean isRegularFile() {
-        return regularFile;
-    }
-
-    public void setRegularFile(boolean regularFile) {
-        this.regularFile = regularFile;
-    }
-
-    public boolean isSymbolicLink() {
-        return symbolicLink;
-    }
-
-    public void setSymbolicLink(boolean symbolicLink) {
-        this.symbolicLink = symbolicLink;
-    }
 }

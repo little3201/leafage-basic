@@ -15,6 +15,7 @@
 package top.leafage.hypervisor.system.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Predicate;
 import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,9 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.data.domain.TreeNode;
-import top.leafage.hypervisor.system.domain.*;
+import top.leafage.hypervisor.system.domain.Group;
+import top.leafage.hypervisor.system.domain.GroupPrivilege;
+import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
@@ -79,11 +82,16 @@ public class GroupServiceImpl implements GroupService {
     public Page<@NonNull GroupVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Group> spec = (root, _, cb) ->
-                buildPredicate(filters, cb, root).orElse(null);
-        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
-            spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
-        }
+        Specification<Group> spec = (root, _, cb) -> {
+            Optional<Predicate> predicate = buildPredicate(filters, cb, root);
+            // 添加superiorId的条件
+            Predicate basePredicate = predicate.orElse(cb.conjunction());
+            if (StringUtils.hasText(filters) && filters.contains("superiorId")) {
+                return basePredicate;
+            } else {
+                return cb.and(basePredicate, cb.isNull(root.get("superiorId")));
+            }
+        };
 
         return groupRepository.findAll(spec, pageable)
                 .map(GroupVO::from);

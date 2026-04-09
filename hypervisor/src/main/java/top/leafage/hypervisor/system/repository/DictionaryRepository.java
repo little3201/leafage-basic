@@ -41,6 +41,13 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long>, J
     boolean existsByName(String name);
 
     /**
+     * find the superior is null.
+     *
+     * @return the result.
+     */
+    List<Dictionary> findAllBySuperiorIdIsNull();
+
+    /**
      * find by superior id.
      *
      * @param superiorId the pk of superior.

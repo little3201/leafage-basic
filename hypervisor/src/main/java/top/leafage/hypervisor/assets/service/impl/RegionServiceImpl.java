@@ -16,6 +16,7 @@
 package top.leafage.hypervisor.assets.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Predicate;
 import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.hypervisor.assets.domain.Region;
-import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
@@ -34,6 +34,7 @@ import top.leafage.hypervisor.assets.service.RegionService;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * region service impl.
@@ -62,11 +63,15 @@ public class RegionServiceImpl implements RegionService {
     public Page<@NonNull RegionVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Region> spec = (root, _, cb) ->
-                buildPredicate(filters, cb, root).orElse(null);
-        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
-            spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
-        }
+        Specification<Region> spec = (root, _, cb) -> {
+            Optional<Predicate> predicate = buildPredicate(filters, cb, root);
+            Predicate basePredicate = predicate.orElse(cb.conjunction());
+            if (StringUtils.hasText(filters) && filters.contains("superiorId")) {
+                return basePredicate;
+            } else {
+                return cb.and(basePredicate, cb.isNull(root.get("superiorId")));
+            }
+        };
 
         return regionRepository.findAll(spec, pageable)
                 .map(entity -> {

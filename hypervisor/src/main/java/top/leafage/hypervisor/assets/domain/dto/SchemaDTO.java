@@ -16,41 +16,26 @@
 package top.leafage.hypervisor.assets.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import top.leafage.hypervisor.assets.domain.Section;
+import top.leafage.hypervisor.assets.domain.Schema;
 
 /**
- * dto class for section.
+ * dto class for schema.
  *
  * @author wq li
  */
-public class SectionDTO {
-
-    private Long superiorId;
+public class SchemaDTO {
 
     @NotBlank
     private String name;
 
-    private String body;
-
-    private String type;
+    private String description;
 
 
-    public static Section toEntity(SectionDTO dto) {
-        return new Section(
-                dto.getSuperiorId(),
+    public static Schema toEntity(SchemaDTO dto) {
+        return new Schema(
                 dto.getName(),
-                dto.getBody(),
-                dto.getType()
+                dto.getDescription()
         );
-    }
-
-
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
     }
 
     public String getName() {
@@ -61,19 +46,11 @@ public class SectionDTO {
         this.name = name;
     }
 
-    public String getBody() {
-        return body;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -16,49 +16,49 @@
 package top.leafage.hypervisor.assets.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import top.leafage.hypervisor.assets.domain.Section;
+import top.leafage.hypervisor.assets.domain.Report;
 
 /**
- * dto class for section.
+ * dto class for report.
  *
  * @author wq li
  */
-public class SectionDTO {
-
-    private Long superiorId;
+public class ReportDTO {
 
     @NotBlank
-    private String name;
+    private String title;
+
+    private Long schemaId;
 
     private String body;
 
-    private String type;
+    private String owner;
 
 
-    public static Section toEntity(SectionDTO dto) {
-        return new Section(
-                dto.getSuperiorId(),
-                dto.getName(),
+    public static Report toEntity(ReportDTO dto) {
+        return new Report(
+                dto.getTitle(),
+                dto.getSchemaId(),
                 dto.getBody(),
-                dto.getType()
+                dto.getOwner()
         );
     }
 
 
-    public Long getSuperiorId() {
-        return superiorId;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getName() {
-        return name;
+    public Long getSchemaId() {
+        return schemaId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSchemaId(Long schemaId) {
+        this.schemaId = schemaId;
     }
 
     public String getBody() {
@@ -69,11 +69,11 @@ public class SectionDTO {
         this.body = body;
     }
 
-    public String getType() {
-        return type;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

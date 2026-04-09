@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import top.leafage.hypervisor.assets.domain.Region;
 import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
@@ -117,8 +116,8 @@ public class SectionServiceImpl implements SectionService {
     @Transactional
     @Override
     public SectionVO create(SectionDTO dto) {
-        if (sectionRepository.existsByTitle(dto.getTitle())) {
-            throw new IllegalArgumentException("title already exists: " + dto.getTitle());
+        if (sectionRepository.existsByName(dto.getName())) {
+            throw new IllegalArgumentException("title already exists: " + dto.getName());
         }
         Section entity = sectionRepository.saveAndFlush(SectionDTO.toEntity(dto));
         return SectionVO.from(entity);
@@ -134,9 +133,9 @@ public class SectionServiceImpl implements SectionService {
 
         Section existing = sectionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("section not found: " + id));
-        if (!existing.getTitle().equals(dto.getTitle()) &&
-                sectionRepository.existsByTitle(dto.getTitle())) {
-            throw new IllegalArgumentException("title already exists: " + dto.getTitle());
+        if (!existing.getName().equals(dto.getName()) &&
+                sectionRepository.existsByName(dto.getName())) {
+            throw new IllegalArgumentException("title already exists: " + dto.getName());
         }
         copier.copy(dto, existing, null);
         Section entity = sectionRepository.save(existing);

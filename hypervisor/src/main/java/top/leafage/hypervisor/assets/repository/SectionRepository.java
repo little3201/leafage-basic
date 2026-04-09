@@ -33,12 +33,12 @@ import java.util.List;
 public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpecificationExecutor<Section> {
 
     /**
-     * exists by title.
+     * exists by name.
      *
-     * @param title a {@link String} object
+     * @param name a {@link String} object
      * @return a boolean
      */
-    boolean existsByTitle(String title);
+    boolean existsByName(String name);
 
     /**
      * 查询

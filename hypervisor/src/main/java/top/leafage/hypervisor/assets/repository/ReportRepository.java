@@ -20,48 +20,23 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import top.leafage.hypervisor.assets.domain.Region;
-
-import java.util.List;
+import top.leafage.hypervisor.assets.domain.Report;
 
 /**
- * region repository.
+ * Report repository.
  *
  * @author wq li
  */
 @Repository
-public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecificationExecutor<Region> {
+public interface ReportRepository extends JpaRepository<Report, Long>, JpaSpecificationExecutor<Report> {
 
     /**
-     * existsByName.
+     * exists by title.
      *
-     * @param name a {@link String} object
+     * @param title a {@link String} object
      * @return a boolean
      */
-    boolean existsByName(String name);
-
-    /**
-     * find the superior is null.
-     *
-     * @return 关联的数据
-     */
-    List<Region> findAllBySuperiorIdIsNull();
-
-    /**
-     * find by superior id.
-     *
-     * @param superiorId the pk of superior.
-     * @return the result.
-     */
-    List<Region> findAllBySuperiorId(Long superiorId);
-
-    /**
-     * Counts the number of records by superior ID.
-     *
-     * @param superiorId The superior ID.
-     * @return The count of records.
-     */
-    long countBySuperiorId(Long superiorId);
+    boolean existsByTitle(String title);
 
     /**
      * enable a record by pk.
@@ -70,6 +45,6 @@ public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecif
      * @return result.
      */
     @Modifying
-    @Query("UPDATE Region t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
+    @Query("UPDATE Section t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
     int updateEnabledById(Long id);
 }

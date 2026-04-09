@@ -16,6 +16,7 @@
 package top.leafage.hypervisor.system.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Predicate;
 import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
@@ -24,13 +25,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import top.leafage.hypervisor.system.domain.Dictionary;
 import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
 import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import top.leafage.hypervisor.system.repository.DictionaryRepository;
 import top.leafage.hypervisor.system.service.DictionaryService;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * dictionary service impl.
@@ -59,9 +63,16 @@ public class DictionaryServiceImpl implements DictionaryService {
     public Page<@NonNull DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Dictionary> spec = (root, _, cb) ->
-                buildPredicate(filters, cb, root).orElse(null);
-        spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
+        Specification<Dictionary> spec = (root, _, cb) -> {
+            Optional<Predicate> predicate = buildPredicate(filters, cb, root);
+            // 添加superiorId的条件
+            Predicate basePredicate = predicate.orElse(cb.conjunction());
+            if (StringUtils.hasText(filters) && filters.contains("superiorId")) {
+                return basePredicate;
+            } else {
+                return cb.and(basePredicate, cb.isNull(root.get("superiorId")));
+            }
+        };
 
         return dictionaryRepository.findAll(spec, pageable)
                 .map(entity -> {
@@ -97,10 +108,14 @@ public class DictionaryServiceImpl implements DictionaryService {
      */
     @Override
     public List<DictionaryVO> subset(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        return dictionaryRepository.findAllBySuperiorId(id)
-                .stream().map(entity -> {
+        List<Dictionary> list;
+        if (id == null) {
+            list = dictionaryRepository.findAllBySuperiorIdIsNull();
+        } else {
+            list = dictionaryRepository.findAllBySuperiorId(id);
+        }
+        return list.stream().sorted(Comparator.comparing(Dictionary::getId))
+                .map(entity -> {
                     long count = dictionaryRepository.countBySuperiorId(entity.getId());
                     return DictionaryVO.from(entity, count);
                 })

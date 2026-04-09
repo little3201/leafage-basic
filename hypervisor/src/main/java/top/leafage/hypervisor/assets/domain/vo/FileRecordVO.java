@@ -32,8 +32,6 @@ public record FileRecordVO(
         String contentType,
         long size,
         boolean directory,
-        boolean regularFile,
-        boolean symbolicLink,
         LocalDateTime lastModifiedDate
 ) {
     public static FileRecordVO from(FileRecord entity) {
@@ -45,8 +43,6 @@ public record FileRecordVO(
                 entity.getContentType(),
                 entity.getSize(),
                 entity.isDirectory(),
-                entity.isRegularFile(),
-                entity.isSymbolicLink(),
                 entity.getLastModifiedDate().isPresent() ? entity.getLastModifiedDate().get() : null
         );
     }

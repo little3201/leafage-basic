@@ -16,6 +16,7 @@
 package top.leafage.hypervisor.assets.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Predicate;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,14 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.hypervisor.assets.domain.FileRecord;
+import top.leafage.hypervisor.assets.domain.Region;
 import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.repository.FileRecordRepository;
 import top.leafage.hypervisor.assets.service.FileRecordService;
 
+import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * file service impl.
@@ -54,11 +58,15 @@ public class FileRecordServiceImpl implements FileRecordService {
     public Page<@NonNull FileRecordVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull FileRecord> spec = (root, _, cb) ->
-                buildPredicate(filters, cb, root).orElse(null);
-        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
-            spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
-        }
+        Specification<FileRecord> spec = (root, _, cb) -> {
+            Optional<Predicate> predicate = buildPredicate(filters, cb, root);
+            Predicate basePredicate = predicate.orElse(cb.conjunction());
+            if (StringUtils.hasText(filters) && filters.contains("superiorId")) {
+                return basePredicate;
+            } else {
+                return cb.and(basePredicate, cb.isNull(root.get("superiorId")));
+            }
+        };
 
         return fileRecordRepository.findAll(spec, pageable)
                 .map(FileRecordVO::from);
@@ -87,12 +95,15 @@ public class FileRecordServiceImpl implements FileRecordService {
                 record.setExtension(originalFilename.substring(lastDot + 1));
             }
         }
-        record.setPath("");
+        try {
+            record.setPath(file.getResource().getFilePath().toString());
+        } catch (IOException e) {
+            logger.error("Get file path error: {}", e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
         record.setContentType(Objects.requireNonNull(file.getContentType()));
         record.setSize(file.getSize());
         record.setDirectory(false);
-        record.setRegularFile(true);
-        record.setSymbolicLink(false);
         FileRecord entity = fileRecordRepository.saveAndFlush(record);
         return FileRecordVO.from(entity);
     }

@@ -21,79 +21,76 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 
 /**
- * entity class for sections.
+ * entity class for schemas.
  *
  * @author wq li
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "sections")
-public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
-
-    private Long superiorId;
+@Table(name = "schemas")
+public class Schema extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
     private String name;
 
-    @Column(columnDefinition = "text")
-    private String body;
+    @Version
+    private int version;
 
     @Enumerated(EnumType.STRING)
-    private Type type = Type.PARAGRAPH;
+    private Status status = Status.DRAFT;
 
-    private boolean enabled = true;
+    private String description;
+
+    private boolean enabled;
 
 
-    public Section() {
+    public Schema() {
     }
 
-    public Section(Long superiorId, String name, String body, String type) {
-        this.superiorId = superiorId;
+    public Schema(String name, String description) {
         this.name = name;
-        this.body = body;
-        this.type = Type.of(type);
+        this.description = description;
     }
 
-    public enum Type {
-        HEADING,      // 标题
-        PARAGRAPH,    // 段落
-        TABLE,        // 表格
-        IMAGE;        // 图片
+    public enum Status {
+        DRAFT,
+        PUBLISHED,
+        ARCHIVED;
 
-        public static Type of(String value) {
+        public static Status of(String value) {
             return valueOf(value.toUpperCase());
         }
-    }
-
-    public Long getSuperiorId() {
-        return superiorId;
-    }
-
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String title) {
-        this.name = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getBody() {
-        return body;
+    public int getVersion() {
+        return version;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setVersion(int version) {
+        this.version = version;
     }
 
-    public Type getType() {
-        return type;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public boolean isEnabled() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright (c) 2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,28 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.system.service;
+package top.leafage.hypervisor.assets.service;
 
+import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
-import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
+import top.leafage.hypervisor.assets.domain.dto.ReportDTO;
+import top.leafage.hypervisor.assets.domain.vo.ReportVO;
+import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 
 import java.util.List;
 
 /**
- * dictionary service.
+ * report service.
  *
  * @author wq li
  */
-public interface DictionaryService extends JpaCrudService<DictionaryDTO, DictionaryVO> {
+public interface ReportService extends JpaCrudService<ReportDTO, ReportVO> {
 
     /**
-     * 获取子节点
+     * sections
      *
-     * @param id th pk.
-     * @return 数据集
+     * @param id the pk.
+     * @return the result.
      */
-    List<DictionaryVO> subset(Long id);
+    List<TreeNode<Long>> sections(Long id);
 }

@@ -21,63 +21,55 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 
 /**
- * entity class for sections.
+ * entity class for reports.
  *
  * @author wq li
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "sections")
-public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
+@Table(name = "reports")
+public class Report extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
-    private Long superiorId;
+    private String title;
 
-    private String name;
+    private Long schemaId;
 
     @Column(columnDefinition = "text")
     private String body;
 
-    @Enumerated(EnumType.STRING)
-    private Type type = Type.PARAGRAPH;
+    private String owner;
+
+    @Version
+    private int version;
 
     private boolean enabled = true;
 
 
-    public Section() {
+    public Report() {
     }
 
-    public Section(Long superiorId, String name, String body, String type) {
-        this.superiorId = superiorId;
-        this.name = name;
+    public Report(String title, Long schemaId, String body, String owner) {
+        this.title = title;
+        this.schemaId = schemaId;
         this.body = body;
-        this.type = Type.of(type);
+        this.owner = owner;
     }
 
-    public enum Type {
-        HEADING,      // 标题
-        PARAGRAPH,    // 段落
-        TABLE,        // 表格
-        IMAGE;        // 图片
 
-        public static Type of(String value) {
-            return valueOf(value.toUpperCase());
-        }
+    public String getTitle() {
+        return title;
     }
 
-    public Long getSuperiorId() {
-        return superiorId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setSuperiorId(Long superiorId) {
-        this.superiorId = superiorId;
+    public Long getSchemaId() {
+        return schemaId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String title) {
-        this.name = title;
+    public void setSchemaId(Long schemaId) {
+        this.schemaId = schemaId;
     }
 
     public String getBody() {
@@ -88,12 +80,20 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.body = body;
     }
 
-    public Type getType() {
-        return type;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public boolean isEnabled() {

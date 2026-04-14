@@ -15,6 +15,7 @@
 
 package top.leafage.hypervisor.assets.service;
 
+import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
@@ -29,10 +30,44 @@ import java.util.List;
 public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
 
     /**
+     * tree
+     *
+     * @param id the pk.
+     * @return the result.
+     */
+    List<TreeNode<Long>> reportTree(Long id);
+
+    /**
+     * tree
+     *
+     * @param id the pk.
+     * @return the result.
+     */
+    List<TreeNode<Long>> schemaTree(Long id);
+
+    /**
      * 获取子节点
      *
      * @param id th pk.
      * @return 数据集
      */
     List<SectionVO> subset(Long id);
+
+    /**
+     * Create report section
+     *
+     * @param id  the pk.
+     * @param dto the data of section.
+     * @return the result.
+     */
+    SectionVO createReportSection(Long id, SectionDTO dto);
+
+    /**
+     * Create schema section
+     *
+     * @param id  the pk.
+     * @param dto the data of section.
+     * @return the result.
+     */
+    SectionVO createSchemaSection(Long id, SectionDTO dto);
 }

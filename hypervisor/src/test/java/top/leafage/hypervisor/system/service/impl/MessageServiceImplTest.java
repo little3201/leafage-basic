@@ -108,12 +108,12 @@ class MessageServiceImplTest {
     @Test
     void create() {
         when(messageRepository.existsByTitle("test")).thenReturn(false);
-        when(messageRepository.saveAndFlush(any(Message.class))).thenReturn(entity);
+        when(messageRepository.save(any(Message.class))).thenReturn(entity);
 
         MessageVO vo = messageService.create(dto);
         assertNotNull(vo);
         assertEquals("test", vo.title());
-        verify(messageRepository).saveAndFlush(any(Message.class));
+        verify(messageRepository).save(any(Message.class));
     }
 
     @Test

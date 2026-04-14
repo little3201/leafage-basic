@@ -131,7 +131,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         if (dictionaryRepository.existsByName(dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        Dictionary entity = dictionaryRepository.saveAndFlush(DictionaryDTO.toEntity(dto));
+        Dictionary entity = dictionaryRepository.save(DictionaryDTO.toEntity(dto));
         return DictionaryVO.from(entity);
     }
 

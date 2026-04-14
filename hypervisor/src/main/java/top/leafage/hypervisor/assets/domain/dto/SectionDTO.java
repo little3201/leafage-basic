@@ -15,6 +15,8 @@
 
 package top.leafage.hypervisor.assets.domain.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import top.leafage.hypervisor.assets.domain.Section;
 
@@ -30,6 +32,10 @@ public class SectionDTO {
     @NotBlank
     private String name;
 
+    @Min(1)
+    @Max(6)
+    private Integer level;
+
     private String body;
 
     private String type;
@@ -39,6 +45,7 @@ public class SectionDTO {
         return new Section(
                 dto.getSuperiorId(),
                 dto.getName(),
+                dto.getLevel(),
                 dto.getBody(),
                 dto.getType()
         );
@@ -59,6 +66,14 @@ public class SectionDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public String getBody() {

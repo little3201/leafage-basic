@@ -15,13 +15,9 @@
 
 package top.leafage.hypervisor.assets.service;
 
-import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.assets.domain.dto.ReportDTO;
 import top.leafage.hypervisor.assets.domain.vo.ReportVO;
-import top.leafage.hypervisor.assets.domain.vo.SectionVO;
-
-import java.util.List;
 
 /**
  * report service.
@@ -30,11 +26,4 @@ import java.util.List;
  */
 public interface ReportService extends JpaCrudService<ReportDTO, ReportVO> {
 
-    /**
-     * sections
-     *
-     * @param id the pk.
-     * @return the result.
-     */
-    List<TreeNode<Long>> sections(Long id);
 }

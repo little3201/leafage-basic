@@ -110,12 +110,12 @@ class PostServiceImplTest {
     @Test
     void create() {
         when(postRepository.existsByTitle("test")).thenReturn(false);
-        when(postRepository.saveAndFlush(any(Post.class))).thenReturn(entity);
+        when(postRepository.save(any(Post.class))).thenReturn(entity);
 
         PostVO vo = postsService.create(dto);
         assertNotNull(vo);
         assertEquals("test", vo.title());
-        verify(postRepository).saveAndFlush(any(Post.class));
+        verify(postRepository).save(any(Post.class));
     }
 
     @Test

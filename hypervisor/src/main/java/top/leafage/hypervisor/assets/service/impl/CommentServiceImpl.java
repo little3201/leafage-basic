@@ -94,7 +94,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public CommentVO create(CommentDTO dto) {
-        Comment entity = commentRepository.saveAndFlush(CommentDTO.toEntity(dto));
+        Comment entity = commentRepository.save(CommentDTO.toEntity(dto));
         return CommentVO.from(entity);
     }
 

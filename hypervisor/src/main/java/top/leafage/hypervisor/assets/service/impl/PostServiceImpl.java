@@ -85,7 +85,7 @@ public class PostServiceImpl implements PostService {
         if (postRepository.existsByTitle(dto.getTitle())) {
             throw new IllegalArgumentException("title already exists: " + dto.getTitle());
         }
-        Post entity = postRepository.saveAndFlush(PostDTO.toEntity(dto));
+        Post entity = postRepository.save(PostDTO.toEntity(dto));
         return PostVO.from(entity);
     }
 

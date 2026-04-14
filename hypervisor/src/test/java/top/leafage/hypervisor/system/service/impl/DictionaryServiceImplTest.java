@@ -126,12 +126,12 @@ class DictionaryServiceImplTest {
     @Test
     void create() {
         when(dictionaryRepository.existsByName("test")).thenReturn(false);
-        when(dictionaryRepository.saveAndFlush(any(Dictionary.class))).thenReturn(entity);
+        when(dictionaryRepository.save(any(Dictionary.class))).thenReturn(entity);
 
         DictionaryVO vo = dictionaryService.create(dto);
         assertNotNull(vo);
         assertEquals("test", vo.name());
-        verify(dictionaryRepository).saveAndFlush(any(Dictionary.class));
+        verify(dictionaryRepository).save(any(Dictionary.class));
     }
 
     @Test

@@ -85,7 +85,7 @@ public class MessageServiceImpl implements MessageService {
         if (messageRepository.existsByTitle(dto.getTitle())) {
             throw new IllegalArgumentException("title already exists: " + dto.getTitle());
         }
-        Message entity = messageRepository.saveAndFlush(MessageDTO.toEntity(dto));
+        Message entity = messageRepository.save(MessageDTO.toEntity(dto));
         return MessageVO.from(entity);
     }
 

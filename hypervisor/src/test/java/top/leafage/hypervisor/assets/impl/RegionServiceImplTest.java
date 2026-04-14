@@ -108,12 +108,12 @@ class RegionServiceImplTest {
     @Test
     void create() {
         when(regionRepository.existsByName("test")).thenReturn(false);
-        when(regionRepository.saveAndFlush(any(Region.class))).thenReturn(entity);
+        when(regionRepository.save(any(Region.class))).thenReturn(entity);
 
         RegionVO vo = regionService.create(dto);
         assertNotNull(vo);
         assertEquals("test", vo.name());
-        verify(regionRepository).saveAndFlush(any(Region.class));
+        verify(regionRepository).save(any(Region.class));
     }
 
     @Test

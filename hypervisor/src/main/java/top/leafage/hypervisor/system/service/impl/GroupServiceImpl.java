@@ -141,7 +141,7 @@ public class GroupServiceImpl implements GroupService {
         if (groupRepository.existsByName(dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        Group entity = groupRepository.saveAndFlush(GroupDTO.toEntity(dto));
+        Group entity = groupRepository.save(GroupDTO.toEntity(dto));
         return GroupVO.from(entity);
     }
 

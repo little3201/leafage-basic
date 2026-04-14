@@ -35,8 +35,8 @@ public class SchemaSection extends Section {
     public SchemaSection() {
     }
 
-    public SchemaSection(Long superiorId, String title, String body, String type, Long schemaId) {
-        super(superiorId, title, body, type);
+    public SchemaSection(Long schemaId, Section section) {
+        super(section.getSuperiorId(), section.getName(), section.getLevel(), section.getBody(), section.getType().name());
         this.schemaId = schemaId;
     }
 

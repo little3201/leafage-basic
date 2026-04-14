@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("username already exists: " + dto.getUsername());
         }
-        User entity = userRepository.saveAndFlush(UserDTO.toEntity(dto, "{noop}123456"));
+        User entity = userRepository.save(UserDTO.toEntity(dto, "{noop}123456"));
         return UserVO.from(entity);
     }
 

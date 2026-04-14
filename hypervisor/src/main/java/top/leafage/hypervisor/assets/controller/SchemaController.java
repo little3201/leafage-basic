@@ -22,11 +22,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.assets.domain.dto.SchemaDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.vo.SchemaVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.SchemaService;
+import top.leafage.hypervisor.assets.service.SectionService;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,9 +44,11 @@ import java.util.List;
 public class SchemaController {
 
     private final SchemaService schemaService;
+    private final SectionService sectionService;
 
-    public SchemaController(SchemaService schemaService) {
+    public SchemaController(SchemaService schemaService, SectionService sectionService) {
         this.schemaService = schemaService;
+        this.sectionService = sectionService;
     }
 
     /**
@@ -129,35 +134,56 @@ public class SchemaController {
     }
 
     /**
-     * 分页查询
+     * sections.
      *
-     * @param id         主键
-     * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序字段
-     * @param descending 排序方向
+     * @param id the pk.
      * @return 查询的数据集，异常时返回204状态码
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
     @GetMapping("/{id}/sections")
-    public ResponseEntity<Page<SectionVO>> sections(@PathVariable Long id, @RequestParam int page, @RequestParam int size,
-                                                    String sortBy, boolean descending, String filters) {
-        Page<SectionVO> voPage = schemaService.sections(id, page, size, sortBy, descending, filters);
-        return ResponseEntity.ok(voPage);
+    public ResponseEntity<List<TreeNode<Long>>> sections(@PathVariable Long id) {
+        List<TreeNode<Long>> treeNodes = sectionService.schemaTree(id);
+        return ResponseEntity.ok(treeNodes);
     }
 
     /**
-     * Fetch subset.
+     * Fetch section.
      *
-     * @param id        the pk.
      * @param sectionId the pk of section.
      * @return 查询的数据集，异常时返回204状态码
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
-    @GetMapping("/{id}/sections/subset")
-    public ResponseEntity<List<SectionVO>> subset(@PathVariable Long id, Long sectionId) {
-        List<SectionVO> voList = schemaService.subset(id, sectionId);
-        return ResponseEntity.ok(voList);
+    @GetMapping("/sections/{sectionId}")
+    public ResponseEntity<SectionVO> fetchSection(@PathVariable Long sectionId) {
+        SectionVO vo = sectionService.fetch(sectionId);
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * Create section.
+     *
+     * @param id  the pk.
+     * @param dto the data of section.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
+    @PostMapping("/{id}/sections")
+    public ResponseEntity<SectionVO> createSection(@PathVariable Long id, @RequestBody SectionDTO dto) {
+        SectionVO vo = sectionService.createSchemaSection(id, dto);
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * Modify section.
+     *
+     * @param dto the data of section.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
+    @PutMapping("/sections/{sectionId}")
+    public ResponseEntity<SectionVO> modifySection(@PathVariable Long sectionId, @RequestBody SectionDTO dto) {
+        SectionVO vo = sectionService.modify(sectionId, dto);
+        return ResponseEntity.ok(vo);
     }
 
     /**

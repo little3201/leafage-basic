@@ -106,12 +106,12 @@ class RoleServiceImplTest {
     @Test
     void create() {
         when(roleRepository.existsByName("test")).thenReturn(false);
-        when(roleRepository.saveAndFlush(any(Role.class))).thenReturn(entity);
+        when(roleRepository.save(any(Role.class))).thenReturn(entity);
 
         RoleVO vo = roleService.create(dto);
         assertNotNull(vo);
         assertEquals("test", vo.name());
-        verify(roleRepository).saveAndFlush(any(Role.class));
+        verify(roleRepository).save(any(Role.class));
     }
 
     @Test

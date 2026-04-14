@@ -130,7 +130,7 @@ public class RegionServiceImpl implements RegionService {
         if (regionRepository.existsByName(dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        Region entity = regionRepository.saveAndFlush(RegionDTO.toEntity(dto));
+        Region entity = regionRepository.save(RegionDTO.toEntity(dto));
         return RegionVO.from(entity);
     }
 

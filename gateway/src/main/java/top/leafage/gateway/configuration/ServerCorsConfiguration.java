@@ -39,10 +39,10 @@ public class ServerCorsConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Collections.singletonList(appBaseUri));
         config.addAllowedHeader("X-XSRF-TOKEN");
         config.addAllowedHeader(HttpHeaders.CONTENT_TYPE);
         config.setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedOrigins(Collections.singletonList(appBaseUri));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

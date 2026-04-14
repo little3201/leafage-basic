@@ -115,7 +115,7 @@ public class RoleServiceImpl implements RoleService {
         if (roleRepository.existsByName(dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        Role entity = roleRepository.saveAndFlush(RoleDTO.toEntity(dto));
+        Role entity = roleRepository.save(RoleDTO.toEntity(dto));
         return RoleVO.from(entity);
     }
 

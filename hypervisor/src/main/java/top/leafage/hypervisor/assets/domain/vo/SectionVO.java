@@ -26,6 +26,7 @@ public record SectionVO(
         Long id,
         Long superiorId,
         String name,
+        Integer level,
         String body,
         String type,
         long count
@@ -39,6 +40,7 @@ public record SectionVO(
                 entity.getId(),
                 entity.getSuperiorId(),
                 entity.getName(),
+                entity.getLevel(),
                 entity.getBody(),
                 entity.getType().name(),
                 count

@@ -111,7 +111,7 @@ class CommentServiceImplTest {
 
     @Test
     void create() {
-        when(commentRepository.saveAndFlush(any(Comment.class))).thenReturn(entity);
+        when(commentRepository.save(any(Comment.class))).thenReturn(entity);
 
         CommentVO vo = commentService.create(mock(CommentDTO.class));
         assertEquals("test", vo.body());

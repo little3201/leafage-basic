@@ -120,12 +120,12 @@ class GroupServiceImplTest {
     @Test
     void create() {
         when(groupRepository.existsByName("test")).thenReturn(false);
-        when(groupRepository.saveAndFlush(any(Group.class))).thenReturn(entity);
+        when(groupRepository.save(any(Group.class))).thenReturn(entity);
 
         GroupVO vo = groupService.create(dto);
         assertNotNull(vo);
         assertEquals("test", vo.name());
-        verify(groupRepository).saveAndFlush(any(Group.class));
+        verify(groupRepository).save(any(Group.class));
     }
 
     @Test

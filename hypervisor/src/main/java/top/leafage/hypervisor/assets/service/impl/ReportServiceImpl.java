@@ -24,18 +24,16 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import top.leafage.common.data.domain.TreeNode;
 import top.leafage.hypervisor.assets.domain.Report;
 import top.leafage.hypervisor.assets.domain.ReportSection;
 import top.leafage.hypervisor.assets.domain.dto.ReportDTO;
 import top.leafage.hypervisor.assets.domain.vo.ReportVO;
 import top.leafage.hypervisor.assets.repository.ReportRepository;
 import top.leafage.hypervisor.assets.repository.ReportSectionRepository;
+import top.leafage.hypervisor.assets.repository.SchemaSectionRepository;
 import top.leafage.hypervisor.assets.service.ReportService;
 
 import java.util.List;
-
-import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -44,15 +42,18 @@ public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
     private final ReportSectionRepository reportSectionRepository;
+    private final SchemaSectionRepository schemaSectionRepository;
 
     /**
      * Constructor for ReportServiceImpl.
      *
      * @param reportRepository a {@link ReportRepository} object
      */
-    public ReportServiceImpl(ReportRepository reportRepository, ReportSectionRepository reportSectionRepository) {
+    public ReportServiceImpl(ReportRepository reportRepository, ReportSectionRepository reportSectionRepository,
+                             SchemaSectionRepository schemaSectionRepository) {
         this.reportRepository = reportRepository;
         this.reportSectionRepository = reportSectionRepository;
+        this.schemaSectionRepository = schemaSectionRepository;
     }
 
     /**
@@ -100,7 +101,13 @@ public class ReportServiceImpl implements ReportService {
         if (reportRepository.existsByTitle(dto.getTitle())) {
             throw new IllegalArgumentException("title already exists: " + dto.getTitle());
         }
-        Report entity = reportRepository.saveAndFlush(ReportDTO.toEntity(dto));
+        Report entity = reportRepository.save(ReportDTO.toEntity(dto));
+        if (dto.getSchemaId() != null) {
+            List<ReportSection> sections = schemaSectionRepository.findAllBySchemaId(entity.getId())
+                    .stream().map(schemaSection -> ReportSection.from(entity.getId(), schemaSection))
+                    .toList();
+            reportSectionRepository.saveAll(sections);
+        }
         return ReportVO.from(entity);
     }
 
@@ -137,11 +144,4 @@ public class ReportServiceImpl implements ReportService {
         reportRepository.deleteById(id);
     }
 
-    @Override
-    public List<TreeNode<Long>> sections(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        List<ReportSection> reportSections = reportSectionRepository.findAllByReportId(id);
-        return toTree(reportSections);
-    }
 }

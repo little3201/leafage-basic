@@ -106,12 +106,12 @@ class UserServiceImplTest {
     void create() {
         when(userRepository.existsByUsername("test")).thenReturn(false);
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
-        when(userRepository.saveAndFlush(any(User.class))).thenReturn(entity);
+        when(userRepository.save(any(User.class))).thenReturn(entity);
 
         UserVO vo = userService.create(dto);
         assertNotNull(vo);
         assertEquals("test", vo.username());
-        verify(userRepository).saveAndFlush(any(User.class));
+        verify(userRepository).save(any(User.class));
     }
 
     @Test

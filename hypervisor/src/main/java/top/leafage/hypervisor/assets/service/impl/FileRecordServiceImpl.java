@@ -104,7 +104,7 @@ public class FileRecordServiceImpl implements FileRecordService {
         record.setContentType(Objects.requireNonNull(file.getContentType()));
         record.setSize(file.getSize());
         record.setDirectory(false);
-        FileRecord entity = fileRecordRepository.saveAndFlush(record);
+        FileRecord entity = fileRecordRepository.save(record);
         return FileRecordVO.from(entity);
     }
 

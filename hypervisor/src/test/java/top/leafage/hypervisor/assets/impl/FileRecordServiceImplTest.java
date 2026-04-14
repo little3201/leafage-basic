@@ -101,14 +101,14 @@ class FileRecordServiceImplTest {
 
     @Test
     void upload() {
-        when(fileRecordRepository.saveAndFlush(any(FileRecord.class))).thenReturn(entity);
+        when(fileRecordRepository.save(any(FileRecord.class))).thenReturn(entity);
 
         MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "Hello World".getBytes());
         FileRecordVO vo = fileRecordService.upload(file, 1L);
 
         assertNotNull(vo);
         assertEquals("test", vo.name());
-        verify(fileRecordRepository).saveAndFlush(any(FileRecord.class));
+        verify(fileRecordRepository).save(any(FileRecord.class));
     }
 
     @Test

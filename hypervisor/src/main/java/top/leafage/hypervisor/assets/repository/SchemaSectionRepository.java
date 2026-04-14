@@ -18,6 +18,7 @@ package top.leafage.hypervisor.assets.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
+import top.leafage.hypervisor.assets.domain.ReportSection;
 import top.leafage.hypervisor.assets.domain.SchemaSection;
 
 import java.util.List;
@@ -31,28 +32,10 @@ import java.util.List;
 public interface SchemaSectionRepository extends JpaRepository<SchemaSection, Long>, JpaSpecificationExecutor<SchemaSection> {
 
     /**
-     * Retrieve by scheamId and superiorId.
+     * Retrieve by sectionId.
      *
-     * @param schemaId the pk of shcema.
+     * @param sectionId the pk of section.
      * @return the result.
      */
-    List<SchemaSection> findAllBySchemaIdAndSuperiorIdIsNull(Long schemaId);
-
-    /**
-     * Retrieve by scheamId and superiorId.
-     *
-     * @param schemaId   the pk of shcema.
-     * @param superiorId the superior id.
-     * @return the result.
-     */
-    List<SchemaSection> findAllBySchemaIdAndSuperiorId(Long schemaId, Long superiorId);
-
-    /**
-     * 记录数
-     *
-     * @param schemaId   the pk of shcema.
-     * @param superiorId the superior id.
-     * @return 记录数
-     */
-    long countBySchemaIdAndSuperiorId(Long schemaId, Long superiorId);
+    List<SchemaSection> findAllBySchemaId(Long sectionId);
 }

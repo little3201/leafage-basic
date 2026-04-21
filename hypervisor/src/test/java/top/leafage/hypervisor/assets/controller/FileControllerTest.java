@@ -67,7 +67,7 @@ class FileControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new FileRecordVO(1L, "test", ".txt", "src/test/resources/test.txt", "", 3121L, false, true, false, LocalDateTime.now());
+        vo = new FileRecordVO(1L, "test", ".txt", "src/test/resources/test.txt", "", 3121L, false, LocalDateTime.now());
     }
 
     @Test

@@ -32,6 +32,9 @@ public class Schema extends JpaAbstractAuditable<@NonNull String, @NonNull Long>
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
     @Version
     private int version;
 
@@ -46,8 +49,9 @@ public class Schema extends JpaAbstractAuditable<@NonNull String, @NonNull Long>
     public Schema() {
     }
 
-    public Schema(String name, String description) {
+    public Schema(String name, String type, String description) {
         this.name = name;
+        this.type = Type.of(type);
         this.description = description;
     }
 
@@ -61,12 +65,29 @@ public class Schema extends JpaAbstractAuditable<@NonNull String, @NonNull Long>
         }
     }
 
+    public enum Type {
+        WORD,
+        EXCEL;
+
+        public static Type of(String value) {
+            return valueOf(value.toUpperCase());
+        }
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public int getVersion() {

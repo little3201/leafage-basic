@@ -174,19 +174,6 @@ public class ReportController {
     }
 
     /**
-     * Modify section.
-     *
-     * @param dto the data of section.
-     * @return 查询的数据集，异常时返回204状态码
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_reports')")
-    @PutMapping("/sections/{sectionId}")
-    public ResponseEntity<SectionVO> modifySection(@PathVariable Long sectionId, @RequestBody SectionDTO dto) {
-        SectionVO vo = sectionService.modify(sectionId, dto);
-        return ResponseEntity.ok(vo);
-    }
-
-    /**
      * import.
      *
      * @return the result.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright (c) 2024-2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 public record SchemaVO(
         Long id,
         String name,
+        String type,
         int version,
         String status,
         String description,
@@ -36,6 +37,7 @@ public record SchemaVO(
         return new SchemaVO(
                 entity.getId(),
                 entity.getName(),
+                entity.getType().name(),
                 entity.getVersion(),
                 entity.getStatus().name(),
                 entity.getDescription(),

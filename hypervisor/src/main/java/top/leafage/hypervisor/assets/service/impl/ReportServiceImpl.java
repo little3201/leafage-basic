@@ -102,8 +102,10 @@ public class ReportServiceImpl implements ReportService {
             throw new IllegalArgumentException("title already exists: " + dto.getTitle());
         }
         Report entity = reportRepository.save(ReportDTO.toEntity(dto));
-        if (dto.getSchemaId() != null) {
-            List<ReportSection> sections = schemaSectionRepository.findAllBySchemaId(entity.getId())
+        // 执行模板内容复制
+        Long schemaId = dto.getSchemaId();
+        if (schemaId != null) {
+            List<ReportSection> sections = schemaSectionRepository.findAllBySchemaId(schemaId)
                     .stream().map(schemaSection -> ReportSection.from(entity.getId(), schemaSection))
                     .toList();
             reportSectionRepository.saveAll(sections);

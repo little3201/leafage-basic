@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright (c) 2024-2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,6 @@ public interface ReportRepository extends JpaRepository<Report, Long>, JpaSpecif
      * @return result.
      */
     @Modifying
-    @Query("UPDATE Section t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
+    @Query("UPDATE Report t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
     int updateEnabledById(Long id);
 }

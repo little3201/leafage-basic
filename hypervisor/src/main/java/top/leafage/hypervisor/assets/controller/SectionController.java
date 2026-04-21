@@ -16,18 +16,15 @@
 package top.leafage.hypervisor.assets.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.SectionService;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -45,22 +42,6 @@ public class SectionController {
         this.sectionService = sectionService;
     }
 
-    /**
-     * 分页查询
-     *
-     * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序字段
-     * @param descending 排序方向
-     * @return 查询的数据集，异常时返回204状态码
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
-    @GetMapping
-    public ResponseEntity<Page<SectionVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                    String sortBy, boolean descending, String filters) {
-        Page<SectionVO> voPage = sectionService.retrieve(page, size, sortBy, descending, filters);
-        return ResponseEntity.ok(voPage);
-    }
 
     /**
      * fetch.
@@ -85,6 +66,19 @@ public class SectionController {
     @GetMapping("/subset")
     public ResponseEntity<List<SectionVO>> subset(Long id) {
         List<SectionVO> voList = sectionService.subset(id);
+        return ResponseEntity.ok(voList);
+    }
+
+    /**
+     * 查询 fields.
+     *
+     * @param id th pk.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
+    @GetMapping("/{id}/fields")
+    public ResponseEntity<List<SectionFieldVO>> fields(@PathVariable Long id) {
+        List<SectionFieldVO> voList = sectionService.fields(id);
         return ResponseEntity.ok(voList);
     }
 
@@ -138,19 +132,6 @@ public class SectionController {
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = sectionService.enable(id);
         return ResponseEntity.ok(enabled);
-    }
-
-    /**
-     * import.
-     *
-     * @return the result.
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:import')")
-    @PostMapping("/import")
-    public ResponseEntity<List<SectionVO>> importFromFile(MultipartFile file) throws IOException {
-        List<SectionDTO> dtoList = ExcelReader.read(file.getInputStream(), SectionDTO.class);
-        List<SectionVO> voList = sectionService.createAll(dtoList);
-        return ResponseEntity.ok().body(voList);
     }
 
 }

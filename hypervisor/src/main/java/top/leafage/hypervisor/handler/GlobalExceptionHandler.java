@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025.  little3201.
+ * Copyright (c) 2025-2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import java.util.Map;
  * Global exception handler
  *
  * @author wq li
- * @since 0.4.0
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

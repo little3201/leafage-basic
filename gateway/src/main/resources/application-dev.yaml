@@ -7,6 +7,7 @@ spring:
             provider: spring
             client-id: web-client
             client-secret: secret
+            client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: openid,profile,offline_access

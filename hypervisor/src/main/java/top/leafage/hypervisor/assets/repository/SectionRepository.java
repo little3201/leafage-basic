@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright (c) 2024-2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package top.leafage.hypervisor.assets.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -30,7 +29,7 @@ import java.util.List;
  * @author wq li
  */
 @Repository
-public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpecificationExecutor<Section> {
+public interface SectionRepository extends JpaRepository<Section, Long> {
 
     /**
      * exists by name.

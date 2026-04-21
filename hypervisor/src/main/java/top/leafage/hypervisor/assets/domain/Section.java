@@ -28,6 +28,7 @@ import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "sections")
+@DiscriminatorValue("default")
 public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
     private Long superiorId;

@@ -27,7 +27,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@DiscriminatorValue("schema_sections")
+@DiscriminatorValue("schema")
 public class SchemaSection extends Section {
 
     private Long schemaId;

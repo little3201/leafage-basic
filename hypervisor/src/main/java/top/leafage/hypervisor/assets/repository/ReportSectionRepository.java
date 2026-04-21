@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright (c) 2024-2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,18 @@
 package top.leafage.hypervisor.assets.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.assets.domain.ReportSection;
 
 import java.util.List;
 
 /**
- * schema section repository.
+ * Archive section repository.
  *
  * @author wq li
  */
 @Repository
-public interface ReportSectionRepository extends JpaRepository<ReportSection, Long>, JpaSpecificationExecutor<ReportSection> {
+public interface ReportSectionRepository extends JpaRepository<ReportSection, Long> {
 
     /**
      * Retrieve by reportId.

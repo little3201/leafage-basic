@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright (c) 2024-2026.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,16 @@ public class SchemaDTO {
     @NotBlank
     private String name;
 
+    @NotBlank
+    private String type;
+
     private String description;
 
 
     public static Schema toEntity(SchemaDTO dto) {
         return new Schema(
                 dto.getName(),
+                dto.getType(),
                 dto.getDescription()
         );
     }
@@ -44,6 +48,14 @@ public class SchemaDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDescription() {

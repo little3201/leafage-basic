@@ -27,7 +27,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@DiscriminatorValue("report_sections")
+@DiscriminatorValue("report")
 public class ReportSection extends Section {
 
     private Long reportId;
@@ -51,5 +51,4 @@ public class ReportSection extends Section {
     public void setReportId(Long reportId) {
         this.reportId = reportId;
     }
-
 }

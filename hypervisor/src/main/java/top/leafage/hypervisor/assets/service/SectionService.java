@@ -18,6 +18,8 @@ package top.leafage.hypervisor.assets.service;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
+import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 
 import java.util.List;
@@ -30,23 +32,31 @@ import java.util.List;
 public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
 
     /**
-     * tree
+     * tree.
      *
-     * @param id the pk.
+     * @param archiveId the pk of archive.
      * @return the result.
      */
-    List<TreeNode<Long>> reportTree(Long id);
+    List<TreeNode<Long>> archiveTree(Long archiveId);
 
     /**
-     * tree
+     * tree.
      *
-     * @param id the pk.
+     * @param reportId the pk of report.
      * @return the result.
      */
-    List<TreeNode<Long>> schemaTree(Long id);
+    List<TreeNode<Long>> reportTree(Long reportId);
 
     /**
-     * 获取子节点
+     * tree.
+     *
+     * @param schemaId the pk of schema.
+     * @return the result.
+     */
+    List<TreeNode<Long>> schemaTree(Long schemaId);
+
+    /**
+     * 获取子节点.
      *
      * @param id th pk.
      * @return 数据集
@@ -54,20 +64,54 @@ public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
     List<SectionVO> subset(Long id);
 
     /**
-     * Create report section
+     * Create report section.
      *
-     * @param id  the pk.
-     * @param dto the data of section.
+     * @param reportId the pk of report.
+     * @param dto      the data of section.
      * @return the result.
      */
-    SectionVO createReportSection(Long id, SectionDTO dto);
+    SectionVO createReportSection(Long reportId, SectionDTO dto);
 
     /**
-     * Create schema section
+     * Create schema section.
      *
-     * @param id  the pk.
-     * @param dto the data of section.
+     * @param schemaId the pk of schema.
+     * @param dto      the data of section.
      * @return the result.
      */
-    SectionVO createSchemaSection(Long id, SectionDTO dto);
+    SectionVO createSchemaSection(Long schemaId, SectionDTO dto);
+
+    /**
+     * Create archive section.
+     *
+     * @param archiveId the pk of archive.
+     * @param dto       the data of section.
+     * @return the result.
+     */
+    SectionVO createArchiveSection(Long archiveId, SectionDTO dto);
+
+    /**
+     * Retrieve section fields.
+     *
+     * @param id the pk of section.
+     * @return the result.
+     */
+    List<SectionFieldVO> fields(Long id);
+
+    /**
+     * Create section field.
+     *
+     * @param dto the data of section field.
+     * @return the result.
+     */
+    SectionFieldVO createField(SectionFieldDTO dto);
+
+    /**
+     * Modify section field.
+     *
+     * @param id  the pk of section field.
+     * @param dto the data of section field.
+     * @return the result.
+     */
+    SectionFieldVO modifyField(Long id, SectionFieldDTO dto);
 }

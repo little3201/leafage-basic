@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
 import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.SectionService;
@@ -96,6 +97,19 @@ public class SectionController {
     }
 
     /**
+     * Create field.
+     *
+     * @param dto the request body.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
+    @PostMapping("/fields")
+    public ResponseEntity<SectionFieldVO> createField(@RequestBody SectionFieldDTO dto) {
+        SectionFieldVO vo = sectionService.createField(dto);
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
      * modify.
      *
      * @param id  the pk.
@@ -107,6 +121,20 @@ public class SectionController {
     public ResponseEntity<SectionVO> modify(@PathVariable Long id, @RequestBody SectionDTO dto) {
         SectionVO vo = sectionService.modify(id, dto);
         return ResponseEntity.accepted().body(vo);
+    }
+
+    /**
+     * Modify field.
+     *
+     * @param id  the pk of field.
+     * @param dto the request body.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
+    @PutMapping("/fields/{id}")
+    public ResponseEntity<SectionFieldVO> modifyField(@PathVariable Long id, @RequestBody SectionFieldDTO dto) {
+        SectionFieldVO vo = sectionService.modifyField(id, dto);
+        return ResponseEntity.ok(vo);
     }
 
     /**

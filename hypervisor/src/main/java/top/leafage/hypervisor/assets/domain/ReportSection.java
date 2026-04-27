@@ -36,7 +36,7 @@ public class ReportSection extends Section {
     }
 
     public ReportSection(Long reportId, Section section) {
-        super(section.getSuperiorId(), section.getName(), section.getLevel(), section.getBody(), section.getType().name());
+        super(section.getSuperiorId(), section.getName(), section.getSequence(), section.getLevel(), section.getBody(), section.getType().name());
         this.reportId = reportId;
     }
 

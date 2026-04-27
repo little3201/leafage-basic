@@ -32,6 +32,8 @@ public class SectionDTO {
     @NotBlank
     private String name;
 
+    private Integer sequence;
+
     @Min(1)
     @Max(6)
     private Integer level;
@@ -45,6 +47,7 @@ public class SectionDTO {
         return new Section(
                 dto.getSuperiorId(),
                 dto.getName(),
+                dto.getSequence(),
                 dto.getLevel(),
                 dto.getBody(),
                 dto.getType()
@@ -66,6 +69,14 @@ public class SectionDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
     }
 
     public Integer getLevel() {

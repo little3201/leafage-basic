@@ -35,6 +35,8 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     private String name;
 
+    private Integer sequence;
+
     private Integer level;
 
     @Column(columnDefinition = "text")
@@ -49,9 +51,10 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
     public Section() {
     }
 
-    public Section(Long superiorId, String name, Integer level, String body, String type) {
+    public Section(Long superiorId, String name, Integer sequence, Integer level, String body, String type) {
         this.superiorId = superiorId;
         this.name = name;
+        this.sequence = sequence;
         this.level = level;
         this.body = body;
         this.type = Type.of(type);
@@ -82,6 +85,14 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     public void setName(String title) {
         this.name = title;
+    }
+
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
     }
 
     public Integer getLevel() {

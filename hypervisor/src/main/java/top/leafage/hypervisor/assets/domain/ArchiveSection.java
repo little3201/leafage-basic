@@ -36,7 +36,7 @@ public class ArchiveSection extends Section {
     }
 
     public ArchiveSection(Long archiveId, Section section) {
-        super(section.getSuperiorId(), section.getName(), section.getLevel(), section.getBody(), section.getType().name());
+        super(section.getSuperiorId(), section.getName(), section.getSequence(), section.getLevel(), section.getBody(), section.getType().name());
         this.archiveId = archiveId;
     }
 

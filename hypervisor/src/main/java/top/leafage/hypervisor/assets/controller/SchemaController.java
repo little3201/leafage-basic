@@ -55,9 +55,10 @@ public class SchemaController {
      * 分页查询
      *
      * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序字段
-     * @param descending 排序方向
+     * @param size       分页数据大小，最大 500
+     * @param sortBy     排序字段，若为 null，默认为主键 id
+     * @param descending 排序方向，若为 false, 即正序排列
+     * @param filters    过滤条件，格式：field:condition:value，如：name:like:test
      * @return 查询的数据集，异常时返回204状态码
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")

@@ -70,7 +70,7 @@ public class RegionController {
     /**
      * fetch.
      *
-     * @param id th pk.
+     * @param id the pk.
      * @return the result.
      */
     @GetMapping("/{id}")
@@ -82,7 +82,7 @@ public class RegionController {
     /**
      * subset.
      *
-     * @param id th pk.
+     * @param id the pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions')")

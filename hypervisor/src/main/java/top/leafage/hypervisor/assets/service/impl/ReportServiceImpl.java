@@ -25,12 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.hypervisor.assets.domain.Report;
-import top.leafage.hypervisor.assets.domain.ReportSection;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.ReportDTO;
 import top.leafage.hypervisor.assets.domain.vo.ReportVO;
 import top.leafage.hypervisor.assets.repository.ReportRepository;
-import top.leafage.hypervisor.assets.repository.ReportSectionRepository;
-import top.leafage.hypervisor.assets.repository.SchemaSectionRepository;
+import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.service.ReportService;
 
 import java.util.List;
@@ -41,19 +40,16 @@ public class ReportServiceImpl implements ReportService {
     private static final BeanCopier copier = BeanCopier.create(ReportDTO.class, Report.class, false);
 
     private final ReportRepository reportRepository;
-    private final ReportSectionRepository reportSectionRepository;
-    private final SchemaSectionRepository schemaSectionRepository;
+    private final SectionRepository sectionRepository;
 
     /**
      * Constructor for ReportServiceImpl.
      *
      * @param reportRepository a {@link ReportRepository} object
      */
-    public ReportServiceImpl(ReportRepository reportRepository, ReportSectionRepository reportSectionRepository,
-                             SchemaSectionRepository schemaSectionRepository) {
+    public ReportServiceImpl(ReportRepository reportRepository, SectionRepository sectionRepository) {
         this.reportRepository = reportRepository;
-        this.reportSectionRepository = reportSectionRepository;
-        this.schemaSectionRepository = schemaSectionRepository;
+        this.sectionRepository = sectionRepository;
     }
 
     /**
@@ -105,10 +101,10 @@ public class ReportServiceImpl implements ReportService {
         // 执行模板内容复制
         Long schemaId = dto.getSchemaId();
         if (schemaId != null) {
-            List<ReportSection> sections = schemaSectionRepository.findAllBySchemaId(schemaId)
-                    .stream().map(schemaSection -> ReportSection.from(entity.getId(), schemaSection))
+            List<Section> sections = sectionRepository.findAllByOwnerIdAndOwnerType(schemaId, Section.OwnerType.REPORT)
+                    .stream().map(section -> new Section(entity.getId(), Section.OwnerType.REPORT, section))
                     .toList();
-            reportSectionRepository.saveAll(sections);
+            sectionRepository.saveAll(sections);
         }
         return ReportVO.from(entity);
     }

@@ -21,12 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.common.data.domain.TreeNode;
-import top.leafage.hypervisor.assets.domain.*;
+import top.leafage.hypervisor.assets.domain.Section;
+import top.leafage.hypervisor.assets.domain.SectionField;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
 import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
-import top.leafage.hypervisor.assets.repository.*;
+import top.leafage.hypervisor.assets.repository.SectionFieldRepository;
+import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.service.SectionService;
 
 import java.util.Comparator;
@@ -40,27 +42,16 @@ public class SectionServiceImpl implements SectionService {
     private static final BeanCopier copier = BeanCopier.create(SectionDTO.class, Section.class, false);
 
     private final SectionRepository sectionRepository;
-    private final ArchiveSectionRepository archiveSectionRepository;
-    private final SchemaSectionRepository schemaSectionRepository;
-    private final ReportSectionRepository reportSectionRepository;
     private final SectionFieldRepository sectionFieldRepository;
 
     /**
      * Constructor for SectionServiceImpl.
      *
-     * @param sectionRepository        a {@link SectionRepository} object
-     * @param archiveSectionRepository a {@link ArchiveSectionRepository} object
-     * @param schemaSectionRepository  a {@link SchemaSectionRepository} object
-     * @param reportSectionRepository  a {@link ReportSectionRepository} object
-     * @param sectionFieldRepository   a {@link SectionFieldRepository} object
+     * @param sectionRepository      a {@link SectionRepository} object
+     * @param sectionFieldRepository a {@link SectionFieldRepository} object
      */
-    public SectionServiceImpl(SectionRepository sectionRepository, ArchiveSectionRepository archiveSectionRepository,
-                              SchemaSectionRepository schemaSectionRepository, ReportSectionRepository reportSectionRepository,
-                              SectionFieldRepository sectionFieldRepository) {
+    public SectionServiceImpl(SectionRepository sectionRepository, SectionFieldRepository sectionFieldRepository) {
         this.sectionRepository = sectionRepository;
-        this.archiveSectionRepository = archiveSectionRepository;
-        this.schemaSectionRepository = schemaSectionRepository;
-        this.reportSectionRepository = reportSectionRepository;
         this.sectionFieldRepository = sectionFieldRepository;
     }
 
@@ -87,26 +78,11 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public List<TreeNode<Long>> archiveTree(Long archiveId) {
-        Assert.notNull(archiveId, String.format(_MUST_NOT_BE_NULL, "archiveId"));
+    public List<TreeNode<Long>> tree(Long ownerId, String ownerType) {
+        Assert.notNull(ownerId, String.format(_MUST_NOT_BE_NULL, "ownerId"));
+        Assert.notNull(ownerType, String.format(_MUST_NOT_BE_NULL, "ownerType"));
 
-        List<ArchiveSection> sections = archiveSectionRepository.findAllByArchiveId(archiveId);
-        return toTree(sections);
-    }
-
-    @Override
-    public List<TreeNode<Long>> reportTree(Long reportId) {
-        Assert.notNull(reportId, String.format(_MUST_NOT_BE_NULL, "reportId"));
-
-        List<ReportSection> sections = reportSectionRepository.findAllByReportId(reportId);
-        return toTree(sections);
-    }
-
-    @Override
-    public List<TreeNode<Long>> schemaTree(Long schemaId) {
-        Assert.notNull(schemaId, String.format(_MUST_NOT_BE_NULL, "schemaId"));
-
-        List<SchemaSection> sections = schemaSectionRepository.findAllBySchemaId(schemaId);
+        List<Section> sections = sectionRepository.findAllByOwnerIdAndOwnerType(ownerId, Section.OwnerType.of(ownerType));
         return toTree(sections);
     }
 
@@ -130,35 +106,11 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public SectionVO createReportSection(Long reportId, SectionDTO dto) {
-        Assert.notNull(reportId, String.format(_MUST_NOT_BE_NULL, "reportId"));
-
-        Section section = SectionDTO.toEntity(dto);
-        ReportSection reportSection = new ReportSection(reportId, section);
-
-        ReportSection entity = reportSectionRepository.save(reportSection);
-        return SectionVO.from(entity);
-    }
-
-    @Override
-    public SectionVO createSchemaSection(Long schemaId, SectionDTO dto) {
-        Assert.notNull(schemaId, String.format(_MUST_NOT_BE_NULL, "schemaId"));
-
-        Section section = SectionDTO.toEntity(dto);
-        SchemaSection schemaSection = new SchemaSection(schemaId, section);
-
-        SchemaSection entity = schemaSectionRepository.save(schemaSection);
-        return SectionVO.from(entity);
-    }
-
-    @Override
-    public SectionVO createArchiveSection(Long archiveId, SectionDTO dto) {
-        Assert.notNull(archiveId, String.format(_MUST_NOT_BE_NULL, "archiveId"));
-
-        Section section = SectionDTO.toEntity(dto);
-        ArchiveSection archiveSection = new ArchiveSection(archiveId, section);
-
-        ArchiveSection entity = archiveSectionRepository.save(archiveSection);
+    public SectionVO create(SectionDTO dto) {
+        if (sectionRepository.existsByOwnerIdAndName(dto.getOwnerId(), dto.getName())) {
+            throw new IllegalArgumentException("name already exists: " + dto.getName());
+        }
+        Section entity = sectionRepository.save(SectionDTO.toEntity(dto));
         return SectionVO.from(entity);
     }
 
@@ -173,7 +125,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public SectionFieldVO createField(SectionFieldDTO dto) {
-        if (sectionFieldRepository.existsByName(dto.getName())) {
+        if (sectionFieldRepository.existsBySectionIdAndName(dto.getSectionId(), dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         SectionField entity = sectionFieldRepository.save(SectionFieldDTO.toEntity(dto));
@@ -187,25 +139,12 @@ public class SectionServiceImpl implements SectionService {
         SectionField existing = sectionFieldRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("section field not found: " + id));
         if (!existing.getName().equals(dto.getName()) &&
-                sectionFieldRepository.existsByName(dto.getName())) {
+                sectionFieldRepository.existsBySectionIdAndName(dto.getSectionId(), dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         copier.copy(dto, existing, null);
         SectionField entity = sectionFieldRepository.save(existing);
         return SectionFieldVO.from(entity);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional
-    @Override
-    public SectionVO create(SectionDTO dto) {
-        if (sectionRepository.existsByName(dto.getName())) {
-            throw new IllegalArgumentException("name already exists: " + dto.getName());
-        }
-        Section entity = sectionRepository.save(SectionDTO.toEntity(dto));
-        return SectionVO.from(entity);
     }
 
     /**
@@ -219,7 +158,7 @@ public class SectionServiceImpl implements SectionService {
         Section existing = sectionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("section not found: " + id));
         if (!existing.getName().equals(dto.getName()) &&
-                sectionRepository.existsByName(dto.getName())) {
+                sectionRepository.existsByOwnerIdAndName(existing.getOwnerId(), dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         copier.copy(dto, existing, null);

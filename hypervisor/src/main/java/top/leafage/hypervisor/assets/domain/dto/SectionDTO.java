@@ -18,6 +18,7 @@ package top.leafage.hypervisor.assets.domain.dto;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import top.leafage.hypervisor.assets.domain.Section;
 
 /**
@@ -28,6 +29,12 @@ import top.leafage.hypervisor.assets.domain.Section;
 public class SectionDTO {
 
     private Long superiorId;
+
+    @NotNull
+    private Long ownerId;
+
+    @NotBlank
+    private String ownerType;
 
     @NotBlank
     private String name;
@@ -46,6 +53,8 @@ public class SectionDTO {
     public static Section toEntity(SectionDTO dto) {
         return new Section(
                 dto.getSuperiorId(),
+                dto.getOwnerId(),
+                dto.getOwnerType(),
                 dto.getName(),
                 dto.getSequence(),
                 dto.getLevel(),
@@ -61,6 +70,22 @@ public class SectionDTO {
 
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public String getOwnerType() {
+        return ownerType;
+    }
+
+    public void setOwnerType(String ownerType) {
+        this.ownerType = ownerType;
     }
 
     public String getName() {

@@ -28,10 +28,15 @@ import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "sections")
-@DiscriminatorValue("default")
 public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
     private Long superiorId;
+
+    // 归属对象主键（schema, report）
+    private Long ownerId;
+
+    @Enumerated(EnumType.STRING)
+    private OwnerType ownerType;
 
     private String name;
 
@@ -51,8 +56,21 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
     public Section() {
     }
 
-    public Section(Long superiorId, String name, Integer sequence, Integer level, String body, String type) {
+    public Section(Long ownerId, OwnerType ownerType, Section section) {
+        this.ownerId = ownerId;
+        this.ownerType = ownerType;
+        this.superiorId = section.getSuperiorId();
+        this.name = section.getName();
+        this.sequence = section.getSequence();
+        this.level = section.getLevel();
+        this.body = section.getBody();
+        this.type = section.getType();
+    }
+
+    public Section(Long superiorId, Long ownerId, String ownerType, String name, Integer sequence, Integer level, String body, String type) {
         this.superiorId = superiorId;
+        this.ownerId = ownerId;
+        this.ownerType = OwnerType.of(ownerType);
         this.name = name;
         this.sequence = sequence;
         this.level = level;
@@ -71,12 +89,38 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         }
     }
 
+    public enum OwnerType {
+        ARCHIVE,
+        SCHEMA,
+        REPORT;
+
+        public static OwnerType of(String value) {
+            return valueOf(value.toUpperCase());
+        }
+    }
+
     public Long getSuperiorId() {
         return superiorId;
     }
 
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public OwnerType getOwnerType() {
+        return ownerType;
+    }
+
+    public void setOwnerType(OwnerType ownerType) {
+        this.ownerType = ownerType;
     }
 
     public String getName() {

@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import top.leafage.common.data.domain.TreeNode;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
 import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
@@ -47,7 +48,7 @@ public class SectionController {
     /**
      * fetch.
      *
-     * @param id th pk.
+     * @param id the pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
@@ -58,9 +59,23 @@ public class SectionController {
     }
 
     /**
+     * tree.
+     *
+     * @param ownerId the pk.
+     * @param ownerType tye type.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
+    @GetMapping("/{ownerId}/tree")
+    public ResponseEntity<List<TreeNode<Long>>> tree(@PathVariable Long ownerId, @RequestParam String ownerType) {
+        List<TreeNode<Long>> treeNodes = sectionService.tree(ownerId, ownerType);
+        return ResponseEntity.ok(treeNodes);
+    }
+
+    /**
      * subset.
      *
-     * @param id th pk.
+     * @param id the pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
@@ -73,7 +88,7 @@ public class SectionController {
     /**
      * 查询 fields.
      *
-     * @param id th pk.
+     * @param id the pk.
      * @return 查询的数据集，异常时返回204状态码
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")

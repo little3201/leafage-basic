@@ -28,7 +28,6 @@ import top.leafage.hypervisor.assets.domain.Schema;
 import top.leafage.hypervisor.assets.domain.dto.SchemaDTO;
 import top.leafage.hypervisor.assets.domain.vo.SchemaVO;
 import top.leafage.hypervisor.assets.repository.SchemaRepository;
-import top.leafage.hypervisor.assets.repository.SchemaSectionRepository;
 import top.leafage.hypervisor.assets.service.SchemaService;
 
 @Service
@@ -37,16 +36,14 @@ public class SchemaServiceImpl implements SchemaService {
     private static final BeanCopier copier = BeanCopier.create(SchemaDTO.class, Schema.class, false);
 
     private final SchemaRepository schemaRepository;
-    private final SchemaSectionRepository schemaSectionRepository;
 
     /**
      * Constructor for SchemaServiceImpl.
      *
      * @param schemaRepository a {@link SchemaRepository} object
      */
-    public SchemaServiceImpl(SchemaRepository schemaRepository, SchemaSectionRepository schemaSectionRepository) {
+    public SchemaServiceImpl(SchemaRepository schemaRepository) {
         this.schemaRepository = schemaRepository;
-        this.schemaSectionRepository = schemaSectionRepository;
     }
 
     /**

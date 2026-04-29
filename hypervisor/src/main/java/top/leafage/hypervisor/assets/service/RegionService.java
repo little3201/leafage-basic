@@ -31,7 +31,7 @@ public interface RegionService extends JpaCrudService<RegionDTO, RegionVO> {
     /**
      * 获取子节点
      *
-     * @param id th pk.
+     * @param id the pk.
      * @return 数据集
      */
     List<RegionVO> subset(Long id);

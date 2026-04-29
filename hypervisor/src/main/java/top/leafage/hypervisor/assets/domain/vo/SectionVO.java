@@ -25,6 +25,7 @@ import top.leafage.hypervisor.assets.domain.Section;
 public record SectionVO(
         Long id,
         Long superiorId,
+        Long ownerId,
         String name,
         Integer sequence,
         Integer level,
@@ -40,6 +41,7 @@ public record SectionVO(
         return new SectionVO(
                 entity.getId(),
                 entity.getSuperiorId(),
+                entity.getOwnerId(),
                 entity.getName(),
                 entity.getSequence(),
                 entity.getLevel(),

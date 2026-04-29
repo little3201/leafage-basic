@@ -25,13 +25,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.hypervisor.assets.domain.Archive;
-import top.leafage.hypervisor.assets.domain.ArchiveSection;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.ArchiveDTO;
 import top.leafage.hypervisor.assets.domain.vo.ArchiveVO;
 import top.leafage.hypervisor.assets.repository.ArchiveRepository;
-import top.leafage.hypervisor.assets.repository.ArchiveSectionRepository;
-import top.leafage.hypervisor.assets.repository.SchemaSectionRepository;
-import top.leafage.hypervisor.assets.service.ArchiveService;
+import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.service.ArchiveService;
 
 import java.util.List;
@@ -42,19 +40,16 @@ public class ArchiveServiceImpl implements ArchiveService {
     private static final BeanCopier copier = BeanCopier.create(ArchiveDTO.class, Archive.class, false);
 
     private final ArchiveRepository archiveRepository;
-    private final ArchiveSectionRepository archiveSectionRepository;
-    private final SchemaSectionRepository schemaSectionRepository;
+    private final SectionRepository sectionRepository;
 
     /**
      * Constructor for ArchiveServiceImpl.
      *
      * @param archiveRepository a {@link ArchiveRepository} object
      */
-    public ArchiveServiceImpl(ArchiveRepository archiveRepository, ArchiveSectionRepository archiveSectionRepository,
-                              SchemaSectionRepository schemaSectionRepository) {
+    public ArchiveServiceImpl(ArchiveRepository archiveRepository, SectionRepository sectionRepository) {
         this.archiveRepository = archiveRepository;
-        this.archiveSectionRepository = archiveSectionRepository;
-        this.schemaSectionRepository = schemaSectionRepository;
+        this.sectionRepository = sectionRepository;
     }
 
     /**
@@ -106,10 +101,10 @@ public class ArchiveServiceImpl implements ArchiveService {
         // 执行模板内容复制
         Long schemaId = dto.getSchemaId();
         if (schemaId != null) {
-            List<ArchiveSection> sections = schemaSectionRepository.findAllBySchemaId(schemaId)
-                    .stream().map(schemaSection -> ArchiveSection.from(entity.getId(), schemaSection))
+            List<Section> sections = sectionRepository.findAllByOwnerIdAndOwnerType(schemaId, Section.OwnerType.REPORT)
+                    .stream().map(section -> new Section(entity.getId(), Section.OwnerType.REPORT, section))
                     .toList();
-            archiveSectionRepository.saveAll(sections);
+            sectionRepository.saveAll(sections);
         }
         return ArchiveVO.from(entity);
     }

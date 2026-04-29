@@ -26,7 +26,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
@@ -73,7 +72,7 @@ class SectionControllerTest {
         dto.setSuperiorId(1L);
         dto.setBody("body");
 
-        vo = new SectionVO(1L, 1L, "test", "body", "TITLE", 2L);
+        vo = new SectionVO(1L, 1L, "test", 1, 2, "body", "TITLE", 2L);
     }
 
     @Test
@@ -97,7 +96,7 @@ class SectionControllerTest {
                 .bodyJson().extractingPath("$.content")
                 .convertTo(InstanceOfAssertFactories.list(SectionVO.class))
                 .hasSize(1)
-                .element(0).satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
+                .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
     }
 
     @Test
@@ -109,7 +108,7 @@ class SectionControllerTest {
                 .queryParam("size", "2")
                 .queryParam("sortBy", "id")
                 .queryParam("descending", "true")
-                .queryParam("filters", "content:like:test")
+                .queryParam("filters", "name:like:test")
         )
                 .hasStatus5xxServerError();
     }
@@ -122,7 +121,7 @@ class SectionControllerTest {
                 .hasStatusOk()
                 .bodyJson()
                 .convertTo(SectionVO.class)
-                .satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
+                .satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
     }
 
     @Test
@@ -142,7 +141,7 @@ class SectionControllerTest {
                 .hasStatus(HttpStatus.CREATED)
                 .bodyJson()
                 .convertTo(SectionVO.class)
-                .satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
+                .satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
     }
 
     @Test
@@ -163,7 +162,7 @@ class SectionControllerTest {
                 .hasStatus(HttpStatus.ACCEPTED)
                 .bodyJson()
                 .convertTo(SectionVO.class)
-                .satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
+                .satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
     }
 
     @Test
@@ -200,17 +199,4 @@ class SectionControllerTest {
                 .hasStatusOk();
     }
 
-    @Test
-    void importFromFile() {
-        when(sectionService.createAll(anyList())).thenReturn(List.of(vo));
-
-        MockMultipartFile file = new MockMultipartFile("file", "test.xlsx",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new byte[1]);
-        assertThat(mvc.post().uri("/sections/import").multipart().file(file).with(csrf().asHeader()))
-                .hasStatusOk()
-                .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(SectionVO.class))
-                .hasSize(1)
-                .element(0).satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
-    }
 }

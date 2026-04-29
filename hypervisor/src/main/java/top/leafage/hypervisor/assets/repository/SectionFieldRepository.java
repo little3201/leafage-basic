@@ -30,12 +30,13 @@ import java.util.List;
 public interface SectionFieldRepository extends JpaRepository<SectionField, Long> {
 
     /**
-     * exists by name.
+     * exists by sectionId and name.
      *
-     * @param name a {@link String} object
+     * @param sectionId the pk of section.
+     * @param name      a {@link String} object.
      * @return a boolean
      */
-    boolean existsByName(String name);
+    boolean existsBySectionIdAndName(Long sectionId, String name);
 
     /**
      * Retrieve section fields.

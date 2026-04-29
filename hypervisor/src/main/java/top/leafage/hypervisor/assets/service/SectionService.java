@@ -34,61 +34,18 @@ public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
     /**
      * tree.
      *
-     * @param archiveId the pk of archive.
+     * @param ownerId the pk of archive.
      * @return the result.
      */
-    List<TreeNode<Long>> archiveTree(Long archiveId);
-
-    /**
-     * tree.
-     *
-     * @param reportId the pk of report.
-     * @return the result.
-     */
-    List<TreeNode<Long>> reportTree(Long reportId);
-
-    /**
-     * tree.
-     *
-     * @param schemaId the pk of schema.
-     * @return the result.
-     */
-    List<TreeNode<Long>> schemaTree(Long schemaId);
+    List<TreeNode<Long>> tree(Long ownerId, String ownerType);
 
     /**
      * 获取子节点.
      *
-     * @param id th pk.
+     * @param id the pk.
      * @return 数据集
      */
     List<SectionVO> subset(Long id);
-
-    /**
-     * Create report section.
-     *
-     * @param reportId the pk of report.
-     * @param dto      the data of section.
-     * @return the result.
-     */
-    SectionVO createReportSection(Long reportId, SectionDTO dto);
-
-    /**
-     * Create schema section.
-     *
-     * @param schemaId the pk of schema.
-     * @param dto      the data of section.
-     * @return the result.
-     */
-    SectionVO createSchemaSection(Long schemaId, SectionDTO dto);
-
-    /**
-     * Create archive section.
-     *
-     * @param archiveId the pk of archive.
-     * @param dto       the data of section.
-     * @return the result.
-     */
-    SectionVO createArchiveSection(Long archiveId, SectionDTO dto);
 
     /**
      * Retrieve section fields.

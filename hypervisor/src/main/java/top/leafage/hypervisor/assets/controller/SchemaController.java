@@ -22,14 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.assets.domain.dto.SchemaDTO;
-import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.vo.SchemaVO;
-import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.SchemaService;
-import top.leafage.hypervisor.assets.service.SectionService;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,11 +40,9 @@ import java.util.List;
 public class SchemaController {
 
     private final SchemaService schemaService;
-    private final SectionService sectionService;
 
-    public SchemaController(SchemaService schemaService, SectionService sectionService) {
+    public SchemaController(SchemaService schemaService) {
         this.schemaService = schemaService;
-        this.sectionService = sectionService;
     }
 
     /**
@@ -72,7 +66,7 @@ public class SchemaController {
     /**
      * fetch.
      *
-     * @param id th pk.
+     * @param id the pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
@@ -132,46 +126,6 @@ public class SchemaController {
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = schemaService.enable(id);
         return ResponseEntity.ok(enabled);
-    }
-
-    /**
-     * sections.
-     *
-     * @param id the pk.
-     * @return 查询的数据集，异常时返回204状态码
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
-    @GetMapping("/{id}/sections")
-    public ResponseEntity<List<TreeNode<Long>>> sections(@PathVariable Long id) {
-        List<TreeNode<Long>> treeNodes = sectionService.schemaTree(id);
-        return ResponseEntity.ok(treeNodes);
-    }
-
-    /**
-     * Fetch section.
-     *
-     * @param sectionId the pk of section.
-     * @return 查询的数据集，异常时返回204状态码
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
-    @GetMapping("/sections/{sectionId}")
-    public ResponseEntity<SectionVO> fetchSection(@PathVariable Long sectionId) {
-        SectionVO vo = sectionService.fetch(sectionId);
-        return ResponseEntity.ok(vo);
-    }
-
-    /**
-     * Create section.
-     *
-     * @param id  the pk.
-     * @param dto the data of section.
-     * @return 查询的数据集，异常时返回204状态码
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
-    @PostMapping("/{id}/sections")
-    public ResponseEntity<SectionVO> createSection(@PathVariable Long id, @RequestBody SectionDTO dto) {
-        SectionVO vo = sectionService.createSchemaSection(id, dto);
-        return ResponseEntity.ok(vo);
     }
 
     /**

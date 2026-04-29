@@ -32,12 +32,22 @@ import java.util.List;
 public interface SectionRepository extends JpaRepository<Section, Long> {
 
     /**
+     * Retrieve by ownerId and ownerType.
+     *
+     * @param ownerId   the pk of owner.
+     * @param ownerType the  type of owner.
+     * @return the result.
+     */
+    List<Section> findAllByOwnerIdAndOwnerType(Long ownerId, Section.OwnerType ownerType);
+
+    /**
      * exists by name.
      *
-     * @param name a {@link String} object
+     * @param ownerId the pk of owner.
+     * @param name    a {@link String} object
      * @return a boolean
      */
-    boolean existsByName(String name);
+    boolean existsByOwnerIdAndName(Long ownerId, String name);
 
     /**
      * 查询

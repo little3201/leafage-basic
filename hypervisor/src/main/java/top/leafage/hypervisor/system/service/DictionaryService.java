@@ -31,7 +31,7 @@ public interface DictionaryService extends JpaCrudService<DictionaryDTO, Diction
     /**
      * 获取子节点
      *
-     * @param id th pk.
+     * @param id the pk.
      * @return 数据集
      */
     List<DictionaryVO> subset(Long id);

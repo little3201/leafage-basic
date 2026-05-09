@@ -140,6 +140,11 @@ public class ArchiveServiceImpl implements ArchiveService {
             throw new EntityNotFoundException("archive not found: " + id);
         }
         archiveRepository.deleteById(id);
+        // 删除关联的章节
+        List<Long> ids = sectionRepository.findAllByOwnerIdAndOwnerType(id, Section.OwnerType.ARCHIVE)
+                .stream().map(Section::getId)
+                .toList();
+        sectionRepository.deleteAllById(ids);
     }
 
 }

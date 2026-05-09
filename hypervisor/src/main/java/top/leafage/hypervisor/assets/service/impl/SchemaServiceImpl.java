@@ -25,10 +25,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.hypervisor.assets.domain.Schema;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.SchemaDTO;
 import top.leafage.hypervisor.assets.domain.vo.SchemaVO;
 import top.leafage.hypervisor.assets.repository.SchemaRepository;
+import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.service.SchemaService;
+
+import java.util.List;
 
 @Service
 public class SchemaServiceImpl implements SchemaService {
@@ -36,14 +40,16 @@ public class SchemaServiceImpl implements SchemaService {
     private static final BeanCopier copier = BeanCopier.create(SchemaDTO.class, Schema.class, false);
 
     private final SchemaRepository schemaRepository;
+    private final SectionRepository sectionRepository;
 
     /**
      * Constructor for SchemaServiceImpl.
      *
      * @param schemaRepository a {@link SchemaRepository} object
      */
-    public SchemaServiceImpl(SchemaRepository schemaRepository) {
+    public SchemaServiceImpl(SchemaRepository schemaRepository, SectionRepository sectionRepository) {
         this.schemaRepository = schemaRepository;
+        this.sectionRepository = sectionRepository;
     }
 
     /**
@@ -126,6 +132,11 @@ public class SchemaServiceImpl implements SchemaService {
             throw new EntityNotFoundException("schema not found: " + id);
         }
         schemaRepository.deleteById(id);
+        // 删除关联的章节
+        List<Long> ids = sectionRepository.findAllByOwnerIdAndOwnerType(id, Section.OwnerType.SCHEMA)
+                .stream().map(Section::getId)
+                .toList();
+        sectionRepository.deleteAllById(ids);
     }
 
 }

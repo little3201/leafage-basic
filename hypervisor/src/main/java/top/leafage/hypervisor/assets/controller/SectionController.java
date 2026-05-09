@@ -73,19 +73,6 @@ public class SectionController {
     }
 
     /**
-     * subset.
-     *
-     * @param id the pk.
-     * @return the result.
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
-    @GetMapping("/subset")
-    public ResponseEntity<List<SectionVO>> subset(Long id) {
-        List<SectionVO> voList = sectionService.subset(id);
-        return ResponseEntity.ok(voList);
-    }
-
-    /**
      * 查询 fields.
      *
      * @param id the pk.

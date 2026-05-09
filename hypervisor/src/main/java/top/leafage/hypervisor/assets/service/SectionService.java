@@ -40,14 +40,6 @@ public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
     List<TreeNode<Long>> tree(Long ownerId, String ownerType);
 
     /**
-     * 获取子节点.
-     *
-     * @param id the pk.
-     * @return 数据集
-     */
-    List<SectionVO> subset(Long id);
-
-    /**
      * Retrieve section fields.
      *
      * @param id the pk of section.

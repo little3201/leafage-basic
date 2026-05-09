@@ -50,29 +50,6 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     boolean existsByOwnerIdAndName(Long ownerId, String name);
 
     /**
-     * 查询
-     *
-     * @return 关联的数据
-     */
-    List<Section> findAllBySuperiorIdIsNull();
-
-    /**
-     * 根据superior id查询
-     *
-     * @param superiorId 回复信息
-     * @return 关联的数据
-     */
-    List<Section> findAllBySuperiorId(Long superiorId);
-
-    /**
-     * 记录数
-     *
-     * @param superiorId 回复id
-     * @return 记录数
-     */
-    long countBySuperiorId(Long superiorId);
-
-    /**
      * enable a record by pk.
      *
      * @param id the pk.

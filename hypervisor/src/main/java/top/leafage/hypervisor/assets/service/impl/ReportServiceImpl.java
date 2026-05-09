@@ -140,6 +140,11 @@ public class ReportServiceImpl implements ReportService {
             throw new EntityNotFoundException("report not found: " + id);
         }
         reportRepository.deleteById(id);
+        // 删除关联的章节
+        List<Long> ids = sectionRepository.findAllByOwnerIdAndOwnerType(id, Section.OwnerType.REPORT)
+                .stream().map(Section::getId)
+                .toList();
+        sectionRepository.deleteAllById(ids);
     }
 
 }

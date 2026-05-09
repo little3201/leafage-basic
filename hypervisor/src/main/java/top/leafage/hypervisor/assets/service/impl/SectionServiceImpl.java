@@ -33,11 +33,14 @@ import top.leafage.hypervisor.assets.service.SectionService;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
 
 @Service
 public class SectionServiceImpl implements SectionService {
+
+    private static final Set<String> META_FIELDS = Set.of("sequence", "level");
 
     private static final BeanCopier copier = BeanCopier.create(SectionDTO.class, Section.class, false);
 
@@ -83,26 +86,7 @@ public class SectionServiceImpl implements SectionService {
         Assert.notNull(ownerType, String.format(_MUST_NOT_BE_NULL, "ownerType"));
 
         List<Section> sections = sectionRepository.findAllByOwnerIdAndOwnerType(ownerId, Section.OwnerType.of(ownerType));
-        return toTree(sections);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<SectionVO> subset(Long id) {
-        List<Section> list;
-        if (id == null) {
-            list = sectionRepository.findAllBySuperiorIdIsNull();
-        } else {
-            list = sectionRepository.findAllBySuperiorId(id);
-        }
-        return list.stream().sorted(Comparator.comparing(Section::getId))
-                .map(entity -> {
-                    long count = sectionRepository.countBySuperiorId(entity.getId());
-                    return SectionVO.from(entity, count);
-                })
-                .toList();
+        return toTree(sections, META_FIELDS);
     }
 
     @Override

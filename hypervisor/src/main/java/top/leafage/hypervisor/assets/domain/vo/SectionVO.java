@@ -30,7 +30,6 @@ public record SectionVO(
         Integer sequence,
         Integer level,
         String body,
-        String type,
         long count
 ) {
     public static SectionVO from(Section entity) {
@@ -46,7 +45,6 @@ public record SectionVO(
                 entity.getSequence(),
                 entity.getLevel(),
                 entity.getBody(),
-                entity.getType().name(),
                 count
         );
     }

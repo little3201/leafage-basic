@@ -32,7 +32,9 @@ import top.leafage.hypervisor.assets.repository.ReportRepository;
 import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.service.ReportService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -101,12 +103,27 @@ public class ReportServiceImpl implements ReportService {
         // 执行模板内容复制
         Long schemaId = dto.getSchemaId();
         if (schemaId != null) {
-            List<Section> sections = sectionRepository.findAllByOwnerIdAndOwnerType(schemaId, Section.OwnerType.REPORT)
-                    .stream().map(section -> new Section(entity.getId(), Section.OwnerType.REPORT, section))
-                    .toList();
-            sectionRepository.saveAll(sections);
+            copySections(schemaId, entity.getId());
         }
         return ReportVO.from(entity);
+    }
+
+    private void copySections(Long schemaId, Long reportId) {
+        List<Section> templateSections = sectionRepository.findAllByOwnerIdAndOwnerType(schemaId, Section.OwnerType.SCHEMA);
+        List<Section> copiedSections = templateSections.stream()
+                .map(section -> new Section(reportId, Section.OwnerType.REPORT, section))
+                .toList();
+        List<Section> savedSections = sectionRepository.saveAll(copiedSections);
+
+        Map<Long, Long> idMapping = new HashMap<>();
+        for (int i = 0; i < templateSections.size(); i++) {
+            idMapping.put(templateSections.get(i).getId(), savedSections.get(i).getId());
+        }
+        for (int i = 0; i < templateSections.size(); i++) {
+            Long superiorId = templateSections.get(i).getSuperiorId();
+            savedSections.get(i).setSuperiorId(idMapping.get(superiorId));
+        }
+        sectionRepository.saveAll(savedSections);
     }
 
     /**

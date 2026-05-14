@@ -47,8 +47,6 @@ public class SectionDTO {
 
     private String body;
 
-    private String type;
-
 
     public static Section toEntity(SectionDTO dto) {
         return new Section(
@@ -58,8 +56,7 @@ public class SectionDTO {
                 dto.getName(),
                 dto.getSequence(),
                 dto.getLevel(),
-                dto.getBody(),
-                dto.getType()
+                dto.getBody()
         );
     }
 
@@ -120,11 +117,4 @@ public class SectionDTO {
         this.body = body;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

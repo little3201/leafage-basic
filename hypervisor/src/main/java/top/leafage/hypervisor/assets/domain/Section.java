@@ -47,9 +47,6 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
     @Column(columnDefinition = "text")
     private String body;
 
-    @Enumerated(EnumType.STRING)
-    private Type type = Type.PARAGRAPH;
-
     private boolean enabled = true;
 
 
@@ -64,10 +61,9 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.sequence = section.getSequence();
         this.level = section.getLevel();
         this.body = section.getBody();
-        this.type = section.getType();
     }
 
-    public Section(Long superiorId, Long ownerId, String ownerType, String name, Integer sequence, Integer level, String body, String type) {
+    public Section(Long superiorId, Long ownerId, String ownerType, String name, Integer sequence, Integer level, String body) {
         this.superiorId = superiorId;
         this.ownerId = ownerId;
         this.ownerType = OwnerType.of(ownerType);
@@ -75,7 +71,6 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.sequence = sequence;
         this.level = level;
         this.body = body;
-        this.type = Type.of(type);
     }
 
     public enum Type {
@@ -144,9 +139,6 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
     }
 
     public void setLevel(Integer level) {
-        if (!Type.HEADING.equals(getType())) {
-            level = null;
-        }
         this.level = level;
     }
 
@@ -156,14 +148,6 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     public void setBody(String body) {
         this.body = body;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
     }
 
     public boolean isEnabled() {

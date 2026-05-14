@@ -31,7 +31,6 @@ import top.leafage.hypervisor.assets.repository.SectionFieldRepository;
 import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.service.SectionService;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -43,6 +42,7 @@ public class SectionServiceImpl implements SectionService {
     private static final Set<String> META_FIELDS = Set.of("sequence", "level");
 
     private static final BeanCopier copier = BeanCopier.create(SectionDTO.class, Section.class, false);
+    private static final BeanCopier fieldCopier = BeanCopier.create(SectionFieldDTO.class, SectionField.class, false);
 
     private final SectionRepository sectionRepository;
     private final SectionFieldRepository sectionFieldRepository;
@@ -126,7 +126,7 @@ public class SectionServiceImpl implements SectionService {
                 sectionFieldRepository.existsBySectionIdAndName(dto.getSectionId(), dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        copier.copy(dto, existing, null);
+        fieldCopier.copy(dto, existing, null);
         SectionField entity = sectionFieldRepository.save(existing);
         return SectionFieldVO.from(entity);
     }

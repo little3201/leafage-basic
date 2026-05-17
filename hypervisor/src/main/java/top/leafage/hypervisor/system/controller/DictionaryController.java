@@ -122,7 +122,7 @@ public class DictionaryController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

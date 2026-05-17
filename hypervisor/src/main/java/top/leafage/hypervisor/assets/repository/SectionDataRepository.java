@@ -13,32 +13,27 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.domain.vo;
+package top.leafage.hypervisor.assets.repository;
 
-import top.leafage.hypervisor.assets.domain.SectionField;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import top.leafage.hypervisor.assets.domain.SectionData;
+
+import java.util.List;
 
 /**
- * vo class for section field.
+ * section data repository.
  *
  * @author wq li
  */
-public record SectionFieldVO(
-        Long id,
-        String name,
-        String field,
-        String type,
-        Integer length,
-        boolean required
-) {
+@Repository
+public interface SectionDataRepository extends JpaRepository<SectionData, Long> {
 
-    public static SectionFieldVO from(SectionField entity) {
-        return new SectionFieldVO(
-                entity.getId(),
-                entity.getName(),
-                entity.getField(),
-                entity.getType().name(),
-                entity.getLength(),
-                entity.isRequired()
-        );
-    }
+    /**
+     * Retrieve section datas.
+     *
+     * @param sectionId the pk of section.
+     * @return the result.
+     */
+    List<SectionData> findAllBySectionId(Long sectionId);
 }

@@ -135,7 +135,7 @@ public class UserController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      * @return no content.

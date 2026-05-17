@@ -75,7 +75,7 @@ public class AuditLogController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

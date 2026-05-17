@@ -18,7 +18,9 @@ package top.leafage.hypervisor.assets.service;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionDataDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
+import top.leafage.hypervisor.assets.domain.vo.SectionDataVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 
@@ -48,12 +50,28 @@ public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
     List<SectionFieldVO> fields(Long id);
 
     /**
+     * Retrieve section datas.
+     *
+     * @param id the pk of section.
+     * @return the result.
+     */
+    List<SectionDataVO> datas(Long id);
+
+    /**
      * Create section field.
      *
      * @param dto the data of section field.
      * @return the result.
      */
     SectionFieldVO createField(SectionFieldDTO dto);
+
+    /**
+     * Create section data.
+     *
+     * @param dto the data of section data.
+     * @return the result.
+     */
+    SectionDataVO createData(SectionDataDTO dto);
 
     /**
      * Modify section field.
@@ -63,4 +81,27 @@ public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
      * @return the result.
      */
     SectionFieldVO modifyField(Long id, SectionFieldDTO dto);
+
+    /**
+     * Modify section data.
+     *
+     * @param id  the pk of section data.
+     * @param dto the data of section data.
+     * @return the result.
+     */
+    SectionDataVO modifyData(Long id, SectionDataDTO dto);
+
+    /**
+     * Remove section field.
+     *
+     * @param id the pk of section field.
+     */
+    void removeField(Long id);
+
+    /**
+     * Remove section data.
+     *
+     * @param id the pk of section data.
+     */
+    void removeData(Long id);
 }

@@ -15,9 +15,7 @@
 
 package top.leafage.hypervisor.assets.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
@@ -38,19 +36,35 @@ public class SectionField extends JpaAbstractAuditable<@NonNull String, @NonNull
 
     private String field;
 
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     private Integer length;
+
+    private boolean required = false;
 
     public SectionField() {
     }
 
-    public SectionField(Long sectionId, String name, String field, String type, Integer length) {
+    public SectionField(Long sectionId, String name, String field, String type, Integer length, boolean required) {
         this.sectionId = sectionId;
         this.name = name;
         this.field = field;
-        this.type = type;
+        this.type = Type.of(type);
         this.length = length;
+        this.required = required;
+    }
+
+    public enum Type {
+        STRING,
+        NUMBER,
+        BOOLEAN,
+        DATE,
+        DATETIME;
+
+        public static Type of(String value) {
+            return valueOf(value.toUpperCase());
+        }
     }
 
     public Long getSectionId() {
@@ -77,11 +91,11 @@ public class SectionField extends JpaAbstractAuditable<@NonNull String, @NonNull
         this.field = field;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -91,5 +105,13 @@ public class SectionField extends JpaAbstractAuditable<@NonNull String, @NonNull
 
     public void setLength(Integer length) {
         this.length = length;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }

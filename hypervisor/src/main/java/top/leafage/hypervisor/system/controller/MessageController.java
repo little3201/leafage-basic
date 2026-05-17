@@ -104,7 +104,7 @@ public class MessageController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

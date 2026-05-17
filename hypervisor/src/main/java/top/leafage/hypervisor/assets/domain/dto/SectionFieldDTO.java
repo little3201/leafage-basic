@@ -22,7 +22,7 @@ import jakarta.validation.constraints.NotNull;
 import top.leafage.hypervisor.assets.domain.SectionField;
 
 /**
- * dto class for section.
+ * dto class for section field.
  *
  * @author wq li
  */
@@ -44,6 +44,8 @@ public class SectionFieldDTO {
     @Max(500)
     private Integer length;
 
+    private boolean required;
+
 
     public static SectionField toEntity(SectionFieldDTO dto) {
         return new SectionField(
@@ -51,7 +53,8 @@ public class SectionFieldDTO {
                 dto.getName(),
                 dto.getField(),
                 dto.getType(),
-                dto.getLength()
+                dto.getLength(),
+                dto.isRequired()
         );
     }
 
@@ -93,5 +96,13 @@ public class SectionFieldDTO {
 
     public void setLength(Integer length) {
         this.length = length;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 }

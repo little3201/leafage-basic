@@ -75,7 +75,7 @@ public class OperationLogController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

@@ -75,7 +75,7 @@ public class AccessLogController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

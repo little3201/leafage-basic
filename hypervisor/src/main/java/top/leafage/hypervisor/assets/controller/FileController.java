@@ -130,7 +130,7 @@ public class FileController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      * @return 如果删除成功，返回200状态码，否则返回417状态码

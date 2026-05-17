@@ -120,7 +120,7 @@ public class RegionController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

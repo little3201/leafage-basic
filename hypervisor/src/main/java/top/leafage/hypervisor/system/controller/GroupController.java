@@ -128,7 +128,7 @@ public class GroupController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

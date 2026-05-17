@@ -111,7 +111,7 @@ public class RoleController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

@@ -104,7 +104,7 @@ public class SchemaController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

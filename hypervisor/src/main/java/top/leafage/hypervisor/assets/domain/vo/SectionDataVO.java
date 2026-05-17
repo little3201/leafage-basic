@@ -15,30 +15,24 @@
 
 package top.leafage.hypervisor.assets.domain.vo;
 
-import top.leafage.hypervisor.assets.domain.SectionField;
+import top.leafage.hypervisor.assets.domain.SectionData;
+
+import java.util.Map;
 
 /**
- * vo class for section field.
+ * vo class for section data.
  *
  * @author wq li
  */
-public record SectionFieldVO(
+public record SectionDataVO(
         Long id,
-        String name,
-        String field,
-        String type,
-        Integer length,
-        boolean required
+        Map<String, Object> data
 ) {
 
-    public static SectionFieldVO from(SectionField entity) {
-        return new SectionFieldVO(
+    public static SectionDataVO from(SectionData entity) {
+        return new SectionDataVO(
                 entity.getId(),
-                entity.getName(),
-                entity.getField(),
-                entity.getType().name(),
-                entity.getLength(),
-                entity.isRequired()
+                entity.getData()
         );
     }
 }

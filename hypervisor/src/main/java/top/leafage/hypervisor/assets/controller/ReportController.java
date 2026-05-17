@@ -104,7 +104,7 @@ public class ReportController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

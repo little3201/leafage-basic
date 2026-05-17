@@ -104,7 +104,7 @@ public class ArchiveController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
      * @param id the pk.
      */

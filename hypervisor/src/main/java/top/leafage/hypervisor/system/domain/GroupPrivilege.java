@@ -74,4 +74,12 @@ public class GroupPrivilege extends AbstractPersistable<@NonNull Long> {
             this.actions.addAll(newActions);
         }
     }
+
+    public void removeAction(String action) {
+        this.actions.remove(action);
+    }
+
+    public boolean hasNoActions() {
+        return this.actions.isEmpty();
+    }
 }

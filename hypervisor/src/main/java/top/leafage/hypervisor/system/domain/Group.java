@@ -110,6 +110,19 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
         syncAuthorities();
     }
 
+    public void removePrivilegeAction(Privilege privilege, String action) {
+        groupPrivileges.stream()
+                .filter(gp -> gp.getPrivilege().equals(privilege))
+                .findFirst()
+                .ifPresent(gp -> {
+                    gp.removeAction(action);
+                    if (gp.hasNoActions()) {
+                        groupPrivileges.remove(gp);
+                    }
+                });
+        syncAuthorities();
+    }
+
     /**
      * 核心同步方法：把 Role 的权限 + Group 自身的权限全部转换成 authorities
      */

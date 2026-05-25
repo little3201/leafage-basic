@@ -19,7 +19,6 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -74,5 +73,13 @@ public class RolePrivilege extends AbstractPersistable<@NonNull Long> {
         if (newActions != null) {
             this.actions.addAll(newActions);
         }
+    }
+
+    public void removeAction(String action) {
+        this.actions.remove(action);
+    }
+
+    public boolean hasNoActions() {
+        return this.actions.isEmpty();
     }
 }

@@ -24,31 +24,31 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import top.leafage.hypervisor.assets.domain.Schema;
+import top.leafage.hypervisor.assets.domain.Template;
 import top.leafage.hypervisor.assets.domain.Section;
-import top.leafage.hypervisor.assets.domain.dto.SchemaDTO;
-import top.leafage.hypervisor.assets.domain.vo.SchemaVO;
-import top.leafage.hypervisor.assets.repository.SchemaRepository;
+import top.leafage.hypervisor.assets.domain.dto.TemplateDTO;
+import top.leafage.hypervisor.assets.domain.vo.TemplateVO;
+import top.leafage.hypervisor.assets.repository.TemplateRepository;
 import top.leafage.hypervisor.assets.repository.SectionRepository;
-import top.leafage.hypervisor.assets.service.SchemaService;
+import top.leafage.hypervisor.assets.service.TemplateService;
 
 import java.util.List;
 
 @Service
-public class SchemaServiceImpl implements SchemaService {
+public class TemplateServiceImpl implements TemplateService {
 
-    private static final BeanCopier copier = BeanCopier.create(SchemaDTO.class, Schema.class, false);
+    private static final BeanCopier copier = BeanCopier.create(TemplateDTO.class, Template.class, false);
 
-    private final SchemaRepository schemaRepository;
+    private final TemplateRepository templateRepository;
     private final SectionRepository sectionRepository;
 
     /**
      * Constructor for SchemaServiceImpl.
      *
-     * @param schemaRepository a {@link SchemaRepository} object
+     * @param templateRepository a {@link TemplateRepository} object
      */
-    public SchemaServiceImpl(SchemaRepository schemaRepository, SectionRepository sectionRepository) {
-        this.schemaRepository = schemaRepository;
+    public TemplateServiceImpl(TemplateRepository templateRepository, SectionRepository sectionRepository) {
+        this.templateRepository = templateRepository;
         this.sectionRepository = sectionRepository;
     }
 
@@ -56,36 +56,36 @@ public class SchemaServiceImpl implements SchemaService {
      * {@inheritDoc}
      */
     @Override
-    public Page<@NonNull SchemaVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<@NonNull TemplateVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Schema> spec = (root, _, cb) ->
+        Specification<@NonNull Template> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
-        return schemaRepository.findAll(spec, pageable)
-                .map(SchemaVO::from);
+        return templateRepository.findAll(spec, pageable)
+                .map(TemplateVO::from);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public SchemaVO fetch(Long id) {
+    public TemplateVO fetch(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
-        return schemaRepository.findById(id)
-                .map(SchemaVO::from)
-                .orElseThrow(() -> new EntityNotFoundException("schema not found: " + id));
+        return templateRepository.findById(id)
+                .map(TemplateVO::from)
+                .orElseThrow(() -> new EntityNotFoundException("template not found: " + id));
     }
 
     @Transactional
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        if (!schemaRepository.existsById(id)) {
-            throw new EntityNotFoundException("schema not found: " + id);
+        if (!templateRepository.existsById(id)) {
+            throw new EntityNotFoundException("template not found: " + id);
         }
-        return schemaRepository.updateEnabledById(id) > 0;
+        return templateRepository.updateEnabledById(id) > 0;
     }
 
     /**
@@ -93,12 +93,12 @@ public class SchemaServiceImpl implements SchemaService {
      */
     @Transactional
     @Override
-    public SchemaVO create(SchemaDTO dto) {
-        if (schemaRepository.existsByName(dto.getName())) {
+    public TemplateVO create(TemplateDTO dto) {
+        if (templateRepository.existsByName(dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        Schema entity = schemaRepository.save(SchemaDTO.toEntity(dto));
-        return SchemaVO.from(entity);
+        Template entity = templateRepository.save(TemplateDTO.toEntity(dto));
+        return TemplateVO.from(entity);
     }
 
     /**
@@ -106,18 +106,18 @@ public class SchemaServiceImpl implements SchemaService {
      */
     @Transactional
     @Override
-    public SchemaVO modify(Long id, SchemaDTO dto) {
+    public TemplateVO modify(Long id, TemplateDTO dto) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
-        Schema existing = schemaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("schema not found: " + id));
+        Template existing = templateRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("template not found: " + id));
         if (!existing.getName().equals(dto.getName()) &&
-                schemaRepository.existsByName(dto.getName())) {
+                templateRepository.existsByName(dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         copier.copy(dto, existing, null);
-        Schema entity = schemaRepository.save(existing);
-        return SchemaVO.from(entity);
+        Template entity = templateRepository.save(existing);
+        return TemplateVO.from(entity);
     }
 
     /**
@@ -128,10 +128,10 @@ public class SchemaServiceImpl implements SchemaService {
     public void remove(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
-        if (!schemaRepository.existsById(id)) {
-            throw new EntityNotFoundException("schema not found: " + id);
+        if (!templateRepository.existsById(id)) {
+            throw new EntityNotFoundException("template not found: " + id);
         }
-        schemaRepository.deleteById(id);
+        templateRepository.deleteById(id);
         // 删除关联的章节
         List<Long> ids = sectionRepository.findAllByOwnerIdAndOwnerType(id, Section.OwnerType.SCHEMA)
                 .stream().map(Section::getId)

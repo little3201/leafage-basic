@@ -15,16 +15,16 @@
 
 package top.leafage.hypervisor.assets.domain.vo;
 
-import top.leafage.hypervisor.assets.domain.Schema;
+import top.leafage.hypervisor.assets.domain.Template;
 
 import java.time.LocalDateTime;
 
 /**
- * vo class for schema.
+ * vo class for template.
  *
  * @author wq li
  */
-public record SchemaVO(
+public record TemplateVO(
         Long id,
         String name,
         String type,
@@ -33,8 +33,8 @@ public record SchemaVO(
         String description,
         LocalDateTime lastModifiedDate
 ) {
-    public static SchemaVO from(Schema entity) {
-        return new SchemaVO(
+    public static TemplateVO from(Template entity) {
+        return new TemplateVO(
                 entity.getId(),
                 entity.getName(),
                 entity.getType().name(),

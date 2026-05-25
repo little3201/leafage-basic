@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.util.StringUtils;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.GroupPrivilege;
@@ -272,20 +273,23 @@ public class GroupServiceImpl implements GroupService {
         Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
 
         Privilege priv = privilegeRepository.findById(privilegeId).orElseThrow();
-        if (!priv.getActions().contains(action)) {
+        if (StringUtils.hasText(action) && !priv.getActions().contains(action)) {
             throw new IllegalArgumentException("无效的 action");
         }
+        Set<String> actions = StringUtils.hasText(action) ? Set.of(action) : Set.of();
 
         Optional<GroupPrivilege> existing = groupPrivilegeRepository
                 .findByGroupIdAndPrivilegeId(id, privilegeId);
         Group group = groupRepository.findById(id).orElseThrow();
         if (existing.isPresent()) {
-            // 已存在 → 只更新 actions（最高效）
-            existing.get().updateActions(Set.of(action));
+            // 已存在时只追加指定 action，避免覆盖同一 privilege 下的其他 action。
+            existing.get().addActions(actions);
             groupPrivilegeRepository.save(existing.get());
+            group.syncAuthorities();
+            groupRepository.save(group);
         } else {
             // 不存在 → 新增
-            group.addPrivilege(priv, Set.of(action));
+            group.addPrivilege(priv, actions);
             groupRepository.save(group);
         }
     }
@@ -312,7 +316,16 @@ public class GroupServiceImpl implements GroupService {
         Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
 
         Group group = groupRepository.findById(id).orElseThrow();
-        group.removePrivilege(privilegeRepository.findById(privilegeId).orElseThrow());
+        Privilege priv = privilegeRepository.findById(privilegeId).orElseThrow();
+        if (StringUtils.hasText(action)) {
+            if (!priv.getActions().contains(action)) {
+                throw new IllegalArgumentException("无效的 action");
+            }
+            group.removePrivilegeAction(priv, action);
+        } else {
+            group.removePrivilege(priv);
+        }
+
         groupRepository.save(group);
     }
 }

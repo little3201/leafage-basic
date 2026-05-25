@@ -16,14 +16,14 @@
 package top.leafage.hypervisor.assets.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import top.leafage.hypervisor.assets.domain.Schema;
+import top.leafage.hypervisor.assets.domain.Template;
 
 /**
- * dto class for schema.
+ * dto class for template.
  *
  * @author wq li
  */
-public class SchemaDTO {
+public class TemplateDTO {
 
     @NotBlank
     private String name;
@@ -34,8 +34,8 @@ public class SchemaDTO {
     private String description;
 
 
-    public static Schema toEntity(SchemaDTO dto) {
-        return new Schema(
+    public static Template toEntity(TemplateDTO dto) {
+        return new Template(
                 dto.getName(),
                 dto.getType(),
                 dto.getDescription()

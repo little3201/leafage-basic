@@ -32,7 +32,7 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     private Long superiorId;
 
-    // 归属对象主键（schema, report）
+    // 归属对象主键（template, report）
     private Long ownerId;
 
     @Enumerated(EnumType.STRING)

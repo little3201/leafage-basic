@@ -16,13 +16,13 @@
 package top.leafage.hypervisor.assets.service;
 
 import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.assets.domain.dto.SchemaDTO;
-import top.leafage.hypervisor.assets.domain.vo.SchemaVO;
+import top.leafage.hypervisor.assets.domain.dto.TemplateDTO;
+import top.leafage.hypervisor.assets.domain.vo.TemplateVO;
 
 /**
- * schema service.
+ * template service.
  *
  * @author wq li
  */
-public interface SchemaService extends JpaCrudService<SchemaDTO, SchemaVO> {
+public interface TemplateService extends JpaCrudService<TemplateDTO, TemplateVO> {
 }

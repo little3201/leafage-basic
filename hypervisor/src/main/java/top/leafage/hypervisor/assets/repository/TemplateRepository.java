@@ -20,15 +20,15 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import top.leafage.hypervisor.assets.domain.Schema;
+import top.leafage.hypervisor.assets.domain.Template;
 
 /**
- * schema repository.
+ * template repository.
  *
  * @author wq li
  */
 @Repository
-public interface SchemaRepository extends JpaRepository<Schema, Long>, JpaSpecificationExecutor<Schema> {
+public interface TemplateRepository extends JpaRepository<Template, Long>, JpaSpecificationExecutor<Template> {
 
     /**
      * existsByName.

@@ -61,7 +61,7 @@ class FileRecordServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        entity = new FileRecord(null, "test", ".txt", "/text/plain", "test", 121L, false, true, false);
+        entity = new FileRecord(null, "test", ".txt", "/text/plain", "test", 121L, false);
     }
 
     @Test

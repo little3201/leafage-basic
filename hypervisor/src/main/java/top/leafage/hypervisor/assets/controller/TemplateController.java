@@ -23,26 +23,26 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.poi.excel.ExcelReader;
-import top.leafage.hypervisor.assets.domain.dto.SchemaDTO;
-import top.leafage.hypervisor.assets.domain.vo.SchemaVO;
-import top.leafage.hypervisor.assets.service.SchemaService;
+import top.leafage.hypervisor.assets.domain.dto.TemplateDTO;
+import top.leafage.hypervisor.assets.domain.vo.TemplateVO;
+import top.leafage.hypervisor.assets.service.TemplateService;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * schema controller.
+ * template controller.
  *
  * @author wq li
  */
 @RestController
-@RequestMapping("/schemas")
-public class SchemaController {
+@RequestMapping("/templates")
+public class TemplateController {
 
-    private final SchemaService schemaService;
+    private final TemplateService templateService;
 
-    public SchemaController(SchemaService schemaService) {
-        this.schemaService = schemaService;
+    public TemplateController(TemplateService templateService) {
+        this.templateService = templateService;
     }
 
     /**
@@ -55,11 +55,11 @@ public class SchemaController {
      * @param filters    过滤条件，格式：field:condition:value，如：name:like:test
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates')")
     @GetMapping
-    public ResponseEntity<Page<SchemaVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                   String sortBy, boolean descending, String filters) {
-        Page<SchemaVO> voPage = schemaService.retrieve(page, size, sortBy, descending, filters);
+    public ResponseEntity<Page<TemplateVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                     String sortBy, boolean descending, String filters) {
+        Page<TemplateVO> voPage = templateService.retrieve(page, size, sortBy, descending, filters);
         return ResponseEntity.ok(voPage);
     }
 
@@ -69,10 +69,10 @@ public class SchemaController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates')")
     @GetMapping("/{id}")
-    public ResponseEntity<SchemaVO> fetch(@PathVariable Long id) {
-        SchemaVO vo = schemaService.fetch(id);
+    public ResponseEntity<TemplateVO> fetch(@PathVariable Long id) {
+        TemplateVO vo = templateService.fetch(id);
         return ResponseEntity.ok(vo);
     }
 
@@ -82,10 +82,10 @@ public class SchemaController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas:create')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:create')")
     @PostMapping
-    public ResponseEntity<SchemaVO> create(@Valid @RequestBody SchemaDTO dto) {
-        SchemaVO vo = schemaService.create(dto);
+    public ResponseEntity<TemplateVO> create(@Valid @RequestBody TemplateDTO dto) {
+        TemplateVO vo = templateService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(vo);
     }
 
@@ -96,10 +96,10 @@ public class SchemaController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas:modify')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:modify')")
     @PutMapping("/{id}")
-    public ResponseEntity<SchemaVO> modify(@PathVariable Long id, @RequestBody SchemaDTO dto) {
-        SchemaVO vo = schemaService.modify(id, dto);
+    public ResponseEntity<TemplateVO> modify(@PathVariable Long id, @RequestBody TemplateDTO dto) {
+        TemplateVO vo = templateService.modify(id, dto);
         return ResponseEntity.accepted().body(vo);
     }
 
@@ -108,10 +108,10 @@ public class SchemaController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
-        schemaService.remove(id);
+        templateService.remove(id);
         return ResponseEntity.ok().build();
     }
 
@@ -121,10 +121,10 @@ public class SchemaController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas:enable')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:enable')")
     @PatchMapping("/{id}")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
-        boolean enabled = schemaService.enable(id);
+        boolean enabled = templateService.enable(id);
         return ResponseEntity.ok(enabled);
     }
 
@@ -133,11 +133,11 @@ public class SchemaController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_schemas:import')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:import')")
     @PostMapping("/import")
-    public ResponseEntity<List<SchemaVO>> importFromFile(MultipartFile file) throws IOException {
-        List<SchemaDTO> dtoList = ExcelReader.read(file.getInputStream(), SchemaDTO.class);
-        List<SchemaVO> voList = schemaService.createAll(dtoList);
+    public ResponseEntity<List<TemplateVO>> importFromFile(MultipartFile file) throws IOException {
+        List<TemplateDTO> dtoList = ExcelReader.read(file.getInputStream(), TemplateDTO.class);
+        List<TemplateVO> voList = templateService.createAll(dtoList);
         return ResponseEntity.ok().body(voList);
     }
 

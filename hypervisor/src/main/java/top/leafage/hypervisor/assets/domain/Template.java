@@ -21,14 +21,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 
 /**
- * entity class for schemas.
+ * entity class for templates.
  *
  * @author wq li
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "schemas")
-public class Schema extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
+@Table(name = "templates")
+public class Template extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
     private String name;
 
@@ -46,10 +46,10 @@ public class Schema extends JpaAbstractAuditable<@NonNull String, @NonNull Long>
     private boolean enabled;
 
 
-    public Schema() {
+    public Template() {
     }
 
-    public Schema(String name, String type, String description) {
+    public Template(String name, String type, String description) {
         this.name = name;
         this.type = Type.of(type);
         this.description = description;

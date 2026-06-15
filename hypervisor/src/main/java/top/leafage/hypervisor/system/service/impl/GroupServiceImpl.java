@@ -26,8 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.util.StringUtils;
 import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.GroupPrivilege;
 import top.leafage.hypervisor.system.domain.Privilege;
@@ -122,6 +122,7 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new EntityNotFoundException("group not found: " + id));
     }
 
+    @OperationLog(module = "groups", action = "enable")
     @Transactional
     @Override
     public boolean enable(Long id) {
@@ -130,12 +131,25 @@ public class GroupServiceImpl implements GroupService {
         if (!groupRepository.existsById(id)) {
             throw new EntityNotFoundException("group not found: " + id);
         }
-        return groupRepository.updateEnabledById(id) > 0;
+        return groupRepository.enableById(id) > 0;
+    }
+
+    @OperationLog(module = "groups", action = "disable")
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!groupRepository.existsById(id)) {
+            throw new EntityNotFoundException("group not found: " + id);
+        }
+        return groupRepository.disableById(id) > 0;
     }
 
     /**
      * {@inheritDoc}
      */
+    @OperationLog(module = "groups", action = "create")
     @Transactional
     @Override
     public GroupVO create(GroupDTO dto) {
@@ -149,6 +163,7 @@ public class GroupServiceImpl implements GroupService {
     /**
      * {@inheritDoc}
      */
+    @OperationLog(module = "groups", action = "modify")
     @Transactional
     @Override
     public GroupVO modify(Long id, GroupDTO dto) {
@@ -169,6 +184,7 @@ public class GroupServiceImpl implements GroupService {
     /**
      * {@inheritDoc}
      */
+    @OperationLog(module = "groups", action = "remove", pk = "#id")
     @Transactional
     @Override
     public void remove(Long id) {

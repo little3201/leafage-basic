@@ -79,10 +79,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!userRepository.existsById(id)) {
             throw new EntityNotFoundException("user not found: " + id);
         }
-        return userRepository.updateEnabledById(id) > 0;
+        return userRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException("user not found: " + id);
+        }
+        return userRepository.disableById(id) > 0;
     }
 
     @Transactional

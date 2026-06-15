@@ -38,13 +38,4 @@ public interface ReportRepository extends JpaRepository<Report, Long>, JpaSpecif
      */
     boolean existsByTitle(String title);
 
-    /**
-     * enable a record by pk.
-     *
-     * @param id the pk.
-     * @return result.
-     */
-    @Modifying
-    @Query("UPDATE Report t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
-    int updateEnabledById(Long id);
 }

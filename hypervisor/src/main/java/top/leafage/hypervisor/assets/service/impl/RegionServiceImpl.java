@@ -96,10 +96,22 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!regionRepository.existsById(id)) {
             throw new EntityNotFoundException("region not found: " + id);
         }
-        return regionRepository.updateEnabledById(id) > 0;
+        return regionRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!regionRepository.existsById(id)) {
+            throw new EntityNotFoundException("region not found: " + id);
+        }
+        return regionRepository.disableById(id) > 0;
     }
 
     /**

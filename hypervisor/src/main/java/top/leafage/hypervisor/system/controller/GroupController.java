@@ -146,10 +146,23 @@ public class GroupController {
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:enable')")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = groupService.enable(id);
         return ResponseEntity.ok(enabled);
+    }
+
+    /**
+     * disable.
+     *
+     * @param id the pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:disable')")
+    @PatchMapping("/{id}/disable")
+    public ResponseEntity<Boolean> disable(@PathVariable Long id) {
+        boolean disable = groupService.disable(id);
+        return ResponseEntity.ok(disable);
     }
 
     /**

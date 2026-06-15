@@ -3,25 +3,22 @@ spring:
     oauth2:
       client:
         registration:
-          messaging-client-oidc:
+          web-client:
             provider: spring
-            client-id: messaging-client
+            client-id: web-client
             client-secret: secret
+            client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
-            redirect-uri: "http://127.0.0.1:8760/login/oauth2/code/{registrationId}"
-            scope: openid,profile
-            client-name: messaging-client-oidc
-          messaging-client-authorization-code:
-            provider: spring
-            client-id: messaging-client
-            client-secret: secret
-            authorization-grant-type: authorization_code
-            redirect-uri: "http://127.0.0.1:8760/authorized"
-            scope: message.read,message.write
-            client-name: messaging-client-authorization-code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid,profile,offline_access
+            client-name: web-client
         provider:
           spring:
             issuer-uri: http://localhost:8761
+
+logging:
+  file:
+    name: logs/${spring.application.name}.log
 
 app:
   base-uri: http://127.0.0.1:5173

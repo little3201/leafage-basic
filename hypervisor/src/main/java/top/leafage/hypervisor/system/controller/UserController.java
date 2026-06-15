@@ -122,6 +122,19 @@ public class UserController {
     }
 
     /**
+     * disable.
+     *
+     * @param id the pk.
+     * @return 编辑后的信息，否则返回417状态码
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:disable')")
+    @PatchMapping("/{id}/disable")
+    public ResponseEntity<Boolean> disable(@PathVariable Long id) {
+        boolean disable = userService.disable(id);
+        return ResponseEntity.ok(disable);
+    }
+
+    /**
      * unlock.
      *
      * @param id the pk.

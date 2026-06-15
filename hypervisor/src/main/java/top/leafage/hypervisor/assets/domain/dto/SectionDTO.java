@@ -15,11 +15,14 @@
 
 package top.leafage.hypervisor.assets.domain.dto;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import top.leafage.hypervisor.assets.domain.Section;
+
+import java.util.Map;
 
 /**
  * dto class for section.
@@ -45,7 +48,7 @@ public class SectionDTO {
     @Max(6)
     private Integer level;
 
-    private String body;
+    private Map<String, Object> body;
 
 
     public static Section toEntity(SectionDTO dto) {
@@ -109,11 +112,11 @@ public class SectionDTO {
         this.level = level;
     }
 
-    public String getBody() {
+    public Map<String, Object> getBody() {
         return body;
     }
 
-    public void setBody(String body) {
+    public void setBody(Map<String, Object> body) {
         this.body = body;
     }
 

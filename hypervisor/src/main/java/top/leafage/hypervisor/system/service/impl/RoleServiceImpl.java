@@ -101,10 +101,22 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!roleRepository.existsById(id)) {
             throw new EntityNotFoundException("role not found: " + id);
         }
-        return roleRepository.updateEnabledById(id) > 0;
+        return roleRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!roleRepository.existsById(id)) {
+            throw new EntityNotFoundException("role not found: " + id);
+        }
+        return roleRepository.disableById(id) > 0;
     }
 
     /**

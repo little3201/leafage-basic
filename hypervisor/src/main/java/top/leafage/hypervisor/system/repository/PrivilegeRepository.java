@@ -111,6 +111,16 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>, Jpa
      * @return result.
      */
     @Modifying
-    @Query("UPDATE Privilege t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
-    int updateEnabledById(Long id);
+    @Query("UPDATE Privilege t SET t.enabled = true WHERE t.id = :id AND t.enabled = false")
+    int enableById(Long id);
+
+    /**
+     * disable a record by pk.
+     *
+     * @param id the pk.
+     * @return result.
+     */
+    @Modifying
+    @Query("UPDATE Privilege t SET t.enabled = false WHERE t.id = :id AND t.enabled = true")
+    int disableById(Long id);
 }

@@ -128,10 +128,23 @@ public class PrivilegeController {
      * @return 编辑后的信息，否则返回417状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:enable')")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = privilegeService.enable(id);
         return ResponseEntity.ok(enabled);
+    }
+
+    /**
+     * disable.
+     *
+     * @param id the pk.
+     * @return 编辑后的信息，否则返回417状态码
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:disable')")
+    @PatchMapping("/{id}/disable")
+    public ResponseEntity<Boolean> disable(@PathVariable Long id) {
+        boolean disable = privilegeService.disable(id);
+        return ResponseEntity.ok(disable);
     }
 
     /**

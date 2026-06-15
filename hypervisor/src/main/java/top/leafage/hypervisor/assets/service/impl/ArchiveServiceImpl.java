@@ -80,16 +80,6 @@ public class ArchiveServiceImpl implements ArchiveService {
                 .orElseThrow(() -> new EntityNotFoundException("archive not found: " + id));
     }
 
-    @Transactional
-    @Override
-    public boolean enable(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        if (!archiveRepository.existsById(id)) {
-            throw new EntityNotFoundException("archive not found: " + id);
-        }
-        return archiveRepository.updateEnabledById(id) > 0;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -109,7 +99,7 @@ public class ArchiveServiceImpl implements ArchiveService {
     }
 
     private void copySections(Long schemaId, Long archiveId) {
-        List<Section> templateSections = sectionRepository.findAllByOwnerIdAndOwnerType(schemaId, Section.OwnerType.SCHEMA);
+        List<Section> templateSections = sectionRepository.findAllByOwnerIdAndOwnerType(schemaId, Section.OwnerType.ARCHIVE);
         List<Section> copiedSections = templateSections.stream()
                 .map(section -> new Section(archiveId, Section.OwnerType.ARCHIVE, section))
                 .toList();

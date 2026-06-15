@@ -16,8 +16,6 @@
 package top.leafage.hypervisor.assets.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.assets.domain.Section;
 
@@ -41,21 +39,13 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     List<Section> findAllByOwnerIdAndOwnerType(Long ownerId, Section.OwnerType ownerType);
 
     /**
-     * exists by name.
+     * exists.
      *
-     * @param ownerId the pk of owner.
-     * @param name    a {@link String} object
+     * @param ownerId   the pk of owner.
+     * @param ownerType the type of owner.
+     * @param name      a {@link String} object
      * @return a boolean
      */
-    boolean existsByOwnerIdAndName(Long ownerId, String name);
+    boolean existsByOwnerIdAndOwnerTypeAndName(Long ownerId, Section.OwnerType ownerType, String name);
 
-    /**
-     * enable a record by pk.
-     *
-     * @param id the pk.
-     * @return result.
-     */
-    @Modifying
-    @Query("UPDATE Section t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
-    int updateEnabledById(Long id);
 }

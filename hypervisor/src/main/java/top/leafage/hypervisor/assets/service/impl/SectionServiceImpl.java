@@ -78,16 +78,6 @@ public class SectionServiceImpl implements SectionService {
                 .orElseThrow(() -> new EntityNotFoundException("section not found: " + id));
     }
 
-    @Transactional
-    @Override
-    public boolean enable(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        if (!sectionRepository.existsById(id)) {
-            throw new EntityNotFoundException("section not found: " + id);
-        }
-        return sectionRepository.updateEnabledById(id) > 0;
-    }
-
     @Override
     public List<TreeNode<Long>> tree(Long ownerId, String ownerType) {
         Assert.notNull(ownerId, String.format(_MUST_NOT_BE_NULL, "ownerId"));
@@ -99,7 +89,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public SectionVO create(SectionDTO dto) {
-        if (sectionRepository.existsByOwnerIdAndName(dto.getOwnerId(), dto.getName())) {
+        if (sectionRepository.existsByOwnerIdAndOwnerTypeAndName(dto.getOwnerId(), Section.OwnerType.of(dto.getOwnerType()), dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         Section entity = sectionRepository.save(SectionDTO.toEntity(dto));
@@ -150,7 +140,7 @@ public class SectionServiceImpl implements SectionService {
         Section existing = sectionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("section not found: " + id));
         if (!existing.getName().equals(dto.getName()) &&
-                sectionRepository.existsByOwnerIdAndName(existing.getOwnerId(), dto.getName())) {
+                sectionRepository.existsByOwnerIdAndOwnerTypeAndName(existing.getOwnerId(), Section.OwnerType.valueOf( dto.getOwnerType()), dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         copier.copy(dto, existing, null);

@@ -82,10 +82,22 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!templateRepository.existsById(id)) {
             throw new EntityNotFoundException("template not found: " + id);
         }
-        return templateRepository.updateEnabledById(id) > 0;
+        return templateRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!templateRepository.existsById(id)) {
+            throw new EntityNotFoundException("template not found: " + id);
+        }
+        return templateRepository.disableById(id) > 0;
     }
 
     /**
@@ -133,7 +145,7 @@ public class TemplateServiceImpl implements TemplateService {
         }
         templateRepository.deleteById(id);
         // 删除关联的章节
-        List<Long> ids = sectionRepository.findAllByOwnerIdAndOwnerType(id, Section.OwnerType.SCHEMA)
+        List<Long> ids = sectionRepository.findAllByOwnerIdAndOwnerType(id, Section.OwnerType.TEMPLATE)
                 .stream().map(Section::getId)
                 .toList();
         sectionRepository.deleteAllById(ids);

@@ -97,10 +97,22 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!dictionaryRepository.existsById(id)) {
             throw new EntityNotFoundException("dictionary not found: " + id);
         }
-        return dictionaryRepository.updateEnabledById(id) > 0;
+        return dictionaryRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!dictionaryRepository.existsById(id)) {
+            throw new EntityNotFoundException("dictionary not found: " + id);
+        }
+        return dictionaryRepository.disableById(id) > 0;
     }
 
     /**

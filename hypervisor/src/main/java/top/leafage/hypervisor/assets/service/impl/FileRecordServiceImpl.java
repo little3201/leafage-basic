@@ -110,6 +110,28 @@ public class FileRecordServiceImpl implements FileRecordService {
 
     @Transactional
     @Override
+    public boolean enable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!fileRecordRepository.existsById(id)) {
+            throw new EntityNotFoundException("file not found: " + id);
+        }
+        return fileRecordRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!fileRecordRepository.existsById(id)) {
+            throw new EntityNotFoundException("file not found: " + id);
+        }
+        return fileRecordRepository.disableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
     public void remove(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         if (!fileRecordRepository.existsById(id)) {

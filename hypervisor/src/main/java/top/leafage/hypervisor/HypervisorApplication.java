@@ -16,6 +16,7 @@ package top.leafage.hypervisor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 
 /**
@@ -23,6 +24,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author wq li
  */
+@ComponentScan(basePackages = {
+        "top.leafage.hypervisor",
+        "top.leafage.common"
+})
 @SpringBootApplication
 public class HypervisorApplication {
 

@@ -140,10 +140,23 @@ public class DictionaryController {
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:enable')")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = dictionaryService.enable(id);
         return ResponseEntity.ok(enabled);
+    }
+
+    /**
+     * disable.
+     *
+     * @param id the pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:disable')")
+    @PatchMapping("/{id}/disable")
+    public ResponseEntity<Boolean> disable(@PathVariable Long id) {
+        boolean disable = dictionaryService.disable(id);
+        return ResponseEntity.ok(disable);
     }
 
     /**

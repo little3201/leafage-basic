@@ -217,17 +217,4 @@ public class SectionController {
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * enable.
-     *
-     * @param id the pk.
-     * @return the result.
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:enable')")
-    @PatchMapping("/{id}")
-    public ResponseEntity<Boolean> enable(@PathVariable Long id) {
-        boolean enabled = sectionService.enable(id);
-        return ResponseEntity.ok(enabled);
-    }
-
 }

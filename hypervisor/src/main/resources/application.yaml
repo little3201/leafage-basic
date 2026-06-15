@@ -12,20 +12,20 @@ spring:
     properties:
       hibernate:
         format_sql: true
-    hibernate:
-      ddl-auto: update
 
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8761
+  aop:
+    proxy-target-class: true
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,prometheus,info
+        include: health,info,prometheus
   metrics:
     tags:
       application: ${spring.application.name}

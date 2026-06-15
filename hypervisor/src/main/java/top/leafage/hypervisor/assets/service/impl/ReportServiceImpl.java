@@ -80,16 +80,6 @@ public class ReportServiceImpl implements ReportService {
                 .orElseThrow(() -> new EntityNotFoundException("report not found: " + id));
     }
 
-    @Transactional
-    @Override
-    public boolean enable(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        if (!reportRepository.existsById(id)) {
-            throw new EntityNotFoundException("report not found: " + id);
-        }
-        return reportRepository.updateEnabledById(id) > 0;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -109,7 +99,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private void copySections(Long schemaId, Long reportId) {
-        List<Section> templateSections = sectionRepository.findAllByOwnerIdAndOwnerType(schemaId, Section.OwnerType.SCHEMA);
+        List<Section> templateSections = sectionRepository.findAllByOwnerIdAndOwnerType(schemaId, Section.OwnerType.REPORT);
         List<Section> copiedSections = templateSections.stream()
                 .map(section -> new Section(reportId, Section.OwnerType.REPORT, section))
                 .toList();

@@ -15,7 +15,10 @@
 
 package top.leafage.hypervisor.assets.domain.vo;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import top.leafage.hypervisor.assets.domain.Section;
+
+import java.util.Map;
 
 /**
  * vo class for section.
@@ -29,7 +32,7 @@ public record SectionVO(
         String name,
         Integer sequence,
         Integer level,
-        String body,
+        Map<String, Object> body,
         long count
 ) {
     public static SectionVO from(Section entity) {

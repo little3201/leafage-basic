@@ -116,19 +116,6 @@ public class ArchiveController {
     }
 
     /**
-     * enable.
-     *
-     * @param id the pk.
-     * @return the result.
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_archives:enable')")
-    @PatchMapping("/{id}")
-    public ResponseEntity<Boolean> enable(@PathVariable Long id) {
-        boolean enabled = archiveService.enable(id);
-        return ResponseEntity.ok(enabled);
-    }
-
-    /**
      * import.
      *
      * @return the result.

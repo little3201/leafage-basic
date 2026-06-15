@@ -116,19 +116,6 @@ public class ReportController {
     }
 
     /**
-     * enable.
-     *
-     * @param id the pk.
-     * @return the result.
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_reports:enable')")
-    @PatchMapping("/{id}")
-    public ResponseEntity<Boolean> enable(@PathVariable Long id) {
-        boolean enabled = reportService.enable(id);
-        return ResponseEntity.ok(enabled);
-    }
-
-    /**
      * import.
      *
      * @return the result.

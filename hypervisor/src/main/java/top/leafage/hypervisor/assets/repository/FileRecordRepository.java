@@ -17,6 +17,8 @@ package top.leafage.hypervisor.assets.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.assets.domain.FileRecord;
 
@@ -35,4 +37,24 @@ public interface FileRecordRepository extends JpaRepository<FileRecord, Long>, J
      * @return true-是，false-否
      */
     boolean existsByName(String name);
+
+    /**
+     * enable a record by pk.
+     *
+     * @param id the pk.
+     * @return result.
+     */
+    @Modifying
+    @Query("UPDATE FileRecord t SET t.enabled = true WHERE t.id = :id AND t.enabled = false")
+    int enableById(Long id);
+
+    /**
+     * disable a record by pk.
+     *
+     * @param id the pk.
+     * @return result.
+     */
+    @Modifying
+    @Query("UPDATE FileRecord t SET t.enabled = false WHERE t.id = :id AND t.enabled = true")
+    int disableById(Long id);
 }

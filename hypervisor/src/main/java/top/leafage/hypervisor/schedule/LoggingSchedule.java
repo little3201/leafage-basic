@@ -18,8 +18,8 @@ package top.leafage.hypervisor.schedule;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import top.leafage.hypervisor.system.service.OperationLogService;
-import top.leafage.hypervisor.system.service.SchedulerLogService;
+import top.leafage.hypervisor.logging.service.OperationLogService;
+import top.leafage.hypervisor.logging.service.SchedulerLogService;
 
 @Component
 public class LoggingSchedule {

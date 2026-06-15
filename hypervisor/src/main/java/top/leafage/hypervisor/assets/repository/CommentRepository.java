@@ -53,5 +53,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpec
      * @return 记录数
      */
     long countBySuperiorId(Long superiorId);
-
 }

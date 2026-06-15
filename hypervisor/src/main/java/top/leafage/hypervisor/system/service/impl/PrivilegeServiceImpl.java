@@ -143,10 +143,22 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!privilegeRepository.existsById(id)) {
             throw new EntityNotFoundException("privilege not found: " + id);
         }
-        return privilegeRepository.updateEnabledById(id) > 0;
+        return privilegeRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!privilegeRepository.existsById(id)) {
+            throw new EntityNotFoundException("privilege not found: " + id);
+        }
+        return privilegeRepository.disableById(id) > 0;
     }
 
     /**

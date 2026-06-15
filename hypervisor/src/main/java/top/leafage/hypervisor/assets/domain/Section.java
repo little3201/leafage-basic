@@ -15,10 +15,15 @@
 
 package top.leafage.hypervisor.assets.domain;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
+
+import java.util.Map;
 
 /**
  * entity class for sections.
@@ -44,8 +49,9 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     private Integer level;
 
-    @Column(columnDefinition = "text")
-    private String body;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> body;
 
     private boolean enabled = true;
 
@@ -63,7 +69,7 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.body = section.getBody();
     }
 
-    public Section(Long superiorId, Long ownerId, String ownerType, String name, Integer sequence, Integer level, String body) {
+    public Section(Long superiorId, Long ownerId, String ownerType, String name, Integer sequence, Integer level, Map<String, Object> body) {
         this.superiorId = superiorId;
         this.ownerId = ownerId;
         this.ownerType = OwnerType.of(ownerType);
@@ -86,7 +92,7 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     public enum OwnerType {
         ARCHIVE,
-        SCHEMA,
+        TEMPLATE,
         REPORT;
 
         public static OwnerType of(String value) {
@@ -142,11 +148,11 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.level = level;
     }
 
-    public String getBody() {
+    public Map<String, Object> getBody() {
         return body;
     }
 
-    public void setBody(String body) {
+    public void setBody(Map<String, Object> body) {
         this.body = body;
     }
 

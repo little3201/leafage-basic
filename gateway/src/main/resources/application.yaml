@@ -2,10 +2,10 @@ server:
   port: 8760
 
 spring:
-  profiles:
-    active: dev
   application:
     name: gateway
+  profiles:
+    active: dev
 
   cloud:
     gateway:
@@ -30,7 +30,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,prometheus,info
+        include: health,info,prometheus
   metrics:
     tags:
       application: ${spring.application.name}

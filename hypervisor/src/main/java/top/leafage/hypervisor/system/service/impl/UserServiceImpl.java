@@ -23,6 +23,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.UserDTO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
@@ -34,6 +35,7 @@ import top.leafage.hypervisor.system.service.UserService;
  *
  * @author wq li
  */
+@OperationLog("users")
 @Service
 public class UserServiceImpl implements UserService {
 

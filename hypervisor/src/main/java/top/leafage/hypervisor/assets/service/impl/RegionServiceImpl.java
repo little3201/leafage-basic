@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.Region;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
@@ -41,6 +42,7 @@ import java.util.Optional;
  *
  * @author wq li
  */
+@OperationLog("regions")
 @Service
 public class RegionServiceImpl implements RegionService {
 

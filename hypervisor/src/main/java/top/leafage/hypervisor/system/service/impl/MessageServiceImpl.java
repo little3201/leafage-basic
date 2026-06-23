@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.system.domain.Message;
 import top.leafage.hypervisor.system.domain.dto.MessageDTO;
 import top.leafage.hypervisor.system.domain.vo.MessageVO;
@@ -35,6 +36,7 @@ import top.leafage.hypervisor.system.service.MessageService;
  *
  * @author wq li
  */
+@OperationLog("messages")
 @Service
 public class MessageServiceImpl implements MessageService {
 

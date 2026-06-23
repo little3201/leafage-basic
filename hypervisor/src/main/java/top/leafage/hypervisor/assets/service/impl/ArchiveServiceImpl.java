@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.Archive;
 import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.ArchiveDTO;
@@ -36,6 +37,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * archive service impl
+ *
+ * @author wq li
+ */
+@OperationLog("archives")
 @Service
 public class ArchiveServiceImpl implements ArchiveService {
 

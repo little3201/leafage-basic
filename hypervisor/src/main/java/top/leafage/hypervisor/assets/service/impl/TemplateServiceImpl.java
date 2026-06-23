@@ -24,6 +24,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.Template;
 import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.TemplateDTO;
@@ -34,6 +35,12 @@ import top.leafage.hypervisor.assets.service.TemplateService;
 
 import java.util.List;
 
+/**
+ * template service impl
+ *
+ * @author wq li
+ */
+@OperationLog("templates")
 @Service
 public class TemplateServiceImpl implements TemplateService {
 

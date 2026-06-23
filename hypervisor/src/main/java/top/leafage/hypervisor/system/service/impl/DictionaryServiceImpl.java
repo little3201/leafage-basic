@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.system.domain.Dictionary;
 import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
 import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
@@ -41,6 +42,7 @@ import java.util.Optional;
  *
  * @author wq li
  */
+@OperationLog("dictionaries")
 @Service
 public class DictionaryServiceImpl implements DictionaryService {
 

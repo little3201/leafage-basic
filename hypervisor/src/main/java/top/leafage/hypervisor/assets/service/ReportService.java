@@ -26,4 +26,7 @@ import top.leafage.hypervisor.assets.domain.vo.ReportVO;
  */
 public interface ReportService extends JpaCrudService<ReportDTO, ReportVO> {
 
+    byte[] generate(Long id);
+
+    String preview(Long id);
 }

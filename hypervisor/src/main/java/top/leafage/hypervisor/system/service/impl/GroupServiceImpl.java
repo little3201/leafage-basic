@@ -52,6 +52,7 @@ import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
  *
  * @author wq li
  */
+@OperationLog("groups")
 @Service
 public class GroupServiceImpl implements GroupService {
 
@@ -122,7 +123,6 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new EntityNotFoundException("group not found: " + id));
     }
 
-    @OperationLog(module = "groups", action = "enable")
     @Transactional
     @Override
     public boolean enable(Long id) {
@@ -134,7 +134,6 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.enableById(id) > 0;
     }
 
-    @OperationLog(module = "groups", action = "disable")
     @Transactional
     @Override
     public boolean disable(Long id) {
@@ -149,7 +148,6 @@ public class GroupServiceImpl implements GroupService {
     /**
      * {@inheritDoc}
      */
-    @OperationLog(module = "groups", action = "create")
     @Transactional
     @Override
     public GroupVO create(GroupDTO dto) {
@@ -163,7 +161,6 @@ public class GroupServiceImpl implements GroupService {
     /**
      * {@inheritDoc}
      */
-    @OperationLog(module = "groups", action = "modify")
     @Transactional
     @Override
     public GroupVO modify(Long id, GroupDTO dto) {
@@ -184,7 +181,6 @@ public class GroupServiceImpl implements GroupService {
     /**
      * {@inheritDoc}
      */
-    @OperationLog(module = "groups", action = "remove", pk = "#id")
     @Transactional
     @Override
     public void remove(Long id) {

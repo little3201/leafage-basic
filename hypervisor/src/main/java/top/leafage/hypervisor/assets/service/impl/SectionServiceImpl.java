@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.SectionData;
 import top.leafage.hypervisor.assets.domain.SectionField;
@@ -40,6 +41,12 @@ import java.util.Set;
 
 import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
 
+/**
+ * section service impl
+ *
+ * @author wq li
+ */
+@OperationLog("sections")
 @Service
 public class SectionServiceImpl implements SectionService {
 

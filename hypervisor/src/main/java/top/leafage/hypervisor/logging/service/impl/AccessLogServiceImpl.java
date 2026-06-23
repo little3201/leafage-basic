@@ -24,9 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.hypervisor.logging.domain.AccessLog;
-import top.leafage.hypervisor.logging.vo.AccessLogVO;
 import top.leafage.hypervisor.logging.repository.AccessLogRepository;
 import top.leafage.hypervisor.logging.service.AccessLogService;
+import top.leafage.hypervisor.logging.vo.AccessLogVO;
 
 /**
  * access log service impl.

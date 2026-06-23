@@ -16,8 +16,12 @@
 package top.leafage.hypervisor.assets.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +30,11 @@ import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.assets.domain.dto.ReportDTO;
 import top.leafage.hypervisor.assets.domain.vo.ReportVO;
 import top.leafage.hypervisor.assets.service.ReportService;
+import top.leafage.hypervisor.exploiter.domain.vo.SampleVO;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -128,4 +135,39 @@ public class ReportController {
         return ResponseEntity.ok().body(voList);
     }
 
+    /**
+     * Generate to file.
+     *
+     * @param id the pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('DEVELOP') || hasAuthority('SCOPE_reports:generate')")
+    @GetMapping("/{id}/generate")
+    public ResponseEntity<Resource> generate(@PathVariable Long id) {
+        byte[] zipBytes = reportService.generate(id);
+        ByteArrayResource resource = new ByteArrayResource(zipBytes);
+
+        String fileName = String.format("report_%s.zip", id);
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename*=UTF-8''" + encodedFileName;
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(zipBytes.length))
+                .body(resource);
+    }
+
+    /**
+     * Preview a record.
+     *
+     * @param id the pk.
+     * @return The list of records value objects, or 417 status code if an error occurs.
+     */
+    @PreAuthorize("hasRole('DEVELOP') || hasAuthority('SCOPE_reports')")
+    @GetMapping("/{id}/preview")
+    public ResponseEntity<String> preview(@PathVariable Long id) {
+        String content = reportService.preview(id);
+        return ResponseEntity.ok().body(content);
+    }
 }

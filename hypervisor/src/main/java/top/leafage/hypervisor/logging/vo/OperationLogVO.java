@@ -18,6 +18,7 @@ package top.leafage.hypervisor.logging.vo;
 import top.leafage.hypervisor.logging.domain.OperationLog;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * vo class for operation log.
@@ -28,9 +29,10 @@ public record OperationLogVO(
         Long id,
         String module,
         String action,
-        String params,
-        String result,
-        int status,
+        Long targetId,
+        Map<String, Object> params,
+        String response,
+        String status,
         long duration,
         String message,
         String operator,
@@ -41,9 +43,10 @@ public record OperationLogVO(
                 entity.getId(),
                 entity.getModule(),
                 entity.getAction(),
+                entity.getTargetId(),
                 entity.getParams(),
-                entity.getResult(),
-                entity.getStatus(),
+                entity.getResponse(),
+                entity.getStatus().name(),
                 entity.getDuration(),
                 entity.getMessage(),
                 entity.getCreatedBy().orElse(null),

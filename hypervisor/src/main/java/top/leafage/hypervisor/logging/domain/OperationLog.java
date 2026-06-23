@@ -16,12 +16,15 @@
 package top.leafage.hypervisor.logging.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
+import top.leafage.common.logging.event.OperationLogEvent;
+
+import java.util.Map;
 
 /**
  * entity class for operation log.
@@ -37,11 +40,17 @@ public class OperationLog extends JpaAbstractAuditable<@NonNull String, @NonNull
 
     private String action;
 
-    private String params;
+    private Long targetId;
 
-    private String result;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> params;
 
-    private int status;
+    @Column(columnDefinition = "text")
+    private String response;
+
+    @Enumerated(EnumType.STRING)
+    private OperationLogEvent.Status status;
 
     private long duration;
 
@@ -51,11 +60,12 @@ public class OperationLog extends JpaAbstractAuditable<@NonNull String, @NonNull
     public OperationLog() {
     }
 
-    public OperationLog(String module, String action, String params, String result, int status, long duration, String message) {
+    public OperationLog(String module, String action, Long targetId, Map<String, Object> params, String response, OperationLogEvent.Status status, long duration, String message) {
         this.module = module;
         this.action = action;
+        this.targetId = targetId;
         this.params = params;
-        this.result = result;
+        this.response = response;
         this.status = status;
         this.duration = duration;
         this.message = message;
@@ -77,27 +87,35 @@ public class OperationLog extends JpaAbstractAuditable<@NonNull String, @NonNull
         this.action = action;
     }
 
-    public String getParams() {
+    public Long getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
+    }
+
+    public Map<String, Object> getParams() {
         return params;
     }
 
-    public void setParams(String params) {
+    public void setParams(Map<String, Object> params) {
         this.params = params;
     }
 
-    public String getResult() {
-        return result;
+    public String getResponse() {
+        return response;
     }
 
-    public void setResult(String result) {
-        this.result = result;
+    public void setResponse(String response) {
+        this.response = response;
     }
 
-    public int getStatus() {
+    public OperationLogEvent.Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(OperationLogEvent.Status status) {
         this.status = status;
     }
 

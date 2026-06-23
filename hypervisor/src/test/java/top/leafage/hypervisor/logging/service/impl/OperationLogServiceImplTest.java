@@ -61,7 +61,7 @@ class OperationLogServiceImplTest {
     void setUp() {
         entity = new OperationLog();
         entity.setModule("test");
-        entity.setResult("result");
+        entity.setResponse("result");
         entity.setParams("params");
         entity.setAction("test");
         entity.setStatus(200);

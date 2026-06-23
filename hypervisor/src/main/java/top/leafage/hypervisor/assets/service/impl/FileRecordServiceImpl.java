@@ -28,8 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.FileRecord;
-import top.leafage.hypervisor.assets.domain.Region;
 import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.repository.FileRecordRepository;
 import top.leafage.hypervisor.assets.service.FileRecordService;
@@ -43,6 +43,7 @@ import java.util.Optional;
  *
  * @author wq li
  */
+@OperationLog("files")
 @Service
 public class FileRecordServiceImpl implements FileRecordService {
 
@@ -50,6 +51,11 @@ public class FileRecordServiceImpl implements FileRecordService {
 
     private final FileRecordRepository fileRecordRepository;
 
+    /**
+     * Constructor for FileRecordRepository.
+     *
+     * @param fileRecordRepository a {@link FileRecordRepository} object
+     */
     public FileRecordServiceImpl(FileRecordRepository fileRecordRepository) {
         this.fileRecordRepository = fileRecordRepository;
     }

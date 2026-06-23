@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.Role;
@@ -44,6 +45,7 @@ import java.util.Set;
  *
  * @author wq li
  */
+@OperationLog("roles")
 @Service
 public class RoleServiceImpl implements RoleService {
 

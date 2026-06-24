@@ -28,8 +28,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
-import top.leafage.hypervisor.logging.service.AuditLogService;
 import top.leafage.hypervisor.logging.domain.vo.AuditLogVO;
+import top.leafage.hypervisor.logging.service.AuditLogService;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ class AuditLogControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new AuditLogVO(1L, "test", "test", 1L, "test", "test", "127.0.0.1", 200, 2132L);
+        vo = new AuditLogVO(1L, "test", "test", 1L, null, null, "127.0.0.1", "SUCCEED", 2132L);
     }
 
     @Test

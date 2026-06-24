@@ -28,9 +28,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import top.leafage.hypervisor.logging.domain.AuditLog;
-import top.leafage.hypervisor.logging.repository.AuditLogRepository;
 import top.leafage.hypervisor.logging.domain.vo.AuditLogVO;
+import top.leafage.hypervisor.logging.repository.AuditLogRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,9 +62,8 @@ class AuditLogServiceImplTest {
         entity = new AuditLog();
         entity.setAction("test");
         entity.setModule("test");
-        entity.setOldValue("old");
-        entity.setNewValue("new");
-        entity.setStatus(200);
+        entity.setOldValue(Collections.emptyMap());
+        entity.setNewValue(Collections.emptyMap());
     }
 
     @Test

@@ -184,7 +184,7 @@ class UserControllerTest {
     void enable() {
         when(userService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/users/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/users/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
     }
 

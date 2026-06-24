@@ -194,7 +194,7 @@ class PrivilegeControllerTest {
     void enable() {
         when(privilegeService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/privileges/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/privileges/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
     }
 

@@ -119,12 +119,22 @@ class DictionaryControllerTest {
     void subset() {
         when(dictionaryService.subset(anyLong())).thenReturn(List.of(vo));
 
-        assertThat(mvc.get().uri("/dictionaries/{id}/subset", anyLong()))
+        assertThat(mvc.get().uri("/dictionaries/subset")
+                .queryParam("id", "1"))
                 .hasStatusOk()
                 .bodyJson()
                 .convertTo(InstanceOfAssertFactories.list(DictionaryVO.class))
                 .hasSize(1)
                 .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
+    }
+
+    @Test
+    void subset_error() {
+        when(dictionaryService.subset(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.get().uri("/dictionaries/subset")
+                .queryParam("id", "1"))
+                .hasStatus5xxServerError();
     }
 
     @Test
@@ -144,14 +154,6 @@ class DictionaryControllerTest {
 
         assertThat(mvc.get().uri("/dictionaries/{id}", anyLong()))
                 .hasStatus(HttpStatus.NOT_FOUND);
-    }
-
-    @Test
-    void subset_error() {
-        when(dictionaryService.subset(anyLong())).thenThrow(new RuntimeException());
-
-        assertThat(mvc.get().uri("/dictionaries/{id}/subset", "1"))
-                .hasStatus5xxServerError();
     }
 
     @Test
@@ -208,7 +210,7 @@ class DictionaryControllerTest {
     void enable() {
         when(dictionaryService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/dictionaries/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/dictionaries/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
     }
 

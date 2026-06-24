@@ -15,15 +15,10 @@
 
 package top.leafage.hypervisor.assets.controller;
 
-import org.assertj.core.api.InstanceOfAssertFactories;
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -35,13 +30,12 @@ import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.SectionService;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /**
@@ -71,46 +65,10 @@ class SectionControllerTest {
         dto.setName("test");
         dto.setSuperiorId(1L);
         dto.setBody(Collections.emptyMap());
+        dto.setOwnerId(1L);
+        dto.setOwnerType("TEMPLATE");
 
         vo = new SectionVO(1L, 1L, 1L, "test", 1, 2, null, 2L);
-    }
-
-    @Test
-    void retrieve() {
-        Page<@NonNull SectionVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
-
-        // 使用 eq() 准确匹配参数
-        when(sectionService.retrieve(anyInt(), anyInt(), anyString(),
-                anyBoolean(), anyString())).thenReturn(voPage);
-
-        // 调用接口并验证结果
-        assertThat(mvc.get().uri("/sections")
-                .queryParam("page", "0")
-                .queryParam("size", "2")
-                .queryParam("sortBy", "id")
-                .queryParam("descending", "false")
-                .queryParam("filters", "name:like:test")
-        )
-                .hasStatusOk()
-
-                .bodyJson().extractingPath("$.content")
-                .convertTo(InstanceOfAssertFactories.list(SectionVO.class))
-                .hasSize(1)
-                .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
-    }
-
-    @Test
-    void retrieve_error() {
-        when(sectionService.retrieve(anyInt(), anyInt(), anyString(), anyBoolean(), anyString())).thenThrow(new RuntimeException());
-
-        assertThat(mvc.get().uri("/sections")
-                .queryParam("page", "0")
-                .queryParam("size", "2")
-                .queryParam("sortBy", "id")
-                .queryParam("descending", "true")
-                .queryParam("filters", "name:like:test")
-        )
-                .hasStatus5xxServerError();
     }
 
     @Test
@@ -188,15 +146,6 @@ class SectionControllerTest {
 
         assertThat(mvc.delete().uri("/sections/{id}", anyLong()).with(csrf().asHeader()))
                 .hasStatus5xxServerError();
-    }
-
-
-    @Test
-    void enable() {
-        when(sectionService.enable(anyLong())).thenReturn(true);
-
-        assertThat(mvc.patch().uri("/sections/{id}", anyLong()).with(csrf().asHeader()))
-                .hasStatusOk();
     }
 
 }

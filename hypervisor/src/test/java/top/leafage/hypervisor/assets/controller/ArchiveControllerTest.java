@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
 import top.leafage.hypervisor.assets.domain.dto.ArchiveDTO;
 import top.leafage.hypervisor.assets.domain.vo.ArchiveVO;
-import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.ArchiveService;
 
 import java.util.List;
@@ -93,9 +92,9 @@ class ArchiveControllerTest {
                 .hasStatusOk()
 
                 .bodyJson().extractingPath("$.content")
-                .convertTo(InstanceOfAssertFactories.list(SectionVO.class))
+                .convertTo(InstanceOfAssertFactories.list(ArchiveVO.class))
                 .hasSize(1)
-                .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
+                .element(0).satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
     }
 
     @Test
@@ -110,8 +109,8 @@ class ArchiveControllerTest {
                 .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
                 .hasStatus(HttpStatus.CREATED)
                 .bodyJson()
-                .convertTo(SectionVO.class)
-                .satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
+                .convertTo(ArchiveVO.class)
+                .satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
     }
 
     @Test

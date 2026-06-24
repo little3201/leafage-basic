@@ -196,7 +196,7 @@ class RoleControllerTest {
     void enable() {
         when(roleService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/roles/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/roles/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
     }
 

@@ -197,7 +197,7 @@ class RegionControllerTest {
     void enable() {
         when(regionService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/regions/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/regions/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
     }
 

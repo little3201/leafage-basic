@@ -215,7 +215,7 @@ class GroupControllerTest {
     void enable() {
         when(groupService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/groups/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/groups/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
     }
 

@@ -115,7 +115,7 @@ public class UserController {
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:enable')")
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = userService.enable(id);
         return ResponseEntity.ok(enabled);

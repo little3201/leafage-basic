@@ -23,15 +23,17 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 import top.leafage.hypervisor.assets.domain.FileRecord;
 import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.repository.FileRecordRepository;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,10 +101,19 @@ class FileRecordServiceImplTest {
     }
 
     @Test
-    void upload() {
+    void upload() throws Exception {
+        MultipartFile file = org.mockito.Mockito.mock(MultipartFile.class);
+        Resource resource = org.mockito.Mockito.mock(Resource.class);
+        Path path = Path.of("src/test/resources/test.txt");
+
+        when(file.getName()).thenReturn("file");
+        when(file.getOriginalFilename()).thenReturn("test.txt");
+        when(file.getResource()).thenReturn(resource);
+        when(resource.getFilePath()).thenReturn(path);
+        when(file.getContentType()).thenReturn("text/plain");
+        when(file.getSize()).thenReturn(11L);
         when(fileRecordRepository.save(any(FileRecord.class))).thenReturn(entity);
 
-        MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "Hello World".getBytes());
         FileRecordVO vo = fileRecordService.upload(file, 1L);
 
         assertNotNull(vo);

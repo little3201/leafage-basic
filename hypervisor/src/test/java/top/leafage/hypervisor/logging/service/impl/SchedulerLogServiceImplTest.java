@@ -29,7 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import top.leafage.hypervisor.logging.domain.SchedulerLog;
 import top.leafage.hypervisor.logging.repository.SchedulerLogRepository;
-import top.leafage.hypervisor.logging.vo.SchedulerLogVO;
+import top.leafage.hypervisor.logging.domain.vo.SchedulerLogVO;
 
 import java.time.Instant;
 import java.util.List;

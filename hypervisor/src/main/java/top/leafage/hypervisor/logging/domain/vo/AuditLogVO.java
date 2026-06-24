@@ -13,37 +13,39 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.logging.vo;
+package top.leafage.hypervisor.logging.domain.vo;
 
-import top.leafage.hypervisor.logging.domain.AccessLog;
+import top.leafage.hypervisor.logging.domain.AuditLog;
+
+import java.util.Map;
 
 /**
- * vo class for access log.
+ * vo class for audit log.
  *
  * @author wq li
  */
-public record AccessLogVO(
+public record AuditLogVO(
         Long id,
-        String url,
-        String httpMethod,
+        String module,
+        String action,
+        Long targetId,
+        Map<String, Object> oldValue,
+        Map<String, Object> newValue,
         String ip,
-        String params,
-        String body,
-        Integer statusCode,
-        Long duration,
-        String response
+        String status,
+        Long duration
 ) {
-    public static AccessLogVO from(AccessLog entity) {
-        return new AccessLogVO(
+    public static AuditLogVO from(AuditLog entity) {
+        return new AuditLogVO(
                 entity.getId(),
-                entity.getUrl(),
-                entity.getHttpMethod(),
+                entity.getModule(),
+                entity.getAction(),
+                entity.getTargetId(),
+                entity.getOldValue(),
+                entity.getNewValue(),
                 entity.getIp() == null ? null : entity.getIp().getHostAddress(),
-                entity.getParams(),
-                entity.getBody(),
-                entity.getStatusCode(),
-                entity.getDuration(),
-                entity.getResponse()
+                entity.getStatus().name(),
+                entity.getDuration()
         );
     }
 }

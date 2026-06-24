@@ -20,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import top.leafage.hypervisor.logging.service.SchedulerLogService;
-import top.leafage.hypervisor.logging.vo.SchedulerLogVO;
+import top.leafage.hypervisor.logging.domain.vo.SchedulerLogVO;
 
 /**
  * controller for scheduler_logs.

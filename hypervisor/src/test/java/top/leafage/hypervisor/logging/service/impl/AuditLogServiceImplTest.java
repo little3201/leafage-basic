@@ -29,7 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import top.leafage.hypervisor.logging.domain.AuditLog;
 import top.leafage.hypervisor.logging.repository.AuditLogRepository;
-import top.leafage.hypervisor.logging.vo.AuditLogVO;
+import top.leafage.hypervisor.logging.domain.vo.AuditLogVO;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,10 +60,10 @@ class AuditLogServiceImplTest {
     void setUp() {
         entity = new AuditLog();
         entity.setAction("test");
-        entity.setResource("test");
+        entity.setModule("test");
         entity.setOldValue("old");
         entity.setNewValue("new");
-        entity.setStatusCode(200);
+        entity.setStatus(200);
     }
 
     @Test

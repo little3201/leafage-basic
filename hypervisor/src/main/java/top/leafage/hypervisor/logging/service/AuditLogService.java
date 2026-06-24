@@ -16,7 +16,7 @@
 package top.leafage.hypervisor.logging.service;
 
 import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.logging.vo.AuditLogVO;
+import top.leafage.hypervisor.logging.domain.vo.AuditLogVO;
 
 /**
  * audit log service.

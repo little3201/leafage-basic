@@ -30,7 +30,7 @@ import org.springframework.data.jpa.domain.Specification;
 import top.leafage.common.logging.event.OperationLogEvent;
 import top.leafage.hypervisor.logging.domain.OperationLog;
 import top.leafage.hypervisor.logging.repository.OperationLogRepository;
-import top.leafage.hypervisor.logging.vo.OperationLogVO;
+import top.leafage.hypervisor.logging.domain.vo.OperationLogVO;
 
 import java.util.Collections;
 import java.util.List;

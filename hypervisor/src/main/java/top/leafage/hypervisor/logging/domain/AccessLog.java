@@ -20,11 +20,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 
 import java.net.InetAddress;
+import java.util.Map;
 
 /**
  * entity class for access log.
@@ -40,13 +43,18 @@ public class AccessLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lo
 
     private String httpMethod;
 
+    private Long targetId;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> params;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> body;
+
     @Column(columnDefinition = "inet")
     private InetAddress ip;
-
-    private String params;
-
-    @Column(columnDefinition = "text")
-    private String body;
 
     private String userAgent;
 
@@ -54,7 +62,9 @@ public class AccessLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lo
 
     private Long duration;
 
-    private String response;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> response;
 
 
     public String getUrl() {
@@ -73,6 +83,30 @@ public class AccessLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lo
         this.httpMethod = httpMethod;
     }
 
+    public Long getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
+    }
+
+    public Map<String, Object> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, Object> params) {
+        this.params = params;
+    }
+
+    public Map<String, Object> getBody() {
+        return body;
+    }
+
+    public void setBody(Map<String, Object> body) {
+        this.body = body;
+    }
+
     public InetAddress getIp() {
         return ip;
     }
@@ -81,20 +115,12 @@ public class AccessLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lo
         this.ip = ip;
     }
 
-    public String getParams() {
-        return params;
+    public String getUserAgent() {
+        return userAgent;
     }
 
-    public void setParams(String params) {
-        this.params = params;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 
     public Integer getStatusCode() {
@@ -113,11 +139,11 @@ public class AccessLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lo
         this.duration = responseTimes;
     }
 
-    public String getResponse() {
+    public Map<String, Object> getResponse() {
         return response;
     }
 
-    public void setResponse(String responseMessage) {
+    public void setResponse(Map<String, Object> responseMessage) {
         this.response = responseMessage;
     }
 }

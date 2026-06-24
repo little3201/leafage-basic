@@ -16,15 +16,15 @@
 package top.leafage.hypervisor.logging.domain;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 
 import java.net.InetAddress;
+import java.util.Map;
 
 /**
  * entity class for audit log.
@@ -36,32 +36,43 @@ import java.net.InetAddress;
 @Table(name = "audit_logs")
 public class AuditLog extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
-    private String resource;
+    private String module;
 
     private String action;
 
     private Long targetId;
 
-    @Column(columnDefinition = "text")
-    private String oldValue;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> oldValue;
 
-    @Column(columnDefinition = "text")
-    private String newValue;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> newValue;
 
     @Column(columnDefinition = "inet")
     private InetAddress ip;
 
-    private Integer statusCode;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     private Long duration;
 
+    public enum Status {
+        SUCCEED,
+        FAILED;
 
-    public String getResource() {
-        return resource;
+        public static Status of(String value) {
+            return valueOf(value.toUpperCase());
+        }
     }
 
-    public void setResource(String resource) {
-        this.resource = resource;
+    public String getModule() {
+        return module;
+    }
+
+    public void setModule(String module) {
+        this.module = module;
     }
 
     public String getAction() {
@@ -80,19 +91,19 @@ public class AuditLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
         this.targetId = objPk;
     }
 
-    public String getOldValue() {
+    public Map<String, Object> getOldValue() {
         return oldValue;
     }
 
-    public void setOldValue(String oldValue) {
+    public void setOldValue(Map<String, Object> oldValue) {
         this.oldValue = oldValue;
     }
 
-    public String getNewValue() {
+    public Map<String, Object> getNewValue() {
         return newValue;
     }
 
-    public void setNewValue(String newValue) {
+    public void setNewValue(Map<String, Object> newValue) {
         this.newValue = newValue;
     }
 
@@ -104,12 +115,12 @@ public class AuditLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
         this.ip = ip;
     }
 
-    public Integer getStatusCode() {
-        return statusCode;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public Long getDuration() {

@@ -29,7 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import top.leafage.hypervisor.logging.domain.AccessLog;
 import top.leafage.hypervisor.logging.repository.AccessLogRepository;
-import top.leafage.hypervisor.logging.vo.AccessLogVO;
+import top.leafage.hypervisor.logging.domain.vo.AccessLogVO;
 
 import java.util.List;
 import java.util.Optional;

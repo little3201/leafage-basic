@@ -29,7 +29,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import top.leafage.hypervisor.logging.service.AuditLogService;
-import top.leafage.hypervisor.logging.vo.AuditLogVO;
+import top.leafage.hypervisor.logging.domain.vo.AuditLogVO;
 
 import java.util.List;
 

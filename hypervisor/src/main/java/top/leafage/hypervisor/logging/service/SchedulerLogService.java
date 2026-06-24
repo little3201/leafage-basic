@@ -16,7 +16,7 @@
 package top.leafage.hypervisor.logging.service;
 
 import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.logging.vo.SchedulerLogVO;
+import top.leafage.hypervisor.logging.domain.vo.SchedulerLogVO;
 
 /**
  * service for scheduler_logs.

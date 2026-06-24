@@ -26,7 +26,7 @@ import org.springframework.util.Assert;
 import top.leafage.hypervisor.logging.domain.AuditLog;
 import top.leafage.hypervisor.logging.repository.AuditLogRepository;
 import top.leafage.hypervisor.logging.service.AuditLogService;
-import top.leafage.hypervisor.logging.vo.AuditLogVO;
+import top.leafage.hypervisor.logging.domain.vo.AuditLogVO;
 
 /**
  * audit log service impl.

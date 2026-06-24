@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.logging.vo;
+package top.leafage.hypervisor.logging.domain.vo;
 
 
 import top.leafage.hypervisor.logging.domain.SchedulerLog;

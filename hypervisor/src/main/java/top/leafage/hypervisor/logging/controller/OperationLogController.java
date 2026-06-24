@@ -20,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import top.leafage.hypervisor.logging.service.OperationLogService;
-import top.leafage.hypervisor.logging.vo.OperationLogVO;
+import top.leafage.hypervisor.logging.domain.vo.OperationLogVO;
 
 /**
  * operation log controller.

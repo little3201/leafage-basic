@@ -26,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
@@ -99,6 +100,13 @@ class ArchiveControllerTest {
 
     @Test
     void fetch() {
+        when(archiveService.fetch(anyLong())).thenReturn(vo);
+
+        assertThat(mvc.get().uri("/archives/{id}", 1L))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(ArchiveVO.class)
+                .satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
     }
 
     @Test
@@ -115,13 +123,35 @@ class ArchiveControllerTest {
 
     @Test
     void modify() {
+        when(archiveService.modify(anyLong(), any(ArchiveDTO.class))).thenReturn(vo);
+
+        assertThat(mvc.put().uri("/archives/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
+                .hasStatus(HttpStatus.ACCEPTED)
+                .bodyJson()
+                .convertTo(ArchiveVO.class)
+                .satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
     }
 
     @Test
     void remove() {
+        archiveService.remove(anyLong());
+
+        assertThat(mvc.delete().uri("/archives/{id}", 1L).with(csrf().asHeader()))
+                .hasStatusOk();
     }
 
     @Test
     void importFromFile() {
+        when(archiveService.createAll(anyList())).thenReturn(List.of(vo));
+
+        MockMultipartFile file = new MockMultipartFile("file", "test.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new byte[1]);
+        assertThat(mvc.post().uri("/archives/import").multipart().file(file).with(csrf().asHeader()))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(ArchiveVO.class))
+                .hasSize(1)
+                .element(0).satisfies(vo -> assertThat(vo.title()).isEqualTo("test"));
     }
 }

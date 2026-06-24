@@ -31,6 +31,7 @@ import top.leafage.hypervisor.logging.domain.AccessLog;
 import top.leafage.hypervisor.logging.repository.AccessLogRepository;
 import top.leafage.hypervisor.logging.domain.vo.AccessLogVO;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,7 +62,8 @@ class AccessLogServiceImplTest {
         entity = new AccessLog();
         entity.setUrl("test");
         entity.setHttpMethod("test");
-        entity.setParams("test");
+        entity.setTargetId(1L);
+        entity.setParams(Collections.emptyMap());
     }
 
     @Test

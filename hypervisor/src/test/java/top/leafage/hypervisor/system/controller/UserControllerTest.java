@@ -192,7 +192,7 @@ class UserControllerTest {
     void enable_error() {
         when(userService.enable(anyLong())).thenThrow(new RuntimeException());
 
-        assertThat(mvc.patch().uri("/users/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/users/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatus5xxServerError();
     }
 

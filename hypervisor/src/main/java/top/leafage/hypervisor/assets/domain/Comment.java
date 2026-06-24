@@ -65,7 +65,7 @@ public class Comment extends JpaAbstractAuditable<@NonNull String, @NonNull Long
     public void setSuperiorId(Long replier) {
         this.superiorId = replier;
     }
-    
+
     public String getBody() {
         return body;
     }

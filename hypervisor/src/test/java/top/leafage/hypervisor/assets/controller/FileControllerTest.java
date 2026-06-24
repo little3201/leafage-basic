@@ -57,9 +57,6 @@ class FileControllerTest {
     @Autowired
     private MockMvcTester mvc;
 
-    @Autowired
-    private ObjectMapper mapper;
-
     @MockitoBean
     private FileRecordService fileRecordService;
 
@@ -67,7 +64,7 @@ class FileControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new FileRecordVO(1L, "test", ".txt", "src/test/resources/test.txt", "", 3121L, false, LocalDateTime.now());
+        vo = new FileRecordVO(1L, "test", ".txt", "src/test/resources/test.txt", "", 3121L, false, true, LocalDateTime.now());
     }
 
     @Test

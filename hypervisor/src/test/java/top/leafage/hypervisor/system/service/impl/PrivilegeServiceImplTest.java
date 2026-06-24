@@ -149,7 +149,7 @@ class PrivilegeServiceImplTest {
     @Test
     void enable() {
         when(privilegeRepository.existsById(anyLong())).thenReturn(true);
-        when(privilegeRepository.updateEnabledById(anyLong())).thenReturn(1);
+        when(privilegeRepository.enableById(anyLong())).thenReturn(1);
 
         boolean enabled = privilegeService.enable(1L);
         assertTrue(enabled);

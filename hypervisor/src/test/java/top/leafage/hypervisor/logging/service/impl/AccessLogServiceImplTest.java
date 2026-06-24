@@ -28,8 +28,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import top.leafage.hypervisor.logging.domain.AccessLog;
-import top.leafage.hypervisor.logging.vo.AccessLogVO;
 import top.leafage.hypervisor.logging.repository.AccessLogRepository;
+import top.leafage.hypervisor.logging.vo.AccessLogVO;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**

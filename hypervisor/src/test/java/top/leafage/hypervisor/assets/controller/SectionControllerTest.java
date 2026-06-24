@@ -34,6 +34,7 @@ import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.SectionService;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,9 +70,9 @@ class SectionControllerTest {
         dto = new SectionDTO();
         dto.setName("test");
         dto.setSuperiorId(1L);
-        dto.setBody("body");
+        dto.setBody(Collections.emptyMap());
 
-        vo = new SectionVO(1L, 1L, 1L, "test", 1, 2, "body", 2L);
+        vo = new SectionVO(1L, 1L, 1L, "test", 1, 2, null, 2L);
     }
 
     @Test

@@ -44,6 +44,7 @@ import java.nio.charset.StandardCharsets;
 public class FileController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
+
     private final FileRecordService fileRecordService;
 
     /**

@@ -31,18 +31,15 @@ import java.util.Set;
 @Table(name = "role_privileges")
 public class RolePrivilege extends AbstractPersistable<@NonNull Long> {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "privilege_id", nullable = false)
-    private Privilege privilege;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "role_privilege_actions", joinColumns = @JoinColumn(name = "role_privilege_id"))
     private final Set<String> actions = new HashSet<>();
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "privilege_id", nullable = false)
+    private Privilege privilege;
 
     public Role getRole() {
         return role;

@@ -13,12 +13,13 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.logging;
+package top.leafage.hypervisor.logging.controller;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.Page;
@@ -28,11 +29,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
-import top.leafage.hypervisor.logging.controller.OperationLogController;
-import top.leafage.hypervisor.logging.service.OperationLogService;
-import top.leafage.hypervisor.logging.vo.OperationLogVO;
+import top.leafage.hypervisor.logging.service.AccessLogService;
+import top.leafage.hypervisor.logging.vo.AccessLogVO;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,113 +41,111 @@ import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /**
- * operation log controller test
+ * access log controller test
  *
  * @author wq li
  **/
 @WithMockUser
-@WebMvcTest(OperationLogController.class)
-class OperationLogControllerTest {
+@WebMvcTest(AccessLogController.class)
+class AccessLogControllerTest {
 
     @Autowired
     private MockMvcTester mvc;
 
     @MockitoBean
-    private OperationLogService operationLogService;
+    private AccessLogService accessLogService;
 
-    private OperationLogVO vo;
+    private AccessLogVO vo;
 
     @BeforeEach
     void setUp() {
-        vo = new OperationLogVO(1L, "test", "create", "filters=test", "test", 1, 1234L, "test", "test", LocalDateTime.now());
+        vo = new AccessLogVO(1L, "test", "POST", "127.0.0.1", "", "", 200, 230L, "");
     }
 
     @Test
     void retrieve() {
-        Page<@NonNull OperationLogVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<@NonNull AccessLogVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
-        when(operationLogService.retrieve(anyInt(), anyInt(), eq("id"),
+        when(accessLogService.retrieve(anyInt(), anyInt(), eq("id"),
                 anyBoolean(), anyString())).thenReturn(voPage);
 
-        assertThat(mvc.get().uri("/operation-logs")
+        assertThat(mvc.get().uri("/access-logs")
                 .queryParam("page", "0")
                 .queryParam("size", "2")
                 .queryParam("sortBy", "id")
-                .queryParam("descending", "true")
-                .queryParam("filters", "operation:like:test")
+                .queryParam("descending", "false")
+                .queryParam("filters", "url:like:test")
         )
                 .hasStatusOk()
                 .bodyJson().extractingPath("$.content")
-                .convertTo(InstanceOfAssertFactories.list(OperationLogVO.class))
+                .convertTo(InstanceOfAssertFactories.list(AccessLogVO.class))
                 .hasSize(1)
-                .element(0).satisfies(vo -> assertThat(vo.module()).isEqualTo("test"));
+                .element(0).satisfies(vo -> assertThat(vo.url()).isEqualTo("test"));
 
-        verify(operationLogService).retrieve(anyInt(), anyInt(), anyString(), anyBoolean(), anyString());
+        verify(accessLogService).retrieve(anyInt(), anyInt(), anyString(), anyBoolean(), anyString());
     }
 
     @Test
     void retrieve_error() {
-        when(operationLogService.retrieve(anyInt(), anyInt(), anyString(),
+        when(accessLogService.retrieve(anyInt(), anyInt(), eq("id"),
                 anyBoolean(), anyString())).thenThrow(new RuntimeException());
 
-        assertThat(mvc.get().uri("/operation-logs")
+        assertThat(mvc.get().uri("/access-logs")
                 .queryParam("page", "0")
                 .queryParam("size", "2")
                 .queryParam("sortBy", "id")
-                .queryParam("descending", "true")
-                .queryParam("filters", "operation:like:test")
+                .queryParam("descending", "false")
+                .queryParam("filters", "url:like:test")
         )
                 .hasStatus5xxServerError();
     }
 
     @Test
     void fetch() {
-        when(operationLogService.fetch(anyLong())).thenReturn(vo);
+        when(accessLogService.fetch(anyLong())).thenReturn(Mockito.mock(AccessLogVO.class));
 
-        assertThat(mvc.get().uri("/operation-logs/{id}", anyLong()))
+        assertThat(mvc.get().uri("/access-logs/{id}", anyLong()))
                 .hasStatusOk()
-                .bodyJson()
-                .convertTo(OperationLogVO.class)
-                .satisfies(vo -> assertThat(vo.module()).isEqualTo("test"));
+                .body().isNotNull();
     }
 
     @Test
     void fetch_error() {
-        when(operationLogService.fetch(anyLong())).thenThrow(new RuntimeException());
+        when(accessLogService.fetch(anyLong())).thenThrow(new RuntimeException());
 
-        assertThat(mvc.get().uri("/operation-logs/{id}", anyLong()))
+        assertThat(mvc.get().uri("/access-logs/{id}", anyLong()))
                 .hasStatus5xxServerError();
     }
 
     @Test
     void remove() {
-        this.operationLogService.remove(anyLong());
+        this.accessLogService.remove(anyLong());
 
-        assertThat(mvc.delete().uri("/operation-logs/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.delete().uri("/access-logs/{id}", anyLong()).with(csrf().asHeader()))
                 .hasStatus(HttpStatus.NO_CONTENT);
     }
 
     @Test
     void remove_error() {
-        doThrow(new RuntimeException()).when(operationLogService).remove(anyLong());
+        doThrow(new RuntimeException()).when(accessLogService).remove(anyLong());
 
-        assertThat(mvc.delete().uri("/operation-logs/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.delete().uri("/access-logs/{id}", anyLong()).with(csrf().asHeader()))
                 .hasStatus5xxServerError();
     }
 
     @Test
     void clear() {
-        this.operationLogService.clear();
+        this.accessLogService.clear();
 
-        assertThat(mvc.delete().uri("/operation-logs").with(csrf().asHeader()))
+        assertThat(mvc.delete().uri("/access-logs").with(csrf().asHeader()))
                 .hasStatus(HttpStatus.NO_CONTENT);
     }
 
     @Test
     void clear_error() {
-        doThrow(new RuntimeException()).when(operationLogService).clear();
+        doThrow(new RuntimeException()).when(accessLogService).clear();
 
-        assertThat(mvc.delete().uri("/operation-logs").with(csrf().asHeader()))
+        assertThat(mvc.delete().uri("/access-logs").with(csrf().asHeader()))
                 .hasStatus5xxServerError();
     }
 

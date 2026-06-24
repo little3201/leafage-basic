@@ -31,11 +31,11 @@ leafage 是一个基于 Spring Boot 构建的通用后台管理系统，适用�
 - Spring Boot
 - Spring Security
 
-| 认证模式 | 分支    | 框架/库 |
-|----------|---------|----------|
-| BFF      | develop | Spring data jpa <br> Spring cloud gateway webmvc |
-| PKCE     | webflux | Spring data r2dbc <br> Spring cloud gateway webflux |
-| JWT      | jdbc    | Spring data jdbc <br> Spring cloud gateway webmvc |
+| 认证模式 | 分支      | 框架/库                                                |
+|------|---------|-----------------------------------------------------|
+| BFF  | develop | Spring data jpa <br> Spring cloud gateway webmvc    |
+| PKCE | webflux | Spring data r2dbc <br> Spring cloud gateway webflux |
+| JWT  | jdbc    | Spring data jdbc <br> Spring cloud gateway webmvc   |
 
 [前端仓库](https://github.com/little3201/leafage-ui)及详细文档
 

@@ -16,8 +16,8 @@ package top.leafage.hypervisor.system.service;
 
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 
 import java.util.List;

@@ -16,8 +16,8 @@
 package top.leafage.hypervisor.assets.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.common.data.jpa.JpaCrudService;
+import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 
 /**
  * file service.
@@ -29,7 +29,7 @@ public interface FileRecordService extends JpaCrudService<Object, FileRecordVO> 
     /**
      * upload.
      *
-     * @param file the file.
+     * @param file       the file.
      * @param superiorId the superior id.
      * @return the result.
      */

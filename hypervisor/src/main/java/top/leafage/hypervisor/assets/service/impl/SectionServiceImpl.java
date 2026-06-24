@@ -147,7 +147,7 @@ public class SectionServiceImpl implements SectionService {
         Section existing = sectionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("section not found: " + id));
         if (!existing.getName().equals(dto.getName()) &&
-                sectionRepository.existsByOwnerIdAndOwnerTypeAndName(existing.getOwnerId(), Section.OwnerType.valueOf( dto.getOwnerType()), dto.getName())) {
+                sectionRepository.existsByOwnerIdAndOwnerTypeAndName(existing.getOwnerId(), Section.OwnerType.valueOf(dto.getOwnerType()), dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         copier.copy(dto, existing, null);

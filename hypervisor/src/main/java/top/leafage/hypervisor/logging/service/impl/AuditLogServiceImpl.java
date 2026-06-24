@@ -24,9 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.hypervisor.logging.domain.AuditLog;
-import top.leafage.hypervisor.logging.vo.AuditLogVO;
 import top.leafage.hypervisor.logging.repository.AuditLogRepository;
 import top.leafage.hypervisor.logging.service.AuditLogService;
+import top.leafage.hypervisor.logging.vo.AuditLogVO;
 
 /**
  * audit log service impl.

@@ -14,9 +14,9 @@
  */
 package top.leafage.hypervisor.assets.service;
 
+import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.assets.domain.dto.PostDTO;
 import top.leafage.hypervisor.assets.domain.vo.PostVO;
-import top.leafage.common.data.jpa.JpaCrudService;
 
 /**
  * posts service.

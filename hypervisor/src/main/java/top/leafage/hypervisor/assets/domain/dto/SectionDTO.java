@@ -15,7 +15,6 @@
 
 package top.leafage.hypervisor.assets.domain.dto;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

@@ -188,7 +188,7 @@ class GroupServiceImplTest {
     @Test
     void enable() {
         when(groupRepository.existsById(anyLong())).thenReturn(true);
-        when(groupRepository.updateEnabledById(anyLong())).thenReturn(1);
+        when(groupRepository.enableById(anyLong())).thenReturn(1);
 
         boolean enabled = groupService.enable(1L);
         assertTrue(enabled);

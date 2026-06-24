@@ -15,7 +15,6 @@
 
 package top.leafage.hypervisor.assets.domain;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -77,27 +76,6 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.sequence = sequence;
         this.level = level;
         this.body = body;
-    }
-
-    public enum Type {
-        HEADING,      // 标题
-        PARAGRAPH,    // 段落
-        TABLE,        // 表格
-        IMAGE;        // 图片
-
-        public static Type of(String value) {
-            return valueOf(value.toUpperCase());
-        }
-    }
-
-    public enum OwnerType {
-        ARCHIVE,
-        TEMPLATE,
-        REPORT;
-
-        public static OwnerType of(String value) {
-            return valueOf(value.toUpperCase());
-        }
     }
 
     public Long getSuperiorId() {
@@ -162,5 +140,26 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public enum Type {
+        HEADING,      // 标题
+        PARAGRAPH,    // 段落
+        TABLE,        // 表格
+        IMAGE;        // 图片
+
+        public static Type of(String value) {
+            return valueOf(value.toUpperCase());
+        }
+    }
+
+    public enum OwnerType {
+        ARCHIVE,
+        TEMPLATE,
+        REPORT;
+
+        public static OwnerType of(String value) {
+            return valueOf(value.toUpperCase());
+        }
     }
 }

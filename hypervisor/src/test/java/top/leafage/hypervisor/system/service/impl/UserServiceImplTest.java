@@ -38,7 +38,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 /**
  * user service test
@@ -176,7 +177,7 @@ class UserServiceImplTest {
     @Test
     void enable() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(userRepository.updateEnabledById(anyLong())).thenReturn(1);
+        when(userRepository.enableById(anyLong())).thenReturn(1);
 
         boolean enabled = userService.enable(1L);
         assertTrue(enabled);

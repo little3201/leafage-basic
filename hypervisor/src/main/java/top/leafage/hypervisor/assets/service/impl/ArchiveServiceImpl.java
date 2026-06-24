@@ -55,6 +55,7 @@ public class ArchiveServiceImpl implements ArchiveService {
      * Constructor for ArchiveServiceImpl.
      *
      * @param archiveRepository a {@link ArchiveRepository} object
+     * @param sectionRepository a {@link SectionRepository} object
      */
     public ArchiveServiceImpl(ArchiveRepository archiveRepository, SectionRepository sectionRepository) {
         this.archiveRepository = archiveRepository;

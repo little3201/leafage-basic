@@ -28,8 +28,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import top.leafage.hypervisor.logging.domain.SchedulerLog;
-import top.leafage.hypervisor.logging.vo.SchedulerLogVO;
 import top.leafage.hypervisor.logging.repository.SchedulerLogRepository;
+import top.leafage.hypervisor.logging.vo.SchedulerLogVO;
 
 import java.time.Instant;
 import java.util.List;
@@ -39,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**

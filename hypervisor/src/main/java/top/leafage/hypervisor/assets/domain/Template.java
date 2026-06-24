@@ -55,25 +55,6 @@ public class Template extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
         this.description = description;
     }
 
-    public enum Status {
-        DRAFT,
-        PUBLISHED,
-        ARCHIVED;
-
-        public static Status of(String value) {
-            return valueOf(value.toUpperCase());
-        }
-    }
-
-    public enum Type {
-        WORD,
-        EXCEL;
-
-        public static Type of(String value) {
-            return valueOf(value.toUpperCase());
-        }
-    }
-
     public String getName() {
         return name;
     }
@@ -120,5 +101,24 @@ public class Template extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public enum Status {
+        DRAFT,
+        PUBLISHED,
+        ARCHIVED;
+
+        public static Status of(String value) {
+            return valueOf(value.toUpperCase());
+        }
+    }
+
+    public enum Type {
+        WORD,
+        EXCEL;
+
+        public static Type of(String value) {
+            return valueOf(value.toUpperCase());
+        }
     }
 }

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.impl;
+package top.leafage.hypervisor.assets.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,6 @@ import top.leafage.hypervisor.assets.domain.Comment;
 import top.leafage.hypervisor.assets.domain.dto.CommentDTO;
 import top.leafage.hypervisor.assets.domain.vo.CommentVO;
 import top.leafage.hypervisor.assets.repository.CommentRepository;
-import top.leafage.hypervisor.assets.service.impl.CommentServiceImpl;
 
 import java.util.Collections;
 import java.util.List;

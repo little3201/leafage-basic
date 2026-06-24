@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.logging;
+package top.leafage.hypervisor.logging.controller;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.jspecify.annotations.NonNull;
@@ -28,9 +28,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
-import top.leafage.hypervisor.logging.controller.SchedulerLogController;
-import top.leafage.hypervisor.logging.vo.SchedulerLogVO;
 import top.leafage.hypervisor.logging.service.SchedulerLogService;
+import top.leafage.hypervisor.logging.vo.SchedulerLogVO;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.impl;
+package top.leafage.hypervisor.assets.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,6 @@ import top.leafage.hypervisor.assets.domain.Region;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
-import top.leafage.hypervisor.assets.service.impl.RegionServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -176,7 +175,7 @@ class RegionServiceImplTest {
     @Test
     void enable() {
         when(regionRepository.existsById(anyLong())).thenReturn(true);
-        when(regionRepository.updateEnabledById(anyLong())).thenReturn(1);
+        when(regionRepository.enableById(anyLong())).thenReturn(1);
 
         boolean enabled = regionService.enable(1L);
         assertTrue(enabled);

@@ -31,7 +31,6 @@ import top.leafage.hypervisor.system.domain.Role;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.repository.RoleRepository;
-import top.leafage.hypervisor.system.service.impl.RoleServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +39,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 /**
  * role service test
@@ -174,7 +174,7 @@ class RoleServiceImplTest {
     @Test
     void enable() {
         when(roleRepository.existsById(anyLong())).thenReturn(true);
-        when(roleRepository.updateEnabledById(anyLong())).thenReturn(1);
+        when(roleRepository.enableById(anyLong())).thenReturn(1);
 
         boolean enabled = roleService.enable(1L);
         assertTrue(enabled);

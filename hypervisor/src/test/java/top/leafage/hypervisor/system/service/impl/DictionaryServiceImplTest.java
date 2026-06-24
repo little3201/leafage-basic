@@ -31,7 +31,6 @@ import top.leafage.hypervisor.system.domain.Dictionary;
 import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
 import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import top.leafage.hypervisor.system.repository.DictionaryRepository;
-import top.leafage.hypervisor.system.service.impl.DictionaryServiceImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -194,7 +193,7 @@ class DictionaryServiceImplTest {
     @Test
     void enable() {
         when(dictionaryRepository.existsById(anyLong())).thenReturn(true);
-        when(dictionaryRepository.updateEnabledById(anyLong())).thenReturn(1);
+        when(dictionaryRepository.enableById(anyLong())).thenReturn(1);
 
         boolean enabled = dictionaryService.enable(1L);
         assertTrue(enabled);

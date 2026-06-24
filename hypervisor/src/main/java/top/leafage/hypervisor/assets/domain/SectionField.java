@@ -55,18 +55,6 @@ public class SectionField extends JpaAbstractAuditable<@NonNull String, @NonNull
         this.required = required;
     }
 
-    public enum Type {
-        STRING,
-        NUMBER,
-        BOOLEAN,
-        DATE,
-        DATETIME;
-
-        public static Type of(String value) {
-            return valueOf(value.toUpperCase());
-        }
-    }
-
     public Long getSectionId() {
         return sectionId;
     }
@@ -113,5 +101,17 @@ public class SectionField extends JpaAbstractAuditable<@NonNull String, @NonNull
 
     public void setRequired(boolean required) {
         this.required = required;
+    }
+
+    public enum Type {
+        STRING,
+        NUMBER,
+        BOOLEAN,
+        DATE,
+        DATETIME;
+
+        public static Type of(String value) {
+            return valueOf(value.toUpperCase());
+        }
     }
 }

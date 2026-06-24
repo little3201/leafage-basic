@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.impl;
+package top.leafage.hypervisor.assets.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import top.leafage.hypervisor.assets.domain.FileRecord;
 import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.repository.FileRecordRepository;
-import top.leafage.hypervisor.assets.service.impl.FileRecordServiceImpl;
 
 import java.util.List;
 import java.util.Optional;

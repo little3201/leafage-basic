@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package top.leafage.hypervisor.assets.impl;
+package top.leafage.hypervisor.assets.service.impl;
 
 
 import jakarta.persistence.EntityNotFoundException;
@@ -31,7 +31,6 @@ import top.leafage.hypervisor.assets.domain.Post;
 import top.leafage.hypervisor.assets.domain.dto.PostDTO;
 import top.leafage.hypervisor.assets.domain.vo.PostVO;
 import top.leafage.hypervisor.assets.repository.PostRepository;
-import top.leafage.hypervisor.assets.service.impl.PostServiceImpl;
 
 import java.util.List;
 import java.util.Optional;

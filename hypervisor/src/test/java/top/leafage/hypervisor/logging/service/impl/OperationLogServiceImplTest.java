@@ -27,10 +27,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import top.leafage.common.logging.event.OperationLogEvent;
 import top.leafage.hypervisor.logging.domain.OperationLog;
 import top.leafage.hypervisor.logging.repository.OperationLogRepository;
 import top.leafage.hypervisor.logging.vo.OperationLogVO;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,9 +64,9 @@ class OperationLogServiceImplTest {
         entity = new OperationLog();
         entity.setModule("test");
         entity.setResponse("result");
-        entity.setParams("params");
+        entity.setParams(Collections.emptyMap());
         entity.setAction("test");
-        entity.setStatus(200);
+        entity.setStatus(OperationLogEvent.Status.SUCCEED);
     }
 
     @Test

@@ -30,7 +30,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
-import top.leafage.hypervisor.system.controller.MessageController;
 import top.leafage.hypervisor.system.domain.dto.MessageDTO;
 import top.leafage.hypervisor.system.domain.vo.MessageVO;
 import top.leafage.hypervisor.system.service.MessageService;

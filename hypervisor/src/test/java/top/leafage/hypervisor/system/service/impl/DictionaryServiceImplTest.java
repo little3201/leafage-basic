@@ -77,7 +77,7 @@ class DictionaryServiceImplTest {
         when(dictionaryRepository.findAll(ArgumentMatchers.<Specification<Dictionary>>any(),
                 any(Pageable.class))).thenReturn(page);
 
-        Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2, "id", true, "test");
+        Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2, "id", true, "");
         assertEquals(1, voPage.getTotalElements());
         assertEquals(1, voPage.getContent().size());
         verify(dictionaryRepository).findAll(ArgumentMatchers.<Specification<Dictionary>>any(), any(Pageable.class));

@@ -25,6 +25,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.Region;
@@ -32,10 +33,13 @@ import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
 import top.leafage.hypervisor.assets.service.RegionService;
+import top.leafage.hypervisor.system.domain.Dictionary;
+import top.leafage.hypervisor.system.domain.Privilege;
+import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * region service impl.
@@ -75,11 +79,25 @@ public class RegionServiceImpl implements RegionService {
             }
         };
 
-        return regionRepository.findAll(spec, pageable)
-                .map(entity -> {
-                    long count = regionRepository.countBySuperiorId(entity.getId());
-                    return RegionVO.from(entity, count);
-                });
+        Page<Region> entityPage = regionRepository.findAll(spec, pageable);
+        if (entityPage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        Set<Long> ids = entityPage.getContent().stream()
+                .map(Region::getId)
+                .collect(Collectors.toSet());
+
+        List<Object[]> countResults = regionRepository.countBySuperiorIdsGrouped(ids);
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return entityPage.map(entity -> {
+            long count = countMap.getOrDefault(entity.getId(), 0L);
+            return RegionVO.from(entity, count);
+        });
     }
 
     /**
@@ -127,9 +145,24 @@ public class RegionServiceImpl implements RegionService {
         } else {
             list = regionRepository.findAllBySuperiorId(id);
         }
-        return list.stream().sorted(Comparator.comparing(Region::getId))
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+
+        Set<Long> ids = list.stream()
+                .map(Region::getId)
+                .collect(Collectors.toSet());
+
+        List<Object[]> countResults = regionRepository.countBySuperiorIdsGrouped(ids);
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return list.stream()
                 .map(entity -> {
-                    long count = regionRepository.countBySuperiorId(entity.getId());
+                    long count = countMap.getOrDefault(entity.getId(), 0L);
                     return RegionVO.from(entity, count);
                 })
                 .toList();

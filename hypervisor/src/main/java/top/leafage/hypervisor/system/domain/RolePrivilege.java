@@ -34,9 +34,11 @@ public class RolePrivilege extends AbstractPersistable<@NonNull Long> {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "role_privilege_actions", joinColumns = @JoinColumn(name = "role_privilege_id"))
     private final Set<String> actions = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "privilege_id", nullable = false)
     private Privilege privilege;
@@ -59,11 +61,6 @@ public class RolePrivilege extends AbstractPersistable<@NonNull Long> {
 
     public Set<String> getActions() {
         return Set.copyOf(actions);
-    }
-
-    public void updateActions(Set<String> newActions) {
-        this.actions.clear();
-        this.actions.addAll(newActions);
     }
 
     public void addActions(Collection<String> newActions) {

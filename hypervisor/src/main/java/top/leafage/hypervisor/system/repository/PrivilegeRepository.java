@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.Privilege;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -99,10 +100,11 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>, Jpa
     /**
      * Counts the number of records by superior ID.
      *
-     * @param superiorId The superior ID.
+     * @param superiorIds The pk of superiors.
      * @return The count of records.
      */
-    long countBySuperiorId(Long superiorId);
+    @Query("SELECT t.superiorId, COUNT(t.id) FROM Privilege t WHERE t.superiorId IN :superiorIds GROUP BY t.superiorId")
+    List<Object[]> countBySuperiorIdsGrouped(Collection<Long> superiorIds);
 
     /**
      * enable a record by pk.

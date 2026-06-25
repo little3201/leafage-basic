@@ -27,8 +27,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.logging.annotation.OperationLog;
+import top.leafage.hypervisor.system.domain.Dictionary;
 import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
+import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 import top.leafage.hypervisor.system.repository.PrivilegeRepository;
 import top.leafage.hypervisor.system.service.PrivilegeService;
@@ -78,11 +80,25 @@ public class PrivilegeServiceImpl implements PrivilegeService {
             return cb.and(basePredicate, cb.isNull(root.get("superiorId")));
         };
 
-        return privilegeRepository.findAll(spec, pageable)
-                .map(entity -> {
-                    long count = privilegeRepository.countBySuperiorId(entity.getId());
-                    return PrivilegeVO.from(entity, count);
-                });
+        Page<Privilege> entityPage = privilegeRepository.findAll(spec, pageable);
+        if (entityPage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        Set<Long> ids = entityPage.getContent().stream()
+                .map(Privilege::getId)
+                .collect(Collectors.toSet());
+
+        List<Object[]> countResults = privilegeRepository.countBySuperiorIdsGrouped(ids);
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return entityPage.map(entity -> {
+            long count = countMap.getOrDefault(entity.getId(), 0L);
+            return PrivilegeVO.from(entity, count);
+        });
     }
 
     /**
@@ -117,10 +133,25 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     public List<PrivilegeVO> subset(Long superiorId) {
         Assert.notNull(superiorId, String.format(_MUST_NOT_BE_NULL, "superiorId"));
 
-        return privilegeRepository.findAllBySuperiorId(superiorId)
-                .stream()
+        List<Privilege> list = privilegeRepository.findAllBySuperiorId(superiorId);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+
+        Set<Long> ids = list.stream()
+                .map(Privilege::getId)
+                .collect(Collectors.toSet());
+
+        List<Object[]> countResults = privilegeRepository.countBySuperiorIdsGrouped(ids);
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return list.stream()
                 .map(entity -> {
-                    long count = privilegeRepository.countBySuperiorId(entity.getId());
+                    long count = countMap.getOrDefault(entity.getId(), 0L);
                     return PrivilegeVO.from(entity, count);
                 })
                 .toList();

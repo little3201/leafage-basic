@@ -31,14 +31,11 @@ public class TemplateDTO {
     @NotBlank
     private String type;
 
-    private String description;
-
 
     public static Template toEntity(TemplateDTO dto) {
         return new Template(
                 dto.getName(),
-                dto.getType(),
-                dto.getDescription()
+                dto.getType()
         );
     }
 
@@ -58,11 +55,4 @@ public class TemplateDTO {
         this.type = type;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

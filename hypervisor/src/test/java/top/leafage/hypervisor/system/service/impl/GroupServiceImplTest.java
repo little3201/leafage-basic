@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.util.ReflectionTestUtils;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
@@ -40,8 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -59,6 +59,7 @@ class GroupServiceImplTest {
     private GroupServiceImpl groupService;
 
     private GroupDTO dto;
+    @Mock
     private Group entity;
 
     @BeforeEach
@@ -66,9 +67,8 @@ class GroupServiceImplTest {
         dto = new GroupDTO();
         dto.setName("test");
         dto.setSuperiorId(1L);
-        dto.setDescription("description");
 
-        entity = new Group(1L, "test", null, "description");
+        entity = new Group("test", null);
     }
 
     @Test
@@ -86,7 +86,10 @@ class GroupServiceImplTest {
 
     @Test
     void tree() {
-        Group child = new Group(2L, "test", 1L, "description");
+        ReflectionTestUtils.setField(entity, "id", 1L);
+        Group child = new Group("test", 1L);
+        ReflectionTestUtils.setField(child, "id", 2L);
+
         when(groupRepository.findAll()).thenReturn(List.of(entity, child));
 
         List<TreeNode<Long>> nodes = groupService.tree();

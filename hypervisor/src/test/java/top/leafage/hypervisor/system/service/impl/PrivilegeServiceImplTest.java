@@ -64,7 +64,6 @@ class PrivilegeServiceImplTest {
     void init() {
         dto = new PrivilegeDTO();
         dto.setName("test");
-        dto.setIcon("test");
         dto.setPath("/test");
         dto.setSuperiorId(1L);
 

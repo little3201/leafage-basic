@@ -71,14 +71,12 @@ class PrivilegeControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new PrivilegeVO(1L, "test", null, "test", "test", "#", "icon", Set.of("create,modify"), "description", true, 0);
+        vo = new PrivilegeVO(1L, "test", null, "test", "test", "#", Set.of("create,modify"), true, 0);
 
         dto = new PrivilegeDTO();
         dto.setName("test");
         dto.setRedirect("redirect");
-        dto.setDescription("description");
         dto.setPath("/test");
-        dto.setIcon("icon");
         dto.setSuperiorId(1L);
     }
 

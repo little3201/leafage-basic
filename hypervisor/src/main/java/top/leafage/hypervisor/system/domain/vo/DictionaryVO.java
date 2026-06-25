@@ -26,7 +26,6 @@ public record DictionaryVO(
         Long id,
         String name,
         Long superiorId,
-        String description,
         long count,
         boolean enabled
 ) {
@@ -39,7 +38,6 @@ public record DictionaryVO(
                 entity.getId(),
                 entity.getName(),
                 entity.getSuperiorId(),
-                entity.getDescription(),
                 count,
                 entity.isEnabled()
         );

@@ -16,6 +16,9 @@ package top.leafage.hypervisor.system.domain.vo;
 
 import top.leafage.hypervisor.system.domain.Role;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * vo class for role.
  *
@@ -24,14 +27,14 @@ import top.leafage.hypervisor.system.domain.Role;
 public record RoleVO(
         Long id,
         String name,
-        String description,
+        Set<UserVO> members,
         boolean enabled
 ) {
     public static RoleVO from(Role entity) {
         return new RoleVO(
                 entity.getId(),
                 entity.getName(),
-                entity.getDescription(),
+                entity.getMembers().stream().map(UserVO::from).collect(Collectors.toSet()),
                 entity.isEnabled()
         );
     }

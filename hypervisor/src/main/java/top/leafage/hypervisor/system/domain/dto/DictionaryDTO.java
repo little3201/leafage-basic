@@ -30,14 +30,12 @@ public class DictionaryDTO {
 
     private Long superiorId;
 
-    private String description;
 
 
     public static Dictionary toEntity(DictionaryDTO dto) {
         return new Dictionary(
                 dto.getName(),
-                dto.getSuperiorId(),
-                dto.getDescription()
+                dto.getSuperiorId()
         );
     }
 
@@ -57,11 +55,4 @@ public class DictionaryDTO {
         this.superiorId = superiorId;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

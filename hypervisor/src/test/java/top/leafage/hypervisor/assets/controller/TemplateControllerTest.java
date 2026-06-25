@@ -49,9 +49,8 @@ class TemplateControllerTest {
         dto = new TemplateDTO();
         dto.setName("test");
         dto.setType("word");
-        dto.setDescription("description");
 
-        vo = new TemplateVO(1L, "test", "WORD", 0, "DRAFT", "description", null);
+        vo = new TemplateVO(1L, "test", "WORD", 0, "DRAFT",  null);
     }
 
     @Test

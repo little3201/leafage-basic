@@ -41,18 +41,15 @@ public class Template extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
     @Enumerated(EnumType.STRING)
     private Status status = Status.DRAFT;
 
-    private String description;
-
     private boolean enabled;
 
 
     public Template() {
     }
 
-    public Template(String name, String type, String description) {
+    public Template(String name, String type) {
         this.name = name;
         this.type = Type.of(type);
-        this.description = description;
     }
 
     public String getName() {
@@ -85,14 +82,6 @@ public class Template extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public boolean isEnabled() {

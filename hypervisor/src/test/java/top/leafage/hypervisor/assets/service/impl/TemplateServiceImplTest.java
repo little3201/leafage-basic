@@ -47,7 +47,6 @@ class TemplateServiceImplTest {
         dto = new TemplateDTO();
         dto.setName("test");
         dto.setType("word");
-        dto.setDescription("description");
 
         entity = TemplateDTO.toEntity(dto);
     }

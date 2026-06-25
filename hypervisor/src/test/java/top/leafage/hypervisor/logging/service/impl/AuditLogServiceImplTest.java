@@ -62,6 +62,7 @@ class AuditLogServiceImplTest {
         entity = new AuditLog();
         entity.setAction("test");
         entity.setModule("test");
+        entity.setStatus(AuditLog.Status.SUCCEED);
         entity.setOldValue(Collections.emptyMap());
         entity.setNewValue(Collections.emptyMap());
     }

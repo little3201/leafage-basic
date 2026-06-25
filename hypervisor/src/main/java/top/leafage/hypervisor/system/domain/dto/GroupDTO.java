@@ -29,14 +29,11 @@ public class GroupDTO {
 
     private Long superiorId;
 
-    private String description;
-
 
     public static Group toEntity(GroupDTO dto) {
         return new Group(
                 dto.getName(),
-                dto.getSuperiorId(),
-                dto.getDescription()
+                dto.getSuperiorId()
         );
     }
 
@@ -56,11 +53,4 @@ public class GroupDTO {
         this.superiorId = superiorId;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

@@ -32,24 +32,25 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
+    @Column(unique = true, nullable = false)
+    private String name;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "role_members",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
     private final Set<User> members = new HashSet<>();
+
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<RolePrivilege> rolePrivileges = new HashSet<>();
-    @Column(unique = true, nullable = false)
-    private String name;
-    private String description;
+
     private boolean enabled = true;
 
     public Role() {
     }
 
-    public Role(String name, String description) {
+    public Role(String name) {
         this.name = name;
-        this.description = description;
     }
 
     public void addPrivilege(Privilege privilege, Set<String> actions) {
@@ -90,14 +91,6 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public boolean isEnabled() {

@@ -69,12 +69,11 @@ class DictionaryControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new DictionaryVO(1L, "test", null, "description", 2L, true);
+        vo = new DictionaryVO(1L, "test", null, 2L, true);
 
         dto = new DictionaryDTO();
         dto.setName("gender");
         dto.setSuperiorId(1L);
-        dto.setDescription("description");
     }
 
     @Test

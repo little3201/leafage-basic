@@ -48,7 +48,7 @@ import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
 @Service
 public class PrivilegeServiceImpl implements PrivilegeService {
 
-    private static final Set<String> META_FIELDS = Set.of("path", "redirect", "component", "icon", "actions");
+    private static final Set<String> META_FIELDS = Set.of("path", "redirect", "component", "actions");
 
     private static final BeanCopier copier = BeanCopier.create(PrivilegeDTO.class, Privilege.class, false);
 

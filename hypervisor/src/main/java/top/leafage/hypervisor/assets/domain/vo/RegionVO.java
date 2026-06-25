@@ -28,7 +28,6 @@ public record RegionVO(
         String name,
         String areaCode,
         String postalCode,
-        String description,
         long count,
         boolean enabled
 ) {
@@ -43,7 +42,6 @@ public record RegionVO(
                 entity.getName(),
                 entity.getAreaCode(),
                 entity.getPostalCode(),
-                entity.getDescription(),
                 count,
                 entity.isEnabled()
         );

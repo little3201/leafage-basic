@@ -16,6 +16,9 @@ package top.leafage.hypervisor.system.domain.vo;
 
 import top.leafage.hypervisor.system.domain.Group;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * vo class for group.
  *
@@ -24,14 +27,16 @@ import top.leafage.hypervisor.system.domain.Group;
 public record GroupVO(
         Long id,
         String name,
-        String description,
+        Set<UserVO> members,
+        Set<RoleVO> roles,
         boolean enabled
 ) {
     public static GroupVO from(Group entity) {
         return new GroupVO(
                 entity.getId(),
                 entity.getName(),
-                entity.getDescription(),
+                entity.getMembers().stream().map(UserVO::from).collect(Collectors.toSet()),
+                entity.getRoles().stream().map(RoleVO::from).collect(Collectors.toSet()),
                 entity.isEnabled()
         );
     }

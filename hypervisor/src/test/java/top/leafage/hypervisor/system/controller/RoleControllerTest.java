@@ -37,6 +37,7 @@ import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.RoleService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -69,11 +70,10 @@ class RoleControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new RoleVO(1L, "test", "description", true);
+        vo = new RoleVO(1L, "test", Collections.emptySet(), true);
 
         dto = new RoleDTO();
         dto.setName("test");
-        dto.setDescription("description");
     }
 
     @Test

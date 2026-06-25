@@ -30,9 +30,7 @@ public record PrivilegeVO(
         String path,
         String redirect,
         String component,
-        String icon,
         Set<String> actions,
-        String description,
         boolean enabled,
         long count
 ) {
@@ -48,9 +46,7 @@ public record PrivilegeVO(
                 entity.getPath(),
                 entity.getRedirect(),
                 entity.getComponent(),
-                entity.getIcon(),
                 entity.getActions(),
-                entity.getDescription(),
                 entity.isEnabled(),
                 count
         );

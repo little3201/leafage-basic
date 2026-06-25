@@ -25,13 +25,10 @@ public class RoleDTO {
 
     private String name;
 
-    private String description;
-
 
     public static Role toEntity(RoleDTO dto) {
         return new Role(
-                dto.getName(),
-                dto.getDescription()
+                dto.getName()
         );
     }
 
@@ -43,11 +40,4 @@ public class RoleDTO {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

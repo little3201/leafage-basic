@@ -73,12 +73,11 @@ class GroupControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new GroupVO(1L, "test", "description", true);
+        vo = new GroupVO(1L, "test", Collections.emptySet(), Collections.emptySet(), true);
 
         dto = new GroupDTO();
         dto.setName("test");
         dto.setSuperiorId(1L);
-        dto.setDescription("description");
     }
 
     @Test

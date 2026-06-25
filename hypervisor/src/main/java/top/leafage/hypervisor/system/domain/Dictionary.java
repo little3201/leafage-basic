@@ -38,18 +38,15 @@ public class Dictionary extends JpaAbstractAuditable<@NonNull String, @NonNull L
 
     private Long superiorId;
 
-    private String description;
-
     private boolean enabled = true;
 
 
     public Dictionary() {
     }
 
-    public Dictionary(String name, Long superiorId, String description) {
+    public Dictionary(String name, Long superiorId) {
         this.name = name;
         this.superiorId = superiorId;
-        this.description = description;
     }
 
     public String getName() {
@@ -66,14 +63,6 @@ public class Dictionary extends JpaAbstractAuditable<@NonNull String, @NonNull L
 
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public boolean isEnabled() {

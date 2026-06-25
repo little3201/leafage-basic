@@ -16,6 +16,7 @@ package top.leafage.hypervisor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 
 /**
@@ -23,6 +24,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author wq li
  */
+@EnableAsync
 @SpringBootApplication(scanBasePackages = {
         "top.leafage.hypervisor",
         "top.leafage.common"

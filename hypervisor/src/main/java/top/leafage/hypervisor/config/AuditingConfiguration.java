@@ -35,7 +35,7 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
  * @author wq li
  */
 @Configuration(proxyBeanMethods = false)
-@EnableJpaAuditing
+@EnableJpaAuditing(modifyOnCreate = false)
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class AuditingConfiguration {
 

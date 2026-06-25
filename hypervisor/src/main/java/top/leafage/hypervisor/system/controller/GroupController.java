@@ -197,7 +197,7 @@ public class GroupController {
      * @param usernames username集合
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:member')")
     @DeleteMapping("/{id}/members")
     public ResponseEntity<Void> removeMembers(@PathVariable Long id, @RequestParam Set<String> usernames) {
         groupService.removeMembers(id, usernames);
@@ -210,7 +210,7 @@ public class GroupController {
      * @param id group id
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:member')")
     @GetMapping("/{id}/members")
     public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
         List<UserVO> members = groupService.members(id);
@@ -224,7 +224,7 @@ public class GroupController {
      * @param roleIds role ids
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
     @PatchMapping("/{id}/roles")
     public ResponseEntity<Void> addRoles(@PathVariable Long id, @RequestBody Set<Long> roleIds) {
         groupService.addRoles(id, roleIds);
@@ -237,7 +237,7 @@ public class GroupController {
      * @param id group id
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
     @GetMapping("/{id}/roles")
     public ResponseEntity<List<RoleVO>> roles(@PathVariable Long id) {
         List<RoleVO> roles = groupService.roles(id);
@@ -251,7 +251,7 @@ public class GroupController {
      * @param roleIds role ids
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
     @DeleteMapping("/{id}/roles")
     public ResponseEntity<Void> removeRoles(@PathVariable Long id, @RequestParam Set<Long> roleIds) {
         groupService.removeRoles(id, roleIds);

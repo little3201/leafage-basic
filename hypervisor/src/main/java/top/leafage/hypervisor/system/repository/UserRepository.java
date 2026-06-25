@@ -21,7 +21,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.User;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * user repository.
@@ -34,10 +35,10 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     /**
      * 查询.
      *
-     * @param username the username of user.
+     * @param usernames the username of users.
      * @return result.
      */
-    Optional<User> findByUsername(String username);
+    List<User> findAllByUsernameIn(Collection<String> usernames);
 
     /**
      * is exists.

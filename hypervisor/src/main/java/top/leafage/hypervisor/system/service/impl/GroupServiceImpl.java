@@ -28,9 +28,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import top.leafage.common.data.domain.TreeNode;
 import top.leafage.common.logging.annotation.OperationLog;
-import top.leafage.hypervisor.system.domain.Group;
-import top.leafage.hypervisor.system.domain.GroupPrivilege;
-import top.leafage.hypervisor.system.domain.Privilege;
+import top.leafage.hypervisor.system.domain.*;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
@@ -43,6 +41,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
 
@@ -80,6 +79,7 @@ public class GroupServiceImpl implements GroupService {
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
     public Page<@NonNull GroupVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
@@ -200,10 +200,13 @@ public class GroupServiceImpl implements GroupService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         Group group = groupRepository.findById(id).orElseThrow();
+        Set<String> existing = group.getMembers()
+                .stream()
+                .map(User::getUsername)
+                .collect(Collectors.toSet());
 
-        usernames.forEach(username -> userRepository.findByUsername(username)
-                .ifPresent(group::addMember));
-        groupRepository.save(group);
+        Set<String> collect = usernames.stream().filter(username -> !existing.contains(username)).collect(Collectors.toSet());
+        userRepository.findAllByUsernameIn(collect).forEach(group::addMember);
     }
 
     /**
@@ -227,10 +230,7 @@ public class GroupServiceImpl implements GroupService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         Group group = groupRepository.findById(id).orElseThrow();
-
-        usernames.forEach(username -> userRepository.findByUsername(username)
-                .ifPresent(group::removeMember));
-        groupRepository.save(group);
+        userRepository.findAllByUsernameIn(usernames).forEach(group::removeMember);
     }
 
     /**
@@ -242,10 +242,13 @@ public class GroupServiceImpl implements GroupService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         Group group = groupRepository.findById(id).orElseThrow();
+        Set<Long> existing = group.getRoles()
+                .stream()
+                .map(Role::getId)
+                .collect(Collectors.toSet());
 
-        roleIds.forEach(roleId -> roleRepository.findById(roleId)
-                .ifPresent(group::addRole));
-        groupRepository.save(group);
+        Set<Long> collect = roleIds.stream().filter(roleId -> !existing.contains(roleId)).collect(Collectors.toSet());
+        roleRepository.findAllById(collect).forEach(group::addRole);
     }
 
     /**
@@ -269,10 +272,7 @@ public class GroupServiceImpl implements GroupService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         Group group = groupRepository.findById(id).orElseThrow();
-
-        roleIds.forEach(roleId -> roleRepository.findById(roleId)
-                .ifPresent(group::removeRole));
-        groupRepository.save(group);
+        roleRepository.findAllById(roleIds).forEach(group::removeRole);
     }
 
     /**

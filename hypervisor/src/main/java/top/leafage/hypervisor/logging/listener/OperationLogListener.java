@@ -39,8 +39,16 @@ public class OperationLogListener {
     @Async
     @EventListener
     public void handle(OperationLogEvent event) {
-        OperationLog entity = new OperationLog(event.getModule(), event.getAction(), event.getTargetId(), event.getParams(), event.getResponse(),
-                event.getStatus(), event.getDuration(), event.getMessage());
+        OperationLog entity = new OperationLog(
+                event.getModule(),
+                event.getAction(),
+                event.getTargetId(),
+                event.getParams(),
+                event.getResponse(),
+                event.getStatus(),
+                event.getDuration(),
+                event.getMessage()
+        );
 
         operationLogRepository.save(entity);
     }

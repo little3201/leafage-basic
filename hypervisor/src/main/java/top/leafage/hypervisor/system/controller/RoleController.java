@@ -169,7 +169,7 @@ public class RoleController {
      * @param usernames 账号
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:member')")
     @PatchMapping("/{id}/members")
     public ResponseEntity<Void> addMembers(@PathVariable Long id, @RequestBody Set<String> usernames) {
         roleService.addMembers(id, usernames);
@@ -183,7 +183,7 @@ public class RoleController {
      * @param usernames username集合
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:member')")
     @DeleteMapping("/{id}/members")
     public ResponseEntity<Void> removeMembers(@PathVariable Long id, @RequestParam Set<String> usernames) {
         roleService.removeMembers(id, usernames);
@@ -196,7 +196,7 @@ public class RoleController {
      * @param id roleid
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:member')")
     @GetMapping("/{id}/members")
     public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
         List<UserVO> members = roleService.members(id);

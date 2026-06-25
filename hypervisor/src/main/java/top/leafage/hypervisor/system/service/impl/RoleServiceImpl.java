@@ -25,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import top.leafage.common.logging.annotation.OperationLog;
-import top.leafage.hypervisor.system.domain.Group;
-import top.leafage.hypervisor.system.domain.Privilege;
-import top.leafage.hypervisor.system.domain.Role;
-import top.leafage.hypervisor.system.domain.RolePrivilege;
+import top.leafage.hypervisor.system.domain.*;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
@@ -39,6 +36,7 @@ import top.leafage.hypervisor.system.service.RoleService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * role service impl.
@@ -76,6 +74,7 @@ public class RoleServiceImpl implements RoleService {
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
     public Page<@NonNull RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
@@ -175,10 +174,13 @@ public class RoleServiceImpl implements RoleService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         Role role = roleRepository.findById(id).orElseThrow();
+        Set<String> existing = role.getMembers()
+                .stream()
+                .map(User::getUsername)
+                .collect(Collectors.toSet());
 
-        usernames.forEach(username -> userRepository.findByUsername(username)
-                .ifPresent(role::addMember));
-        roleRepository.save(role);
+        Set<String> collect = usernames.stream().filter(username -> !existing.contains(username)).collect(Collectors.toSet());
+        userRepository.findAllByUsernameIn(collect).forEach(role::addMember);
     }
 
     /**
@@ -203,9 +205,7 @@ public class RoleServiceImpl implements RoleService {
 
         Role role = roleRepository.findById(id).orElseThrow();
 
-        usernames.forEach(username -> userRepository.findByUsername(username)
-                .ifPresent(role::removeMember));
-        roleRepository.save(role);
+        userRepository.findAllByUsernameIn(usernames).forEach(role::removeMember);
     }
 
     /**

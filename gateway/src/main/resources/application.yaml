@@ -8,6 +8,9 @@ spring:
     active: dev
 
   cloud:
+    refresh:
+      enabled: false
+
     gateway:
       server:
         webmvc:

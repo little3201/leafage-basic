@@ -16,6 +16,9 @@
 package top.leafage.hypervisor.system.controller;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +39,8 @@ import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
 import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import top.leafage.hypervisor.system.service.DictionaryService;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +49,7 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static top.leafage.hypervisor.ImportTestUtils.createMinimalXlsxBytes;
 
 /**
  * dictionary controller test
@@ -214,11 +220,11 @@ class DictionaryControllerTest {
     }
 
     @Test
-    void importFromFile() {
+    void importFromFile() throws Exception {
         when(dictionaryService.createAll(anyList())).thenReturn(List.of(vo));
 
         MockMultipartFile file = new MockMultipartFile("file", "test.xlsx",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new byte[1]);
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", createMinimalXlsxBytes());
         assertThat(mvc.post().uri("/dictionaries/import").multipart().file(file).with(csrf().asHeader()))
                 .hasStatusOk()
                 .bodyJson()
@@ -226,5 +232,6 @@ class DictionaryControllerTest {
                 .hasSize(1)
                 .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
     }
+
 
 }

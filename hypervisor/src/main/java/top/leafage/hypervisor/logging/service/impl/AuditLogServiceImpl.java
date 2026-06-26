@@ -24,9 +24,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.hypervisor.logging.domain.AuditLog;
+import top.leafage.hypervisor.logging.domain.vo.AuditLogVO;
 import top.leafage.hypervisor.logging.repository.AuditLogRepository;
 import top.leafage.hypervisor.logging.service.AuditLogService;
-import top.leafage.hypervisor.logging.domain.vo.AuditLogVO;
+
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
 /**
  * audit log service impl.

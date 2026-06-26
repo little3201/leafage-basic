@@ -24,9 +24,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.hypervisor.logging.domain.SchedulerLog;
+import top.leafage.hypervisor.logging.domain.vo.SchedulerLogVO;
 import top.leafage.hypervisor.logging.repository.SchedulerLogRepository;
 import top.leafage.hypervisor.logging.service.SchedulerLogService;
-import top.leafage.hypervisor.logging.domain.vo.SchedulerLogVO;
+
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
 /**
  * service for scheduler_logs.

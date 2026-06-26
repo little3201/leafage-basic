@@ -20,7 +20,7 @@ import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.SectionData;
@@ -39,7 +39,9 @@ import top.leafage.hypervisor.assets.service.SectionService;
 import java.util.List;
 import java.util.Set;
 
-import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
+import static top.leafage.common.data.core.converter.ModelToTreeNodeConverter.toTree;
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
 
 /**
  * section service impl

@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+
 /**
  * report service impl
  *

@@ -20,7 +20,7 @@
     <parent>
         <groupId>top.leafage</groupId>
         <artifactId>leafage-starter-parent</artifactId>
-        <version>0.4.2</version>
+        <version>0.4.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -38,7 +38,7 @@
         <sonar.coverage.jacoco.xmlReportPaths>**/target/site/jacoco-aggregate/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
         <!-- common -->
-        <leafage-common.version>0.4.2</leafage-common.version>
+        <leafage-common.version>0.4.3</leafage-common.version>
     </properties>
 
     <developers>
@@ -58,8 +58,10 @@
         <dependencies>
             <dependency>
                 <groupId>top.leafage</groupId>
-                <artifactId>leafage-common</artifactId>
+                <artifactId>common-dependencies</artifactId>
                 <version>${leafage-common.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -75,6 +77,10 @@
                 <configuration>
                     <parameters>true</parameters>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

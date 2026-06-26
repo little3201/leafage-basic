@@ -24,6 +24,10 @@ public final class GlobalConstant {
 
     public static final List<String> METADATA = List.of("id", "enabled", "created_by", "created_date", "last_modified_by", "last_modified_date");
 
+    public static final String ID_MUST_NOT_BE_NULL = "The given id must not be null.";
+    public static final String _MUST_NOT_BE_NULL = "The given %s must not be null.";
+    public static final String _MUST_NOT_BE_EMPTY = "The given %s must not be empty.";
+
     // private construce
     private GlobalConstant() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");

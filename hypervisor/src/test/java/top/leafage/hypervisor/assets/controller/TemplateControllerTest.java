@@ -50,7 +50,7 @@ class TemplateControllerTest {
         dto.setName("test");
         dto.setType("word");
 
-        vo = new TemplateVO(1L, "test", "WORD", 0, "DRAFT",  null);
+        vo = new TemplateVO(1L, "test", "WORD", 0, "DRAFT", null);
     }
 
     @Test

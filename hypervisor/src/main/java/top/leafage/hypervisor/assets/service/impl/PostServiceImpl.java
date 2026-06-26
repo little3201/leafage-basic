@@ -29,6 +29,8 @@ import top.leafage.hypervisor.assets.domain.vo.PostVO;
 import top.leafage.hypervisor.assets.repository.PostRepository;
 import top.leafage.hypervisor.assets.service.PostService;
 
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+
 
 /**
  * posts service impl.

@@ -31,7 +31,6 @@ public class DictionaryDTO {
     private Long superiorId;
 
 
-
     public static Dictionary toEntity(DictionaryDTO dto) {
         return new Dictionary(
                 dto.getName(),

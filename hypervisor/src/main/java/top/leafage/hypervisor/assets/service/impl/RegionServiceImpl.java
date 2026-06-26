@@ -33,13 +33,11 @@ import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
 import top.leafage.hypervisor.assets.service.RegionService;
-import top.leafage.hypervisor.system.domain.Dictionary;
-import top.leafage.hypervisor.system.domain.Privilege;
-import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
-import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
 /**
  * region service impl.

@@ -32,31 +32,25 @@ import java.util.Set;
 @Table(name = "groups")
 public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
-    @Column(name = "group_name", unique = true, nullable = false)
-    private String name;
-
-    private Long superiorId;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "group_members",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
     private final Set<User> members = new HashSet<>();
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "group_roles",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private final Set<Role> roles = new HashSet<>();
-
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<GroupPrivilege> groupPrivileges = new HashSet<>();
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "group_authorities", joinColumns = @JoinColumn(name = "group_id"))
     @Column(name = "authority")
     private final Set<String> authorities = new HashSet<>();
-
+    @Column(name = "group_name", unique = true, nullable = false)
+    private String name;
+    private Long superiorId;
     private boolean enabled = true;
 
 

@@ -15,7 +15,7 @@
 package top.leafage.hypervisor.system.service;
 
 import org.jspecify.annotations.NonNull;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;

@@ -31,6 +31,8 @@ import top.leafage.hypervisor.system.domain.vo.MessageVO;
 import top.leafage.hypervisor.system.repository.MessageRepository;
 import top.leafage.hypervisor.system.service.MessageService;
 
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+
 /**
  * message service impl.
  *

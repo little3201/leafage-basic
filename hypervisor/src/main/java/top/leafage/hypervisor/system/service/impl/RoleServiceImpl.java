@@ -38,6 +38,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
+
 /**
  * role service impl.
  *

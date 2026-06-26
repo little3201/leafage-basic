@@ -58,15 +58,6 @@ public class AuditLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
 
     private Long duration;
 
-    public enum Status {
-        SUCCEED,
-        FAILED;
-
-        public static Status of(String value) {
-            return valueOf(value.toUpperCase());
-        }
-    }
-
     public String getModule() {
         return module;
     }
@@ -129,5 +120,14 @@ public class AuditLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
 
     public void setDuration(Long operatedTimes) {
         this.duration = operatedTimes;
+    }
+
+    public enum Status {
+        SUCCEED,
+        FAILED;
+
+        public static Status of(String value) {
+            return valueOf(value.toUpperCase());
+        }
     }
 }

@@ -24,9 +24,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.hypervisor.logging.domain.OperationLog;
+import top.leafage.hypervisor.logging.domain.vo.OperationLogVO;
 import top.leafage.hypervisor.logging.repository.OperationLogRepository;
 import top.leafage.hypervisor.logging.service.OperationLogService;
-import top.leafage.hypervisor.logging.domain.vo.OperationLogVO;
+
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
 /**
  * operation log service impl.

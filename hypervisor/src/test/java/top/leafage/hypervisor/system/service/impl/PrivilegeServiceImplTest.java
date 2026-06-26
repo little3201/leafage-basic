@@ -27,7 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;

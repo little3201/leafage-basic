@@ -15,7 +15,7 @@
 
 package top.leafage.hypervisor.assets.service;
 
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionDataDTO;

@@ -35,6 +35,8 @@ import top.leafage.hypervisor.assets.service.TemplateService;
 
 import java.util.List;
 
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+
 /**
  * template service impl
  *

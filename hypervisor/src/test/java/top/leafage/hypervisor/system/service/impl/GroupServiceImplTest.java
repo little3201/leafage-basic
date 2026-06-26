@@ -28,7 +28,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.util.ReflectionTestUtils;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
@@ -41,7 +41,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 
 /**

@@ -31,7 +31,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.web.multipart.MultipartFile;
-import tools.jackson.databind.ObjectMapper;
 import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.service.FileRecordService;
 

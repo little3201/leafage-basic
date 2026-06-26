@@ -25,12 +25,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.common.logging.annotation.OperationLog;
-import top.leafage.hypervisor.system.domain.Dictionary;
 import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
-import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 import top.leafage.hypervisor.system.repository.PrivilegeRepository;
 import top.leafage.hypervisor.system.service.PrivilegeService;
@@ -39,7 +37,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
+import static top.leafage.common.data.core.converter.ModelToTreeNodeConverter.toTree;
+import static top.leafage.hypervisor.constants.GlobalConstant.*;
 
 /**
  * privilege service impl.

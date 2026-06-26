@@ -30,6 +30,8 @@ import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.repository.UserRepository;
 import top.leafage.hypervisor.system.service.UserService;
 
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+
 /**
  * user service impl.
  *

@@ -25,10 +25,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
  * @author wq li
  */
 @EnableAsync
-@SpringBootApplication(scanBasePackages = {
-        "top.leafage.hypervisor",
-        "top.leafage.common"
-})
+@SpringBootApplication
 public class HypervisorApplication {
 
     /**

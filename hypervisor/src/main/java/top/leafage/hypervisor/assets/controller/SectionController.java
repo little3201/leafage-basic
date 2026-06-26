@@ -20,7 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionDataDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;

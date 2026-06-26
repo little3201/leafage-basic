@@ -30,6 +30,9 @@ import top.leafage.hypervisor.assets.service.CommentService;
 
 import java.util.List;
 
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
+
 /**
  * comment service impl.
  *
@@ -81,6 +84,8 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     public List<CommentVO> replies(Long replier) {
+        Assert.notNull(replier, String.format(_MUST_NOT_BE_NULL, "replier"));
+
         return commentRepository.findAllBySuperiorId(replier)
                 .stream().map(entity -> {
                     long count = commentRepository.countBySuperiorId(entity.getId());

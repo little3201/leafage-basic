@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,7 +61,6 @@ public class PrivilegeServiceImpl implements PrivilegeService {
      * @param privilegeRepository a {@link PrivilegeRepository} object
      */
     public PrivilegeServiceImpl(PrivilegeRepository privilegeRepository) {
-
         this.privilegeRepository = privilegeRepository;
     }
 
@@ -69,7 +68,7 @@ public class PrivilegeServiceImpl implements PrivilegeService {
      * {@inheritDoc}
      */
     @Override
-    public Page<@NonNull PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<Privilege> spec = (root, _, cb) -> {

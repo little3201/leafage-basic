@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcherEntry;
@@ -58,19 +58,17 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-        CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
-
+        XorCsrfTokenRequestAttributeHandler csrfTokenRequestHandler = new XorCsrfTokenRequestAttributeHandler();
         // 设置attribute name 为 null
-        csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName(null);
+//        csrfTokenRequestHandler.setCsrfRequestAttributeName(null);
 
         http
                 .authorizeHttpRequests(authorize ->
                         authorize.anyRequest().authenticated()
                 )
                 .csrf(csrf ->
-                        csrf.csrfTokenRepository(cookieCsrfTokenRepository)
-                                .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
+                        csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                                .csrfTokenRequestHandler(csrfTokenRequestHandler)
                 )
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exceptionHandling ->

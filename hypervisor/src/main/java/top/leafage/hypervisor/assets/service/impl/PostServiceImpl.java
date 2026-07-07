@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 package top.leafage.hypervisor.assets.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,10 +55,10 @@ public class PostServiceImpl implements PostService {
      * {@inheritDoc}
      */
     @Override
-    public Page<@NonNull PostVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<PostVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Post> spec = (root, _, cb) ->
+        Specification<Post> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return postRepository.findAll(spec, pageable)

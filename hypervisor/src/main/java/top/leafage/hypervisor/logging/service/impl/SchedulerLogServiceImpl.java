@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package top.leafage.hypervisor.logging.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -40,15 +39,20 @@ public class SchedulerLogServiceImpl implements SchedulerLogService {
 
     private final SchedulerLogRepository schedulerLogRepository;
 
+    /**
+     * Constructor for SchedulerLogServiceImpl.
+     *
+     * @param schedulerLogRepository a {@link SchedulerLogRepository} object
+     */
     public SchedulerLogServiceImpl(SchedulerLogRepository schedulerLogRepository) {
         this.schedulerLogRepository = schedulerLogRepository;
     }
 
     @Override
-    public Page<@NonNull SchedulerLogVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<SchedulerLogVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull SchedulerLog> spec = (root, _, cb) ->
+        Specification<SchedulerLog> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return schedulerLogRepository.findAll(spec, pageable)

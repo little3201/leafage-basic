@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package top.leafage.hypervisor.system.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Predicate;
-import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,7 +63,7 @@ public class DictionaryServiceImpl implements DictionaryService {
      * {@inheritDoc}
      */
     @Override
-    public Page<@NonNull DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<DictionaryVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<Dictionary> spec = (root, _, cb) -> {

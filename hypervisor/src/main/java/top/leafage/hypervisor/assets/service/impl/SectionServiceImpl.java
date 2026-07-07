@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,8 @@ public class SectionServiceImpl implements SectionService {
      * @param sectionFieldRepository a {@link SectionFieldRepository} object
      * @param sectionDataRepository  a {@link SectionDataRepository} object
      */
-    public SectionServiceImpl(SectionRepository sectionRepository, SectionFieldRepository sectionFieldRepository, SectionDataRepository sectionDataRepository) {
+    public SectionServiceImpl(SectionRepository sectionRepository, SectionFieldRepository sectionFieldRepository,
+                              SectionDataRepository sectionDataRepository) {
         this.sectionRepository = sectionRepository;
         this.sectionFieldRepository = sectionFieldRepository;
         this.sectionDataRepository = sectionDataRepository;
@@ -148,8 +149,13 @@ public class SectionServiceImpl implements SectionService {
 
         Section existing = sectionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("section not found: " + id));
-        if (!existing.getName().equals(dto.getName()) &&
-                sectionRepository.existsByOwnerIdAndOwnerTypeAndName(existing.getOwnerId(), Section.OwnerType.valueOf(dto.getOwnerType()), dto.getName())) {
+
+        boolean existsed = sectionRepository.existsByOwnerIdAndOwnerTypeAndName(
+                existing.getOwnerId(),
+                Section.OwnerType.valueOf(dto.getOwnerType()),
+                dto.getName()
+        );
+        if (!existing.getName().equals(dto.getName()) && existsed) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         copier.copy(dto, existing, null);

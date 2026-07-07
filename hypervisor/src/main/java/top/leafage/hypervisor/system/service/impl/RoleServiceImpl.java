@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 package top.leafage.hypervisor.system.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,8 +64,10 @@ public class RoleServiceImpl implements RoleService {
      * @param rolePrivilegeRepository a {@link RolePrivilegeRepository} object
      * @param privilegeRepository     a {@link PrivilegeRepository} object
      * @param groupRepository         a {@link GroupRepository} object
+     * @param userRepository          a {@link UserRepository} object
      */
-    public RoleServiceImpl(RoleRepository roleRepository, RolePrivilegeRepository rolePrivilegeRepository, PrivilegeRepository privilegeRepository, GroupRepository groupRepository, UserRepository userRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, RolePrivilegeRepository rolePrivilegeRepository,
+                           PrivilegeRepository privilegeRepository, GroupRepository groupRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
         this.rolePrivilegeRepository = rolePrivilegeRepository;
         this.privilegeRepository = privilegeRepository;
@@ -79,10 +80,10 @@ public class RoleServiceImpl implements RoleService {
      */
     @Transactional(readOnly = true)
     @Override
-    public Page<@NonNull RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Role> spec = (root, _, cb) ->
+        Specification<Role> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return roleRepository.findAll(spec, pageable)

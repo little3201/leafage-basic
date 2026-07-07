@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,13 +55,14 @@ public class MessageController {
      * @param size       The number of records per page.
      * @param sortBy     The field to sort by.
      * @param descending Whether sorting should be in descending order.
+     * @param filters    The filters.
      * @param principal  The principal.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
     @GetMapping
     public ResponseEntity<Page<MessageVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                    String sortBy, boolean descending, Principal principal) {
-        Page<MessageVO> voPage = messageService.retrieve(page, size, sortBy, descending, String.format("receiver:eq:%s", principal.getName()));
+                                                    String sortBy, boolean descending, String filters, Principal principal) {
+        Page<MessageVO> voPage = messageService.retrieve(page, size, sortBy, descending, filters.concat(String.format("receiver:eq:%s", principal.getName())));
         return ResponseEntity.ok(voPage);
     }
 

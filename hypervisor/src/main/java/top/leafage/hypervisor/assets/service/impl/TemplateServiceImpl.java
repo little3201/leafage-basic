@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package top.leafage.hypervisor.assets.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,6 +54,7 @@ public class TemplateServiceImpl implements TemplateService {
      * Constructor for SchemaServiceImpl.
      *
      * @param templateRepository a {@link TemplateRepository} object
+     * @param sectionRepository  a {@link SectionRepository} object
      */
     public TemplateServiceImpl(TemplateRepository templateRepository, SectionRepository sectionRepository) {
         this.templateRepository = templateRepository;
@@ -65,10 +65,10 @@ public class TemplateServiceImpl implements TemplateService {
      * {@inheritDoc}
      */
     @Override
-    public Page<@NonNull TemplateVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<TemplateVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Template> spec = (root, _, cb) ->
+        Specification<Template> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return templateRepository.findAll(spec, pageable)

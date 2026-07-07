@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 
 package top.leafage.hypervisor.assets.service.impl;
 
-import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,6 +28,9 @@ import top.leafage.hypervisor.assets.repository.CommentRepository;
 import top.leafage.hypervisor.assets.service.CommentService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
@@ -56,14 +58,29 @@ public class CommentServiceImpl implements CommentService {
      * {@inheritDoc}
      */
     @Override
-    public Page<@NonNull CommentVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<CommentVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Comment> spec = (root, _, cb) ->
+        Specification<Comment> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
-        return commentRepository.findAll(spec, pageable).map(entity -> {
-            long count = commentRepository.countBySuperiorId(entity.getId());
+        Page<Comment> entityPage = commentRepository.findAll(spec, pageable);
+        if (entityPage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        Set<Long> ids = entityPage.getContent().stream()
+                .map(Comment::getId)
+                .collect(Collectors.toSet());
+
+        List<Object[]> countResults = commentRepository.countBySuperiorIds(ids);
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return entityPage.map(entity -> {
+            long count = countMap.getOrDefault(entity.getId(), 0L);
             return CommentVO.from(entity, count);
         });
     }
@@ -86,11 +103,22 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentVO> replies(Long replier) {
         Assert.notNull(replier, String.format(_MUST_NOT_BE_NULL, "replier"));
 
-        return commentRepository.findAllBySuperiorId(replier)
-                .stream().map(entity -> {
-                    long count = commentRepository.countBySuperiorId(entity.getId());
-                    return CommentVO.from(entity, count);
-                }).toList();
+        List<Comment> comments = commentRepository.findAllBySuperiorId(replier);
+        Set<Long> ids = comments
+                .stream().map(Comment::getId)
+                .collect(Collectors.toSet());
+        List<Object[]> countResults = commentRepository.countBySuperiorIds(ids);
+
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return comments.stream().map(entity -> {
+            long count = countMap.getOrDefault(entity.getId(), 0L);
+            return CommentVO.from(entity, count);
+        }).toList();
     }
 
     /**

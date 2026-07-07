@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,9 +68,14 @@ public class GroupServiceImpl implements GroupService {
     /**
      * Constructor for GroupServiceImpl.
      *
-     * @param groupRepository a {@link GroupRepository} object
+     * @param groupRepository          a {@link GroupRepository} object
+     * @param groupPrivilegeRepository a {@link GroupPrivilegeRepository} object
+     * @param privilegeRepository      a {@link PrivilegeRepository} object
+     * @param userRepository           a {@link UserRepository} object
+     * @param roleRepository           a {@link RoleRepository} object
      */
-    public GroupServiceImpl(GroupRepository groupRepository, GroupPrivilegeRepository groupPrivilegeRepository, PrivilegeRepository privilegeRepository, UserRepository userRepository, RoleRepository roleRepository) {
+    public GroupServiceImpl(GroupRepository groupRepository, GroupPrivilegeRepository groupPrivilegeRepository,
+                            PrivilegeRepository privilegeRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.groupRepository = groupRepository;
         this.groupPrivilegeRepository = groupPrivilegeRepository;
         this.privilegeRepository = privilegeRepository;
@@ -83,7 +88,7 @@ public class GroupServiceImpl implements GroupService {
      */
     @Transactional(readOnly = true)
     @Override
-    public Page<@NonNull GroupVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
         Specification<Group> spec = (root, _, cb) -> {

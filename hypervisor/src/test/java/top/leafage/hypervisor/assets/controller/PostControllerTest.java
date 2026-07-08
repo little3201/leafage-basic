@@ -81,7 +81,7 @@ class PostControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull PostVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<PostVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(postService.retrieve(anyInt(), anyInt(), anyString(),
                 anyBoolean(), anyString())).thenReturn(page);

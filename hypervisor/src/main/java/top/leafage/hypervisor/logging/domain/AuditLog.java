@@ -78,8 +78,8 @@ public class AuditLog extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
         return targetId;
     }
 
-    public void setTargetId(Long objPk) {
-        this.targetId = objPk;
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
     }
 
     public Map<String, Object> getOldValue() {

@@ -13,55 +13,25 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.exploiter.service.impl;
+package top.leafage.hypervisor.assets.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import top.leafage.hypervisor.exploiter.domain.Connection;
-import top.leafage.hypervisor.exploiter.domain.dto.ConnectionDTO;
-import top.leafage.hypervisor.exploiter.repository.ConnectionRepository;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Connection service test
+ * Section service test
  *
  * @author wq li
  **/
 @ExtendWith(MockitoExtension.class)
-class ConnectionServiceImplTest {
-
-    @Mock
-    private ConnectionRepository connectionRepository;
-
-    @InjectMocks
-    private ConnectionServiceImpl templateService;
-
-    private ConnectionDTO dto;
-    private Connection entity;
+class SectionServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        dto = new ConnectionDTO();
-        dto.setType(Connection.DatabaseType.MYSQL);
-        dto.setDatabase("test");
-        dto.setHost("127.0.0.1");
-        dto.setPort(3306);
-        dto.setUsername("username");
-        dto.setPassword("password");
-        dto.setParams("");
-
-        entity = ConnectionDTO.toEntity(dto);
-    }
-
-    @Test
-    void retrieve() {
-    }
-
-    @Test
-    void retrieve_error() {
     }
 
     @Test
@@ -69,7 +39,7 @@ class ConnectionServiceImplTest {
     }
 
     @Test
-    void tables() {
+    void tree() {
     }
 
     @Test
@@ -77,10 +47,42 @@ class ConnectionServiceImplTest {
     }
 
     @Test
+    void fields() {
+    }
+
+    @Test
+    void datas() {
+    }
+
+    @Test
+    void createField() {
+    }
+
+    @Test
+    void createData() {
+    }
+
+    @Test
     void modify() {
     }
 
     @Test
+    void modifyField() {
+    }
+
+    @Test
+    void modifyData() {
+    }
+
+    @Test
     void remove() {
+    }
+
+    @Test
+    void removeField() {
+    }
+
+    @Test
+    void removeData() {
     }
 }

@@ -76,7 +76,7 @@ class UserControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull UserVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<UserVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(userService.retrieve(anyInt(), anyInt(), anyString(),
                 anyBoolean(), anyString())).thenReturn(voPage);

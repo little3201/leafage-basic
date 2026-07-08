@@ -68,10 +68,10 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.body = section.getBody();
     }
 
-    public Section(Long superiorId, Long ownerId, String ownerType, String name, Integer sequence, Integer level, Map<String, Object> body) {
+    public Section(Long superiorId, Long ownerId, OwnerType ownerType, String name, Integer sequence, Integer level, Map<String, Object> body) {
         this.superiorId = superiorId;
         this.ownerId = ownerId;
-        this.ownerType = OwnerType.of(ownerType);
+        this.ownerType = ownerType;
         this.name = name;
         this.sequence = sequence;
         this.level = level;
@@ -142,7 +142,7 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.enabled = enabled;
     }
 
-    public enum Type {
+   /* public enum Type {
         HEADING,      // 标题
         PARAGRAPH,    // 段落
         TABLE,        // 表格
@@ -151,7 +151,7 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         public static Type of(String value) {
             return valueOf(value.toUpperCase());
         }
-    }
+    }*/
 
     public enum OwnerType {
         ARCHIVE,

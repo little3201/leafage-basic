@@ -17,6 +17,7 @@ package top.leafage.hypervisor.assets.service;
 
 import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionDataDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
@@ -39,7 +40,7 @@ public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
      * @param ownerId the pk of archive.
      * @return the result.
      */
-    List<TreeNode<Long>> tree(Long ownerId, String ownerType);
+    List<TreeNode<Long>> tree(Long ownerId, Section.OwnerType ownerType);
 
     /**
      * Retrieve section fields.

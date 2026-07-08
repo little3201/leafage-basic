@@ -25,6 +25,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.SectionService;
@@ -66,7 +67,7 @@ class SectionControllerTest {
         dto.setSuperiorId(1L);
         dto.setBody(Collections.emptyMap());
         dto.setOwnerId(1L);
-        dto.setOwnerType("TEMPLATE");
+        dto.setOwnerType(Section.OwnerType.TEMPLATE);
 
         vo = new SectionVO(1L, 1L, 1L, "test", 1, 2, null, 2L);
     }

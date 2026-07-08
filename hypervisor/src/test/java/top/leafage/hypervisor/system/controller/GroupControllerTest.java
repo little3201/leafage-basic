@@ -83,7 +83,7 @@ class GroupControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull GroupVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<GroupVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(groupService.retrieve(anyInt(), anyInt(), eq("id"),
                 anyBoolean(), anyString())).thenReturn(voPage);

@@ -65,7 +65,7 @@ class SchedulerLogControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull SchedulerLogVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<SchedulerLogVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(schedulerLogService.retrieve(anyInt(), anyInt(), eq("id"),
                 anyBoolean(), anyString())).thenReturn(voPage);

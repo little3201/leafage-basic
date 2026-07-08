@@ -79,7 +79,7 @@ class RoleControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull RoleVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<RoleVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(roleService.retrieve(anyInt(), anyInt(), eq("id"),
                 anyBoolean(), anyString())).thenReturn(voPage);

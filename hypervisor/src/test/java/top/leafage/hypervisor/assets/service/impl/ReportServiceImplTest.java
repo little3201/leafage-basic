@@ -31,7 +31,6 @@ import top.leafage.hypervisor.assets.domain.Report;
 import top.leafage.hypervisor.assets.domain.dto.ReportDTO;
 import top.leafage.hypervisor.assets.domain.vo.ReportVO;
 import top.leafage.hypervisor.assets.repository.ReportRepository;
-import top.leafage.hypervisor.assets.repository.SectionRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,9 +51,6 @@ class ReportServiceImplTest {
 
     @Mock
     private ReportRepository reportRepository;
-
-    @Mock
-    private SectionRepository sectionRepository;
 
     @InjectMocks
     private ReportServiceImpl reportService;

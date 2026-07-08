@@ -83,7 +83,7 @@ class PrivilegeControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull PrivilegeVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<PrivilegeVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(privilegeService.retrieve(anyInt(), anyInt(), anyString(),
                 anyBoolean(), anyString())).thenReturn(voPage);

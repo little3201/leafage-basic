@@ -31,6 +31,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
+import top.leafage.hypervisor.assets.domain.Template;
 import top.leafage.hypervisor.assets.domain.dto.TemplateDTO;
 import top.leafage.hypervisor.assets.domain.vo.TemplateVO;
 import top.leafage.hypervisor.assets.service.TemplateService;
@@ -69,14 +70,14 @@ class TemplateControllerTest {
     void setUp() {
         dto = new TemplateDTO();
         dto.setName("test");
-        dto.setType("word");
+        dto.setType(Template.Type.WORD);
 
-        vo = new TemplateVO(1L, "test", "WORD", 0, "DRAFT", null);
+        vo = new TemplateVO(1L, "test", Template.Type.WORD, 0, Template.Status.ARCHIVED, null);
     }
 
     @Test
     void retrieve() {
-        Page<@NonNull TemplateVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<TemplateVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
         when(templateService.retrieve(anyInt(), anyInt(), anyString(), anyBoolean(), anyString())).thenReturn(page);
 
         assertThat(mvc.get().uri("/templates")

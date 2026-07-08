@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import top.leafage.common.data.core.domain.TreeNode;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionDataDTO;
 import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
@@ -70,7 +71,7 @@ public class SectionController {
     @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
     @GetMapping("/{ownerId}/tree")
     public ResponseEntity<List<TreeNode<Long>>> tree(@PathVariable Long ownerId, @RequestParam String ownerType) {
-        List<TreeNode<Long>> treeNodes = sectionService.tree(ownerId, ownerType);
+        List<TreeNode<Long>> treeNodes = sectionService.tree(ownerId, Section.OwnerType.of(ownerType));
         return ResponseEntity.ok(treeNodes);
     }
 

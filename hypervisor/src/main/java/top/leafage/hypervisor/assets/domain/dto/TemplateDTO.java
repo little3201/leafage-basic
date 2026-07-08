@@ -16,6 +16,7 @@
 package top.leafage.hypervisor.assets.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import top.leafage.hypervisor.assets.domain.Template;
 
 /**
@@ -28,8 +29,8 @@ public class TemplateDTO {
     @NotBlank
     private String name;
 
-    @NotBlank
-    private String type;
+    @NotNull
+    private Template.Type type;
 
 
     public static Template toEntity(TemplateDTO dto) {
@@ -47,11 +48,11 @@ public class TemplateDTO {
         this.name = name;
     }
 
-    public String getType() {
+    public Template.Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Template.Type type) {
         this.type = type;
     }
 

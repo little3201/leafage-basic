@@ -16,7 +16,6 @@
 package top.leafage.hypervisor.system.controller;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
+import top.leafage.hypervisor.system.domain.Message;
 import top.leafage.hypervisor.system.domain.dto.MessageDTO;
 import top.leafage.hypervisor.system.domain.vo.MessageVO;
 import top.leafage.hypervisor.system.service.MessageService;
@@ -66,7 +66,7 @@ class MessageControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new MessageVO(1L, "test", "test", "admin", false);
+        vo = new MessageVO(1L, "test", "test", "admin", Message.Status.UNREAD);
 
         dto = new MessageDTO();
         dto.setTitle("test");
@@ -76,7 +76,7 @@ class MessageControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull MessageVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<MessageVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(messageService.retrieve(anyInt(), anyInt(), eq("id"),
                 anyBoolean(), anyString())).thenReturn(voPage);

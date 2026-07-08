@@ -47,9 +47,9 @@ public class Template extends JpaAbstractAuditable<@NonNull String, @NonNull Lon
     public Template() {
     }
 
-    public Template(String name, String type) {
+    public Template(String name, Type type) {
         this.name = name;
-        this.type = Type.of(type);
+        this.type = type;
     }
 
     public String getName() {

@@ -79,7 +79,7 @@ class DictionaryControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull DictionaryVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<DictionaryVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(dictionaryService.retrieve(anyInt(), anyInt(), anyString(),
                 anyBoolean(), anyString())).thenReturn(voPage);

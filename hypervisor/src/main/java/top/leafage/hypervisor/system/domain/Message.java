@@ -15,9 +15,7 @@
 
 package top.leafage.hypervisor.system.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
@@ -38,7 +36,8 @@ public class Message extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     private String receiver;
 
-    private boolean unread = true;
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.UNREAD;
 
     public Message() {
     }
@@ -47,6 +46,11 @@ public class Message extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.title = title;
         this.body = body;
         this.receiver = receiver;
+    }
+
+    public enum Status {
+        READ,
+        UNREAD;
     }
 
     public String getTitle() {
@@ -73,11 +77,11 @@ public class Message extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.receiver = receiver;
     }
 
-    public boolean isUnread() {
-        return unread;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setUnread(boolean unread) {
-        this.unread = unread;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

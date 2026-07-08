@@ -77,7 +77,7 @@ class ArchiveControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull ArchiveVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<ArchiveVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         // 使用 eq() 准确匹配参数
         when(archiveService.retrieve(anyInt(), anyInt(), anyString(),

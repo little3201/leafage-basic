@@ -27,7 +27,7 @@ public record MessageVO(
         String title,
         String body,
         String receiver,
-        boolean unread
+        Message.Status status
 ) {
     public static MessageVO from(Message entity) {
         return new MessageVO(
@@ -35,7 +35,7 @@ public record MessageVO(
                 entity.getTitle(),
                 entity.getBody(),
                 entity.getReceiver(),
-                entity.isUnread()
+                entity.getStatus()
         );
     }
 }

@@ -89,17 +89,17 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public List<TreeNode<Long>> tree(Long ownerId, String ownerType) {
+    public List<TreeNode<Long>> tree(Long ownerId, Section.OwnerType ownerType) {
         Assert.notNull(ownerId, String.format(_MUST_NOT_BE_NULL, "ownerId"));
         Assert.notNull(ownerType, String.format(_MUST_NOT_BE_NULL, "ownerType"));
 
-        List<Section> sections = sectionRepository.findAllByOwnerIdAndOwnerType(ownerId, Section.OwnerType.of(ownerType));
+        List<Section> sections = sectionRepository.findAllByOwnerIdAndOwnerType(ownerId, ownerType);
         return toTree(sections, META_FIELDS);
     }
 
     @Override
     public SectionVO create(SectionDTO dto) {
-        if (sectionRepository.existsByOwnerIdAndOwnerTypeAndName(dto.getOwnerId(), Section.OwnerType.of(dto.getOwnerType()), dto.getName())) {
+        if (sectionRepository.existsByOwnerIdAndOwnerTypeAndName(dto.getOwnerId(), dto.getOwnerType(), dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         Section entity = sectionRepository.save(SectionDTO.toEntity(dto));
@@ -150,11 +150,7 @@ public class SectionServiceImpl implements SectionService {
         Section existing = sectionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("section not found: " + id));
 
-        boolean existsed = sectionRepository.existsByOwnerIdAndOwnerTypeAndName(
-                existing.getOwnerId(),
-                Section.OwnerType.valueOf(dto.getOwnerType()),
-                dto.getName()
-        );
+        boolean existsed = sectionRepository.existsByOwnerIdAndOwnerTypeAndName(existing.getOwnerId(), dto.getOwnerType(), dto.getName());
         if (!existing.getName().equals(dto.getName()) && existsed) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }

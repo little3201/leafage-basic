@@ -46,11 +46,11 @@ public class SectionField extends JpaAbstractAuditable<@NonNull String, @NonNull
     public SectionField() {
     }
 
-    public SectionField(Long sectionId, String name, String field, String type, Integer length, boolean required) {
+    public SectionField(Long sectionId, String name, String field, Type type, Integer length, boolean required) {
         this.sectionId = sectionId;
         this.name = name;
         this.field = field;
-        this.type = Type.of(type);
+        this.type = type;
         this.length = length;
         this.required = required;
     }

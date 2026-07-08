@@ -27,18 +27,18 @@ import java.time.LocalDateTime;
 public record TemplateVO(
         Long id,
         String name,
-        String type,
+        Template.Type type,
         int version,
-        String status,
+        Template.Status status,
         LocalDateTime lastModifiedDate
 ) {
     public static TemplateVO from(Template entity) {
         return new TemplateVO(
                 entity.getId(),
                 entity.getName(),
-                entity.getType().name(),
+                entity.getType(),
                 entity.getVersion(),
-                entity.getStatus().name(),
+                entity.getStatus(),
                 entity.getLastModifiedDate().isPresent() ? entity.getLastModifiedDate().get() : null
         );
     }

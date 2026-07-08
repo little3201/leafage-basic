@@ -75,8 +75,7 @@ class CommentControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull CommentVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
-
+        Page<CommentVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
         when(commentService.retrieve(anyInt(), anyInt(), eq("id"), anyBoolean(), anyString())).thenReturn(page);
 
         assertThat(mvc.get().uri("/comments")

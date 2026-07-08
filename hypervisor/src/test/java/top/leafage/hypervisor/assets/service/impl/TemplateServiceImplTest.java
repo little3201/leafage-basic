@@ -30,7 +30,6 @@ import org.springframework.data.jpa.domain.Specification;
 import top.leafage.hypervisor.assets.domain.Template;
 import top.leafage.hypervisor.assets.domain.dto.TemplateDTO;
 import top.leafage.hypervisor.assets.domain.vo.TemplateVO;
-import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.repository.TemplateRepository;
 
 import java.util.List;
@@ -53,9 +52,6 @@ class TemplateServiceImplTest {
     @Mock
     private TemplateRepository templateRepository;
 
-    @Mock
-    private SectionRepository sectionRepository;
-
     @InjectMocks
     private TemplateServiceImpl templateService;
 
@@ -66,7 +62,7 @@ class TemplateServiceImplTest {
     void setUp() {
         dto = new TemplateDTO();
         dto.setName("test");
-        dto.setType("word");
+        dto.setType(Template.Type.EXCEL);
 
         entity = TemplateDTO.toEntity(dto);
     }

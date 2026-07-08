@@ -79,7 +79,7 @@ class RegionControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull RegionVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<RegionVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         // 使用 eq() 准确匹配参数
         when(regionService.retrieve(anyInt(), anyInt(), anyString(),

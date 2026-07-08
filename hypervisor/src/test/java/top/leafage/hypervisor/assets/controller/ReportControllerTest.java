@@ -77,7 +77,7 @@ class ReportControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull ReportVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<ReportVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
         when(reportService.retrieve(anyInt(), anyInt(), anyString(), anyBoolean(), anyString())).thenReturn(page);
 
         assertThat(mvc.get().uri("/reports")

@@ -35,8 +35,8 @@ public class SectionDTO {
     @NotNull
     private Long ownerId;
 
-    @NotBlank
-    private String ownerType;
+    @NotNull
+    private Section.OwnerType ownerType;
 
     @NotBlank
     private String name;
@@ -79,11 +79,11 @@ public class SectionDTO {
         this.ownerId = ownerId;
     }
 
-    public String getOwnerType() {
+    public Section.OwnerType getOwnerType() {
         return ownerType;
     }
 
-    public void setOwnerType(String ownerType) {
+    public void setOwnerType(Section.OwnerType ownerType) {
         this.ownerType = ownerType;
     }
 

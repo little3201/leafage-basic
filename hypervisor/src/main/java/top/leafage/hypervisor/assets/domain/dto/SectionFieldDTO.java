@@ -38,7 +38,7 @@ public class SectionFieldDTO {
     private String field;
 
     @NotBlank
-    private String type;
+    private SectionField.Type type;
 
     @Min(1)
     @Max(500)
@@ -82,11 +82,11 @@ public class SectionFieldDTO {
         this.field = field;
     }
 
-    public String getType() {
+    public SectionField.Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(SectionField.Type type) {
         this.type = type;
     }
 

@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * privilege service test
+ * Pivilege service test
  *
  * @author wq li
  **/

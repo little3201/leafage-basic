@@ -44,7 +44,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
- * 帖子接口测试
+ * Post service test
  *
  * @author wq li
  **/

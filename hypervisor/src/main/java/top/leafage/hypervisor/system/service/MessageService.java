@@ -20,7 +20,7 @@ import top.leafage.hypervisor.system.domain.dto.MessageDTO;
 import top.leafage.hypervisor.system.domain.vo.MessageVO;
 
 /**
- * message service.
+ * Message service.
  *
  * @author wq li
  */

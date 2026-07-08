@@ -20,7 +20,7 @@ import top.leafage.hypervisor.assets.domain.dto.TemplateDTO;
 import top.leafage.hypervisor.assets.domain.vo.TemplateVO;
 
 /**
- * template service.
+ * Template service.
  *
  * @author wq li
  */

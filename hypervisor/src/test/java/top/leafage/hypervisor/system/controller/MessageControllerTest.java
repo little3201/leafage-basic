@@ -43,7 +43,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /**
- * message controller test
+ * Message controller test
  *
  * @author wq li
  **/

@@ -23,7 +23,7 @@ import top.leafage.hypervisor.logging.domain.vo.AuditLogVO;
 import top.leafage.hypervisor.logging.service.AuditLogService;
 
 /**
- * audit log controller.
+ * Audit log controller.
  *
  * @author wq li
  */

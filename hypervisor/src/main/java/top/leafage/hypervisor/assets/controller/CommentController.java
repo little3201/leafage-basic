@@ -27,7 +27,7 @@ import top.leafage.hypervisor.assets.service.CommentService;
 import java.util.List;
 
 /**
- * comment controller.
+ * Comment controller.
  *
  * @author wq li
  */

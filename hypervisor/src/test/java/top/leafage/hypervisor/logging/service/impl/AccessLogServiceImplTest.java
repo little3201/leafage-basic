@@ -42,7 +42,7 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.verify;
 
 /**
- * access log service test
+ * Access log service test
  *
  * @author wq li
  **/

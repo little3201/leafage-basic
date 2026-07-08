@@ -35,7 +35,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 /**
- * file controller.
+ * File controller.
  *
  * @author wq li
  */

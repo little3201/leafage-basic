@@ -23,7 +23,7 @@ import top.leafage.hypervisor.logging.domain.vo.SchedulerLogVO;
 import top.leafage.hypervisor.logging.service.SchedulerLogService;
 
 /**
- * controller for scheduler_logs.
+ * Scheduler log controller.
  *
  * @author wq li
  */

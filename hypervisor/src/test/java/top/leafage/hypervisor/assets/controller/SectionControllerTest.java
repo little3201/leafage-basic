@@ -39,7 +39,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /**
- * sections 接口测试
+ * Section controller test
  *
  * @author wq li
  **/

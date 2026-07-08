@@ -42,7 +42,7 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.*;
 
 /**
- * region service test
+ * Region service test
  *
  * @author wq li
  **/

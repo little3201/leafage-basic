@@ -42,7 +42,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /**
- * scheduler log controller test
+ * Scheduler log controller test
  *
  * @author wq li
  **/

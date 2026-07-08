@@ -41,7 +41,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /**
- * operation log controller test
+ * Operation log controller test
  *
  * @author wq li
  **/

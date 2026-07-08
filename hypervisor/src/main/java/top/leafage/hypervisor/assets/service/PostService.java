@@ -19,7 +19,7 @@ import top.leafage.hypervisor.assets.domain.dto.PostDTO;
 import top.leafage.hypervisor.assets.domain.vo.PostVO;
 
 /**
- * posts service.
+ * Posts service.
  *
  * @author wq li
  */

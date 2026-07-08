@@ -28,7 +28,7 @@ import top.leafage.hypervisor.system.service.MessageService;
 import java.security.Principal;
 
 /**
- * messages controller.
+ * Messages controller.
  *
  * @author wq li
  */

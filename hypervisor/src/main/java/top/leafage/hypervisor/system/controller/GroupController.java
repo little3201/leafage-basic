@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * group controller.
+ * Group controller.
  *
  * @author wq li
  */

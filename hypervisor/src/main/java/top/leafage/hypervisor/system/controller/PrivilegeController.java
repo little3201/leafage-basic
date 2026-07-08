@@ -32,7 +32,7 @@ import java.util.List;
 
 
 /**
- * privilege controller.
+ * Privilege controller.
  *
  * @author wq li
  */

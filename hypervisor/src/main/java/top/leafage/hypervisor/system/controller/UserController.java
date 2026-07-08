@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * user controller.
+ * User controller.
  *
  * @author wq li
  */

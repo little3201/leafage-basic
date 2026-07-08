@@ -44,7 +44,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
- * dictionary controller test
+ * Dictionary controller test
  *
  * @author wq li
  **/

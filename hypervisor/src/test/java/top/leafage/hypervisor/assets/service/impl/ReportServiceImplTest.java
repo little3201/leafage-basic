@@ -42,6 +42,11 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Report service test
+ *
+ * @author wq li
+ **/
 @ExtendWith(MockitoExtension.class)
 class ReportServiceImplTest {
 

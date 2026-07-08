@@ -22,7 +22,7 @@ import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import java.util.List;
 
 /**
- * dictionary service.
+ * Dictionary service.
  *
  * @author wq li
  */

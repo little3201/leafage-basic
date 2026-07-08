@@ -19,7 +19,7 @@ import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.logging.domain.vo.SchedulerLogVO;
 
 /**
- * service for scheduler_logs.
+ * Scheduler log service for.
  *
  * @author wq li
  */

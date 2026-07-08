@@ -23,7 +23,7 @@ import top.leafage.hypervisor.assets.domain.vo.CommentVO;
 import java.util.List;
 
 /**
- * comment service.
+ * Comment service.
  *
  * @author wq li
  */

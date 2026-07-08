@@ -42,7 +42,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
- * user service test
+ * User service test
  *
  * @author wq li
  **/

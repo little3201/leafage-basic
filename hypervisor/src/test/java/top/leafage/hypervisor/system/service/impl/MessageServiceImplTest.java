@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * message service test
+ * Message service test
  *
  * @author wq li
  **/

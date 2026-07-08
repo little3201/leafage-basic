@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * template controller.
+ * Template controller.
  *
  * @author wq li
  */

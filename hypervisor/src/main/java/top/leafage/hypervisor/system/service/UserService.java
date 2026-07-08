@@ -19,7 +19,7 @@ import top.leafage.hypervisor.system.domain.dto.UserDTO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 
 /**
- * user service.
+ * User service.
  *
  * @author wq li
  */

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * group service.
+ * Group service.
  *
  * @author wq li
  */

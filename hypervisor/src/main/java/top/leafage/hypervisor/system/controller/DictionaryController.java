@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * dictionary controller.
+ * Dictionary controller.
  *
  * @author wq li
  */

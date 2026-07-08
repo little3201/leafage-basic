@@ -43,7 +43,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
- * comment 接口测试
+ * Comment service test
  *
  * @author wq li
  **/

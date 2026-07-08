@@ -23,7 +23,7 @@ import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 import java.util.List;
 
 /**
- * privilege service.
+ * Privilege service.
  *
  * @author wq li
  */

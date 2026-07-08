@@ -47,7 +47,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static top.leafage.hypervisor.ImportTestUtils.createMinimalXlsxBytes;
 
 /**
- * dictionary controller test
+ * Dictionary controller test
  *
  * @author wq li
  **/
@@ -227,6 +227,5 @@ class DictionaryControllerTest {
                 .hasSize(1)
                 .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
     }
-
 
 }

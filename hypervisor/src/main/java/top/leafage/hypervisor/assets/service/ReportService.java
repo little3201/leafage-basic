@@ -20,7 +20,7 @@ import top.leafage.hypervisor.assets.domain.dto.ReportDTO;
 import top.leafage.hypervisor.assets.domain.vo.ReportVO;
 
 /**
- * report service.
+ * Report service.
  *
  * @author wq li
  */

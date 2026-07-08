@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * operation log service test
+ * Operation log service test
  *
  * @author wq li
  **/

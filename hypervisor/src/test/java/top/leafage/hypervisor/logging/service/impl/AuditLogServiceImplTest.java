@@ -42,7 +42,7 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.verify;
 
 /**
- * audit log service test
+ * Audit log service test
  *
  * @author wq li
  **/

@@ -27,7 +27,7 @@ import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import java.util.List;
 
 /**
- * section service.
+ * Section service.
  *
  * @author wq li
  */

@@ -45,7 +45,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /**
- * files 接口测试
+ * File controller test
  *
  * @author wq li
  **/

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * calendar events controller.
+ * Calendar events controller.
  *
  * @author wq li
  */

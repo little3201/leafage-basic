@@ -19,7 +19,7 @@ import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.logging.domain.vo.AccessLogVO;
 
 /**
- * access log service.
+ * Access log service.
  *
  * @author wq li
  */

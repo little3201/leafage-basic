@@ -32,7 +32,7 @@ import top.leafage.hypervisor.assets.service.SectionService;
 import java.util.List;
 
 /**
- * section controller.
+ * Section controller.
  *
  * @author wq li
  */

@@ -37,7 +37,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
- * report controller.
+ * Report controller.
  *
  * @author wq li
  */

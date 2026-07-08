@@ -42,7 +42,7 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.verify;
 
 /**
- * scheduler log service test
+ * Scheduler log service test
  *
  * @author wq li
  **/

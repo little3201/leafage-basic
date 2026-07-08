@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * posts controller.
+ * Posts controller.
  *
  * @author wq li
  */

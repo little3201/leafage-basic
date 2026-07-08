@@ -44,7 +44,7 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.verify;
 
 /**
- * file record service test
+ * File record service test
  *
  * @author wq li
  **/

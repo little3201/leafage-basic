@@ -23,7 +23,7 @@ import top.leafage.hypervisor.logging.domain.vo.OperationLogVO;
 import top.leafage.hypervisor.logging.service.OperationLogService;
 
 /**
- * operation log controller.
+ * Operation log controller.
  *
  * @author wq li
  */

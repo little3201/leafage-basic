@@ -46,7 +46,7 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * group service test
+ * Group service test
  *
  * @author wq li
  **/

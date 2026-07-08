@@ -23,7 +23,7 @@ import top.leafage.hypervisor.logging.domain.vo.AccessLogVO;
 import top.leafage.hypervisor.logging.service.AccessLogService;
 
 /**
- * access log controller.
+ * Access log controller.
  *
  * @author wq li
  */

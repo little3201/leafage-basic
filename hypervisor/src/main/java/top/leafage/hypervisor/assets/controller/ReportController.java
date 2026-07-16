@@ -70,7 +70,7 @@ public class ReportController {
     }
 
     /**
-     * fetch.
+     * Fetch.
      *
      * @param id the pk.
      * @return the result.

@@ -25,8 +25,6 @@ import top.leafage.hypervisor.system.domain.dto.MessageDTO;
 import top.leafage.hypervisor.system.domain.vo.MessageVO;
 import top.leafage.hypervisor.system.service.MessageService;
 
-import java.security.Principal;
-
 /**
  * Messages controller.
  *
@@ -47,7 +45,6 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-
     /**
      * Retrieves a paginated list of records.
      *
@@ -56,18 +53,17 @@ public class MessageController {
      * @param sortBy     The field to sort by.
      * @param descending Whether sorting should be in descending order.
      * @param filters    The filters.
-     * @param principal  The principal.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
     @GetMapping
     public ResponseEntity<Page<MessageVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                    String sortBy, boolean descending, String filters, Principal principal) {
-        Page<MessageVO> voPage = messageService.retrieve(page, size, sortBy, descending, filters.concat(String.format("receiver:eq:%s", principal.getName())));
+                                                    String sortBy, boolean descending, String filters) {
+        Page<MessageVO> voPage = messageService.retrieve(page, size, sortBy, descending, filters);
         return ResponseEntity.ok(voPage);
     }
 
     /**
-     * fetch.
+     * Fetch.
      *
      * @param id the pk.
      * @return the result.

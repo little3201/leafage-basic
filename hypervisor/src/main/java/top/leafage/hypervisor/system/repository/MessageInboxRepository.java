@@ -20,7 +20,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import top.leafage.hypervisor.system.domain.Message;
+import top.leafage.hypervisor.system.domain.MessageInbox;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,35 +31,42 @@ import java.util.List;
  * @author wq li
  */
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpecificationExecutor<Message> {
+public interface MessageInboxRepository extends JpaRepository<MessageInbox, Long>, JpaSpecificationExecutor<MessageInbox> {
 
     /**
-     * is exists.
+     * Find all.
      *
-     * @param title the title.
-     * @return if exists return true or false.
+     * @param receiver the receiver.
+     * @return result.
      */
-    boolean existsByTitle(String title);
+    List<MessageInbox> findAllByReceiver(String receiver);
+
+    /**
+     * Find all unread.
+     *
+     * @param status   the status.
+     * @param receiver the receiver.
+     * @return result.
+     */
+    List<MessageInbox> findAllByStatusAndReceiver(MessageInbox.Status status, String receiver);
 
     /**
      * Read a record by pk.
      *
-     * @param id     the pk.
-     * @param status the status.
+     * @param id the pk.
      * @return result.
      */
     @Modifying
-    @Query("UPDATE Message t SET t.status = :status WHERE t.id = :id")
-    int updateStatusById(Long id, Message.Status status);
+    @Query("UPDATE Message t SET t.status = 'READ', t.readAt = CURRENT_TIMESTAMP WHERE t.id = :id AND t.status = 'UNREAD'")
+    int updateStatusById(Long id);
 
     /**
      * Read all.
      *
-     * @param ids    the pk.
-     * @param status the status.
+     * @param ids the pk.
      * @return result.
      */
     @Modifying
-    @Query("UPDATE Message t SET t.status = :status WHERE t.id in (:ids)")
-    int updateStatusByIds(Collection<Long> ids, Message.Status status);
+    @Query("UPDATE Message t SET t.status = 'READ', t.readAt = CURRENT_TIMESTAMP WHERE t.id in (:ids) AND t.status = 'UNREAD'")
+    int updateStatusByIds(Collection<Long> ids);
 }

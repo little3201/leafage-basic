@@ -16,22 +16,35 @@
 package top.leafage.hypervisor.system.service;
 
 import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.system.domain.dto.MessageDTO;
-import top.leafage.hypervisor.system.domain.vo.MessageVO;
+import top.leafage.hypervisor.system.domain.vo.MessageInboxVO;
 
 /**
  * Message service.
  *
  * @author wq li
  */
-public interface MessageService extends JpaCrudService<MessageDTO, MessageVO> {
+public interface MessageInboxService extends JpaCrudService<Object, MessageInboxVO> {
 
     /**
-     * Publish
+     * Read
      *
      * @param id the pk of the record.
      * @return the result.
      */
-    boolean publish(Long id);
+    boolean read(Long id);
 
+    /**
+     * Read all
+     *
+     * @param receiver the receiver.
+     * @return the result.
+     */
+    boolean readAll(String receiver);
+
+    /**
+     * Clear all
+     *
+     * @param receiver the receiver.
+     */
+    void clear(String receiver);
 }

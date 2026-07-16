@@ -36,11 +36,7 @@ public class MessageDTO {
 
 
     public static Message toEntity(MessageDTO dto) {
-        return new Message(
-                dto.getTitle(),
-                dto.getBody(),
-                dto.getReceiver()
-        );
+        return new Message(dto.getTitle(), dto.getBody());
     }
 
     public String getTitle() {

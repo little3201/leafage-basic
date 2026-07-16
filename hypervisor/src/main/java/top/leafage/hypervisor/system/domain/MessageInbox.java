@@ -29,46 +29,47 @@ import java.time.LocalDateTime;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "messages")
-public class Message extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
+@Table(name = "message_inbox")
+public class MessageInbox extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
-    private String title;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "message_id", nullable = false)
+    private Message message;
 
-    private String body;
+    private String receiver;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.DRAFT;
+    private Status status = Status.UNREAD;
 
-    private LocalDateTime publishedAt;
+    private LocalDateTime readAt;
 
-    public Message() {
+    public MessageInbox() {
     }
 
-    public Message(String title, String body) {
-        this.title = title;
-        this.body = body;
+    public MessageInbox(Message message, String receiver) {
+        this.message = message;
+        this.receiver = receiver;
     }
 
     public enum Status {
-        DRAFT,
-        PUBLISHED,
-        REVOKED;
+        READ,
+        UNREAD;
     }
 
-    public String getTitle() {
-        return title;
+    public Message getMessage() {
+        return message;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setMessage(Message message) {
+        this.message = message;
     }
 
-    public String getBody() {
-        return body;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public Status getStatus() {
@@ -79,11 +80,11 @@ public class Message extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.status = status;
     }
 
-    public LocalDateTime getPublishedAt() {
-        return publishedAt;
+    public LocalDateTime getReadAt() {
+        return readAt;
     }
 
-    public void setPublishedAt(LocalDateTime publishedAt) {
-        this.publishedAt = publishedAt;
+    public void setReadAt(LocalDateTime readAt) {
+        this.readAt = readAt;
     }
 }

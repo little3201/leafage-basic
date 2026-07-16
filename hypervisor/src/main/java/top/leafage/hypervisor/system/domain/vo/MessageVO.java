@@ -17,6 +17,8 @@ package top.leafage.hypervisor.system.domain.vo;
 
 import top.leafage.hypervisor.system.domain.Message;
 
+import java.time.LocalDateTime;
+
 /**
  * vo class for message.
  *
@@ -26,16 +28,18 @@ public record MessageVO(
         Long id,
         String title,
         String body,
-        String receiver,
-        Message.Status status
+        String sender,
+        Message.Status status,
+        LocalDateTime publishedAt
 ) {
     public static MessageVO from(Message entity) {
         return new MessageVO(
                 entity.getId(),
                 entity.getTitle(),
                 entity.getBody(),
-                entity.getReceiver(),
-                entity.getStatus()
+                entity.getCreatedBy().orElse(null),
+                entity.getStatus(),
+                entity.getPublishedAt()
         );
     }
 }

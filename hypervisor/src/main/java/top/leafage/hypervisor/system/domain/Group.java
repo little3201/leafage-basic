@@ -126,6 +126,12 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
         }
     }
 
+    /**
+     * Add authority for security. Example：users:create
+     *
+     * @param privilegeName the privilege name.
+     * @param actions       the action under the privilege.
+     */
     private void addAuthoritiesFromPrivilege(String privilegeName, Set<String> actions) {
         for (String action : actions) {
             String authority = buildAuthority(privilegeName, action);
@@ -133,8 +139,14 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
         }
     }
 
+    /**
+     * Build authority for security. Example：users:create
+     *
+     * @param privilegeName the privilege name.
+     * @param action        the action under the privilege.
+     * @return authority.
+     */
     private String buildAuthority(String privilegeName, String action) {
-        // 示例：users:create
         return privilegeName + ":" + action;
     }
 

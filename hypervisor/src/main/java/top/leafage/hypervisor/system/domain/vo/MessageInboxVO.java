@@ -13,25 +13,31 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.system.service;
+package top.leafage.hypervisor.system.domain.vo;
 
-import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.system.domain.dto.MessageDTO;
-import top.leafage.hypervisor.system.domain.vo.MessageVO;
+import top.leafage.hypervisor.system.domain.MessageInbox;
+
+import java.time.LocalDateTime;
 
 /**
- * Message service.
+ * vo class for message.
  *
  * @author wq li
  */
-public interface MessageService extends JpaCrudService<MessageDTO, MessageVO> {
-
-    /**
-     * Publish
-     *
-     * @param id the pk of the record.
-     * @return the result.
-     */
-    boolean publish(Long id);
-
+public record MessageInboxVO(
+        Long id,
+        MessageVO message,
+        String receiver,
+        MessageInbox.Status status,
+        LocalDateTime readAt
+) {
+    public static MessageInboxVO from(MessageInbox entity) {
+        return new MessageInboxVO(
+                entity.getId(),
+                MessageVO.from(entity.getMessage()),
+                entity.getReceiver(),
+                entity.getStatus(),
+                entity.getReadAt()
+        );
+    }
 }

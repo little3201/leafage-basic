@@ -64,7 +64,7 @@ public class ArchiveController {
     }
 
     /**
-     * fetch.
+     * Fetch.
      *
      * @param id the pk.
      * @return the result.

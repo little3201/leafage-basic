@@ -121,4 +121,10 @@ public class MessageServiceImpl implements MessageService {
         }
         messageRepository.deleteById(id);
     }
+
+    @Override
+    public boolean publish(Long id) {
+        return messageRepository.updateStatusById(id, Message.Status.PUBLISHED) > 0;
+    }
+
 }

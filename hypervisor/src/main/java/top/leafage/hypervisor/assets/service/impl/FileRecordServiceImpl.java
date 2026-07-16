@@ -30,10 +30,12 @@ import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.FileRecord;
 import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
+import top.leafage.hypervisor.assets.domain.vo.FileStatisticsVO;
 import top.leafage.hypervisor.assets.repository.FileRecordRepository;
 import top.leafage.hypervisor.assets.service.FileRecordService;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -113,6 +115,11 @@ public class FileRecordServiceImpl implements FileRecordService {
         record.setDirectory(false);
         FileRecord entity = fileRecordRepository.save(record);
         return FileRecordVO.from(entity);
+    }
+
+    @Override
+    public List<FileStatisticsVO> statistics(String username) {
+        return List.of();
     }
 
     @Transactional

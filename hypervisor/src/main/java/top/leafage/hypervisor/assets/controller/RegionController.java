@@ -68,7 +68,7 @@ public class RegionController {
     }
 
     /**
-     * fetch.
+     * Fetch.
      *
      * @param id the pk.
      * @return the result.

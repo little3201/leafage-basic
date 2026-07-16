@@ -28,11 +28,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
+import top.leafage.hypervisor.assets.domain.vo.FileStatisticsVO;
 import top.leafage.hypervisor.assets.service.FileRecordService;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.Principal;
+import java.util.List;
 
 /**
  * File controller.
@@ -75,7 +78,7 @@ public class FileController {
     }
 
     /**
-     * fetch.
+     * Fetch.
      *
      * @param id the pk.
      * @return the result.
@@ -85,6 +88,18 @@ public class FileController {
     public ResponseEntity<FileRecordVO> fetch(@PathVariable Long id) {
         FileRecordVO vo = fileRecordService.fetch(id);
         return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * Statistics.
+     *
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_files')")
+    @GetMapping("/statistics")
+    public ResponseEntity<List<FileStatisticsVO>> statistics(Principal principal) {
+        List<FileStatisticsVO> voList = fileRecordService.statistics(principal.getName());
+        return ResponseEntity.ok(voList);
     }
 
     /**
@@ -101,7 +116,7 @@ public class FileController {
     }
 
     /**
-     * fetch.
+     * Fetch.
      *
      * @param id the pk.
      * @return the result.

@@ -13,25 +13,16 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.system.service;
-
-import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.system.domain.dto.MessageDTO;
-import top.leafage.hypervisor.system.domain.vo.MessageVO;
+package top.leafage.hypervisor.assets.domain.vo;
 
 /**
- * Message service.
+ * vo class for file statistics.
  *
  * @author wq li
  */
-public interface MessageService extends JpaCrudService<MessageDTO, MessageVO> {
-
-    /**
-     * Publish
-     *
-     * @param id the pk of the record.
-     * @return the result.
-     */
-    boolean publish(Long id);
-
+public record FileStatisticsVO(
+        String key,
+        long count,
+        long size
+) {
 }

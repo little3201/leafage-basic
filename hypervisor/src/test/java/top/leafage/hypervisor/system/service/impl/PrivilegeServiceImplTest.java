@@ -65,6 +65,7 @@ class PrivilegeServiceImplTest {
         dto = new PrivilegeDTO();
         dto.setName("test");
         dto.setPath("/test");
+        dto.setComponent("#");
         dto.setSuperiorId(1L);
 
         entity = PrivilegeDTO.toEntity(dto);

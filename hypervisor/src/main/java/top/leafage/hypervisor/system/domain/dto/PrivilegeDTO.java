@@ -31,11 +31,11 @@ public class PrivilegeDTO {
 
     private Long superiorId;
 
-    @NotBlank
     private String path;
 
     private String redirect;
 
+    @NotBlank
     private String component;
 
     private Set<String> actions;

@@ -78,6 +78,7 @@ class PrivilegeControllerTest {
         dto.setName("test");
         dto.setRedirect("redirect");
         dto.setPath("/test");
+        dto.setComponent("#");
         dto.setSuperiorId(1L);
     }
 

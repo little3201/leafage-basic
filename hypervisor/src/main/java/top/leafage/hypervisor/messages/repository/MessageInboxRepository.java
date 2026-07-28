@@ -36,19 +36,19 @@ public interface MessageInboxRepository extends JpaRepository<MessageInbox, Long
     /**
      * Find all.
      *
-     * @param receiver the receiver.
      * @return result.
      */
-    List<MessageInbox> findAllByReceiver(String receiver);
+    @Query("select t from MessageInbox t where t.receiver = ?#{ principal?.name }")
+    List<MessageInbox> findAllInbox();
 
     /**
      * Find all unread.
      *
-     * @param status   the status.
-     * @param receiver the receiver.
+     * @param status the status.
      * @return result.
      */
-    List<MessageInbox> findAllByStatusAndReceiver(MessageInbox.Status status, String receiver);
+    @Query("select t from MessageInbox t where t.status = :status and t.receiver = ?#{ principal?.name }")
+    List<MessageInbox> findAllByStatus(MessageInbox.Status status);
 
     /**
      * Read a record by pk.

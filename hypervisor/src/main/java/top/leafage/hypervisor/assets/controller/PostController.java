@@ -121,7 +121,7 @@ public class PostController {
     }
 
     /**
-     * enable.
+     * Enable.
      *
      * @param id the pk.
      * @return the result.

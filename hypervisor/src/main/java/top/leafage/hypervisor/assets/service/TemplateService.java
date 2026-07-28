@@ -25,4 +25,20 @@ import top.leafage.hypervisor.assets.domain.vo.TemplateVO;
  * @author wq li
  */
 public interface TemplateService extends JpaCrudService<TemplateDTO, TemplateVO> {
+
+    /**
+     * Publish.
+     *
+     * @param id the pk of record.
+     * @return publish result.
+     */
+    boolean publish(Long id);
+
+    /**
+     * Archive.
+     *
+     * @param id the pk of record.
+     * @return publish result.
+     */
+    boolean archive(Long id);
 }

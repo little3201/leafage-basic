@@ -137,7 +137,7 @@ public class GroupController {
     }
 
     /**
-     * enable.
+     * Enable.
      *
      * @param id the pk.
      * @return the result.
@@ -150,7 +150,7 @@ public class GroupController {
     }
 
     /**
-     * disable.
+     * Disable.
      *
      * @param id the pk.
      * @return the result.
@@ -174,6 +174,19 @@ public class GroupController {
         List<GroupVO> voList = groupService.createAll(dtoList);
 
         return ResponseEntity.ok().body(voList);
+    }
+
+    /**
+     * 根据group查询关联user
+     *
+     * @param id group id
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:member')")
+    @GetMapping("/{id}/members")
+    public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
+        List<UserVO> members = groupService.members(id);
+        return ResponseEntity.ok(members);
     }
 
     /**
@@ -205,16 +218,16 @@ public class GroupController {
     }
 
     /**
-     * 根据group查询关联user
+     * 根据group查询关联roles
      *
      * @param id group id
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:member')")
-    @GetMapping("/{id}/members")
-    public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
-        List<UserVO> members = groupService.members(id);
-        return ResponseEntity.ok(members);
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
+    @GetMapping("/{id}/roles")
+    public ResponseEntity<List<RoleVO>> roles(@PathVariable Long id) {
+        List<RoleVO> roles = groupService.roles(id);
+        return ResponseEntity.ok(roles);
     }
 
     /**
@@ -229,19 +242,6 @@ public class GroupController {
     public ResponseEntity<Void> addRoles(@PathVariable Long id, @RequestBody Set<Long> roleIds) {
         groupService.addRoles(id, roleIds);
         return ResponseEntity.ok().build();
-    }
-
-    /**
-     * 根据group查询关联roles
-     *
-     * @param id group id
-     * @return 查询到的数据集，异常时返回204状态码
-     */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
-    @GetMapping("/{id}/roles")
-    public ResponseEntity<List<RoleVO>> roles(@PathVariable Long id) {
-        List<RoleVO> roles = groupService.roles(id);
-        return ResponseEntity.ok(roles);
     }
 
     /**

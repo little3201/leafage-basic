@@ -17,6 +17,7 @@ package top.leafage.hypervisor.assets.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.data.jpa.JpaCrudService;
+import top.leafage.hypervisor.assets.domain.dto.FileRecordDTO;
 import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.domain.vo.FileStatisticsVO;
 
@@ -27,7 +28,7 @@ import java.util.List;
  *
  * @author wq li
  */
-public interface FileRecordService extends JpaCrudService<Object, FileRecordVO> {
+public interface FileRecordService extends JpaCrudService<FileRecordDTO, FileRecordVO> {
 
     /**
      * upload.

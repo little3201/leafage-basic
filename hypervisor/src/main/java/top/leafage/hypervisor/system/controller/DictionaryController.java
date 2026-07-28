@@ -134,7 +134,7 @@ public class DictionaryController {
     }
 
     /**
-     * enable.
+     * Enable.
      *
      * @param id the pk.
      * @return the result.
@@ -147,7 +147,7 @@ public class DictionaryController {
     }
 
     /**
-     * disable.
+     * Disable.
      *
      * @param id the pk.
      * @return the result.

@@ -33,8 +33,10 @@ public class MessageDTO {
     @NotBlank
     private String body;
 
+    @NotBlank
     private String type;
 
+    @NotBlank
     private String scope;
 
     private List<String> receivers;

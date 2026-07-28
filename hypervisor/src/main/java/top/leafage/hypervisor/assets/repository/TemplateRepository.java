@@ -57,4 +57,15 @@ public interface TemplateRepository extends JpaRepository<Template, Long>, JpaSp
     @Modifying
     @Query("UPDATE Template t SET t.enabled = false WHERE t.id = :id AND t.enabled = true")
     int disableById(Long id);
+
+    /**
+     * update status by pk.
+     *
+     * @param id the pk.
+     * @param status the status.
+     * @return result.
+     */
+    @Modifying
+    @Query("UPDATE Template t SET t.status = :status WHERE t.id = :id AND t.enabled = true")
+    int updateStatusById(Long id, Template.Status status);
 }

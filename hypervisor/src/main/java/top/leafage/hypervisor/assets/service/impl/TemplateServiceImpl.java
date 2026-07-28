@@ -160,4 +160,21 @@ public class TemplateServiceImpl implements TemplateService {
         sectionRepository.deleteAllById(ids);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public boolean publish(Long id) {
+        return templateRepository.updateStatusById(id, Template.Status.PUBLISHED) > 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public boolean archive(Long id) {
+        return templateRepository.updateStatusById(id, Template.Status.ARCHIVED) > 0;
+    }
 }

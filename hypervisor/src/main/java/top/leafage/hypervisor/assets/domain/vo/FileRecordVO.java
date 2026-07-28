@@ -30,7 +30,7 @@ public record FileRecordVO(
         String extension,
         String path,
         String contentType,
-        long size,
+        Long size,
         boolean directory,
         boolean enabled,
         LocalDateTime lastModifiedDate

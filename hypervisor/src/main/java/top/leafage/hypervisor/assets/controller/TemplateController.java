@@ -116,7 +116,7 @@ public class TemplateController {
     }
 
     /**
-     * enable.
+     * Enable.
      *
      * @param id the pk.
      * @return the result.
@@ -129,7 +129,7 @@ public class TemplateController {
     }
 
     /**
-     * disable.
+     * Disable.
      *
      * @param id the pk.
      * @return the result.
@@ -139,6 +139,32 @@ public class TemplateController {
     public ResponseEntity<Boolean> disable(@PathVariable Long id) {
         boolean disable = templateService.disable(id);
         return ResponseEntity.ok(disable);
+    }
+
+    /**
+     * Publish.
+     *
+     * @param id the pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:enable')")
+    @PatchMapping("/{id}/publish")
+    public ResponseEntity<Boolean> publish(@PathVariable Long id) {
+        boolean published = templateService.publish(id);
+        return ResponseEntity.ok(published);
+    }
+
+    /**
+     * Archive.
+     *
+     * @param id the pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:disable')")
+    @PatchMapping("/{id}/archive")
+    public ResponseEntity<Boolean> archive(@PathVariable Long id) {
+        boolean archived = templateService.archive(id);
+        return ResponseEntity.ok(archived);
     }
 
     /**

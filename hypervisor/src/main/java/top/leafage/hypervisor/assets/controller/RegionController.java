@@ -132,7 +132,7 @@ public class RegionController {
     }
 
     /**
-     * enable.
+     * Enable.
      *
      * @param id the pk.
      * @return the result.
@@ -145,7 +145,7 @@ public class RegionController {
     }
 
     /**
-     * disable.
+     * Disable.
      *
      * @param id the pk.
      * @return the result.

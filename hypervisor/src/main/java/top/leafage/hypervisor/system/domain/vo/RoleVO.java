@@ -30,6 +30,15 @@ public record RoleVO(
         Set<UserVO> members,
         boolean enabled
 ) {
+    public static RoleVO from(Long id, String name,boolean enabled) {
+        return new RoleVO(
+                id,
+                name,
+                null,
+                enabled
+        );
+    }
+
     public static RoleVO from(Role entity) {
         return new RoleVO(
                 entity.getId(),

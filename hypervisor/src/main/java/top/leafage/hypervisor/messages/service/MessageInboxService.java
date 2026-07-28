@@ -36,15 +36,13 @@ public interface MessageInboxService extends JpaCrudService<Object, MessageInbox
     /**
      * Read all
      *
-     * @param receiver the receiver.
      * @return the result.
      */
-    boolean readAll(String receiver);
+    boolean readAll();
 
     /**
      * Clear all
      *
-     * @param receiver the receiver.
      */
-    void clear(String receiver);
+    void clear();
 }

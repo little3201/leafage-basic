@@ -25,19 +25,19 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.FileRecord;
+import top.leafage.hypervisor.assets.domain.dto.FileRecordDTO;
 import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.domain.vo.FileStatisticsVO;
 import top.leafage.hypervisor.assets.repository.FileRecordRepository;
 import top.leafage.hypervisor.assets.service.FileRecordService;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
@@ -51,6 +51,12 @@ import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NUL
 public class FileRecordServiceImpl implements FileRecordService {
 
     private static final Logger logger = LoggerFactory.getLogger(FileRecordServiceImpl.class);
+
+    private static final String IMAGE = "Image";
+    private static final String VIDEO = "Video";
+    private static final String DOCUMENT = "Document";
+    private static final String OTHER = "Other";
+    private static final List<String> CATEGORY = List.of(IMAGE, VIDEO, DOCUMENT, OTHER);
 
     private final FileRecordRepository fileRecordRepository;
 
@@ -90,6 +96,16 @@ public class FileRecordServiceImpl implements FileRecordService {
                 .orElseThrow(() -> new EntityNotFoundException("file record not found: " + id));
     }
 
+    @Override
+    public FileRecordVO create(FileRecordDTO dto) {
+        if (fileRecordRepository.existsByName(dto.getName())) {
+            throw new IllegalArgumentException("name already exists: " + dto.getName());
+        }
+
+        FileRecord entity = fileRecordRepository.save(FileRecordDTO.toEntity(dto));
+        return FileRecordVO.from(entity);
+    }
+
     @Transactional
     @Override
     public FileRecordVO upload(MultipartFile file, Long superiorId) {
@@ -119,7 +135,34 @@ public class FileRecordServiceImpl implements FileRecordService {
 
     @Override
     public List<FileStatisticsVO> statistics(String username) {
-        return List.of();
+        List<FileRecord> fileRecords = fileRecordRepository.findAll();
+        if (CollectionUtils.isEmpty(fileRecords)) {
+            return Collections.emptyList();
+        }
+
+        Map<String, FileStatisticsVO> result = new HashMap<>();
+        for (FileRecord file : fileRecords) {
+            if (file.isDirectory()) {
+                continue;
+            }
+
+            String category = category(file);
+            result.compute(
+                    category,
+                    (key, value) -> value == null
+                            ? new FileStatisticsVO(key, 1, file.getSize())
+                            : new FileStatisticsVO(
+                            key,
+                            value.count() + 1,
+                            value.size() + file.getSize()
+                    )
+            );
+        }
+        return CATEGORY.stream().map(category -> result.getOrDefault(
+                        category,
+                        new FileStatisticsVO(category, 0, 0)
+                ))
+                .toList();
     }
 
     @Transactional
@@ -152,5 +195,26 @@ public class FileRecordServiceImpl implements FileRecordService {
             throw new EntityNotFoundException("file record not found: " + id);
         }
         fileRecordRepository.deleteById(id);
+    }
+
+    private String category(FileRecord fileRecord) {
+        String mime = fileRecord.getContentType();
+
+        if (mime != null) {
+            if (mime.startsWith("image/")) {
+                return "Image";
+            }
+            if (mime.startsWith("video/")) {
+                return "Video";
+            }
+            if (mime.startsWith("text/")
+                    || mime.equals("application/pdf")
+                    || mime.contains("word")
+                    || mime.contains("excel")) {
+                return "Document";
+            }
+        }
+
+        return "Other";
     }
 }

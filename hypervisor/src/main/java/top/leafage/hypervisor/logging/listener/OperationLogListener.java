@@ -49,7 +49,7 @@ public class OperationLogListener {
                 event.getDuration(),
                 event.getMessage()
         );
-
+        entity.setCreatedBy(event.getOperator());
         operationLogRepository.save(entity);
     }
 }

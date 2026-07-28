@@ -106,16 +106,16 @@ public class MessageInboxServiceImpl implements MessageInboxService {
      */
     @Transactional
     @Override
-    public boolean readAll(String receiver) {
-        List<Long> ids = messageInboxRepository.findAllByStatusAndReceiver(MessageInbox.Status.UNREAD, receiver)
+    public boolean readAll() {
+        List<Long> ids = messageInboxRepository.findAllByStatus(MessageInbox.Status.UNREAD)
                 .stream().map(MessageInbox::getId)
                 .toList();
         return messageInboxRepository.updateStatusAndReadAtByIds(ids) > 0;
     }
 
     @Override
-    public void clear(String receiver) {
-        List<Long> ids = messageInboxRepository.findAllByReceiver(receiver)
+    public void clear() {
+        List<Long> ids = messageInboxRepository.findAllInbox()
                 .stream().map(MessageInbox::getId)
                 .toList();
         messageInboxRepository.deleteAllById(ids);

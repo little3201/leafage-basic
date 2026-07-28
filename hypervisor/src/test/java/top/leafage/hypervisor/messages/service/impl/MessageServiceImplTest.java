@@ -65,7 +65,9 @@ class MessageServiceImplTest {
         dto = new MessageDTO();
         dto.setTitle("test");
         dto.setBody("body");
-        dto.setReceiver("demo");
+        dto.setType("系统公告");
+        dto.setScope("ALL");
+        dto.setReceivers(List.of("demo"));
 
         entity = MessageDTO.toEntity(dto);
     }

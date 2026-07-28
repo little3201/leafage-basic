@@ -22,6 +22,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.assets.domain.FileRecord;
 
+import java.util.List;
+
 /**
  * file repository.
  *
@@ -37,6 +39,9 @@ public interface FileRecordRepository extends JpaRepository<FileRecord, Long>, J
      * @return true-是，false-否
      */
     boolean existsByName(String name);
+
+    @Query("select t from FileRecord t where t.createdBy = ?#{ principal?.name }")
+    List<FileRecord> findAll();
 
     /**
      * enable a record by pk.

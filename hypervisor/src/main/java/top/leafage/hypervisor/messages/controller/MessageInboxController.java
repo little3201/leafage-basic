@@ -97,13 +97,12 @@ public class MessageInboxController {
     /**
      * Read all.
      *
-     * @param principal the principal.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/read")
-    public ResponseEntity<Boolean> readAll(Principal principal) {
-        boolean read = messageInboxService.readAll(principal.getName());
+    public ResponseEntity<Boolean> readAll() {
+        boolean read = messageInboxService.readAll();
         return ResponseEntity.accepted().body(read);
     }
 
@@ -122,12 +121,11 @@ public class MessageInboxController {
     /**
      * Clear.
      *
-     * @param principal the principal.
      */
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/clear")
-    public ResponseEntity<Void> clear(Principal principal) {
-        messageInboxService.clear(principal.getName());
+    public ResponseEntity<Void> clear() {
+        messageInboxService.clear();
         return ResponseEntity.noContent().build();
     }
 }

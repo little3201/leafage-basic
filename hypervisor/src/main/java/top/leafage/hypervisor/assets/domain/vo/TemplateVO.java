@@ -30,6 +30,7 @@ public record TemplateVO(
         Template.Type type,
         int version,
         Template.Status status,
+        boolean enabled,
         LocalDateTime lastModifiedDate
 ) {
     public static TemplateVO from(Template entity) {
@@ -39,6 +40,7 @@ public record TemplateVO(
                 entity.getType(),
                 entity.getVersion(),
                 entity.getStatus(),
+                entity.isEnabled(),
                 entity.getLastModifiedDate().isPresent() ? entity.getLastModifiedDate().get() : null
         );
     }

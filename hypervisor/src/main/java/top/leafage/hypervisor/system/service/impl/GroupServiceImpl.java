@@ -267,7 +267,7 @@ public class GroupServiceImpl implements GroupService {
 
         Group group = groupRepository.findWithRolesById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Group not found: " + id));
-        return group.getRoles().stream().map(RoleVO::from).toList();
+        return group.getRoles().stream().map(role -> RoleVO.from(role.getId(), role.getName(), role.isEnabled())).toList();
     }
 
     /**

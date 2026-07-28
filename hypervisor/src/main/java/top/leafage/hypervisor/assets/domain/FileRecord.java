@@ -44,7 +44,7 @@ public class FileRecord extends JpaAbstractAuditable<@NonNull String, @NonNull L
 
     private String contentType;
 
-    private long size;
+    private Long size;
 
     private boolean directory;
 
@@ -54,7 +54,13 @@ public class FileRecord extends JpaAbstractAuditable<@NonNull String, @NonNull L
     public FileRecord() {
     }
 
-    public FileRecord(Long superiorId, String name, String extension, String path, String contentType, long size, boolean directory, boolean enabled) {
+    public FileRecord(Long superiorId, String name, boolean directory) {
+        this.superiorId = superiorId;
+        this.name = name;
+        this.directory = directory;
+    }
+
+    public FileRecord(Long superiorId, String name, String extension, String path, String contentType, Long size, boolean directory, boolean enabled) {
         this.superiorId = superiorId;
         this.name = name;
         this.extension = extension;
@@ -105,11 +111,11 @@ public class FileRecord extends JpaAbstractAuditable<@NonNull String, @NonNull L
         this.contentType = contentType;
     }
 
-    public long getSize() {
+    public Long getSize() {
         return size;
     }
 
-    public void setSize(long size) {
+    public void setSize(Long size) {
         this.size = size;
     }
 

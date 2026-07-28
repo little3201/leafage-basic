@@ -54,6 +54,7 @@ public class OperationLog extends JpaAbstractAuditable<@NonNull String, @NonNull
 
     private long duration;
 
+    @Column(columnDefinition = "text")
     private String message;
 
 

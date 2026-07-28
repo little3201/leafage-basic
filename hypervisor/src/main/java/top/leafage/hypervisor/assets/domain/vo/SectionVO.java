@@ -26,9 +26,10 @@ import java.util.Map;
  */
 public record SectionVO(
         Long id,
+        String name,
         Long superiorId,
         Long ownerId,
-        String name,
+        Section.OwnerType ownerType,
         Integer sequence,
         Integer level,
         Map<String, Object> body,
@@ -41,9 +42,10 @@ public record SectionVO(
     public static SectionVO from(Section entity, long count) {
         return new SectionVO(
                 entity.getId(),
+                entity.getName(),
                 entity.getSuperiorId(),
                 entity.getOwnerId(),
-                entity.getName(),
+                entity.getOwnerType(),
                 entity.getSequence(),
                 entity.getLevel(),
                 entity.getBody(),

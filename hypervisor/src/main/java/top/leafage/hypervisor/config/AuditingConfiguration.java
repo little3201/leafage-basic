@@ -24,6 +24,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
 
 import java.util.Optional;
 
@@ -50,5 +51,10 @@ public class AuditingConfiguration {
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getName);
+    }
+
+    @Bean
+    public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+        return new SecurityEvaluationContextExtension();
     }
 }

@@ -59,7 +59,7 @@ public class PostController {
      * @param filters    过滤条件，格式：field:condition:value，如：name:like:test
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts')")
     @GetMapping
     public ResponseEntity<Page<PostVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                  String sortBy, boolean descending, String filters) {
@@ -73,7 +73,7 @@ public class PostController {
      * @param id the pk.
      * @return 帖子信息，不包括内容
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts')")
     @GetMapping("/{id}")
     public ResponseEntity<PostVO> fetch(@PathVariable Long id) {
         PostVO vo = postService.fetch(id);
@@ -86,7 +86,7 @@ public class PostController {
      * @param dto 文章内容
      * @return 帖子信息
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts:create')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:create')")
     @PostMapping
     public ResponseEntity<PostVO> create(@Valid @RequestBody PostDTO dto) {
         PostVO vo = postService.create(dto);
@@ -100,7 +100,7 @@ public class PostController {
      * @param dto 帖子信息
      * @return 修改后的帖子信息
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<PostVO> modify(@PathVariable Long id, @Valid @RequestBody PostDTO dto) {
         PostVO vo = postService.modify(id, dto);
@@ -113,7 +113,7 @@ public class PostController {
      * @param id the pk.
      * @return 删除结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         postService.remove(id);
@@ -126,7 +126,7 @@ public class PostController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts:enable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:enable')")
     @PatchMapping("/{id}")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = postService.enable(id);
@@ -138,7 +138,7 @@ public class PostController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('SCOPE_posts:import')")
+    @PreAuthorize("hasAuthority('posts:import')")
     @PostMapping("/import")
     public ResponseEntity<List<PostVO>> importFromFile(MultipartFile file) throws IOException {
         List<PostDTO> dtoList = ExcelReader.read(file.getInputStream(), PostDTO.class);

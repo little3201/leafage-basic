@@ -44,7 +44,7 @@ public class SchedulerLog extends JpaAbstractAuditable<@NonNull String, @NonNull
     private String record;
 
     @Enumerated(EnumType.STRING)
-    private ScheduleStatus status;
+    private Scheduler.Status status;
 
 
     public String getName() {
@@ -87,15 +87,12 @@ public class SchedulerLog extends JpaAbstractAuditable<@NonNull String, @NonNull
         this.record = record;
     }
 
-    public ScheduleStatus getStatus() {
+    public Scheduler.Status getStatus() {
         return status;
     }
 
-    public void setStatus(ScheduleStatus status) {
+    public void setStatus(Scheduler.Status status) {
         this.status = status;
     }
 
-    public enum ScheduleStatus {
-        PENDING, RUNNING, SUCCESS, FAILED, CANCELED
-    }
 }

@@ -59,17 +59,17 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
     }
 
     public void removePrivilege(Privilege privilege) {
-        rolePrivileges.removeIf(rp -> rp.getPrivilege().equals(privilege));
+        this.rolePrivileges.removeIf(rp -> rp.getPrivilege().equals(privilege));
     }
 
     public void removePrivilegeAction(Privilege privilege, String action) {
-        rolePrivileges.stream()
+        this.rolePrivileges.stream()
                 .filter(rp -> rp.getPrivilege().equals(privilege))
                 .findFirst()
                 .ifPresent(rp -> {
                     rp.removeAction(action);
                     if (rp.hasNoActions()) {
-                        rolePrivileges.remove(rp);
+                        this.rolePrivileges.remove(rp);
                     }
                 });
     }

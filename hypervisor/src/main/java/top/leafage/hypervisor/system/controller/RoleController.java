@@ -62,7 +62,7 @@ public class RoleController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles')")
     @GetMapping
     public ResponseEntity<Page<RoleVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                  String sortBy, boolean descending, String filters) {
@@ -76,7 +76,7 @@ public class RoleController {
      * @param id the pk.
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles')")
     @GetMapping("/{id}")
     public ResponseEntity<RoleVO> fetch(@PathVariable Long id) {
         RoleVO vo = roleService.fetch(id);
@@ -89,7 +89,7 @@ public class RoleController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:create')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:create')")
     @PostMapping
     public ResponseEntity<RoleVO> create(@Valid @RequestBody RoleDTO dto) {
         RoleVO vo = roleService.create(dto);
@@ -103,7 +103,7 @@ public class RoleController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<RoleVO> modify(@PathVariable Long id, @Valid @RequestBody RoleDTO dto) {
         RoleVO vo = roleService.modify(id, dto);
@@ -115,7 +115,7 @@ public class RoleController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         roleService.remove(id);
@@ -128,7 +128,7 @@ public class RoleController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('SCOPE_roles:enable')")
+    @PreAuthorize("hasAuthority('roles:enable')")
     @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = roleService.enable(id);
@@ -141,7 +141,7 @@ public class RoleController {
      * @param id the pk.
      * @return 编辑后的信息，否则返回417状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:disable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:disable')")
     @PatchMapping("/{id}/disable")
     public ResponseEntity<Boolean> disable(@PathVariable Long id) {
         boolean disable = roleService.disable(id);
@@ -153,7 +153,7 @@ public class RoleController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:import')")
     @PostMapping("/import")
     public ResponseEntity<List<RoleVO>> importFromFile(MultipartFile file) throws IOException {
         List<RoleDTO> dtoList = ExcelReader.read(file.getInputStream(), RoleDTO.class);
@@ -169,7 +169,7 @@ public class RoleController {
      * @param usernames 账号
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:member')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:member')")
     @PatchMapping("/{id}/members")
     public ResponseEntity<Void> addMembers(@PathVariable Long id, @RequestBody Set<String> usernames) {
         roleService.addMembers(id, usernames);
@@ -183,7 +183,7 @@ public class RoleController {
      * @param usernames username集合
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:member')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:member')")
     @DeleteMapping("/{id}/members")
     public ResponseEntity<Void> removeMembers(@PathVariable Long id, @RequestParam Set<String> usernames) {
         roleService.removeMembers(id, usernames);
@@ -196,7 +196,7 @@ public class RoleController {
      * @param id roleid
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:member')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:member')")
     @GetMapping("/{id}/members")
     public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
         List<UserVO> members = roleService.members(id);
@@ -211,7 +211,7 @@ public class RoleController {
      * @param action      操作
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:authorize')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:authorize')")
     @PatchMapping("/{id}/privileges/{privilegeId}")
     public ResponseEntity<Void> addPrivilege(@PathVariable Long id, @PathVariable Long privilegeId,
                                              String action) {
@@ -225,7 +225,7 @@ public class RoleController {
      * @param id role代码
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:authorize')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:authorize')")
     @GetMapping("/{id}/privileges")
     public ResponseEntity<List<SimplePrivilegeVO>> privileges(@PathVariable Long id) {
         List<SimplePrivilegeVO> privileges = roleService.privileges(id);
@@ -240,7 +240,7 @@ public class RoleController {
      * @param action      the action of privilege.
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_roles:authorize')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:authorize')")
     @DeleteMapping("/{id}/privileges/{privilegeId}")
     public ResponseEntity<Void> removePrivilege(@PathVariable Long id, @PathVariable Long privilegeId,
                                                 String action) {

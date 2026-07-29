@@ -72,7 +72,7 @@ public class FileController {
      * @param filters    过滤条件，格式：field:condition:value，如：name:like:test
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_files')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('files')")
     @GetMapping
     public ResponseEntity<Page<FileRecordVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                        String sortBy, boolean descending, String filters) {
@@ -86,7 +86,7 @@ public class FileController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_files')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('files')")
     @GetMapping("/{id}")
     public ResponseEntity<FileRecordVO> fetch(@PathVariable Long id) {
         FileRecordVO vo = fileRecordService.fetch(id);
@@ -98,7 +98,7 @@ public class FileController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_files')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('files')")
     @GetMapping("/statistics")
     public ResponseEntity<List<FileStatisticsVO>> statistics(Principal principal) {
         List<FileStatisticsVO> voList = fileRecordService.statistics(principal.getName());
@@ -111,7 +111,7 @@ public class FileController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_files:create')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('files:create')")
     @PostMapping
     public ResponseEntity<FileRecordVO> create(@Valid @RequestBody FileRecordDTO dto) {
         FileRecordVO vo = fileRecordService.create(dto);
@@ -124,7 +124,7 @@ public class FileController {
      * @param file the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_files:upload')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('files:upload')")
     @PostMapping("/upload")
     public ResponseEntity<FileRecordVO> upload(MultipartFile file, Long superiorId) {
         FileRecordVO vo = fileRecordService.upload(file, superiorId);
@@ -137,7 +137,7 @@ public class FileController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_files:download')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('files:download')")
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> download(@PathVariable Long id, HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
@@ -167,7 +167,7 @@ public class FileController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_files:enable')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('files:enable')")
     @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = fileRecordService.enable(id);
@@ -180,7 +180,7 @@ public class FileController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_files:disable')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('files:disable')")
     @PatchMapping("/{id}/disable")
     public ResponseEntity<Boolean> disable(@PathVariable Long id) {
         boolean disable = fileRecordService.disable(id);
@@ -193,7 +193,7 @@ public class FileController {
      * @param id the pk.
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_files:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('files:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         fileRecordService.remove(id);

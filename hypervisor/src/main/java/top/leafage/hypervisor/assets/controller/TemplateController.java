@@ -55,7 +55,7 @@ public class TemplateController {
      * @param filters    过滤条件，格式：field:condition:value，如：name:like:test
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates')")
     @GetMapping
     public ResponseEntity<Page<TemplateVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                      String sortBy, boolean descending, String filters) {
@@ -69,7 +69,7 @@ public class TemplateController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates')")
     @GetMapping("/{id}")
     public ResponseEntity<TemplateVO> fetch(@PathVariable Long id) {
         TemplateVO vo = templateService.fetch(id);
@@ -82,7 +82,7 @@ public class TemplateController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:create')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates:create')")
     @PostMapping
     public ResponseEntity<TemplateVO> create(@Valid @RequestBody TemplateDTO dto) {
         TemplateVO vo = templateService.create(dto);
@@ -96,7 +96,7 @@ public class TemplateController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:modify')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<TemplateVO> modify(@PathVariable Long id, @RequestBody TemplateDTO dto) {
         TemplateVO vo = templateService.modify(id, dto);
@@ -108,7 +108,7 @@ public class TemplateController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         templateService.remove(id);
@@ -121,7 +121,7 @@ public class TemplateController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:enable')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates:enable')")
     @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = templateService.enable(id);
@@ -134,7 +134,7 @@ public class TemplateController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:disable')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates:disable')")
     @PatchMapping("/{id}/disable")
     public ResponseEntity<Boolean> disable(@PathVariable Long id) {
         boolean disable = templateService.disable(id);
@@ -147,7 +147,7 @@ public class TemplateController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:enable')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates:enable')")
     @PatchMapping("/{id}/publish")
     public ResponseEntity<Boolean> publish(@PathVariable Long id) {
         boolean published = templateService.publish(id);
@@ -160,7 +160,7 @@ public class TemplateController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:disable')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates:disable')")
     @PatchMapping("/{id}/archive")
     public ResponseEntity<Boolean> archive(@PathVariable Long id) {
         boolean archived = templateService.archive(id);
@@ -172,7 +172,7 @@ public class TemplateController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_templates:import')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('templates:import')")
     @PostMapping("/import")
     public ResponseEntity<List<TemplateVO>> importFromFile(MultipartFile file) throws IOException {
         List<TemplateDTO> dtoList = ExcelReader.read(file.getInputStream(), TemplateDTO.class);

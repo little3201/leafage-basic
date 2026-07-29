@@ -93,7 +93,7 @@ public class MessageController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_messages:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<MessageVO> modify(@PathVariable Long id, @RequestBody MessageDTO dto) {
         MessageVO vo = messageService.modify(id, dto);
@@ -106,7 +106,7 @@ public class MessageController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_messages:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:modify')")
     @PatchMapping("/{id}/publish")
     public ResponseEntity<Boolean> publish(@PathVariable Long id) {
         boolean published = messageService.publish(id);
@@ -119,7 +119,7 @@ public class MessageController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_messages:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:modify')")
     @PatchMapping("/{id}/revoke")
     public ResponseEntity<Boolean> revoke(@PathVariable Long id) {
         boolean revoked = messageService.revoke(id);
@@ -131,7 +131,7 @@ public class MessageController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_messages:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         messageService.remove(id);

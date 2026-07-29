@@ -61,7 +61,7 @@ public class DictionaryController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries')")
     @GetMapping
     public ResponseEntity<Page<DictionaryVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                        String sortBy, boolean descending, String filters) {
@@ -75,7 +75,7 @@ public class DictionaryController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries')")
     @GetMapping("/{id}")
     public ResponseEntity<DictionaryVO> fetch(@PathVariable Long id) {
         DictionaryVO vo = dictionaryService.fetch(id);
@@ -100,7 +100,7 @@ public class DictionaryController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:create')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:create')")
     @PostMapping
     public ResponseEntity<DictionaryVO> create(@Valid @RequestBody DictionaryDTO dto) {
         DictionaryVO vo = dictionaryService.create(dto);
@@ -114,7 +114,7 @@ public class DictionaryController {
      * @param id  the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<DictionaryVO> modify(@PathVariable Long id, @Valid @RequestBody DictionaryDTO dto) {
         DictionaryVO vo = dictionaryService.modify(id, dto);
@@ -126,7 +126,7 @@ public class DictionaryController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         dictionaryService.remove(id);
@@ -139,7 +139,7 @@ public class DictionaryController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:enable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:enable')")
     @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = dictionaryService.enable(id);
@@ -152,7 +152,7 @@ public class DictionaryController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:disable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:disable')")
     @PatchMapping("/{id}/disable")
     public ResponseEntity<Boolean> disable(@PathVariable Long id) {
         boolean disable = dictionaryService.disable(id);
@@ -164,7 +164,7 @@ public class DictionaryController {
      *
      * @return the imported data.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:import')")
     @PostMapping("/import")
     public ResponseEntity<List<DictionaryVO>> importFromFile(MultipartFile file) throws IOException {
         List<DictionaryDTO> dtoList = ExcelReader.read(file.getInputStream(), DictionaryDTO.class);

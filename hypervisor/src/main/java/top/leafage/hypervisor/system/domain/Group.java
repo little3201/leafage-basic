@@ -90,18 +90,18 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
     }
 
     public void removePrivilege(Privilege privilege) {
-        groupPrivileges.removeIf(gp -> gp.getPrivilege().equals(privilege));
+        this.groupPrivileges.removeIf(gp -> gp.getPrivilege().equals(privilege));
         syncAuthorities();
     }
 
     public void removePrivilegeAction(Privilege privilege, String action) {
-        groupPrivileges.stream()
+        this.groupPrivileges.stream()
                 .filter(gp -> gp.getPrivilege().equals(privilege))
                 .findFirst()
                 .ifPresent(gp -> {
                     gp.removeAction(action);
                     if (gp.hasNoActions()) {
-                        groupPrivileges.remove(gp);
+                        this.groupPrivileges.remove(gp);
                     }
                 });
         syncAuthorities();

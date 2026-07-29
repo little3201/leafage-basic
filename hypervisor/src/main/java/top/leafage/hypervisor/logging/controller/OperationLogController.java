@@ -53,7 +53,7 @@ public class OperationLogController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_operation_logs')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('operation_logs')")
     @GetMapping
     public ResponseEntity<Page<OperationLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                          String sortBy, boolean descending, String filters) {
@@ -67,7 +67,7 @@ public class OperationLogController {
      * @param id the pk.
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_operation_logs')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('operation_logs')")
     @GetMapping("/{id}")
     public ResponseEntity<OperationLogVO> fetch(@PathVariable Long id) {
         OperationLogVO vo = operationLogService.fetch(id);
@@ -79,7 +79,7 @@ public class OperationLogController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_operation_logs:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('operation_logs:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         operationLogService.remove(id);
@@ -90,7 +90,7 @@ public class OperationLogController {
      * 清空信息
      *
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_operation_logs:clear')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('operation_logs:clear')")
     @DeleteMapping
     public ResponseEntity<Void> clear() {
         operationLogService.clear();

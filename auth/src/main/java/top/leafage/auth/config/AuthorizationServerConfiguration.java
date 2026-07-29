@@ -50,11 +50,9 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * 认证服务配置
@@ -132,10 +130,8 @@ public class AuthorizationServerConfiguration {
                 context.getClaims().claims((claims) -> {
                     Authentication principal = context.getPrincipal();
                     if (Objects.nonNull(principal)) {
-                        Set<String> roles = AuthorityUtils.authorityListToSet(principal.getAuthorities())
-                                .stream().map(c -> c.replaceFirst("^ROLE_", ""))
-                                .collect(Collectors.collectingAndThen(Collectors.toSet(), Collections::unmodifiableSet));
-                        claims.put("roles", roles);
+                        Set<String> authorities = AuthorityUtils.authorityListToSet(principal.getAuthorities());
+                        claims.put("authorities", authorities);
                     }
                 });
             }

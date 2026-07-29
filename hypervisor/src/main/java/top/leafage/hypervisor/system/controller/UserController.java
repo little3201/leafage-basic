@@ -59,7 +59,7 @@ public class UserController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users')")
     @GetMapping
     public ResponseEntity<Page<UserVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                  String sortBy, boolean descending, String filters) {
@@ -73,7 +73,7 @@ public class UserController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users')")
     @GetMapping("/{id}")
     public ResponseEntity<UserVO> fetch(@PathVariable Long id) {
         UserVO vo = userService.fetch(id);
@@ -86,7 +86,7 @@ public class UserController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:create')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:create')")
     @PostMapping
     public ResponseEntity<UserVO> create(@Valid @RequestBody UserDTO dto) {
         UserVO vo = userService.create(dto);
@@ -100,7 +100,7 @@ public class UserController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<UserVO> modify(@PathVariable Long id,
                                          @Valid @RequestBody UserDTO dto) {
@@ -114,7 +114,7 @@ public class UserController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:enable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:enable')")
     @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = userService.enable(id);
@@ -127,7 +127,7 @@ public class UserController {
      * @param id the pk.
      * @return 编辑后的信息，否则返回417状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:disable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:disable')")
     @PatchMapping("/{id}/disable")
     public ResponseEntity<Boolean> disable(@PathVariable Long id) {
         boolean disable = userService.disable(id);
@@ -140,7 +140,7 @@ public class UserController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:unlock')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:unlock')")
     @PatchMapping("/{id}/unlock")
     public ResponseEntity<Boolean> unlock(@PathVariable Long id) {
         boolean unlock = userService.unlock(id);
@@ -153,7 +153,7 @@ public class UserController {
      * @param id the pk.
      * @return no content.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         userService.remove(id);
@@ -166,7 +166,7 @@ public class UserController {
      * @param file the file of data.
      * @return the imported data.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_users:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:import')")
     @PostMapping("/import")
     public ResponseEntity<List<UserVO>> importFromFile(MultipartFile file) throws IOException {
         List<UserDTO> dtoList = ExcelReader.read(file.getInputStream(), UserDTO.class);

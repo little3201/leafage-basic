@@ -85,7 +85,7 @@ public class RegionController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions')")
     @GetMapping("/subset")
     public ResponseEntity<List<RegionVO>> subset(Long id) {
         List<RegionVO> voList = regionService.subset(id);
@@ -98,7 +98,7 @@ public class RegionController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:create')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:create')")
     @PostMapping
     public ResponseEntity<RegionVO> create(@Valid @RequestBody RegionDTO dto) {
         RegionVO vo = regionService.create(dto);
@@ -112,7 +112,7 @@ public class RegionController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<RegionVO> modify(@PathVariable Long id, @RequestBody RegionDTO dto) {
         RegionVO vo = regionService.modify(id, dto);
@@ -124,7 +124,7 @@ public class RegionController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         regionService.remove(id);
@@ -137,7 +137,7 @@ public class RegionController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:enable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:enable')")
     @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = regionService.enable(id);
@@ -150,7 +150,7 @@ public class RegionController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:disable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:disable')")
     @PatchMapping("/{id}/disable")
     public ResponseEntity<Boolean> disable(@PathVariable Long id) {
         boolean disable = regionService.disable(id);
@@ -162,7 +162,7 @@ public class RegionController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:import')")
     @PostMapping("/import")
     public ResponseEntity<List<RegionVO>> importFromFile(MultipartFile file) throws IOException {
         List<RegionDTO> dtoList = ExcelReader.read(file.getInputStream(), RegionDTO.class);

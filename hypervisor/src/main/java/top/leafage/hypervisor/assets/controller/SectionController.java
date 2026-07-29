@@ -54,7 +54,7 @@ public class SectionController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections')")
     @GetMapping("/{id}")
     public ResponseEntity<SectionVO> fetch(@PathVariable Long id) {
         SectionVO vo = sectionService.fetch(id);
@@ -68,7 +68,7 @@ public class SectionController {
      * @param ownerType tye type.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections')")
     @GetMapping("/{ownerId}/tree")
     public ResponseEntity<List<TreeNode<Long>>> tree(@PathVariable Long ownerId, @RequestParam String ownerType) {
         List<TreeNode<Long>> treeNodes = sectionService.tree(ownerId, Section.OwnerType.of(ownerType));
@@ -81,7 +81,7 @@ public class SectionController {
      * @param id the pk.
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:field')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:field')")
     @GetMapping("/{id}/fields")
     public ResponseEntity<List<SectionFieldVO>> fields(@PathVariable Long id) {
         List<SectionFieldVO> voList = sectionService.fields(id);
@@ -94,7 +94,7 @@ public class SectionController {
      * @param id the pk.
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:data')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:data')")
     @GetMapping("/{id}/datas")
     public ResponseEntity<List<SectionDataVO>> datas(@PathVariable Long id) {
         List<SectionDataVO> voList = sectionService.datas(id);
@@ -107,7 +107,7 @@ public class SectionController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:create')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:create')")
     @PostMapping
     public ResponseEntity<SectionVO> create(@Valid @RequestBody SectionDTO dto) {
         SectionVO vo = sectionService.create(dto);
@@ -120,7 +120,7 @@ public class SectionController {
      * @param dto the request body.
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:field')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:field')")
     @PostMapping("/fields")
     public ResponseEntity<SectionFieldVO> createField(@RequestBody SectionFieldDTO dto) {
         SectionFieldVO vo = sectionService.createField(dto);
@@ -133,7 +133,7 @@ public class SectionController {
      * @param dto the request body.
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:data')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:data')")
     @PostMapping("/datas")
     public ResponseEntity<SectionDataVO> createData(@RequestBody SectionDataDTO dto) {
         SectionDataVO vo = sectionService.createData(dto);
@@ -147,7 +147,7 @@ public class SectionController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:modify')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<SectionVO> modify(@PathVariable Long id, @RequestBody SectionDTO dto) {
         SectionVO vo = sectionService.modify(id, dto);
@@ -161,7 +161,7 @@ public class SectionController {
      * @param dto the request body.
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:field')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:field')")
     @PutMapping("/fields/{id}")
     public ResponseEntity<SectionFieldVO> modifyField(@PathVariable Long id, @RequestBody SectionFieldDTO dto) {
         SectionFieldVO vo = sectionService.modifyField(id, dto);
@@ -175,7 +175,7 @@ public class SectionController {
      * @param dto the request body.
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:data')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:data')")
     @PutMapping("/datas/{id}")
     public ResponseEntity<SectionDataVO> modifyData(@PathVariable Long id, @RequestBody SectionDataDTO dto) {
         SectionDataVO vo = sectionService.modifyData(id, dto);
@@ -187,7 +187,7 @@ public class SectionController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         sectionService.remove(id);
@@ -199,7 +199,7 @@ public class SectionController {
      *
      * @param id the pk of section field.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:remove')")
     @DeleteMapping("/fields/{id}")
     public ResponseEntity<Void> removeField(@PathVariable Long id) {
         sectionService.removeField(id);
@@ -211,7 +211,7 @@ public class SectionController {
      *
      * @param id the pk of section data.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:remove')")
     @DeleteMapping("/datas/{id}")
     public ResponseEntity<Void> removeData(@PathVariable Long id) {
         sectionService.removeData(id);

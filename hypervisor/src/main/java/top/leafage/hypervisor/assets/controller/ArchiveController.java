@@ -55,7 +55,7 @@ public class ArchiveController {
      * @param filters    过滤条件，格式：field:condition:value，如：name:like:test
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_archives')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('archives')")
     @GetMapping
     public ResponseEntity<Page<ArchiveVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                     String sortBy, boolean descending, String filters) {
@@ -69,7 +69,7 @@ public class ArchiveController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_archives')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('archives')")
     @GetMapping("/{id}")
     public ResponseEntity<ArchiveVO> fetch(@PathVariable Long id) {
         ArchiveVO vo = archiveService.fetch(id);
@@ -82,7 +82,7 @@ public class ArchiveController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_archives:create')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('archives:create')")
     @PostMapping
     public ResponseEntity<ArchiveVO> create(@Valid @RequestBody ArchiveDTO dto) {
         ArchiveVO vo = archiveService.create(dto);
@@ -96,7 +96,7 @@ public class ArchiveController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_archives:modify')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('archives:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<ArchiveVO> modify(@PathVariable Long id, @RequestBody ArchiveDTO dto) {
         ArchiveVO vo = archiveService.modify(id, dto);
@@ -108,7 +108,7 @@ public class ArchiveController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_archives:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('archives:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         archiveService.remove(id);
@@ -120,7 +120,7 @@ public class ArchiveController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_archives:import')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('archives:import')")
     @PostMapping("/import")
     public ResponseEntity<List<ArchiveVO>> importFromFile(MultipartFile file) throws IOException {
         List<ArchiveDTO> dtoList = ExcelReader.read(file.getInputStream(), ArchiveDTO.class);

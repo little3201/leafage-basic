@@ -61,7 +61,7 @@ public class ReportController {
      * @param filters    过滤条件，格式：field:condition:value，如：name:like:test
      * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_reports')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('reports')")
     @GetMapping
     public ResponseEntity<Page<ReportVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                    String sortBy, boolean descending, String filters) {
@@ -75,7 +75,7 @@ public class ReportController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_reports')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('reports')")
     @GetMapping("/{id}")
     public ResponseEntity<ReportVO> fetch(@PathVariable Long id) {
         ReportVO vo = reportService.fetch(id);
@@ -88,7 +88,7 @@ public class ReportController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_reports:create')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('reports:create')")
     @PostMapping
     public ResponseEntity<ReportVO> create(@Valid @RequestBody ReportDTO dto) {
         ReportVO vo = reportService.create(dto);
@@ -102,7 +102,7 @@ public class ReportController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_reports:modify')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('reports:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<ReportVO> modify(@PathVariable Long id, @RequestBody ReportDTO dto) {
         ReportVO vo = reportService.modify(id, dto);
@@ -114,7 +114,7 @@ public class ReportController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_reports:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('reports:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         reportService.remove(id);
@@ -126,7 +126,7 @@ public class ReportController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_reports:import')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('reports:import')")
     @PostMapping("/import")
     public ResponseEntity<List<ReportVO>> importFromFile(MultipartFile file) throws IOException {
         List<ReportDTO> dtoList = ExcelReader.read(file.getInputStream(), ReportDTO.class);
@@ -140,7 +140,7 @@ public class ReportController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('DEVELOP') || hasAuthority('SCOPE_reports:generate')")
+    @PreAuthorize("hasRole('DEVELOP') || hasAuthority('reports:generate')")
     @GetMapping("/{id}/generate")
     public ResponseEntity<Resource> generate(@PathVariable Long id) {
         byte[] zipBytes = reportService.generate(id);
@@ -163,7 +163,7 @@ public class ReportController {
      * @param id the pk.
      * @return The list of records value objects, or 417 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('DEVELOP') || hasAuthority('SCOPE_reports')")
+    @PreAuthorize("hasRole('DEVELOP') || hasAuthority('reports')")
     @GetMapping("/{id}/preview")
     public ResponseEntity<String> preview(@PathVariable Long id) {
         String content = reportService.preview(id);

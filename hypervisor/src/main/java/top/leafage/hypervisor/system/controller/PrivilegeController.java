@@ -62,7 +62,7 @@ public class PrivilegeController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges')")
     @GetMapping
     public ResponseEntity<Page<PrivilegeVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                       String sortBy, boolean descending, String filters) {
@@ -87,7 +87,7 @@ public class PrivilegeController {
      * @param superiorId the pk.
      * @return 查询到的信息，否则返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges')")
     @GetMapping("/{superiorId}/subset")
     public ResponseEntity<List<PrivilegeVO>> subset(@PathVariable Long superiorId) {
         List<PrivilegeVO> voList = privilegeService.subset(superiorId);
@@ -100,7 +100,7 @@ public class PrivilegeController {
      * @param id the pk.
      * @return 查询到的信息，否则返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges')")
     @GetMapping("/{id}")
     public ResponseEntity<PrivilegeVO> fetch(@PathVariable Long id) {
         PrivilegeVO vo = privilegeService.fetch(id);
@@ -114,7 +114,7 @@ public class PrivilegeController {
      * @param dto the request body.
      * @return 编辑后的信息，否则返回417状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<PrivilegeVO> modify(@PathVariable Long id, @Valid @RequestBody PrivilegeDTO dto) {
         PrivilegeVO vo = privilegeService.modify(id, dto);
@@ -127,7 +127,7 @@ public class PrivilegeController {
      * @param id the pk.
      * @return 编辑后的信息，否则返回417状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:enable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges:enable')")
     @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = privilegeService.enable(id);
@@ -140,7 +140,7 @@ public class PrivilegeController {
      * @param id the pk.
      * @return 编辑后的信息，否则返回417状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:disable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges:disable')")
     @PatchMapping("/{id}/disable")
     public ResponseEntity<Boolean> disable(@PathVariable Long id) {
         boolean disable = privilegeService.disable(id);
@@ -152,7 +152,7 @@ public class PrivilegeController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_privileges:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges:import')")
     @PostMapping("/import")
     public ResponseEntity<List<PrivilegeVO>> importFromFile(MultipartFile file) throws IOException {
         List<PrivilegeDTO> dtoList = ExcelReader.read(file.getInputStream(), PrivilegeDTO.class);

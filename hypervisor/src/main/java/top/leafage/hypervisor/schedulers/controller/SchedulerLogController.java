@@ -47,7 +47,7 @@ public class SchedulerLogController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_scheduler_logs')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('scheduler_logs')")
     @GetMapping
     public ResponseEntity<Page<SchedulerLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                          String sortBy, boolean descending, String filters) {
@@ -61,7 +61,7 @@ public class SchedulerLogController {
      * @param id the pk.
      * @return The record data, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_scheduler_logs')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('scheduler_logs')")
     @GetMapping("/{id}")
     public ResponseEntity<SchedulerLogVO> fetch(@PathVariable Long id) {
         SchedulerLogVO vo = schedulerLogService.fetch(id);
@@ -74,7 +74,7 @@ public class SchedulerLogController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_scheduler_logs:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('scheduler_logs:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         schedulerLogService.remove(id);
@@ -85,7 +85,7 @@ public class SchedulerLogController {
      * 清空信息
      *
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_operation_logs:clear')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('operation_logs:clear')")
     @DeleteMapping
     public ResponseEntity<Void> clear() {
         schedulerLogService.clear();

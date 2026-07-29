@@ -53,7 +53,7 @@ public class AccessLogController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_access_logs')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('access_logs')")
     @GetMapping
     public ResponseEntity<Page<AccessLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                       String sortBy, boolean descending, String filters) {
@@ -67,7 +67,7 @@ public class AccessLogController {
      * @param id the pk.
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_access_logs')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('access_logs')")
     @GetMapping("/{id}")
     public ResponseEntity<AccessLogVO> fetch(@PathVariable Long id) {
         AccessLogVO vo = accessLogService.fetch(id);
@@ -79,7 +79,7 @@ public class AccessLogController {
      *
      * @param id the pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_access_logs:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('access_logs:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         accessLogService.remove(id);
@@ -90,7 +90,7 @@ public class AccessLogController {
      * 清空信息
      *
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_access_logs:clear')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('access_logs:clear')")
     @DeleteMapping
     public ResponseEntity<Void> clear() {
         accessLogService.clear();

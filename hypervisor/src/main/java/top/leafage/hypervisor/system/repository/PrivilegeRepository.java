@@ -51,7 +51,6 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>, Jpa
     /**
      * Group 直接配置的 Privilege
      *
-     * @param username the username of user.
      * @return result.
      */
     @Query("""
@@ -60,14 +59,13 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>, Jpa
             JOIN g.members u
             JOIN g.groupPrivileges gp
             JOIN gp.privilege p
-            WHERE u.username = :username
+            WHERE u.username = ?#{ principal?.name }
             """)
-    List<Long> findGroupPrivilegeIdsByUsername(String username);
+    List<Long> findGroupPrivilegeIds();
 
     /**
      * 通过 Group → Role 继承的 Privilege
      *
-     * @param username the username of user.
      * @return result.
      */
     @Query("""
@@ -77,25 +75,24 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>, Jpa
             JOIN g.roles r
             JOIN r.rolePrivileges rp
             JOIN rp.privilege p
-            WHERE u.username = :username
+            WHERE u.username = ?#{ principal?.name }
             """)
-    List<Long> findGroupRolePrivilegeIdsByUsername(String username);
+    List<Long> findGroupRolePrivilegeIds();
 
     /**
-     * Group 直接配置的 Privilege
+     * Role 直接配置的 Privilege
      *
-     * @param username the username of user.
      * @return result.
      */
     @Query("""
             SELECT DISTINCT p.id 
-            FROM Role r
-            JOIN r.members u
+            FROM User u
+            JOIN u.roles r
             JOIN r.rolePrivileges rp
             JOIN rp.privilege p
-            WHERE u.username = :username
+            WHERE u.username = ?#{ principal?.name }
             """)
-    List<Long> findRolePrivilegeIdsByUsername(String username);
+    List<Long> findRolePrivilegeIds();
 
     /**
      * Counts the number of records by superior ID.

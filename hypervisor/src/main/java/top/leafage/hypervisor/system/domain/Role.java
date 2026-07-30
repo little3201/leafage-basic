@@ -32,22 +32,24 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_members",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
-    private final Set<User> members = new HashSet<>();
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<RolePrivilege> rolePrivileges = new HashSet<>();
     @Column(unique = true, nullable = false)
     private String name;
+
+    @Column(unique = true, nullable = false)
+    private String code;
+
+    private boolean builtIn = false;
+
     private boolean enabled = true;
 
     public Role() {
     }
 
-    public Role(String name) {
+    public Role(String name, String code) {
         this.name = name;
+        this.code = code;
     }
 
     public void addPrivilege(Privilege privilege, Set<String> actions) {
@@ -74,13 +76,6 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
                 });
     }
 
-    public void addMember(User user) {
-        this.members.add(user);
-    }
-
-    public void removeMember(User user) {
-        this.members.remove(user);
-    }
 
     public String getName() {
         return name;
@@ -90,16 +85,28 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
         this.name = name;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean isBuiltIn() {
+        return builtIn;
+    }
+
+    public void setBuiltIn(boolean builtIn) {
+        this.builtIn = builtIn;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public Set<User> getMembers() {
-        return Set.copyOf(members);
     }
 
     public Set<RolePrivilege> getRolePrivileges() {

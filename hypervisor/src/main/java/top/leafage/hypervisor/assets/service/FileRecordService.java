@@ -42,8 +42,7 @@ public interface FileRecordService extends JpaCrudService<FileRecordDTO, FileRec
     /**
      * statistics
      *
-     * @param username the username of user.
      * @return the result.
      */
-    List<FileStatisticsVO> statistics(String username);
+    List<FileStatisticsVO> statistics();
 }

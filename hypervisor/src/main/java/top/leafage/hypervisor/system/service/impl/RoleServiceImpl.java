@@ -28,14 +28,12 @@ import top.leafage.hypervisor.system.domain.*;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
-import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.repository.*;
 import top.leafage.hypervisor.system.service.RoleService;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
@@ -174,49 +172,6 @@ public class RoleServiceImpl implements RoleService {
      */
     @Transactional
     @Override
-    public void addMembers(Long id, Set<String> usernames) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        Role role = roleRepository.findById(id).orElseThrow();
-        Set<String> existing = role.getMembers()
-                .stream()
-                .map(User::getUsername)
-                .collect(Collectors.toSet());
-
-        Set<String> collect = usernames.stream().filter(username -> !existing.contains(username)).collect(Collectors.toSet());
-        userRepository.findAllByUsernameIn(collect).forEach(role::addMember);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<UserVO> members(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        Role role = roleRepository.findWithMembersById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Role not found: " + id));
-        return role.getMembers().stream().map(UserVO::from).toList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional
-    @Override
-    public void removeMembers(Long id, Set<String> usernames) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        Role role = roleRepository.findById(id).orElseThrow();
-
-        userRepository.findAllByUsernameIn(usernames).forEach(role::removeMember);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional
-    @Override
     public void addPrivilege(Long id, Long privilegeId, String action) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
         Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
@@ -276,13 +231,33 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.save(role);
 
         syncAllGroupsContainingRole(role);
+
+        syncAllUsersContainingRole(role);
     }
 
+    /**
+     * 更新关联了角色的组权限
+     *
+     * @param role 角色
+     */
     private void syncAllGroupsContainingRole(Role role) {
-        List<Group> groups = groupRepository.findByRolesContaining(role);
-        for (Group g : groups) {
-            g.syncAuthorities();
-            groupRepository.save(g);
+        List<Group> groups = groupRepository.findDisctinctByRolesContaining(role);
+        for (Group group : groups) {
+            group.syncAuthorities();
+            groupRepository.save(group);
+        }
+    }
+
+    /**
+     * 更新关联了角色的用户权限
+     *
+     * @param role 角色
+     */
+    private void syncAllUsersContainingRole(Role role) {
+        List<User> groups = userRepository.findDisctinctByRolesContaining(role);
+        for (User user : groups) {
+            user.syncAuthorities();
+            userRepository.save(user);
         }
     }
 }

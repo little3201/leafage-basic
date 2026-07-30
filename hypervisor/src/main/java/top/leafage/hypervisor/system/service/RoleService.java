@@ -18,10 +18,8 @@ import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
-import top.leafage.hypervisor.system.domain.vo.UserVO;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Role service.
@@ -29,30 +27,6 @@ import java.util.Set;
  * @author wq li
  */
 public interface RoleService extends JpaCrudService<RoleDTO, RoleVO> {
-
-    /**
-     * 添加 user
-     *
-     * @param id        the pk of group.
-     * @param usernames the username of users.
-     */
-    void addMembers(Long id, Set<String> usernames);
-
-    /**
-     * 查询 user
-     *
-     * @param id the pk of group.
-     * @return 数据集
-     */
-    List<UserVO> members(Long id);
-
-    /**
-     * 移除 user
-     *
-     * @param id        the pk of group.
-     * @param usernames the username of users.
-     */
-    void removeMembers(Long id, Set<String> usernames);
 
     /**
      * 添加 privilege

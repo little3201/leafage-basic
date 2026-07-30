@@ -63,7 +63,7 @@ public class MessageInboxServiceImpl implements MessageInboxService {
         Specification<MessageInbox> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
-        return messageInboxRepository.findAll(spec, pageable)
+        return messageInboxRepository.findAllBy(spec, pageable)
                 .map(MessageInboxVO::from);
     }
 

@@ -115,11 +115,12 @@ public class AuthorizationServerConfiguration {
     UserDetailsService userDetailsService(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
         jdbcUserDetailsManager.setEnableGroups(true);
+        jdbcUserDetailsManager.setEnableUpdatePassword(true);
         return jdbcUserDetailsManager;
     }
 
     /**
-     * token中添加 roles，减少token长度
+     * token中添加 authorities，适配角色、权限
      *
      * @return JwtEncodingContext
      */

@@ -15,7 +15,6 @@
 package top.leafage.hypervisor.system.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.Predicate;
 import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
@@ -91,16 +90,8 @@ public class GroupServiceImpl implements GroupService {
     public Page<GroupVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<Group> spec = (root, _, cb) -> {
-            Optional<Predicate> predicate = buildPredicate(filters, cb, root);
-            // 添加superiorId的条件
-            Predicate basePredicate = predicate.orElse(cb.conjunction());
-            if (StringUtils.hasText(filters) && filters.contains("superiorId")) {
-                return basePredicate;
-            } else {
-                return cb.and(basePredicate, cb.isNull(root.get("superiorId")));
-            }
-        };
+        Specification<Group> spec = (root, _, cb) ->
+                buildPredicate(filters, cb, root).orElse(null);
 
         return groupRepository.findAll(spec, pageable)
                 .map(GroupVO::from);
@@ -224,7 +215,7 @@ public class GroupServiceImpl implements GroupService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         Group group = groupRepository.findWithMembersById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Group not found: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("group not found: " + id));
         return group.getMembers().stream().map(UserVO::from).toList();
     }
 
@@ -266,8 +257,8 @@ public class GroupServiceImpl implements GroupService {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         Group group = groupRepository.findWithRolesById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Group not found: " + id));
-        return group.getRoles().stream().map(role -> RoleVO.from(role.getId(), role.getName(), role.isEnabled())).toList();
+                .orElseThrow(() -> new EntityNotFoundException("group not found: " + id));
+        return group.getRoles().stream().map(RoleVO::from).toList();
     }
 
     /**

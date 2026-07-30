@@ -32,10 +32,9 @@ public interface PrivilegeService extends JpaCrudService<PrivilegeDTO, Privilege
     /**
      * 获取树结构数据
      *
-     * @param username username
      * @return 树结构数据集
      */
-    List<TreeNode<@NonNull Long>> tree(String username);
+    List<TreeNode<@NonNull Long>> tree();
 
     /**
      * get subset

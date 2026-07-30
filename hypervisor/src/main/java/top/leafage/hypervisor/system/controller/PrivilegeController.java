@@ -27,7 +27,6 @@ import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 import top.leafage.hypervisor.system.service.PrivilegeService;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 
 
@@ -76,8 +75,8 @@ public class PrivilegeController {
      * @return the result.
      */
     @GetMapping("/tree")
-    public ResponseEntity<List<TreeNode<Long>>> tree(Principal principal) {
-        List<TreeNode<Long>> treeNodes = privilegeService.tree(principal.getName());
+    public ResponseEntity<List<TreeNode<Long>>> tree() {
+        List<TreeNode<Long>> treeNodes = privilegeService.tree();
         return ResponseEntity.ok(treeNodes);
     }
 

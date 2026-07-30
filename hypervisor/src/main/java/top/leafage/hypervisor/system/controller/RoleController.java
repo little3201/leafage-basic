@@ -25,12 +25,10 @@ import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
-import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.RoleService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Role controller.
@@ -128,7 +126,7 @@ public class RoleController {
      * @param id the pk.
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('roles:enable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:enable')")
     @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = roleService.enable(id);
@@ -160,47 +158,6 @@ public class RoleController {
         List<RoleVO> voList = roleService.createAll(dtoList);
 
         return ResponseEntity.ok().body(voList);
-    }
-
-    /**
-     * 保存role-privilege关联
-     *
-     * @param id        role id
-     * @param usernames 账号
-     * @return 操作结果
-     */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:member')")
-    @PatchMapping("/{id}/members")
-    public ResponseEntity<Void> addMembers(@PathVariable Long id, @RequestBody Set<String> usernames) {
-        roleService.addMembers(id, usernames);
-        return ResponseEntity.ok().build();
-    }
-
-    /**
-     * 删除 role-privilege关联
-     *
-     * @param id        the pk of role.
-     * @param usernames username集合
-     * @return 操作结果
-     */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:member')")
-    @DeleteMapping("/{id}/members")
-    public ResponseEntity<Void> removeMembers(@PathVariable Long id, @RequestParam Set<String> usernames) {
-        roleService.removeMembers(id, usernames);
-        return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * 根据id查询关联用户信息
-     *
-     * @param id roleid
-     * @return 查询到的数据集，异常时返回204状态码
-     */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:member')")
-    @GetMapping("/{id}/members")
-    public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
-        List<UserVO> members = roleService.members(id);
-        return ResponseEntity.ok(members);
     }
 
     /**

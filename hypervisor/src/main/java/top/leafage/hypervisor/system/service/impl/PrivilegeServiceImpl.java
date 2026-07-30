@@ -38,7 +38,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static top.leafage.common.data.core.converter.ModelToTreeNodeConverter.toTree;
-import static top.leafage.hypervisor.constants.GlobalConstant.*;
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
 
 /**
  * privilege service impl.
@@ -103,13 +104,11 @@ public class PrivilegeServiceImpl implements PrivilegeService {
      * {@inheritDoc}
      */
     @Override
-    public List<TreeNode<@NonNull Long>> tree(String username) {
-        Assert.hasText(username, String.format(_MUST_NOT_BE_EMPTY, "username"));
-
+    public List<TreeNode<@NonNull Long>> tree() {
         Set<Long> privilegeIds = new LinkedHashSet<>();
-        privilegeIds.addAll(privilegeRepository.findGroupPrivilegeIdsByUsername(username));
-        privilegeIds.addAll(privilegeRepository.findGroupRolePrivilegeIdsByUsername(username));
-        privilegeIds.addAll(privilegeRepository.findRolePrivilegeIdsByUsername(username));
+        privilegeIds.addAll(privilegeRepository.findGroupPrivilegeIds());
+        privilegeIds.addAll(privilegeRepository.findGroupRolePrivilegeIds());
+        privilegeIds.addAll(privilegeRepository.findRolePrivilegeIds());
         if (CollectionUtils.isEmpty(privilegeIds)) {
             return Collections.emptyList();
         }

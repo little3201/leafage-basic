@@ -18,6 +18,7 @@ package top.leafage.hypervisor.messages.domain.vo;
 import top.leafage.hypervisor.messages.domain.Message;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,12 +32,16 @@ public record MessageVO(
         String body,
         String type,
         String sender,
-        String scope,
-        List<String> receivers,
+        Message.Scope scope,
+        List<TargetVO> targets,
         Message.Status status,
         LocalDateTime publishedAt
 ) {
     public static MessageVO from(Message entity) {
+        return MessageVO.from(entity, Collections.emptyList());
+    }
+
+    public static MessageVO from(Message entity, List<TargetVO> targets) {
         return new MessageVO(
                 entity.getId(),
                 entity.getTitle(),
@@ -44,7 +49,7 @@ public record MessageVO(
                 entity.getType(),
                 entity.getCreatedBy().orElse(null),
                 entity.getScope(),
-                entity.getReceivers(),
+                targets,
                 entity.getStatus(),
                 entity.getPublishedAt()
         );

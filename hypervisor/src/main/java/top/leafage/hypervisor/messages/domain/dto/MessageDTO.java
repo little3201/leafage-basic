@@ -16,6 +16,7 @@
 package top.leafage.hypervisor.messages.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import top.leafage.hypervisor.messages.domain.Message;
 
 import java.util.List;
@@ -36,14 +37,14 @@ public class MessageDTO {
     @NotBlank
     private String type;
 
-    @NotBlank
-    private String scope;
+    @NotNull
+    private Message.Scope scope;
 
-    private List<String> receivers;
+    private List<Long> targets;
 
 
     public static Message toEntity(MessageDTO dto) {
-        return new Message(dto.getTitle(), dto.getBody(), dto.getType(), dto.getScope(), dto.getReceivers());
+        return new Message(dto.getTitle(), dto.getBody(), dto.getType(), dto.getScope());
     }
 
     public String getTitle() {
@@ -70,19 +71,19 @@ public class MessageDTO {
         this.type = type;
     }
 
-    public String getScope() {
+    public Message.Scope getScope() {
         return scope;
     }
 
-    public void setScope(String scope) {
+    public void setScope(Message.Scope scope) {
         this.scope = scope;
     }
 
-    public List<String> getReceivers() {
-        return receivers;
+    public List<Long> getTargets() {
+        return targets;
     }
 
-    public void setReceivers(List<String> receivers) {
-        this.receivers = receivers;
+    public void setTargets(List<Long> targets) {
+        this.targets = targets;
     }
 }

@@ -886,27 +886,6 @@ comment on column regions.created_date is '创建时间';
 comment on column regions.last_modified_by is '最后修改者';
 comment on column regions.last_modified_date is '最后修改时间';
 
-create table role_members
-(
-    tableoid oid                    not null,
-    cmax     cid                    not null,
-    xmax     xid                    not null,
-    cmin     cid                    not null,
-    xmin     xid                    not null,
-    ctid     tid                    not null,
-    id       bigint primary key     not null, -- 主键
-    role_id  bigint                 not null, -- 角色ID
-    username character varying(255) not null, -- 用户名
-    foreign key (role_id) references roles (id)
-        match simple on update no action on delete no action,
-    foreign key (username) references users (username)
-        match simple on update no action on delete no action
-);
-comment on table role_members is '角色成员关系表';
-comment on column role_members.id is '主键';
-comment on column role_members.role_id is '角色ID';
-comment on column role_members.username is '用户名';
-
 create table role_privilege_actions
 (
     tableoid          oid                    not null,

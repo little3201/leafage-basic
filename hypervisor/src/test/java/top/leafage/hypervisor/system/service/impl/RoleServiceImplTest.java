@@ -63,6 +63,7 @@ class RoleServiceImplTest {
     void setUp() {
         dto = new RoleDTO();
         dto.setName("test");
+        dto.setCode("TEST");
 
         entity = RoleDTO.toEntity(dto);
     }

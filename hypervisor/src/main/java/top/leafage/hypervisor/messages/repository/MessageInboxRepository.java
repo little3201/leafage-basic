@@ -15,6 +15,9 @@
 
 package top.leafage.hypervisor.messages.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -32,6 +35,14 @@ import java.util.List;
  */
 @Repository
 public interface MessageInboxRepository extends JpaRepository<MessageInbox, Long>, JpaSpecificationExecutor<MessageInbox> {
+
+    /**
+     * 分页查询
+     *
+     * @return result.
+     */
+    @Query("select t from MessageInbox t where t.createdBy = ?#{ principal?.name }")
+    Page<MessageInbox> findAllBy(Specification<MessageInbox> spec, Pageable pageable);
 
     /**
      * Find all.

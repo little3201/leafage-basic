@@ -14,15 +14,14 @@
  */
 package top.leafage.hypervisor.system.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
+import top.leafage.hypervisor.system.domain.Role;
 import top.leafage.hypervisor.system.domain.User;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * user repository.
@@ -31,6 +30,31 @@ import java.util.List;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
+
+    /**
+     * 查询
+     *
+     * @param role the role.
+     * @return result.
+     */
+    List<User> findDisctinctByRolesContaining(Role role);
+
+    /**
+     * 查询
+     *
+     * @param ids the pk of records.
+     * @return result.
+     */
+    List<User> findByRolesIdIn(Collection<Long> ids);
+
+    /**
+     * 查询
+     *
+     * @param id the pk.
+     * @return result.
+     */
+    @EntityGraph(attributePaths = "roles")
+    Optional<User> findWithRolesById(Long id);
 
     /**
      * 查询.
@@ -76,13 +100,4 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     @Query("UPDATE User t SET t.enabled = false WHERE t.id = :id AND t.enabled = true")
     int disableById(Long id);
 
-    /**
-     * update the accountNonLocked to true by pk.
-     *
-     * @param id the pk.
-     * @return result.
-     */
-    @Modifying
-    @Query("UPDATE User t SET t.accountNonLocked = true WHERE t.id = :id")
-    int updateAccountNonLockedById(Long id);
 }

@@ -15,13 +15,13 @@
 package top.leafage.hypervisor.system.domain;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * entity class for user.
@@ -43,13 +43,24 @@ public class User extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
     private String email;
 
-    private boolean accountNonExpired = true;
-
-    private boolean accountNonLocked = true;
-
-    private boolean credentialsNonExpired = true;
-
     private boolean enabled = true;
+
+    /**
+     * roles
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private final Set<Role> roles = new HashSet<>();
+
+    /**
+     * authorities
+     */
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "authorities", joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
+    @Column(name = "authority")
+    private final Set<String> authorities = new HashSet<>();
 
 
     public User() {
@@ -60,6 +71,52 @@ public class User extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
         this.password = password;
         this.fullName = fullName;
         this.email = email;
+    }
+
+    public void addRole(Role role) {
+        if (this.roles.add(role)) {
+            syncAuthorities();
+        }
+    }
+
+    public void removeRole(Role role) {
+        if (this.roles.remove(role)) {
+            syncAuthorities();
+        }
+    }
+
+    /**
+     * 核心同步方法：把 Role 的权限转换成 authorities
+     */
+    public void syncAuthorities() {
+        this.authorities.clear();
+
+        // 关联的 Roles
+        for (Role role : roles) {
+            if (role.isBuiltIn()) {
+                authorities.add(
+                        "ROLE_" + role.getCode()
+                );
+            }
+
+            for (RolePrivilege rp : role.getRolePrivileges()) {
+                addAuthorities(rp.getPrivilege().getName(), rp.getActions());
+            }
+        }
+    }
+
+    /**
+     * Add authority for security. Example：users:create
+     *
+     * @param privilegeName the privilege name.
+     * @param actions       the action under the privilege.
+     */
+    private void addAuthorities(String privilegeName, Set<String> actions) {
+        this.authorities.add(privilegeName);
+        for (String action : actions) {
+            String authority = privilegeName + ":" + action;
+            this.authorities.add(authority);
+        }
     }
 
     public String getUsername() {
@@ -94,30 +151,6 @@ public class User extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
         this.email = email;
     }
 
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    public void setAccountNonExpired(boolean accountNonExpired) {
-        this.accountNonExpired = accountNonExpired;
-    }
-
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    public void setAccountNonLocked(boolean accountNonLocked) {
-        this.accountNonLocked = accountNonLocked;
-    }
-
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
-        this.credentialsNonExpired = credentialsNonExpired;
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
@@ -126,4 +159,11 @@ public class User extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
         this.enabled = enabled;
     }
 
+    public Set<Role> getRoles() {
+        return Set.copyOf(roles);
+    }
+
+    public Set<String> getAuthorities() {
+        return Set.copyOf(authorities);
+    }
 }

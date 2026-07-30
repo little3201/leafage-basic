@@ -23,11 +23,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.system.domain.dto.UserDTO;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User controller.
@@ -135,19 +137,6 @@ public class UserController {
     }
 
     /**
-     * unlock.
-     *
-     * @param id the pk.
-     * @return the result.
-     */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:unlock')")
-    @PatchMapping("/{id}/unlock")
-    public ResponseEntity<Boolean> unlock(@PathVariable Long id) {
-        boolean unlock = userService.unlock(id);
-        return ResponseEntity.ok(unlock);
-    }
-
-    /**
      * Remove.
      *
      * @param id the pk.
@@ -173,6 +162,47 @@ public class UserController {
         List<UserVO> voList = userService.createAll(dtoList);
 
         return ResponseEntity.ok().body(voList);
+    }
+
+    /**
+     * 根据user查询关联roles
+     *
+     * @param id user id
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:authorize')")
+    @GetMapping("/{id}/roles")
+    public ResponseEntity<List<RoleVO>> roles(@PathVariable Long id) {
+        List<RoleVO> roles = userService.roles(id);
+        return ResponseEntity.ok(roles);
+    }
+
+    /**
+     * 保存user-roles关联
+     *
+     * @param id      user id
+     * @param roleIds role ids
+     * @return 操作结果
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:authorize')")
+    @PatchMapping("/{id}/roles")
+    public ResponseEntity<Void> addRoles(@PathVariable Long id, @RequestBody Set<Long> roleIds) {
+        userService.addRoles(id, roleIds);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 删除 user-roles关联
+     *
+     * @param id      user id
+     * @param roleIds role ids
+     * @return 操作结果
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:authorize')")
+    @DeleteMapping("/{id}/roles")
+    public ResponseEntity<Void> removeRoles(@PathVariable Long id, @RequestParam Set<Long> roleIds) {
+        userService.removeRoles(id, roleIds);
+        return ResponseEntity.noContent().build();
     }
 
 }

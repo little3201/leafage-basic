@@ -27,7 +27,6 @@ import java.time.LocalDateTime;
 public record MessageInboxVO(
         Long id,
         MessageVO message,
-        String receiver,
         MessageInbox.Status status,
         LocalDateTime readAt
 ) {
@@ -35,7 +34,6 @@ public record MessageInboxVO(
         return new MessageInboxVO(
                 entity.getId(),
                 MessageVO.from(entity.getMessage()),
-                entity.getReceiver(),
                 entity.getStatus(),
                 entity.getReadAt()
         );

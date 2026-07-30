@@ -17,11 +17,8 @@ package top.leafage.hypervisor.messages.domain;
 
 import jakarta.persistence.*;
 import org.jspecify.annotations.NonNull;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
-import top.leafage.hypervisor.system.domain.User;
-
-import java.time.LocalDateTime;
 
 /**
  * entity class for message.
@@ -30,36 +27,32 @@ import java.time.LocalDateTime;
  */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "message_inbox")
-public class MessageInbox extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
+@Table(name = "message_targets")
+public class MessageTarget extends AbstractPersistable<@NonNull Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "message_id", nullable = false)
+    @JoinColumn(name = "message_id")
     private Message message;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "receiver",
-            referencedColumnName = "username"
-    )
-    private User receiver;
-
     @Enumerated(EnumType.STRING)
-    private Status status = Status.UNREAD;
+    private TargetType type;
 
-    private LocalDateTime readAt;
+    private Long targetId;
 
-    public MessageInbox() {
+
+    public enum TargetType {
+        USER,
+        GROUP,
+        ROLE
     }
 
-    public MessageInbox(Message message, User receiver) {
+    public MessageTarget() {
+    }
+
+    public MessageTarget(Message message, TargetType type, Long targetId) {
         this.message = message;
-        this.receiver = receiver;
-    }
-
-    public enum Status {
-        READ,
-        UNREAD;
+        this.type = type;
+        this.targetId = targetId;
     }
 
     public Message getMessage() {
@@ -70,27 +63,19 @@ public class MessageInbox extends JpaAbstractAuditable<@NonNull String, @NonNull
         this.message = message;
     }
 
-    public User getReceiver() {
-        return receiver;
+    public TargetType getType() {
+        return type;
     }
 
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
+    public void setType(TargetType type) {
+        this.type = type;
     }
 
-    public Status getStatus() {
-        return status;
+    public Long getTargetId() {
+        return targetId;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getReadAt() {
-        return readAt;
-    }
-
-    public void setReadAt(LocalDateTime readAt) {
-        this.readAt = readAt;
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
     }
 }

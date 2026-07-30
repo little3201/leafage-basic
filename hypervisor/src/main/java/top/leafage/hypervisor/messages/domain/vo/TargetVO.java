@@ -12,45 +12,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package top.leafage.hypervisor.system.domain.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import top.leafage.hypervisor.system.domain.Role;
+package top.leafage.hypervisor.messages.domain.vo;
+
+import top.leafage.hypervisor.messages.domain.MessageTarget;
 
 /**
- * dto class for role.
+ * entity class for message.
  *
  * @author wq li
  */
-public class RoleDTO {
-
-    @NotBlank
-    private String name;
-
-    @NotBlank
-    private String code;
-
-
-    public static Role toEntity(RoleDTO dto) {
-        return new Role(
-                dto.getName(),
-                dto.getCode()
+public record TargetVO(
+        Long id,
+        String name
+) {
+    public static TargetVO from(MessageTarget entity, String name) {
+        return new TargetVO(
+                entity.getId(),
+                name
         );
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 }

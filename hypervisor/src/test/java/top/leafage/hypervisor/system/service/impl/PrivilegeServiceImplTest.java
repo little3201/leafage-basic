@@ -38,7 +38,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.verify;
 
@@ -138,11 +139,11 @@ class PrivilegeServiceImplTest {
 
     @Test
     void tree() {
-        when(privilegeRepository.findGroupPrivilegeIdsByUsername(anyString())).thenReturn(List.of(1L, 2L, 3L));
-        when(privilegeRepository.findGroupRolePrivilegeIdsByUsername(anyString())).thenReturn(List.of(4L, 5L));
-        when(privilegeRepository.findRolePrivilegeIdsByUsername(anyString())).thenReturn(List.of(6L, 7L));
+        when(privilegeRepository.findGroupPrivilegeIds()).thenReturn(List.of(1L, 2L, 3L));
+        when(privilegeRepository.findGroupRolePrivilegeIds()).thenReturn(List.of(4L, 5L));
+        when(privilegeRepository.findRolePrivilegeIds()).thenReturn(List.of(6L, 7L));
 
-        List<TreeNode<Long>> nodes = privilegeService.tree("test");
+        List<TreeNode<Long>> nodes = privilegeService.tree();
         assertNotNull(nodes);
     }
 

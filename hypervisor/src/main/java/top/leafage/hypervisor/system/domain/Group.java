@@ -37,20 +37,35 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
     private final Set<User> members = new HashSet<>();
+
+    /**
+     * roles
+     */
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "group_roles",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private final Set<Role> roles = new HashSet<>();
+
+    /**
+     * group privileges
+     */
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<GroupPrivilege> groupPrivileges = new HashSet<>();
+
+    /**
+     * group authorities
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "group_authorities", joinColumns = @JoinColumn(name = "group_id"))
     @Column(name = "authority")
     private final Set<String> authorities = new HashSet<>();
+
     @Column(name = "group_name", unique = true, nullable = false)
     private String name;
+
     private Long superiorId;
+
     private boolean enabled = true;
 
 
@@ -71,13 +86,15 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
     }
 
     public void addRole(Role role) {
-        this.roles.add(role);
-        syncAuthorities();
+        if (this.roles.add(role)) {
+            syncAuthorities();
+        }
     }
 
     public void removeRole(Role role) {
-        this.roles.remove(role);
-        syncAuthorities();
+        if (this.roles.remove(role)) {
+            syncAuthorities();
+        }
     }
 
     public void addPrivilege(Privilege privilege, Set<String> actions) {
@@ -85,8 +102,9 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
         gp.setGroup(this);
         gp.setPrivilege(privilege);
         gp.addActions(actions);
-        this.groupPrivileges.add(gp);
-        syncAuthorities();
+        if (this.groupPrivileges.add(gp)) {
+            syncAuthorities();
+        }
     }
 
     public void removePrivilege(Privilege privilege) {
@@ -113,16 +131,22 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
     public void syncAuthorities() {
         this.authorities.clear();
 
-        // 1. 来自关联的 Roles
+        // 关联的 Roles
         for (Role role : roles) {
+            if (role.isBuiltIn()) {
+                authorities.add(
+                        "ROLE_" + role.getCode()
+                );
+            }
+
             for (RolePrivilege rp : role.getRolePrivileges()) {
-                addAuthoritiesFromPrivilege(rp.getPrivilege().getName(), rp.getActions());
+                addAuthorities(rp.getPrivilege().getName(), rp.getActions());
             }
         }
 
-        // 2. 来自 Group 自身直接配置的 Privileges
+        // 直接配置的 Privileges
         for (GroupPrivilege gp : groupPrivileges) {
-            addAuthoritiesFromPrivilege(gp.getPrivilege().getName(), gp.getActions());
+            addAuthorities(gp.getPrivilege().getName(), gp.getActions());
         }
     }
 
@@ -132,22 +156,12 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
      * @param privilegeName the privilege name.
      * @param actions       the action under the privilege.
      */
-    private void addAuthoritiesFromPrivilege(String privilegeName, Set<String> actions) {
+    private void addAuthorities(String privilegeName, Set<String> actions) {
+        this.authorities.add(privilegeName);
         for (String action : actions) {
-            String authority = buildAuthority(privilegeName, action);
+            String authority = privilegeName + ":" + action;
             this.authorities.add(authority);
         }
-    }
-
-    /**
-     * Build authority for security. Example：users:create
-     *
-     * @param privilegeName the privilege name.
-     * @param action        the action under the privilege.
-     * @return authority.
-     */
-    private String buildAuthority(String privilegeName, String action) {
-        return privilegeName + ":" + action;
     }
 
     public String getName() {

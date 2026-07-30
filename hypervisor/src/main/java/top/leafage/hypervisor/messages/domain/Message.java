@@ -21,7 +21,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * entity class for message.
@@ -39,32 +40,58 @@ public class Message extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     private String type;
 
-    private String scope;
+    @Enumerated(EnumType.STRING)
+    private Scope scope;
 
     @Enumerated(EnumType.STRING)
     private Status status = Status.DRAFT;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "message_receivers", joinColumns = @JoinColumn(name = "message_id"))
-    private List<String> receivers;
+    @OneToMany(
+            mappedBy = "message",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<MessageTarget> targets = new HashSet<>();
 
     private LocalDateTime publishedAt;
 
     public Message() {
     }
 
-    public Message(String title, String body, String type, String scope, List<String> receivers) {
+    public Message(String title, String body, String type, Scope scope) {
         this.title = title;
         this.body = body;
         this.type = type;
         this.scope = scope;
-        this.receivers = receivers;
+    }
+
+    public enum Scope {
+        ALL,
+        USER,
+        GROUP,
+        ROLE;
     }
 
     public enum Status {
         DRAFT,
         PUBLISHED,
         REVOKED;
+    }
+
+    public void addTarget(MessageTarget.TargetType type, Long targetId) {
+        MessageTarget target = new MessageTarget(
+                this,
+                type,
+                targetId
+        );
+
+        targets.add(target);
+    }
+
+
+    public void clearTargets() {
+        targets.clear();
     }
 
     public String getTitle() {
@@ -99,20 +126,20 @@ public class Message extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.type = type;
     }
 
-    public String getScope() {
+    public Scope getScope() {
         return scope;
     }
 
-    public void setScope(String scope) {
+    public void setScope(Scope scope) {
         this.scope = scope;
     }
 
-    public List<String> getReceivers() {
-        return receivers;
+    public Set<MessageTarget> getTargets() {
+        return targets;
     }
 
-    public void setReceivers(List<String> receivers) {
-        this.receivers = receivers;
+    public void setTargets(Set<MessageTarget> targets) {
+        this.targets = targets;
     }
 
     public LocalDateTime getPublishedAt() {

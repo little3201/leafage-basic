@@ -12,29 +12,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package top.leafage.hypervisor.system.domain.vo;
 
-import top.leafage.hypervisor.system.domain.Role;
+package top.leafage.hypervisor.messages.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import top.leafage.hypervisor.messages.domain.MessageTarget;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
- * vo class for role.
+ * message repository.
  *
  * @author wq li
  */
-public record RoleVO(
-        Long id,
-        String name,
-        String code,
-        boolean builtIn,
-        boolean enabled
-) {
-    public static RoleVO from(Role entity) {
-        return new RoleVO(
-                entity.getId(),
-                entity.getName(),
-                entity.getCode(),
-                entity.isBuiltIn(),
-                entity.isEnabled()
-        );
-    }
+@Repository
+public interface MessageTargetRepository extends JpaRepository<MessageTarget, Long> {
+
+    /**
+     * 查询
+     *
+     * @param ids the pk of group.
+     * @return result.
+     */
+    List<MessageTarget> findByMessageIdIn(Collection<Long> ids);
 }

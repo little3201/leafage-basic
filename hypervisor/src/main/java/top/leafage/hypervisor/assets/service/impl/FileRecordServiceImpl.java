@@ -83,7 +83,7 @@ public class FileRecordServiceImpl implements FileRecordService {
             }
         };
 
-        return fileRecordRepository.findAll(spec, pageable)
+        return fileRecordRepository.findAllBy(spec, pageable)
                 .map(FileRecordVO::from);
     }
 
@@ -134,8 +134,8 @@ public class FileRecordServiceImpl implements FileRecordService {
     }
 
     @Override
-    public List<FileStatisticsVO> statistics(String username) {
-        List<FileRecord> fileRecords = fileRecordRepository.findAll();
+    public List<FileStatisticsVO> statistics() {
+        List<FileRecord> fileRecords = fileRecordRepository.findAllBy();
         if (CollectionUtils.isEmpty(fileRecords)) {
             return Collections.emptyList();
         }

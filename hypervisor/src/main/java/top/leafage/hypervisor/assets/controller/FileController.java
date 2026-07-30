@@ -37,7 +37,6 @@ import top.leafage.hypervisor.assets.service.FileRecordService;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.Principal;
 import java.util.List;
 
 /**
@@ -100,8 +99,8 @@ public class FileController {
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('files')")
     @GetMapping("/statistics")
-    public ResponseEntity<List<FileStatisticsVO>> statistics(Principal principal) {
-        List<FileStatisticsVO> voList = fileRecordService.statistics(principal.getName());
+    public ResponseEntity<List<FileStatisticsVO>> statistics() {
+        List<FileStatisticsVO> voList = fileRecordService.statistics();
         return ResponseEntity.ok(voList);
     }
 

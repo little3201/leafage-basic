@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.Role;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,12 +32,12 @@ import java.util.Optional;
 public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecificationExecutor<Group> {
 
     /**
-     * 查询关联 group
+     * 查询关联
      *
      * @param role the role.
      * @return result.
      */
-    List<Group> findByRolesContaining(Role role);
+    List<Group> findDisctinctByRolesContaining(Role role);
 
     /**
      * 查询 members
@@ -46,6 +47,15 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
      */
     @EntityGraph(attributePaths = "members")
     Optional<Group> findWithMembersById(Long id);
+
+    /**
+     * 查询 members
+     *
+     * @param ids the pk of group.
+     * @return result.
+     */
+    @EntityGraph(attributePaths = "members")
+    List<Group> findWithMembersByIdIn(Collection<Long> ids);
 
     /**
      * 查询 roles

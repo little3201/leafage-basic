@@ -23,11 +23,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import top.leafage.common.logging.annotation.OperationLog;
+import top.leafage.hypervisor.system.domain.Role;
 import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.UserDTO;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
+import top.leafage.hypervisor.system.repository.RoleRepository;
 import top.leafage.hypervisor.system.repository.UserRepository;
 import top.leafage.hypervisor.system.service.UserService;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
@@ -41,20 +48,25 @@ import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NUL
 public class UserServiceImpl implements UserService {
 
     private static final BeanCopier copier = BeanCopier.create(UserDTO.class, User.class, false);
+
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     /**
      * Constructor for UserServiceImpl.
      *
      * @param userRepository a {@link UserRepository} object
+     * @param roleRepository a {@link RoleRepository} object
      */
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
     public Page<UserVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
@@ -98,16 +110,6 @@ public class UserServiceImpl implements UserService {
             throw new EntityNotFoundException("user not found: " + id);
         }
         return userRepository.disableById(id) > 0;
-    }
-
-    @Transactional
-    @Override
-    public boolean unlock(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        if (!userRepository.existsById(id)) {
-            throw new EntityNotFoundException("user not found: " + id);
-        }
-        return userRepository.updateAccountNonLockedById(id) > 0;
     }
 
     /**
@@ -164,4 +166,42 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public void addRoles(Long id, Set<Long> roleIds) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        User user = userRepository.findById(id).orElseThrow();
+        Set<Long> existing = user.getRoles()
+                .stream()
+                .map(Role::getId)
+                .collect(Collectors.toSet());
+
+        Set<Long> collect = roleIds.stream().filter(roleId -> !existing.contains(roleId)).collect(Collectors.toSet());
+        roleRepository.findAllById(collect).forEach(user::addRole);
+    }
+
+    @Override
+    public List<RoleVO> roles(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        User user = userRepository.findWithRolesById(id)
+                .orElseThrow(() -> new EntityNotFoundException("user not found: " + id));
+        return user.getRoles().stream().map(RoleVO::from).toList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Transactional
+    @Override
+    public void removeRoles(Long id, Set<Long> roleIds) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        User user = userRepository.findById(id).orElseThrow();
+        roleRepository.findAllById(roleIds).forEach(user::removeRole);
+    }
 }

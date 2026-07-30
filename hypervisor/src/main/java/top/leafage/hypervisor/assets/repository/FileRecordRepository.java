@@ -15,6 +15,9 @@
 
 package top.leafage.hypervisor.assets.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.assets.domain.FileRecord;
 
 import java.util.List;
+
 
 /**
  * file repository.
@@ -40,8 +44,21 @@ public interface FileRecordRepository extends JpaRepository<FileRecord, Long>, J
      */
     boolean existsByName(String name);
 
+    /**
+     * 分页查询
+     *
+     * @return result.
+     */
     @Query("select t from FileRecord t where t.createdBy = ?#{ principal?.name }")
-    List<FileRecord> findAll();
+    Page<FileRecord> findAllBy(Specification<FileRecord> spec, Pageable pageable);
+
+    /**
+     * 查询
+     *
+     * @return result.
+     */
+    @Query("select t from FileRecord t where t.createdBy = ?#{ principal?.name }")
+    List<FileRecord> findAllBy();
 
     /**
      * enable a record by pk.

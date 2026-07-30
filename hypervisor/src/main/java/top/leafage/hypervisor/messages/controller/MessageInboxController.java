@@ -18,12 +18,9 @@ package top.leafage.hypervisor.messages.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import top.leafage.hypervisor.messages.domain.vo.MessageInboxVO;
 import top.leafage.hypervisor.messages.service.MessageInboxService;
-
-import java.security.Principal;
 
 /**
  * Message inbox controller.
@@ -53,17 +50,12 @@ public class MessageInboxController {
      * @param sortBy     The field to sort by.
      * @param descending Whether sorting should be in descending order.
      * @param filters    The filters.
-     * @param principal  The principal.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
     @PreAuthorize("hasRole('USER')")
     @GetMapping
     public ResponseEntity<Page<MessageInboxVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                         String sortBy, boolean descending, String filters, Principal principal) {
-        String receiverFilter = String.format("receiver:eq:%s", principal.getName());
-        filters = !StringUtils.hasText(filters)
-                ? receiverFilter
-                : filters.concat(",").concat(receiverFilter);
+                                                         String sortBy, boolean descending, String filters) {
         Page<MessageInboxVO> voPage = messageInboxService.retrieve(page, size, sortBy, descending, filters);
         return ResponseEntity.ok(voPage);
     }

@@ -16,7 +16,6 @@ package top.leafage.hypervisor.system.controller;
 
 
 import org.assertj.core.api.InstanceOfAssertFactories;
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +33,9 @@ import tools.jackson.databind.ObjectMapper;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
-import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.RoleService;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -71,10 +67,11 @@ class RoleControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new RoleVO(1L, "test", Collections.emptySet(), true);
+        vo = new RoleVO(1L, "test", "TEST", true, true);
 
         dto = new RoleDTO();
         dto.setName("test");
+        dto.setCode("TEST");
     }
 
     @Test
@@ -213,61 +210,6 @@ class RoleControllerTest {
                 .convertTo(InstanceOfAssertFactories.list(RoleVO.class))
                 .hasSize(1)
                 .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
-    }
-
-    @Test
-    void members() {
-        when(roleService.members(anyLong())).thenReturn(List.of(mock(UserVO.class)));
-
-        assertThat(mvc.get().uri("/roles/{id}/members", 1L))
-                .hasStatusOk()
-                .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(UserVO.class))
-                .hasSize(1);
-    }
-
-    @Test
-    void members_error() {
-        doThrow(new RuntimeException()).when(roleService).members(anyLong());
-
-        assertThat(mvc.get().uri("/roles/{id}/members", anyLong()))
-                .hasStatus5xxServerError();
-    }
-
-    @Test
-    void addMembers() {
-        roleService.addMembers(anyLong(), anySet());
-
-        assertThat(mvc.patch().uri("/roles/{id}/members", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(Set.of("test")))
-                .with(csrf().asHeader())
-        )
-                .hasStatusOk();
-    }
-
-    @Test
-    void relationMembers_error() {
-        doThrow(new RuntimeException()).when(roleService).addMembers(anyLong(), anySet());
-
-        assertThat(mvc.patch().uri("/roles/{id}/members", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(Set.of("test")))
-                .with(csrf().asHeader())
-        )
-                .hasStatus5xxServerError();
-    }
-
-    @Test
-    void removeMembers() {
-        roleService.removeMembers(anyLong(), anySet());
-
-        assertThat(mvc.delete().uri("/roles/{id}/members", 1L)
-                .queryParam("usernames", "test")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf().asHeader())
-        )
-                .hasStatus(HttpStatus.NO_CONTENT);
     }
 
     @Test

@@ -16,7 +16,11 @@ package top.leafage.hypervisor.system.service;
 
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.system.domain.dto.UserDTO;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * User service.
@@ -26,10 +30,27 @@ import top.leafage.hypervisor.system.domain.vo.UserVO;
 public interface UserService extends JpaCrudService<UserDTO, UserVO> {
 
     /**
-     * Update accountNonLocked.
+     * 添加 role
      *
-     * @param id the pk.
-     * @return result.
+     * @param id      the pk of group.
+     * @param roleIds the pk of roles.
      */
-    boolean unlock(Long id);
+    void addRoles(Long id, Set<Long> roleIds);
+
+    /**
+     * 查询 role
+     *
+     * @param id the pk of group.
+     * @return 数据集
+     */
+    List<RoleVO> roles(Long id);
+
+    /**
+     * 移除 role
+     *
+     * @param id      the pk of group.
+     * @param roleIds the pk of roles.
+     */
+    void removeRoles(Long id, Set<Long> roleIds);
+
 }

@@ -63,7 +63,7 @@ public class MessageInboxController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER')")
@@ -76,7 +76,7 @@ public class MessageInboxController {
     /**
      * Read.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER')")
@@ -101,7 +101,7 @@ public class MessageInboxController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{id}")

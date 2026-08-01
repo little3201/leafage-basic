@@ -64,7 +64,7 @@ public class AuditLogController {
     /**
      * fetch by id.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @PreAuthorize("hasRole('AUDITOR') || hasAuthority('audit_logs')")
@@ -77,7 +77,7 @@ public class AuditLogController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('AUDITOR') || hasAuthority('audit_logs:remove')")
     @DeleteMapping("/{id}")

@@ -16,7 +16,6 @@
 package top.leafage.hypervisor.assets.controller;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.web.multipart.MultipartFile;
-import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
-import top.leafage.hypervisor.assets.service.FileRecordService;
+import top.leafage.hypervisor.files.controller.FileController;
+import top.leafage.hypervisor.files.domain.vo.FileRecordVO;
+import top.leafage.hypervisor.files.service.FileRecordService;
 
 import java.time.LocalDateTime;
 import java.util.List;

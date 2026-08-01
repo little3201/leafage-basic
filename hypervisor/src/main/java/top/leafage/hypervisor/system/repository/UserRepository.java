@@ -50,7 +50,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     /**
      * 查询
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @EntityGraph(attributePaths = "roles")
@@ -83,7 +83,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -93,7 +93,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     /**
      * disable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying

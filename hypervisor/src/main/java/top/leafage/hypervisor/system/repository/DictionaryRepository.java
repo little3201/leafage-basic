@@ -68,7 +68,7 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long>, J
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -78,7 +78,7 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long>, J
     /**
      * disable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying

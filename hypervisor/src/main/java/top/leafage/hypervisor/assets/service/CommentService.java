@@ -32,7 +32,7 @@ public interface CommentService extends JpaCrudService<CommentDTO, CommentVO> {
     /**
      * relation.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     List<CommentVO> relation(Long id);
@@ -40,7 +40,7 @@ public interface CommentService extends JpaCrudService<CommentDTO, CommentVO> {
     /**
      * find replier by id.
      *
-     * @param replier the pk.
+     * @param replier The pk.
      * @return the result.
      */
     List<CommentVO> replies(Long replier);

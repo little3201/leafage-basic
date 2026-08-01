@@ -13,15 +13,14 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.service.impl;
+package top.leafage.hypervisor.files.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Predicate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -29,28 +28,26 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.logging.annotation.OperationLog;
-import top.leafage.hypervisor.assets.domain.FileRecord;
-import top.leafage.hypervisor.assets.domain.dto.FileRecordDTO;
-import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.domain.vo.FileStatisticsVO;
-import top.leafage.hypervisor.assets.repository.FileRecordRepository;
-import top.leafage.hypervisor.assets.service.FileRecordService;
+import top.leafage.hypervisor.files.domain.FileRecord;
+import top.leafage.hypervisor.files.domain.dto.FileRecordDTO;
+import top.leafage.hypervisor.files.domain.vo.FileRecordVO;
+import top.leafage.hypervisor.files.repository.FileRecordRepository;
+import top.leafage.hypervisor.files.service.FileRecordService;
+import top.leafage.hypervisor.files.service.FileService;
 
-import java.io.IOException;
 import java.util.*;
 
 import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
 /**
- * file service impl.
+ * file record service impl.
  *
  * @author wq li
  */
 @OperationLog("files")
 @Service
 public class FileRecordServiceImpl implements FileRecordService {
-
-    private static final Logger logger = LoggerFactory.getLogger(FileRecordServiceImpl.class);
 
     private static final String IMAGE = "Image";
     private static final String VIDEO = "Video";
@@ -59,16 +56,21 @@ public class FileRecordServiceImpl implements FileRecordService {
     private static final List<String> CATEGORY = List.of(IMAGE, VIDEO, DOCUMENT, OTHER);
 
     private final FileRecordRepository fileRecordRepository;
+    private final FileService fileService;
 
     /**
      * Constructor for FileRecordRepository.
      *
      * @param fileRecordRepository a {@link FileRecordRepository} object
      */
-    public FileRecordServiceImpl(FileRecordRepository fileRecordRepository) {
+    public FileRecordServiceImpl(FileRecordRepository fileRecordRepository, FileService fileService) {
         this.fileRecordRepository = fileRecordRepository;
+        this.fileService = fileService;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Page<FileRecordVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
@@ -76,17 +78,30 @@ public class FileRecordServiceImpl implements FileRecordService {
         Specification<FileRecord> spec = (root, _, cb) -> {
             Optional<Predicate> predicate = buildPredicate(filters, cb, root);
             Predicate basePredicate = predicate.orElse(cb.conjunction());
+            // created by
+            Predicate createdByPredicate = cb.equal(
+                    root.get("createdBy"),
+                    Objects.requireNonNull(SecurityContextHolder
+                                    .getContext()
+                                    .getAuthentication())
+                            .getName());
+            cb.and(basePredicate, createdByPredicate);
             if (StringUtils.hasText(filters) && filters.contains("superiorId")) {
                 return basePredicate;
             } else {
                 return cb.and(basePredicate, cb.isNull(root.get("superiorId")));
             }
+
+
         };
 
-        return fileRecordRepository.findAllBy(spec, pageable)
+        return fileRecordRepository.findAll(spec, pageable)
                 .map(FileRecordVO::from);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FileRecordVO fetch(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
@@ -96,6 +111,9 @@ public class FileRecordServiceImpl implements FileRecordService {
                 .orElseThrow(() -> new EntityNotFoundException("file record not found: " + id));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public FileRecordVO create(FileRecordDTO dto) {
         if (fileRecordRepository.existsByName(dto.getName())) {
@@ -106,26 +124,30 @@ public class FileRecordServiceImpl implements FileRecordService {
         return FileRecordVO.from(entity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional
     @Override
     public FileRecordVO upload(MultipartFile file, Long superiorId) {
-        FileRecord record = new FileRecord();
+        String originalFilename = file.getOriginalFilename();
+        FileRecord record = fileRecordRepository.findByName(originalFilename).orElse(null);
+        if (record == null) {
+            record = new FileRecord();
+        }
         record.setSuperiorId(superiorId);
-        record.setName(file.getName());
-        // get extension
-        if (file.getOriginalFilename() != null) {
-            String originalFilename = file.getOriginalFilename();
+        record.setName(originalFilename);
+        // extension
+        if (originalFilename != null) {
             int lastDot = originalFilename.lastIndexOf('.');
             if (lastDot > 0) {
                 record.setExtension(originalFilename.substring(lastDot + 1));
             }
         }
-        try {
-            record.setPath(file.getResource().getFilePath().toString());
-        } catch (IOException e) {
-            logger.error("Get file path error: {}", e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+
+        String path = fileService.upload(file);
+        record.setPath(path);
+
         record.setContentType(Objects.requireNonNull(file.getContentType()));
         record.setSize(file.getSize());
         record.setDirectory(false);
@@ -133,6 +155,9 @@ public class FileRecordServiceImpl implements FileRecordService {
         return FileRecordVO.from(entity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<FileStatisticsVO> statistics() {
         List<FileRecord> fileRecords = fileRecordRepository.findAllBy();
@@ -165,6 +190,9 @@ public class FileRecordServiceImpl implements FileRecordService {
                 .toList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional
     @Override
     public boolean enable(Long id) {
@@ -176,6 +204,9 @@ public class FileRecordServiceImpl implements FileRecordService {
         return fileRecordRepository.enableById(id) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional
     @Override
     public boolean disable(Long id) {
@@ -187,6 +218,9 @@ public class FileRecordServiceImpl implements FileRecordService {
         return fileRecordRepository.disableById(id) > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional
     @Override
     public void remove(Long id) {

@@ -41,7 +41,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long>, JpaSp
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -51,7 +51,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long>, JpaSp
     /**
      * disable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -61,7 +61,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long>, JpaSp
     /**
      * update status by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @param status the status.
      * @return result.
      */

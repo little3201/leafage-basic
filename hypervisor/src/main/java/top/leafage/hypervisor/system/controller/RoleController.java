@@ -71,7 +71,7 @@ public class RoleController {
     /**
      * fetch by id.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles')")
@@ -97,7 +97,7 @@ public class RoleController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
@@ -111,7 +111,7 @@ public class RoleController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:remove')")
     @DeleteMapping("/{id}")
@@ -123,7 +123,7 @@ public class RoleController {
     /**
      * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:enable')")
@@ -136,7 +136,7 @@ public class RoleController {
     /**
      * Disable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 编辑后的信息，否则返回417状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('roles:disable')")

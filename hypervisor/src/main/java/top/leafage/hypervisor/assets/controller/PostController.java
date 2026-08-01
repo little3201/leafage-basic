@@ -70,7 +70,7 @@ public class PostController {
     /**
      * fetch with id .
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 帖子信息，不包括内容
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts')")
@@ -96,7 +96,7 @@ public class PostController {
     /**
      * 修改帖子信息
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto 帖子信息
      * @return 修改后的帖子信息
      */
@@ -110,7 +110,7 @@ public class PostController {
     /**
      * 删除帖子信息
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 删除结果
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:remove')")
@@ -123,7 +123,7 @@ public class PostController {
     /**
      * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:enable')")

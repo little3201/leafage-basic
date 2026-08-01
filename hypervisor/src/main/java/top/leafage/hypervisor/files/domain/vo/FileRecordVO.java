@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.domain.vo;
+package top.leafage.hypervisor.files.domain.vo;
 
-import top.leafage.hypervisor.assets.domain.FileRecord;
+import top.leafage.hypervisor.files.domain.FileRecord;
 
 import java.time.LocalDateTime;
 

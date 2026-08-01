@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.domain;
+package top.leafage.hypervisor.files.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

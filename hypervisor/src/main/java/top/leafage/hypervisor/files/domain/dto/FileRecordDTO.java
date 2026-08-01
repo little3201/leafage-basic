@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.domain.dto;
+package top.leafage.hypervisor.files.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import top.leafage.hypervisor.assets.domain.FileRecord;
+import top.leafage.hypervisor.files.domain.FileRecord;
 
 /**
  * dto class for file record.

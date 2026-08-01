@@ -77,7 +77,7 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -87,7 +87,7 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
     /**
      * disable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying

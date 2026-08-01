@@ -83,7 +83,7 @@ public class PrivilegeController {
     /**
      * fetch by id.
      *
-     * @param superiorId the pk.
+     * @param superiorId The pk.
      * @return 查询到的信息，否则返回204状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges')")
@@ -96,7 +96,7 @@ public class PrivilegeController {
     /**
      * fetch by id.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 查询到的信息，否则返回204状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges')")
@@ -109,7 +109,7 @@ public class PrivilegeController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return 编辑后的信息，否则返回417状态码
      */
@@ -123,7 +123,7 @@ public class PrivilegeController {
     /**
      * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 编辑后的信息，否则返回417状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges:enable')")
@@ -136,7 +136,7 @@ public class PrivilegeController {
     /**
      * Disable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 编辑后的信息，否则返回417状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('privileges:disable')")

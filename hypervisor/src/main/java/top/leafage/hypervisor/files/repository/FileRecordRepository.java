@@ -13,19 +13,17 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.repository;
+package top.leafage.hypervisor.files.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import top.leafage.hypervisor.assets.domain.FileRecord;
+import top.leafage.hypervisor.files.domain.FileRecord;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -37,20 +35,20 @@ import java.util.List;
 public interface FileRecordRepository extends JpaRepository<FileRecord, Long>, JpaSpecificationExecutor<FileRecord> {
 
     /**
-     * 是否已存在
+     * 是否存在
      *
-     * @param name name.
+     * @param name The name.
      * @return true-是，false-否
      */
     boolean existsByName(String name);
 
     /**
-     * 分页查询
+     * 查询
      *
-     * @return result.
+     * @param name The name.
+     * @return true-是，false-否
      */
-    @Query("select t from FileRecord t where t.createdBy = ?#{ principal?.name }")
-    Page<FileRecord> findAllBy(Specification<FileRecord> spec, Pageable pageable);
+    Optional<FileRecord> findByName(String name);
 
     /**
      * 查询
@@ -63,7 +61,7 @@ public interface FileRecordRepository extends JpaRepository<FileRecord, Long>, J
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -73,7 +71,7 @@ public interface FileRecordRepository extends JpaRepository<FileRecord, Long>, J
     /**
      * disable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying

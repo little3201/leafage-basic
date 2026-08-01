@@ -68,7 +68,7 @@ public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecif
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -78,7 +78,7 @@ public interface RegionRepository extends JpaRepository<Region, Long>, JpaSpecif
     /**
      * disable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying

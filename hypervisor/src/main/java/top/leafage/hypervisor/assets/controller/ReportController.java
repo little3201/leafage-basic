@@ -72,7 +72,7 @@ public class ReportController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('reports')")
@@ -98,7 +98,7 @@ public class ReportController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
@@ -112,7 +112,7 @@ public class ReportController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('reports:remove')")
     @DeleteMapping("/{id}")
@@ -137,7 +137,7 @@ public class ReportController {
     /**
      * Generate to file.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('DEVELOP') || hasAuthority('reports:generate')")
@@ -160,7 +160,7 @@ public class ReportController {
     /**
      * Preview a record.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return The list of records value objects, or 417 status code if an error occurs.
      */
     @PreAuthorize("hasRole('DEVELOP') || hasAuthority('reports')")

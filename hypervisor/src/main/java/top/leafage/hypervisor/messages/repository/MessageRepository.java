@@ -41,7 +41,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpec
     /**
      * Publish.
      *
-     * @param id     the pk.
+     * @param id     The pk.
      * @param status the status.
      * @return result.
      */
@@ -52,7 +52,7 @@ public interface MessageRepository extends JpaRepository<Message, Long>, JpaSpec
     /**
      * Revoke.
      *
-     * @param id     the pk.
+     * @param id     The pk.
      * @param status the status.
      * @return result.
      */

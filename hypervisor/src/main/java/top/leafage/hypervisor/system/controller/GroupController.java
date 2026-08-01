@@ -87,7 +87,7 @@ public class GroupController {
     /**
      * fetch by id.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups')")
@@ -113,7 +113,7 @@ public class GroupController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
@@ -127,7 +127,7 @@ public class GroupController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:remove')")
     @DeleteMapping("/{id}")
@@ -139,7 +139,7 @@ public class GroupController {
     /**
      * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:enable')")
@@ -152,7 +152,7 @@ public class GroupController {
     /**
      * Disable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:disable')")

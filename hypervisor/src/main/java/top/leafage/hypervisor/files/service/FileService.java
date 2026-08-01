@@ -13,26 +13,11 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.system.service;
+package top.leafage.hypervisor.files.service;
 
-import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
-import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+public interface FileService {
 
-/**
- * Dictionary service.
- *
- * @author wq li
- */
-public interface DictionaryService extends JpaCrudService<DictionaryDTO, DictionaryVO> {
-
-    /**
-     * 获取子节点
-     *
-     * @param id The pk.
-     * @return 数据集
-     */
-    List<DictionaryVO> subset(Long id);
+    String upload(MultipartFile file);
 }

@@ -66,7 +66,7 @@ public class ArchiveController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('archives')")
@@ -92,7 +92,7 @@ public class ArchiveController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
@@ -106,7 +106,7 @@ public class ArchiveController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('archives:remove')")
     @DeleteMapping("/{id}")

@@ -72,7 +72,7 @@ public class UserController {
     /**
      * fetch by id.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('users')")
@@ -98,7 +98,7 @@ public class UserController {
     /**
      * modify..
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
@@ -113,7 +113,7 @@ public class UserController {
     /**
      * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:enable')")
@@ -126,7 +126,7 @@ public class UserController {
     /**
      * Disable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 编辑后的信息，否则返回417状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:disable')")
@@ -139,7 +139,7 @@ public class UserController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return no content.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('users:remove')")

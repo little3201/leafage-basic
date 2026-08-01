@@ -29,9 +29,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.multipart.MultipartFile;
-import top.leafage.hypervisor.assets.domain.FileRecord;
-import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
-import top.leafage.hypervisor.assets.repository.FileRecordRepository;
+import top.leafage.hypervisor.files.domain.FileRecord;
+import top.leafage.hypervisor.files.domain.vo.FileRecordVO;
+import top.leafage.hypervisor.files.repository.FileRecordRepository;
+import top.leafage.hypervisor.files.service.impl.FileRecordServiceImpl;
 
 import java.nio.file.Path;
 import java.util.List;

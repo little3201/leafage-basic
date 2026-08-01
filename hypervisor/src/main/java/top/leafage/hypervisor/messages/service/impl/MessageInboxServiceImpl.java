@@ -16,9 +16,11 @@
 package top.leafage.hypervisor.messages.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -29,6 +31,8 @@ import top.leafage.hypervisor.messages.repository.MessageInboxRepository;
 import top.leafage.hypervisor.messages.service.MessageInboxService;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
@@ -60,10 +64,22 @@ public class MessageInboxServiceImpl implements MessageInboxService {
     public Page<MessageInboxVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<MessageInbox> spec = (root, _, cb) ->
-                buildPredicate(filters, cb, root).orElse(null);
+        Specification<MessageInbox> spec = (root, _, cb) -> {
+            Optional<Predicate> predicate = buildPredicate(filters, cb, root);
+            Predicate basePredicate = predicate.orElse(cb.conjunction());
+            // receiver
+            Predicate receiverPredicate = cb.equal(
+                    root.get("receiver").get("username"),
+                    Objects.requireNonNull(SecurityContextHolder
+                                    .getContext()
+                                    .getAuthentication())
+                            .getName()
+            );
 
-        return messageInboxRepository.findAllBy(spec, pageable)
+            return cb.and(basePredicate, receiverPredicate);
+        };
+
+        return messageInboxRepository.findAll(spec, pageable)
                 .map(MessageInboxVO::from);
     }
 

@@ -66,7 +66,7 @@ public class TemplateController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('templates')")
@@ -92,7 +92,7 @@ public class TemplateController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
@@ -106,7 +106,7 @@ public class TemplateController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('templates:remove')")
     @DeleteMapping("/{id}")
@@ -118,7 +118,7 @@ public class TemplateController {
     /**
      * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('templates:enable')")
@@ -131,7 +131,7 @@ public class TemplateController {
     /**
      * Disable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('templates:disable')")
@@ -144,7 +144,7 @@ public class TemplateController {
     /**
      * Publish.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('templates:enable')")
@@ -157,7 +157,7 @@ public class TemplateController {
     /**
      * Archive.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('templates:disable')")

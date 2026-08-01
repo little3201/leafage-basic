@@ -51,7 +51,7 @@ public class SectionController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('sections')")
@@ -64,7 +64,7 @@ public class SectionController {
     /**
      * tree.
      *
-     * @param ownerId   the pk.
+     * @param ownerId   The pk.
      * @param ownerType tye type.
      * @return the result.
      */
@@ -78,7 +78,7 @@ public class SectionController {
     /**
      * 查询 fields.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 查询的数据集，异常时返回204状态码
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('sections:field')")
@@ -91,7 +91,7 @@ public class SectionController {
     /**
      * 查询 datas.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 查询的数据集，异常时返回204状态码
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('sections:data')")
@@ -143,7 +143,7 @@ public class SectionController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
@@ -185,7 +185,7 @@ public class SectionController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('sections:remove')")
     @DeleteMapping("/{id}")

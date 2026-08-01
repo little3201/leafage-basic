@@ -72,7 +72,7 @@ public class DictionaryController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries')")
@@ -85,7 +85,7 @@ public class DictionaryController {
     /**
      * subset.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @GetMapping("subset")
@@ -111,7 +111,7 @@ public class DictionaryController {
      * modify.
      *
      * @param dto the request body.
-     * @param id  the pk.
+     * @param id  The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:modify')")
@@ -124,7 +124,7 @@ public class DictionaryController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:remove')")
     @DeleteMapping("/{id}")
@@ -136,7 +136,7 @@ public class DictionaryController {
     /**
      * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:enable')")
@@ -149,7 +149,7 @@ public class DictionaryController {
     /**
      * Disable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:disable')")

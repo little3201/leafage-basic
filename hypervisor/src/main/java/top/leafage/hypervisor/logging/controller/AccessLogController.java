@@ -64,7 +64,7 @@ public class AccessLogController {
     /**
      * fetch by id.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('access_logs')")
@@ -77,7 +77,7 @@ public class AccessLogController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('access_logs:remove')")
     @DeleteMapping("/{id}")

@@ -70,7 +70,7 @@ public class RegionController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @GetMapping("/{id}")
@@ -82,7 +82,7 @@ public class RegionController {
     /**
      * subset.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions')")
@@ -108,7 +108,7 @@ public class RegionController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
@@ -122,7 +122,7 @@ public class RegionController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:remove')")
     @DeleteMapping("/{id}")
@@ -134,7 +134,7 @@ public class RegionController {
     /**
      * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:enable')")
@@ -147,7 +147,7 @@ public class RegionController {
     /**
      * Disable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:disable')")

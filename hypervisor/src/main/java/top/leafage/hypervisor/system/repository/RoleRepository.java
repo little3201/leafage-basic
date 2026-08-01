@@ -40,7 +40,7 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -50,7 +50,7 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
     /**
      * disable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.controller;
+package top.leafage.hypervisor.files.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -29,10 +29,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import top.leafage.hypervisor.assets.domain.dto.FileRecordDTO;
-import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
+import top.leafage.hypervisor.files.domain.dto.FileRecordDTO;
+import top.leafage.hypervisor.files.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.domain.vo.FileStatisticsVO;
-import top.leafage.hypervisor.assets.service.FileRecordService;
+import top.leafage.hypervisor.files.service.FileRecordService;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -82,7 +82,7 @@ public class FileController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('files')")
@@ -133,7 +133,7 @@ public class FileController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('files:download')")
@@ -163,7 +163,7 @@ public class FileController {
     /**
      * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('files:enable')")
@@ -176,7 +176,7 @@ public class FileController {
     /**
      * Disable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('files:disable')")
@@ -189,7 +189,7 @@ public class FileController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 如果删除成功，返回200状态码，否则返回417状态码
      */
     @PreAuthorize("hasRole('USER') || hasAuthority('files:remove')")

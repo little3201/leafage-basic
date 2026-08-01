@@ -106,7 +106,7 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>, Jpa
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -116,7 +116,7 @@ public interface PrivilegeRepository extends JpaRepository<Privilege, Long>, Jpa
     /**
      * disable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying

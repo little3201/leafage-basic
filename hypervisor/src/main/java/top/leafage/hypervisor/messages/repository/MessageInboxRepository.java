@@ -15,9 +15,6 @@
 
 package top.leafage.hypervisor.messages.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -37,19 +34,11 @@ import java.util.List;
 public interface MessageInboxRepository extends JpaRepository<MessageInbox, Long>, JpaSpecificationExecutor<MessageInbox> {
 
     /**
-     * 分页查询
-     *
-     * @return result.
-     */
-    @Query("select t from MessageInbox t where t.createdBy = ?#{ principal?.name }")
-    Page<MessageInbox> findAllBy(Specification<MessageInbox> spec, Pageable pageable);
-
-    /**
      * Find all.
      *
      * @return result.
      */
-    @Query("select t from MessageInbox t where t.receiver = ?#{ principal?.name }")
+    @Query("select t from MessageInbox t where t.receiver.username = ?#{ principal?.name }")
     List<MessageInbox> findAllInbox();
 
     /**
@@ -58,13 +47,13 @@ public interface MessageInboxRepository extends JpaRepository<MessageInbox, Long
      * @param status the status.
      * @return result.
      */
-    @Query("select t from MessageInbox t where t.status = :status and t.receiver = ?#{ principal?.name }")
+    @Query("select t from MessageInbox t where t.status = :status and t.receiver.username = ?#{ principal?.name }")
     List<MessageInbox> findAllByStatus(MessageInbox.Status status);
 
     /**
      * Read a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
@@ -74,7 +63,7 @@ public interface MessageInboxRepository extends JpaRepository<MessageInbox, Long
     /**
      * Read all.
      *
-     * @param ids the pk.
+     * @param ids The pk.
      * @return result.
      */
     @Modifying

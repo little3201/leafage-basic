@@ -65,7 +65,7 @@ public class MessageController {
     /**
      * Fetch.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @GetMapping("/{id}")
@@ -89,7 +89,7 @@ public class MessageController {
     /**
      * Modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
@@ -103,7 +103,7 @@ public class MessageController {
     /**
      * Publish.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:modify')")
@@ -116,7 +116,7 @@ public class MessageController {
     /**
      * Revoke.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:modify')")
@@ -129,7 +129,7 @@ public class MessageController {
     /**
      * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:remove')")
     @DeleteMapping("/{id}")

@@ -13,18 +13,18 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.service;
+package top.leafage.hypervisor.files.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.data.jpa.JpaCrudService;
-import top.leafage.hypervisor.assets.domain.dto.FileRecordDTO;
-import top.leafage.hypervisor.assets.domain.vo.FileRecordVO;
+import top.leafage.hypervisor.files.domain.dto.FileRecordDTO;
+import top.leafage.hypervisor.files.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.assets.domain.vo.FileStatisticsVO;
 
 import java.util.List;
 
 /**
- * File service.
+ * File record service.
  *
  * @author wq li
  */

@@ -53,7 +53,7 @@ public class AuditLogController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('AUDITOR') || hasAuthority('audit_logs')")
+    @PreAuthorize("hasRole('AUDITOR') || hasAuthority('auditLogs')")
     @GetMapping
     public ResponseEntity<Page<AuditLogVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                      String sortBy, boolean descending, String filters) {
@@ -67,7 +67,7 @@ public class AuditLogController {
      * @param id The pk.
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @PreAuthorize("hasRole('AUDITOR') || hasAuthority('audit_logs')")
+    @PreAuthorize("hasRole('AUDITOR') || hasAuthority('auditLogs')")
     @GetMapping("/{id}")
     public ResponseEntity<AuditLogVO> fetch(@PathVariable Long id) {
         AuditLogVO vo = auditLogService.fetch(id);
@@ -79,7 +79,7 @@ public class AuditLogController {
      *
      * @param id The pk.
      */
-    @PreAuthorize("hasRole('AUDITOR') || hasAuthority('audit_logs:remove')")
+    @PreAuthorize("hasRole('AUDITOR') || hasAuthority('auditLogs:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         auditLogService.remove(id);

@@ -196,6 +196,7 @@ public class RoleServiceImpl implements RoleService {
             roleRepository.save(role);
         }
         syncAllGroupsContainingRole(role);
+        syncAllUsersContainingRole(role);
     }
 
     /**

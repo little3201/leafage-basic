@@ -216,7 +216,7 @@ public class GroupServiceImpl implements GroupService {
 
         Group group = groupRepository.findWithMembersById(id)
                 .orElseThrow(() -> new EntityNotFoundException("group not found: " + id));
-        return group.getMembers().stream().map(UserVO::from).toList();
+        return group.getMembers().stream().map(user -> UserVO.from(user, null)).toList();
     }
 
     /**

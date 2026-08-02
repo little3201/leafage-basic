@@ -30,10 +30,10 @@
                     </div>
 
                     <div class="my-10">
-                        <div th:if="${param.error}" style="color: red; text-align: center;">
+                        <div th:if="${param.error}" style="color: red;">
                             Invalid username and password.
                         </div>
-                        <form class="space-y-6" method="post" th:action="@{/login}">
+                        <form class="mt-2 space-y-6" method="post" th:action="@{/login}">
                             <div>
                                 <label class="block font-medium text-gray-900" for="username">Username</label>
                                 <div class="mt-2">

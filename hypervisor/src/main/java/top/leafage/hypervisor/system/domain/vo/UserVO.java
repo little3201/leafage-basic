@@ -37,6 +37,17 @@ public record UserVO(
         return from(entity, true);
     }
 
+    public static UserVO from(User entity, List<RoleVO> roles) {
+        return new UserVO(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getFullName(),
+                null,
+                roles,
+                entity.isEnabled()
+        );
+    }
+
     public static UserVO from(User entity, boolean maskEmail) {
         return new UserVO(
                 entity.getId(),

@@ -17,7 +17,6 @@ package top.leafage.hypervisor.schedulers.domain.vo;
 
 
 import top.leafage.hypervisor.schedulers.domain.Scheduler;
-import top.leafage.hypervisor.schedulers.domain.SchedulerLog;
 
 import java.time.Instant;
 
@@ -26,21 +25,21 @@ import java.time.Instant;
  *
  * @author wq li
  */
-public record SchedulerLogVO(
+public record SchedulerVO(
         Long id,
         String name,
-        Instant startTime,
-        Long duration,
+        String cronExpression,
+        Instant lastExecuteTime,
         Scheduler.Status status,
         Instant nextExecuteTime,
         String record
 ) {
-    public static SchedulerLogVO from(SchedulerLog entity) {
-        return new SchedulerLogVO(
+    public static SchedulerVO from(Scheduler entity) {
+        return new SchedulerVO(
                 entity.getId(),
                 entity.getName(),
-                entity.getStartTime(),
-                entity.getDuration(),
+                entity.getCronExpression(),
+                entity.getLastExecuteTime(),
                 entity.getStatus(),
                 entity.getNextExecuteTime(),
                 entity.getRecord()

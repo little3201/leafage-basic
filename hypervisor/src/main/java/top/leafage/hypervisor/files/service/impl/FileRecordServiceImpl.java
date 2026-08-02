@@ -85,7 +85,8 @@ public class FileRecordServiceImpl implements FileRecordService {
                                     .getContext()
                                     .getAuthentication())
                             .getName());
-            cb.and(basePredicate, createdByPredicate);
+            basePredicate  = cb.and(basePredicate, createdByPredicate);
+
             if (StringUtils.hasText(filters) && filters.contains("superiorId")) {
                 return basePredicate;
             } else {

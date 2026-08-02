@@ -48,7 +48,7 @@ import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
 
 
 /**
- * group service impl.
+ * Group service impl.
  *
  * @author wq li
  */

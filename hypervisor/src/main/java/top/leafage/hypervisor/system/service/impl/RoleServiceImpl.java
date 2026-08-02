@@ -39,7 +39,7 @@ import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NUL
 import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
 
 /**
- * role service impl.
+ * Role service impl.
  *
  * @author wq li
  */

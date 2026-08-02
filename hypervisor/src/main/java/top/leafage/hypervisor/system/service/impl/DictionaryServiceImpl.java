@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
 /**
- * dictionary service impl.
+ * Dictionary service impl.
  *
  * @author wq li
  */

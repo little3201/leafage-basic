@@ -22,21 +22,20 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.system.domain.*;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.repository.*;
 import top.leafage.hypervisor.system.service.RoleService;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
-import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
 
 /**
  * Role service impl.
@@ -172,31 +171,62 @@ public class RoleServiceImpl implements RoleService {
      */
     @Transactional
     @Override
-    public void addPrivilege(Long id, Long privilegeId, String action) {
+    public void authorize(Long id, Collection<PrivilegeActionsDTO> dtos) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
-
-        Privilege priv = privilegeRepository.findById(privilegeId).orElseThrow();
-        if (StringUtils.hasText(action) && !priv.getActions().contains(action)) {
-            throw new IllegalArgumentException("无效的 action");
-        }
-        Set<String> actions = StringUtils.hasText(action) ? Set.of(action) : Set.of();
-
-        Optional<RolePrivilege> existing = rolePrivilegeRepository
-                .findByRoleIdAndPrivilegeId(id, privilegeId);
-
         Role role = roleRepository.findById(id).orElseThrow();
-        if (existing.isPresent()) {
-            // 已存在时只追加指定 action，避免覆盖同一 privilege 下的其他 action。
-            existing.get().addActions(actions);
-            rolePrivilegeRepository.save(existing.get());
-        } else {
-            // 不存在 → 新增
-            role.addPrivilege(priv, actions);
-            roleRepository.save(role);
+
+        Set<Long> privilegeIds = dtos.stream()
+                .map(PrivilegeActionsDTO::getPrivilegeId)
+                .collect(Collectors.toSet());
+
+        // 批量查询 privilege
+        Map<Long, Privilege> privileges = privilegeRepository.findAllById(privilegeIds)
+                .stream()
+                .collect(Collectors.toMap(Privilege::getId, Function.identity()));
+        if (privileges.size() != privilegeIds.size()) {
+            throw new IllegalArgumentException("Invalid privilege");
         }
-        syncAllGroupsContainingRole(role);
-        syncAllUsersContainingRole(role);
+
+        // 查出当前 Role 已有的全部授权
+        List<RolePrivilege> existingList = rolePrivilegeRepository.findAllByRoleId(id);
+        Map<Long, RolePrivilege> existing = existingList.stream()
+                .collect(Collectors.toMap(rp -> rp.getPrivilege().getId(), Function.identity()));
+
+        List<RolePrivilege> toSave = new ArrayList<>();
+        Set<Long> toKeep = new HashSet<>();
+
+        for (PrivilegeActionsDTO dto : dtos) {
+            Privilege privilege = privileges.get(dto.getPrivilegeId());
+            Set<String> actions = Optional.ofNullable(dto.getActions()).orElse(Collections.emptySet());
+
+            if (!privilege.getActions().containsAll(actions)) {
+                throw new IllegalArgumentException("Invalid action: " + actions);
+            }
+
+            RolePrivilege rolePrivilege = existing.get(dto.getPrivilegeId());
+            if (rolePrivilege != null) {
+                rolePrivilege.updateActions(actions);
+            } else {
+                rolePrivilege = new RolePrivilege(role, privilege, actions);
+            }
+            toSave.add(rolePrivilege);
+            toKeep.add(dto.getPrivilegeId());
+        }
+
+        // 需要删除的 = 已存在但不在本次传入列表中的
+        List<RolePrivilege> toDelete = existingList.stream()
+                .filter(rp -> !toKeep.contains(rp.getPrivilege().getId()))
+                .toList();
+        if (!toDelete.isEmpty()) {
+            toDelete.forEach(role.getRolePrivileges()::remove);
+        }
+
+        for (RolePrivilege rp : toSave) {
+            role.getRolePrivileges().add(rp);
+        }
+
+        syncGroupsRole(role);
+        syncUsersRole(role);
     }
 
     /**
@@ -204,36 +234,12 @@ public class RoleServiceImpl implements RoleService {
      */
     @Transactional(readOnly = true)
     @Override
-    public List<SimplePrivilegeVO> privileges(Long id) {
+    public List<PrivilegeActionsVO> privileges(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         return rolePrivilegeRepository.findAllByRoleId(id)
-                .stream().map(SimplePrivilegeVO::from)
+                .stream().map(PrivilegeActionsVO::from)
                 .toList();
-    }
-
-    @Transactional
-    @Override
-    public void removePrivilege(Long id, Long privilegeId, String action) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
-
-        Role role = roleRepository.findById(id).orElseThrow();
-        Privilege priv = privilegeRepository.findById(privilegeId).orElseThrow();
-        if (StringUtils.hasText(action)) {
-            if (!priv.getActions().contains(action)) {
-                throw new IllegalArgumentException("无效的 action");
-            }
-            role.removePrivilegeAction(priv, action);
-        } else {
-            role.removePrivilege(priv);
-        }
-
-        roleRepository.save(role);
-
-        syncAllGroupsContainingRole(role);
-
-        syncAllUsersContainingRole(role);
     }
 
     /**
@@ -241,12 +247,10 @@ public class RoleServiceImpl implements RoleService {
      *
      * @param role 角色
      */
-    private void syncAllGroupsContainingRole(Role role) {
+    private void syncGroupsRole(Role role) {
         List<Group> groups = groupRepository.findDisctinctByRolesContaining(role);
-        for (Group group : groups) {
-            group.syncAuthorities();
-            groupRepository.save(group);
-        }
+        groups.forEach(Group::syncAuthorities);
+        groupRepository.saveAll(groups);
     }
 
     /**
@@ -254,11 +258,9 @@ public class RoleServiceImpl implements RoleService {
      *
      * @param role 角色
      */
-    private void syncAllUsersContainingRole(Role role) {
-        List<User> groups = userRepository.findDisctinctByRolesContaining(role);
-        for (User user : groups) {
-            user.syncAuthorities();
-            userRepository.save(user);
-        }
+    private void syncUsersRole(Role role) {
+        List<User> users = userRepository.findDisctinctByRolesContaining(role);
+        users.forEach(User::syncAuthorities);
+        userRepository.saveAll(users);
     }
 }

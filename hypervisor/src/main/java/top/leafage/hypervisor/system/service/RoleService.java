@@ -15,10 +15,12 @@
 package top.leafage.hypervisor.system.service;
 
 import top.leafage.common.data.jpa.JpaCrudService;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,11 +33,10 @@ public interface RoleService extends JpaCrudService<RoleDTO, RoleVO> {
     /**
      * 添加 privilege
      *
-     * @param id          the pk of role.
-     * @param privilegeId the pk of privilege.
-     * @param action      the action of privilege.
+     * @param id   the pk of role.
+     * @param dtos privilege actions dto.
      */
-    void addPrivilege(Long id, Long privilegeId, String action);
+    void authorize(Long id, Collection<PrivilegeActionsDTO> dtos);
 
     /**
      * 查询 privilege
@@ -43,14 +44,5 @@ public interface RoleService extends JpaCrudService<RoleDTO, RoleVO> {
      * @param id the pk of role.
      * @return 数据集
      */
-    List<SimplePrivilegeVO> privileges(Long id);
-
-    /**
-     * 移除 privilege
-     *
-     * @param id          the pk of role.
-     * @param privilegeId the pk of privilege.
-     * @param action      the action of privilege.
-     */
-    void removePrivilege(Long id, Long privilegeId, String action);
+    List<PrivilegeActionsVO> privileges(Long id);
 }

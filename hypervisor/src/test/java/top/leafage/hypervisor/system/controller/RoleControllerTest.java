@@ -30,12 +30,14 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.service.RoleService;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -64,6 +66,7 @@ class RoleControllerTest {
 
     private RoleVO vo;
     private RoleDTO dto;
+    private PrivilegeActionsDTO actionsDTO;
 
     @BeforeEach
     void setUp() {
@@ -72,6 +75,11 @@ class RoleControllerTest {
         dto = new RoleDTO();
         dto.setName("test");
         dto.setCode("TEST");
+
+        actionsDTO = new PrivilegeActionsDTO();
+        actionsDTO.setActions(Set.of("create"));
+        actionsDTO.setName("test");
+        actionsDTO.setPrivilegeId(1L);
     }
 
     @Test
@@ -214,12 +222,12 @@ class RoleControllerTest {
 
     @Test
     void privileges() {
-        when(roleService.privileges(anyLong())).thenReturn(List.of(mock(SimplePrivilegeVO.class)));
+        when(roleService.privileges(anyLong())).thenReturn(List.of(mock(PrivilegeActionsVO.class)));
 
         assertThat(mvc.get().uri("/roles/{id}/privileges", 1L))
                 .hasStatusOk()
                 .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(SimplePrivilegeVO.class))
+                .convertTo(InstanceOfAssertFactories.list(PrivilegeActionsVO.class))
                 .hasSize(1);
     }
 
@@ -232,37 +240,27 @@ class RoleControllerTest {
     }
 
     @Test
-    void addPrivilege() {
-        roleService.addPrivilege(anyLong(), anyLong(), anyString());
+    void authorize() {
+        roleService.authorize(anyLong(), anyCollection());
 
-        assertThat(mvc.patch().uri("/roles/{id}/privileges/{privilegeId}", 1L, 1L)
+        assertThat(mvc.patch().uri("/roles/{id}/privileges", 1L)
                 .queryParam("action", "create")
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of(actionsDTO)))
                 .with(csrf().asHeader())
         )
                 .hasStatusOk();
     }
 
     @Test
-    void addPrivilege_error() {
-        doThrow(new RuntimeException()).when(roleService).addPrivilege(anyLong(), anyLong(), anyString());
+    void authorize_error() {
+        doThrow(new RuntimeException()).when(roleService).authorize(anyLong(), anyCollection());
 
-        assertThat(mvc.patch().uri("/roles/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
+        assertThat(mvc.patch().uri("/roles/{id}/privileges/{privilegeId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON).with(csrf().asHeader())
+                .content(mapper.writeValueAsString(Set.of(actionsDTO)))
         )
                 .hasStatus5xxServerError();
     }
 
-    @Test
-    void removePrivilege() {
-        roleService.removePrivilege(anyLong(), anyLong(), anyString());
-
-        assertThat(mvc.delete().uri("/roles/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf().asHeader())
-        )
-                .hasStatus(HttpStatus.NO_CONTENT);
-    }
 }

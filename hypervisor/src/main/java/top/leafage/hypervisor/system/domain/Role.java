@@ -32,8 +32,12 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
+    /**
+     * role privileges
+     */
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<RolePrivilege> rolePrivileges = new HashSet<>();
+
     @Column(unique = true, nullable = false)
     private String name;
 
@@ -50,30 +54,6 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
     public Role(String name, String code) {
         this.name = name;
         this.code = code;
-    }
-
-    public void addPrivilege(Privilege privilege, Set<String> actions) {
-        RolePrivilege rp = new RolePrivilege();
-        rp.setRole(this);
-        rp.setPrivilege(privilege);
-        rp.addActions(actions);
-        this.rolePrivileges.add(rp);
-    }
-
-    public void removePrivilege(Privilege privilege) {
-        this.rolePrivileges.removeIf(rp -> rp.getPrivilege().equals(privilege));
-    }
-
-    public void removePrivilegeAction(Privilege privilege, String action) {
-        this.rolePrivileges.stream()
-                .filter(rp -> rp.getPrivilege().equals(privilege))
-                .findFirst()
-                .ifPresent(rp -> {
-                    rp.removeAction(action);
-                    if (rp.hasNoActions()) {
-                        this.rolePrivileges.remove(rp);
-                    }
-                });
     }
 
 
@@ -110,6 +90,6 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
     }
 
     public Set<RolePrivilege> getRolePrivileges() {
-        return Set.copyOf(rolePrivileges);
+        return rolePrivileges;
     }
 }

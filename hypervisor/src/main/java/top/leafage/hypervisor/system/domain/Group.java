@@ -78,48 +78,38 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
     }
 
     public void addMember(User user) {
-        this.members.add(user);
+        this.getMembers().add(user);
     }
 
     public void removeMember(User user) {
-        this.members.remove(user);
+        this.getMembers().remove(user);
     }
 
     public void addRole(Role role) {
-        if (this.roles.add(role)) {
+        if (this.getRoles().add(role)) {
             syncAuthorities();
         }
     }
 
     public void removeRole(Role role) {
-        if (this.roles.remove(role)) {
-            syncAuthorities();
-        }
-    }
-
-    public void addPrivilege(Privilege privilege, Set<String> actions) {
-        GroupPrivilege gp = new GroupPrivilege();
-        gp.setGroup(this);
-        gp.setPrivilege(privilege);
-        gp.addActions(actions);
-        if (this.groupPrivileges.add(gp)) {
+        if (this.getRoles().remove(role)) {
             syncAuthorities();
         }
     }
 
     public void removePrivilege(Privilege privilege) {
-        this.groupPrivileges.removeIf(gp -> gp.getPrivilege().equals(privilege));
+        this.getGroupPrivileges().removeIf(gp -> gp.getPrivilege().equals(privilege));
         syncAuthorities();
     }
 
     public void removePrivilegeAction(Privilege privilege, String action) {
-        this.groupPrivileges.stream()
+        this.getGroupPrivileges().stream()
                 .filter(gp -> gp.getPrivilege().equals(privilege))
                 .findFirst()
                 .ifPresent(gp -> {
                     gp.removeAction(action);
                     if (gp.hasNoActions()) {
-                        this.groupPrivileges.remove(gp);
+                        this.getGroupPrivileges().remove(gp);
                     }
                 });
         syncAuthorities();
@@ -129,12 +119,12 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
      * 核心同步方法：把 Role 的权限 + Group 自身的权限全部转换成 authorities
      */
     public void syncAuthorities() {
-        this.authorities.clear();
+        this.getAuthorities().clear();
 
         // 关联的 Roles
-        for (Role role : roles) {
+        for (Role role : this.getRoles()) {
             if (role.isBuiltIn()) {
-                authorities.add(
+                this.getAuthorities().add(
                         "ROLE_" + role.getCode()
                 );
             }
@@ -145,7 +135,7 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
         }
 
         // 直接配置的 Privileges
-        for (GroupPrivilege gp : groupPrivileges) {
+        for (GroupPrivilege gp : this.getGroupPrivileges()) {
             addAuthorities(gp.getPrivilege().getName(), gp.getActions());
         }
     }
@@ -157,10 +147,10 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
      * @param actions       the action under the privilege.
      */
     private void addAuthorities(String privilegeName, Set<String> actions) {
-        this.authorities.add(privilegeName);
+        this.getAuthorities().add(privilegeName);
         for (String action : actions) {
             String authority = privilegeName + ":" + action;
-            this.authorities.add(authority);
+            this.getAuthorities().add(authority);
         }
     }
 
@@ -189,18 +179,18 @@ public class Group extends JpaAbstractAuditable<@NonNull String, @NonNull Long> 
     }
 
     public Set<User> getMembers() {
-        return Set.copyOf(members);
+        return members;
     }
 
     public Set<Role> getRoles() {
-        return Set.copyOf(roles);
+        return roles;
     }
 
     public Set<GroupPrivilege> getGroupPrivileges() {
-        return Set.copyOf(groupPrivileges);
+        return groupPrivileges;
     }
 
     public Set<String> getAuthorities() {
-        return Set.copyOf(authorities);
+        return authorities;
     }
 }

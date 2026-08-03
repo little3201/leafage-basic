@@ -19,8 +19,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.GroupPrivilege;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * group privileges repository.
@@ -48,8 +48,24 @@ public interface GroupPrivilegeRepository extends JpaRepository<GroupPrivilege, 
     /**
      * 根据group查privilege
      *
-     * @param groupId the pk of privilege.
+     * @param groupId      the pk of privilege.
+     * @param privilegeIds the pk of privilege.
      * @return the result.
      */
-    Optional<GroupPrivilege> findByGroupIdAndPrivilegeId(Long groupId, Long privilegeId);
+    List<GroupPrivilege> findAllByGroupIdAndPrivilegeIdIn(Long groupId, Collection<Long> privilegeIds);
+
+    /**
+     * 删除
+     *
+     * @param roleId the pk of role.
+     */
+    void deleteByGroupId(Long roleId);
+
+    /**
+     * 删除
+     *
+     * @param roleId       the pk of group.
+     * @param privilegeIds the pk of privilege.
+     */
+    void deleteByGroupIdAndPrivilegeIdNotIn(Long roleId, Collection<Long> privilegeIds);
 }

@@ -20,25 +20,25 @@ import top.leafage.hypervisor.system.domain.RolePrivilege;
 import java.util.Set;
 
 /**
- * vo class for privilege.
+ * vo class for privilege actions.
  *
  * @author wq li
  */
-public record SimplePrivilegeVO(
+public record PrivilegeActionsVO(
         Long id,
         Long privilegeId,
         Set<String> actions
 ) {
-    public static SimplePrivilegeVO from(RolePrivilege entity) {
-        return new SimplePrivilegeVO(
+    public static PrivilegeActionsVO from(RolePrivilege entity) {
+        return new PrivilegeActionsVO(
                 entity.getId(),
                 entity.getPrivilege().getId(),
                 entity.getActions()
         );
     }
 
-    public static SimplePrivilegeVO from(GroupPrivilege entity) {
-        return new SimplePrivilegeVO(
+    public static PrivilegeActionsVO from(GroupPrivilege entity) {
+        return new PrivilegeActionsVO(
                 entity.getId(),
                 entity.getPrivilege().getId(),
                 entity.getActions()

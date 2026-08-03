@@ -24,9 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.GroupService;
 
@@ -261,16 +262,14 @@ public class GroupController {
     /**
      * 添加 privilege
      *
-     * @param id          role id
-     * @param privilegeId privilege id
-     * @param action      操作
+     * @param id   role id
+     * @param dtos privilege actions dto
      * @return 操作结果
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:authorize')")
-    @PatchMapping("/{id}/privileges/{privilegeId}")
-    public ResponseEntity<Void> addPrivilege(@PathVariable Long id, @PathVariable Long privilegeId,
-                                             String action) {
-        groupService.addPrivilege(id, privilegeId, action);
+    @PatchMapping("/{id}/privileges")
+    public ResponseEntity<Void> authorize(@PathVariable Long id, @RequestBody List<PrivilegeActionsDTO> dtos) {
+        groupService.authorize(id, dtos);
         return ResponseEntity.ok().build();
     }
 
@@ -282,8 +281,8 @@ public class GroupController {
      */
     @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:authorize')")
     @GetMapping("/{id}/privileges")
-    public ResponseEntity<List<SimplePrivilegeVO>> privileges(@PathVariable Long id) {
-        List<SimplePrivilegeVO> privileges = groupService.privileges(id);
+    public ResponseEntity<List<PrivilegeActionsVO>> privileges(@PathVariable Long id) {
+        List<PrivilegeActionsVO> privileges = groupService.privileges(id);
         return ResponseEntity.ok(privileges);
     }
 

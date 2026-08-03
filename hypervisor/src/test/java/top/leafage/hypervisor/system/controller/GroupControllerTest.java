@@ -16,7 +16,6 @@
 package top.leafage.hypervisor.system.controller;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,10 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
 import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.GroupService;
 
@@ -71,6 +71,7 @@ class GroupControllerTest {
     private GroupVO vo;
 
     private GroupDTO dto;
+    private PrivilegeActionsDTO actionsDTO;
 
     @BeforeEach
     void setUp() {
@@ -79,6 +80,11 @@ class GroupControllerTest {
         dto = new GroupDTO();
         dto.setName("test");
         dto.setSuperiorId(1L);
+
+        actionsDTO = new PrivilegeActionsDTO();
+        actionsDTO.setActions(Set.of("create"));
+        actionsDTO.setName("test");
+        actionsDTO.setPrivilegeId(1L);
     }
 
     @Test
@@ -328,12 +334,12 @@ class GroupControllerTest {
     }
 
     @Test
-    void addPrivilege() {
-        groupService.addPrivilege(anyLong(), anyLong(), anyString());
+    void authorize() {
+        groupService.authorize(anyLong(), anyCollection());
 
-        assertThat(mvc.patch().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
+        assertThat(mvc.patch().uri("/groups/{id}/privileges", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of(actionsDTO)))
                 .with(csrf().asHeader())
         )
                 .hasStatusOk()
@@ -341,12 +347,12 @@ class GroupControllerTest {
     }
 
     @Test
-    void addPrivilege_error() {
-        doThrow(new RuntimeException()).when(groupService).addPrivilege(anyLong(), anyLong(), anyString());
+    void authorize_error() {
+        doThrow(new RuntimeException()).when(groupService).authorize(anyLong(), anyCollection());
 
-        assertThat(mvc.patch().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
+        assertThat(mvc.patch().uri("/groups/{id}/privileges", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of(actionsDTO)))
                 .with(csrf().asHeader())
         )
                 .hasStatus5xxServerError();
@@ -354,12 +360,12 @@ class GroupControllerTest {
 
     @Test
     void privileges() {
-        when(groupService.privileges(anyLong())).thenReturn(List.of(mock(SimplePrivilegeVO.class)));
+        when(groupService.privileges(anyLong())).thenReturn(List.of(mock(PrivilegeActionsVO.class)));
 
         assertThat(mvc.get().uri("/groups/{id}/privileges", 1L))
                 .hasStatusOk()
                 .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(SimplePrivilegeVO.class))
+                .convertTo(InstanceOfAssertFactories.list(PrivilegeActionsVO.class))
                 .hasSize(1);
     }
 

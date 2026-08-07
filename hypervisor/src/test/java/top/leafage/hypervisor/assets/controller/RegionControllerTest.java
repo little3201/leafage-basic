@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,9 +43,10 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static top.leafage.hypervisor.ImportTestUtils.createMinimalXlsxBytes;
 
 /**
- * regions 接口测试
+ * Region controller test
  *
  * @author wq li
  **/
@@ -72,14 +73,13 @@ class RegionControllerTest {
         dto.setAreaCode("23234");
         dto.setPostalCode("712000");
         dto.setSuperiorId(1L);
-        dto.setDescription("description");
 
-        vo = new RegionVO(1L, 1L, "test", "029", "712000", "description", 2L, true);
+        vo = new RegionVO(1L, 1L, "test", "029", "712000", 2L, true);
     }
 
     @Test
     void retrieve() {
-        Page<@NonNull RegionVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<RegionVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         // 使用 eq() 准确匹配参数
         when(regionService.retrieve(anyInt(), anyInt(), anyString(),
@@ -131,6 +131,28 @@ class RegionControllerTest {
         when(regionService.fetch(anyLong())).thenThrow(new RuntimeException());
 
         assertThat(mvc.get().uri("/regions/{id}", anyLong()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
+    void subset() {
+        when(regionService.subset(anyLong())).thenReturn(List.of(vo));
+
+        assertThat(mvc.get().uri("/regions/subset")
+                .queryParam("id", "1"))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(RegionVO.class))
+                .hasSize(1)
+                .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
+    }
+
+    @Test
+    void subset_error() {
+        when(regionService.subset(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.get().uri("/regions/subset")
+                .queryParam("id", "1"))
                 .hasStatus5xxServerError();
     }
 
@@ -197,8 +219,24 @@ class RegionControllerTest {
     void enable() {
         when(regionService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/regions/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/regions/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
+    }
+
+    @Test
+    void disable() {
+        when(regionService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/regions/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(regionService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/regions/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
     }
 
     @Test
@@ -206,7 +244,7 @@ class RegionControllerTest {
         when(regionService.createAll(anyList())).thenReturn(List.of(vo));
 
         MockMultipartFile file = new MockMultipartFile("file", "test.xlsx",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new byte[1]);
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", createMinimalXlsxBytes());
         assertThat(mvc.post().uri("/regions/import").multipart().file(file).with(csrf().asHeader()))
                 .hasStatusOk()
                 .bodyJson()

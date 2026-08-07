@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package top.leafage.hypervisor.system.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Predicate;
 import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
@@ -24,7 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
@@ -35,17 +37,20 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static top.leafage.common.data.converter.ModelToTreeNodeConverter.toTree;
+import static top.leafage.common.data.core.converter.ModelToTreeNodeConverter.toTree;
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
 
 /**
- * privilege service impl.
+ * Privilege service impl.
  *
  * @author wq li
  */
+@OperationLog("privileges")
 @Service
 public class PrivilegeServiceImpl implements PrivilegeService {
 
-    private static final Set<String> META_FIELDS = Set.of("path", "redirect", "component", "icon", "actions");
+    private static final Set<String> META_FIELDS = Set.of("path", "redirect", "component", "actions");
 
     private static final BeanCopier copier = BeanCopier.create(PrivilegeDTO.class, Privilege.class, false);
 
@@ -57,7 +62,6 @@ public class PrivilegeServiceImpl implements PrivilegeService {
      * @param privilegeRepository a {@link PrivilegeRepository} object
      */
     public PrivilegeServiceImpl(PrivilegeRepository privilegeRepository) {
-
         this.privilegeRepository = privilegeRepository;
     }
 
@@ -65,31 +69,46 @@ public class PrivilegeServiceImpl implements PrivilegeService {
      * {@inheritDoc}
      */
     @Override
-    public Page<@NonNull PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<PrivilegeVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Privilege> spec = (root, _, cb) ->
-                buildPredicate(filters, cb, root).orElse(null);
-        spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
+        Specification<Privilege> spec = (root, _, cb) -> {
+            Optional<Predicate> predicate = buildPredicate(filters, cb, root);
+            // 添加superiorId的条件
+            Predicate basePredicate = predicate.orElse(cb.conjunction());
+            return cb.and(basePredicate, cb.isNull(root.get("superiorId")));
+        };
 
-        return privilegeRepository.findAll(spec, pageable)
-                .map(entity -> {
-                    long count = privilegeRepository.countBySuperiorId(entity.getId());
-                    return PrivilegeVO.from(entity, count);
-                });
+        Page<Privilege> entityPage = privilegeRepository.findAll(spec, pageable);
+        if (entityPage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        Set<Long> ids = entityPage.getContent().stream()
+                .map(Privilege::getId)
+                .collect(Collectors.toSet());
+
+        List<Object[]> countResults = privilegeRepository.countBySuperiorIdsGrouped(ids);
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return entityPage.map(entity -> {
+            long count = countMap.getOrDefault(entity.getId(), 0L);
+            return PrivilegeVO.from(entity, count);
+        });
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<TreeNode<@NonNull Long>> tree(String username) {
-        Assert.hasText(username, String.format(_MUST_NOT_BE_EMPTY, "username"));
-
+    public List<TreeNode<@NonNull Long>> tree() {
         Set<Long> privilegeIds = new LinkedHashSet<>();
-        privilegeIds.addAll(privilegeRepository.findGroupPrivilegeIdsByUsername(username));
-        privilegeIds.addAll(privilegeRepository.findGroupRolePrivilegeIdsByUsername(username));
-        privilegeIds.addAll(privilegeRepository.findRolePrivilegeIdsByUsername(username));
+        privilegeIds.addAll(privilegeRepository.findGroupPrivilegeIds());
+        privilegeIds.addAll(privilegeRepository.findGroupRolePrivilegeIds());
+        privilegeIds.addAll(privilegeRepository.findRolePrivilegeIds());
         if (CollectionUtils.isEmpty(privilegeIds)) {
             return Collections.emptyList();
         }
@@ -111,10 +130,25 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     public List<PrivilegeVO> subset(Long superiorId) {
         Assert.notNull(superiorId, String.format(_MUST_NOT_BE_NULL, "superiorId"));
 
-        return privilegeRepository.findAllBySuperiorId(superiorId)
-                .stream()
+        List<Privilege> list = privilegeRepository.findAllBySuperiorId(superiorId);
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+
+        Set<Long> ids = list.stream()
+                .map(Privilege::getId)
+                .collect(Collectors.toSet());
+
+        List<Object[]> countResults = privilegeRepository.countBySuperiorIdsGrouped(ids);
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return list.stream()
                 .map(entity -> {
-                    long count = privilegeRepository.countBySuperiorId(entity.getId());
+                    long count = countMap.getOrDefault(entity.getId(), 0L);
                     return PrivilegeVO.from(entity, count);
                 })
                 .toList();
@@ -139,10 +173,22 @@ public class PrivilegeServiceImpl implements PrivilegeService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!privilegeRepository.existsById(id)) {
             throw new EntityNotFoundException("privilege not found: " + id);
         }
-        return privilegeRepository.updateEnabledById(id) > 0;
+        return privilegeRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!privilegeRepository.existsById(id)) {
+            throw new EntityNotFoundException("privilege not found: " + id);
+        }
+        return privilegeRepository.disableById(id) > 0;
     }
 
     /**

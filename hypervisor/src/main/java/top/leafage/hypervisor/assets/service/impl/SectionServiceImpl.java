@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,58 +16,64 @@
 package top.leafage.hypervisor.assets.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import top.leafage.hypervisor.assets.domain.Region;
+import top.leafage.common.data.core.domain.TreeNode;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.Section;
+import top.leafage.hypervisor.assets.domain.SectionData;
+import top.leafage.hypervisor.assets.domain.SectionField;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionDataDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
+import top.leafage.hypervisor.assets.domain.vo.SectionDataVO;
+import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
+import top.leafage.hypervisor.assets.repository.SectionDataRepository;
+import top.leafage.hypervisor.assets.repository.SectionFieldRepository;
 import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.service.SectionService;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
+import static top.leafage.common.data.core.converter.ModelToTreeNodeConverter.toTree;
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
+import static top.leafage.hypervisor.constants.GlobalConstant._MUST_NOT_BE_NULL;
+
+/**
+ * section service impl
+ *
+ * @author wq li
+ */
+@OperationLog("sections")
 @Service
 public class SectionServiceImpl implements SectionService {
 
+    private static final Set<String> META_FIELDS = Set.of("sequence", "level");
+
     private static final BeanCopier copier = BeanCopier.create(SectionDTO.class, Section.class, false);
+    private static final BeanCopier fieldCopier = BeanCopier.create(SectionFieldDTO.class, SectionField.class, false);
+    private static final BeanCopier dataCopier = BeanCopier.create(SectionDataDTO.class, SectionData.class, false);
+
     private final SectionRepository sectionRepository;
+    private final SectionFieldRepository sectionFieldRepository;
+    private final SectionDataRepository sectionDataRepository;
 
     /**
      * Constructor for SectionServiceImpl.
      *
-     * @param sectionRepository a {@link SectionRepository} object
+     * @param sectionRepository      a {@link SectionRepository} object
+     * @param sectionFieldRepository a {@link SectionFieldRepository} object
+     * @param sectionDataRepository  a {@link SectionDataRepository} object
      */
-    public SectionServiceImpl(SectionRepository sectionRepository) {
+    public SectionServiceImpl(SectionRepository sectionRepository, SectionFieldRepository sectionFieldRepository,
+                              SectionDataRepository sectionDataRepository) {
         this.sectionRepository = sectionRepository;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Page<@NonNull SectionVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
-        Pageable pageable = pageable(page, size, sortBy, descending);
-
-        Specification<@NonNull Section> spec = (root, _, cb) ->
-                buildPredicate(filters, cb, root).orElse(null);
-        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
-            spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
-        }
-
-        return sectionRepository.findAll(spec, pageable)
-                .map(entity -> {
-                    long count = sectionRepository.countBySuperiorId(entity.getId());
-                    return SectionVO.from(entity, count);
-                });
+        this.sectionFieldRepository = sectionFieldRepository;
+        this.sectionDataRepository = sectionDataRepository;
     }
 
     /**
@@ -82,46 +88,55 @@ public class SectionServiceImpl implements SectionService {
                 .orElseThrow(() -> new EntityNotFoundException("section not found: " + id));
     }
 
-    @Transactional
     @Override
-    public boolean enable(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        if (!sectionRepository.existsById(id)) {
-            throw new EntityNotFoundException("section not found: " + id);
-        }
-        return sectionRepository.updateEnabledById(id) > 0;
+    public List<TreeNode<Long>> tree(Long ownerId, Section.OwnerType ownerType) {
+        Assert.notNull(ownerId, String.format(_MUST_NOT_BE_NULL, "ownerId"));
+        Assert.notNull(ownerType, String.format(_MUST_NOT_BE_NULL, "ownerType"));
+
+        List<Section> sections = sectionRepository.findAllByOwnerIdAndOwnerType(ownerId, ownerType);
+        return toTree(sections, META_FIELDS);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<SectionVO> subset(Long id) {
-        List<Section> list;
-        if (id == null) {
-            list = sectionRepository.findAllBySuperiorIdIsNull();
-        } else {
-            list = sectionRepository.findAllBySuperiorId(id);
+    public SectionVO create(SectionDTO dto) {
+        if (sectionRepository.existsByOwnerIdAndOwnerTypeAndName(dto.getOwnerId(), dto.getOwnerType(), dto.getName())) {
+            throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        return list.stream().sorted(Comparator.comparing(Section::getId))
-                .map(entity -> {
-                    long count = sectionRepository.countBySuperiorId(entity.getId());
-                    return SectionVO.from(entity, count);
-                })
+        Section entity = sectionRepository.save(SectionDTO.toEntity(dto));
+        return SectionVO.from(entity);
+    }
+
+    @Override
+    public List<SectionFieldVO> fields(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        return sectionFieldRepository.findAllBySectionId(id)
+                .stream().map(SectionFieldVO::from)
                 .toList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional
     @Override
-    public SectionVO create(SectionDTO dto) {
-        if (sectionRepository.existsByTitle(dto.getTitle())) {
-            throw new IllegalArgumentException("title already exists: " + dto.getTitle());
+    public List<SectionDataVO> datas(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        return sectionDataRepository.findAllBySectionId(id)
+                .stream().map(SectionDataVO::from)
+                .toList();
+    }
+
+    @Override
+    public SectionFieldVO createField(SectionFieldDTO dto) {
+        if (sectionFieldRepository.existsBySectionIdAndName(dto.getSectionId(), dto.getName())) {
+            throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        Section entity = sectionRepository.saveAndFlush(SectionDTO.toEntity(dto));
-        return SectionVO.from(entity);
+        SectionField entity = sectionFieldRepository.save(SectionFieldDTO.toEntity(dto));
+        return SectionFieldVO.from(entity);
+    }
+
+    @Override
+    public SectionDataVO createData(SectionDataDTO dto) {
+        SectionData entity = sectionDataRepository.save(SectionDataDTO.toEntity(dto));
+        return SectionDataVO.from(entity);
     }
 
     /**
@@ -134,13 +149,41 @@ public class SectionServiceImpl implements SectionService {
 
         Section existing = sectionRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("section not found: " + id));
-        if (!existing.getTitle().equals(dto.getTitle()) &&
-                sectionRepository.existsByTitle(dto.getTitle())) {
-            throw new IllegalArgumentException("title already exists: " + dto.getTitle());
+
+        boolean existsed = sectionRepository.existsByOwnerIdAndOwnerTypeAndName(existing.getOwnerId(), dto.getOwnerType(), dto.getName());
+        if (!existing.getName().equals(dto.getName()) && existsed) {
+            throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
         copier.copy(dto, existing, null);
         Section entity = sectionRepository.save(existing);
         return SectionVO.from(entity);
+    }
+
+    @Override
+    public SectionFieldVO modifyField(Long id, SectionFieldDTO dto) {
+        Assert.notNull(id, String.format(_MUST_NOT_BE_NULL, "section field id"));
+
+        SectionField existing = sectionFieldRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("section field not found: " + id));
+        if (!existing.getName().equals(dto.getName()) &&
+                sectionFieldRepository.existsBySectionIdAndName(dto.getSectionId(), dto.getName())) {
+            throw new IllegalArgumentException("name already exists: " + dto.getName());
+        }
+        fieldCopier.copy(dto, existing, null);
+        SectionField entity = sectionFieldRepository.save(existing);
+        return SectionFieldVO.from(entity);
+    }
+
+    @Override
+    public SectionDataVO modifyData(Long id, SectionDataDTO dto) {
+        Assert.notNull(id, String.format(_MUST_NOT_BE_NULL, "section data id"));
+
+        SectionData existing = sectionDataRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("section data not found: " + id));
+
+        dataCopier.copy(dto, existing, null);
+        SectionData entity = sectionDataRepository.save(existing);
+        return SectionDataVO.from(entity);
     }
 
     /**
@@ -156,4 +199,23 @@ public class SectionServiceImpl implements SectionService {
         sectionRepository.deleteById(id);
     }
 
+    @Override
+    public void removeField(Long id) {
+        Assert.notNull(id, String.format(_MUST_NOT_BE_NULL, "section field id"));
+
+        if (!sectionFieldRepository.existsById(id)) {
+            throw new EntityNotFoundException("section not found: " + id);
+        }
+        sectionFieldRepository.deleteById(id);
+    }
+
+    @Override
+    public void removeData(Long id) {
+        Assert.notNull(id, String.format(_MUST_NOT_BE_NULL, "section field id"));
+
+        if (!sectionDataRepository.existsById(id)) {
+            throw new EntityNotFoundException("section not found: " + id);
+        }
+        sectionDataRepository.deleteById(id);
+    }
 }

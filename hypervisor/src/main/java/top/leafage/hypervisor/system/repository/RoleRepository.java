@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,12 @@
  */
 package top.leafage.hypervisor.system.repository;
 
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.Role;
-
-import java.util.Optional;
 
 /**
  * role repository.
@@ -27,15 +28,6 @@ import java.util.Optional;
  */
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor<Role> {
-
-    /**
-     * 查询 members
-     *
-     * @param id the pk of role.
-     * @return result.
-     */
-    @EntityGraph(attributePaths = "members")
-    Optional<Role> findWithMembersById(Long id);
 
     /**
      * is exists.
@@ -48,10 +40,20 @@ public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificat
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
-    @Query("UPDATE Role t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
-    int updateEnabledById(Long id);
+    @Query("UPDATE Role t SET t.enabled = true WHERE t.id = :id AND t.enabled = false")
+    int enableById(Long id);
+
+    /**
+     * disable a record by pk.
+     *
+     * @param id The pk.
+     * @return result.
+     */
+    @Modifying
+    @Query("UPDATE Role t SET t.enabled = false WHERE t.id = :id AND t.enabled = true")
+    int disableById(Long id);
 }

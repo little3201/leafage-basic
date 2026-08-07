@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * dictionary controller.
+ * Dictionary controller.
  *
  * @author wq li
  */
@@ -61,7 +61,7 @@ public class DictionaryController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries')")
     @GetMapping
     public ResponseEntity<Page<DictionaryVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                        String sortBy, boolean descending, String filters) {
@@ -70,12 +70,12 @@ public class DictionaryController {
     }
 
     /**
-     * fetch.
+     * Fetch.
      *
-     * @param id th pk.
+     * @param id The pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries')")
     @GetMapping("/{id}")
     public ResponseEntity<DictionaryVO> fetch(@PathVariable Long id) {
         DictionaryVO vo = dictionaryService.fetch(id);
@@ -85,11 +85,11 @@ public class DictionaryController {
     /**
      * subset.
      *
-     * @param id th pk.
+     * @param id The pk.
      * @return the result.
      */
-    @GetMapping("/{id}/subset")
-    public ResponseEntity<List<DictionaryVO>> subset(@PathVariable Long id) {
+    @GetMapping("subset")
+    public ResponseEntity<List<DictionaryVO>> subset(Long id) {
         List<DictionaryVO> voList = dictionaryService.subset(id);
         return ResponseEntity.ok(voList);
     }
@@ -100,7 +100,7 @@ public class DictionaryController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:create')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:create')")
     @PostMapping
     public ResponseEntity<DictionaryVO> create(@Valid @RequestBody DictionaryDTO dto) {
         DictionaryVO vo = dictionaryService.create(dto);
@@ -111,10 +111,10 @@ public class DictionaryController {
      * modify.
      *
      * @param dto the request body.
-     * @param id  th pk.
+     * @param id  The pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<DictionaryVO> modify(@PathVariable Long id, @Valid @RequestBody DictionaryDTO dto) {
         DictionaryVO vo = dictionaryService.modify(id, dto);
@@ -122,11 +122,11 @@ public class DictionaryController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         dictionaryService.remove(id);
@@ -134,16 +134,29 @@ public class DictionaryController {
     }
 
     /**
-     * enable.
+     * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:enable')")
-    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:enable')")
+    @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = dictionaryService.enable(id);
         return ResponseEntity.ok(enabled);
+    }
+
+    /**
+     * Disable.
+     *
+     * @param id The pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:disable')")
+    @PatchMapping("/{id}/disable")
+    public ResponseEntity<Boolean> disable(@PathVariable Long id) {
+        boolean disable = dictionaryService.disable(id);
+        return ResponseEntity.ok(disable);
     }
 
     /**
@@ -151,7 +164,7 @@ public class DictionaryController {
      *
      * @return the imported data.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_dictionaries:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('dictionaries:import')")
     @PostMapping("/import")
     public ResponseEntity<List<DictionaryVO>> importFromFile(MultipartFile file) throws IOException {
         List<DictionaryDTO> dtoList = ExcelReader.read(file.getInputStream(), DictionaryDTO.class);

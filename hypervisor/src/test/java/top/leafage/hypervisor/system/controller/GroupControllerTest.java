@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 package top.leafage.hypervisor.system.controller;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +30,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
-import top.leafage.common.data.domain.TreeNode;
-import top.leafage.hypervisor.system.domain.GroupPrivilege;
-import top.leafage.hypervisor.system.domain.Role;
-import top.leafage.hypervisor.system.domain.User;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.GroupService;
 
@@ -51,9 +48,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static top.leafage.hypervisor.ImportTestUtils.createMinimalXlsxBytes;
 
 /**
- * group controller test
+ * Group controller test
  *
  * @author wq li
  **/
@@ -73,20 +71,25 @@ class GroupControllerTest {
     private GroupVO vo;
 
     private GroupDTO dto;
+    private PrivilegeActionsDTO actionsDTO;
 
     @BeforeEach
     void setUp() {
-        vo = new GroupVO(1L, "test", "description", true);
+        vo = new GroupVO(1L, "test", Collections.emptySet(), Collections.emptySet(), true);
 
         dto = new GroupDTO();
         dto.setName("test");
         dto.setSuperiorId(1L);
-        dto.setDescription("description");
+
+        actionsDTO = new PrivilegeActionsDTO();
+        actionsDTO.setActions(Set.of("create"));
+        actionsDTO.setName("test");
+        actionsDTO.setPrivilegeId(1L);
     }
 
     @Test
     void retrieve() {
-        Page<@NonNull GroupVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<GroupVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(groupService.retrieve(anyInt(), anyInt(), eq("id"),
                 anyBoolean(), anyString())).thenReturn(voPage);
@@ -218,7 +221,7 @@ class GroupControllerTest {
     void enable() {
         when(groupService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/groups/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/groups/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
     }
 
@@ -331,12 +334,12 @@ class GroupControllerTest {
     }
 
     @Test
-    void addPrivilege() {
-        groupService.addPrivilege(anyLong(), anyLong(), anyString());
+    void authorize() {
+        groupService.authorize(anyLong(), anyCollection());
 
-        assertThat(mvc.patch().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
+        assertThat(mvc.patch().uri("/groups/{id}/privileges", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of(actionsDTO)))
                 .with(csrf().asHeader())
         )
                 .hasStatusOk()
@@ -344,12 +347,12 @@ class GroupControllerTest {
     }
 
     @Test
-    void addPrivilege_error() {
-        doThrow(new RuntimeException()).when(groupService).addPrivilege(anyLong(), anyLong(), anyString());
+    void authorize_error() {
+        doThrow(new RuntimeException()).when(groupService).authorize(anyLong(), anyCollection());
 
-        assertThat(mvc.patch().uri("/groups/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
+        assertThat(mvc.patch().uri("/groups/{id}/privileges", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of(actionsDTO)))
                 .with(csrf().asHeader())
         )
                 .hasStatus5xxServerError();
@@ -357,12 +360,12 @@ class GroupControllerTest {
 
     @Test
     void privileges() {
-        when(groupService.privileges(anyLong())).thenReturn(List.of(mock(SimplePrivilegeVO.class)));
+        when(groupService.privileges(anyLong())).thenReturn(List.of(mock(PrivilegeActionsVO.class)));
 
         assertThat(mvc.get().uri("/groups/{id}/privileges", 1L))
                 .hasStatusOk()
                 .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(SimplePrivilegeVO.class))
+                .convertTo(InstanceOfAssertFactories.list(PrivilegeActionsVO.class))
                 .hasSize(1);
     }
 
@@ -386,11 +389,27 @@ class GroupControllerTest {
     }
 
     @Test
+    void disable() {
+        when(groupService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/groups/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(groupService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/groups/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
     void importFromFile() {
         when(groupService.createAll(anyList())).thenReturn(List.of(vo));
 
         MockMultipartFile file = new MockMultipartFile("file", "test.xlsx",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new byte[1]);
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", createMinimalXlsxBytes());
         assertThat(mvc.post().uri("/groups/import").multipart().file(file).with(csrf().asHeader()))
                 .hasStatusOk()
                 .bodyJson()

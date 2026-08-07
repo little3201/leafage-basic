@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  */
 package top.leafage.hypervisor.assets.service;
 
+import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.assets.domain.dto.PostDTO;
 import top.leafage.hypervisor.assets.domain.vo.PostVO;
-import top.leafage.common.data.jpa.JpaCrudService;
 
 /**
- * posts service.
+ * Posts service.
  *
  * @author wq li
  */

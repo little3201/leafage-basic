@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * region controller.
+ * Region controller.
  *
  * @author wq li
  */
@@ -54,9 +54,10 @@ public class RegionController {
      * 分页查询
      *
      * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序字段
-     * @param descending 排序方向
+     * @param size       分页数据大小，最大 500
+     * @param sortBy     排序字段，若为 null，默认为主键 id
+     * @param descending 排序方向，若为 false, 即正序排列
+     * @param filters    过滤条件，格式：field:condition:value，如：name:like:test
      * @return 查询的数据集，异常时返回204状态码
      */
     @GetMapping
@@ -67,9 +68,9 @@ public class RegionController {
     }
 
     /**
-     * fetch.
+     * Fetch.
      *
-     * @param id th pk.
+     * @param id The pk.
      * @return the result.
      */
     @GetMapping("/{id}")
@@ -81,10 +82,10 @@ public class RegionController {
     /**
      * subset.
      *
-     * @param id th pk.
+     * @param id The pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions')")
     @GetMapping("/subset")
     public ResponseEntity<List<RegionVO>> subset(Long id) {
         List<RegionVO> voList = regionService.subset(id);
@@ -97,7 +98,7 @@ public class RegionController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:create')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:create')")
     @PostMapping
     public ResponseEntity<RegionVO> create(@Valid @RequestBody RegionDTO dto) {
         RegionVO vo = regionService.create(dto);
@@ -107,11 +108,11 @@ public class RegionController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<RegionVO> modify(@PathVariable Long id, @RequestBody RegionDTO dto) {
         RegionVO vo = regionService.modify(id, dto);
@@ -119,11 +120,11 @@ public class RegionController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         regionService.remove(id);
@@ -131,16 +132,29 @@ public class RegionController {
     }
 
     /**
-     * enable.
+     * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:enable')")
-    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:enable')")
+    @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = regionService.enable(id);
         return ResponseEntity.ok(enabled);
+    }
+
+    /**
+     * Disable.
+     *
+     * @param id The pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:disable')")
+    @PatchMapping("/{id}/disable")
+    public ResponseEntity<Boolean> disable(@PathVariable Long id) {
+        boolean disable = regionService.disable(id);
+        return ResponseEntity.ok(disable);
     }
 
     /**
@@ -148,7 +162,7 @@ public class RegionController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_regions:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('regions:import')")
     @PostMapping("/import")
     public ResponseEntity<List<RegionVO>> importFromFile(MultipartFile file) throws IOException {
         List<RegionDTO> dtoList = ExcelReader.read(file.getInputStream(), RegionDTO.class);

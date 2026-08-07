@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@ package top.leafage.hypervisor.system.domain.vo;
 
 import top.leafage.hypervisor.system.domain.Group;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * vo class for group.
  *
@@ -24,14 +27,16 @@ import top.leafage.hypervisor.system.domain.Group;
 public record GroupVO(
         Long id,
         String name,
-        String description,
+        Set<UserVO> members,
+        Set<RoleVO> roles,
         boolean enabled
 ) {
     public static GroupVO from(Group entity) {
         return new GroupVO(
                 entity.getId(),
                 entity.getName(),
-                entity.getDescription(),
+                entity.getMembers().stream().map(UserVO::from).collect(Collectors.toSet()),
+                entity.getRoles().stream().map(RoleVO::from).collect(Collectors.toSet()),
                 entity.isEnabled()
         );
     }

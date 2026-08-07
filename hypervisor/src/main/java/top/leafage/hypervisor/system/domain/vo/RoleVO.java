@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,14 +24,16 @@ import top.leafage.hypervisor.system.domain.Role;
 public record RoleVO(
         Long id,
         String name,
-        String description,
+        String code,
+        boolean builtIn,
         boolean enabled
 ) {
     public static RoleVO from(Role entity) {
         return new RoleVO(
                 entity.getId(),
                 entity.getName(),
-                entity.getDescription(),
+                entity.getCode(),
+                entity.isBuiltIn(),
                 entity.isEnabled()
         );
     }

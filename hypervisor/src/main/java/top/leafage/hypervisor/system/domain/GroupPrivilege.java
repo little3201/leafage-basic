@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,18 +31,35 @@ import java.util.Set;
 @Table(name = "group_privileges")
 public class GroupPrivilege extends AbstractPersistable<@NonNull Long> {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = false)
-    private Group group;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "privilege_id", nullable = false)
-    private Privilege privilege;
-
+    /**
+     * actions
+     */
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "group_privilege_actions", joinColumns = @JoinColumn(name = "group_privilege_id"))
     private final Set<String> actions = new HashSet<>();
 
+    /**
+     * group
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
+
+    /**
+     * privilege
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "privilege_id", nullable = false)
+    private Privilege privilege;
+
+    public GroupPrivilege() {
+    }
+
+    public GroupPrivilege(Group group, Privilege privilege, Set<String> actions) {
+        this.group = group;
+        this.privilege = privilege;
+        this.updateActions(actions);
+    }
 
     public Group getGroup() {
         return group;
@@ -64,14 +81,19 @@ public class GroupPrivilege extends AbstractPersistable<@NonNull Long> {
         return Set.copyOf(actions);
     }
 
-    public void updateActions(Set<String> newActions) {
+    public void updateActions(Collection<String> actions) {
         this.actions.clear();
-        this.actions.addAll(newActions);
+
+        if (actions != null && !actions.isEmpty()) {
+            this.actions.addAll(actions);
+        }
     }
 
-    public void addActions(Collection<String> newActions) {
-        if (newActions != null) {
-            this.actions.addAll(newActions);
-        }
+    public void removeAction(String action) {
+        this.actions.remove(action);
+    }
+
+    public boolean hasNoActions() {
+        return this.actions.isEmpty();
     }
 }

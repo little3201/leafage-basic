@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 /**
- * Comment 接口测试
+ * Comment controller test
  *
  * @author wq li
  **/
@@ -75,8 +75,7 @@ class CommentControllerTest {
 
     @Test
     void retrieve() {
-        Page<@NonNull CommentVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
-
+        Page<CommentVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
         when(commentService.retrieve(anyInt(), anyInt(), eq("id"), anyBoolean(), anyString())).thenReturn(page);
 
         assertThat(mvc.get().uri("/comments")

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package top.leafage.hypervisor.assets.domain.vo;
 
 import top.leafage.hypervisor.assets.domain.Section;
 
+import java.util.Map;
+
 /**
  * vo class for section.
  *
@@ -24,10 +26,13 @@ import top.leafage.hypervisor.assets.domain.Section;
  */
 public record SectionVO(
         Long id,
+        String name,
         Long superiorId,
-        String title,
-        String body,
-        String type,
+        Long ownerId,
+        Section.OwnerType ownerType,
+        Integer sequence,
+        Integer level,
+        Map<String, Object> body,
         long count
 ) {
     public static SectionVO from(Section entity) {
@@ -37,10 +42,13 @@ public record SectionVO(
     public static SectionVO from(Section entity, long count) {
         return new SectionVO(
                 entity.getId(),
+                entity.getName(),
                 entity.getSuperiorId(),
-                entity.getTitle(),
+                entity.getOwnerId(),
+                entity.getOwnerType(),
+                entity.getSequence(),
+                entity.getLevel(),
                 entity.getBody(),
-                entity.getType().name(),
                 count
         );
     }

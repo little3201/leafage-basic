@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -44,7 +44,7 @@ public class Post extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
     @CollectionTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
     private Set<String> tags;
 
-    private Instant publishedAt;
+    private LocalDateTime publishedAt;
 
 
     public Post() {
@@ -89,11 +89,11 @@ public class Post extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
         this.tags = tags;
     }
 
-    public Instant getPublishedAt() {
+    public LocalDateTime getPublishedAt() {
         return publishedAt;
     }
 
-    public void setPublishedAt(Instant publishedAt) {
+    public void setPublishedAt(LocalDateTime publishedAt) {
         this.publishedAt = publishedAt;
     }
 }

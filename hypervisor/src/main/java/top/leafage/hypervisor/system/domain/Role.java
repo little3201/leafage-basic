@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,49 +32,30 @@ import java.util.Set;
 @Table(name = "roles")
 public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
 
+    /**
+     * role privileges
+     */
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<RolePrivilege> rolePrivileges = new HashSet<>();
+
     @Column(unique = true, nullable = false)
     private String name;
 
-    private String description;
+    @Column(unique = true, nullable = false)
+    private String code;
+
+    private boolean builtIn = false;
 
     private boolean enabled = true;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_members",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
-    private final Set<User> members = new HashSet<>();
-
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final Set<RolePrivilege> rolePrivileges = new HashSet<>();
 
     public Role() {
     }
 
-    public Role(String name, String description) {
+    public Role(String name, String code) {
         this.name = name;
-        this.description = description;
+        this.code = code;
     }
 
-    public void addPrivilege(Privilege privilege, Set<String> actions) {
-        RolePrivilege rp = new RolePrivilege();
-        rp.setRole(this);
-        rp.setPrivilege(privilege);
-        rp.addActions(actions);
-        this.rolePrivileges.add(rp);
-    }
-
-    public void removePrivilege(Privilege privilege) {
-        rolePrivileges.removeIf(rp -> rp.getPrivilege().equals(privilege));
-    }
-
-    public void addMember(User user) {
-        this.members.add(user);
-    }
-
-    public void removeMember(User user) {
-        this.members.remove(user);
-    }
 
     public String getName() {
         return name;
@@ -84,12 +65,20 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCode() {
+        return code;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean isBuiltIn() {
+        return builtIn;
+    }
+
+    public void setBuiltIn(boolean builtIn) {
+        this.builtIn = builtIn;
     }
 
     public boolean isEnabled() {
@@ -100,11 +89,7 @@ public class Role extends JpaAbstractAuditable<@NonNull String, @NonNull Long> {
         this.enabled = enabled;
     }
 
-    public Set<User> getMembers() {
-        return Set.copyOf(members);
-    }
-
     public Set<RolePrivilege> getRolePrivileges() {
-        return Set.copyOf(rolePrivileges);
+        return rolePrivileges;
     }
 }

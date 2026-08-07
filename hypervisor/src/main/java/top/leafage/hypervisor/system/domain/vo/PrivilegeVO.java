@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,7 @@ public record PrivilegeVO(
         String path,
         String redirect,
         String component,
-        String icon,
         Set<String> actions,
-        String description,
         boolean enabled,
         long count
 ) {
@@ -48,9 +46,7 @@ public record PrivilegeVO(
                 entity.getPath(),
                 entity.getRedirect(),
                 entity.getComponent(),
-                entity.getIcon(),
                 entity.getActions(),
-                entity.getDescription(),
                 entity.isEnabled(),
                 count
         );

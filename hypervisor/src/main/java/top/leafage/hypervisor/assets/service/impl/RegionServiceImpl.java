@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package top.leafage.hypervisor.assets.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.jspecify.annotations.NonNull;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,22 +24,26 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import top.leafage.common.logging.annotation.OperationLog;
 import top.leafage.hypervisor.assets.domain.Region;
-import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
 import top.leafage.hypervisor.assets.service.RegionService;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
 /**
  * region service impl.
  *
  * @author wq li
  */
+@OperationLog("regions")
 @Service
 public class RegionServiceImpl implements RegionService {
 
@@ -59,20 +63,38 @@ public class RegionServiceImpl implements RegionService {
      * {@inheritDoc}
      */
     @Override
-    public Page<@NonNull RegionVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<RegionVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Region> spec = (root, _, cb) ->
-                buildPredicate(filters, cb, root).orElse(null);
-        if (!StringUtils.hasText(filters) || !filters.contains("superiorId")) {
-            spec = spec.and((root, _, cb) -> cb.isNull(root.get("superiorId")));
-        }
+        Specification<Region> spec = (root, _, cb) -> {
+            Optional<Predicate> predicate = buildPredicate(filters, cb, root);
+            Predicate basePredicate = predicate.orElse(cb.conjunction());
+            if (StringUtils.hasText(filters) && filters.contains("superiorId")) {
+                return basePredicate;
+            } else {
+                return cb.and(basePredicate, cb.isNull(root.get("superiorId")));
+            }
+        };
 
-        return regionRepository.findAll(spec, pageable)
-                .map(entity -> {
-                    long count = regionRepository.countBySuperiorId(entity.getId());
-                    return RegionVO.from(entity, count);
-                });
+        Page<Region> entityPage = regionRepository.findAll(spec, pageable);
+        if (entityPage.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        Set<Long> ids = entityPage.getContent().stream()
+                .map(Region::getId)
+                .collect(Collectors.toSet());
+
+        List<Object[]> countResults = regionRepository.countBySuperiorIdsGrouped(ids);
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return entityPage.map(entity -> {
+            long count = countMap.getOrDefault(entity.getId(), 0L);
+            return RegionVO.from(entity, count);
+        });
     }
 
     /**
@@ -91,10 +113,22 @@ public class RegionServiceImpl implements RegionService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!regionRepository.existsById(id)) {
             throw new EntityNotFoundException("region not found: " + id);
         }
-        return regionRepository.updateEnabledById(id) > 0;
+        return regionRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!regionRepository.existsById(id)) {
+            throw new EntityNotFoundException("region not found: " + id);
+        }
+        return regionRepository.disableById(id) > 0;
     }
 
     /**
@@ -108,9 +142,24 @@ public class RegionServiceImpl implements RegionService {
         } else {
             list = regionRepository.findAllBySuperiorId(id);
         }
-        return list.stream().sorted(Comparator.comparing(Region::getId))
+        if (CollectionUtils.isEmpty(list)) {
+            return Collections.emptyList();
+        }
+
+        Set<Long> ids = list.stream()
+                .map(Region::getId)
+                .collect(Collectors.toSet());
+
+        List<Object[]> countResults = regionRepository.countBySuperiorIdsGrouped(ids);
+        Map<Long, Long> countMap = countResults.stream()
+                .collect(Collectors.toMap(
+                        row -> (Long) row[0],  // superiorId
+                        row -> (Long) row[1]   // count
+                ));
+
+        return list.stream()
                 .map(entity -> {
-                    long count = regionRepository.countBySuperiorId(entity.getId());
+                    long count = countMap.getOrDefault(entity.getId(), 0L);
                     return RegionVO.from(entity, count);
                 })
                 .toList();
@@ -125,7 +174,7 @@ public class RegionServiceImpl implements RegionService {
         if (regionRepository.existsByName(dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        Region entity = regionRepository.saveAndFlush(RegionDTO.toEntity(dto));
+        Region entity = regionRepository.save(RegionDTO.toEntity(dto));
         return RegionVO.from(entity);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,13 +42,9 @@ public class Privilege extends JpaAbstractAuditable<@NonNull String, @NonNull Lo
 
     private String component;
 
-    private String icon;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "privilege_actions", joinColumns = @JoinColumn(name = "privilege_id"))
     private Set<String> actions;
-
-    private String description;
 
     private boolean enabled = true;
 
@@ -56,15 +52,13 @@ public class Privilege extends JpaAbstractAuditable<@NonNull String, @NonNull Lo
     public Privilege() {
     }
 
-    public Privilege(String name, Long superiorId, String path, String redirect, String component, String icon, Set<String> actions, String description) {
+    public Privilege(String name, Long superiorId, String path, String redirect, String component, Set<String> actions) {
         this.name = name;
         this.superiorId = superiorId;
         this.path = path;
         this.redirect = redirect;
         this.component = component;
-        this.icon = icon;
         this.actions = actions;
-        this.description = description;
     }
 
     public String getName() {
@@ -107,28 +101,12 @@ public class Privilege extends JpaAbstractAuditable<@NonNull String, @NonNull Lo
         this.component = component;
     }
 
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
     public Set<String> getActions() {
         return actions;
     }
 
     public void setActions(Set<String> actions) {
         this.actions = actions;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public boolean isEnabled() {

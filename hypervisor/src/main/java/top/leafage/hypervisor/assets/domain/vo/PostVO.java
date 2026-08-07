@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package top.leafage.hypervisor.assets.domain.vo;
 import top.leafage.hypervisor.assets.domain.Post;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -30,7 +31,7 @@ public record PostVO(
         String summary,
         String body,
         Set<String> tags,
-        Instant publishedAt
+        LocalDateTime publishedAt
 ) {
     public static PostVO from(Post entity) {
         return new PostVO(

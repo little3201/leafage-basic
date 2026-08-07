@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcherEntry;
@@ -58,9 +59,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse();
         CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
-
         // 设置attribute name 为 null
         csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName(null);
 
@@ -69,7 +68,7 @@ public class SecurityConfiguration {
                         authorize.anyRequest().authenticated()
                 )
                 .csrf(csrf ->
-                        csrf.csrfTokenRepository(cookieCsrfTokenRepository)
+                        csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                                 .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                 )
                 .cors(Customizer.withDefaults())
@@ -101,7 +100,7 @@ public class SecurityConfiguration {
 
     private LogoutSuccessHandler oidcLogoutSuccessHandler() {
         OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler =
-                new OidcClientInitiatedLogoutSuccessHandler(this.clientRegistrationRepository);
+                new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
 
         // Sets the location that the End-User's User Agent will be redirected to
         // after the logout has been performed at the Provider

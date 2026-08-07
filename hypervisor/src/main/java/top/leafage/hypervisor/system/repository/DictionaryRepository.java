@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.Dictionary;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -41,6 +42,13 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long>, J
     boolean existsByName(String name);
 
     /**
+     * find the superior is null.
+     *
+     * @return the result.
+     */
+    List<Dictionary> findAllBySuperiorIdIsNull();
+
+    /**
      * find by superior id.
      *
      * @param superiorId the pk of superior.
@@ -51,18 +59,29 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long>, J
     /**
      * Counts the number of records by superior ID.
      *
-     * @param superiorId The superior ID.
+     * @param superiorIds The pk of superiors.
      * @return The count of records.
      */
-    long countBySuperiorId(Long superiorId);
+    @Query("SELECT t.superiorId, COUNT(t.id) FROM Dictionary t WHERE t.superiorId IN :superiorIds GROUP BY t.superiorId")
+    List<Object[]> countBySuperiorIdsGrouped(Collection<Long> superiorIds);
 
     /**
-     * enable a record by pk..
+     * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
-    @Query("UPDATE Dictionary t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
-    int updateEnabledById(Long id);
+    @Query("UPDATE Dictionary t SET t.enabled = true WHERE t.id = :id AND t.enabled = false")
+    int enableById(Long id);
+
+    /**
+     * disable a record by pk.
+     *
+     * @param id The pk.
+     * @return result.
+     */
+    @Modifying
+    @Query("UPDATE Dictionary t SET t.enabled = false WHERE t.id = :id AND t.enabled = true")
+    int disableById(Long id);
 }

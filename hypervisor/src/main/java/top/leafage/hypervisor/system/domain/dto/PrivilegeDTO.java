@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,19 +31,14 @@ public class PrivilegeDTO {
 
     private Long superiorId;
 
-    @NotBlank
     private String path;
 
     private String redirect;
 
+    @NotBlank
     private String component;
 
-    @NotBlank
-    private String icon;
-
     private Set<String> actions;
-
-    private String description;
 
 
     public static Privilege toEntity(PrivilegeDTO dto) {
@@ -53,9 +48,7 @@ public class PrivilegeDTO {
                 dto.getPath(),
                 dto.getRedirect(),
                 dto.getComponent(),
-                dto.getIcon(),
-                dto.getActions(),
-                dto.getDescription()
+                dto.getActions()
         );
     }
 
@@ -99,14 +92,6 @@ public class PrivilegeDTO {
         this.component = component;
     }
 
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
     public Set<String> getActions() {
         return actions;
     }
@@ -115,11 +100,4 @@ public class PrivilegeDTO {
         this.actions = actions;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,6 @@
 package top.leafage.hypervisor.assets.controller;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +27,7 @@ import top.leafage.hypervisor.assets.service.CommentService;
 import java.util.List;
 
 /**
- * comment controller.
+ * Comment controller.
  *
  * @author wq li
  */
@@ -37,7 +35,6 @@ import java.util.List;
 @RequestMapping("/comments")
 public class CommentController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
     private final CommentService commentService;
 
     /**

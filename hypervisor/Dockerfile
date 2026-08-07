@@ -1,17 +1,22 @@
-# Start with a base image containing Java runtime
-FROM openjdk:17-jdk-alpine
+# 使用极简基础镜像（推荐）
+FROM debian:bookworm-slim
 
-# Add Maintainer Info
+# 或者使用更小的 distroless（推荐生产环境）
+# FROM gcr.io/distroless/base-debian12
+
 LABEL maintainer="little3201@gmail.com"
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
+# 创建工作目录
+WORKDIR /app
 
-# Make port 8762 available to the world outside this container
+# 复制 Native 可执行文件
+COPY target/hypervisor ./hypervisor   # ← 根据你的实际文件名修改
+
+# 暴露端口（改成你实际使用的端口）
 EXPOSE 8762
 
-# Add the application's jar to the container
-ADD hypervisor-0.1.0.jar .
+# 运行 Native 可执行文件
+ENTRYPOINT ["./hypervisor"]
 
-# Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/hypervisor-0.1.0.jar","--spring.profiles.active=dev"]
+# 可选：添加常用参数
+# CMD ["--spring.profiles.active=prod"]

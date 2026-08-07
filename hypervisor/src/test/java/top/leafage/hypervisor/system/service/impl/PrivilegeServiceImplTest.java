@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.Privilege;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
@@ -38,13 +38,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.verify;
 
 
 /**
- * privilege service test
+ * Pivilege service test
  *
  * @author wq li
  **/
@@ -64,8 +65,8 @@ class PrivilegeServiceImplTest {
     void init() {
         dto = new PrivilegeDTO();
         dto.setName("test");
-        dto.setIcon("test");
         dto.setPath("/test");
+        dto.setComponent("#");
         dto.setSuperiorId(1L);
 
         entity = PrivilegeDTO.toEntity(dto);
@@ -138,18 +139,18 @@ class PrivilegeServiceImplTest {
 
     @Test
     void tree() {
-        when(privilegeRepository.findGroupPrivilegeIdsByUsername(anyString())).thenReturn(List.of(1L, 2L, 3L));
-        when(privilegeRepository.findGroupRolePrivilegeIdsByUsername(anyString())).thenReturn(List.of(4L, 5L));
-        when(privilegeRepository.findRolePrivilegeIdsByUsername(anyString())).thenReturn(List.of(6L, 7L));
+        when(privilegeRepository.findGroupPrivilegeIds()).thenReturn(List.of(1L, 2L, 3L));
+        when(privilegeRepository.findGroupRolePrivilegeIds()).thenReturn(List.of(4L, 5L));
+        when(privilegeRepository.findRolePrivilegeIds()).thenReturn(List.of(6L, 7L));
 
-        List<TreeNode<Long>> nodes = privilegeService.tree("test");
+        List<TreeNode<Long>> nodes = privilegeService.tree();
         assertNotNull(nodes);
     }
 
     @Test
     void enable() {
         when(privilegeRepository.existsById(anyLong())).thenReturn(true);
-        when(privilegeRepository.updateEnabledById(anyLong())).thenReturn(1);
+        when(privilegeRepository.enableById(anyLong())).thenReturn(1);
 
         boolean enabled = privilegeService.enable(1L);
         assertTrue(enabled);
@@ -162,6 +163,26 @@ class PrivilegeServiceImplTest {
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
                 () -> privilegeService.enable(1L)
+        );
+        assertEquals("privilege not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void disable() {
+        when(privilegeRepository.existsById(anyLong())).thenReturn(true);
+        when(privilegeRepository.disableById(anyLong())).thenReturn(1);
+
+        boolean disabled = privilegeService.disable(1L);
+        assertTrue(disabled);
+    }
+
+    @Test
+    void disable_not_found() {
+        when(privilegeRepository.existsById(anyLong())).thenReturn(false);
+
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> privilegeService.disable(1L)
         );
         assertEquals("privilege not found: 1", exception.getMessage());
     }

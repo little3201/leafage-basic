@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ package top.leafage.hypervisor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 
 /**
@@ -23,6 +24,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author wq li
  */
+@EnableAsync
 @SpringBootApplication
 public class HypervisorApplication {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class Comment extends JpaAbstractAuditable<@NonNull String, @NonNull Long
     public void setSuperiorId(Long replier) {
         this.superiorId = replier;
     }
-    
+
     public String getBody() {
         return body;
     }

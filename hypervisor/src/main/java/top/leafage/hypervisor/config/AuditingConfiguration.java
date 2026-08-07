@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
  * @author wq li
  */
 @Configuration(proxyBeanMethods = false)
-@EnableJpaAuditing
+@EnableJpaAuditing(modifyOnCreate = false)
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 public class AuditingConfiguration {
 
@@ -51,4 +51,5 @@ public class AuditingConfiguration {
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getName);
     }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 import top.leafage.hypervisor.system.service.PrivilegeService;
@@ -46,9 +46,10 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static top.leafage.hypervisor.ImportTestUtils.createMinimalXlsxBytes;
 
 /**
- * privilege controller test
+ * Privilege controller test
  *
  * @author wq li
  **/
@@ -71,20 +72,19 @@ class PrivilegeControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new PrivilegeVO(1L, "test", null, "test", "test", "#", "icon", Set.of("create,modify"), "description", true, 0);
+        vo = new PrivilegeVO(1L, "test", null, "test", "test", "#", Set.of("create,modify"), true, 0);
 
         dto = new PrivilegeDTO();
         dto.setName("test");
         dto.setRedirect("redirect");
-        dto.setDescription("description");
         dto.setPath("/test");
-        dto.setIcon("icon");
+        dto.setComponent("#");
         dto.setSuperiorId(1L);
     }
 
     @Test
     void retrieve() {
-        Page<@NonNull PrivilegeVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<PrivilegeVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(privilegeService.retrieve(anyInt(), anyInt(), anyString(),
                 anyBoolean(), anyString())).thenReturn(voPage);
@@ -175,7 +175,7 @@ class PrivilegeControllerTest {
     @Test
     void tree() {
         TreeNode<Long> treeNode = TreeNode.withId(1L).name("test").build();
-        when(privilegeService.tree(anyString())).thenReturn(Collections.singletonList(treeNode));
+        when(privilegeService.tree()).thenReturn(Collections.singletonList(treeNode));
 
         assertThat(mvc.get().uri("/privileges/tree"))
                 .hasStatusOk()
@@ -184,7 +184,7 @@ class PrivilegeControllerTest {
 
     @Test
     void tree_error() {
-        when(privilegeService.tree(anyString())).thenThrow(new RuntimeException());
+        when(privilegeService.tree()).thenThrow(new RuntimeException());
 
         assertThat(mvc.get().uri("/privileges/tree"))
                 .hasStatus5xxServerError();
@@ -194,8 +194,24 @@ class PrivilegeControllerTest {
     void enable() {
         when(privilegeService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/privileges/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/privileges/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
+    }
+
+    @Test
+    void disable() {
+        when(privilegeService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/privileges/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(privilegeService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/privileges/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
     }
 
     @Test
@@ -203,7 +219,7 @@ class PrivilegeControllerTest {
         when(privilegeService.createAll(anyList())).thenReturn(List.of(vo));
 
         MockMultipartFile file = new MockMultipartFile("file", "test.xlsx",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new byte[1]);
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", createMinimalXlsxBytes());
         assertThat(mvc.post().uri("/privileges/import").multipart().file(file).with(csrf().asHeader()))
                 .hasStatusOk()
                 .bodyJson()

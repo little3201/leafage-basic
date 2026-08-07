@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,32 +15,28 @@
 package top.leafage.hypervisor.assets.controller;
 
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import top.leafage.common.poi.excel.ExcelReader;
 import top.leafage.hypervisor.assets.domain.dto.PostDTO;
 import top.leafage.hypervisor.assets.domain.vo.PostVO;
 import top.leafage.hypervisor.assets.service.PostService;
-import top.leafage.common.poi.excel.ExcelReader;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
- * posts controller.
+ * Posts controller.
  *
  * @author wq li
  */
 @RestController
 @RequestMapping("/posts")
 public class PostController {
-
-    private final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     private final PostService postService;
 
@@ -54,15 +50,16 @@ public class PostController {
     }
 
     /**
-     * retrieve with page .
+     * 分页查询
      *
      * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序字段
-     * @param descending a boolean
-     * @return 分页结果集
+     * @param size       分页数据大小，最大 500
+     * @param sortBy     排序字段，若为 null，默认为主键 id
+     * @param descending 排序方向，若为 false, 即正序排列
+     * @param filters    过滤条件，格式：field:condition:value，如：name:like:test
+     * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts')")
     @GetMapping
     public ResponseEntity<Page<PostVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                  String sortBy, boolean descending, String filters) {
@@ -73,10 +70,10 @@ public class PostController {
     /**
      * fetch with id .
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 帖子信息，不包括内容
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts')")
     @GetMapping("/{id}")
     public ResponseEntity<PostVO> fetch(@PathVariable Long id) {
         PostVO vo = postService.fetch(id);
@@ -89,7 +86,7 @@ public class PostController {
      * @param dto 文章内容
      * @return 帖子信息
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts:create')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:create')")
     @PostMapping
     public ResponseEntity<PostVO> create(@Valid @RequestBody PostDTO dto) {
         PostVO vo = postService.create(dto);
@@ -99,11 +96,11 @@ public class PostController {
     /**
      * 修改帖子信息
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto 帖子信息
      * @return 修改后的帖子信息
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<PostVO> modify(@PathVariable Long id, @Valid @RequestBody PostDTO dto) {
         PostVO vo = postService.modify(id, dto);
@@ -113,10 +110,10 @@ public class PostController {
     /**
      * 删除帖子信息
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 删除结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         postService.remove(id);
@@ -124,12 +121,12 @@ public class PostController {
     }
 
     /**
-     * enable.
+     * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_posts:enable')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('posts:enable')")
     @PatchMapping("/{id}")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = postService.enable(id);
@@ -141,7 +138,7 @@ public class PostController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasAuthority('SCOPE_posts:import')")
+    @PreAuthorize("hasAuthority('posts:import')")
     @PostMapping("/import")
     public ResponseEntity<List<PostVO>> importFromFile(MultipartFile file) throws IOException {
         List<PostDTO> dtoList = ExcelReader.read(file.getInputStream(), PostDTO.class);

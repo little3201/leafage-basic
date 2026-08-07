@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package top.leafage.hypervisor.constants;
 
 import java.util.List;
+import java.util.Set;
 
 public final class GlobalConstant {
 
@@ -23,6 +24,10 @@ public final class GlobalConstant {
     public static final String TEMP_DIR = "temp";
 
     public static final List<String> METADATA = List.of("id", "enabled", "created_by", "created_date", "last_modified_by", "last_modified_date");
+
+    public static final String ID_MUST_NOT_BE_NULL = "The given id must not be null.";
+    public static final String _MUST_NOT_BE_NULL = "The given %s must not be null.";
+    public static final String _MUST_NOT_BE_EMPTY = "The given %s must not be empty.";
 
     // private construce
     private GlobalConstant() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.RolePrivilege;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * role privileges repository.
@@ -45,11 +44,4 @@ public interface RolePrivilegeRepository extends JpaRepository<RolePrivilege, Lo
             """)
     List<RolePrivilege> findAllByRoleId(Long roleId);
 
-    /**
-     * find by role id and privilege id.
-     *
-     * @param roleId the pk of privilege.
-     * @return the result.
-     */
-    Optional<RolePrivilege> findByRoleIdAndPrivilegeId(Long roleId, Long privilegeId);
 }

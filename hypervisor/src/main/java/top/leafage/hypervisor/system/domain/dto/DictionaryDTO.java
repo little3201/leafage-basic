@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,14 +30,11 @@ public class DictionaryDTO {
 
     private Long superiorId;
 
-    private String description;
-
 
     public static Dictionary toEntity(DictionaryDTO dto) {
         return new Dictionary(
                 dto.getName(),
-                dto.getSuperiorId(),
-                dto.getDescription()
+                dto.getSuperiorId()
         );
     }
 
@@ -57,11 +54,4 @@ public class DictionaryDTO {
         this.superiorId = superiorId;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

@@ -1,24 +1,22 @@
-# Start with a base image containing Java runtime
-FROM eclipse-temurin:17-jre-alpine
+# 使用极简基础镜像（推荐）
+FROM debian:bookworm-slim
 
-# Add Maintainer Info
+# 或者使用更小的 distroless（推荐生产环境）
+# FROM gcr.io/distroless/base-debian12
+
 LABEL maintainer="little3201@gmail.com"
 
-# Add param to use in anywhere
-ARG JAR_NAME=leafage-gateway
-ARG VERSION=0.1.0
+# 创建工作目录
+WORKDIR /app
 
-# Add a volume pointing to /tmp
-VOLUME /tmp
+# 复制 Native 可执行文件
+COPY target/gateway ./gateway   # ← 根据你的实际文件名修改
 
-# Make port 8760 available to the world outside this container
+# 暴露端口（改成你实际使用的端口）
 EXPOSE 8760
 
-# The application's jar file
-ARG JAR_FILE=target/${JAR_NAME}-${VERSION}.jar
+# 运行 Native 可执行文件
+ENTRYPOINT ["./gateway"]
 
-# Add the application's jar to the container
-COPY ${JAR_FILE} app.jar
-
-# Run the jar file
-ENTRYPOINT ["java","-jar","/app.jar","--spring.profiles.active=prod"]
+# 可选：添加常用参数
+# CMD ["--spring.profiles.active=prod"]

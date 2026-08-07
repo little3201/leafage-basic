@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,21 +27,26 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import top.leafage.hypervisor.system.domain.User;
+import top.leafage.hypervisor.system.domain.Role;
 import top.leafage.hypervisor.system.domain.dto.UserDTO;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
+import top.leafage.hypervisor.system.repository.RoleRepository;
 import top.leafage.hypervisor.system.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 /**
- * user service test
+ * User service test
  *
  * @author wq li
  **/
@@ -50,6 +55,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private RoleRepository roleRepository;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -91,6 +99,25 @@ class UserServiceImplTest {
     }
 
     @Test
+    void fetch_current_user() {
+        when(userRepository.findCurrentUser()).thenReturn(Optional.of(entity));
+
+        UserVO vo = userService.fetch();
+        assertNotNull(vo);
+        assertEquals("test", vo.username());
+        verify(userRepository).findCurrentUser();
+    }
+
+    @Test
+    void fetch_current_user_not_found() {
+        when(userRepository.findCurrentUser()).thenReturn(Optional.empty());
+
+        UserVO vo = userService.fetch();
+        assertNull(vo);
+        verify(userRepository).findCurrentUser();
+    }
+
+    @Test
     void fetch_not_found() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
@@ -106,12 +133,12 @@ class UserServiceImplTest {
     void create() {
         when(userRepository.existsByUsername("test")).thenReturn(false);
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
-        when(userRepository.saveAndFlush(any(User.class))).thenReturn(entity);
+        when(userRepository.save(any(User.class))).thenReturn(entity);
 
         UserVO vo = userService.create(dto);
         assertNotNull(vo);
         assertEquals("test", vo.username());
-        verify(userRepository).saveAndFlush(any(User.class));
+        verify(userRepository).save(any(User.class));
     }
 
     @Test
@@ -176,7 +203,7 @@ class UserServiceImplTest {
     @Test
     void enable() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(userRepository.updateEnabledById(anyLong())).thenReturn(1);
+        when(userRepository.enableById(anyLong())).thenReturn(1);
 
         boolean enabled = userService.enable(1L);
         assertTrue(enabled);
@@ -194,22 +221,71 @@ class UserServiceImplTest {
     }
 
     @Test
-    void unlock() {
+    void disable() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(userRepository.updateAccountNonLockedById(anyLong())).thenReturn(1);
+        when(userRepository.disableById(anyLong())).thenReturn(1);
 
-        boolean unlock = userService.unlock(1L);
-        assertTrue(unlock);
+        boolean disabled = userService.disable(1L);
+        assertTrue(disabled);
     }
 
     @Test
-    void unlock_not_found() {
+    void disable_not_found() {
         when(userRepository.existsById(anyLong())).thenReturn(false);
 
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
-                () -> userService.unlock(1L)
+                () -> userService.disable(1L)
         );
         assertEquals("user not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void roles() {
+        Role role = new Role("admin", "ADMIN");
+        entity.addRole(role);
+        when(userRepository.findWithRolesById(anyLong())).thenReturn(Optional.of(entity));
+
+        List<RoleVO> roles = userService.roles(1L);
+
+        assertEquals(1, roles.size());
+        assertEquals("admin", roles.getFirst().name());
+        verify(userRepository).findWithRolesById(anyLong());
+    }
+
+    @Test
+    void roles_not_found() {
+        when(userRepository.findWithRolesById(anyLong())).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> userService.roles(1L)
+        );
+        assertEquals("user not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void addRoles() {
+        Role role = new Role("admin", "ADMIN");
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(entity));
+        when(roleRepository.findAllById(Set.of(1L))).thenReturn(List.of(role));
+
+        userService.addRoles(1L, Set.of(1L));
+
+        assertTrue(entity.getRoles().contains(role));
+        verify(roleRepository).findAllById(Set.of(1L));
+    }
+
+    @Test
+    void removeRoles() {
+        Role role = new Role("admin", "ADMIN");
+        entity.addRole(role);
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(entity));
+        when(roleRepository.findAllById(Set.of(1L))).thenReturn(List.of(role));
+
+        userService.removeRoles(1L, Set.of(1L));
+
+        assertFalse(entity.getRoles().contains(role));
+        verify(roleRepository).findAllById(Set.of(1L));
     }
 }

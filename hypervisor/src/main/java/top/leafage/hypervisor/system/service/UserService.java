@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,47 @@ package top.leafage.hypervisor.system.service;
 
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.system.domain.dto.UserDTO;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 
+import java.util.List;
+import java.util.Set;
+
 /**
- * user service.
+ * User service.
  *
  * @author wq li
  */
 public interface UserService extends JpaCrudService<UserDTO, UserVO> {
 
     /**
-     * Update accountNonLocked.
-     *
-     * @param id the pk.
-     * @return result.
+     * Fetch me
+     * @return user
      */
-    boolean unlock(Long id);
+    UserVO fetch();
+
+    /**
+     * 添加 role
+     *
+     * @param id      the pk of group.
+     * @param roleIds the pk of roles.
+     */
+    void addRoles(Long id, Set<Long> roleIds);
+
+    /**
+     * 查询 role
+     *
+     * @param id the pk of group.
+     * @return 数据集
+     */
+    List<RoleVO> roles(Long id);
+
+    /**
+     * 移除 role
+     *
+     * @param id      the pk of group.
+     * @param roleIds the pk of roles.
+     */
+    void removeRoles(Long id, Set<Long> roleIds);
+
 }

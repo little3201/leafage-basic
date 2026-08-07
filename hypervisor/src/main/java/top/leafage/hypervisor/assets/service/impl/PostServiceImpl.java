@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 package top.leafage.hypervisor.assets.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +27,8 @@ import top.leafage.hypervisor.assets.domain.dto.PostDTO;
 import top.leafage.hypervisor.assets.domain.vo.PostVO;
 import top.leafage.hypervisor.assets.repository.PostRepository;
 import top.leafage.hypervisor.assets.service.PostService;
+
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
 
 /**
@@ -54,10 +55,10 @@ public class PostServiceImpl implements PostService {
      * {@inheritDoc}
      */
     @Override
-    public Page<@NonNull PostVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<PostVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Post> spec = (root, _, cb) ->
+        Specification<Post> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return postRepository.findAll(spec, pageable)
@@ -85,7 +86,7 @@ public class PostServiceImpl implements PostService {
         if (postRepository.existsByTitle(dto.getTitle())) {
             throw new IllegalArgumentException("title already exists: " + dto.getTitle());
         }
-        Post entity = postRepository.saveAndFlush(PostDTO.toEntity(dto));
+        Post entity = postRepository.save(PostDTO.toEntity(dto));
         return PostVO.from(entity);
     }
 

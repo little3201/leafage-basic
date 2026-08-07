@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,19 +42,16 @@ public class Region extends JpaAbstractAuditable<@NonNull String, @NonNull Long>
 
     private String postalCode;
 
-    private String description;
-
     private boolean enabled = true;
 
     public Region() {
     }
 
-    public Region(String name, Long superiorId, String areaCode, String postalCode, String description) {
+    public Region(String name, Long superiorId, String areaCode, String postalCode) {
         this.name = name;
         this.superiorId = superiorId;
         this.areaCode = areaCode;
         this.postalCode = postalCode;
-        this.description = description;
     }
 
     public String getName() {
@@ -87,14 +84,6 @@ public class Region extends JpaAbstractAuditable<@NonNull String, @NonNull Long>
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public boolean isEnabled() {

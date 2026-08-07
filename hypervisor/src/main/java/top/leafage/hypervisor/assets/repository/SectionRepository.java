@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,6 @@
 package top.leafage.hypervisor.assets.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.assets.domain.Section;
 
@@ -30,46 +27,25 @@ import java.util.List;
  * @author wq li
  */
 @Repository
-public interface SectionRepository extends JpaRepository<Section, Long>, JpaSpecificationExecutor<Section> {
+public interface SectionRepository extends JpaRepository<Section, Long> {
 
     /**
-     * exists by title.
+     * Retrieve by ownerId and ownerType.
      *
-     * @param title a {@link String} object
+     * @param ownerId   the pk of owner.
+     * @param ownerType the  type of owner.
+     * @return the result.
+     */
+    List<Section> findAllByOwnerIdAndOwnerType(Long ownerId, Section.OwnerType ownerType);
+
+    /**
+     * exists.
+     *
+     * @param ownerId   the pk of owner.
+     * @param ownerType the type of owner.
+     * @param name      a {@link String} object
      * @return a boolean
      */
-    boolean existsByTitle(String title);
+    boolean existsByOwnerIdAndOwnerTypeAndName(Long ownerId, Section.OwnerType ownerType, String name);
 
-    /**
-     * 查询
-     *
-     * @return 关联的数据
-     */
-    List<Section> findAllBySuperiorIdIsNull();
-
-    /**
-     * 根据superior id查询
-     *
-     * @param superiorId 回复信息
-     * @return 关联的数据
-     */
-    List<Section> findAllBySuperiorId(Long superiorId);
-
-    /**
-     * 记录数
-     *
-     * @param superiorId 回复id
-     * @return 记录数
-     */
-    long countBySuperiorId(Long superiorId);
-
-    /**
-     * enable a record by pk.
-     *
-     * @param id the pk.
-     * @return result.
-     */
-    @Modifying
-    @Query("UPDATE Section t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
-    int updateEnabledById(Long id);
 }

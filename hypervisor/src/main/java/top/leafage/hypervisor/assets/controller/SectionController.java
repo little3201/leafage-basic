@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,24 @@
 package top.leafage.hypervisor.assets.controller;
 
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import top.leafage.common.poi.excel.ExcelReader;
+import top.leafage.common.data.core.domain.TreeNode;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionDataDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
+import top.leafage.hypervisor.assets.domain.vo.SectionDataVO;
+import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.SectionService;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
- * section controller.
+ * Section controller.
  *
  * @author wq li
  */
@@ -45,30 +47,14 @@ public class SectionController {
         this.sectionService = sectionService;
     }
 
-    /**
-     * 分页查询
-     *
-     * @param page       页码
-     * @param size       大小
-     * @param sortBy     排序字段
-     * @param descending 排序方向
-     * @return 查询的数据集，异常时返回204状态码
-     */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
-    @GetMapping
-    public ResponseEntity<Page<SectionVO>> retrieve(@RequestParam int page, @RequestParam int size,
-                                                    String sortBy, boolean descending, String filters) {
-        Page<SectionVO> voPage = sectionService.retrieve(page, size, sortBy, descending, filters);
-        return ResponseEntity.ok(voPage);
-    }
 
     /**
-     * fetch.
+     * Fetch.
      *
-     * @param id th pk.
+     * @param id The pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections')")
     @GetMapping("/{id}")
     public ResponseEntity<SectionVO> fetch(@PathVariable Long id) {
         SectionVO vo = sectionService.fetch(id);
@@ -76,15 +62,42 @@ public class SectionController {
     }
 
     /**
-     * subset.
+     * tree.
      *
-     * @param id th pk.
+     * @param ownerId   The pk.
+     * @param ownerType tye type.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections')")
-    @GetMapping("/subset")
-    public ResponseEntity<List<SectionVO>> subset(Long id) {
-        List<SectionVO> voList = sectionService.subset(id);
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections')")
+    @GetMapping("/{ownerId}/tree")
+    public ResponseEntity<List<TreeNode<Long>>> tree(@PathVariable Long ownerId, @RequestParam String ownerType) {
+        List<TreeNode<Long>> treeNodes = sectionService.tree(ownerId, Section.OwnerType.of(ownerType));
+        return ResponseEntity.ok(treeNodes);
+    }
+
+    /**
+     * 查询 fields.
+     *
+     * @param id The pk.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:field')")
+    @GetMapping("/{id}/fields")
+    public ResponseEntity<List<SectionFieldVO>> fields(@PathVariable Long id) {
+        List<SectionFieldVO> voList = sectionService.fields(id);
+        return ResponseEntity.ok(voList);
+    }
+
+    /**
+     * 查询 datas.
+     *
+     * @param id The pk.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:data')")
+    @GetMapping("/{id}/datas")
+    public ResponseEntity<List<SectionDataVO>> datas(@PathVariable Long id) {
+        List<SectionDataVO> voList = sectionService.datas(id);
         return ResponseEntity.ok(voList);
     }
 
@@ -94,7 +107,7 @@ public class SectionController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:create')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:create')")
     @PostMapping
     public ResponseEntity<SectionVO> create(@Valid @RequestBody SectionDTO dto) {
         SectionVO vo = sectionService.create(dto);
@@ -102,13 +115,39 @@ public class SectionController {
     }
 
     /**
+     * Create field.
+     *
+     * @param dto the request body.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:field')")
+    @PostMapping("/fields")
+    public ResponseEntity<SectionFieldVO> createField(@RequestBody SectionFieldDTO dto) {
+        SectionFieldVO vo = sectionService.createField(dto);
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * Create data.
+     *
+     * @param dto the request body.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:data')")
+    @PostMapping("/datas")
+    public ResponseEntity<SectionDataVO> createData(@RequestBody SectionDataDTO dto) {
+        SectionDataVO vo = sectionService.createData(dto);
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:modify')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<SectionVO> modify(@PathVariable Long id, @RequestBody SectionDTO dto) {
         SectionVO vo = sectionService.modify(id, dto);
@@ -116,11 +155,39 @@ public class SectionController {
     }
 
     /**
-     * remove.
+     * Modify field.
      *
-     * @param id the pk.
+     * @param id  the pk of field.
+     * @param dto the request body.
+     * @return 查询的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:remove')")
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:field')")
+    @PutMapping("/fields/{id}")
+    public ResponseEntity<SectionFieldVO> modifyField(@PathVariable Long id, @RequestBody SectionFieldDTO dto) {
+        SectionFieldVO vo = sectionService.modifyField(id, dto);
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * Modify data.
+     *
+     * @param id  the pk of field.
+     * @param dto the request body.
+     * @return 查询的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:data')")
+    @PutMapping("/datas/{id}")
+    public ResponseEntity<SectionDataVO> modifyData(@PathVariable Long id, @RequestBody SectionDataDTO dto) {
+        SectionDataVO vo = sectionService.modifyData(id, dto);
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * Remove.
+     *
+     * @param id The pk.
+     */
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         sectionService.remove(id);
@@ -128,29 +195,27 @@ public class SectionController {
     }
 
     /**
-     * enable.
+     * Remove section field.
      *
-     * @param id the pk.
-     * @return the result.
+     * @param id the pk of section field.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:enable')")
-    @PatchMapping("/{id}")
-    public ResponseEntity<Boolean> enable(@PathVariable Long id) {
-        boolean enabled = sectionService.enable(id);
-        return ResponseEntity.ok(enabled);
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:remove')")
+    @DeleteMapping("/fields/{id}")
+    public ResponseEntity<Void> removeField(@PathVariable Long id) {
+        sectionService.removeField(id);
+        return ResponseEntity.ok().build();
     }
 
     /**
-     * import.
+     * Remove section data.
      *
-     * @return the result.
+     * @param id the pk of section data.
      */
-    @PreAuthorize("hasRole('USER') || hasAuthority('SCOPE_sections:import')")
-    @PostMapping("/import")
-    public ResponseEntity<List<SectionVO>> importFromFile(MultipartFile file) throws IOException {
-        List<SectionDTO> dtoList = ExcelReader.read(file.getInputStream(), SectionDTO.class);
-        List<SectionVO> voList = sectionService.createAll(dtoList);
-        return ResponseEntity.ok().body(voList);
+    @PreAuthorize("hasRole('USER') || hasAuthority('sections:remove')")
+    @DeleteMapping("/datas/{id}")
+    public ResponseEntity<Void> removeData(@PathVariable Long id) {
+        sectionService.removeData(id);
+        return ResponseEntity.ok().build();
     }
 
 }

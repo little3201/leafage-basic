@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@ package top.leafage.hypervisor.system.controller;
 
 
 import org.assertj.core.api.InstanceOfAssertFactories;
-import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +30,10 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.RoleService;
 
 import java.util.List;
@@ -45,9 +44,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static top.leafage.hypervisor.ImportTestUtils.createMinimalXlsxBytes;
 
 /**
- * role controller test
+ * Role controller test
  *
  * @author wq li
  **/
@@ -66,19 +66,25 @@ class RoleControllerTest {
 
     private RoleVO vo;
     private RoleDTO dto;
+    private PrivilegeActionsDTO actionsDTO;
 
     @BeforeEach
     void setUp() {
-        vo = new RoleVO(1L, "test", "description", true);
+        vo = new RoleVO(1L, "test", "TEST", true, true);
 
         dto = new RoleDTO();
         dto.setName("test");
-        dto.setDescription("description");
+        dto.setCode("TEST");
+
+        actionsDTO = new PrivilegeActionsDTO();
+        actionsDTO.setActions(Set.of("create"));
+        actionsDTO.setName("test");
+        actionsDTO.setPrivilegeId(1L);
     }
 
     @Test
     void retrieve() {
-        Page<@NonNull RoleVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<RoleVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(roleService.retrieve(anyInt(), anyInt(), eq("id"),
                 anyBoolean(), anyString())).thenReturn(voPage);
@@ -196,8 +202,24 @@ class RoleControllerTest {
     void enable() {
         when(roleService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/roles/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/roles/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
+    }
+
+    @Test
+    void disable() {
+        when(roleService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/roles/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(roleService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/roles/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
     }
 
     @Test
@@ -205,7 +227,7 @@ class RoleControllerTest {
         when(roleService.createAll(anyList())).thenReturn(List.of(vo));
 
         MockMultipartFile file = new MockMultipartFile("file", "test.xlsx",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new byte[1]);
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", createMinimalXlsxBytes());
         assertThat(mvc.post().uri("/roles/import").multipart().file(file).with(csrf().asHeader()))
                 .hasStatusOk()
                 .bodyJson()
@@ -215,68 +237,13 @@ class RoleControllerTest {
     }
 
     @Test
-    void members() {
-        when(roleService.members(anyLong())).thenReturn(List.of(mock(UserVO.class)));
-
-        assertThat(mvc.get().uri("/roles/{id}/members", 1L))
-                .hasStatusOk()
-                .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(UserVO.class))
-                .hasSize(1);
-    }
-
-    @Test
-    void members_error() {
-        doThrow(new RuntimeException()).when(roleService).members(anyLong());
-
-        assertThat(mvc.get().uri("/roles/{id}/members", anyLong()))
-                .hasStatus5xxServerError();
-    }
-
-    @Test
-    void addMembers() {
-        roleService.addMembers(anyLong(), anySet());
-
-        assertThat(mvc.patch().uri("/roles/{id}/members", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(Set.of("test")))
-                .with(csrf().asHeader())
-        )
-                .hasStatusOk();
-    }
-
-    @Test
-    void relationMembers_error() {
-        doThrow(new RuntimeException()).when(roleService).addMembers(anyLong(), anySet());
-
-        assertThat(mvc.patch().uri("/roles/{id}/members", 1L)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(Set.of("test")))
-                .with(csrf().asHeader())
-        )
-                .hasStatus5xxServerError();
-    }
-
-    @Test
-    void removeMembers() {
-        roleService.removeMembers(anyLong(), anySet());
-
-        assertThat(mvc.delete().uri("/roles/{id}/members", 1L)
-                .queryParam("usernames", "test")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf().asHeader())
-        )
-                .hasStatus(HttpStatus.NO_CONTENT);
-    }
-
-    @Test
     void privileges() {
-        when(roleService.privileges(anyLong())).thenReturn(List.of(mock(SimplePrivilegeVO.class)));
+        when(roleService.privileges(anyLong())).thenReturn(List.of(mock(PrivilegeActionsVO.class)));
 
         assertThat(mvc.get().uri("/roles/{id}/privileges", 1L))
                 .hasStatusOk()
                 .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(SimplePrivilegeVO.class))
+                .convertTo(InstanceOfAssertFactories.list(PrivilegeActionsVO.class))
                 .hasSize(1);
     }
 
@@ -289,37 +256,27 @@ class RoleControllerTest {
     }
 
     @Test
-    void addPrivilege() {
-        roleService.addPrivilege(anyLong(), anyLong(), anyString());
+    void authorize() {
+        roleService.authorize(anyLong(), anyCollection());
 
-        assertThat(mvc.patch().uri("/roles/{id}/privileges/{privilegeId}", 1L, 1L)
+        assertThat(mvc.patch().uri("/roles/{id}/privileges", 1L)
                 .queryParam("action", "create")
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of(actionsDTO)))
                 .with(csrf().asHeader())
         )
                 .hasStatusOk();
     }
 
     @Test
-    void addPrivilege_error() {
-        doThrow(new RuntimeException()).when(roleService).addPrivilege(anyLong(), anyLong(), anyString());
+    void authorize_error() {
+        doThrow(new RuntimeException()).when(roleService).authorize(anyLong(), anyCollection());
 
-        assertThat(mvc.patch().uri("/roles/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
+        assertThat(mvc.patch().uri("/roles/{id}/privileges", 1L)
                 .contentType(MediaType.APPLICATION_JSON).with(csrf().asHeader())
+                .content(mapper.writeValueAsString(Set.of(actionsDTO)))
         )
                 .hasStatus5xxServerError();
     }
 
-    @Test
-    void removePrivilege() {
-        roleService.removePrivilege(anyLong(), anyLong(), anyString());
-
-        assertThat(mvc.delete().uri("/roles/{id}/privileges/{privilegeId}", 1L, 1L)
-                .queryParam("action", "create")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf().asHeader())
-        )
-                .hasStatus(HttpStatus.NO_CONTENT);
-    }
 }

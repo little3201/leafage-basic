@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,13 @@
 
 package top.leafage.hypervisor.assets.domain.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import top.leafage.hypervisor.assets.domain.Comment;
 import top.leafage.hypervisor.assets.domain.Section;
+
+import java.util.Map;
 
 /**
  * dto class for section.
@@ -29,20 +32,33 @@ public class SectionDTO {
 
     private Long superiorId;
 
+    @NotNull
+    private Long ownerId;
+
+    @NotNull
+    private Section.OwnerType ownerType;
+
     @NotBlank
-    private String title;
+    private String name;
 
-    private String body;
+    private Integer sequence;
 
-    private String type;
+    @Min(1)
+    @Max(6)
+    private Integer level;
+
+    private Map<String, Object> body;
 
 
     public static Section toEntity(SectionDTO dto) {
         return new Section(
                 dto.getSuperiorId(),
-                dto.getTitle(),
-                dto.getBody(),
-                dto.getType()
+                dto.getOwnerId(),
+                dto.getOwnerType(),
+                dto.getName(),
+                dto.getSequence(),
+                dto.getLevel(),
+                dto.getBody()
         );
     }
 
@@ -55,27 +71,52 @@ public class SectionDTO {
         this.superiorId = superiorId;
     }
 
-    public String getTitle() {
-        return title;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public String getBody() {
+    public Section.OwnerType getOwnerType() {
+        return ownerType;
+    }
+
+    public void setOwnerType(Section.OwnerType ownerType) {
+        this.ownerType = ownerType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public Map<String, Object> getBody() {
         return body;
     }
 
-    public void setBody(String body) {
+    public void setBody(Map<String, Object> body) {
         this.body = body;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

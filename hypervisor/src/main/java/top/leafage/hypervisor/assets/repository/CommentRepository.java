@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@ package top.leafage.hypervisor.assets.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.assets.domain.Comment;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -49,9 +51,9 @@ public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpec
     /**
      * 记录数
      *
-     * @param superiorId 回复id
+     * @param superiorIds thp pk.
      * @return 记录数
      */
-    long countBySuperiorId(Long superiorId);
-
+    @Query("SELECT t.superiorId, COUNT(t.id) FROM Comment t WHERE t.superiorId IN :superiorIds GROUP BY t.superiorId")
+    List<Object[]> countBySuperiorIds(Collection<Long> superiorIds);
 }

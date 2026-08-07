@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import top.leafage.hypervisor.system.domain.Dictionary;
 import top.leafage.hypervisor.system.domain.dto.DictionaryDTO;
 import top.leafage.hypervisor.system.domain.vo.DictionaryVO;
 import top.leafage.hypervisor.system.repository.DictionaryRepository;
-import top.leafage.hypervisor.system.service.impl.DictionaryServiceImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +44,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
- * dictionary controller test
+ * Dictionary controller test
  *
  * @author wq li
  **/
@@ -67,7 +66,6 @@ class DictionaryServiceImplTest {
         dto = new DictionaryDTO();
         dto.setName("test");
         dto.setSuperiorId(1L);
-        dto.setDescription("description");
 
         entity = DictionaryDTO.toEntity(dto);
     }
@@ -79,7 +77,7 @@ class DictionaryServiceImplTest {
         when(dictionaryRepository.findAll(ArgumentMatchers.<Specification<Dictionary>>any(),
                 any(Pageable.class))).thenReturn(page);
 
-        Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2, "id", true, "test");
+        Page<DictionaryVO> voPage = dictionaryService.retrieve(0, 2, "id", true, "");
         assertEquals(1, voPage.getTotalElements());
         assertEquals(1, voPage.getContent().size());
         verify(dictionaryRepository).findAll(ArgumentMatchers.<Specification<Dictionary>>any(), any(Pageable.class));
@@ -126,12 +124,12 @@ class DictionaryServiceImplTest {
     @Test
     void create() {
         when(dictionaryRepository.existsByName("test")).thenReturn(false);
-        when(dictionaryRepository.saveAndFlush(any(Dictionary.class))).thenReturn(entity);
+        when(dictionaryRepository.save(any(Dictionary.class))).thenReturn(entity);
 
         DictionaryVO vo = dictionaryService.create(dto);
         assertNotNull(vo);
         assertEquals("test", vo.name());
-        verify(dictionaryRepository).saveAndFlush(any(Dictionary.class));
+        verify(dictionaryRepository).save(any(Dictionary.class));
     }
 
     @Test
@@ -194,7 +192,7 @@ class DictionaryServiceImplTest {
     @Test
     void enable() {
         when(dictionaryRepository.existsById(anyLong())).thenReturn(true);
-        when(dictionaryRepository.updateEnabledById(anyLong())).thenReturn(1);
+        when(dictionaryRepository.enableById(anyLong())).thenReturn(1);
 
         boolean enabled = dictionaryService.enable(1L);
         assertTrue(enabled);
@@ -207,6 +205,26 @@ class DictionaryServiceImplTest {
         EntityNotFoundException exception = assertThrows(
                 EntityNotFoundException.class,
                 () -> dictionaryService.enable(1L)
+        );
+        assertEquals("dictionary not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void disable() {
+        when(dictionaryRepository.existsById(anyLong())).thenReturn(true);
+        when(dictionaryRepository.disableById(anyLong())).thenReturn(1);
+
+        boolean disabled = dictionaryService.disable(1L);
+        assertTrue(disabled);
+    }
+
+    @Test
+    void disable_not_found() {
+        when(dictionaryRepository.existsById(anyLong())).thenReturn(false);
+
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> dictionaryService.disable(1L)
         );
         assertEquals("dictionary not found: 1", exception.getMessage());
     }

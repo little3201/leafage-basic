@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,10 @@
 package top.leafage.hypervisor.system.domain.vo;
 
 
+import org.springframework.util.StringUtils;
 import top.leafage.hypervisor.system.domain.User;
+
+import java.util.List;
 
 /**
  * vo class for user.
@@ -28,11 +31,26 @@ public record UserVO(
         String username,
         String fullName,
         String email,
-        String status,
+        List<RoleVO> roles,
         boolean enabled
 ) {
     public static UserVO from(User entity) {
         return from(entity, true);
+    }
+
+    public static UserVO from(User entity, List<RoleVO> roles) {
+        return from(entity, true, roles);
+    }
+
+    public static UserVO from(User entity, boolean maskEmail, List<RoleVO> roles) {
+        return new UserVO(
+                entity.getId(),
+                entity.getUsername(),
+                entity.getFullName(),
+                mask(entity.getEmail(), maskEmail),
+                roles,
+                entity.isEnabled()
+        );
     }
 
     public static UserVO from(User entity, boolean maskEmail) {
@@ -41,13 +59,13 @@ public record UserVO(
                 entity.getUsername(),
                 entity.getFullName(),
                 mask(entity.getEmail(), maskEmail),
-                Status.determineStatus(entity).name(),
+                entity.getRoles().stream().map(RoleVO::from).toList(),
                 entity.isEnabled()
         );
     }
 
     private static String mask(String email, boolean mask) {
-        if (email == null || email.isEmpty()) {
+        if (!StringUtils.hasText(email)) {
             return "";
         } else if (!mask) {
             return email;
@@ -63,30 +81,5 @@ public record UserVO(
         int starCount = atIndex - 3;
 
         return prefix + "*".repeat(starCount) + suffix;
-    }
-
-    public enum Status {
-        ACTIVE,                  // 正常可用
-        LOCKED,                  // 账户被锁定
-        EXPIRED,                // 账户已过期
-        CREDENTIALS_EXPIRED, // 凭证（密码）已过期
-        DISABLED;              // 账户被禁用
-
-        public static Status determineStatus(User entity) {
-            if (entity.isAccountNonExpired() &&
-                    entity.isAccountNonLocked() &&
-                    entity.isCredentialsNonExpired() &&
-                    entity.isEnabled()) {
-                return ACTIVE;
-            } else if (!entity.isAccountNonExpired()) {
-                return EXPIRED;
-            } else if (!entity.isAccountNonLocked()) {
-                return LOCKED;
-            } else if (!entity.isCredentialsNonExpired()) {
-                return CREDENTIALS_EXPIRED;
-            } else {
-                return DISABLED;
-            }
-        }
     }
 }

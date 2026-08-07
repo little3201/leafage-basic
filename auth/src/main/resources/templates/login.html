@@ -10,27 +10,30 @@
 <body class="min-h-screen">
 <div class="h-screen">
     <div class="absolute inset-0 z-0"
-         style="background-image: url('/assets/svgs/background.svg'); background-repeat: no-repeat; background-size: cover;">
+         style="background-image: url('/assets/svg/background.svg'); background-repeat: no-repeat; background-size: cover;">
     </div>
     <div class="flex h-screen items-center justify-center">
         <div class="h-2/3 xl:grid grid-cols-2 gap-8 xl:gap-24 z-10 w-4/5 text-white xl:text-black">
             <div class="hidden xl:flex items-center justify-center">
                 <img alt="login_illustration" height="100%"
-                     src="/assets/svgs/hello_ccwj.svg" th:src="@{/assets/svgs/hello_ccwj.svg}" width="100%">
+                     src="/assets/svg/hello_ccwj.svg" th:src="@{/assets/svg/hello_ccwj.svg}" width="100%">
             </div>
             <div class="bg-white rounded-xl xl:bg-transparent flex min-h-full flex-col justify-center px-6 py-12">
                 <div class="sm:mx-auto sm:w-full sm:max-w-1/2 min-w-sm">
                     <div class="text-center">
-                        <img alt="logo" class="mx-auto h-20 w-auto" height="64" src="/assets/svgs/logo.svg"
+                        <img alt="logo" class="mx-auto h-20 w-auto" height="64" src="/assets/svg/logo.svg"
                              style="display: inline-block"
-                             th:src="@{/assets/svgs/logo.svg}">
+                             th:src="@{/assets/svg/logo.svg}">
                         <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
                             Sign in to your account
                         </h2>
                     </div>
 
                     <div class="my-10">
-                        <form class="space-y-6" method="post" th:action="@{/login}">
+                        <div th:if="${param.error}" style="color: red;">
+                            Invalid username and password.
+                        </div>
+                        <form class="mt-2 space-y-6" method="post" th:action="@{/login}">
                             <div>
                                 <label class="block font-medium text-gray-900" for="username">Username</label>
                                 <div class="mt-2">
@@ -54,9 +57,11 @@
                             </div>
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center">
-                                    <input type="checkbox" id="rememberMe" name="rememberMe"
-                                           class="h-4 w-4 text-blue-600 border-gray-300 rounded">
-                                    <label class="block text-sm hover:text-blue-500 ml-1" for="rememberMe">Remember me?</label>
+                                    <input class="h-4 w-4 text-blue-600 border-gray-300 rounded" id="rememberMe"
+                                           name="rememberMe"
+                                           type="checkbox">
+                                    <label class="block text-sm hover:text-blue-500 ml-1" for="rememberMe">Remember
+                                        me?</label>
                                 </div>
                                 <div>
                                     <a class="text-sm hover:text-blue-500" href="#">

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
 package top.leafage.hypervisor.assets.service;
 
 
+import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.assets.domain.dto.CommentDTO;
 import top.leafage.hypervisor.assets.domain.vo.CommentVO;
-import top.leafage.common.data.jpa.JpaCrudService;
 
 import java.util.List;
 
 /**
- * comment service.
+ * Comment service.
  *
  * @author wq li
  */
@@ -32,7 +32,7 @@ public interface CommentService extends JpaCrudService<CommentDTO, CommentVO> {
     /**
      * relation.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
     List<CommentVO> relation(Long id);
@@ -40,7 +40,7 @@ public interface CommentService extends JpaCrudService<CommentDTO, CommentVO> {
     /**
      * find replier by id.
      *
-     * @param replier the pk.
+     * @param replier The pk.
      * @return the result.
      */
     List<CommentVO> replies(Long replier);

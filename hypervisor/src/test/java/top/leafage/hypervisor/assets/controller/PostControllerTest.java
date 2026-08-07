@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import top.leafage.hypervisor.assets.domain.dto.PostDTO;
 import top.leafage.hypervisor.assets.domain.vo.PostVO;
 import top.leafage.hypervisor.assets.service.PostService;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -44,9 +44,10 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static top.leafage.hypervisor.ImportTestUtils.createMinimalXlsxBytes;
 
 /**
- * posts 接口测试
+ * Post controller test
  *
  * @author wq li
  **/
@@ -75,12 +76,12 @@ class PostControllerTest {
         dto.setSummary("summary");
         dto.setTags(Set.of("Code"));
 
-        vo = new PostVO(1L, "test", "summary", "body", Set.of("Code"), Instant.now());
+        vo = new PostVO(1L, "test", "summary", "body", Set.of("Code"), LocalDateTime.now());
     }
 
     @Test
     void retrieve() {
-        Page<@NonNull PostVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<PostVO> page = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(postService.retrieve(anyInt(), anyInt(), anyString(),
                 anyBoolean(), anyString())).thenReturn(page);
@@ -202,7 +203,7 @@ class PostControllerTest {
         when(postService.createAll(anyList())).thenReturn(List.of(vo));
 
         MockMultipartFile file = new MockMultipartFile("file", "test.xlsx",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new byte[1]);
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", createMinimalXlsxBytes());
         assertThat(mvc.post().uri("/posts/import").multipart().file(file).with(csrf().asHeader()))
                 .hasStatusOk()
                 .bodyJson()

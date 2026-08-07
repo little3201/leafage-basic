@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,18 +38,15 @@ public class Dictionary extends JpaAbstractAuditable<@NonNull String, @NonNull L
 
     private Long superiorId;
 
-    private String description;
-
     private boolean enabled = true;
 
 
     public Dictionary() {
     }
 
-    public Dictionary(String name, Long superiorId, String description) {
+    public Dictionary(String name, Long superiorId) {
         this.name = name;
         this.superiorId = superiorId;
-        this.description = description;
     }
 
     public String getName() {
@@ -66,14 +63,6 @@ public class Dictionary extends JpaAbstractAuditable<@NonNull String, @NonNull L
 
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public boolean isEnabled() {

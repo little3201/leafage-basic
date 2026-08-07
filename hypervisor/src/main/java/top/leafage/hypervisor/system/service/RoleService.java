@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,53 +15,28 @@
 package top.leafage.hypervisor.system.service;
 
 import top.leafage.common.data.jpa.JpaCrudService;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.UserVO;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
- * role service.
+ * Role service.
  *
  * @author wq li
  */
 public interface RoleService extends JpaCrudService<RoleDTO, RoleVO> {
 
     /**
-     * 添加 user
-     *
-     * @param id        the pk of group.
-     * @param usernames the username of users.
-     */
-    void addMembers(Long id, Set<String> usernames);
-
-    /**
-     * 查询 user
-     *
-     * @param id the pk of group.
-     * @return 数据集
-     */
-    List<UserVO> members(Long id);
-
-    /**
-     * 移除 user
-     *
-     * @param id        the pk of group.
-     * @param usernames the username of users.
-     */
-    void removeMembers(Long id, Set<String> usernames);
-
-    /**
      * 添加 privilege
      *
-     * @param id          the pk of role.
-     * @param privilegeId the pk of privilege.
-     * @param action      the action of privilege.
+     * @param id   the pk of role.
+     * @param dtos privilege actions dto.
      */
-    void addPrivilege(Long id, Long privilegeId, String action);
+    void authorize(Long id, Collection<PrivilegeActionsDTO> dtos);
 
     /**
      * 查询 privilege
@@ -69,14 +44,5 @@ public interface RoleService extends JpaCrudService<RoleDTO, RoleVO> {
      * @param id the pk of role.
      * @return 数据集
      */
-    List<SimplePrivilegeVO> privileges(Long id);
-
-    /**
-     * 移除 privilege
-     *
-     * @param id          the pk of role.
-     * @param privilegeId the pk of privilege.
-     * @param action      the action of privilege.
-     */
-    void removePrivilege(Long id, Long privilegeId, String action);
+    List<PrivilegeActionsVO> privileges(Long id);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,13 @@
 package top.leafage.hypervisor.assets.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import top.leafage.common.data.jpa.domain.JpaAbstractAuditable;
+
+import java.util.Map;
 
 /**
  * entity class for sections.
@@ -32,12 +36,21 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     private Long superiorId;
 
-    private String title;
-
-    private String body;
+    // 归属对象主键（template, report）
+    private Long ownerId;
 
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private OwnerType ownerType;
+
+    private String name;
+
+    private Integer sequence;
+
+    private Integer level;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private Map<String, Object> body;
 
     private boolean enabled = true;
 
@@ -45,22 +58,24 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
     public Section() {
     }
 
-    public Section(Long superiorId, String title, String body, String type) {
-        this.superiorId = superiorId;
-        this.title = title;
-        this.body = body;
-        this.type = Type.of(type);
+    public Section(Long ownerId, OwnerType ownerType, Section section) {
+        this.ownerId = ownerId;
+        this.ownerType = ownerType;
+        this.superiorId = section.getSuperiorId();
+        this.name = section.getName();
+        this.sequence = section.getSequence();
+        this.level = section.getLevel();
+        this.body = section.getBody();
     }
 
-    public enum Type {
-        HEADING,      // 标题
-        PARAGRAPH,    // 段落
-        TABLE,        // 表格
-        IMAGE;        // 图片
-
-        public static Type of(String value) {
-            return valueOf(value.toUpperCase());
-        }
+    public Section(Long superiorId, Long ownerId, OwnerType ownerType, String name, Integer sequence, Integer level, Map<String, Object> body) {
+        this.superiorId = superiorId;
+        this.ownerId = ownerId;
+        this.ownerType = ownerType;
+        this.name = name;
+        this.sequence = sequence;
+        this.level = level;
+        this.body = body;
     }
 
     public Long getSuperiorId() {
@@ -71,28 +86,52 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
         this.superiorId = superiorId;
     }
 
-    public String getTitle() {
-        return title;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
-    public String getBody() {
+    public OwnerType getOwnerType() {
+        return ownerType;
+    }
+
+    public void setOwnerType(OwnerType ownerType) {
+        this.ownerType = ownerType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String title) {
+        this.name = title;
+    }
+
+    public Integer getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public Map<String, Object> getBody() {
         return body;
     }
 
-    public void setBody(String body) {
+    public void setBody(Map<String, Object> body) {
         this.body = body;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
     }
 
     public boolean isEnabled() {
@@ -101,5 +140,26 @@ public class Section extends JpaAbstractAuditable<@NonNull String, @NonNull Long
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+   /* public enum Type {
+        HEADING,      // 标题
+        PARAGRAPH,    // 段落
+        TABLE,        // 表格
+        IMAGE;        // 图片
+
+        public static Type of(String value) {
+            return valueOf(value.toUpperCase());
+        }
+    }*/
+
+    public enum OwnerType {
+        ARCHIVE,
+        TEMPLATE,
+        REPORT;
+
+        public static OwnerType of(String value) {
+            return valueOf(value.toUpperCase());
+        }
     }
 }

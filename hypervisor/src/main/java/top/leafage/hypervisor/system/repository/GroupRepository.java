@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import top.leafage.hypervisor.system.domain.Group;
 import top.leafage.hypervisor.system.domain.Role;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,12 +32,12 @@ import java.util.Optional;
 public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecificationExecutor<Group> {
 
     /**
-     * 查询关联 group
+     * 查询关联
      *
      * @param role the role.
      * @return result.
      */
-    List<Group> findByRolesContaining(Role role);
+    List<Group> findDisctinctByRolesContaining(Role role);
 
     /**
      * 查询 members
@@ -46,6 +47,15 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
      */
     @EntityGraph(attributePaths = "members")
     Optional<Group> findWithMembersById(Long id);
+
+    /**
+     * 查询 members
+     *
+     * @param ids the pk of group.
+     * @return result.
+     */
+    @EntityGraph(attributePaths = "members")
+    List<Group> findWithMembersByIdIn(Collection<Long> ids);
 
     /**
      * 查询 roles
@@ -67,10 +77,20 @@ public interface GroupRepository extends JpaRepository<Group, Long>, JpaSpecific
     /**
      * enable a record by pk.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return result.
      */
     @Modifying
-    @Query("UPDATE Group t SET t.enabled = CASE WHEN t.enabled = true THEN false ELSE true END WHERE t.id = :id")
-    int updateEnabledById(Long id);
+    @Query("UPDATE Group t SET t.enabled = true WHERE t.id = :id AND t.enabled = false")
+    int enableById(Long id);
+
+    /**
+     * disable a record by pk.
+     *
+     * @param id The pk.
+     * @return result.
+     */
+    @Modifying
+    @Query("UPDATE Group t SET t.enabled = false WHERE t.id = :id AND t.enabled = true")
+    int disableById(Long id);
 }

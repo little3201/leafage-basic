@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 package top.leafage.hypervisor.system.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.jspecify.annotations.NonNull;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,26 +22,27 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import top.leafage.hypervisor.system.domain.Group;
-import top.leafage.hypervisor.system.domain.Privilege;
-import top.leafage.hypervisor.system.domain.Role;
-import top.leafage.hypervisor.system.domain.RolePrivilege;
+import top.leafage.common.logging.annotation.OperationLog;
+import top.leafage.hypervisor.system.domain.*;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.repository.*;
 import top.leafage.hypervisor.system.service.RoleService;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static top.leafage.hypervisor.constants.GlobalConstant.ID_MUST_NOT_BE_NULL;
 
 /**
- * role service impl.
+ * Role service impl.
  *
  * @author wq li
  */
+@OperationLog("roles")
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -61,8 +61,10 @@ public class RoleServiceImpl implements RoleService {
      * @param rolePrivilegeRepository a {@link RolePrivilegeRepository} object
      * @param privilegeRepository     a {@link PrivilegeRepository} object
      * @param groupRepository         a {@link GroupRepository} object
+     * @param userRepository          a {@link UserRepository} object
      */
-    public RoleServiceImpl(RoleRepository roleRepository, RolePrivilegeRepository rolePrivilegeRepository, PrivilegeRepository privilegeRepository, GroupRepository groupRepository, UserRepository userRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, RolePrivilegeRepository rolePrivilegeRepository,
+                           PrivilegeRepository privilegeRepository, GroupRepository groupRepository, UserRepository userRepository) {
         this.roleRepository = roleRepository;
         this.rolePrivilegeRepository = rolePrivilegeRepository;
         this.privilegeRepository = privilegeRepository;
@@ -73,11 +75,12 @@ public class RoleServiceImpl implements RoleService {
     /**
      * {@inheritDoc}
      */
+    @Transactional(readOnly = true)
     @Override
-    public Page<@NonNull RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
+    public Page<RoleVO> retrieve(int page, int size, String sortBy, boolean descending, String filters) {
         Pageable pageable = pageable(page, size, sortBy, descending);
 
-        Specification<@NonNull Role> spec = (root, _, cb) ->
+        Specification<Role> spec = (root, _, cb) ->
                 buildPredicate(filters, cb, root).orElse(null);
 
         return roleRepository.findAll(spec, pageable)
@@ -100,10 +103,22 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
         if (!roleRepository.existsById(id)) {
             throw new EntityNotFoundException("role not found: " + id);
         }
-        return roleRepository.updateEnabledById(id) > 0;
+        return roleRepository.enableById(id) > 0;
+    }
+
+    @Transactional
+    @Override
+    public boolean disable(Long id) {
+        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+
+        if (!roleRepository.existsById(id)) {
+            throw new EntityNotFoundException("role not found: " + id);
+        }
+        return roleRepository.disableById(id) > 0;
     }
 
     /**
@@ -115,7 +130,7 @@ public class RoleServiceImpl implements RoleService {
         if (roleRepository.existsByName(dto.getName())) {
             throw new IllegalArgumentException("name already exists: " + dto.getName());
         }
-        Role entity = roleRepository.saveAndFlush(RoleDTO.toEntity(dto));
+        Role entity = roleRepository.save(RoleDTO.toEntity(dto));
         return RoleVO.from(entity);
     }
 
@@ -156,71 +171,62 @@ public class RoleServiceImpl implements RoleService {
      */
     @Transactional
     @Override
-    public void addMembers(Long id, Set<String> usernames) {
+    public void authorize(Long id, Collection<PrivilegeActionsDTO> dtos) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
         Role role = roleRepository.findById(id).orElseThrow();
 
-        usernames.forEach(username -> userRepository.findByUsername(username)
-                .ifPresent(role::addMember));
-        roleRepository.save(role);
-    }
+        Set<Long> privilegeIds = dtos.stream()
+                .map(PrivilegeActionsDTO::getPrivilegeId)
+                .collect(Collectors.toSet());
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<UserVO> members(Long id) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        Role role = roleRepository.findWithMembersById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Role not found: " + id));
-        return role.getMembers().stream().map(UserVO::from).toList();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional
-    @Override
-    public void removeMembers(Long id, Set<String> usernames) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-
-        Role role = roleRepository.findById(id).orElseThrow();
-
-        usernames.forEach(username -> userRepository.findByUsername(username)
-                .ifPresent(role::removeMember));
-        roleRepository.save(role);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional
-    @Override
-    public void addPrivilege(Long id, Long privilegeId, String action) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
-
-        Privilege priv = privilegeRepository.findById(privilegeId).orElseThrow();
-        if (!priv.getActions().contains(action)) {
-            throw new IllegalArgumentException("无效的 action");
+        // 批量查询 privilege
+        Map<Long, Privilege> privileges = privilegeRepository.findAllById(privilegeIds)
+                .stream()
+                .collect(Collectors.toMap(Privilege::getId, Function.identity()));
+        if (privileges.size() != privilegeIds.size()) {
+            throw new IllegalArgumentException("Invalid privilege");
         }
 
-        Optional<RolePrivilege> existing = rolePrivilegeRepository
-                .findByRoleIdAndPrivilegeId(id, privilegeId);
+        // 查出当前 Role 已有的全部授权
+        List<RolePrivilege> existingList = rolePrivilegeRepository.findAllByRoleId(id);
+        Map<Long, RolePrivilege> existing = existingList.stream()
+                .collect(Collectors.toMap(rp -> rp.getPrivilege().getId(), Function.identity()));
 
-        Role role = roleRepository.findById(id).orElseThrow();
-        if (existing.isPresent()) {
-            // 已存在 → 只更新 actions（最高效）
-            existing.get().updateActions(Set.of(action));
-            rolePrivilegeRepository.save(existing.get());
-        } else {
-            // 不存在 → 新增
-            role.addPrivilege(priv, Set.of(action));
-            roleRepository.save(role);
+        List<RolePrivilege> toSave = new ArrayList<>();
+        Set<Long> toKeep = new HashSet<>();
+
+        for (PrivilegeActionsDTO dto : dtos) {
+            Privilege privilege = privileges.get(dto.getPrivilegeId());
+            Set<String> actions = Optional.ofNullable(dto.getActions()).orElse(Collections.emptySet());
+
+            if (!privilege.getActions().containsAll(actions)) {
+                throw new IllegalArgumentException("Invalid action: " + actions);
+            }
+
+            RolePrivilege rolePrivilege = existing.get(dto.getPrivilegeId());
+            if (rolePrivilege != null) {
+                rolePrivilege.updateActions(actions);
+            } else {
+                rolePrivilege = new RolePrivilege(role, privilege, actions);
+            }
+            toSave.add(rolePrivilege);
+            toKeep.add(dto.getPrivilegeId());
         }
-        syncAllGroupsContainingRole(role);
+
+        // 需要删除的 = 已存在但不在本次传入列表中的
+        List<RolePrivilege> toDelete = existingList.stream()
+                .filter(rp -> !toKeep.contains(rp.getPrivilege().getId()))
+                .toList();
+        if (!toDelete.isEmpty()) {
+            toDelete.forEach(role.getRolePrivileges()::remove);
+        }
+
+        for (RolePrivilege rp : toSave) {
+            role.getRolePrivileges().add(rp);
+        }
+
+        syncGroupsRole(role);
+        syncUsersRole(role);
     }
 
     /**
@@ -228,34 +234,33 @@ public class RoleServiceImpl implements RoleService {
      */
     @Transactional(readOnly = true)
     @Override
-    public List<SimplePrivilegeVO> privileges(Long id) {
+    public List<PrivilegeActionsVO> privileges(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
         return rolePrivilegeRepository.findAllByRoleId(id)
-                .stream().map(SimplePrivilegeVO::from)
+                .stream().map(PrivilegeActionsVO::from)
                 .toList();
     }
 
-    @Transactional
-    @Override
-    public void removePrivilege(Long id, Long privilegeId, String action) {
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
-        Assert.notNull(privilegeId, String.format(_MUST_NOT_BE_NULL, "privilegeId"));
-
-        Role role = roleRepository.findById(id).orElseThrow();
-        Privilege priv = privilegeRepository.findById(privilegeId).orElseThrow();
-
-        role.removePrivilege(priv);
-        roleRepository.save(role);
-
-        syncAllGroupsContainingRole(role);
+    /**
+     * 更新关联了角色的组权限
+     *
+     * @param role 角色
+     */
+    private void syncGroupsRole(Role role) {
+        List<Group> groups = groupRepository.findDisctinctByRolesContaining(role);
+        groups.forEach(Group::syncAuthorities);
+        groupRepository.saveAll(groups);
     }
 
-    private void syncAllGroupsContainingRole(Role role) {
-        List<Group> groups = groupRepository.findByRolesContaining(role);
-        for (Group g : groups) {
-            g.syncAuthorities();
-            groupRepository.save(g);
-        }
+    /**
+     * 更新关联了角色的用户权限
+     *
+     * @param role 角色
+     */
+    private void syncUsersRole(Role role) {
+        List<User> users = userRepository.findDisctinctByRolesContaining(role);
+        users.forEach(User::syncAuthorities);
+        userRepository.saveAll(users);
     }
 }

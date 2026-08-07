@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,94 @@
 
 package top.leafage.hypervisor.assets.service;
 
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionDataDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
+import top.leafage.hypervisor.assets.domain.vo.SectionDataVO;
+import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 
 import java.util.List;
 
+/**
+ * Section service.
+ *
+ * @author wq li
+ */
 public interface SectionService extends JpaCrudService<SectionDTO, SectionVO> {
 
     /**
-     * 获取子节点
+     * tree.
      *
-     * @param id th pk.
-     * @return 数据集
+     * @param ownerId the pk of archive.
+     * @return the result.
      */
-    List<SectionVO> subset(Long id);
+    List<TreeNode<Long>> tree(Long ownerId, Section.OwnerType ownerType);
+
+    /**
+     * Retrieve section fields.
+     *
+     * @param id the pk of section.
+     * @return the result.
+     */
+    List<SectionFieldVO> fields(Long id);
+
+    /**
+     * Retrieve section datas.
+     *
+     * @param id the pk of section.
+     * @return the result.
+     */
+    List<SectionDataVO> datas(Long id);
+
+    /**
+     * Create section field.
+     *
+     * @param dto the data of section field.
+     * @return the result.
+     */
+    SectionFieldVO createField(SectionFieldDTO dto);
+
+    /**
+     * Create section data.
+     *
+     * @param dto the data of section data.
+     * @return the result.
+     */
+    SectionDataVO createData(SectionDataDTO dto);
+
+    /**
+     * Modify section field.
+     *
+     * @param id  the pk of section field.
+     * @param dto the data of section field.
+     * @return the result.
+     */
+    SectionFieldVO modifyField(Long id, SectionFieldDTO dto);
+
+    /**
+     * Modify section data.
+     *
+     * @param id  the pk of section data.
+     * @param dto the data of section data.
+     * @return the result.
+     */
+    SectionDataVO modifyData(Long id, SectionDataDTO dto);
+
+    /**
+     * Remove section field.
+     *
+     * @param id the pk of section field.
+     */
+    void removeField(Long id);
+
+    /**
+     * Remove section data.
+     *
+     * @param id the pk of section data.
+     */
+    void removeData(Long id);
 }

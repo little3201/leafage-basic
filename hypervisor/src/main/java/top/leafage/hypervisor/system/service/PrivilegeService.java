@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 package top.leafage.hypervisor.system.service;
 
 import org.jspecify.annotations.NonNull;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.common.data.jpa.JpaCrudService;
 import top.leafage.hypervisor.system.domain.dto.PrivilegeDTO;
 import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
@@ -23,7 +23,7 @@ import top.leafage.hypervisor.system.domain.vo.PrivilegeVO;
 import java.util.List;
 
 /**
- * privilege service.
+ * Privilege service.
  *
  * @author wq li
  */
@@ -32,10 +32,9 @@ public interface PrivilegeService extends JpaCrudService<PrivilegeDTO, Privilege
     /**
      * 获取树结构数据
      *
-     * @param username username
      * @return 树结构数据集
      */
-    List<TreeNode<@NonNull Long>> tree(String username);
+    List<TreeNode<@NonNull Long>> tree();
 
     /**
      * get subset

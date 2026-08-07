@@ -1,0 +1,141 @@
+/*
+ * Copyright(c) 2019-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package top.leafage.hypervisor.messages.controller;
+
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import top.leafage.hypervisor.messages.domain.dto.MessageDTO;
+import top.leafage.hypervisor.messages.domain.vo.MessageVO;
+import top.leafage.hypervisor.messages.service.MessageService;
+
+/**
+ * Messages controller.
+ *
+ * @author wq li
+ */
+@RestController
+@RequestMapping("/messages")
+public class MessageController {
+
+    private final MessageService messageService;
+
+    /**
+     * Constructor for MessageController.
+     *
+     * @param messageService a {@link MessageService} object
+     */
+    public MessageController(MessageService messageService) {
+        this.messageService = messageService;
+    }
+
+    /**
+     * Retrieves a paginated list of records.
+     *
+     * @param page       The page number.
+     * @param size       The number of records per page.
+     * @param sortBy     The field to sort by.
+     * @param descending Whether sorting should be in descending order.
+     * @param filters    The filters.
+     * @return A paginated list of records, or 204 status code if an error occurs.
+     */
+    @GetMapping
+    public ResponseEntity<Page<MessageVO>> retrieve(@RequestParam int page, @RequestParam int size,
+                                                    String sortBy, boolean descending, String filters) {
+        Page<MessageVO> voPage = messageService.retrieve(page, size, sortBy, descending, filters);
+        return ResponseEntity.ok(voPage);
+    }
+
+    /**
+     * Fetch.
+     *
+     * @param id The pk.
+     * @return the result.
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<MessageVO> fetch(@PathVariable Long id) {
+        MessageVO vo = messageService.fetch(id);
+        return ResponseEntity.ok(vo);
+    }
+
+    /**
+     * Create.
+     *
+     * @param dto the request body.
+     * @return the result.
+     */
+    @PostMapping
+    public ResponseEntity<MessageVO> create(@Valid @RequestBody MessageDTO dto) {
+        MessageVO vo = messageService.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(vo);
+    }
+
+    /**
+     * Modify.
+     *
+     * @param id  The pk.
+     * @param dto the request body.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:modify')")
+    @PutMapping("/{id}")
+    public ResponseEntity<MessageVO> modify(@PathVariable Long id, @RequestBody MessageDTO dto) {
+        MessageVO vo = messageService.modify(id, dto);
+        return ResponseEntity.accepted().body(vo);
+    }
+
+    /**
+     * Publish.
+     *
+     * @param id The pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:modify')")
+    @PatchMapping("/{id}/publish")
+    public ResponseEntity<Boolean> publish(@PathVariable Long id) {
+        boolean published = messageService.publish(id);
+        return ResponseEntity.accepted().body(published);
+    }
+
+    /**
+     * Revoke.
+     *
+     * @param id The pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:modify')")
+    @PatchMapping("/{id}/revoke")
+    public ResponseEntity<Boolean> revoke(@PathVariable Long id) {
+        boolean revoked = messageService.revoke(id);
+        return ResponseEntity.accepted().body(revoked);
+    }
+
+    /**
+     * Remove.
+     *
+     * @param id The pk.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('messages:remove')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
+        messageService.remove(id);
+        return ResponseEntity.noContent().build();
+    }
+
+}

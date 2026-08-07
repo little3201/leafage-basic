@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,7 +32,6 @@ import java.util.Map;
  * Global exception handler
  *
  * @author wq li
- * @since 0.4.0
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -61,11 +59,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(fieldErrors);
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<@NonNull String> handleAccessDeniedException(AccessDeniedException ex) {
-        logger.error("Catch AccessDeniedException: {}", ex.getMessage(), ex);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
-    }
+//    @ExceptionHandler(AccessDeniedException.class)
+//    public ResponseEntity<@NonNull String> handleAccessDeniedException(AccessDeniedException ex) {
+//        logger.error("Catch AccessDeniedException: {}", ex.getMessage(), ex);
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+//    }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<@NonNull String> handleGenericException(RuntimeException ex) {

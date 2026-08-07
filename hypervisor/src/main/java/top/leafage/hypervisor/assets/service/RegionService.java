@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import java.util.List;
 
 /**
- * region service.
+ * Region service.
  *
  * @author wq li
  */
@@ -31,7 +31,7 @@ public interface RegionService extends JpaCrudService<RegionDTO, RegionVO> {
     /**
      * 获取子节点
      *
-     * @param id th pk.
+     * @param id The pk.
      * @return 数据集
      */
     List<RegionVO> subset(Long id);

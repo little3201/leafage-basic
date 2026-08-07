@@ -1,4 +1,49 @@
 /*
+ * Copyright(c) 2019-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Copyright(c) 2018-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ * Copyright (c) 2026.  little3201.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *       https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * Copyright (c) 2025.  little3201.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -840,27 +885,6 @@ comment on column regions.created_by is '创建者';
 comment on column regions.created_date is '创建时间';
 comment on column regions.last_modified_by is '最后修改者';
 comment on column regions.last_modified_date is '最后修改时间';
-
-create table role_members
-(
-    tableoid oid                    not null,
-    cmax     cid                    not null,
-    xmax     xid                    not null,
-    cmin     cid                    not null,
-    xmin     xid                    not null,
-    ctid     tid                    not null,
-    id       bigint primary key     not null, -- 主键
-    role_id  bigint                 not null, -- 角色ID
-    username character varying(255) not null, -- 用户名
-    foreign key (role_id) references roles (id)
-        match simple on update no action on delete no action,
-    foreign key (username) references users (username)
-        match simple on update no action on delete no action
-);
-comment on table role_members is '角色成员关系表';
-comment on column role_members.id is '主键';
-comment on column role_members.role_id is '角色ID';
-comment on column role_members.username is '用户名';
 
 create table role_privilege_actions
 (

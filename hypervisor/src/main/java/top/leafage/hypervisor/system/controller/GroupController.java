@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import top.leafage.common.data.domain.TreeNode;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.common.poi.excel.ExcelReader;
-import top.leafage.hypervisor.system.domain.GroupPrivilege;
-import top.leafage.hypervisor.system.domain.Role;
-import top.leafage.hypervisor.system.domain.User;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.domain.vo.SimplePrivilegeVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.GroupService;
 
@@ -38,7 +36,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * group controller.
+ * Group controller.
  *
  * @author wq li
  */
@@ -67,7 +65,7 @@ public class GroupController {
      * @param filters    The filters.
      * @return A paginated list of records, or 204 status code if an error occurs.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups')")
     @GetMapping
     public ResponseEntity<Page<GroupVO>> retrieve(@RequestParam int page, @RequestParam int size,
                                                   String sortBy, boolean descending, String filters) {
@@ -80,7 +78,7 @@ public class GroupController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups')")
     @GetMapping("/tree")
     public ResponseEntity<List<TreeNode<Long>>> tree() {
         List<TreeNode<Long>> treeNodes = groupService.tree();
@@ -90,10 +88,10 @@ public class GroupController {
     /**
      * fetch by id.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return 如果查询到数据，返回查询到的信息，否则返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups')")
     @GetMapping("/{id}")
     public ResponseEntity<GroupVO> fetch(@PathVariable Long id) {
         GroupVO vo = groupService.fetch(id);
@@ -106,7 +104,7 @@ public class GroupController {
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:create')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:create')")
     @PostMapping
     public ResponseEntity<GroupVO> create(@Valid @RequestBody GroupDTO dto) {
         GroupVO vo = groupService.create(dto);
@@ -116,11 +114,11 @@ public class GroupController {
     /**
      * modify.
      *
-     * @param id  the pk.
+     * @param id  The pk.
      * @param dto the request body.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:modify')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:modify')")
     @PutMapping("/{id}")
     public ResponseEntity<GroupVO> modify(@PathVariable Long id, @RequestBody GroupDTO dto) {
         GroupVO vo = groupService.modify(id, dto);
@@ -128,11 +126,11 @@ public class GroupController {
     }
 
     /**
-     * remove.
+     * Remove.
      *
-     * @param id the pk.
+     * @param id The pk.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:remove')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:remove')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
         groupService.remove(id);
@@ -140,16 +138,29 @@ public class GroupController {
     }
 
     /**
-     * enable.
+     * Enable.
      *
-     * @param id the pk.
+     * @param id The pk.
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:enable')")
-    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:enable')")
+    @PatchMapping("/{id}/enable")
     public ResponseEntity<Boolean> enable(@PathVariable Long id) {
         boolean enabled = groupService.enable(id);
         return ResponseEntity.ok(enabled);
+    }
+
+    /**
+     * Disable.
+     *
+     * @param id The pk.
+     * @return the result.
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:disable')")
+    @PatchMapping("/{id}/disable")
+    public ResponseEntity<Boolean> disable(@PathVariable Long id) {
+        boolean disable = groupService.disable(id);
+        return ResponseEntity.ok(disable);
     }
 
     /**
@@ -157,7 +168,7 @@ public class GroupController {
      *
      * @return the result.
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:import')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:import')")
     @PostMapping("/import")
     public ResponseEntity<List<GroupVO>> importFromFile(MultipartFile file) throws IOException {
         List<GroupDTO> dtoList = ExcelReader.read(file.getInputStream(), GroupDTO.class);
@@ -167,13 +178,26 @@ public class GroupController {
     }
 
     /**
+     * 根据group查询关联user
+     *
+     * @param id group id
+     * @return 查询到的数据集，异常时返回204状态码
+     */
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:member')")
+    @GetMapping("/{id}/members")
+    public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
+        List<UserVO> members = groupService.members(id);
+        return ResponseEntity.ok(members);
+    }
+
+    /**
      * 保存group-users关联
      *
      * @param id        group id
      * @param usernames 账号
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:relation')")
     @PatchMapping("/{id}/members")
     public ResponseEntity<Void> addMembers(@PathVariable Long id, @RequestBody Set<String> usernames) {
         groupService.addMembers(id, usernames);
@@ -187,7 +211,7 @@ public class GroupController {
      * @param usernames username集合
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:member')")
     @DeleteMapping("/{id}/members")
     public ResponseEntity<Void> removeMembers(@PathVariable Long id, @RequestParam Set<String> usernames) {
         groupService.removeMembers(id, usernames);
@@ -195,16 +219,16 @@ public class GroupController {
     }
 
     /**
-     * 根据group查询关联user
+     * 根据group查询关联roles
      *
      * @param id group id
      * @return 查询到的数据集，异常时返回204状态码
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
-    @GetMapping("/{id}/members")
-    public ResponseEntity<List<UserVO>> members(@PathVariable Long id) {
-        List<UserVO> members = groupService.members(id);
-        return ResponseEntity.ok(members);
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:authorize')")
+    @GetMapping("/{id}/roles")
+    public ResponseEntity<List<RoleVO>> roles(@PathVariable Long id) {
+        List<RoleVO> roles = groupService.roles(id);
+        return ResponseEntity.ok(roles);
     }
 
     /**
@@ -214,24 +238,11 @@ public class GroupController {
      * @param roleIds role ids
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:authorize')")
     @PatchMapping("/{id}/roles")
     public ResponseEntity<Void> addRoles(@PathVariable Long id, @RequestBody Set<Long> roleIds) {
         groupService.addRoles(id, roleIds);
         return ResponseEntity.ok().build();
-    }
-
-    /**
-     * 根据group查询关联roles
-     *
-     * @param id group id
-     * @return 查询到的数据集，异常时返回204状态码
-     */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
-    @GetMapping("/{id}/roles")
-    public ResponseEntity<List<RoleVO>> roles(@PathVariable Long id) {
-        List<RoleVO> roles = groupService.roles(id);
-        return ResponseEntity.ok(roles);
     }
 
     /**
@@ -241,7 +252,7 @@ public class GroupController {
      * @param roleIds role ids
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:relation')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:authorize')")
     @DeleteMapping("/{id}/roles")
     public ResponseEntity<Void> removeRoles(@PathVariable Long id, @RequestParam Set<Long> roleIds) {
         groupService.removeRoles(id, roleIds);
@@ -251,16 +262,14 @@ public class GroupController {
     /**
      * 添加 privilege
      *
-     * @param id          role id
-     * @param privilegeId privilege id
-     * @param action      操作
+     * @param id   role id
+     * @param dtos privilege actions dto
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
-    @PatchMapping("/{id}/privileges/{privilegeId}")
-    public ResponseEntity<Void> addPrivilege(@PathVariable Long id, @PathVariable Long privilegeId,
-                                             String action) {
-        groupService.addPrivilege(id, privilegeId, action);
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:authorize')")
+    @PatchMapping("/{id}/privileges")
+    public ResponseEntity<Void> authorize(@PathVariable Long id, @RequestBody List<PrivilegeActionsDTO> dtos) {
+        groupService.authorize(id, dtos);
         return ResponseEntity.ok().build();
     }
 
@@ -270,10 +279,10 @@ public class GroupController {
      * @param id role代码
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:authorize')")
     @GetMapping("/{id}/privileges")
-    public ResponseEntity<List<SimplePrivilegeVO>> privileges(@PathVariable Long id) {
-        List<SimplePrivilegeVO> privileges = groupService.privileges(id);
+    public ResponseEntity<List<PrivilegeActionsVO>> privileges(@PathVariable Long id) {
+        List<PrivilegeActionsVO> privileges = groupService.privileges(id);
         return ResponseEntity.ok(privileges);
     }
 
@@ -285,7 +294,7 @@ public class GroupController {
      * @param action      操作
      * @return 操作结果
      */
-    @PreAuthorize("hasRole('ADMIN') || hasAuthority('SCOPE_groups:authorize')")
+    @PreAuthorize("hasRole('ADMIN') || hasAuthority('groups:authorize')")
     @DeleteMapping("/{id}/privileges/{privilegeId}")
     public ResponseEntity<Void> removePrivilege(@PathVariable Long id, @PathVariable Long privilegeId,
                                                 String action) {

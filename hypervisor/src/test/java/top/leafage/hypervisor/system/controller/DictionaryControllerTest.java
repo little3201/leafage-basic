@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,9 +44,10 @@ import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static top.leafage.hypervisor.ImportTestUtils.createMinimalXlsxBytes;
 
 /**
- * dictionary controller test
+ * Dictionary controller test
  *
  * @author wq li
  **/
@@ -69,17 +70,16 @@ class DictionaryControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new DictionaryVO(1L, "test", null, "description", 2L, true);
+        vo = new DictionaryVO(1L, "test", null, 2L, true);
 
         dto = new DictionaryDTO();
         dto.setName("gender");
         dto.setSuperiorId(1L);
-        dto.setDescription("description");
     }
 
     @Test
     void retrieve() {
-        Page<@NonNull DictionaryVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
+        Page<DictionaryVO> voPage = new PageImpl<>(List.of(vo), mock(PageRequest.class), 2L);
 
         when(dictionaryService.retrieve(anyInt(), anyInt(), anyString(),
                 anyBoolean(), anyString())).thenReturn(voPage);
@@ -119,12 +119,22 @@ class DictionaryControllerTest {
     void subset() {
         when(dictionaryService.subset(anyLong())).thenReturn(List.of(vo));
 
-        assertThat(mvc.get().uri("/dictionaries/{id}/subset", anyLong()))
+        assertThat(mvc.get().uri("/dictionaries/subset")
+                .queryParam("id", "1"))
                 .hasStatusOk()
                 .bodyJson()
                 .convertTo(InstanceOfAssertFactories.list(DictionaryVO.class))
                 .hasSize(1)
                 .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
+    }
+
+    @Test
+    void subset_error() {
+        when(dictionaryService.subset(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.get().uri("/dictionaries/subset")
+                .queryParam("id", "1"))
+                .hasStatus5xxServerError();
     }
 
     @Test
@@ -144,14 +154,6 @@ class DictionaryControllerTest {
 
         assertThat(mvc.get().uri("/dictionaries/{id}", anyLong()))
                 .hasStatus(HttpStatus.NOT_FOUND);
-    }
-
-    @Test
-    void subset_error() {
-        when(dictionaryService.subset(anyLong())).thenThrow(new RuntimeException());
-
-        assertThat(mvc.get().uri("/dictionaries/{id}/subset", "1"))
-                .hasStatus5xxServerError();
     }
 
     @Test
@@ -208,16 +210,32 @@ class DictionaryControllerTest {
     void enable() {
         when(dictionaryService.enable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/dictionaries/{id}", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/dictionaries/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
     }
 
     @Test
-    void importFromFile() {
+    void disable() {
+        when(dictionaryService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/dictionaries/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(dictionaryService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/dictionaries/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
+    void importFromFile() throws Exception {
         when(dictionaryService.createAll(anyList())).thenReturn(List.of(vo));
 
         MockMultipartFile file = new MockMultipartFile("file", "test.xlsx",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new byte[1]);
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", createMinimalXlsxBytes());
         assertThat(mvc.post().uri("/dictionaries/import").multipart().file(file).with(csrf().asHeader()))
                 .hasStatusOk()
                 .bodyJson()

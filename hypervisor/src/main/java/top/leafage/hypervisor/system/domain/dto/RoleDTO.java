@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 package top.leafage.hypervisor.system.domain.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import top.leafage.hypervisor.system.domain.Role;
 
 /**
@@ -23,15 +24,17 @@ import top.leafage.hypervisor.system.domain.Role;
  */
 public class RoleDTO {
 
+    @NotBlank
     private String name;
 
-    private String description;
+    @NotBlank
+    private String code;
 
 
     public static Role toEntity(RoleDTO dto) {
         return new Role(
                 dto.getName(),
-                dto.getDescription()
+                dto.getCode()
         );
     }
 
@@ -43,11 +46,11 @@ public class RoleDTO {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCode() {
+        return code;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCode(String code) {
+        this.code = code;
     }
 }

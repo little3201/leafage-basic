@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025.  little3201.
+ * Copyright(c) 2019-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,10 @@ public class ServerCorsConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Collections.singletonList(appBaseUri));
         config.addAllowedHeader("X-XSRF-TOKEN");
         config.addAllowedHeader(HttpHeaders.CONTENT_TYPE);
         config.setAllowedMethods(Arrays.asList("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedOrigins(Collections.singletonList(appBaseUri));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -389,6 +389,22 @@ class GroupControllerTest {
     }
 
     @Test
+    void disable() {
+        when(groupService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/groups/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(groupService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/groups/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
     void importFromFile() {
         when(groupService.createAll(anyList())).thenReturn(List.of(vo));
 

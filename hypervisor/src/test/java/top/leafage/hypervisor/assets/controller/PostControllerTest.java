@@ -34,7 +34,7 @@ import top.leafage.hypervisor.assets.domain.dto.PostDTO;
 import top.leafage.hypervisor.assets.domain.vo.PostVO;
 import top.leafage.hypervisor.assets.service.PostService;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -76,7 +76,7 @@ class PostControllerTest {
         dto.setSummary("summary");
         dto.setTags(Set.of("Code"));
 
-        vo = new PostVO(1L, "test", "summary", "body", Set.of("Code"), Instant.now());
+        vo = new PostVO(1L, "test", "summary", "body", Set.of("Code"), LocalDateTime.now());
     }
 
     @Test

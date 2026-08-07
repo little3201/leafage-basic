@@ -30,6 +30,7 @@ import org.springframework.data.jpa.domain.Specification;
 import top.leafage.hypervisor.assets.domain.Template;
 import top.leafage.hypervisor.assets.domain.dto.TemplateDTO;
 import top.leafage.hypervisor.assets.domain.vo.TemplateVO;
+import top.leafage.hypervisor.assets.repository.SectionRepository;
 import top.leafage.hypervisor.assets.repository.TemplateRepository;
 
 import java.util.List;
@@ -51,6 +52,9 @@ class TemplateServiceImplTest {
 
     @Mock
     private TemplateRepository templateRepository;
+
+    @Mock
+    private SectionRepository sectionRepository;
 
     @InjectMocks
     private TemplateServiceImpl templateService;
@@ -118,6 +122,25 @@ class TemplateServiceImplTest {
     }
 
     @Test
+    void disable() {
+        when(templateRepository.existsById(anyLong())).thenReturn(true);
+        when(templateRepository.disableById(anyLong())).thenReturn(1);
+
+        assertTrue(templateService.disable(1L));
+    }
+
+    @Test
+    void disable_not_found() {
+        when(templateRepository.existsById(anyLong())).thenReturn(false);
+
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> templateService.disable(1L)
+        );
+        assertEquals("template not found: 1", exception.getMessage());
+    }
+
+    @Test
     void remove_not_found() {
         when(templateRepository.existsById(anyLong())).thenReturn(false);
 
@@ -126,5 +149,21 @@ class TemplateServiceImplTest {
                 () -> templateService.remove(anyLong())
         );
         assertEquals("template not found: 0", exception.getMessage());
+    }
+
+    @Test
+    void publish() {
+        when(templateRepository.updateStatusById(1L, Template.Status.PUBLISHED)).thenReturn(1);
+
+        assertTrue(templateService.publish(1L));
+        verify(templateRepository).updateStatusById(1L, Template.Status.PUBLISHED);
+    }
+
+    @Test
+    void archive() {
+        when(templateRepository.updateStatusById(1L, Template.Status.ARCHIVED)).thenReturn(1);
+
+        assertTrue(templateService.archive(1L));
+        verify(templateRepository).updateStatusById(1L, Template.Status.ARCHIVED);
     }
 }

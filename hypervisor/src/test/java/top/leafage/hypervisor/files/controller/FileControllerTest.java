@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package top.leafage.hypervisor.assets.controller;
+package top.leafage.hypervisor.files.controller;
 
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.web.multipart.MultipartFile;
-import top.leafage.hypervisor.files.controller.FileController;
+import tools.jackson.databind.ObjectMapper;
+import top.leafage.hypervisor.assets.domain.vo.FileStatisticsVO;
+import top.leafage.hypervisor.files.domain.dto.FileRecordDTO;
 import top.leafage.hypervisor.files.domain.vo.FileRecordVO;
 import top.leafage.hypervisor.files.service.FileRecordService;
 
@@ -55,6 +57,9 @@ class FileControllerTest {
 
     @Autowired
     private MockMvcTester mvc;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockitoBean
     private FileRecordService fileRecordService;
@@ -162,6 +167,85 @@ class FileControllerTest {
     }
 
     @Test
+    void statistics() {
+        when(fileRecordService.statistics()).thenReturn(List.of(new FileStatisticsVO("Image", 1, 3121L)));
+
+        assertThat(mvc.get().uri("/files/statistics"))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(FileStatisticsVO.class))
+                .hasSize(1)
+                .element(0).satisfies(vo -> assertThat(vo.key()).isEqualTo("Image"));
+    }
+
+    @Test
+    void statistics_error() {
+        when(fileRecordService.statistics()).thenThrow(new RuntimeException());
+
+        assertThat(mvc.get().uri("/files/statistics"))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
+    void create() throws Exception {
+        FileRecordDTO dto = new FileRecordDTO();
+        dto.setName("test");
+        dto.setSuperiorId(1L);
+        when(fileRecordService.create(any(FileRecordDTO.class))).thenReturn(vo);
+
+        assertThat(mvc.post().uri("/files").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
+                .hasStatus(HttpStatus.CREATED)
+                .bodyJson()
+                .convertTo(FileRecordVO.class)
+                .satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
+    }
+
+    @Test
+    void create_error() throws Exception {
+        FileRecordDTO dto = new FileRecordDTO();
+        dto.setName("test");
+        dto.setSuperiorId(1L);
+        when(fileRecordService.create(any(FileRecordDTO.class))).thenThrow(new RuntimeException());
+
+        assertThat(mvc.post().uri("/files").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(dto)).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
+    void enable() {
+        when(fileRecordService.enable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/files/{id}/enable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void enable_error() {
+        when(fileRecordService.enable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/files/{id}/enable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
+    void disable() {
+        when(fileRecordService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/files/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(fileRecordService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/files/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
     void remove() {
         fileRecordService.remove(anyLong());
 
@@ -176,4 +260,5 @@ class FileControllerTest {
         assertThat(mvc.delete().uri("/files/{id}", anyLong()).with(csrf().asHeader()))
                 .hasStatus5xxServerError();
     }
+
 }

@@ -208,4 +208,24 @@ class DictionaryServiceImplTest {
         );
         assertEquals("dictionary not found: 1", exception.getMessage());
     }
+
+    @Test
+    void disable() {
+        when(dictionaryRepository.existsById(anyLong())).thenReturn(true);
+        when(dictionaryRepository.disableById(anyLong())).thenReturn(1);
+
+        boolean disabled = dictionaryService.disable(1L);
+        assertTrue(disabled);
+    }
+
+    @Test
+    void disable_not_found() {
+        when(dictionaryRepository.existsById(anyLong())).thenReturn(false);
+
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> dictionaryService.disable(1L)
+        );
+        assertEquals("dictionary not found: 1", exception.getMessage());
+    }
 }

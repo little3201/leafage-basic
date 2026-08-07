@@ -16,13 +16,13 @@ spring:
         webmvc:
           routes:
             - id: auth
-              uri: http://localhost:8761
+              uri: http://127.0.0.1:8761
               predicates:
                 - Path=/userinfo
               filters:
                 - TokenRelay=
             - id: hypervisor
-              uri: http://localhost:8762
+              uri: http://127.0.0.1:8762
               predicates:
                 - Path=/hypervisor/**
               filters:

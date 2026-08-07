@@ -27,18 +27,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.util.ReflectionTestUtils;
 import top.leafage.hypervisor.assets.domain.Report;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.ReportDTO;
 import top.leafage.hypervisor.assets.domain.vo.ReportVO;
 import top.leafage.hypervisor.assets.repository.ReportRepository;
+import top.leafage.hypervisor.assets.repository.SectionRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -51,6 +56,9 @@ class ReportServiceImplTest {
 
     @Mock
     private ReportRepository reportRepository;
+
+    @Mock
+    private SectionRepository sectionRepository;
 
     @InjectMocks
     private ReportServiceImpl reportService;
@@ -66,6 +74,7 @@ class ReportServiceImplTest {
         dto.setOwner("owner");
 
         entity = ReportDTO.toEntity(dto);
+        ReflectionTestUtils.setField(entity, "id", 2L);
     }
 
     @Test
@@ -99,6 +108,34 @@ class ReportServiceImplTest {
     }
 
     @Test
+    void create_with_schema_copy_sections() {
+        dto.setSchemaId(1L);
+        Section source = new Section(null, 1L, Section.OwnerType.REPORT, "section", 1, 1, Map.of());
+        ReflectionTestUtils.setField(source, "id", 10L);
+        Section copied = new Section(2L, Section.OwnerType.REPORT, source);
+        ReflectionTestUtils.setField(copied, "id", 20L);
+
+        when(reportRepository.existsByTitle("test")).thenReturn(false);
+        when(reportRepository.save(any(Report.class))).thenReturn(entity);
+        when(sectionRepository.findAllByOwnerIdAndOwnerType(1L, Section.OwnerType.REPORT)).thenReturn(List.of(source));
+        when(sectionRepository.saveAll(any())).thenReturn(List.of(copied));
+
+        ReportVO vo = reportService.create(dto);
+
+        assertEquals("test", vo.title());
+        verify(sectionRepository, times(2)).saveAll(any());
+    }
+
+    @Test
+    void create_title_conflict() {
+        when(reportRepository.existsByTitle("test")).thenReturn(true);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> reportService.create(dto));
+        assertEquals("title already exists: test", exception.getMessage());
+    }
+
+    @Test
     void modify() {
         when(reportRepository.findById(anyLong())).thenReturn(Optional.of(entity));
         when(reportRepository.existsByTitle("demo")).thenReturn(false);
@@ -108,6 +145,46 @@ class ReportServiceImplTest {
         ReportVO vo = reportService.modify(1L, dto);
         assertNotNull(vo);
         assertEquals("demo", vo.title());
+    }
+
+    @Test
+    void fetch_not_found() {
+        when(reportRepository.findById(1L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> reportService.fetch(1L));
+        assertEquals("report not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void modify_not_found() {
+        when(reportRepository.findById(1L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> reportService.modify(1L, dto));
+        assertEquals("report not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void modify_title_conflict() {
+        when(reportRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(reportRepository.existsByTitle("demo")).thenReturn(true);
+
+        dto.setTitle("demo");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> reportService.modify(1L, dto));
+        assertEquals("title already exists: demo", exception.getMessage());
+    }
+
+    @Test
+    void remove() {
+        when(reportRepository.existsById(1L)).thenReturn(true);
+        when(sectionRepository.findAllByOwnerIdAndOwnerType(1L, Section.OwnerType.REPORT)).thenReturn(List.of());
+
+        reportService.remove(1L);
+
+        verify(reportRepository).deleteById(1L);
+        verify(sectionRepository).deleteAllById(List.of());
     }
 
     @Test
@@ -124,5 +201,10 @@ class ReportServiceImplTest {
     @Test
     void preview() {
         assertEquals("", reportService.preview(1L));
+    }
+
+    @Test
+    void generate() {
+        assertArrayEquals(new byte[0], reportService.generate(1L));
     }
 }

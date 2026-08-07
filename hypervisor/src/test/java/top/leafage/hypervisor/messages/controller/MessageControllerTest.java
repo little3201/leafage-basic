@@ -66,12 +66,14 @@ class MessageControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new MessageVO(1L, "test", "test", "admin", Message.Status.UNREAD);
+        vo = new MessageVO(1L, "test", "content", "notice", "admin",
+                Message.Scope.ALL, List.of(), Message.Status.DRAFT, null);
 
         dto = new MessageDTO();
         dto.setTitle("test");
-        dto.setReceiver("23234");
         dto.setBody("content");
+        dto.setType("notice");
+        dto.setScope(Message.Scope.ALL);
     }
 
     @Test
@@ -193,4 +195,25 @@ class MessageControllerTest {
                 .hasStatus5xxServerError();
     }
 
+    @Test
+    void publish() {
+        when(messageService.publish(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/messages/{id}/publish", 1L).with(csrf().asHeader()))
+                .hasStatus(HttpStatus.ACCEPTED)
+                .bodyJson()
+                .convertTo(Boolean.class)
+                .isEqualTo(true);
+    }
+
+    @Test
+    void revoke() {
+        when(messageService.revoke(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/messages/{id}/revoke", 1L).with(csrf().asHeader()))
+                .hasStatus(HttpStatus.ACCEPTED)
+                .bodyJson()
+                .convertTo(Boolean.class)
+                .isEqualTo(true);
+    }
 }

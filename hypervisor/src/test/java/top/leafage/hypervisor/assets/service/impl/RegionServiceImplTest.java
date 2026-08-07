@@ -27,11 +27,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.util.ReflectionTestUtils;
 import top.leafage.hypervisor.assets.domain.Region;
 import top.leafage.hypervisor.assets.domain.dto.RegionDTO;
 import top.leafage.hypervisor.assets.domain.vo.RegionVO;
 import top.leafage.hypervisor.assets.repository.RegionRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,6 +69,7 @@ class RegionServiceImplTest {
         dto.setSuperiorId(1L);
 
         entity = RegionDTO.toEntity(dto);
+        ReflectionTestUtils.setField(entity, "id", 1L);
     }
 
     @Test
@@ -190,5 +193,60 @@ class RegionServiceImplTest {
                 () -> regionService.enable(1L)
         );
         assertEquals("region not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void disable() {
+        when(regionRepository.existsById(anyLong())).thenReturn(true);
+        when(regionRepository.disableById(anyLong())).thenReturn(1);
+
+        boolean disabled = regionService.disable(1L);
+        assertTrue(disabled);
+    }
+
+    @Test
+    void disable_not_found() {
+        when(regionRepository.existsById(anyLong())).thenReturn(false);
+
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> regionService.disable(1L)
+        );
+        assertEquals("region not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void subset_with_null_id() {
+        Region root = new Region("root", null, "029", "710000");
+        ReflectionTestUtils.setField(root, "id", 1L);
+        when(regionRepository.findAllBySuperiorIdIsNull()).thenReturn(List.of(root));
+        when(regionRepository.countBySuperiorIdsGrouped(any())).thenReturn(Collections.singletonList(new Object[]{1L, 2L}));
+
+        List<RegionVO> voList = regionService.subset(null);
+        assertEquals(1, voList.size());
+        assertEquals("root", voList.getFirst().name());
+        assertEquals(2L, voList.getFirst().count());
+        verify(regionRepository).findAllBySuperiorIdIsNull();
+    }
+
+    @Test
+    void subset_with_superior_id() {
+        when(regionRepository.findAllBySuperiorId(1L)).thenReturn(List.of(entity));
+        when(regionRepository.countBySuperiorIdsGrouped(any())).thenReturn(Collections.singletonList(new Object[]{1L, 1L}));
+
+        List<RegionVO> voList = regionService.subset(1L);
+        assertEquals(1, voList.size());
+        assertEquals("test", voList.getFirst().name());
+        assertEquals(1L, voList.getFirst().count());
+        verify(regionRepository).findAllBySuperiorId(1L);
+    }
+
+    @Test
+    void subset_empty() {
+        when(regionRepository.findAllBySuperiorId(1L)).thenReturn(List.of());
+
+        List<RegionVO> voList = regionService.subset(1L);
+        assertTrue(voList.isEmpty());
+        verify(regionRepository, never()).countBySuperiorIdsGrouped(any());
     }
 }

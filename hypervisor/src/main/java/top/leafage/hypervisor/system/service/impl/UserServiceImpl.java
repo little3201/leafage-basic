@@ -92,6 +92,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
+    public UserVO fetch() {
+        return userRepository.findCurrentUser().map(user -> UserVO.from(user, false)).orElse(null);
+    }
+
+    @Transactional
+    @Override
     public boolean enable(Long id) {
         Assert.notNull(id, ID_MUST_NOT_BE_NULL);
 
@@ -125,7 +131,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("username already exists: " + dto.getUsername());
         }
         User entity = userRepository.save(UserDTO.toEntity(dto, "{noop}123456"));
-        return UserVO.from(entity);
+        return UserVO.from(entity, false, null);
     }
 
     /**
@@ -150,7 +156,7 @@ public class UserServiceImpl implements UserService {
 
         copier.copy(dto, existing, null);
         User entity = userRepository.save(existing);
-        return UserVO.from(entity);
+        return UserVO.from(entity, false, null);
     }
 
     /**

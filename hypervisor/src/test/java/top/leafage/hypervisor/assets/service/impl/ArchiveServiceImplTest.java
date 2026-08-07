@@ -26,17 +26,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.util.ReflectionTestUtils;
 import top.leafage.hypervisor.assets.domain.Archive;
+import top.leafage.hypervisor.assets.domain.Section;
 import top.leafage.hypervisor.assets.domain.dto.ArchiveDTO;
 import top.leafage.hypervisor.assets.domain.vo.ArchiveVO;
 import top.leafage.hypervisor.assets.repository.ArchiveRepository;
 import top.leafage.hypervisor.assets.repository.SectionRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -69,6 +72,7 @@ class ArchiveServiceImplTest {
         dto.setOwner("owner");
 
         entity = ArchiveDTO.toEntity(dto);
+        ReflectionTestUtils.setField(entity, "id", 2L);
     }
 
     @Test
@@ -106,6 +110,34 @@ class ArchiveServiceImplTest {
     }
 
     @Test
+    void create_with_schema_copy_sections() {
+        dto.setSchemaId(1L);
+        Section source = new Section(null, 1L, Section.OwnerType.ARCHIVE, "section", 1, 1, Map.of());
+        ReflectionTestUtils.setField(source, "id", 10L);
+        Section copied = new Section(2L, Section.OwnerType.ARCHIVE, source);
+        ReflectionTestUtils.setField(copied, "id", 20L);
+
+        when(archiveRepository.existsByTitle("test")).thenReturn(false);
+        when(archiveRepository.save(any(Archive.class))).thenReturn(entity);
+        when(sectionRepository.findAllByOwnerIdAndOwnerType(1L, Section.OwnerType.ARCHIVE)).thenReturn(List.of(source));
+        when(sectionRepository.saveAll(any())).thenReturn(List.of(copied));
+
+        ArchiveVO vo = archiveService.create(dto);
+
+        assertEquals("test", vo.title());
+        verify(sectionRepository, times(2)).saveAll(any());
+    }
+
+    @Test
+    void create_title_conflict() {
+        when(archiveRepository.existsByTitle("test")).thenReturn(true);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> archiveService.create(dto));
+        assertEquals("title already exists: test", exception.getMessage());
+    }
+
+    @Test
     void modify() {
         when(archiveRepository.findById(anyLong())).thenReturn(Optional.of(entity));
         when(archiveRepository.existsByTitle("demo")).thenReturn(false);
@@ -126,5 +158,43 @@ class ArchiveServiceImplTest {
         archiveService.remove(anyLong());
         verify(archiveRepository).deleteById(anyLong());
         verify(sectionRepository).deleteAllById(List.of());
+    }
+
+    @Test
+    void fetch_not_found() {
+        when(archiveRepository.findById(1L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> archiveService.fetch(1L));
+        assertEquals("archive not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void modify_not_found() {
+        when(archiveRepository.findById(1L)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> archiveService.modify(1L, dto));
+        assertEquals("archive not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void modify_title_conflict() {
+        when(archiveRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(archiveRepository.existsByTitle("demo")).thenReturn(true);
+
+        dto.setTitle("demo");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> archiveService.modify(1L, dto));
+        assertEquals("title already exists: demo", exception.getMessage());
+    }
+
+    @Test
+    void remove_not_found() {
+        when(archiveRepository.existsById(1L)).thenReturn(false);
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
+                () -> archiveService.remove(1L));
+        assertEquals("archive not found: 1", exception.getMessage());
     }
 }

@@ -72,7 +72,7 @@ class TemplateControllerTest {
         dto.setName("test");
         dto.setType(Template.Type.WORD);
 
-        vo = new TemplateVO(1L, "test", Template.Type.WORD, 0, Template.Status.ARCHIVED, null);
+        vo = new TemplateVO(1L, "test", Template.Type.WORD, 0, Template.Status.ARCHIVED, true, null);
     }
 
     @Test
@@ -145,6 +145,28 @@ class TemplateControllerTest {
 
         assertThat(mvc.patch().uri("/templates/{id}/disable", 1L).with(csrf().asHeader()))
                 .hasStatusOk();
+    }
+
+    @Test
+    void publish() {
+        when(templateService.publish(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/templates/{id}/publish", 1L).with(csrf().asHeader()))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(Boolean.class)
+                .isEqualTo(true);
+    }
+
+    @Test
+    void archive() {
+        when(templateService.archive(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/templates/{id}/archive", 1L).with(csrf().asHeader()))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(Boolean.class)
+                .isEqualTo(true);
     }
 
     @Test

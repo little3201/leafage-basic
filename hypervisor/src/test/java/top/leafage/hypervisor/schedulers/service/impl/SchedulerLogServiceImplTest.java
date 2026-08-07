@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import top.leafage.hypervisor.schedulers.domain.Scheduler;
 import top.leafage.hypervisor.schedulers.domain.SchedulerLog;
 import top.leafage.hypervisor.schedulers.domain.vo.SchedulerLogVO;
 import top.leafage.hypervisor.schedulers.repository.SchedulerLogRepository;
@@ -62,7 +63,7 @@ class SchedulerLogServiceImplTest {
         entity = new SchedulerLog();
         entity.setName("test");
         entity.setStartTime(Instant.now());
-        entity.setStatus(SchedulerLog.ScheduleStatus.RUNNING);
+        entity.setStatus(Scheduler.Status.RUNNING);
         entity.setRecord("description");
     }
 

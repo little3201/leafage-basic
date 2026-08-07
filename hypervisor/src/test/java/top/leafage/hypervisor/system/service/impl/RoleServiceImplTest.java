@@ -27,13 +27,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import top.leafage.hypervisor.system.domain.Role;
+import org.springframework.test.util.ReflectionTestUtils;
+import top.leafage.hypervisor.system.domain.*;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.dto.RoleDTO;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
 import top.leafage.hypervisor.system.domain.vo.RoleVO;
-import top.leafage.hypervisor.system.repository.RoleRepository;
+import top.leafage.hypervisor.system.repository.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,6 +56,18 @@ class RoleServiceImplTest {
 
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private RolePrivilegeRepository rolePrivilegeRepository;
+
+    @Mock
+    private PrivilegeRepository privilegeRepository;
+
+    @Mock
+    private GroupRepository groupRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     @InjectMocks
     private RoleServiceImpl roleService;
@@ -189,5 +205,60 @@ class RoleServiceImplTest {
                 () -> roleService.enable(1L)
         );
         assertEquals("role not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void disable() {
+        when(roleRepository.existsById(anyLong())).thenReturn(true);
+        when(roleRepository.disableById(anyLong())).thenReturn(1);
+
+        boolean disabled = roleService.disable(1L);
+        assertTrue(disabled);
+    }
+
+    @Test
+    void disable_not_found() {
+        when(roleRepository.existsById(anyLong())).thenReturn(false);
+
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> roleService.disable(1L)
+        );
+        assertEquals("role not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void authorize() {
+        ReflectionTestUtils.setField(entity, "id", 1L);
+        Privilege privilege = new Privilege("roles", null, "/roles", null, null, Set.of("read", "modify"));
+        ReflectionTestUtils.setField(privilege, "id", 2L);
+        PrivilegeActionsDTO actionsDTO = new PrivilegeActionsDTO();
+        actionsDTO.setPrivilegeId(2L);
+        actionsDTO.setActions(Set.of("read"));
+
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(privilegeRepository.findAllById(Set.of(2L))).thenReturn(List.of(privilege));
+        when(rolePrivilegeRepository.findAllByRoleId(1L)).thenReturn(List.of());
+        when(groupRepository.findDisctinctByRolesContaining(entity)).thenReturn(List.of());
+        when(userRepository.findDisctinctByRolesContaining(entity)).thenReturn(List.of());
+
+        roleService.authorize(1L, List.of(actionsDTO));
+
+        assertEquals(1, entity.getRolePrivileges().size());
+        verify(groupRepository).saveAll(List.of());
+        verify(userRepository).saveAll(List.of());
+    }
+
+    @Test
+    void privileges() {
+        Privilege privilege = new Privilege("roles", null, "/roles", null, null, Set.of("read"));
+        ReflectionTestUtils.setField(privilege, "id", 2L);
+        RolePrivilege rolePrivilege = new RolePrivilege(entity, privilege, Set.of("read"));
+        when(rolePrivilegeRepository.findAllByRoleId(1L)).thenReturn(List.of(rolePrivilege));
+
+        List<PrivilegeActionsVO> privileges = roleService.privileges(1L);
+
+        assertEquals(1, privileges.size());
+        assertEquals(2L, privileges.getFirst().privilegeId());
     }
 }

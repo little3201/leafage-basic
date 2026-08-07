@@ -15,6 +15,7 @@
 
 package top.leafage.hypervisor.assets.controller;
 
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +26,25 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
+import top.leafage.common.data.core.domain.TreeNode;
 import top.leafage.hypervisor.assets.domain.Section;
+import top.leafage.hypervisor.assets.domain.SectionField;
 import top.leafage.hypervisor.assets.domain.dto.SectionDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionDataDTO;
+import top.leafage.hypervisor.assets.domain.dto.SectionFieldDTO;
+import top.leafage.hypervisor.assets.domain.vo.SectionDataVO;
+import top.leafage.hypervisor.assets.domain.vo.SectionFieldVO;
 import top.leafage.hypervisor.assets.domain.vo.SectionVO;
 import top.leafage.hypervisor.assets.service.SectionService;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -59,6 +69,10 @@ class SectionControllerTest {
 
     private SectionDTO dto;
     private SectionVO vo;
+    private SectionFieldDTO fieldDTO;
+    private SectionDataDTO dataDTO;
+    private SectionFieldVO fieldVO;
+    private SectionDataVO dataVO;
 
     @BeforeEach
     void setUp() {
@@ -69,7 +83,22 @@ class SectionControllerTest {
         dto.setOwnerId(1L);
         dto.setOwnerType(Section.OwnerType.TEMPLATE);
 
-        vo = new SectionVO(1L, 1L, 1L, "test", 1, 2, null, 2L);
+        vo = new SectionVO(1L, "test", 1L, 1L, Section.OwnerType.TEMPLATE, 1, 2, null, 2L);
+
+        fieldDTO = new SectionFieldDTO();
+        fieldDTO.setSectionId(1L);
+        fieldDTO.setName("field name");
+        fieldDTO.setField("field");
+        fieldDTO.setType(SectionField.Type.STRING);
+        fieldDTO.setLength(32);
+        fieldDTO.setRequired(true);
+
+        dataDTO = new SectionDataDTO();
+        dataDTO.setSectionId(1L);
+        dataDTO.setData(Map.of("field", "value"));
+
+        fieldVO = new SectionFieldVO(1L, "field name", "field", "STRING", 32, true);
+        dataVO = new SectionDataVO(1L, Map.of("field", "value"));
     }
 
     @Test
@@ -149,4 +178,101 @@ class SectionControllerTest {
                 .hasStatus5xxServerError();
     }
 
+    @Test
+    void tree() {
+        TreeNode<Long> treeNode = TreeNode.withId(1L).name("test").build();
+        when(sectionService.tree(anyLong(), any(Section.OwnerType.class))).thenReturn(List.of(treeNode));
+
+        assertThat(mvc.get().uri("/sections/{ownerId}/tree", 1L).queryParam("ownerType", "template"))
+                .hasStatusOk()
+                .bodyJson().extractingPath("$[0].name").isEqualTo("test");
+    }
+
+    @Test
+    void fields() {
+        when(sectionService.fields(anyLong())).thenReturn(List.of(fieldVO));
+
+        assertThat(mvc.get().uri("/sections/{id}/fields", 1L))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(SectionFieldVO.class))
+                .hasSize(1)
+                .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("field name"));
+    }
+
+    @Test
+    void datas() {
+        when(sectionService.datas(anyLong())).thenReturn(List.of(dataVO));
+
+        assertThat(mvc.get().uri("/sections/{id}/datas", 1L))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(SectionDataVO.class))
+                .hasSize(1)
+                .element(0).satisfies(vo -> assertThat(vo.data()).containsEntry("field", "value"));
+    }
+
+    @Test
+    void createField() throws Exception {
+        when(sectionService.createField(any(SectionFieldDTO.class))).thenReturn(fieldVO);
+
+        assertThat(mvc.post().uri("/sections/fields").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(fieldDTO)).with(csrf().asHeader()))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(SectionFieldVO.class)
+                .satisfies(vo -> assertThat(vo.field()).isEqualTo("field"));
+    }
+
+    @Test
+    void createData() throws Exception {
+        when(sectionService.createData(any(SectionDataDTO.class))).thenReturn(dataVO);
+
+        assertThat(mvc.post().uri("/sections/datas").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(dataDTO)).with(csrf().asHeader()))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(SectionDataVO.class)
+                .satisfies(vo -> assertThat(vo.data()).containsEntry("field", "value"));
+    }
+
+    @Test
+    void modifyField() throws Exception {
+        when(sectionService.modifyField(anyLong(), any(SectionFieldDTO.class))).thenReturn(fieldVO);
+
+        assertThat(mvc.put().uri("/sections/fields/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(fieldDTO)).with(csrf().asHeader()))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(SectionFieldVO.class)
+                .satisfies(vo -> assertThat(vo.name()).isEqualTo("field name"));
+    }
+
+    @Test
+    void modifyData() throws Exception {
+        when(sectionService.modifyData(anyLong(), any(SectionDataDTO.class))).thenReturn(dataVO);
+
+        assertThat(mvc.put().uri("/sections/datas/{id}", 1L).contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(dataDTO)).with(csrf().asHeader()))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(SectionDataVO.class)
+                .satisfies(vo -> assertThat(vo.id()).isEqualTo(1L));
+    }
+
+    @Test
+    void removeField() {
+        sectionService.removeField(anyLong());
+
+        assertThat(mvc.delete().uri("/sections/fields/{id}", 1L).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void removeData() {
+        sectionService.removeData(anyLong());
+
+        assertThat(mvc.delete().uri("/sections/datas/{id}", 1L).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
 }

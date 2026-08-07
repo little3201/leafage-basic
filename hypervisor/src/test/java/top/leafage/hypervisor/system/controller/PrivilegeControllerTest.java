@@ -175,7 +175,7 @@ class PrivilegeControllerTest {
     @Test
     void tree() {
         TreeNode<Long> treeNode = TreeNode.withId(1L).name("test").build();
-        when(privilegeService.tree(anyString())).thenReturn(Collections.singletonList(treeNode));
+        when(privilegeService.tree()).thenReturn(Collections.singletonList(treeNode));
 
         assertThat(mvc.get().uri("/privileges/tree"))
                 .hasStatusOk()
@@ -184,7 +184,7 @@ class PrivilegeControllerTest {
 
     @Test
     void tree_error() {
-        when(privilegeService.tree(anyString())).thenThrow(new RuntimeException());
+        when(privilegeService.tree()).thenThrow(new RuntimeException());
 
         assertThat(mvc.get().uri("/privileges/tree"))
                 .hasStatus5xxServerError();
@@ -196,6 +196,22 @@ class PrivilegeControllerTest {
 
         assertThat(mvc.patch().uri("/privileges/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
+    }
+
+    @Test
+    void disable() {
+        when(privilegeService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/privileges/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(privilegeService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/privileges/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
     }
 
     @Test

@@ -166,4 +166,24 @@ class PrivilegeServiceImplTest {
         );
         assertEquals("privilege not found: 1", exception.getMessage());
     }
+
+    @Test
+    void disable() {
+        when(privilegeRepository.existsById(anyLong())).thenReturn(true);
+        when(privilegeRepository.disableById(anyLong())).thenReturn(1);
+
+        boolean disabled = privilegeService.disable(1L);
+        assertTrue(disabled);
+    }
+
+    @Test
+    void disable_not_found() {
+        when(privilegeRepository.existsById(anyLong())).thenReturn(false);
+
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> privilegeService.disable(1L)
+        );
+        assertEquals("privilege not found: 1", exception.getMessage());
+    }
 }

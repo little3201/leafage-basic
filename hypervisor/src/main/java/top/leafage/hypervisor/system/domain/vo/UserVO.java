@@ -16,6 +16,7 @@
 package top.leafage.hypervisor.system.domain.vo;
 
 
+import org.springframework.util.StringUtils;
 import top.leafage.hypervisor.system.domain.User;
 
 import java.util.List;
@@ -38,11 +39,15 @@ public record UserVO(
     }
 
     public static UserVO from(User entity, List<RoleVO> roles) {
+        return from(entity, true, roles);
+    }
+
+    public static UserVO from(User entity, boolean maskEmail, List<RoleVO> roles) {
         return new UserVO(
                 entity.getId(),
                 entity.getUsername(),
                 entity.getFullName(),
-                null,
+                mask(entity.getEmail(), maskEmail),
                 roles,
                 entity.isEnabled()
         );
@@ -60,7 +65,7 @@ public record UserVO(
     }
 
     private static String mask(String email, boolean mask) {
-        if (email == null || email.isEmpty()) {
+        if (!StringUtils.hasText(email)) {
             return "";
         } else if (!mask) {
             return email;

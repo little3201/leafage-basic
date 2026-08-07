@@ -207,6 +207,22 @@ class RoleControllerTest {
     }
 
     @Test
+    void disable() {
+        when(roleService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/roles/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(roleService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/roles/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
     void importFromFile() {
         when(roleService.createAll(anyList())).thenReturn(List.of(vo));
 
@@ -256,7 +272,7 @@ class RoleControllerTest {
     void authorize_error() {
         doThrow(new RuntimeException()).when(roleService).authorize(anyLong(), anyCollection());
 
-        assertThat(mvc.patch().uri("/roles/{id}/privileges/{privilegeId}", 1L)
+        assertThat(mvc.patch().uri("/roles/{id}/privileges", 1L)
                 .contentType(MediaType.APPLICATION_JSON).with(csrf().asHeader())
                 .content(mapper.writeValueAsString(Set.of(actionsDTO)))
         )

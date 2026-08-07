@@ -32,6 +32,14 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     /**
+     * Fetch current user.
+     *
+     * @return user.
+     */
+    @Query("SELECT t from User t WHERE t.username = ?#{ principal?.name }")
+    Optional<User> findCurrentUser();
+
+    /**
      * 查询
      *
      * @param role the role.

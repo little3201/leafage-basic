@@ -26,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.test.util.ReflectionTestUtils;
 import top.leafage.hypervisor.assets.domain.Comment;
 import top.leafage.hypervisor.assets.domain.dto.CommentDTO;
 import top.leafage.hypervisor.assets.domain.vo.CommentVO;
@@ -61,6 +62,7 @@ class CommentServiceImplTest {
     @BeforeEach
     void setUp() {
         entity = new Comment(1L, 1L, "test");
+        ReflectionTestUtils.setField(entity, "id", 2L);
     }
 
     @Test
@@ -69,11 +71,23 @@ class CommentServiceImplTest {
 
         when(commentRepository.findAll(ArgumentMatchers.<Specification<Comment>>any(),
                 any(Pageable.class))).thenReturn(page);
+        when(commentRepository.countBySuperiorIds(any())).thenReturn(List.<Object[]>of(new Object[]{entity.getId(), 2L}));
 
         Page<CommentVO> voPage = commentService.retrieve(0, 2, "id", true, "body:like:test");
         assertEquals(1, voPage.getTotalElements());
         assertEquals(1, voPage.getContent().size());
+        assertEquals(2L, voPage.getContent().getFirst().count());
         verify(commentRepository).findAll(ArgumentMatchers.<Specification<Comment>>any(), any(Pageable.class));
+    }
+
+    @Test
+    void retrieve_empty() {
+        when(commentRepository.findAll(ArgumentMatchers.<Specification<Comment>>any(),
+                any(Pageable.class))).thenReturn(Page.empty());
+
+        Page<CommentVO> voPage = commentService.retrieve(0, 2, "id", true, "body:like:test");
+
+        assertTrue(voPage.isEmpty());
     }
 
     @Test
@@ -96,9 +110,11 @@ class CommentServiceImplTest {
     @Test
     void replies() {
         when(commentRepository.findAllBySuperiorId(anyLong())).thenReturn(List.of(entity));
+        when(commentRepository.countBySuperiorIds(any())).thenReturn(List.<Object[]>of(new Object[]{entity.getId(), 1L}));
 
         List<CommentVO> voList = commentService.replies(anyLong());
         assertEquals(1, voList.size());
+        assertEquals(1L, voList.getFirst().count());
         verify(commentRepository).findAllBySuperiorId(anyLong());
     }
 

@@ -29,13 +29,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.util.ReflectionTestUtils;
 import top.leafage.common.data.core.domain.TreeNode;
-import top.leafage.hypervisor.system.domain.Group;
+import top.leafage.hypervisor.system.domain.*;
 import top.leafage.hypervisor.system.domain.dto.GroupDTO;
+import top.leafage.hypervisor.system.domain.dto.PrivilegeActionsDTO;
 import top.leafage.hypervisor.system.domain.vo.GroupVO;
-import top.leafage.hypervisor.system.repository.GroupRepository;
+import top.leafage.hypervisor.system.domain.vo.PrivilegeActionsVO;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
+import top.leafage.hypervisor.system.domain.vo.UserVO;
+import top.leafage.hypervisor.system.repository.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,6 +60,18 @@ class GroupServiceImplTest {
 
     @Mock
     private GroupRepository groupRepository;
+
+    @Mock
+    private GroupPrivilegeRepository groupPrivilegeRepository;
+
+    @Mock
+    private PrivilegeRepository privilegeRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private RoleRepository roleRepository;
 
     @InjectMocks
     private GroupServiceImpl groupService;
@@ -207,5 +224,146 @@ class GroupServiceImplTest {
                 () -> groupService.enable(1L)
         );
         assertEquals("group not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void disable() {
+        when(groupRepository.existsById(anyLong())).thenReturn(true);
+        when(groupRepository.disableById(anyLong())).thenReturn(1);
+
+        boolean disabled = groupService.disable(1L);
+        assertTrue(disabled);
+    }
+
+    @Test
+    void disable_not_found() {
+        when(groupRepository.existsById(anyLong())).thenReturn(false);
+
+        EntityNotFoundException exception = assertThrows(
+                EntityNotFoundException.class,
+                () -> groupService.disable(1L)
+        );
+        assertEquals("group not found: 1", exception.getMessage());
+    }
+
+    @Test
+    void addMembers() {
+        User member = new User("test", "password", "test", "test@example.com");
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(userRepository.findAllByUsernameIn(Set.of("test"))).thenReturn(List.of(member));
+
+        groupService.addMembers(1L, Set.of("test"));
+
+        assertTrue(entity.getMembers().contains(member));
+        verify(userRepository).findAllByUsernameIn(Set.of("test"));
+    }
+
+    @Test
+    void members() {
+        User member = new User("test", "password", "test", "test@example.com");
+        entity.addMember(member);
+        when(groupRepository.findWithMembersById(1L)).thenReturn(Optional.of(entity));
+
+        List<UserVO> members = groupService.members(1L);
+
+        assertEquals(1, members.size());
+        assertEquals("test", members.getFirst().username());
+    }
+
+    @Test
+    void removeMembers() {
+        User member = new User("test", "password", "test", "test@example.com");
+        entity.addMember(member);
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(userRepository.findAllByUsernameIn(Set.of("test"))).thenReturn(List.of(member));
+
+        groupService.removeMembers(1L, Set.of("test"));
+
+        assertFalse(entity.getMembers().contains(member));
+    }
+
+    @Test
+    void addRoles() {
+        Role role = new Role("admin", "ADMIN");
+        ReflectionTestUtils.setField(role, "id", 2L);
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(roleRepository.findAllById(Set.of(2L))).thenReturn(List.of(role));
+
+        groupService.addRoles(1L, Set.of(2L));
+
+        assertTrue(entity.getRoles().contains(role));
+    }
+
+    @Test
+    void roles() {
+        Role role = new Role("admin", "ADMIN");
+        entity.addRole(role);
+        when(groupRepository.findWithRolesById(1L)).thenReturn(Optional.of(entity));
+
+        List<RoleVO> roles = groupService.roles(1L);
+
+        assertEquals(1, roles.size());
+        assertEquals("admin", roles.getFirst().name());
+    }
+
+    @Test
+    void removeRoles() {
+        Role role = new Role("admin", "ADMIN");
+        ReflectionTestUtils.setField(role, "id", 2L);
+        entity.addRole(role);
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(roleRepository.findAllById(Set.of(2L))).thenReturn(List.of(role));
+
+        groupService.removeRoles(1L, Set.of(2L));
+
+        assertFalse(entity.getRoles().contains(role));
+    }
+
+    @Test
+    void authorize() {
+        ReflectionTestUtils.setField(entity, "id", 1L);
+        Privilege privilege = new Privilege("groups", null, "/groups", null, null, Set.of("read", "modify"));
+        ReflectionTestUtils.setField(privilege, "id", 2L);
+        PrivilegeActionsDTO actionsDTO = new PrivilegeActionsDTO();
+        actionsDTO.setPrivilegeId(2L);
+        actionsDTO.setActions(Set.of("read"));
+
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(privilegeRepository.findAllById(Set.of(2L))).thenReturn(List.of(privilege));
+        when(groupPrivilegeRepository.findAllByGroupId(1L)).thenReturn(List.of());
+
+        groupService.authorize(1L, List.of(actionsDTO));
+
+        assertEquals(1, entity.getGroupPrivileges().size());
+        assertTrue(entity.getAuthorities().contains("groups:read"));
+    }
+
+    @Test
+    void privileges() {
+        Privilege privilege = new Privilege("groups", null, "/groups", null, null, Set.of("read"));
+        ReflectionTestUtils.setField(privilege, "id", 2L);
+        GroupPrivilege groupPrivilege = new GroupPrivilege(entity, privilege, Set.of("read"));
+        when(groupPrivilegeRepository.findAllByGroupId(1L)).thenReturn(List.of(groupPrivilege));
+
+        List<PrivilegeActionsVO> privileges = groupService.privileges(1L);
+
+        assertEquals(1, privileges.size());
+        assertEquals(2L, privileges.getFirst().privilegeId());
+    }
+
+    @Test
+    void removePrivilege() {
+        Privilege privilege = new Privilege("groups", null, "/groups", null, null, Set.of("read"));
+        GroupPrivilege groupPrivilege = new GroupPrivilege(entity, privilege, Set.of("read"));
+        entity.getGroupPrivileges().add(groupPrivilege);
+
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(entity));
+        when(privilegeRepository.findById(2L)).thenReturn(Optional.of(privilege));
+        when(groupRepository.save(entity)).thenReturn(entity);
+
+        groupService.removePrivilege(1L, 2L, "read");
+
+        assertTrue(entity.getGroupPrivileges().isEmpty());
+        verify(groupRepository).save(entity);
     }
 }

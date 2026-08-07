@@ -215,6 +215,22 @@ class DictionaryControllerTest {
     }
 
     @Test
+    void disable() {
+        when(dictionaryService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/dictionaries/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(dictionaryService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/dictionaries/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
     void importFromFile() throws Exception {
         when(dictionaryService.createAll(anyList())).thenReturn(List.of(vo));
 

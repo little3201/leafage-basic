@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
+import top.leafage.hypervisor.schedulers.domain.Scheduler;
 import top.leafage.hypervisor.schedulers.domain.vo.SchedulerLogVO;
 import top.leafage.hypervisor.schedulers.service.SchedulerLogService;
 
@@ -59,7 +60,8 @@ class SchedulerLogControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new SchedulerLogVO(1L, "test", Instant.now(), 232L, "RUNNING", Instant.now().plus(12, ChronoUnit.HOURS), "description");
+        vo = new SchedulerLogVO(1L, "test", Instant.now(), 232L, Scheduler.Status.RUNNING,
+                Instant.now().plus(12, ChronoUnit.HOURS), "description");
     }
 
     @Test

@@ -38,7 +38,7 @@ public interface MessageInboxRepository extends JpaRepository<MessageInbox, Long
      *
      * @return result.
      */
-    @Query("select t from MessageInbox t where t.receiver.username = ?#{ principal?.name }")
+    @Query("SELECT t from MessageInbox t WHERE t.receiver.username = ?#{ principal?.name }")
     List<MessageInbox> findAllInbox();
 
     /**
@@ -47,7 +47,7 @@ public interface MessageInboxRepository extends JpaRepository<MessageInbox, Long
      * @param status the status.
      * @return result.
      */
-    @Query("select t from MessageInbox t where t.status = :status and t.receiver.username = ?#{ principal?.name }")
+    @Query("SELECT t from MessageInbox t WHERE t.status = :status and t.receiver.username = ?#{ principal?.name }")
     List<MessageInbox> findAllByStatus(MessageInbox.Status status);
 
     /**

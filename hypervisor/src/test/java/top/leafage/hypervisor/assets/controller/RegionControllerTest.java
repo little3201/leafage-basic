@@ -135,6 +135,28 @@ class RegionControllerTest {
     }
 
     @Test
+    void subset() {
+        when(regionService.subset(anyLong())).thenReturn(List.of(vo));
+
+        assertThat(mvc.get().uri("/regions/subset")
+                .queryParam("id", "1"))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(RegionVO.class))
+                .hasSize(1)
+                .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("test"));
+    }
+
+    @Test
+    void subset_error() {
+        when(regionService.subset(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.get().uri("/regions/subset")
+                .queryParam("id", "1"))
+                .hasStatus5xxServerError();
+    }
+
+    @Test
     void create() {
         when(regionService.create(any(RegionDTO.class))).thenReturn(vo);
 
@@ -199,6 +221,22 @@ class RegionControllerTest {
 
         assertThat(mvc.patch().uri("/regions/{id}/enable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
+    }
+
+    @Test
+    void disable() {
+        when(regionService.disable(anyLong())).thenReturn(true);
+
+        assertThat(mvc.patch().uri("/regions/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void disable_error() {
+        when(regionService.disable(anyLong())).thenThrow(new RuntimeException());
+
+        assertThat(mvc.patch().uri("/regions/{id}/disable", anyLong()).with(csrf().asHeader()))
+                .hasStatus5xxServerError();
     }
 
     @Test

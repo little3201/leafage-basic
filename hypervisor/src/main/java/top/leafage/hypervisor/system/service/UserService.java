@@ -30,6 +30,12 @@ import java.util.Set;
 public interface UserService extends JpaCrudService<UserDTO, UserVO> {
 
     /**
+     * Fetch me
+     * @return user
+     */
+    UserVO fetch();
+
+    /**
      * 添加 role
      *
      * @param id      the pk of group.

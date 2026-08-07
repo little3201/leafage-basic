@@ -31,10 +31,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import tools.jackson.databind.ObjectMapper;
 import top.leafage.hypervisor.system.domain.dto.UserDTO;
+import top.leafage.hypervisor.system.domain.vo.RoleVO;
 import top.leafage.hypervisor.system.domain.vo.UserVO;
 import top.leafage.hypervisor.system.service.UserService;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -66,7 +68,7 @@ class UserControllerTest {
 
     @BeforeEach
     void setUp() {
-        vo = new UserVO(1L, "test", "test", "test@example.com", "ACTIVE", true);
+        vo = new UserVO(1L, "test", "test", "test@example.com", List.of(), true);
 
         dto = new UserDTO();
         dto.setUsername("test");
@@ -129,6 +131,17 @@ class UserControllerTest {
 
         assertThat(mvc.get().uri("/users/{id}", anyLong()))
                 .hasStatus5xxServerError();
+    }
+
+    @Test
+    void me() {
+        when(userService.fetch()).thenReturn(vo);
+
+        assertThat(mvc.get().uri("/users/me"))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(UserVO.class)
+                .satisfies(vo -> assertThat(vo.username()).isEqualTo("test"));
     }
 
     @Test
@@ -198,18 +211,18 @@ class UserControllerTest {
     }
 
     @Test
-    void unlock() {
-        when(userService.unlock(anyLong())).thenReturn(true);
+    void disable() {
+        when(userService.disable(anyLong())).thenReturn(true);
 
-        assertThat(mvc.patch().uri("/users/{id}/unlock", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/users/{id}/disable", anyLong()).with(csrf().asHeader()))
                 .hasStatusOk();
     }
 
     @Test
-    void unlock_error() {
-        when(userService.unlock(anyLong())).thenThrow(new RuntimeException());
+    void disable_error() {
+        when(userService.disable(anyLong())).thenThrow(new RuntimeException());
 
-        assertThat(mvc.patch().uri("/users/{id}/unlock", anyLong()).with(csrf().asHeader()))
+        assertThat(mvc.patch().uri("/users/{id}/disable", anyLong()).with(csrf().asHeader()))
                 .hasStatus5xxServerError();
     }
 
@@ -225,5 +238,38 @@ class UserControllerTest {
                 .convertTo(InstanceOfAssertFactories.list(UserVO.class))
                 .hasSize(1)
                 .element(0).satisfies(vo -> assertThat(vo.username()).isEqualTo("test"));
+    }
+
+    @Test
+    void roles() {
+        when(userService.roles(anyLong())).thenReturn(List.of(new RoleVO(1L, "admin", "ADMIN", true, true)));
+
+        assertThat(mvc.get().uri("/users/{id}/roles", 1L))
+                .hasStatusOk()
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(RoleVO.class))
+                .hasSize(1)
+                .element(0).satisfies(vo -> assertThat(vo.name()).isEqualTo("admin"));
+    }
+
+    @Test
+    void addRoles() {
+        userService.addRoles(anyLong(), anySet());
+
+        assertThat(mvc.patch().uri("/users/{id}/roles", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(Set.of(1L)))
+                .with(csrf().asHeader()))
+                .hasStatusOk();
+    }
+
+    @Test
+    void removeRoles() {
+        userService.removeRoles(anyLong(), anySet());
+
+        assertThat(mvc.delete().uri("/users/{id}/roles", 1L)
+                .queryParam("roleIds", "1", "2")
+                .with(csrf().asHeader()))
+                .hasStatus(HttpStatus.NO_CONTENT);
     }
 }
